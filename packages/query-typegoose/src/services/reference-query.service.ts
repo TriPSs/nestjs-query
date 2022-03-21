@@ -10,7 +10,7 @@ import {
   mergeFilter,
   ModifyRelationOptions,
   Query,
-} from '@nestjs-query/core';
+} from '@tripss/nestjs-query-core';
 import { Base } from '@typegoose/typegoose/lib/defaultClasses';
 import { ReturnModelType, DocumentType, getModelWithString, getClass, mongoose } from '@typegoose/typegoose';
 import { NotFoundException } from '@nestjs/common';

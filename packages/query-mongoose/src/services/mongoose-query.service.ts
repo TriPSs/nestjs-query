@@ -12,7 +12,7 @@ import {
   QueryService,
   UpdateManyResponse,
   UpdateOneOptions,
-} from '@nestjs-query/core';
+} from '@tripss/nestjs-query-core';
 import { NotFoundException } from '@nestjs/common';
 import { Document, Model as MongooseModel, UpdateQuery } from 'mongoose';
 import { AggregateBuilder, FilterQueryBuilder } from '../query';

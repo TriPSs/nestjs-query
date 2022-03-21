@@ -1,4 +1,4 @@
-import { Class, Filter, mergeQuery, QueryService } from '@nestjs-query/core';
+import { Class, Filter, mergeQuery, QueryService } from '@tripss/nestjs-query-core';
 import { ArgsType, Resolver } from '@nestjs/graphql';
 import omit from 'lodash.omit';
 import { getDTONames } from '../common';

@@ -1,4 +1,4 @@
-import { Class, DeleteManyResponse } from '@nestjs-query/core';
+import { Class, DeleteManyResponse } from '@tripss/nestjs-query-core';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 /** @internal */

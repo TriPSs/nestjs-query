@@ -1,4 +1,4 @@
-import { Filter, SortDirection } from '@nestjs-query/core';
+import { Filter, SortDirection } from '@tripss/nestjs-query-core';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToClass } from 'class-transformer';
 import { Repository } from 'typeorm';

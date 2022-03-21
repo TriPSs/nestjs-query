@@ -1,4 +1,4 @@
-import { AggregateQuery } from '@nestjs-query/core';
+import { AggregateQuery } from '@tripss/nestjs-query-core';
 import { GraphQLResolveInfo } from 'graphql';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';

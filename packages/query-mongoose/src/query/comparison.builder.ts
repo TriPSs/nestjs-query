@@ -1,4 +1,4 @@
-import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@nestjs-query/core';
+import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@tripss/nestjs-query-core';
 import escapeRegExp from 'lodash.escaperegexp';
 import { Model as MongooseModel, FilterQuery, Document, Types, Schema } from 'mongoose';
 import { BadRequestException } from '@nestjs/common';

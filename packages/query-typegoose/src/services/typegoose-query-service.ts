@@ -11,7 +11,7 @@ import {
   UpdateManyResponse,
   UpdateOneOptions,
   QueryService,
-} from '@nestjs-query/core';
+} from '@tripss/nestjs-query-core';
 import { Base } from '@typegoose/typegoose/lib/defaultClasses';
 import { ReturnModelType, DocumentType, mongoose } from '@typegoose/typegoose';
 import { NotFoundException } from '@nestjs/common';

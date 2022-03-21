@@ -1,5 +1,5 @@
 {
-  "name": "@nestjs-query/query-typegoose",
+  "name": "@tripss/nestjs-query-typegoose",
   "version": "0.30.0",
   "description": "Typegoose adapter for @nestjs-query/core",
   "author": "john mcinall<johnmcinall@gmail.com>",
@@ -18,7 +18,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@nestjs-query/core": "0.30.0",
+    "@tripss/nestjs-query-core": "0.30.0",
     "camel-case": "^4.1.2",
     "is-class": "0.0.9",
     "lodash.escaperegexp": "^4.1.2",

@@ -1,4 +1,4 @@
-import { CommonFieldComparisonBetweenType } from '@nestjs-query/core';
+import { CommonFieldComparisonBetweenType } from '@tripss/nestjs-query-core';
 import { getModelForClass, mongoose } from '@typegoose/typegoose';
 import { TestEntity } from '../__fixtures__/test.entity';
 import { ComparisonBuilder } from '../../src/query';

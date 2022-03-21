@@ -2,7 +2,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { InjectModel, MongooseModule } from '@nestjs/mongoose';
 import { Model, Document, LeanDocument, Types } from 'mongoose';
-import { SortDirection } from '@nestjs-query/core';
+import { SortDirection } from '@tripss/nestjs-query-core';
 import { MongooseQueryService } from '../../src/services';
 import {
   TestReference,

@@ -1,4 +1,4 @@
-import { AggregateQuery, Filter, Query, SortDirection, SortField } from '@nestjs-query/core';
+import { AggregateQuery, Filter, Query, SortDirection, SortField } from '@tripss/nestjs-query-core';
 import { DocumentType, ReturnModelType, mongoose } from '@typegoose/typegoose';
 import { AggregateBuilder, TypegooseGroupAndAggregate } from './aggregate.builder';
 import { getSchemaKey } from './helpers';

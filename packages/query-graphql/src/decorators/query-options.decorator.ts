@@ -1,4 +1,4 @@
-import { Class, MetaValue, ValueReflector } from '@nestjs-query/core';
+import { Class, MetaValue, ValueReflector } from '@tripss/nestjs-query-core';
 import { QueryArgsTypeOpts } from '../types';
 import { QUERY_OPTIONS_KEY } from './constants';
 

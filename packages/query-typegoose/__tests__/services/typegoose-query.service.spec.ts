@@ -3,7 +3,7 @@ import { getModelForClass, DocumentType, mongoose } from '@typegoose/typegoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReturnModelType } from '@typegoose/typegoose/lib/types';
 import { InjectModel, TypegooseModule } from 'nestjs-typegoose';
-import { FindRelationOptions, SortDirection } from '@nestjs-query/core';
+import { FindRelationOptions, SortDirection } from '@tripss/nestjs-query-core';
 import {
   TestReference,
   TestEntity,

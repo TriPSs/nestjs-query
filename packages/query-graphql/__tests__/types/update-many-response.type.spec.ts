@@ -1,5 +1,5 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { UpdateManyResponse } from '@nestjs-query/core';
+import { UpdateManyResponse } from '@tripss/nestjs-query-core';
 import { UpdateManyResponseType } from '../../src';
 import { generateSchema } from '../__fixtures__';
 

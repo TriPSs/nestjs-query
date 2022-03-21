@@ -1,4 +1,4 @@
-import { Class, Filter, Query, SortField } from '@nestjs-query/core';
+import { Class, Filter, Query, SortField } from '@tripss/nestjs-query-core';
 import { PagingStrategies, InferPagingTypeFromStrategy } from '../paging';
 import { FilterTypeOptions } from '../filter.type';
 import {

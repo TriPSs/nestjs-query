@@ -1,5 +1,5 @@
 import sequelize, { Projectable } from 'sequelize';
-import { AggregateQuery, AggregateResponse } from '@nestjs-query/core';
+import { AggregateQuery, AggregateResponse } from '@tripss/nestjs-query-core';
 import { Model, ModelCtor } from 'sequelize-typescript';
 import { BadRequestException } from '@nestjs/common';
 import { camelCase } from 'camel-case';

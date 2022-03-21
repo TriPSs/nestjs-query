@@ -1,5 +1,5 @@
 {
-  "name": "@nestjs-query/query-sequelize",
+  "name": "@tripss/nestjs-query-sequelize",
   "version": "0.30.0",
   "description": "Sequelize adapter for @nestjs-query/core",
   "author": "doug-martin <doug@dougamartin.com>",
@@ -18,7 +18,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@nestjs-query/core": "0.30.0",
+    "@tripss/nestjs-query-core": "0.30.0",
     "camel-case": "^4.1.2",
     "lodash.pick": "4.4.0",
     "tslib": "^2.1.0"

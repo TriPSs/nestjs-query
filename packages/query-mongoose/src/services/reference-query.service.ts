@@ -10,7 +10,7 @@ import {
   ModifyRelationOptions,
   Query,
   AssemblerFactory,
-} from '@nestjs-query/core';
+} from '@tripss/nestjs-query-core';
 import { Document, Model as MongooseModel, UpdateQuery } from 'mongoose';
 import { AggregateBuilder, FilterQueryBuilder } from '../query';
 import {
