@@ -209,7 +209,8 @@ export class TypeOrmQueryService<Entity>
       const distinctRecords = await builder.addSelect(`${builder.alias}.id`).getRawMany();
 
       const ids: unknown[] = distinctRecords.map(({ id }) => id as unknown);
-      const idsFilter = { id: { in: ids } } as Filter<Entity>;
+
+      const idsFilter = { id: { in: ids } } as unknown as Filter<Entity>;
 
       updateResult = await this.filterQueryBuilder
         .update({ filter: idsFilter })
@@ -272,7 +273,7 @@ export class TypeOrmQueryService<Entity>
       const distinctRecords = await builder.addSelect(`${builder.alias}.id`).getRawMany();
 
       const ids: unknown[] = distinctRecords.map(({ id }) => id as unknown);
-      const idsFilter = { id: { in: ids } } as Filter<Entity>;
+      const idsFilter = { id: { in: ids } } as unknown as Filter<Entity>;
 
       if (ids.length > 0) {
         if (this.useSoftDelete || opts?.useSoftDelete) {
@@ -340,7 +341,7 @@ export class TypeOrmQueryService<Entity>
 
   private async ensureEntityDoesNotExist(e: Entity): Promise<Entity> {
     if (this.repo.hasId(e)) {
-      const found = await this.repo.findOne(this.repo.getId(e) as string | number);
+      const found = await this.repo.findOneById(this.repo.getId(e) as string | number);
       if (found) {
         throw new Error('Entity already exists');
       }
