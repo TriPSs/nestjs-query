@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknestjs_query=self.webpackChunknestjs_query||[]).push([[2881],{870:e=>{e.exports=JSON.parse('{"permalink":"/nestjs-query/blog/tags/patch/page/2","page":2,"postsPerPage":10,"totalPages":3,"totalCount":24,"previousPage":"/nestjs-query/blog/tags/patch","nextPage":"/nestjs-query/blog/tags/patch/page/3","blogDescription":"Blog","blogTitle":"Blog"}')}}]);
