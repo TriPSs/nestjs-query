@@ -1,4 +1,4 @@
-import { Filter, FilterComparisons, FilterFieldComparison } from '@ptc-org/nestjs-query-core';
+import { Filter, FilterComparisonOperators, FilterComparisons, FilterFieldComparison } from '@ptc-org/nestjs-query-core';
 import { FilterQuery, Document, Model as MongooseModel } from 'mongoose';
 import { EntityComparisonField, ComparisonBuilder } from './comparison.builder';
 
@@ -68,10 +68,20 @@ export class WhereBuilder<Entity extends Document> {
     const opts = Object.keys(cmp) as (keyof FilterFieldComparison<Entity[T]>)[];
     if (opts.length === 1) {
       const cmpType = opts[0];
-      return this.comparisonBuilder.build(field, cmpType, cmp[cmpType] as EntityComparisonField<Entity, T>);
+      return this.comparisonBuilder.build(
+        field,
+        cmpType as unknown as FilterComparisonOperators<Entity[T]>,
+        cmp[cmpType] as EntityComparisonField<Entity, T>
+      );
     }
     return {
-      $or: opts.map((cmpType) => this.comparisonBuilder.build(field, cmpType, cmp[cmpType] as EntityComparisonField<Entity, T>))
+      $or: opts.map((cmpType) =>
+        this.comparisonBuilder.build(
+          field,
+          cmpType as unknown as FilterComparisonOperators<Entity[T]>,
+          cmp[cmpType] as EntityComparisonField<Entity, T>
+        )
+      )
     } as FilterQuery<Entity>;
   }
 }
