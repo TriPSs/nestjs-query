@@ -40,7 +40,7 @@ describe('MongooseQueryService', () => {
   beforeAll(async () => {
     moduleRef = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot(await getConnectionUri()),
+        MongooseModule.forRoot(getConnectionUri()),
         NestjsQueryMongooseModule.forFeature([
           { name: TestReference.name, document: TestReference, schema: TestReferenceSchema },
           { name: TestEntity.name, document: TestEntity, schema: TestEntitySchema }

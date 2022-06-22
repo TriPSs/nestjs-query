@@ -5,7 +5,7 @@ import { seed } from './seeds';
 const { connections } = mongoose;
 const mongoServer = new MongoMemoryServer();
 
-export function getConnectionUri(): Promise<string> {
+export function getConnectionUri(): string {
   return mongoServer.getUri();
 }
 

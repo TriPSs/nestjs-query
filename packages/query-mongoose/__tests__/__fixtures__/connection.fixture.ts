@@ -4,7 +4,7 @@ import { seed } from './seeds';
 
 const mongoServer = new MongoMemoryServer();
 
-export function getConnectionUri(): Promise<string> {
+export function getConnectionUri(): string {
   return mongoServer.getUri();
 }
 
