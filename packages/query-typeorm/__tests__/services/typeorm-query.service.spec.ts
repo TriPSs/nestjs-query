@@ -1894,7 +1894,10 @@ describe('TypeOrmQueryService', (): void => {
         await queryService.deleteMany(deleteMany);
         const foundEntity = await queryService.findById(entity.testEntityPk);
         expect(foundEntity).toBeUndefined();
-        const deletedEntity = await queryService.repo.findOne(entity.testEntityPk, { withDeleted: true });
+        const deletedEntity = await queryService.repo.findOne({
+          where: { testEntityPk: entity.testEntityPk },
+          withDeleted: true
+        });
         expect(deletedEntity).toEqual({ ...entity, deletedAt: expect.any(Date) });
       });
     });
@@ -1909,7 +1912,10 @@ describe('TypeOrmQueryService', (): void => {
         const foundEntity = await queryService.findById(entity.testEntityPk);
         expect(foundEntity).toBeUndefined();
 
-        const deletedEntity = await queryService.repo.findOne(entity.testEntityPk, { withDeleted: true });
+        const deletedEntity = await queryService.repo.findOne({
+          where: { testEntityPk: entity.testEntityPk },
+          withDeleted: true
+        });
         expect(deletedEntity).toEqual({ ...entity, deletedAt: expect.any(Date) });
       });
 
