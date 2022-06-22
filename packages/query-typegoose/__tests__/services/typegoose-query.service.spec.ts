@@ -3,13 +3,11 @@ import { getModelForClass, DocumentType, mongoose } from '@typegoose/typegoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReturnModelType } from '@typegoose/typegoose/lib/types';
 import { InjectModel, TypegooseModule } from 'nestjs-typegoose';
-import { FindRelationOptions, SortDirection } from '@ptc-org/nestjs-query-core';
 import {
   TestReference,
   TestEntity,
   TEST_ENTITIES,
   TEST_DISCRIMINATED_ENTITIES,
-  TEST_REFERENCES,
   getConnectionUri,
   prepareDb,
   closeDbConnection,
@@ -41,10 +39,7 @@ describe('TypegooseQueryService', () => {
 
   beforeAll(async () => {
     moduleRef = await Test.createTestingModule({
-      imports: [
-        TypegooseModule.forRoot(await getConnectionUri()),
-        NestjsQueryTypegooseModule.forFeature([TestEntity, TestReference])
-      ],
+      imports: [TypegooseModule.forRoot(getConnectionUri()), NestjsQueryTypegooseModule.forFeature([TestEntity, TestReference])],
       providers: [TestReferenceService, TestEntityService]
     }).compile();
   });
