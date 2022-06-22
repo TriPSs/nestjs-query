@@ -26,6 +26,7 @@
     "tslib": "^2.4.0"
   },
   "peerDependencies": {
+    "@nestjs/common": "^8.0.4",
     "@typegoose/typegoose": "^9.9.0",
     "mongoose": "^6.3.5",
     "nestjs-typegoose": "^7.1.38"
