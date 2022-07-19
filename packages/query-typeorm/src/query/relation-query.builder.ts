@@ -350,17 +350,25 @@ export class RelationQueryBuilder<Entity, Relation> {
       fromAlias: aliasName,
       fromPrimaryKeys,
       joins: [],
-      mapRelations: (entity: Entity, relations: Relation[]): Relation[] => {
-        const filter = columns.reduce(
-          (columnsFilter, column) => ({
-            ...columnsFilter,
-            [column.propertyName]: column.referencedColumn.getEntityValue(entity)
-          }),
-          {} as Partial<Entity>
-        );
+      mapRelations: (entity: Entity, relations: Relation[], rawRelations:any[]): Relation[] => {
+        const rawFilter = columns.reduce((columns, column) => ({
+                    ...columns,
+                    [`${aliasName}_${column.propertyAliasName}`]: column.referencedColumn.getEntityValue(entity)
+        }),  {} as Partial<Entity>);
 
-        return lodashFilter(relations, filter) as Relation[];
-      },
+        return lodashFilter(rawRelations, rawFilter).reduce((entityRelations: Relation[], rawRelation: Relation) => {
+          const filter = this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
+            (columns: Partial<Entity>, column) => ({
+              ...columns,
+
+              [column.propertyName]: rawRelation[column.columnName]
+            }),
+            {} as Partial<Entity>
+          );
+
+          return entityRelations.concat(lodashFilter(relations, filter) as Relation[]);
+        }, [] as Relation[]) as Relation[];
+      }, 
       batchSelect: (qb: SelectQueryBuilder<Relation>, entities: Entity[]) => {
         const params = {};
 
