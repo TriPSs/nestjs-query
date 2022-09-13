@@ -1,6 +1,6 @@
-import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@ptc-org/nestjs-query-core';
+import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@rezonapp/nestjs-query-core';
 import { ExecutionContext } from '@nestjs/common';
-import { Args, ArgsType, Context, Parent, Resolver } from '@nestjs/graphql';
+import { Args, ArgsType, Context, InputType, Parent, Resolver } from '@nestjs/graphql';
 import { OperationGroup } from '../../auth';
 import { getDTONames } from '../../common';
 import { AggregateQueryParam, RelationAuthorizerFilter, ResolverField } from '../../decorators';
@@ -11,6 +11,7 @@ import { transformAndValidate } from '../helpers';
 import { BaseServiceResolver, ServiceResolver } from '../resolver.interface';
 import { flattenRelations, removeRelationOpts } from './helpers';
 import { RelationsOpts, ResolverRelation } from './relations.interface';
+import {memoize} from "@nestjs/passport/dist/utils/memoize.util";
 
 export interface AggregateRelationsResolverOpts extends RelationsOpts {
   /**
@@ -32,12 +33,13 @@ const AggregateRelationMixin =
     const commonResolverOpts = removeRelationOpts(relation);
     const relationDTO = relation.DTO;
     const dtoName = getDTONames(DTOClass).baseName;
-    const { baseNameLower, pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, {
+    const { baseNameLower, pluralBaseNameLower, pluralBaseName, baseName } = getDTONames(relationDTO, {
       dtoName: relation.dtoName
     });
     const relationName = relation.relationName ?? pluralBaseNameLower;
     const aggregateRelationLoaderName = `aggregate${pluralBaseName}For${dtoName}`;
     const aggregateLoader = new AggregateRelationsLoader<DTO, Relation>(relationDTO, relationName);
+
     @ArgsType()
     class RelationQA extends AggregateArgsType(relationDTO) {}
 
@@ -49,7 +51,7 @@ const AggregateRelationMixin =
       })
       async [`aggregate${pluralBaseName}`](
         @Parent() dto: DTO,
-        @Args() q: RelationQA,
+        @Args({ type: () => RelationQA }) q: RelationQA,
         @AggregateQueryParam() aggregateQuery: AggregateQuery<Relation>,
         @Context() context: ExecutionContext,
         @RelationAuthorizerFilter(baseNameLower, {
@@ -58,7 +60,8 @@ const AggregateRelationMixin =
         })
         relationFilter?: Filter<Relation>
       ): Promise<AggregateResponse<Relation>> {
-        const qa = await transformAndValidate(RelationQA, q);
+        let qa: AggregateArgsType<Relation>;
+        if (q) qa = await transformAndValidate(RelationQA, q);
         const loader = DataLoaderFactory.getOrCreateLoader(
           context,
           aggregateRelationLoaderName,
@@ -66,7 +69,7 @@ const AggregateRelationMixin =
         );
         return loader.load({
           dto,
-          filter: mergeFilter(qa.filter ?? {}, relationFilter ?? {}),
+          filter: mergeFilter(qa?.filter ?? {}, relationFilter ?? {}),
           aggregate: aggregateQuery
         });
       }

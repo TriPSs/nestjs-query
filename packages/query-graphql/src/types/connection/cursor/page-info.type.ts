@@ -1,5 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { Class } from '@ptc-org/nestjs-query-core';
+import {Directive, Field, ObjectType} from '@nestjs/graphql';
+import { Class } from '@rezonapp/nestjs-query-core';
 import { ConnectionCursorType, ConnectionCursorScalar } from '../../cursor.scalar';
 import { PageInfoType } from '../interfaces';
 
@@ -21,6 +21,7 @@ export const getOrCreatePageInfoType = (): PageInfoTypeConstructor => {
   }
 
   @ObjectType('PageInfo')
+  @Directive('@shareable')
   class PageInfoTypeImpl implements PageInfoType {
     constructor(
       hasNextPage: boolean,

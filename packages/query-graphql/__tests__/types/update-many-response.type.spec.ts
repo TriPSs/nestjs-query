@@ -1,6 +1,6 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { UpdateManyResponse } from '@ptc-org/nestjs-query-core';
-import { UpdateManyResponseType } from '@ptc-org/nestjs-query-graphql';
+import { UpdateManyResponse } from '@rezonapp/nestjs-query-core';
+import { UpdateManyResponseType } from '@rezonapp/nestjs-query-graphql';
 import { generateSchema } from '../__fixtures__';
 
 describe('UpdateManyResponseType', () => {

@@ -6,7 +6,7 @@ import {
   AssemblerFactory,
   AssemblerQueryService,
   Assembler
-} from '@ptc-org/nestjs-query-core';
+} from '@rezonapp/nestjs-query-core';
 import { Provider, Inject } from '@nestjs/common';
 import { Resolver } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
@@ -93,7 +93,7 @@ function createFederatedResolver<DTO, Service>(resolverOpts: FederatedAutoResolv
   return AutoResolver;
 }
 
-function createEntityAutoResolver<DTO, Entity, C, U, R, PS extends PagingStrategies>(
+function createEntityAutoResolver<DTO extends object, Entity, C, U, R, PS extends PagingStrategies>(
   resolverOpts: EntityCRUDAutoResolverOpts<DTO, Entity, C, U, R, PS>
 ): Provider {
   const { DTOClass, EntityClass } = resolverOpts;
@@ -148,7 +148,7 @@ function createServiceAutoResolver<DTO, Service, C, U, R, PS extends PagingStrat
   return AutoResolver;
 }
 
-function createResolver<DTO, EntityServiceOrAssembler, C, U, R, PS extends PagingStrategies>(
+function createResolver<DTO extends object, EntityServiceOrAssembler, C, U, R, PS extends PagingStrategies>(
   resolverOpts: AutoResolverOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>
 ): Provider {
   if (isFederatedResolverOpts(resolverOpts)) {
@@ -164,5 +164,5 @@ function createResolver<DTO, EntityServiceOrAssembler, C, U, R, PS extends Pagin
 }
 
 export const createResolvers = (
-  opts: AutoResolverOpts<unknown, unknown, unknown, unknown, unknown, PagingStrategies>[]
+  opts: AutoResolverOpts<object, unknown, unknown, unknown, unknown, PagingStrategies>[]
 ): Provider[] => opts.map((opt) => createResolver(opt));

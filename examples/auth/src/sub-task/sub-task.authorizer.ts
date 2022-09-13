@@ -1,5 +1,5 @@
-import { Authorizer, AuthorizationContext } from '@ptc-org/nestjs-query-graphql';
-import { Filter } from '@ptc-org/nestjs-query-core';
+import { Authorizer, AuthorizationContext } from '@rezonapp/nestjs-query-graphql';
+import { Filter } from '@rezonapp/nestjs-query-core';
 import { UserContext } from '../auth/auth.interfaces';
 import { SubTaskDTO } from './dto/sub-task.dto';
 

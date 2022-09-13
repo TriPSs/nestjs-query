@@ -1,5 +1,5 @@
-import { Class, DeleteManyResponse } from '@ptc-org/nestjs-query-core';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Class, DeleteManyResponse } from '@rezonapp/nestjs-query-core';
+import {Directive, Field, Int, ObjectType} from '@nestjs/graphql';
 
 /** @internal */
 let deleteManyResponseType: Class<DeleteManyResponse> | null = null;
@@ -9,6 +9,7 @@ export const DeleteManyResponseType = (): Class<DeleteManyResponse> => {
     return deleteManyResponseType;
   }
   @ObjectType('DeleteManyResponse')
+  @Directive('@shareable')
   class DeleteManyResponseTypeImpl implements DeleteManyResponse {
     @Field(() => Int, { description: 'The number of records deleted.' })
     deletedCount!: number;

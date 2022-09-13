@@ -1,5 +1,5 @@
 import { ObjectType } from '@nestjs/graphql';
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
+import { NestjsQueryGraphQLModule } from '@rezonapp/nestjs-query-graphql';
 import { FilterableField } from '../src/decorators/filterable-field.decorator';
 
 describe('NestjsQueryGraphQLModule', () => {

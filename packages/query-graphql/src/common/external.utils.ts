@@ -1,7 +1,7 @@
 import { LazyMetadataStorage } from '@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage';
 import { ObjectTypeMetadata } from '@nestjs/graphql/dist/schema-builder/metadata/object-type.metadata';
 import { EnumMetadata } from '@nestjs/graphql/dist/schema-builder/metadata';
-import { Class } from '@ptc-org/nestjs-query-core';
+import { Class } from '@rezonapp/nestjs-query-core';
 import { TypeMetadataStorage } from '@nestjs/graphql';
 import { UnregisteredObjectType } from '../types/type.errors';
 
@@ -9,7 +9,7 @@ import { UnregisteredObjectType } from '../types/type.errors';
  * @internal
  */
 export function findGraphqlObjectMetadata<T>(objType: Class<T>): ObjectTypeMetadata | undefined {
-  return TypeMetadataStorage.getObjectTypesMetadata().find((o) => o.target === objType);
+  return TypeMetadataStorage.getObjectTypeMetadataByTarget(objType);
 }
 
 export function getGraphqlObjectMetadata<T>(objType: Class<T>, notFoundMsg: string): ObjectTypeMetadata {

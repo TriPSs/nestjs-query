@@ -1,4 +1,4 @@
-import { Class } from '@ptc-org/nestjs-query-core';
+import { Class } from '@rezonapp/nestjs-query-core';
 
 /** @internal */
 export class UnregisteredObjectType<T> extends Error {

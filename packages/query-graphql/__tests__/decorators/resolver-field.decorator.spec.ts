@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Class } from '@ptc-org/nestjs-query-core';
-import * as nestGraphql from '@nestjs/graphql';
-import { ResolveFieldOptions, ReturnTypeFunc } from '@nestjs/graphql';
+import { Class } from '@rezonapp/nestjs-query-core';
+import { ResolveField, ResolveFieldOptions, ReturnTypeFunc } from '@nestjs/graphql';
 import { ResolverField } from '../../src/decorators';
 import * as resolverDecorator from '../../src/decorators/resolver-method.decorator';
 
+jest.mock('@nestjs/graphql', () => ({
+  ResolveField: jest.fn(() => () => null)
+}));
+
+const propertySpy = jest.mocked(ResolveField);
+
 describe('ResolverField decorator', (): void => {
   const resolverMethodSpy = jest.spyOn(resolverDecorator, 'ResolverMethod');
-  const propertySpy = jest.spyOn(nestGraphql, 'ResolveField');
 
   beforeEach(() => jest.clearAllMocks());
 

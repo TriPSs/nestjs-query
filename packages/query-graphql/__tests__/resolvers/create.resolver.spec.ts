@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { DeepPartial } from '@ptc-org/nestjs-query-core';
+import { DeepPartial } from '@rezonapp/nestjs-query-core';
 import { Resolver, Query, InputType } from '@nestjs/graphql';
 import { when, objectContaining, verify, deepEqual, anything, mock, instance } from 'ts-mockito';
 import { PubSub } from 'graphql-subscriptions';
@@ -9,7 +9,7 @@ import {
   CreateResolver,
   CreateResolverOpts,
   InjectPubSub
-} from '@ptc-org/nestjs-query-graphql';
+} from '@rezonapp/nestjs-query-graphql';
 import { CreatedEvent } from '../../src/resolvers/create.resolver';
 import { EventType, getDTOEventName } from '../../src/subscription';
 import { generateSchema, createResolverFromNest, TestResolverDTO, TestResolverInputDTO, TestService } from '../__fixtures__';

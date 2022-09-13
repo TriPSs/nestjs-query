@@ -1,9 +1,10 @@
-import { Connection, getConnection, In } from 'typeorm';
+import {Connection, DataSource, getConnection, In} from 'typeorm';
 import { TestRelation } from './test-relation.entity';
 import { TestSoftDeleteEntity } from './test-soft-delete.entity';
 import { TestEntity } from './test.entity';
 import { RelationOfTestRelationEntity } from './relation-of-test-relation.entity';
 import { TestSoftDeleteRelation } from './test-soft-delete.relation';
+import {getTestConnection} from "./connection.fixture";
 
 export const TEST_ENTITIES: TestEntity[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
   const testEntityPk = `test-entity-${i}`;
@@ -64,7 +65,7 @@ export const TEST_RELATIONS_OF_RELATION = TEST_RELATIONS.map<Partial<RelationOfT
   testRelationId: testRelation.testRelationPk
 })) as RelationOfTestRelationEntity[];
 
-export const seed = async (connection: Connection = getConnection()): Promise<void> => {
+export const seed = async (connection: DataSource = getTestConnection()): Promise<void> => {
   const testEntityRepo = connection.getRepository(TestEntity);
   const testRelationRepo = connection.getRepository(TestRelation);
   const relationOfTestRelationRepo = connection.getRepository(RelationOfTestRelationEntity);
@@ -72,6 +73,7 @@ export const seed = async (connection: Connection = getConnection()): Promise<vo
   const testSoftDeleteRelationRepo = connection.getRepository(TestSoftDeleteRelation);
 
   const testEntities = await testEntityRepo.save(TEST_ENTITIES.map((e: TestEntity) => ({ ...e })));
+  const all = await testEntityRepo.find({});
 
   const testRelations = await testRelationRepo.save(TEST_RELATIONS.map((r: TestRelation) => ({ ...r })));
   const testSoftDeleteRelations = await testSoftDeleteRelationRepo.save(

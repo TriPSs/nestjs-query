@@ -6,7 +6,7 @@
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/query-typeorm",
+        "outputPath": "dist/packages/nestjs-query-typeorm",
         "tsConfig": "packages/query-typeorm/tsconfig.lib.json",
         "packageJson": "packages/query-typeorm/package.json",
         "main": "packages/query-typeorm/src/index.ts",

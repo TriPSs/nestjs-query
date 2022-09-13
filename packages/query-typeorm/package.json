@@ -1,7 +1,7 @@
 {
-  "name": "@ptc-org/nestjs-query-typeorm",
-  "version": "1.0.0-alpha.5",
-  "description": "Typeorm adapter for @ptc-org/nestjs-query-core",
+  "name": "@rezonapp/nestjs-query-typeorm",
+  "version": "4.0.0",
+  "description": "Typeorm adapter for @rezonapp/nestjs-query-core",
   "author": "doug-martin <doug@dougamartin.com>",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
   "license": "MIT",
@@ -26,10 +26,10 @@
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "@nestjs/common": "^8.0.4",
-    "@nestjs/typeorm": "^8.0.0",
-    "class-transformer": "^0.2.3 || 0.3.1 || 0.4",
-    "typeorm": "0.2.45"
+    "@nestjs/common": "9.0.11",
+    "@nestjs/typeorm": "9.0.1",
+    "class-transformer": "0.5.1",
+    "typeorm": "0.3.9"
   },
   "repository": {
     "type": "git",

@@ -14,7 +14,7 @@ import {
   DeleteOneOptions,
   Filterable,
   DeleteManyOptions
-} from '@ptc-org/nestjs-query-core';
+} from '@rezonapp/nestjs-query-core';
 import { Repository, DeleteResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { MethodNotAllowedException, NotFoundException } from '@nestjs/common';
@@ -64,7 +64,7 @@ export class TypeOrmQueryService<Entity>
   }
 
   /**
-   * Query for multiple entities, using a Query from `@ptc-org/nestjs-query-core`.
+   * Query for multiple entities, using a Query from `@rezonapp/nestjs-query-core`.
    *
    * @example
    * ```ts
@@ -76,8 +76,8 @@ export class TypeOrmQueryService<Entity>
    * ```
    * @param query - The Query used to filter, page, and sort rows.
    */
-  async query(query: Query<Entity>): Promise<Entity[]> {
-    return this.filterQueryBuilder.select(query).getMany();
+  async query(query: Query<Entity>, repo?: Repository<Entity>): Promise<Entity[]> {
+    return this.filterQueryBuilder.select(query, repo).getMany();
   }
 
   async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
@@ -186,7 +186,7 @@ export class TypeOrmQueryService<Entity>
   }
 
   /**
-   * Update multiple entities with a `@ptc-org/nestjs-query-core` Filter.
+   * Update multiple entities with a `@rezonapp/nestjs-query-core` Filter.
    *
    * @example
    * ```ts
@@ -209,7 +209,7 @@ export class TypeOrmQueryService<Entity>
       const distinctRecords = await builder.addSelect(`${builder.alias}.id`).getRawMany();
 
       const ids: unknown[] = distinctRecords.map(({ id }) => id as unknown);
-      const idsFilter = { id: { in: ids } } as Filter<Entity>;
+      const idsFilter = { id: { in: ids } } as Filter<Entity & { id: unknown }>;
 
       updateResult = await this.filterQueryBuilder
         .update({ filter: idsFilter })
@@ -250,7 +250,7 @@ export class TypeOrmQueryService<Entity>
   }
 
   /**
-   * Delete multiple records with a `@ptc-org/nestjs-query-core` `Filter`.
+   * Delete multiple records with a `@rezonapp/nestjs-query-core` `Filter`.
    *
    * @example
    *
@@ -272,7 +272,7 @@ export class TypeOrmQueryService<Entity>
       const distinctRecords = await builder.addSelect(`${builder.alias}.id`).getRawMany();
 
       const ids: unknown[] = distinctRecords.map(({ id }) => id as unknown);
-      const idsFilter = { id: { in: ids } } as Filter<Entity>;
+      const idsFilter = { id: { in: ids } } as Filter<Entity & { id: unknown }>;
 
       if (ids.length > 0) {
         if (this.useSoftDelete || opts?.useSoftDelete) {
@@ -311,7 +311,7 @@ export class TypeOrmQueryService<Entity>
   }
 
   /**
-   * Restores multiple records with a `@ptc-org/nestjs-query-core` `Filter`.
+   * Restores multiple records with a `@rezonapp/nestjs-query-core` `Filter`.
    *
    * @example
    *
@@ -340,7 +340,7 @@ export class TypeOrmQueryService<Entity>
 
   private async ensureEntityDoesNotExist(e: Entity): Promise<Entity> {
     if (this.repo.hasId(e)) {
-      const found = await this.repo.findOne(this.repo.getId(e) as string | number);
+      const found = await this.repo.findOneById(this.repo.getId(e) as string | number);
       if (found) {
         throw new Error('Entity already exists');
       }

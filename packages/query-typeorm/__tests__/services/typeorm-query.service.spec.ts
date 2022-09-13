@@ -1,7 +1,7 @@
-import { Filter, SortDirection } from '@ptc-org/nestjs-query-core';
+import { Filter, SortDirection } from '@rezonapp/nestjs-query-core';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToClass } from 'class-transformer';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmQueryService } from '../../src';
 import { FilterQueryBuilder } from '../../src/query';
@@ -50,8 +50,11 @@ describe('TypeOrmQueryService', (): void => {
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRoot(CONNECTION_OPTIONS),
-        TypeOrmModule.forFeature([TestEntity, TestRelation, TestEntityRelationEntity, TestSoftDeleteEntity])
+        TypeOrmModule.forRootAsync({
+          useFactory: () => CONNECTION_OPTIONS,
+          dataSourceFactory: async () => getTestConnection(),
+        }),
+        TypeOrmModule.forFeature([TestEntity, TestRelation, TestEntityRelationEntity, TestSoftDeleteEntity], getTestConnection())
       ],
       providers: [TestEntityService, TestRelationService, TestSoftDeleteEntityService]
     }).compile();
@@ -68,7 +71,9 @@ describe('TypeOrmQueryService', (): void => {
   describe('#query', () => {
     it('call select and return the result', async () => {
       const queryService = moduleRef.get(TestEntityService);
-      const queryResult = await queryService.query({ filter: { stringType: { eq: 'foo1' } } });
+      const repo = getTestConnection().getRepository(TestEntity);
+      const queryResult = await queryService.query({ filter: { stringType: { eq: 'foo1' } } }, repo);
+
       return expect(queryResult).toEqual([TEST_ENTITIES[0]]);
     });
 
@@ -1643,18 +1648,18 @@ describe('TypeOrmQueryService', (): void => {
       expect(found).toEqual(entity);
     });
 
-    it('return undefined if not found', async () => {
+    it('return null if not found', async () => {
       const queryService = moduleRef.get(TestEntityService);
       const found = await queryService.findById('bad-id');
-      expect(found).toBeUndefined();
+      expect(found).toBeNull();
     });
 
-    it('return undefined if deleted', async () => {
+    it('return null if deleted', async () => {
       const entity = TEST_SOFT_DELETE_ENTITIES[0];
       const queryService = moduleRef.get(TestSoftDeleteEntityService);
       await queryService.deleteOne(entity.testEntityPk, { useSoftDelete: true });
       const found = await queryService.findById(entity.testEntityPk);
-      expect(found).toBeUndefined();
+      expect(found).toBeNull();
     });
 
     it('return the entity if deleted and "withDeleted" is on', async () => {
@@ -1678,13 +1683,13 @@ describe('TypeOrmQueryService', (): void => {
         expect(found).toEqual(entity);
       });
 
-      it('should return an undefined if an entity with the pk and filter is not found', async () => {
+      it('should return null if an entity with the pk and filter is not found', async () => {
         const entity = TEST_ENTITIES[0];
         const queryService = moduleRef.get(TestEntityService);
         const found = await queryService.findById(entity.testEntityPk, {
           filter: { stringType: { eq: TEST_ENTITIES[1].stringType } }
         });
-        expect(found).toBeUndefined();
+        expect(found).toBeNull();
       });
     });
   });
@@ -1893,8 +1898,11 @@ describe('TypeOrmQueryService', (): void => {
         const deleteMany: Filter<TestSoftDeleteEntity> = { testEntityPk: { eq: entity.testEntityPk } };
         await queryService.deleteMany(deleteMany);
         const foundEntity = await queryService.findById(entity.testEntityPk);
-        expect(foundEntity).toBeUndefined();
-        const deletedEntity = await queryService.repo.findOne(entity.testEntityPk, { withDeleted: true });
+        expect(foundEntity).toBeNull();
+        const deletedEntity = await queryService.repo.findOne({
+          where: { testEntityPk: entity.testEntityPk },
+          withDeleted: true
+        });
         expect(deletedEntity).toEqual({ ...entity, deletedAt: expect.any(Date) });
       });
     });
@@ -1907,9 +1915,12 @@ describe('TypeOrmQueryService', (): void => {
         expect(deleted).toEqual({ ...entity, deletedAt: expect.any(Date) });
 
         const foundEntity = await queryService.findById(entity.testEntityPk);
-        expect(foundEntity).toBeUndefined();
+        expect(foundEntity).toBeNull();
 
-        const deletedEntity = await queryService.repo.findOne(entity.testEntityPk, { withDeleted: true });
+        const deletedEntity = await queryService.repo.findOne({
+          where: { testEntityPk: entity.testEntityPk },
+          withDeleted: true
+        });
         expect(deletedEntity).toEqual({ ...entity, deletedAt: expect.any(Date) });
       });
 

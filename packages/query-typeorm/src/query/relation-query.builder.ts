@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { AggregateQuery, Class, Query } from '@ptc-org/nestjs-query-core';
+import { AggregateQuery, Class, Query } from '@rezonapp/nestjs-query-core';
 import { Repository, SelectQueryBuilder, ObjectLiteral, Brackets } from 'typeorm';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
 import { DriverUtils } from 'typeorm/driver/DriverUtils';
@@ -354,16 +354,29 @@ export class RelationQueryBuilder<Entity, Relation> {
       fromAlias: aliasName,
       fromPrimaryKeys,
       joins: [],
-      mapRelations: (entity: Entity, relations: Relation[]): Relation[] => {
-        const filter = columns.reduce(
+      mapRelations: (entity: Entity, relations: Relation[], rawRelations: any[]): Relation[] => {
+        const rawFilter = columns.reduce(
           (columnsFilter, column) => ({
             ...columnsFilter,
-            [column.propertyName]: column.referencedColumn.getEntityValue(entity)
+            [`${aliasName}_${column.databaseName}`]: column.referencedColumn.getEntityValue(entity)
           }),
           {} as Partial<Entity>
         );
 
-        return lodashFilter(relations, filter) as Relation[];
+        // First filter the raw relations with the PK of the entity, then filter the relations
+        // with the PK of the raw relation
+        return lodashFilter(rawRelations, rawFilter).reduce((entityRelations: Relation[], rawRelation: object) => {
+          const filter = this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
+            (pkColumns: Partial<Entity>, column) => ({
+              ...pkColumns,
+
+              [column.propertyName]: rawRelation[column.columnName]
+            }),
+            {} as Partial<Entity>
+          );
+
+          return entityRelations.concat(lodashFilter(relations, filter) as Relation[]);
+        }, [] as Relation[]) as Relation[];
       },
       batchSelect: (qb: SelectQueryBuilder<Relation>, entities: Entity[]) => {
         const params = {};

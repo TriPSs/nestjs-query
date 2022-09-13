@@ -8,7 +8,7 @@ import {
   ModifyRelationOptions,
   FindRelationOptions,
   GetByIdOptions
-} from '@ptc-org/nestjs-query-core';
+} from '@rezonapp/nestjs-query-core';
 import { Repository, RelationQueryBuilder as TypeOrmRelationQueryBuilder } from 'typeorm';
 import lodashOmit from 'lodash.omit';
 import { AggregateBuilder, EntityIndexRelation, FilterQueryBuilder, RelationQueryBuilder } from '../query';
@@ -62,7 +62,7 @@ export abstract class RelationQueryService<Entity> {
     query: Query<Relation>
   ): Promise<Relation[]>;
 
-  public async queryRelations<Relation>(
+  public async queryRelations<Relation extends object>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -94,7 +94,7 @@ export abstract class RelationQueryService<Entity> {
     aggregate: AggregateQuery<Relation>
   ): Promise<AggregateResponse<Relation>[]>;
 
-  public async aggregateRelations<Relation>(
+  public async aggregateRelations<Relation extends object>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -129,7 +129,7 @@ export abstract class RelationQueryService<Entity> {
     filter: Filter<Relation>
   ): Promise<number>;
 
-  public async countRelations<Relation>(
+  public async countRelations<Relation extends object>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -172,7 +172,7 @@ export abstract class RelationQueryService<Entity> {
     opts?: FindRelationOptions<Relation>
   ): Promise<Relation | undefined>;
 
-  public async findRelation<Relation>(
+  public async findRelation<Relation extends object>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -331,7 +331,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationName - The name of relation to query for.
    * @param query - A query to filter, page or sort relations.
    */
-  private async batchQueryRelations<Relation>(
+  private async batchQueryRelations<Relation extends object>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -359,7 +359,7 @@ export abstract class RelationQueryService<Entity> {
    * @param filter - Filter.
    * @param query - A query to filter, page or sort relations.
    */
-  private async batchAggregateRelations<Relation>(
+  private async batchAggregateRelations<Relation extends object>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -394,7 +394,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationName - The name of relation to query for.
    * @param filter - The filter to apply to the relation query.
    */
-  private async batchCountRelations<Relation>(
+  private async batchCountRelations<Relation extends object>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -420,7 +420,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationName - The name of relation to query for.
    * @param opts - A query to filter, page or sort relations.
    */
-  private async batchFindRelations<Relation>(
+  private async batchFindRelations<Relation extends object>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: Entity[],
@@ -462,7 +462,8 @@ export abstract class RelationQueryService<Entity> {
     const relationMeta = this.getRelationMeta(relationName);
 
     if (typeof relationMeta.type === 'string') {
-      return this.repo.manager.getRepository(relationMeta.type).target as Class<unknown>;
+      const emptyInstance = this.repo.manager.getRepository(relationMeta.type).create();
+      return emptyInstance.constructor as Class<unknown>;
     }
 
     return relationMeta.type as Class<unknown>;

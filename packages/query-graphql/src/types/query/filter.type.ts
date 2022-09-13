@@ -1,4 +1,4 @@
-import { Class, Filter, MapReflector } from '@ptc-org/nestjs-query-core';
+import { Class, Filter, MapReflector } from '@rezonapp/nestjs-query-core';
 import { InputType, Field } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';

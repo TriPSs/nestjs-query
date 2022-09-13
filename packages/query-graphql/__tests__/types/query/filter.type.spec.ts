@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { Class, Filter } from '@ptc-org/nestjs-query-core';
+import { Class, Filter } from '@rezonapp/nestjs-query-core';
 import { plainToClass } from 'class-transformer';
 import {
   ObjectType,
@@ -28,7 +28,7 @@ import {
   UnPagedRelation,
   FilterableUnPagedRelation,
   QueryOptions
-} from '@ptc-org/nestjs-query-graphql';
+} from '@rezonapp/nestjs-query-graphql';
 import { generateSchema } from '../../__fixtures__';
 
 describe('filter types', (): void => {

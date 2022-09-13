@@ -5,8 +5,8 @@ import {
   NonePagingQueryArgsType,
   OffsetQueryArgsType,
   PagingStrategies
-} from '@ptc-org/nestjs-query-graphql';
-import { SortDirection } from '@ptc-org/nestjs-query-core';
+} from '@rezonapp/nestjs-query-graphql';
+import { SortDirection } from '@rezonapp/nestjs-query-core';
 import { ReadRelationsResolver, RelationsOpts } from '../../../src/resolvers/relations';
 import { generateSchema, createResolverFromNest, TestResolverDTO, TestService, TestRelationDTO } from '../../__fixtures__';
 

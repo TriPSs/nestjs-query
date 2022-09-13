@@ -1,6 +1,6 @@
 {
   "extends": "nx/presets/npm.json",
-  "npmScope": "ptc-org",
+  "npmScope": "rezonapp",
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/nx-cloud",

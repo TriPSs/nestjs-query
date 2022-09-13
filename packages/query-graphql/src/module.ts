@@ -1,9 +1,10 @@
-import { Assembler, NestjsQueryCoreModule, Class } from '@ptc-org/nestjs-query-core';
+import { Assembler, NestjsQueryCoreModule, Class } from '@rezonapp/nestjs-query-core';
 import { DynamicModule, ForwardReference, Provider } from '@nestjs/common';
 import { AutoResolverOpts, createAuthorizerProviders, createHookProviders, createResolvers } from './providers';
 import { ReadResolverOpts } from './resolvers';
 import { defaultPubSub, pubSubToken, GraphQLPubSub } from './subscription';
 import { PagingStrategies } from './types/query/paging';
+import { ConnectionCursorScalar } from './types';
 
 interface DTOModuleOpts<DTO> {
   DTOClass: Class<DTO>;
@@ -52,8 +53,13 @@ export class NestjsQueryGraphQLModule {
       ...this.getPubSubProviders(opts),
       ...this.getAuthorizerProviders(opts),
       ...this.getHookProviders(opts),
-      ...this.getResolverProviders(opts)
+      ...this.getResolverProviders(opts),
+      ...this.getScalarsProviders()
     ];
+  }
+
+  private static getScalarsProviders() {
+    return [ConnectionCursorScalar];
   }
 
   private static getPubSubProviders(opts: NestjsQueryGraphqlModuleOpts): Provider<GraphQLPubSub>[] {

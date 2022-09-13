@@ -74,7 +74,9 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 LIMIT
-  10 OFFSET 10
+  10
+OFFSET
+  10
 `;
 
 exports[`FilterQueryBuilder #select with paging should apply paging args going forward 1`] = `
@@ -90,7 +92,9 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 LIMIT
-  10 OFFSET 11
+  10
+OFFSET
+  11
 `;
 
 exports[`FilterQueryBuilder #select with sorting should apply ASC NULLS_FIRST sorting 1`] = `

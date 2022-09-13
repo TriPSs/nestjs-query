@@ -197,7 +197,9 @@ FROM
 WHERE
   ("testRelations"."test_entity_id" = test-entity-id-1)
 LIMIT
-  10 OFFSET 10
+  10
+OFFSET
+  10
 `;
 
 exports[`RelationQueryBuilder #select with paging should apply paging args going forward 1`] = `
@@ -212,7 +214,9 @@ FROM
 WHERE
   ("testRelations"."test_entity_id" = test-entity-id-1)
 LIMIT
-  10 OFFSET 11
+  10
+OFFSET
+  11
 `;
 
 exports[`RelationQueryBuilder #select with sorting should apply ASC NULLS_FIRST sorting 1`] = `

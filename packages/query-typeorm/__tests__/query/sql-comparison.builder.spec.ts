@@ -1,4 +1,4 @@
-import { CommonFieldComparisonBetweenType } from '@ptc-org/nestjs-query-core';
+import { CommonFieldComparisonBetweenType } from '@rezonapp/nestjs-query-core';
 import { TestEntity } from '../__fixtures__/test.entity';
 import { SQLComparisonBuilder } from '../../src/query';
 import { randomString } from '../../src/common';

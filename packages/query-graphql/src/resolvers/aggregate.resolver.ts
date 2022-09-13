@@ -1,5 +1,5 @@
-import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@ptc-org/nestjs-query-core';
-import { Args, ArgsType, Resolver } from '@nestjs/graphql';
+import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@rezonapp/nestjs-query-core';
+import {Args, ArgsType, InputType, Resolver} from '@nestjs/graphql';
 import omit from 'lodash.omit';
 import { AuthorizerInterceptor } from '../interceptors';
 import { getDTONames } from '../common';
@@ -28,11 +28,12 @@ export interface AggregateResolver<DTO, QS extends QueryService<DTO, unknown, un
 export const Aggregateable =
   <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts?: AggregateResolverOpts) =>
   <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<AggregateResolver<DTO, QS>> & B => {
-    const { baseNameLower } = getDTONames(DTOClass);
+    const { baseNameLower, baseName } = getDTONames(DTOClass);
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection');
     const queryName = `${baseNameLower}Aggregate`;
     const disabled = !opts || !opts.enabled;
     const AR = disabled ? DTOClass : AggregateResponseType(DTOClass);
+
     @ArgsType()
     class AA extends AggregateArgsType(DTOClass) {}
 
@@ -49,7 +50,7 @@ export const Aggregateable =
         )
       )
       async aggregate(
-        @Args() args: AA,
+        @Args({ type: () => AA }) args: AA,
         @AggregateQueryParam() query: AggregateQuery<DTO>,
         @AuthorizerFilter({
           operationGroup: OperationGroup.AGGREGATE,

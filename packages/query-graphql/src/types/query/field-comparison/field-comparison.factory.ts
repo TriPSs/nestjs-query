@@ -1,4 +1,4 @@
-import { Class, FilterFieldComparison, FilterComparisonOperators, isNamed } from '@ptc-org/nestjs-query-core';
+import { Class, FilterFieldComparison, FilterComparisonOperators, isNamed } from '@rezonapp/nestjs-query-core';
 import { IsBoolean, IsDate, IsOptional, ValidateNested } from 'class-validator';
 import { upperCaseFirst } from 'upper-case-first';
 import {

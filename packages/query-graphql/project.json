@@ -21,7 +21,7 @@
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/query-graphql",
+        "outputPath": "dist/packages/nestjs-query-graphql",
         "tsConfig": "packages/query-graphql/tsconfig.lib.json",
         "packageJson": "packages/query-graphql/package.json",
         "main": "packages/query-graphql/src/index.ts",

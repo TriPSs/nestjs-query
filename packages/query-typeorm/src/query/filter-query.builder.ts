@@ -1,11 +1,11 @@
-import { Filter, Paging, Query, SortField, getFilterFields, AggregateQuery } from '@ptc-org/nestjs-query-core';
+import { Filter, Paging, Query, SortField, getFilterFields, AggregateQuery } from '@rezonapp/nestjs-query-core';
 import {
   DeleteQueryBuilder,
   QueryBuilder,
   Repository,
   SelectQueryBuilder,
   UpdateQueryBuilder,
-  WhereExpression,
+  WhereExpressionBuilder,
   EntityMetadata
 } from 'typeorm';
 import { SoftDeleteQueryBuilder } from 'typeorm/query-builder/SoftDeleteQueryBuilder';
@@ -57,7 +57,7 @@ export interface NestedRecord<E = unknown> {
  */
 export class FilterQueryBuilder<Entity> {
   constructor(
-    readonly repo: Repository<Entity>,
+    public repo: Repository<Entity>,
     readonly whereBuilder: WhereBuilder<Entity> = new WhereBuilder<Entity>(),
     readonly aggregateBuilder: AggregateBuilder<Entity> = new AggregateBuilder<Entity>(repo)
   ) {}
@@ -66,8 +66,10 @@ export class FilterQueryBuilder<Entity> {
    * Create a `typeorm` SelectQueryBuilder with `WHERE`, `ORDER BY` and `LIMIT/OFFSET` clauses.
    *
    * @param query - the query to apply.
+   * @param repo
    */
-  public select(query: Query<Entity>): SelectQueryBuilder<Entity> {
+  public select(query: Query<Entity>, repo?: Repository<Entity>): SelectQueryBuilder<Entity> {
+    if(repo) this.repo = repo;
     const hasRelations = this.filterHasRelations(query.filter);
     let qb = this.createQueryBuilder();
     qb = hasRelations
@@ -85,7 +87,7 @@ export class FilterQueryBuilder<Entity> {
     qb = hasRelations
       ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsRecursive(this.repo.metadata, query.filter))
       : qb;
-    qb = qb.andWhereInIds(id);
+    qb = qb.andWhereInIds(Array.isArray(id) ? id : [id]);
     qb = this.applyFilter(qb, query.filter, qb.alias);
     qb = this.applySorting(qb, query.sorting, qb.alias);
     qb = this.applyPaging(qb, query.paging, hasRelations);
@@ -169,7 +171,7 @@ export class FilterQueryBuilder<Entity> {
    * @param filter - the filter.
    * @param alias - optional alias to use to qualify an identifier
    */
-  public applyFilter<Where extends WhereExpression>(qb: Where, filter?: Filter<Entity>, alias?: string): Where {
+  public applyFilter<Where extends WhereExpressionBuilder>(qb: Where, filter?: Filter<Entity>, alias?: string): Where {
     if (!filter) {
       return qb;
     }

@@ -1,12 +1,22 @@
 import * as nestjsGraphQL from '@nestjs/graphql';
-import { FilterableField } from '@ptc-org/nestjs-query-graphql';
+import { FilterableField } from '@rezonapp/nestjs-query-graphql';
 import { getFilterableFields } from '../../src/decorators';
+import { Field, registerEnumType } from '@nestjs/graphql';
 
-const { Float, ObjectType, Field, Int } = nestjsGraphQL;
+const { Float, ObjectType, Int } = nestjsGraphQL;
+
+jest.mock('@nestjs/graphql', () => ({
+  Field: jest.fn(() => () => null),
+  registerEnumType: jest.fn(() => null),
+  ObjectType: jest.fn(() => () => null),
+}));
+const mockField = jest.mocked(Field);
 
 describe('FilterableField decorator', (): void => {
-  const fieldSpy = jest.spyOn(nestjsGraphQL, 'Field');
-  beforeAll(() => jest.clearAllMocks());
+  beforeAll(() => {
+    jest.clearAllMocks();
+    jest.resetModules();
+  });
 
   it('should store metadata', () => {
     const floatReturnFunc = () => Float;
@@ -50,11 +60,11 @@ describe('FilterableField decorator', (): void => {
         returnTypeFunc: undefined
       }
     ]);
-    expect(fieldSpy).toHaveBeenCalledTimes(4);
-    expect(fieldSpy).toHaveBeenNthCalledWith(1);
-    expect(fieldSpy).toHaveBeenNthCalledWith(2, { nullable: true });
-    expect(fieldSpy).toHaveBeenNthCalledWith(3, floatReturnFunc, { nullable: true });
-    expect(fieldSpy).toHaveBeenNthCalledWith(4, { nullable: true });
+    expect(mockField).toHaveBeenCalledTimes(4);
+    expect(mockField).toHaveBeenNthCalledWith(1);
+    expect(mockField).toHaveBeenNthCalledWith(2, { nullable: true });
+    expect(mockField).toHaveBeenNthCalledWith(3, floatReturnFunc, { nullable: true });
+    expect(mockField).toHaveBeenNthCalledWith(4, { nullable: true });
   });
 
   describe('getFilterableObjectFields', () => {

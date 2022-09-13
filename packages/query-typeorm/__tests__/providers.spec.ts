@@ -1,4 +1,4 @@
-import { getQueryServiceToken } from '@ptc-org/nestjs-query-core';
+import { getQueryServiceToken } from '@rezonapp/nestjs-query-core';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { mock, instance } from 'ts-mockito';

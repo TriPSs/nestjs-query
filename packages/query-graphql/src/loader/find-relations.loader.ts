@@ -1,4 +1,4 @@
-import { Class, FindRelationOptions, QueryService } from '@ptc-org/nestjs-query-core';
+import { Class, FindRelationOptions, QueryService } from '@rezonapp/nestjs-query-core';
 import { NestjsQueryDataloader } from './relations.loader';
 
 export type FindRelationsArgs<DTO, Relation> = { dto: DTO } & FindRelationOptions<Relation>;

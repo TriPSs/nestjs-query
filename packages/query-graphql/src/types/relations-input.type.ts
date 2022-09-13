@@ -1,4 +1,4 @@
-import { Class } from '@ptc-org/nestjs-query-core';
+import { Class } from '@rezonapp/nestjs-query-core';
 import { Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, ArrayUnique } from 'class-validator';
 import { getDTOIdTypeOrDefault } from '../common';

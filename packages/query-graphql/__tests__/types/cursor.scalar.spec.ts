@@ -1,5 +1,5 @@
 import { Kind } from 'graphql';
-import { ConnectionCursorScalar } from '@ptc-org/nestjs-query-graphql';
+import { ConnectionCursorScalar } from '@rezonapp/nestjs-query-graphql';
 
 describe('ConnectionCursorScalar', (): void => {
   describe('#parseValue', () => {

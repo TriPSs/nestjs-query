@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
-import { GraphQLFederationModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormOrmConfig } from '../../../helpers';
 import { UserModule } from './user/user.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloFederationDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeormOrmConfig('federation_user')),
-    GraphQLFederationModule.forRoot({
+    // ts-ignore
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       autoSchemaFile: 'schema.gql'
     }),
     UserModule

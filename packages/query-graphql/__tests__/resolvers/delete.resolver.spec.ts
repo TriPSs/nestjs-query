@@ -1,4 +1,4 @@
-import { DeleteManyResponse, Filter } from '@ptc-org/nestjs-query-core';
+import { DeleteManyResponse, Filter } from '@rezonapp/nestjs-query-core';
 import { Field, InputType, Query, Resolver } from '@nestjs/graphql';
 import { deepEqual, objectContaining, when, verify, anything, mock, instance } from 'ts-mockito';
 import { PubSub } from 'graphql-subscriptions';

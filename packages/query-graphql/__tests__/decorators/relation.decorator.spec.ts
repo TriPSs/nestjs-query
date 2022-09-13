@@ -7,7 +7,7 @@ import {
   FilterableUnPagedRelation,
   OffsetConnection,
   FilterableRelation
-} from '@ptc-org/nestjs-query-graphql';
+} from '@rezonapp/nestjs-query-graphql';
 import { CursorConnection, FilterableCursorConnection, FilterableOffsetConnection, getRelations } from '../../src/decorators';
 
 @ObjectType()

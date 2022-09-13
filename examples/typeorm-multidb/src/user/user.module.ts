@@ -1,5 +1,5 @@
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
+import { NestjsQueryGraphQLModule } from '@rezonapp/nestjs-query-graphql';
+import { NestjsQueryTypeOrmModule } from '@rezonapp/nestjs-query-typeorm';
 import { Module } from '@nestjs/common';
 import { USER_CONNECTION } from '../constants';
 import { UserInputDTO } from './dto/user-input.dto';

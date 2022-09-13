@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { GraphQLGatewayModule } from '@nestjs/graphql';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloGatewayDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
-    GraphQLGatewayModule.forRoot({
+    // ts-ignore
+    GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       server: {
         // ... Apollo server options
         cors: true

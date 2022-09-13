@@ -10,7 +10,7 @@ import {
   transformAggregateQuery,
   transformAggregateResponse,
   transformQuery
-} from '@ptc-org/nestjs-query-core';
+} from '@rezonapp/nestjs-query-core';
 
 describe('AssemblerQueryService', () => {
   class TestDTO {

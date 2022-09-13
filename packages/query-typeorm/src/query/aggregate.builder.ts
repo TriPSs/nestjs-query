@@ -1,5 +1,5 @@
 import { Repository, SelectQueryBuilder } from 'typeorm';
-import { AggregateQuery, AggregateResponse } from '@ptc-org/nestjs-query-core';
+import { AggregateQuery, AggregateResponse } from '@rezonapp/nestjs-query-core';
 import { BadRequestException } from '@nestjs/common';
 import { camelCase } from 'camel-case';
 

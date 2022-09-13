@@ -1,5 +1,5 @@
-import { Class, UpdateManyResponse } from '@ptc-org/nestjs-query-core';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Class, UpdateManyResponse } from '@rezonapp/nestjs-query-core';
+import {Directive, Field, Int, ObjectType} from '@nestjs/graphql';
 
 /** @internal */
 let updateManyResponseType: Class<UpdateManyResponse> | null = null;
@@ -9,6 +9,7 @@ export const UpdateManyResponseType = (): Class<UpdateManyResponse> => {
     return updateManyResponseType;
   }
   @ObjectType('UpdateManyResponse')
+  @Directive('@shareable')
   class UpdateManyResponseTypeImpl implements UpdateManyResponse {
     @Field(() => Int, { description: 'The number of records updated.' })
     updatedCount!: number;

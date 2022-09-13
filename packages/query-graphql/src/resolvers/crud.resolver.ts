@@ -1,4 +1,4 @@
-import { Class, DeepPartial, QueryService } from '@ptc-org/nestjs-query-core';
+import { Class, DeepPartial, QueryService } from '@rezonapp/nestjs-query-core';
 import { ConnectionOptions, PagingStrategies } from '../types';
 import { Aggregateable, AggregateResolverOpts, AggregateResolver } from './aggregate.resolver';
 import { Relatable } from './relations';
@@ -98,7 +98,7 @@ function extractDeleteResolverOpts<DTO>(
  * [[UpdateResolver]], and [[DeleteResolver]].
  *
  * ```ts
- * import { CRUDResolver } from '@ptc-org/nestjs-query-graphql';
+ * import { CRUDResolver } from '@rezonapp/nestjs-query-graphql';
  * import { Resolver } from '@nestjs/graphql';
  * import { TodoItemDTO } from './dto/todo-item.dto';
  * import { TodoItemService } from './todo-item.service';

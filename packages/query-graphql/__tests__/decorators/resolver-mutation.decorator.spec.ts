@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Class } from '@ptc-org/nestjs-query-core';
-import * as nestGraphql from '@nestjs/graphql';
-import { ReturnTypeFunc, MutationOptions } from '@nestjs/graphql';
+import { Class } from '@rezonapp/nestjs-query-core';
+import { ReturnTypeFunc, MutationOptions, Query, Mutation } from '@nestjs/graphql';
 import { ResolverMutation } from '../../src/decorators';
 import * as resolverDecorator from '../../src/decorators/resolver-method.decorator';
 
+jest.mock('@nestjs/graphql', () => ({
+  Mutation: jest.fn(() => () => null),
+  ResolverMutation: jest.fn(() => () => null),
+}));
+const mockMutation = jest.mocked(Mutation);
+
 describe('ResolverMutation decorator', (): void => {
   const resolverMethodSpy = jest.spyOn(resolverDecorator, 'ResolverMethod');
-  const mutationSpy = jest.spyOn(nestGraphql, 'Mutation');
 
   beforeEach(() => jest.clearAllMocks());
 
@@ -29,7 +33,7 @@ describe('ResolverMutation decorator', (): void => {
     const opts: resolverDecorator.ResolverMethodOpts[] = [{}];
     createTestResolver(() => Boolean, { name: 'test' }, ...opts);
 
-    const [rt, ao] = mutationSpy.mock.calls[0]!;
+    const [rt, ao] = mockMutation.mock.calls[0]!;
     expect(rt()).toEqual(Boolean);
     expect(ao).toEqual({ name: 'test' });
   });
@@ -43,7 +47,7 @@ describe('ResolverMutation decorator', (): void => {
   it('should not call ResolverMethod if disabled is true', () => {
     const opts: resolverDecorator.ResolverMethodOpts[] = [{ disabled: true }];
     createTestResolver(() => Boolean, { name: 'test' }, ...opts);
-    expect(mutationSpy).toHaveBeenCalledTimes(0);
+    expect(mockMutation).toHaveBeenCalledTimes(0);
     expect(resolverMethodSpy).toHaveBeenCalledTimes(0);
   });
 });

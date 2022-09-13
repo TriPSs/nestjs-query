@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [0.30.0](https://github.com/tripss/nestjs-query/compare/v0.29.0...v0.30.0) (2021-09-30)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -13,7 +13,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [0.29.0](https://github.com/tripss/nestjs-query/compare/v0.28.1...v0.29.0) (2021-09-09)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -21,7 +21,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.28.1](https://github.com/tripss/nestjs-query/compare/v0.28.0...v0.28.1) (2021-07-27)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -29,7 +29,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [0.28.0](https://github.com/tripss/nestjs-query/compare/v0.27.0...v0.28.0) (2021-07-19)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -86,7 +86,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.24.4](https://github.com/tripss/nestjs-query/compare/v0.24.3...v0.24.4) (2021-03-18)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -105,7 +105,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [0.23.0](https://github.com/tripss/nestjs-query/compare/v0.22.0...v0.23.0) (2021-02-26)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -113,7 +113,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [0.22.0](https://github.com/tripss/nestjs-query/compare/v0.21.2...v0.22.0) (2021-02-08)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -161,7 +161,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.20.1](https://github.com/tripss/nestjs-query/compare/v0.20.0...v0.20.1) (2020-09-28)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -203,7 +203,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.19.2](https://github.com/tripss/nestjs-query/compare/v0.19.1...v0.19.2) (2020-09-03)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -239,7 +239,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [0.18.0](https://github.com/tripss/nestjs-query/compare/v0.17.10...v0.18.0) (2020-08-11)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -247,7 +247,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.17.10](https://github.com/tripss/nestjs-query/compare/v0.17.9...v0.17.10) (2020-08-01)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -277,7 +277,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.17.2](https://github.com/tripss/nestjs-query/compare/v0.17.1...v0.17.2) (2020-07-17)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -298,7 +298,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.16.2](https://github.com/tripss/nestjs-query/compare/v0.16.1...v0.16.2) (2020-07-09)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -328,7 +328,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [0.14.0](https://github.com/tripss/nestjs-query/compare/v0.13.2...v0.14.0) (2020-06-18)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -336,7 +336,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [0.13.0](https://github.com/tripss/nestjs-query/compare/v0.12.0...v0.13.0) (2020-06-12)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -355,7 +355,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.11.8](https://github.com/tripss/nestjs-query/compare/v0.11.7...v0.11.8) (2020-05-30)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -363,7 +363,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.11.7](https://github.com/tripss/nestjs-query/compare/v0.11.6...v0.11.7) (2020-05-29)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -371,7 +371,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.11.6](https://github.com/tripss/nestjs-query/compare/v0.11.5...v0.11.6) (2020-05-26)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -379,7 +379,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.11.5](https://github.com/tripss/nestjs-query/compare/v0.11.4...v0.11.5) (2020-05-21)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -387,7 +387,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.11.4](https://github.com/tripss/nestjs-query/compare/v0.11.3...v0.11.4) (2020-05-19)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -395,7 +395,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.11.3](https://github.com/tripss/nestjs-query/compare/v0.11.2...v0.11.3) (2020-05-16)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -452,7 +452,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [0.9.0](https://github.com/tripss/nestjs-query/compare/v0.8.9...v0.9.0) (2020-04-26)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -460,7 +460,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.8.9](https://github.com/tripss/nestjs-query/compare/v0.8.8...v0.8.9) (2020-04-24)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core
 
 
 
@@ -468,4 +468,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.8.7](https://github.com/tripss/nestjs-query/compare/v0.8.6...v0.8.7) (2020-04-23)
 
-**Note:** Version bump only for package @ptc-org/nestjs-query-core
+**Note:** Version bump only for package @rezonapp/nestjs-query-core

@@ -8,7 +8,7 @@ import { getAssemblerDeserializer } from './assembler.deserializer';
 /**
  * Base assembler that uses class-transformer to transform to and from the DTO/Entity.
  */
-export abstract class ClassTransformerAssembler<DTO, Entity> extends AbstractAssembler<
+export abstract class ClassTransformerAssembler<DTO extends object, Entity> extends AbstractAssembler<
   DTO,
   Entity,
   DeepPartial<DTO>,
@@ -36,7 +36,7 @@ export abstract class ClassTransformerAssembler<DTO, Entity> extends AbstractAss
     return aggregate as unknown as AggregateResponse<DTO>;
   }
 
-  convertToCreateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> {
+  convertToCreateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> | Entity {
     return this.convert(this.EntityClass, create);
   }
 

@@ -1,4 +1,4 @@
-import { Class } from '@ptc-org/nestjs-query-core';
+import { Class } from '@rezonapp/nestjs-query-core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DynamicModule } from '@nestjs/common';
 import { Connection, ConnectionOptions } from 'typeorm';
