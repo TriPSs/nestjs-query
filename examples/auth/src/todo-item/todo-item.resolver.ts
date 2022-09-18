@@ -1,5 +1,5 @@
-import { Filter, InjectAssemblerQueryService, mergeFilter, mergeQuery, QueryService } from '@rezonapp/nestjs-query-core';
-import { AuthorizerInterceptor, AuthorizerFilter, ConnectionType, OperationGroup } from '@rezonapp/nestjs-query-graphql';
+import { Filter, InjectAssemblerQueryService, mergeFilter, mergeQuery, QueryService } from '@rezonate/nestjs-query-core';
+import { AuthorizerInterceptor, AuthorizerFilter, ConnectionType, OperationGroup } from '@rezonate/nestjs-query-graphql';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards, UseInterceptors } from '@nestjs/common';
 import { TodoItemDTO } from './dto/todo-item.dto';
@@ -16,7 +16,7 @@ export class TodoItemResolver {
   // Set the return type to the TodoItemConnection
   @Query(() => TodoItemConnection)
   async completedTodoItems(
-    @Args() query: TodoItemQuery,
+    @Args('query', { type: () => TodoItemQuery }) query: TodoItemQuery,
     @AuthorizerFilter({
       operationGroup: OperationGroup.READ,
       many: true
@@ -36,7 +36,7 @@ export class TodoItemResolver {
   // Set the return type to the TodoItemConnection
   @Query(() => TodoItemConnection)
   async uncompletedTodoItems(
-    @Args() query: TodoItemQuery,
+    @Args('query', { type: () => TodoItemQuery }) query: TodoItemQuery,
     @AuthorizerFilter({
       operationName: 'queryUncompletedTodoItems',
       operationGroup: OperationGroup.READ,
@@ -57,7 +57,7 @@ export class TodoItemResolver {
 
   @Query(() => TodoItemConnection)
   async failingTodoItems(
-    @Args() query: TodoItemQuery,
+    @Args('query', { type: () => TodoItemQuery }) query: TodoItemQuery,
     @AuthorizerFilter() // Intentionally left out argument to test error
     authFilter: Filter<TodoItemDTO>
   ): Promise<ConnectionType<TodoItemDTO>> {

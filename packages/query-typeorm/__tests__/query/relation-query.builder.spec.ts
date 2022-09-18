@@ -1,4 +1,4 @@
-import { Class, Query, SortDirection, SortNulls } from '@rezonapp/nestjs-query-core';
+import { Class, Query, SortDirection, SortNulls } from '@rezonate/nestjs-query-core';
 import { format as formatSql } from 'sql-formatter';
 import { closeTestConnection, createTestConnection, getTestConnection } from '../__fixtures__/connection.fixture';
 import { TestRelation } from '../__fixtures__/test-relation.entity';

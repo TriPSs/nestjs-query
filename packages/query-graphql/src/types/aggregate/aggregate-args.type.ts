@@ -1,4 +1,4 @@
-import { Filter, Class } from '@rezonapp/nestjs-query-core';
+import { Filter, Class } from '@rezonate/nestjs-query-core';
 import {Field, ArgsType, InputType} from '@nestjs/graphql';
 import { ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';

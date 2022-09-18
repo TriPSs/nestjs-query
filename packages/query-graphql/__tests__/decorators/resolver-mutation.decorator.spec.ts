@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 import { ReturnTypeFunc, MutationOptions, Query, Mutation } from '@nestjs/graphql';
 import { ResolverMutation } from '../../src/decorators';
 import * as resolverDecorator from '../../src/decorators/resolver-method.decorator';

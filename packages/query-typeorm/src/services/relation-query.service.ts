@@ -8,7 +8,7 @@ import {
   ModifyRelationOptions,
   FindRelationOptions,
   GetByIdOptions
-} from '@rezonapp/nestjs-query-core';
+} from '@rezonate/nestjs-query-core';
 import { Repository, RelationQueryBuilder as TypeOrmRelationQueryBuilder } from 'typeorm';
 import lodashOmit from 'lodash.omit';
 import { AggregateBuilder, EntityIndexRelation, FilterQueryBuilder, RelationQueryBuilder } from '../query';

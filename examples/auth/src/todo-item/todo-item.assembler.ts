@@ -1,4 +1,4 @@
-import { Assembler, ClassTransformerAssembler } from '@rezonapp/nestjs-query-core';
+import { Assembler, ClassTransformerAssembler } from '@rezonate/nestjs-query-core';
 import { TodoItemDTO } from './dto/todo-item.dto';
 import { TodoItemEntity } from './todo-item.entity';
 

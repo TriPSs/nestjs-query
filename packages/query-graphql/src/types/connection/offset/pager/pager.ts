@@ -1,4 +1,4 @@
-import { Query } from '@rezonapp/nestjs-query-core';
+import { Query } from '@rezonate/nestjs-query-core';
 import { Count, Pager, QueryMany } from '../../interfaces';
 import { OffsetQueryArgsType } from '../../../query';
 import { OffsetPagerResult, OffsetPagingMeta, OffsetPagingOpts, QueryResults } from './interfaces';

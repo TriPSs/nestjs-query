@@ -1,4 +1,4 @@
-import { Assembler, NestjsQueryCoreModule, Class } from '@rezonapp/nestjs-query-core';
+import { Assembler, NestjsQueryCoreModule, Class } from '@rezonate/nestjs-query-core';
 import { DynamicModule, ForwardReference, Provider } from '@nestjs/common';
 import { AutoResolverOpts, createAuthorizerProviders, createHookProviders, createResolvers } from './providers';
 import { ReadResolverOpts } from './resolvers';

@@ -1,4 +1,4 @@
-import { FilterFieldComparison } from '@rezonapp/nestjs-query-core';
+import { FilterFieldComparison } from '@rezonate/nestjs-query-core';
 import { registerDecorator } from 'class-validator';
 
 /**

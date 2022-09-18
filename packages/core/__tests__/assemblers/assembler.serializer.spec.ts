@@ -1,5 +1,5 @@
 import { getAssemblerSerializer } from '../../src/assemblers/assembler.serializer';
-import { AssemblerSerializer } from '@rezonapp/nestjs-query-core';
+import { AssemblerSerializer } from '@rezonate/nestjs-query-core';
 
 describe('AssemblerSerializer decorator', () => {
   it('should register a serializer', () => {

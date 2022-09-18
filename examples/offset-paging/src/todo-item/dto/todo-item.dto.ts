@@ -1,4 +1,4 @@
-import { FilterableField, OffsetConnection, PagingStrategies, QueryOptions } from '@rezonapp/nestjs-query-graphql';
+import { FilterableField, OffsetConnection, PagingStrategies, QueryOptions } from '@rezonate/nestjs-query-graphql';
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto';
 import { TagDTO } from '../../tag/dto/tag.dto';

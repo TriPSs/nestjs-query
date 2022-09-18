@@ -1,5 +1,5 @@
 import { Resolver, Query } from '@nestjs/graphql';
-import { DeleteManyResponse } from '@rezonapp/nestjs-query-core';
+import { DeleteManyResponse } from '@rezonate/nestjs-query-core';
 import { DeleteManyResponseType } from '../../src/types';
 import { generateSchema } from '../__fixtures__';
 

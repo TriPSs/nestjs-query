@@ -86,9 +86,7 @@ type CustomPrefixAggregateResponse {
 type Query {
   aggregate: CustomPrefixAggregateResponse!
 }
-
 `;
-
 exports[`AggregateResponseType should create an aggregate type with the correct fields for each type 1`] = `
 type FakeTypeAggregateGroupBy {
   stringField: String
@@ -141,9 +139,7 @@ type FakeTypeAggregateResponse {
 type Query {
   aggregate: FakeTypeAggregateResponse!
 }
-
 `;
-
 exports[`AggregateResponseType should return the same class if called multiple times 1`] = `
 type FakeTypeAggregateGroupBy {
   stringField: String
@@ -196,5 +192,4 @@ type FakeTypeAggregateResponse {
 type Query {
   aggregate: FakeTypeAggregateResponse!
 }
-
 `;

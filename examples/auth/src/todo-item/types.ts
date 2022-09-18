@@ -1,4 +1,4 @@
-import { QueryArgsType } from '@rezonapp/nestjs-query-graphql';
+import { QueryArgsType } from '@rezonate/nestjs-query-graphql';
 import { ArgsType } from '@nestjs/graphql';
 import { TodoItemDTO } from './dto/todo-item.dto';
 

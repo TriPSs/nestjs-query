@@ -26,9 +26,7 @@ input UpdateTestResolverDTO {
   id: ID
   stringField: String
 }
-
 `;
-
 exports[`UpdateResolver #updateMany should not update a new type if the UpdateManyArgs is supplied 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -116,9 +114,7 @@ input TestResolverInputDTO {
   id: ID!
   stringField: String!
 }
-
 `;
-
 exports[`UpdateResolver #updateOne should not expose update one method if disabled 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -191,9 +187,7 @@ input UpdateTestResolverDTO {
   id: ID
   stringField: String
 }
-
 `;
-
 exports[`UpdateResolver #updateOne should use the provided UpdateOneInput type 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -281,9 +275,7 @@ input UpdateTestResolverDTO {
   id: ID
   stringField: String
 }
-
 `;
-
 exports[`UpdateResolver should create a UpdateResolver for the DTO 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -365,9 +357,7 @@ input StringFieldComparison {
   in: [String!]
   notIn: [String!]
 }
-
 `;
-
 exports[`UpdateResolver should not expose update methods if disabled 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -377,9 +367,7 @@ type TestResolverDTO {
 type Query {
   test: TestResolverDTO!
 }
-
 `;
-
 exports[`UpdateResolver should use the UpdateDTOClass if provided 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -461,9 +449,7 @@ input StringFieldComparison {
   in: [String!]
   notIn: [String!]
 }
-
 `;
-
 exports[`UpdateResolver should use the dtoName if provided 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -545,9 +531,7 @@ input StringFieldComparison {
   in: [String!]
   notIn: [String!]
 }
-
 `;
-
 exports[`UpdateResolver should use the many.name option for the updateMany if provided 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -629,9 +613,7 @@ input StringFieldComparison {
   in: [String!]
   notIn: [String!]
 }
-
 `;
-
 exports[`UpdateResolver should use the one.name option for the updateOne if provided 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -713,9 +695,7 @@ input StringFieldComparison {
   in: [String!]
   notIn: [String!]
 }
-
 `;
-
 exports[`UpdateResolver updated subscription should add subscription types if enableSubscriptions is true 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -814,9 +794,7 @@ input TestResolverDTOSubscriptionFilter {
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
-
 `;
-
 exports[`UpdateResolver updated subscription should add subscription types if many.enableSubscriptions is true 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -902,9 +880,7 @@ input StringFieldComparison {
 type Subscription {
   updatedManyTestResolverDTOS: UpdateManyResponse!
 }
-
 `;
-
 exports[`UpdateResolver updated subscription should add subscription types if one.enableSubscriptions is true 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -1002,9 +978,7 @@ input TestResolverDTOSubscriptionFilter {
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
-
 `;
-
 exports[`UpdateResolver updated subscription should not expose subscriptions if enableSubscriptions is false 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -1086,5 +1060,4 @@ input StringFieldComparison {
   in: [String!]
   notIn: [String!]
 }
-
 `;

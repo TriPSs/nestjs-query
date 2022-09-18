@@ -1,5 +1,5 @@
-import { getQueryServiceToken, QueryService } from '@rezonapp/nestjs-query-core';
-import { CursorConnectionType } from '@rezonapp/nestjs-query-graphql';
+import { getQueryServiceToken, QueryService } from '@rezonate/nestjs-query-core';
+import { CursorConnectionType } from '@rezonate/nestjs-query-graphql';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { INestApplication, ValidationPipe } from '@nestjs/common';

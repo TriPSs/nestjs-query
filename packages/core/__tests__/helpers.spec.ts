@@ -20,7 +20,7 @@ import {
   getFilterFields,
   getFilterComparisons,
   mergeFilter
-} from '@rezonapp/nestjs-query-core';
+} from '@rezonate/nestjs-query-core';
 import { AggregateQuery } from '../src/interfaces/aggregate-query.interface';
 
 class TestDTO {

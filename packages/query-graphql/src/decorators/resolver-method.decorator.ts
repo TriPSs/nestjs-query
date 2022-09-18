@@ -10,7 +10,7 @@ import {
   UsePipes,
   applyDecorators
 } from '@nestjs/common';
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 
 export interface BaseResolverOptions {
   /** An array of `nestjs` guards to apply to a graphql endpoint */

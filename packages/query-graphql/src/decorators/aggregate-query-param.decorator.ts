@@ -1,4 +1,4 @@
-import { AggregateQuery } from '@rezonapp/nestjs-query-core';
+import { AggregateQuery } from '@rezonate/nestjs-query-core';
 import { GraphQLResolveInfo } from 'graphql';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
@@ -8,7 +8,8 @@ const EXCLUDED_FIELDS = ['__typename'];
 const QUERY_OPERATORS: (keyof AggregateQuery<unknown>)[] = ['groupBy', 'count', 'avg', 'sum', 'min', 'max'];
 export const AggregateQueryParam = createParamDecorator(<DTO>(data: unknown, ctx: ExecutionContext) => {
   const info: GraphQLResolveInfo = GqlExecutionContext.create(ctx).getInfo<GraphQLResolveInfo>();
-  const fields = graphqlFields(info, {}, { excludedFields: EXCLUDED_FIELDS }) as Record<
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  const fields = graphqlFields(info as any, {}, { excludedFields: EXCLUDED_FIELDS }) as Record<
     keyof AggregateQuery<DTO>,
     Record<keyof DTO, unknown>
   >;

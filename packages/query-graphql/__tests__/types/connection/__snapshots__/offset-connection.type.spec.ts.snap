@@ -26,9 +26,7 @@ type TestOffsetConnection {
 type Query {
   test: TestOffsetConnection!
 }
-
 `;
-
 exports[`OffsetConnectionType should create the connection SDL with totalCount if enabled 1`] = `
 type Test {
   stringField: String!
@@ -62,5 +60,4 @@ type TestTotalCountOffsetConnection {
 type Query {
   test: TestTotalCountOffsetConnection!
 }
-
 `;

@@ -2,7 +2,7 @@
   <a href="https://tripss.github.io/nestjs-query" target="blank"><img src="https://tripss.github.io/nestjs-query/img/logo.svg" width="120" alt="Nestjs-query Logo" /></a>
 </p>
 
-[![Test](https://github.com/TriPSs/nestjs-query/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/TriPSs/nestjs-query/actions/workflows/test.yml)
+[![Test](https://github.com/Rezonate-io/nestjs-query/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Rezonate-io/nestjs-query/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/TriPSs/nestjs-query/branch/master/graph/badge.svg?token=29EX71ID2P)](https://codecov.io/gh/TriPSs/nestjs-query)
 [![Known Vulnerabilities](https://snyk.io/test/github/tripss/nestjs-query/badge.svg?targetFile=package.json)](https://snyk.io/test/github/tripss/nestjs-query?targetFile=package.json)
 
@@ -32,12 +32,12 @@ While working on projects in nestjs it was very easy to get up and running with 
 
 Nestjs-query is composed of multiple packages
 
-* [`@rezonapp/nestjs-query-core`](https://github.com/tripss/nestjs-query/tree/master/packages/core) - Defines all interfaces and utility types implemented by the other packages.
-* [`@rezonapp/nestjs-query-graphql`](https://github.com/tripss/nestjs-query/tree/master/packages/query-graphql) - Package that provides the graphql resolver and decorators for crud endpoints.
-* [`@rezonapp/nestjs-query-mongoose`](https://github.com/tripss/nestjs-query/tree/master/packages/query-typeorm) - Package that implements a Mongoose service that can be used by itself or with the graphql resolver provided by `@rezonapp/nestjs-query-graphql`.
-* [`@rezonapp/nestjs-query-sequelize`](https://github.com/tripss/nestjs-query/tree/master/packages/query-sequelize) - Package that implements a Sequelize service that can be used by itself or with the graphql resolver provided by `@rezonapp/nestjs-query-graphql`.
-* [`@rezonapp/nestjs-query-typegoose`](https://github.com/tripss/nestjs-query/tree/master/packages/query-typegoose) - Package that implements a Typegoose service that can be used by itself or with the graphql resolver provided by `@rezonapp/nestjs-query-graphql`.
-* [`@rezonapp/nestjs-query-typeorm`](https://github.com/tripss/nestjs-query/tree/master/packages/query-typeorm) - Package that implements a Typeorm service that can be used by itself or with the graphql resolver provided by `@rezonapp/nestjs-query-graphql`.
+* [`@rezonate/nestjs-query-core`](https://github.com/Rezonate-io/nestjs-query/tree/master/packages/core) - Defines all interfaces and utility types implemented by the other packages.
+* [`@rezonate/nestjs-query-graphql`](https://github.com/Rezonate-io/nestjs-query/tree/master/packages/query-graphql) - Package that provides the graphql resolver and decorators for crud endpoints.
+* [`@rezonate/nestjs-query-mongoose`](https://github.com/Rezonate-io/nestjs-query/tree/master/packages/query-typeorm) - Package that implements a Mongoose service that can be used by itself or with the graphql resolver provided by `@rezonate/nestjs-query-graphql`.
+* [`@rezonate/nestjs-query-sequelize`](https://github.com/Rezonate-io/nestjs-query/tree/master/packages/query-sequelize) - Package that implements a Sequelize service that can be used by itself or with the graphql resolver provided by `@rezonate/nestjs-query-graphql`.
+* [`@rezonate/nestjs-query-typegoose`](https://github.com/Rezonate-io/nestjs-query/tree/master/packages/query-typegoose) - Package that implements a Typegoose service that can be used by itself or with the graphql resolver provided by `@rezonate/nestjs-query-graphql`.
+* [`@rezonate/nestjs-query-typeorm`](https://github.com/Rezonate-io/nestjs-query/tree/master/packages/query-typeorm) - Package that implements a Typeorm service that can be used by itself or with the graphql resolver provided by `@rezonate/nestjs-query-graphql`.
 
 ## Development
 
@@ -61,4 +61,4 @@ $ yarn nx build query-graphql
 
 ## Collaboration
 
-If you have questions or [issues](https://github.com/TriPSs/nestjs-query/issues), please [open an issue](https://github.com/TriPSs/nestjs-query/issues/new)!
+If you have questions or [issues](https://github.com/Rezonate-io/nestjs-query/issues), please [open an issue](https://github.com/Rezonate-io/nestjs-query/issues/new)!

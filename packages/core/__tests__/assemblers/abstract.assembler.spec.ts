@@ -8,7 +8,7 @@ import {
   transformAggregateQuery,
   transformAggregateResponse,
   DeepPartial
-} from '@rezonapp/nestjs-query-core';
+} from '@rezonate/nestjs-query-core';
 
 describe('ClassTransformerAssembler', () => {
   class TestDTO {

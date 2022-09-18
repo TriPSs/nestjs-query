@@ -1,11 +1,14 @@
 import { Kind, ValueNode } from 'graphql';
-import { CustomScalar, Scalar } from '@nestjs/graphql';
+import { CustomScalar } from '@nestjs/graphql/dist/interfaces';
+import { Scalar } from '@nestjs/graphql/dist/decorators';
 
 export type ConnectionCursorType = string;
 
 @Scalar('ConnectionCursor', (type) => ConnectionCursorScalar)
 export class ConnectionCursorScalar implements CustomScalar<string, string | null> {
-  description: 'Cursor for paging through collections';
+  name = 'ConnectionCursor';
+
+  description = 'Cursor for paging through collections';
 
   parseValue(value: string): string {
     return value;

@@ -2,7 +2,7 @@
 import { plainToClass } from 'class-transformer';
 import { validateSync } from 'class-validator';
 import { Resolver, Query, Args, Int, InputType, ObjectType } from '@nestjs/graphql';
-import { DeleteOneInputType, FilterableField, IDField } from '@rezonapp/nestjs-query-graphql';
+import { DeleteOneInputType, FilterableField, IDField } from '@rezonate/nestjs-query-graphql';
 import { generateSchema } from '../__fixtures__';
 
 describe('DeleteOneInputType', (): void => {
@@ -20,7 +20,7 @@ describe('DeleteOneInputType', (): void => {
     class DeleteOneInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: DeleteOne): number {
+      test(@Args('input', { type: () => DeleteOne }) input: DeleteOne): number {
         return 1;
       }
     }
@@ -42,7 +42,7 @@ describe('DeleteOneInputType', (): void => {
     class DeleteOneInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: DeleteOneCustomId): number {
+      test(@Args('input', { type: () => DeleteOneCustomId }) input: DeleteOneCustomId): number {
         return 1;
       }
     }

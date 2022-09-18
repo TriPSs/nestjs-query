@@ -1,4 +1,4 @@
-import { Class, FilterFieldComparison } from '@rezonapp/nestjs-query-core';
+import { Class, FilterFieldComparison } from '@rezonate/nestjs-query-core';
 import { Field, Float, InputType } from '@nestjs/graphql';
 import { IsBoolean, IsNumber, IsOptional, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';

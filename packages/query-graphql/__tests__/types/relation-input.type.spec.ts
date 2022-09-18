@@ -2,7 +2,7 @@
 import { plainToClass } from 'class-transformer';
 import { validateSync } from 'class-validator';
 import { InputType, Resolver, Query, Args, Int, ObjectType } from '@nestjs/graphql';
-import { FilterableField, IDField, RelationInputType } from '@rezonapp/nestjs-query-graphql';
+import { FilterableField, IDField, RelationInputType } from '@rezonate/nestjs-query-graphql';
 import { generateSchema } from '../__fixtures__';
 
 describe('RelationInputType', (): void => {
@@ -38,7 +38,7 @@ describe('RelationInputType', (): void => {
     class RelationInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: RelationInput): number {
+      test(@Args('input', { type: () => RelationInput }) input: RelationInput): number {
         return 1;
       }
     }
@@ -54,7 +54,7 @@ describe('RelationInputType', (): void => {
     class RelationCustomIdInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: RelationCustomParentIdInput): number {
+      test(@Args('input', { type: () => RelationCustomParentIdInput }) input: RelationCustomParentIdInput): number {
         return 1;
       }
     }
@@ -70,7 +70,7 @@ describe('RelationInputType', (): void => {
     class RelationCustomIdInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: RelationCustomRelationIdInput): number {
+      test(@Args('input', { type: () => RelationCustomRelationIdInput }) input: RelationCustomRelationIdInput): number {
         return 1;
       }
     }
@@ -86,7 +86,7 @@ describe('RelationInputType', (): void => {
     class RelationCustomIdInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: RelationCustomParentAndRelationIdInput): number {
+      test(@Args('input', { type: () => RelationCustomParentAndRelationIdInput }) input: RelationCustomParentAndRelationIdInput): number {
         return 1;
       }
     }

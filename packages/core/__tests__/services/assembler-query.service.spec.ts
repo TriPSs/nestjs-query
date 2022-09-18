@@ -10,7 +10,7 @@ import {
   transformAggregateQuery,
   transformAggregateResponse,
   transformQuery
-} from '@rezonapp/nestjs-query-core';
+} from '@rezonate/nestjs-query-core';
 
 describe('AssemblerQueryService', () => {
   class TestDTO {

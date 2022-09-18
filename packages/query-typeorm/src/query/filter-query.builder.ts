@@ -1,4 +1,4 @@
-import { Filter, Paging, Query, SortField, getFilterFields, AggregateQuery } from '@rezonapp/nestjs-query-core';
+import { Filter, Paging, Query, SortField, getFilterFields, AggregateQuery } from '@rezonate/nestjs-query-core';
 import {
   DeleteQueryBuilder,
   QueryBuilder,

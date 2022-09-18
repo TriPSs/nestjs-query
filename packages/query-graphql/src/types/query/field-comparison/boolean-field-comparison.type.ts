@@ -1,6 +1,6 @@
 import { IsBoolean, IsOptional } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
-import { Class, FilterFieldComparison } from '@rezonapp/nestjs-query-core';
+import { Class, FilterFieldComparison } from '@rezonate/nestjs-query-core';
 
 /** @internal */
 let booleanFieldComparison: Class<FilterFieldComparison<boolean>>;

@@ -1,4 +1,4 @@
-import { Class, Query, ValueReflector } from '@rezonapp/nestjs-query-core';
+import { Class, Query, ValueReflector } from '@rezonate/nestjs-query-core';
 import { PagingStrategies } from '../query';
 import { QueryMany, StaticConnectionType } from './interfaces';
 

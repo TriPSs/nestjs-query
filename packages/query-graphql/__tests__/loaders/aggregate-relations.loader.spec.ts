@@ -1,4 +1,4 @@
-import { AggregateQuery, QueryService } from '@rezonapp/nestjs-query-core';
+import { AggregateQuery, QueryService } from '@rezonate/nestjs-query-core';
 import { mock, instance, when, deepEqual } from 'ts-mockito';
 import { AggregateRelationsLoader } from '../../src/loader';
 

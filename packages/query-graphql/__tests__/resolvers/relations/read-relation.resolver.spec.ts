@@ -1,12 +1,12 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import {Query, Resolver, TypeMetadataStorage} from '@nestjs/graphql';
 import { deepEqual, objectContaining, when } from 'ts-mockito';
 import {
   CursorQueryArgsType,
   NonePagingQueryArgsType,
   OffsetQueryArgsType,
   PagingStrategies
-} from '@rezonapp/nestjs-query-graphql';
-import { SortDirection } from '@rezonapp/nestjs-query-core';
+} from '@rezonate/nestjs-query-graphql';
+import { SortDirection } from '@rezonate/nestjs-query-core';
 import { ReadRelationsResolver, RelationsOpts } from '../../../src/resolvers/relations';
 import { generateSchema, createResolverFromNest, TestResolverDTO, TestService, TestRelationDTO } from '../../__fixtures__';
 
@@ -24,9 +24,7 @@ describe('ReadRelationsResolver', () => {
     expect(schema).toMatchSnapshot();
   };
 
-  it('should not add read methods if one and many are empty', () => expectResolverSDL());
-
-  describe('one', () => {
+  const getTestResolver = () => {
     @Resolver(() => TestResolverDTO)
     class TestResolver extends ReadRelationsResolver(TestResolverDTO, {
       one: { relation: { DTO: TestRelationDTO }, custom: { DTO: TestRelationDTO, relationName: 'other' } }
@@ -35,7 +33,12 @@ describe('ReadRelationsResolver', () => {
         super(service);
       }
     }
+    return TestResolver;
+  };
 
+  it('should not add read methods if one and many are empty', () => expectResolverSDL());
+
+  describe('one', () => {
     it('should use the object type name', () => expectResolverSDL({ one: { relation: { DTO: TestRelationDTO } } }));
 
     it('should use the dtoName if provided', () =>
@@ -48,6 +51,7 @@ describe('ReadRelationsResolver', () => {
       expectResolverSDL({ one: { relation: { DTO: TestRelationDTO, disableRead: true } } }));
 
     it('should call the service findRelation with the provided dto', async () => {
+      const TestResolver = getTestResolver();
       const { resolver, mockService } = await createResolverFromNest(TestResolver);
       const dto: TestResolverDTO = {
         id: 'id-1',
@@ -75,6 +79,8 @@ describe('ReadRelationsResolver', () => {
     });
 
     it('should call the service findRelation with the provided dto and correct relation name', async () => {
+      const TestResolver = getTestResolver();
+
       const { resolver, mockService } = await createResolverFromNest(TestResolver);
       const dto: TestResolverDTO = {
         id: 'id-1',

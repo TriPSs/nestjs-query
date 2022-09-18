@@ -21,7 +21,7 @@ describe('UpdateManyInputType', (): void => {
     class UpdateManyInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updateTest(@Args('input') input: UpdateMany): number {
+      updateTest(@Args('input', { type: () => UpdateMany }) input: UpdateMany): number {
         return 1;
       }
     }

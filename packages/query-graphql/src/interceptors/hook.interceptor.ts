@@ -1,4 +1,4 @@
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { getHookForType } from '../decorators';

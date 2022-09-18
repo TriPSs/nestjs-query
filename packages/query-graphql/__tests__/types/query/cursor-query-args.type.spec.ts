@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { SortDirection, SortNulls } from '@rezonapp/nestjs-query-core';
+import { SortDirection, SortNulls } from '@rezonate/nestjs-query-core';
 import {
   Args,
   ArgsType,
@@ -14,7 +14,7 @@ import {
 } from '@nestjs/graphql';
 import { plainToClass } from 'class-transformer';
 import { validateSync } from 'class-validator';
-import { FilterableField, PagingStrategies, QueryArgsType } from '@rezonapp/nestjs-query-graphql';
+import { FilterableField, PagingStrategies, QueryArgsType } from '@rezonate/nestjs-query-graphql';
 import { generateSchema } from '../../__fixtures__';
 
 describe('Cursor paging strategy QueryArgsType with manual options', (): void => {

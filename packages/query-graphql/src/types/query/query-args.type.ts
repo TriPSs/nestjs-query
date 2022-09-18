@@ -1,4 +1,4 @@
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 import { PagingStrategies } from './paging';
 import {
   DEFAULT_QUERY_OPTS,

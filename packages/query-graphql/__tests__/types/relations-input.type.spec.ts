@@ -2,7 +2,7 @@
 import { plainToClass } from 'class-transformer';
 import { validateSync } from 'class-validator';
 import { Args, Query, Resolver, Int, InputType, ObjectType } from '@nestjs/graphql';
-import { FilterableField, IDField, RelationsInputType } from '@rezonapp/nestjs-query-graphql';
+import { FilterableField, IDField, RelationsInputType } from '@rezonate/nestjs-query-graphql';
 import { generateSchema } from '../__fixtures__';
 
 describe('RelationsInputType', (): void => {
@@ -38,7 +38,7 @@ describe('RelationsInputType', (): void => {
     class RelationsInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: RelationsInput): number {
+      test(@Args('input', { type: () => RelationsInput }) input: RelationsInput): number {
         return 1;
       }
     }
@@ -54,7 +54,7 @@ describe('RelationsInputType', (): void => {
     class RelationsCustomIdInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: RelationsCustomParentIdInput): number {
+      test(@Args('input', { type: () => RelationsCustomParentIdInput }) input: RelationsCustomParentIdInput): number {
         return 1;
       }
     }
@@ -70,7 +70,7 @@ describe('RelationsInputType', (): void => {
     class RelationsCustomIdInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: RelationsCustomRelationIdInput): number {
+      test(@Args('input', { type: () => RelationsCustomRelationIdInput }) input: RelationsCustomRelationIdInput): number {
         return 1;
       }
     }
@@ -86,7 +86,7 @@ describe('RelationsInputType', (): void => {
     class RelationsCustomIdInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: RelationsCustomParentRelationIdInput): number {
+      test(@Args('input', { type: () => RelationsCustomParentRelationIdInput }) input: RelationsCustomParentRelationIdInput): number {
         return 1;
       }
     }

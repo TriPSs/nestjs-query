@@ -1,4 +1,4 @@
-import { SortDirection, SortNulls } from '@rezonapp/nestjs-query-core';
+import { SortDirection, SortNulls } from '@rezonate/nestjs-query-core';
 
 describe('SortField', () => {
   it('should define SortDirection', () => {

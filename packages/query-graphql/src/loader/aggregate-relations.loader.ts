@@ -1,4 +1,4 @@
-import { AggregateQuery, Class, QueryService, Filter, AggregateResponse } from '@rezonapp/nestjs-query-core';
+import { AggregateQuery, Class, QueryService, Filter, AggregateResponse } from '@rezonate/nestjs-query-core';
 import { NestjsQueryDataloader } from './relations.loader';
 
 type AggregateRelationsArgs<DTO, Relation> = {

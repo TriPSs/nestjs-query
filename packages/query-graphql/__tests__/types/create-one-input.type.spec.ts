@@ -1,7 +1,7 @@
 import { plainToClass } from 'class-transformer';
 import { MinLength, validateSync } from 'class-validator';
 import { Resolver, Query, Int, Args, InputType, Field } from '@nestjs/graphql';
-import { CreateOneInputType } from '@rezonapp/nestjs-query-graphql';
+import { CreateOneInputType } from '@rezonate/nestjs-query-graphql';
 import { generateSchema } from '../__fixtures__';
 
 describe('CreateOneInputType', (): void => {
@@ -19,7 +19,7 @@ describe('CreateOneInputType', (): void => {
     class CreateOneInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: CreateOne): number {
+      test(@Args('input', { type: () => CreateOne }) input: CreateOne): number {
         return 1;
       }
     }

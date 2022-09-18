@@ -14,9 +14,9 @@ module.exports = {
     '!**/jest.config.ts',
   ],
   moduleNameMapper: {
-    '@rezonapp/nestjs-query-core': process.cwd() + '/packages/core/src',
-    '@rezonapp/nestjs-query-graphql': process.cwd() + '/packages/query-graphql/src',
-    '@rezonapp/nestjs-query-typeorm': process.cwd() + '/packages/query-typeorm/src',
+    '@rezonate/nestjs-query-core': process.cwd() + '/packages/core/src',
+    '@rezonate/nestjs-query-graphql': process.cwd() + '/packages/query-graphql/src',
+    '@rezonate/nestjs-query-typeorm': process.cwd() + '/packages/query-typeorm/src',
   },
   testEnvironment: 'node',
   setupFilesAfterEnv: ['jest-extended'],

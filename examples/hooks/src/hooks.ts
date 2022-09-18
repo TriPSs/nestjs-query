@@ -7,7 +7,7 @@ import {
   CreateOneInputType,
   UpdateManyInputType,
   UpdateOneInputType
-} from '@rezonapp/nestjs-query-graphql';
+} from '@rezonate/nestjs-query-graphql';
 import { Injectable } from '@nestjs/common';
 import { GqlContext } from './auth/auth.guard';
 import { AuthService } from './auth/auth.service';

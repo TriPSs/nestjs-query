@@ -1,4 +1,4 @@
-import { Class, Query, QueryService } from '@rezonapp/nestjs-query-core';
+import { Class, Query, QueryService } from '@rezonate/nestjs-query-core';
 import { NestjsQueryDataloader } from './relations.loader';
 
 type QueryRelationsArgs<DTO, Relation> = { dto: DTO; query: Query<Relation> };

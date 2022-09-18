@@ -1,4 +1,4 @@
-import { FilterableField } from '@rezonapp/nestjs-query-graphql';
+import { FilterableField } from '@rezonate/nestjs-query-graphql';
 import { GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType('TodoItem')

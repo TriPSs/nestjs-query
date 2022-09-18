@@ -1,5 +1,5 @@
 import { mock, reset, instance, when } from 'ts-mockito';
-import { QueryService, AggregateQuery } from '@rezonapp/nestjs-query-core';
+import { QueryService, AggregateQuery } from '@rezonate/nestjs-query-core';
 import { ProxyQueryService } from '../../src/services/proxy-query.service';
 
 describe('ProxyQueryService', () => {

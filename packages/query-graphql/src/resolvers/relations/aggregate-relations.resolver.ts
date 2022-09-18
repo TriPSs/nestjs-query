@@ -1,4 +1,4 @@
-import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@rezonapp/nestjs-query-core';
+import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@rezonate/nestjs-query-core';
 import { ExecutionContext } from '@nestjs/common';
 import { Args, ArgsType, Context, InputType, Parent, Resolver } from '@nestjs/graphql';
 import { OperationGroup } from '../../auth';

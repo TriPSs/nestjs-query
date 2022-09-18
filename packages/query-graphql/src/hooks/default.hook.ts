@@ -1,4 +1,4 @@
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 import { Hook } from './hooks';
 
 export const createDefaultHook = <T>(func: Hook<T>['run']): Class<Hook<T>> => {

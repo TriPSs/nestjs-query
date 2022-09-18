@@ -1,6 +1,6 @@
-import { Filter } from '@rezonapp/nestjs-query-core';
+import { Filter } from '@rezonate/nestjs-query-core';
 import { Injectable } from '@nestjs/common';
-import { Authorizer } from '@rezonapp/nestjs-query-graphql';
+import { Authorizer } from '@rezonate/nestjs-query-graphql';
 import { TestResolverDTO } from './test-resolver.dto';
 
 @Injectable()

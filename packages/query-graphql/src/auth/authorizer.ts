@@ -1,4 +1,4 @@
-import { Filter } from '@rezonapp/nestjs-query-core';
+import { Filter } from '@rezonate/nestjs-query-core';
 
 export enum OperationGroup {
   READ = 'read',

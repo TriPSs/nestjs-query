@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Class, MapReflector, Query } from '@rezonapp/nestjs-query-core';
+import { Class, MapReflector, Query } from '@rezonate/nestjs-query-core';
 import { NotImplementedException } from '@nestjs/common';
 import { SkipIf } from '../../../decorators';
 import { PagingStrategies } from '../../query';

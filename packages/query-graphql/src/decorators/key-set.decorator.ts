@@ -1,4 +1,4 @@
-import { Class, MetaValue, ValueReflector } from '@rezonapp/nestjs-query-core';
+import { Class, MetaValue, ValueReflector } from '@rezonate/nestjs-query-core';
 import { KEY_SET_KEY } from './constants';
 
 const reflector = new ValueReflector(KEY_SET_KEY);

@@ -12,9 +12,7 @@ input RelationCustomParentIdInput {
   """The id of relation."""
   relationId: ID!
 }
-
 `;
-
 exports[`RelationInputType should create an input type with a custom id for the parent and relation 1`] = `
 type Query {
   test(input: RelationCustomParentAndRelationIdInput!): Int!
@@ -27,9 +25,7 @@ input RelationCustomParentAndRelationIdInput {
   """The id of relation."""
   relationId: String!
 }
-
 `;
-
 exports[`RelationInputType should create an input type with a custom id for the relation 1`] = `
 type Query {
   test(input: RelationCustomRelationIdInput!): Int!
@@ -42,9 +38,7 @@ input RelationCustomRelationIdInput {
   """The id of relation."""
   relationId: String!
 }
-
 `;
-
 exports[`RelationInputType should create an input type with an id and relationId 1`] = `
 type Query {
   test(input: RelationInput!): Int!
@@ -57,5 +51,4 @@ input RelationInput {
   """The id of relation."""
   relationId: ID!
 }
-
 `;

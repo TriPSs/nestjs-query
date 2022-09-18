@@ -18,12 +18,12 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@rezonapp/nestjs-query-core": ["packages/core/src/index.ts"],
-      "@rezonapp/nestjs-query-graphql": ["packages/query-graphql/src/index.ts"],
-      "@rezonapp/nestjs-query-mongoose": ["packages/query-mongoose/src/index.ts"],
-      "@rezonapp/nestjs-query-sequelize": ["packages/query-sequelize/src/index.ts"],
-      "@rezonapp/nestjs-query-typegoose": ["packages/query-typegoose/src/index.ts"],
-      "@rezonapp/nestjs-query-typeorm": ["packages/query-typeorm/src/index.ts"]
+      "@rezonate/nestjs-query-core": ["packages/core/src/index.ts"],
+      "@rezonate/nestjs-query-graphql": ["packages/query-graphql/src/index.ts"],
+      "@rezonate/nestjs-query-mongoose": ["packages/query-mongoose/src/index.ts"],
+      "@rezonate/nestjs-query-sequelize": ["packages/query-sequelize/src/index.ts"],
+      "@rezonate/nestjs-query-typegoose": ["packages/query-typegoose/src/index.ts"],
+      "@rezonate/nestjs-query-typeorm": ["packages/query-typeorm/src/index.ts"],
     }
   }
 }

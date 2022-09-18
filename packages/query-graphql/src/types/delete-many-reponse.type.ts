@@ -1,4 +1,4 @@
-import { Class, DeleteManyResponse } from '@rezonapp/nestjs-query-core';
+import { Class, DeleteManyResponse } from '@rezonate/nestjs-query-core';
 import {Directive, Field, Int, ObjectType} from '@nestjs/graphql';
 
 /** @internal */

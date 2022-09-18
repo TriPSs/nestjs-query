@@ -1,4 +1,4 @@
-import { ModifyRelationOptions } from '@rezonapp/nestjs-query-core';
+import { ModifyRelationOptions } from '@rezonate/nestjs-query-core';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthorizationContext, OperationGroup } from '../auth';

@@ -1,4 +1,4 @@
-import { Class, UpdateManyResponse } from '@rezonapp/nestjs-query-core';
+import { Class, UpdateManyResponse } from '@rezonate/nestjs-query-core';
 import {Directive, Field, Int, ObjectType} from '@nestjs/graphql';
 
 /** @internal */

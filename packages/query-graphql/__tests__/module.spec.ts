@@ -1,5 +1,5 @@
 import { ObjectType } from '@nestjs/graphql';
-import { NestjsQueryGraphQLModule } from '@rezonapp/nestjs-query-graphql';
+import { NestjsQueryGraphQLModule } from '@rezonate/nestjs-query-graphql';
 import { FilterableField } from '../src/decorators/filterable-field.decorator';
 
 describe('NestjsQueryGraphQLModule', () => {
@@ -21,8 +21,8 @@ describe('NestjsQueryGraphQLModule', () => {
     });
     expect(graphqlModule.imports).toHaveLength(1);
     expect(graphqlModule.module).toBe(NestjsQueryGraphQLModule);
-    expect(graphqlModule.providers).toHaveLength(3);
-    expect(graphqlModule.exports).toHaveLength(4);
+    expect(graphqlModule.providers).toHaveLength(4);
+    expect(graphqlModule.exports).toHaveLength(5);
   });
 
   it('should allow a defaultFilter for read options', () => {
@@ -38,7 +38,7 @@ describe('NestjsQueryGraphQLModule', () => {
     });
     expect(graphqlModule.imports).toHaveLength(1);
     expect(graphqlModule.module).toBe(NestjsQueryGraphQLModule);
-    expect(graphqlModule.providers).toHaveLength(3);
-    expect(graphqlModule.exports).toHaveLength(4);
+    expect(graphqlModule.providers).toHaveLength(4);
+    expect(graphqlModule.exports).toHaveLength(5);
   });
 });

@@ -1,4 +1,4 @@
-import { Filter } from '@rezonapp/nestjs-query-core';
+import { Filter } from '@rezonate/nestjs-query-core';
 import { closeTestConnection, createTestConnection, getTestConnection } from '../__fixtures__/connection.fixture';
 import { TestEntity } from '../__fixtures__/test.entity';
 import { WhereBuilder } from '../../src/query';

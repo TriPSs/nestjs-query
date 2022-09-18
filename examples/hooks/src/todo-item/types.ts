@@ -1,4 +1,4 @@
-import { MutationArgsType, UpdateManyInputType } from '@rezonapp/nestjs-query-graphql';
+import { MutationArgsType, UpdateManyInputType } from '@rezonate/nestjs-query-graphql';
 import { ArgsType, InputType, OmitType } from '@nestjs/graphql';
 import { TodoItemDTO } from './dto/todo-item.dto';
 import { TodoItemUpdateDTO } from './dto/todo-item-update.dto';

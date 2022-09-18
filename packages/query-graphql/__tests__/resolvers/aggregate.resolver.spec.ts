@@ -1,6 +1,6 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { AggregateQuery, AggregateResponse } from '@rezonapp/nestjs-query-core';
-import { AggregateArgsType } from '@rezonapp/nestjs-query-graphql';
+import { AggregateQuery, AggregateResponse } from '@rezonate/nestjs-query-core';
+import { AggregateArgsType } from '@rezonate/nestjs-query-graphql';
 import { deepEqual, objectContaining, when } from 'ts-mockito';
 import { AggregateResolver, AggregateResolverOpts } from '../../src/resolvers/aggregate.resolver';
 import { createResolverFromNest, generateSchema, TestResolverDTO, TestService } from '../__fixtures__';

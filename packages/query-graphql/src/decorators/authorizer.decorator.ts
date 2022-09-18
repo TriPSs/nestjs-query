@@ -1,4 +1,4 @@
-import { Class, MetaValue, ValueReflector } from '@rezonapp/nestjs-query-core';
+import { Class, MetaValue, ValueReflector } from '@rezonate/nestjs-query-core';
 import { AuthorizerOptions, createDefaultAuthorizer, Authorizer, CustomAuthorizer } from '../auth';
 import { AUTHORIZER_KEY, CUSTOM_AUTHORIZER_KEY } from './constants';
 

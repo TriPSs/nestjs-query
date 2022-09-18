@@ -1,9 +1,9 @@
 {
-  "name": "@rezonapp/nestjs-query-graphql",
-  "version": "4.0.0",
+  "name": "@rezonate/nestjs-query-graphql",
+  "version": "4.0.2",
   "description": "Nestjs graphql query adapter",
   "author": "doug-martin <doug@dougamartin.com>",
-  "homepage": "https://github.com/tripss/nestjs-query#readme",
+  "homepage": "https://github.com/Rezonate-io/nestjs-query#readme",
   "keywords": [
     "graphql",
     "crud",
@@ -25,11 +25,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tripss/nestjs-query.git",
+    "url": "git+https://github.com/Rezonate-io/nestjs-query.git",
     "directory": "packages/query-graphql"
   },
   "bugs": {
-    "url": "https://github.com/tripss/nestjs-query/issues"
+    "url": "https://github.com/Rezonate-io/nestjs-query/issues"
   },
   "dependencies": {
     "graphql-fields": "^2.0.3",
@@ -43,11 +43,11 @@
     "@apollo/gateway": "2.1.1",
     "@nestjs/common": "9.0.11",
     "@nestjs/core": "9.0.11",
-    "@nestjs/graphql": "^10.1.1",
+    "@nestjs/graphql": "*",
     "class-transformer": "0.5.1",
     "class-validator": "^0.13.0",
     "dataloader": "^2.0.0",
-    "graphql": "15.8.0",
+    "graphql": "16.6.0",
     "graphql-subscriptions": "2.0.0",
     "ts-morph": "15.1.0"
   }

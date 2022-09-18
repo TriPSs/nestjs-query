@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { Injectable } from '@nestjs/common';
-import { QueryService, InjectQueryService, getQueryServiceToken, NoOpQueryService } from '@rezonapp/nestjs-query-core';
+import { QueryService, InjectQueryService, getQueryServiceToken, NoOpQueryService } from '@rezonate/nestjs-query-core';
 
 describe('@InjectQueryService', () => {
   class TestEntity {}

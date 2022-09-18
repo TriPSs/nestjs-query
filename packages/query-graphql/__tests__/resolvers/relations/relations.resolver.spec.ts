@@ -7,7 +7,7 @@ import {
   CursorConnection,
   Reference,
   Relation
-} from '@rezonapp/nestjs-query-graphql';
+} from '@rezonate/nestjs-query-graphql';
 import * as readRelations from '../../../src/resolvers/relations/read-relations.resolver';
 import * as referenceRelation from '../../../src/resolvers/relations/references-relation.resolver';
 import * as removeRelations from '../../../src/resolvers/relations/remove-relations.resolver';

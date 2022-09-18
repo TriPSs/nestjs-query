@@ -1,4 +1,4 @@
-import { Assembler, AssemblerFactory, ClassTransformerAssembler, DefaultAssembler } from '@rezonapp/nestjs-query-core';
+import { Assembler, AssemblerFactory, ClassTransformerAssembler, DefaultAssembler } from '@rezonate/nestjs-query-core';
 
 class TestFrom {
   first!: string;

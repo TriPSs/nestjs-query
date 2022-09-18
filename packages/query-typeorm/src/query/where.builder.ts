@@ -1,5 +1,5 @@
 import { Brackets, WhereExpression } from 'typeorm';
-import { Filter, FilterComparisons, FilterFieldComparison } from '@rezonapp/nestjs-query-core';
+import { Filter, FilterComparisons, FilterFieldComparison } from '@rezonate/nestjs-query-core';
 import { EntityComparisonField, SQLComparisonBuilder } from './sql-comparison.builder';
 import { NestedRecord } from './filter-query.builder';
 

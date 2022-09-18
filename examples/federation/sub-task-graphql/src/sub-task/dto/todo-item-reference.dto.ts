@@ -1,4 +1,4 @@
-import { CursorConnection } from '@rezonapp/nestjs-query-graphql';
+import { CursorConnection } from '@rezonate/nestjs-query-graphql';
 import { ObjectType, Directive, Field, ID } from '@nestjs/graphql';
 import { SubTaskDTO } from './sub-task.dto';
 

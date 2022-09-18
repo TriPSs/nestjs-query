@@ -1,4 +1,4 @@
-import { ArrayReflector, Class, getPrototypeChain } from '@rezonapp/nestjs-query-core';
+import { ArrayReflector, Class, getPrototypeChain } from '@rezonate/nestjs-query-core';
 import { RelationsOpts, ResolverRelation } from '../resolvers/relations';
 import { PagingStrategies } from '../types/query/paging';
 import { RELATION_KEY } from './constants';

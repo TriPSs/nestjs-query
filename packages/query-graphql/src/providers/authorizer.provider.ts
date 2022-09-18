@@ -1,5 +1,5 @@
 import { Provider } from '@nestjs/common';
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 import { createDefaultAuthorizer, getAuthorizerToken, getCustomAuthorizerToken } from '../auth';
 import { getAuthorizer, getCustomAuthorizer } from '../decorators';
 

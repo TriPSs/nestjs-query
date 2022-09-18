@@ -1,4 +1,4 @@
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 
 /** @internal */
 export class UnregisteredObjectType<T> extends Error {

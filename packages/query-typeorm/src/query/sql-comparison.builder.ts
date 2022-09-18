@@ -1,4 +1,4 @@
-import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@rezonapp/nestjs-query-core';
+import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@rezonate/nestjs-query-core';
 import { ObjectLiteral } from 'typeorm';
 
 import { randomString } from '../common';

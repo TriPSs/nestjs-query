@@ -1,5 +1,5 @@
 import { ObjectType, ID } from '@nestjs/graphql';
-import { FilterableField } from '@rezonapp/nestjs-query-graphql';
+import { FilterableField } from '@rezonate/nestjs-query-graphql';
 
 @ObjectType()
 export class TestRelationDTO {

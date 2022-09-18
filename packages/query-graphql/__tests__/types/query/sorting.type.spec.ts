@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import { ObjectType, InputType, Query, Resolver, Args, Int } from '@nestjs/graphql';
-import { FilterableField } from '@rezonapp/nestjs-query-graphql';
+import { FilterableField } from '@rezonate/nestjs-query-graphql';
 import { getOrCreateSortType } from '../../../src/types/query/sorting.type';
 import { generateSchema } from '../../__fixtures__';
 
@@ -31,7 +31,7 @@ describe('SortingType', (): void => {
     class SortingTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: Sorting): number {
+      test(@Args('input', { type: () => Sorting }) input: Sorting): number {
         return 1;
       }
     }

@@ -11,7 +11,7 @@ import {
   UpdateManyInputType,
   FilterableCursorConnection,
   QueryOptions
-} from '@rezonapp/nestjs-query-graphql';
+} from '@rezonate/nestjs-query-graphql';
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto';
 import { UserContext } from '../../auth/auth.interfaces';

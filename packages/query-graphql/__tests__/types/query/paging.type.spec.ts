@@ -14,7 +14,7 @@ describe('PagingType', (): void => {
     class PagingTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: Paging): number {
+      test(@Args('input', { type: () => Paging }) input: Paging): number {
         return 1;
       }
     }

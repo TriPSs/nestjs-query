@@ -1,5 +1,5 @@
-import { NestjsQueryGraphQLModule } from '@rezonapp/nestjs-query-graphql';
-import { NestjsQueryTypeOrmModule } from '@rezonapp/nestjs-query-typeorm';
+import { NestjsQueryGraphQLModule } from '@rezonate/nestjs-query-graphql';
+import { NestjsQueryTypeOrmModule } from '@rezonate/nestjs-query-typeorm';
 import { Module } from '@nestjs/common';
 import { TodoItemInputDTO } from './dto/todo-item-input.dto';
 import { TodoItemDTO } from './dto/todo-item.dto';

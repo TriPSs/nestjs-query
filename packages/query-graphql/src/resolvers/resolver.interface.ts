@@ -1,4 +1,4 @@
-import { QueryService } from '@rezonapp/nestjs-query-core';
+import { QueryService } from '@rezonate/nestjs-query-core';
 import { DTONamesOpts } from '../common';
 import { QueryResolverMethodOpts, SubscriptionResolverMethodOpts } from '../decorators';
 import { GraphQLPubSub } from '../subscription';

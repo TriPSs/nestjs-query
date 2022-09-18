@@ -1,4 +1,4 @@
-import { Query, SortField } from '@rezonapp/nestjs-query-core';
+import { Query, SortField } from '@rezonate/nestjs-query-core';
 import { CursorPagingType } from '../../../../query';
 
 export interface OffsetPagingOpts {

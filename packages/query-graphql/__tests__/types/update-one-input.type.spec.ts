@@ -2,7 +2,7 @@
 import { plainToClass } from 'class-transformer';
 import { validateSync, MinLength } from 'class-validator';
 import { InputType, Resolver, Args, Field, Query, Int, ID, ObjectType } from '@nestjs/graphql';
-import { IDField, UpdateOneInputType } from '@rezonapp/nestjs-query-graphql';
+import { IDField, UpdateOneInputType } from '@rezonate/nestjs-query-graphql';
 import { generateSchema } from '../__fixtures__';
 
 describe('UpdateOneInputType', (): void => {
@@ -27,7 +27,7 @@ describe('UpdateOneInputType', (): void => {
     class UpdateOneInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updateTest(@Args('input') input: UpdateOne): number {
+      updateTest(@Args('input', { type: () => UpdateOne }) input: UpdateOne): number {
         return 1;
       }
     }
@@ -49,7 +49,7 @@ describe('UpdateOneInputType', (): void => {
     class UpdateOneCustomIdInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updateTest(@Args('input') input: UpdateOneCustomId): number {
+      updateTest(@Args('input', { type: () => UpdateOneCustomId }) input: UpdateOneCustomId): number {
         return 1;
       }
     }

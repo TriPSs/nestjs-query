@@ -1,5 +1,5 @@
 import * as nestjsGraphQL from '@nestjs/graphql';
-import { FilterableField } from '@rezonapp/nestjs-query-graphql';
+import { FilterableField } from '@rezonate/nestjs-query-graphql';
 import { getFilterableFields } from '../../src/decorators';
 import { Field, registerEnumType } from '@nestjs/graphql';
 

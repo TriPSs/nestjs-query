@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Class, getClassMetadata, MetaValue } from '@rezonapp/nestjs-query-core';
+import { Class, getClassMetadata, MetaValue } from '@rezonate/nestjs-query-core';
 import {
   BeforeCreateManyHook,
   BeforeCreateOneHook,

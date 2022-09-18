@@ -1,4 +1,4 @@
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 import { plural } from 'pluralize';
 import { upperCaseFirst } from 'upper-case-first';
 import { lowerCaseFirst } from 'lower-case-first';

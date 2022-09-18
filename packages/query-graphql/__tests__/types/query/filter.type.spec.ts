@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { Class, Filter } from '@rezonapp/nestjs-query-core';
+import { Class, Filter } from '@rezonate/nestjs-query-core';
 import { plainToClass } from 'class-transformer';
 import {
   ObjectType,
@@ -28,7 +28,7 @@ import {
   UnPagedRelation,
   FilterableUnPagedRelation,
   QueryOptions
-} from '@rezonapp/nestjs-query-graphql';
+} from '@rezonate/nestjs-query-graphql';
 import { generateSchema } from '../../__fixtures__';
 
 describe('filter types', (): void => {
@@ -129,7 +129,7 @@ describe('filter types', (): void => {
       class FilterTypeSpec {
         @Query(() => Int)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        test(@Args('input') input: TestDtoFilter): number {
+        test(@Args('input', { type: () => TestDtoFilter }) input: TestDtoFilter): number {
           return 1;
         }
       }
@@ -207,7 +207,7 @@ describe('filter types', (): void => {
         class FilterTypeSpec {
           @Query(() => Int)
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          test(@Args('input') input: TestComparisonDtoFilter): number {
+          test(@Args('input', { type: () => TestComparisonDtoFilter }) input: TestComparisonDtoFilter): number {
             return 1;
           }
         }
@@ -247,7 +247,7 @@ describe('filter types', (): void => {
         class FilterBetweenTypeSpec {
           @Query(() => Int)
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          test(@Args('input') input: TestBetweenComparisonDtoFilter): number {
+          test(@Args('input', { type: () => TestBetweenComparisonDtoFilter }) input: TestBetweenComparisonDtoFilter): number {
             return 1;
           }
         }
@@ -276,7 +276,7 @@ describe('filter types', (): void => {
           class FilterTypeSpec {
             @Query(() => Int)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            test(@Args('input') input: TestComparisonDtoFilter): number {
+            test(@Args('input', { type: () => TestComparisonDtoFilter }) input: TestComparisonDtoFilter): number {
               return 1;
             }
           }
@@ -304,7 +304,7 @@ describe('filter types', (): void => {
           class FilterTypeSpec {
             @Query(() => Int)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            test(@Args('input') input: TestComparisonDtoFilter): number {
+            test(@Args('input', { type: () => TestComparisonDtoFilter }) input: TestComparisonDtoFilter): number {
               return 1;
             }
           }
@@ -332,7 +332,7 @@ describe('filter types', (): void => {
           class FilterTypeSpec {
             @Query(() => Int)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            test(@Args('input') input: TestComparisonDtoFilter): number {
+            test(@Args('input', { type: () => TestComparisonDtoFilter }) input: TestComparisonDtoFilter): number {
               return 1;
             }
           }
@@ -366,7 +366,7 @@ describe('filter types', (): void => {
         class FilterTypeSpec {
           @Query(() => Int)
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          test(@Args('input') input: TestComparisonDtoFilter): number {
+          test(@Args('input', { type: () => TestComparisonDtoFilter }) input: TestComparisonDtoFilter): number {
             return 1;
           }
         }
@@ -396,7 +396,7 @@ describe('filter types', (): void => {
       class FilterTypeSpec {
         @Query(() => Int)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        test(@Args('input') input: TestDtoFilter): number {
+        test(@Args('input', { type: () => TestDtoFilter }) input: TestDtoFilter): number {
           return 1;
         }
       }
@@ -462,7 +462,7 @@ describe('filter types', (): void => {
       class FilterTypeSpec {
         @Query(() => Int)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        test(@Args('input') input: TestDtoFilter): number {
+        test(@Args('input', { type: () => TestDtoFilter }) input: TestDtoFilter): number {
           return 1;
         }
       }
@@ -528,7 +528,7 @@ describe('filter types', (): void => {
       class FilterTypeSpec {
         @Query(() => Int)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        test(@Args('input') input: TestDtoFilter): number {
+        test(@Args('input', { type: () => TestDtoFilter }) input: TestDtoFilter): number {
           return 1;
         }
       }

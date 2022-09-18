@@ -1,4 +1,4 @@
-import { Class, MetaValue, ValueReflector } from '@rezonapp/nestjs-query-core';
+import { Class, MetaValue, ValueReflector } from '@rezonate/nestjs-query-core';
 import { QueryArgsTypeOpts } from '../types';
 import { QUERY_OPTIONS_KEY } from './constants';
 

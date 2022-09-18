@@ -1,4 +1,4 @@
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 import { PubSub } from 'graphql-subscriptions';
 import { DTONamesOpts, getDTONames } from '../common';
 import { GraphQLPubSub } from './pub-sub.interface';

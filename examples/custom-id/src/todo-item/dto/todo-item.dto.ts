@@ -1,4 +1,4 @@
-import { FilterableField, CursorConnection, IDField } from '@rezonapp/nestjs-query-graphql';
+import { FilterableField, CursorConnection, IDField } from '@rezonate/nestjs-query-graphql';
 import { ObjectType, GraphQLISODateTime } from '@nestjs/graphql';
 import { CustomIDScalar } from '../../common/custom-id.scalar';
 import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto';

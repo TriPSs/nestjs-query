@@ -214,9 +214,7 @@ input TimestampFieldComparisonBetween {
   lower: Timestamp!
   upper: Timestamp!
 }
-
 `;
-
 exports[`filter types FilterType allowedBooleanExpressions option no boolean expressions should only expose allowed comparisons 1`] = `
 type Query {
   test(input: TestComparisonDtoFilter!): Int!
@@ -246,9 +244,7 @@ input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
 }
-
 `;
-
 exports[`filter types FilterType allowedBooleanExpressions option only and boolean expressions should only expose allowed comparisons 1`] = `
 type Query {
   test(input: TestComparisonDtoFilter!): Int!
@@ -285,9 +281,7 @@ input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
 }
-
 `;
-
 exports[`filter types FilterType allowedBooleanExpressions option only or boolean expressions should only expose allowed comparisons 1`] = `
 type Query {
   test(input: TestComparisonDtoFilter!): Int!
@@ -324,9 +318,7 @@ input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
 }
-
 `;
-
 exports[`filter types FilterType allowedComparisons option should only expose allowed comparisons 1`] = `
 type Query {
   test(input: TestComparisonDtoFilter!): Int!
@@ -413,9 +405,7 @@ input TestAllowedComparisonStringFieldFilterComparison {
   like: String
   notLike: String
 }
-
 `;
-
 exports[`filter types FilterType allowedComparisons option should only expose between/not between comparisons for allowed types 1`] = `
 type Query {
   test(input: TestBetweenComparisonDtoFilter!): Int!
@@ -517,9 +507,7 @@ input TestBetweenComparisonNumberFieldFilterComparisonBetween {
 input TestBetweenComparisonStringFieldFilterComparison {
   eq: String
 }
-
 `;
-
 exports[`filter types FilterType filterRequired option should only expose allowed comparisons 1`] = `
 type Query {
   test(input: TestComparisonDtoFilter!): Int!
@@ -592,9 +580,7 @@ input DateFieldComparisonBetween {
   lower: DateTime!
   upper: DateTime!
 }
-
 `;
-
 exports[`filter types FilterType should create the correct filter graphql schema 1`] = `
 type Query {
   test(input: TestDtoFilter!): Int!
@@ -825,9 +811,7 @@ input TestFilterDtoFilterTestRelationDtoFilter {
   relationName: StringFieldComparison
   relationAge: NumberFieldComparison
 }
-
 `;
-
 exports[`filter types SubscriptionFilterType should create the correct filter graphql schema 1`] = `
 type Query {
   test(input: TestDtoFilter!): Int!
@@ -1042,9 +1026,7 @@ input TimestampFieldComparisonBetween {
   lower: Timestamp!
   upper: Timestamp!
 }
-
 `;
-
 exports[`filter types UpdateFilterType should create the correct filter graphql schema 1`] = `
 type Query {
   test(input: TestDtoFilter!): Int!
@@ -1259,5 +1241,4 @@ input TimestampFieldComparisonBetween {
   lower: Timestamp!
   upper: Timestamp!
 }
-
 `;

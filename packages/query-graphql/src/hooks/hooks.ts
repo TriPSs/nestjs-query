@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Class, Query } from '@rezonapp/nestjs-query-core';
+import { Class, Query } from '@rezonate/nestjs-query-core';
 import {
   CreateManyInputType,
   CreateOneInputType,

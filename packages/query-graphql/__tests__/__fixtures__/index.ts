@@ -1,10 +1,10 @@
-import { printSchema } from 'graphql';
+import { GraphQLScalarType, printSchema } from 'graphql';
 import { Test } from '@nestjs/testing';
-import { GraphQLSchemaBuilderModule, GraphQLSchemaFactory } from '@nestjs/graphql';
-import { Class } from '@rezonapp/nestjs-query-core';
+import {GraphQLSchemaBuilderModule, GraphQLSchemaFactory, TypeMetadataStorage} from '@nestjs/graphql';
+import { Class } from '@rezonate/nestjs-query-core';
 import { instance, mock } from 'ts-mockito';
 import { PubSub } from 'graphql-subscriptions';
-import { Authorizer, pubSubToken } from '@rezonapp/nestjs-query-graphql';
+import { Authorizer, ConnectionCursorScalar, pubSubToken } from '@rezonate/nestjs-query-graphql';
 import { TestService } from './test-resolver.service';
 import { TestResolverDTO } from './test-resolver.dto';
 import { TestResolverAuthorizer } from './test-resolver.authorizer';
@@ -18,7 +18,8 @@ export { TestRelationDTO } from './test-relation.dto';
 
 const getOrCreateSchemaFactory = async (): Promise<GraphQLSchemaFactory> => {
   const moduleRef = await Test.createTestingModule({
-    imports: [GraphQLSchemaBuilderModule]
+    imports: [GraphQLSchemaBuilderModule],
+    providers: [ConnectionCursorScalar]
   }).compile();
   return moduleRef.get(GraphQLSchemaFactory);
 };
@@ -26,7 +27,14 @@ const getOrCreateSchemaFactory = async (): Promise<GraphQLSchemaFactory> => {
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const generateSchema = async (resolvers: Function[]): Promise<string> => {
   const sf = await getOrCreateSchemaFactory();
-  const schema = await sf.create(resolvers);
+  const schema = await sf.create(resolvers, {
+    scalarsMap: [
+      {
+        type: ConnectionCursorScalar,
+        scalar: new GraphQLScalarType(new ConnectionCursorScalar())
+      }
+    ]
+  });
   return printSchema(schema);
 };
 

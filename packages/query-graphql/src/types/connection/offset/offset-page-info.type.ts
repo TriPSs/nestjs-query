@@ -1,5 +1,5 @@
 import {Directive, Field, ObjectType} from '@nestjs/graphql';
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 import { OffsetPageInfoType } from '../interfaces';
 
 export interface OffsetPageInfoTypeConstructor {

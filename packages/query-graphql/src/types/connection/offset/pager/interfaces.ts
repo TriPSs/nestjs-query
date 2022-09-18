@@ -1,4 +1,4 @@
-import { Paging, Query } from '@rezonapp/nestjs-query-core';
+import { Paging, Query } from '@rezonate/nestjs-query-core';
 import { OffsetConnectionType, PagerResult } from '../../interfaces';
 
 export type OffsetPagingOpts = Required<Paging>;

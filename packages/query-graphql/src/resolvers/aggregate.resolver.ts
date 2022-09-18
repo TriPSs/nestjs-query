@@ -1,4 +1,4 @@
-import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@rezonapp/nestjs-query-core';
+import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@rezonate/nestjs-query-core';
 import {Args, ArgsType, InputType, Resolver} from '@nestjs/graphql';
 import omit from 'lodash.omit';
 import { AuthorizerInterceptor } from '../interceptors';

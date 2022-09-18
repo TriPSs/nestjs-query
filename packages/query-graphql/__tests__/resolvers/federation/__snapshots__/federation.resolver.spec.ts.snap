@@ -47,9 +47,7 @@ type OffsetPageInfo {
 type Query {
   test: TestResolverDTO!
 }
-
 `;
-
 exports[`FederationResolver use the defined relations 1`] = `
 type TestRelationDTO {
   id: ID!
@@ -228,5 +226,4 @@ type TestFederatedRelationOffsetConnectionsConnection {
 type Query {
   test: TestFederated!
 }
-
 `;

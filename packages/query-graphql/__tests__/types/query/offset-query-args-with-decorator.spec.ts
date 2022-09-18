@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { SortDirection } from '@rezonapp/nestjs-query-core';
+import { SortDirection } from '@rezonate/nestjs-query-core';
 import {
   Args,
   ArgsType,
@@ -20,7 +20,7 @@ import {
   PagingStrategies,
   QueryArgsType,
   QueryOptions
-} from '@rezonapp/nestjs-query-graphql';
+} from '@rezonate/nestjs-query-graphql';
 import { generateSchema } from '../../__fixtures__';
 
 describe('Offset paging strategy QueryArgsType with decorator options', (): void => {

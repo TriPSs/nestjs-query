@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Class, ValueReflector } from '@rezonapp/nestjs-query-core';
+import { Class, ValueReflector } from '@rezonate/nestjs-query-core';
 import { ConnectionCursorType, ConnectionCursorScalar } from '../../cursor.scalar';
 import { getGraphqlObjectName } from '../../../common';
 import { EdgeType } from '../interfaces';

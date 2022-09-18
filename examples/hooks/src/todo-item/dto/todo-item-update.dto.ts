@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsBoolean, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
-import { BeforeUpdateMany, BeforeUpdateOne } from '@rezonapp/nestjs-query-graphql';
+import { BeforeUpdateMany, BeforeUpdateOne } from '@rezonate/nestjs-query-graphql';
 import { UpdatedByHook } from '../../hooks';
 
 @InputType('TodoItemUpdate')

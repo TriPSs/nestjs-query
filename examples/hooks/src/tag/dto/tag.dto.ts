@@ -7,7 +7,7 @@ import {
   BeforeUpdateOne,
   BeforeUpdateMany,
   KeySet
-} from '@rezonapp/nestjs-query-graphql';
+} from '@rezonate/nestjs-query-graphql';
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { CreatedByHook, UpdatedByHook } from '../../hooks';
 import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto';

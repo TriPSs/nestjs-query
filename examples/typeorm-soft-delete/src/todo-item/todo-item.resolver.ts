@@ -1,5 +1,5 @@
-import { UpdateManyResponse, Filter } from '@rezonapp/nestjs-query-core';
-import { FilterType, UpdateManyResponseType } from '@rezonapp/nestjs-query-graphql';
+import { UpdateManyResponse, Filter } from '@rezonate/nestjs-query-core';
+import { FilterType, UpdateManyResponseType } from '@rezonate/nestjs-query-graphql';
 import { Resolver, Args, Mutation, ID } from '@nestjs/graphql';
 import { TodoItemDTO } from './dto/todo-item.dto';
 import { TodoItemService } from './todo-item.service';

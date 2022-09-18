@@ -1,4 +1,4 @@
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 import { Complexity } from '@nestjs/graphql';
 import { DTONamesOpts } from '../../common';
 import { ResolverMethodOpts } from '../../decorators';

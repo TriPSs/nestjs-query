@@ -9,9 +9,7 @@ input DeleteOneCustomId {
   """The id of the record to delete."""
   id: String!
 }
-
 `;
-
 exports[`DeleteOneInputType should create an input type with id field as the type 1`] = `
 type Query {
   test(input: DeleteOne!): Int!
@@ -21,5 +19,4 @@ input DeleteOne {
   """The id of the record to delete."""
   id: ID!
 }
-
 `;

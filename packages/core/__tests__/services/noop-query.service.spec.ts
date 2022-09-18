@@ -1,5 +1,5 @@
 import { NoOpQueryService } from '../../src/services/noop-query.service';
-import { QueryService } from '@rezonapp/nestjs-query-core';
+import { QueryService } from '@rezonate/nestjs-query-core';
 import { DeepPartial } from '../../src/common';
 
 describe('NoOpQueryService', () => {

@@ -5,7 +5,7 @@ import {
   FilterableCursorConnection,
   QueryOptions,
   AuthorizationContext
-} from '@rezonapp/nestjs-query-graphql';
+} from '@rezonate/nestjs-query-graphql';
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
 import { UnauthorizedException } from '@nestjs/common';
 import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto';

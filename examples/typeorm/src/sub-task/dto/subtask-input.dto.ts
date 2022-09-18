@@ -1,6 +1,6 @@
 import { Field, InputType, ID } from '@nestjs/graphql';
 import { IsOptional, IsString, IsBoolean, IsNotEmpty } from 'class-validator';
-import { BeforeCreateMany, BeforeCreateOne, CreateManyInputType, CreateOneInputType } from '@rezonapp/nestjs-query-graphql';
+import { BeforeCreateMany, BeforeCreateOne, CreateManyInputType, CreateOneInputType } from '@rezonate/nestjs-query-graphql';
 import { GqlContext } from '../../auth.guard';
 import { getUserName } from '../../helpers';
 import { SubTaskDTO } from './sub-task.dto';

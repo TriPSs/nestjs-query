@@ -1,4 +1,4 @@
-import { Class } from '@rezonapp/nestjs-query-core';
+import { Class } from '@rezonate/nestjs-query-core';
 import { IsInt } from 'class-validator';
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsUndefined } from '../../validators';

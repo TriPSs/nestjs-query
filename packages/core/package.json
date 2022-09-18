@@ -1,9 +1,9 @@
 {
-  "name": "@rezonapp/nestjs-query-core",
-  "version": "4.0.0",
+  "name": "@rezonate/nestjs-query-core",
+  "version": "4.0.2",
   "description": "Base query package",
   "author": "doug-martin <doug@dougamartin.com>",
-  "homepage": "https://github.com/tripss/nestjs-query#readme",
+  "homepage": "https://github.com/Rezonate-io/nestjs-query#readme",
   "license": "MIT",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -19,10 +19,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tripss/nestjs-query.git"
+    "url": "git+https://github.com/Rezonate-io/nestjs-query"
   },
   "bugs": {
-    "url": "https://github.com/tripss/nestjs-query/issues"
+    "url": "https://github.com/Rezonate-io/nestjs-query/issues"
   },
   "dependencies": {
     "lodash.merge": "^4.6.2",

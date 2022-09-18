@@ -1,7 +1,7 @@
 import { plainToClass } from 'class-transformer';
 import { validateSync } from 'class-validator';
 import { InputType, Resolver, Query, Args, Int, ObjectType } from '@nestjs/graphql';
-import { DeleteManyInputType } from '@rezonapp/nestjs-query-graphql';
+import { DeleteManyInputType } from '@rezonate/nestjs-query-graphql';
 import { FilterableField } from '../../src/decorators';
 import { generateSchema } from '../__fixtures__';
 
@@ -20,7 +20,7 @@ describe('DeleteManyInputType', (): void => {
     class DeleteManyInputTypeSpec {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      test(@Args('input') input: DeleteMany): number {
+      test(@Args('input', { type: () => DeleteMany }) input: DeleteMany): number {
         return 1;
       }
     }

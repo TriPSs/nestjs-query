@@ -6,50 +6,9 @@ type TestResolverDTO {
   stringField: String!
 }
 
-type TestResolverDTORelationsAggregateGroupBy {
-  id: ID
-  testResolverId: String
-}
-
-type TestResolverDTORelationsCountAggregate {
-  id: Int
-  testResolverId: Int
-}
-
-type TestResolverDTORelationsMinAggregate {
-  id: ID
-  testResolverId: String
-}
-
-type TestResolverDTORelationsMaxAggregate {
-  id: ID
-  testResolverId: String
-}
-
-type TestResolverDTOTestsAggregateGroupBy {
-  id: ID
-  testResolverId: String
-}
-
-type TestResolverDTOTestsCountAggregate {
-  id: Int
-  testResolverId: Int
-}
-
-type TestResolverDTOTestsMinAggregate {
-  id: ID
-  testResolverId: String
-}
-
-type TestResolverDTOTestsMaxAggregate {
-  id: ID
-  testResolverId: String
-}
-
 type Query {
   test: TestResolverDTO!
 }
-
 `;
 
 exports[`AggregateRelationsResolver aggregate should use the dtoName if provided 1`] = `
@@ -153,9 +112,7 @@ type TestResolverDTOTestsAggregateResponse {
 type Query {
   test: TestResolverDTO!
 }
-
 `;
-
 exports[`AggregateRelationsResolver aggregate should use the object type name 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -237,9 +194,7 @@ type TestResolverDTORelationsAggregateResponse {
 type Query {
   test: TestResolverDTO!
 }
-
 `;
-
 exports[`AggregateRelationsResolver should not add read methods if one and many are empty 1`] = `
 type TestResolverDTO {
   id: ID!
@@ -249,5 +204,4 @@ type TestResolverDTO {
 type Query {
   test: TestResolverDTO!
 }
-
 `;

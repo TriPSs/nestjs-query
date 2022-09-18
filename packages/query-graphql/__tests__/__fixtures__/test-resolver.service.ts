@@ -1,4 +1,4 @@
-import { NoOpQueryService, QueryService } from '@rezonapp/nestjs-query-core';
+import { NoOpQueryService, QueryService } from '@rezonate/nestjs-query-core';
 import { TestResolverDTO } from './test-resolver.dto';
 
 @QueryService(TestResolverDTO)

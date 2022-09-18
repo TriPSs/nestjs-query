@@ -1,5 +1,5 @@
-import { Filter, InjectAssemblerQueryService, QueryService } from '@rezonapp/nestjs-query-core';
-import { ConnectionType } from '@rezonapp/nestjs-query-graphql';
+import { Filter, InjectAssemblerQueryService, QueryService } from '@rezonate/nestjs-query-core';
+import { ConnectionType } from '@rezonate/nestjs-query-graphql';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { TodoItemDTO } from './dto/todo-item.dto';
 import { TodoItemAssembler } from './todo-item.assembler';

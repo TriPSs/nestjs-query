@@ -1,4 +1,4 @@
-import { ArrayReflector, Class, FilterComparisonOperators, getPrototypeChain } from '@rezonapp/nestjs-query-core';
+import { ArrayReflector, Class, FilterComparisonOperators, getPrototypeChain } from '@rezonate/nestjs-query-core';
 import { Field, FieldOptions, ReturnTypeFunc } from '@nestjs/graphql';
 import { FILTERABLE_FIELD_KEY } from './constants';
 
@@ -24,7 +24,7 @@ export interface FilterableFieldDescriptor {
  * In the following DTO `id`, `title` and `completed` are filterable.
  *
  * ```ts
- * import { FilterableField } from '@rezonapp/nestjs-query-graphql';
+ * import { FilterableField } from '@rezonate/nestjs-query-graphql';
  * import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
  *
  * @ObjectType('TodoItem')
