@@ -560,8 +560,8 @@ export class RelationQueryBuilder<Entity, Relation> {
     const rawFilter = columns.reduce(
       (columnsFilter, column) => ({
         ...columnsFilter,
-
-        [`${joinAlias}_${column.propertyName}`]: column.referencedColumn.getEntityValue(entity)
+        // Typeorm truncates columns to 63 bytes: https://github.com/typeorm/typeorm/issues/3118
+        [`${joinAlias}_${column.propertyName}`.slice(0, 63)]: column.referencedColumn.getEntityValue(entity),
       }),
       {} as Partial<Entity>
     );
