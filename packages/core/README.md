@@ -4,12 +4,13 @@
 
 [![npm version](https://img.shields.io/npm/v/@rezonate/nestjs-query-core.svg)](https://www.npmjs.org/package/@rezonate/nestjs-query-core)
 [![Test](https://github.com/Rezonate-io/nestjs-query/workflows/Test/badge.svg?branch=master)](https://github.com/Rezonate-io/nestjs-query/actions?query=workflow%3ATest+and+branch%3Amaster+)
-[![Coverage Status](https://coveralls.io/repos/github/tripss/nestjs-query/badge.svg?branch=master)](https://coveralls.io/github/tripss/nestjs-query?branch=master)
+[![Coverage Status](https://codecov.io/gh/TriPSs/nestjs-query/branch/master/graph/badge.svg?token=29EX71ID2P)](https://codecov.io/gh/TriPSs/nestjs-query)
 [![Known Vulnerabilities](https://snyk.io/test/github/tripss/nestjs-query/badge.svg?targetFile=packages/core/package.json)](https://snyk.io/test/github/tripss/nestjs-query?targetFile=packages/core/package.json)
 
 # `@rezonate/nestjs-query-core`
 
-Core package that contains interfaces for types used by [`@rezonate/nestjs-query-graphql`](../query-graphql) and [`@rezonate/nestjs-query-typeorm`](../query-typeorm)
+Core package that contains interfaces for types used by [`@rezonate/nestjs-query-graphql`](../query-graphql)
+and [`@rezonate/nestjs-query-typeorm`](../query-typeorm)
 
 ## Installation
 
@@ -18,5 +19,4 @@ Core package that contains interfaces for types used by [`@rezonate/nestjs-query
 ## Docs
 
 * [Nestjs-query Docs](https://tripss.github.io/nestjs-query/docs/introduction/getting-started)
-
 

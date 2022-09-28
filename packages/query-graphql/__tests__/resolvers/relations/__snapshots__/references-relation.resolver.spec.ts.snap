@@ -15,7 +15,6 @@ exports[`ReferencesRelationMixin should set the field to nullable if set to true
 type TestResolverDTO {
   id: ID!
   stringField: String!
-  test: TestRelationDTO!
   reference: TestRelationDTO
 }
 

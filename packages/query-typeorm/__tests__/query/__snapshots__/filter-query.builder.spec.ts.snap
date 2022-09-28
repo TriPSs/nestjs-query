@@ -19,14 +19,14 @@ DELETE FROM
 
 exports[`FilterQueryBuilder #select with filter should call whereBuilder#build if there is a filter 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 WHERE
@@ -35,42 +35,42 @@ WHERE
 
 exports[`FilterQueryBuilder #select with filter should not call whereBuilder#build 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 `;
 
 exports[`FilterQueryBuilder #select with paging should apply empty paging args 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 `;
 
 exports[`FilterQueryBuilder #select with paging should apply paging args going backward 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 LIMIT
@@ -81,14 +81,14 @@ OFFSET
 
 exports[`FilterQueryBuilder #select with paging should apply paging args going forward 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 LIMIT
@@ -99,14 +99,14 @@ OFFSET
 
 exports[`FilterQueryBuilder #select with sorting should apply ASC NULLS_FIRST sorting 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 ORDER BY
@@ -115,14 +115,14 @@ ORDER BY
 
 exports[`FilterQueryBuilder #select with sorting should apply ASC NULLS_LAST sorting 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 ORDER BY
@@ -131,14 +131,14 @@ ORDER BY
 
 exports[`FilterQueryBuilder #select with sorting should apply ASC sorting 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 ORDER BY
@@ -147,14 +147,14 @@ ORDER BY
 
 exports[`FilterQueryBuilder #select with sorting should apply DESC NULLS_FIRST sorting 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 ORDER BY
@@ -163,14 +163,14 @@ ORDER BY
 
 exports[`FilterQueryBuilder #select with sorting should apply DESC NULLS_LAST sorting 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 ORDER BY
@@ -179,14 +179,14 @@ ORDER BY
 
 exports[`FilterQueryBuilder #select with sorting should apply DESC sorting 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 ORDER BY
@@ -195,14 +195,14 @@ ORDER BY
 
 exports[`FilterQueryBuilder #select with sorting should apply multiple sorts 1`] = `
 SELECT
-  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."id" AS "TestEntity_id",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
 FROM
   "test_entity" "TestEntity"
 ORDER BY

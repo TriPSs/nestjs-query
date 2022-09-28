@@ -1,28 +1,29 @@
-import { GraphQLScalarType, printSchema } from 'graphql';
-import { Test } from '@nestjs/testing';
-import {GraphQLSchemaBuilderModule, GraphQLSchemaFactory, TypeMetadataStorage} from '@nestjs/graphql';
-import { Class } from '@rezonate/nestjs-query-core';
-import { instance, mock } from 'ts-mockito';
-import { PubSub } from 'graphql-subscriptions';
-import { Authorizer, ConnectionCursorScalar, pubSubToken } from '@rezonate/nestjs-query-graphql';
-import { TestService } from './test-resolver.service';
-import { TestResolverDTO } from './test-resolver.dto';
-import { TestResolverAuthorizer } from './test-resolver.authorizer';
-import { getAuthorizerToken } from '../../src/auth';
+import { GraphQLSchemaBuilderModule, GraphQLSchemaFactory } from '@nestjs/graphql'
+import { Test } from '@nestjs/testing'
+import { Class } from '@rezonate/nestjs-query-core'
+import { Authorizer, ConnectionCursorScalar, pubSubToken } from '@rezonate/nestjs-query-graphql'
+import { GraphQLScalarType, printSchema } from 'graphql'
+import { PubSub } from 'graphql-subscriptions'
+import { instance, mock } from 'ts-mockito'
 
-export { TestResolverInputDTO } from './test-resolver-input.dto';
-export { TestResolverDTO } from './test-resolver.dto';
-export { TestResolverAuthorizer } from './test-resolver.authorizer';
-export { TestService } from './test-resolver.service';
-export { TestRelationDTO } from './test-relation.dto';
+import { getAuthorizerToken } from '../../src/auth'
+import { TestResolverAuthorizer } from './test-resolver.authorizer'
+import { TestResolverDTO } from './test-resolver.dto'
+import { TestService } from './test-resolver.service'
+
+export { TestRelationDTO } from './test-relation.dto'
+export { TestResolverAuthorizer } from './test-resolver.authorizer'
+export { TestResolverDTO } from './test-resolver.dto'
+export { TestService } from './test-resolver.service'
+export { TestResolverInputDTO } from './test-resolver-input.dto'
 
 const getOrCreateSchemaFactory = async (): Promise<GraphQLSchemaFactory> => {
   const moduleRef = await Test.createTestingModule({
     imports: [GraphQLSchemaBuilderModule],
     providers: [ConnectionCursorScalar]
-  }).compile();
-  return moduleRef.get(GraphQLSchemaFactory);
-};
+  }).compile()
+  return moduleRef.get(GraphQLSchemaFactory)
+}
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const generateSchema = async (resolvers: Function[]): Promise<string> => {
@@ -39,19 +40,19 @@ export const generateSchema = async (resolvers: Function[]): Promise<string> => 
 };
 
 interface ResolverMock<T> {
-  resolver: T;
-  mockService: TestService;
-  mockPubSub: PubSub;
-  mockAuthorizer: Authorizer<TestResolverDTO>;
+  resolver: T
+  mockService: TestService
+  mockPubSub: PubSub
+  mockAuthorizer: Authorizer<TestResolverDTO>
 }
 
 export const createResolverFromNest = async <T>(
   ResolverClass: Class<T>,
   DTOClass: Class<unknown> = TestResolverDTO
 ): Promise<ResolverMock<T>> => {
-  const mockService = mock(TestService);
-  const mockPubSub = mock(PubSub);
-  const mockAuthorizer = mock(TestResolverAuthorizer);
+  const mockService = mock(TestService)
+  const mockPubSub = mock(PubSub)
+  const mockAuthorizer = mock(TestResolverAuthorizer)
   const moduleRef = await Test.createTestingModule({
     providers: [
       ResolverClass,
@@ -62,7 +63,7 @@ export const createResolverFromNest = async <T>(
   })
     .overrideProvider(TestService)
     .useValue(instance(mockService))
-    .compile();
+    .compile()
 
-  return { resolver: moduleRef.get(ResolverClass), mockService, mockPubSub, mockAuthorizer };
-};
+  return { resolver: moduleRef.get(ResolverClass), mockService, mockPubSub, mockAuthorizer }
+}

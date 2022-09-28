@@ -2,7 +2,7 @@
 
 exports[`AggregateBuilder should create selects for all aggregate functions 1`] = `
 SELECT
-  COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk",
+  COUNT("TestEntity"."id") AS "COUNT_id",
   SUM("TestEntity"."number_type") AS "SUM_numberType",
   AVG("TestEntity"."number_type") AS "AVG_numberType",
   MAX("TestEntity"."string_type") AS "MAX_stringType",
@@ -19,7 +19,7 @@ exports[`AggregateBuilder should create selects for all aggregate functions and 
 SELECT
   "TestEntity"."string_type" AS "GROUP_BY_stringType",
   "TestEntity"."bool_type" AS "GROUP_BY_boolType",
-  COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
+  COUNT("TestEntity"."id") AS "COUNT_id"
 FROM
   "test_entity" "TestEntity"
 `;

@@ -1,3 +1,0 @@
-CREATE USER complexity WITH SUPERUSER;
-CREATE DATABASE complexity;
-GRANT ALL PRIVILEGES ON DATABASE complexity TO complexity;

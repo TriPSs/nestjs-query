@@ -2,8 +2,8 @@
   "version": 2,
   "projects": {
     "core": "packages/core",
-    "examples": "examples",
     "query-graphql": "packages/query-graphql",
     "query-typeorm": "packages/query-typeorm"
-  }
+  },
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json"
 }

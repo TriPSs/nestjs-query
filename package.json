@@ -2,7 +2,7 @@
   "name": "nestjs-query",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/**"
   ],
   "scripts": {
     "build": "nx run-many --target=build --all",
@@ -29,6 +29,7 @@
     "apollo-server-types": "3.6.2",
     "class-validator": "0.13.2",
     "clsx": "1.2.1",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
     "passport": "0.6.0",
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",

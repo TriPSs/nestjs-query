@@ -10,14 +10,3 @@ type Query {
   updateTest: UpdateManyResponse!
 }
 `;
-
-exports[`UpdateManyResponseType should create a @rezonate/graphql object type 1`] = `
-type UpdateManyResponse {
-  """The number of records updated."""
-  updatedCount: Int!
-}
-
-type Query {
-  updateTest: UpdateManyResponse!
-}
-`;

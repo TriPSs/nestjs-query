@@ -10,14 +10,3 @@ type Query {
   deleteTest: DeleteManyResponse!
 }
 `;
-
-exports[`DeleteManyResponseType should create a @rezonate/graphql object type 1`] = `
-type DeleteManyResponse {
-  """The number of records deleted."""
-  deletedCount: Int!
-}
-
-type Query {
-  deleteTest: DeleteManyResponse!
-}
-`;

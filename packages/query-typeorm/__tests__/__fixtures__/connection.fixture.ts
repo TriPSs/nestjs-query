@@ -1,13 +1,13 @@
 // this is needed to create a query builder in typeorm :(
-import { DataSource} from 'typeorm';
-import { TestEntityRelationEntity } from './test-entity-relation.entity';
-import { TestRelation } from './test-relation.entity';
-import { TestSoftDeleteEntity } from './test-soft-delete.entity';
-import { TestEntity } from './test.entity';
-import { seed } from './seeds';
-import { RelationOfTestRelationEntity } from './relation-of-test-relation.entity';
-import { TestSoftDeleteRelation } from './test-soft-delete.relation';
-import { DataSourceOptions } from 'typeorm/data-source/DataSourceOptions';
+import { Connection, ConnectionOptions, createConnection, DataSource, DataSourceOptions, getConnection } from 'typeorm'
+
+import { RelationOfTestRelationEntity } from './relation-of-test-relation.entity'
+import { seed } from './seeds'
+import { TestEntity } from './test.entity'
+import { TestEntityRelationEntity } from './test-entity-relation.entity'
+import { TestRelation } from './test-relation.entity'
+import { TestSoftDeleteEntity } from './test-soft-delete.entity'
+import { TestSoftDeleteRelation } from './test-soft-delete.relation'
 
 export const CONNECTION_OPTIONS: DataSourceOptions = {
   type: 'sqlite',
