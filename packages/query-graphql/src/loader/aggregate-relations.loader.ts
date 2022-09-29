@@ -17,7 +17,7 @@ export class AggregateRelationsLoader<DTO, Relation>
   createLoader(service: QueryService<DTO, unknown, unknown>) {
     return async (
       queryArgs: ReadonlyArray<AggregateRelationsArgs<DTO, Relation>>
-    ): Promise<(AggregateResponse<Relation> | Error)[]> => {
+    ): Promise<Array<AggregateResponse<Relation>[]>> => {
       // group
       const queryMap = this.groupQueries(queryArgs)
       return this.loadResults(service, queryMap)
@@ -27,14 +27,15 @@ export class AggregateRelationsLoader<DTO, Relation>
   private async loadResults(
     service: QueryService<DTO, unknown, unknown>,
     queryRelationsMap: AggregateRelationsMap<DTO, Relation>
-  ): Promise<AggregateResponse<Relation>[]> {
-    const results: AggregateResponse<Relation>[] = []
+  ): Promise<Array<AggregateResponse<Relation>[]>> {
+    const results: Array<AggregateResponse<Relation>[]> = []
     await Promise.all(
       [...queryRelationsMap.values()].map(async (args) => {
         const { filter, aggregate } = args[0]
         const dtos = args.map((a) => a.dto)
         const aggregationResults = await service.aggregateRelations(this.RelationDTO, this.relationName, dtos, filter, aggregate)
-        const dtoRelationAggregates = dtos.map((dto) => aggregationResults.get(dto) ?? {})
+        const dtoRelationAggregates = dtos.map((dto) => aggregationResults.get(dto) ?? ([{}] as AggregateResponse<Relation>[]))
+        // Since we can groupBy although the relation is not existent, we need to fill the missing results with empty objects / arrays
         dtoRelationAggregates.forEach((relationAggregate, index) => {
           results[args[index].index] = relationAggregate
         })
