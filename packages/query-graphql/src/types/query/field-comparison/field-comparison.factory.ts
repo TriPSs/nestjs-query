@@ -9,6 +9,7 @@ import { getOrCreateBooleanFieldComparison } from './boolean-field-comparison.ty
 import { IsUndefined } from '../../validators'
 import { getOrCreateFloatFieldComparison } from './float-field-comparison.type'
 import { getOrCreateTimestampFieldComparison } from './timestamp-field-comparison.type'
+import { getOrCreateStringListFieldComparison } from './string-list-field-comparison.type'
 import { SkipIf } from '../../../decorators'
 import { getGraphqlEnumMetadata } from '../../../common'
 import { upperCaseFirst } from 'upper-case-first'
@@ -19,7 +20,8 @@ import {
   GraphQLTimestamp,
   ID,
   InputType,
-  Int, ReturnTypeFunc,
+  Int,
+  ReturnTypeFunc,
   ReturnTypeFuncValue
 } from '@nestjs/graphql'
 import { Type } from 'class-transformer';
@@ -28,6 +30,7 @@ import { Type } from 'class-transformer';
 /** @internal */
 const filterComparisonMap = new Map<string, () => Class<FilterFieldComparison<unknown>>>()
 filterComparisonMap.set('StringFilterComparison', getOrCreateStringFieldComparison)
+filterComparisonMap.set('StringListFilterComparison', getOrCreateStringListFieldComparison)
 filterComparisonMap.set('NumberFilterComparison', getOrCreateNumberFieldComparison)
 filterComparisonMap.set('IntFilterComparison', getOrCreateIntFieldComparison)
 filterComparisonMap.set('FloatFilterComparison', getOrCreateFloatFieldComparison)
@@ -48,6 +51,8 @@ const knownTypes: Set<ReturnTypeFuncValue> = new Set([
   GraphQLTimestamp
 ])
 
+const knownArrTypes: Set<ReturnTypeFuncValue> = new Set([String])
+
 const allowedBetweenTypes: Set<ReturnTypeFuncValue> = new Set([Number, Int, Float, Date, GraphQLISODateTime, GraphQLTimestamp])
 
 /** @internal */
@@ -55,6 +60,13 @@ const getTypeName = (SomeType: ReturnTypeFuncValue): string => {
   if (knownTypes.has(SomeType) || isNamed(SomeType)) {
     const typeName = (SomeType as { name: string }).name
     return upperCaseFirst(typeName)
+  }
+  if (typeof SomeType === 'object' && Array.isArray(SomeType)) {
+    if (knownArrTypes.has(SomeType?.[0] as ReturnTypeFuncValue)) {
+      const typeName = getTypeName(SomeType?.[0] as ReturnTypeFuncValue)
+      return `${typeName}List`
+    }
+    throw new Error(`Unable to create filter comparison for ${JSON.stringify(SomeType)}.`)
   }
   if (typeof SomeType === 'object') {
     const enumType = getGraphqlEnumMetadata(SomeType)

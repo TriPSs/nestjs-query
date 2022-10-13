@@ -65,6 +65,7 @@ export function AggregateResponseType<DTO>(DTOClass: Class<DTO>, opts?: Aggregat
     const minMaxFields = fields.filter(({ target }) => target !== Boolean)
     const GroupType = AggregateGroupByType(`${prefix}AggregateGroupBy`, fields)
     const CountType = NumberAggregatedType(`${prefix}CountAggregate`, fields, Int)
+    const DistinctCountType = NumberAggregatedType(`${prefix}DistinctCountAggregate`, fields, Int)
     const SumType = NumberAggregatedType(`${prefix}SumAggregate`, numberFields, Float)
     const AvgType = NumberAggregatedType(`${prefix}AvgAggregate`, numberFields, Float)
     const MinType = AggregatedType(`${prefix}MinAggregate`, minMaxFields)
@@ -77,6 +78,9 @@ export function AggregateResponseType<DTO>(DTOClass: Class<DTO>, opts?: Aggregat
 
       @Field(() => CountType, { nullable: true })
       count?: NumberAggregate<DTO>
+
+      @Field(() => DistinctCountType, { nullable: true })
+      distinctCount?: NumberAggregate<DTO>
 
       @SkipIf(() => numberFields.length === 0, Field(() => SumType, { nullable: true }))
       sum?: NumberAggregate<DTO>

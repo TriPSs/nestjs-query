@@ -8,6 +8,7 @@ export type TypeAggregate<DTO> = {
 
 export type AggregateResponse<DTO> = {
   count?: NumberAggregate<DTO>
+  distinctCount?: NumberAggregate<DTO>
   sum?: NumberAggregate<DTO>
   avg?: NumberAggregate<DTO>
   max?: TypeAggregate<DTO>

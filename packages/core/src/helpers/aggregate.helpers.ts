@@ -55,6 +55,7 @@ export const transformAggregateQuery = <From, To>(
   fieldMap: QueryFieldMap<From, To>
 ): AggregateQuery<To> => ({
   count: convertAggregateQueryFields(fieldMap, query.count),
+  distinctCount: convertAggregateQueryFields(fieldMap, query.distinctCount),
   sum: convertAggregateQueryFields(fieldMap, query.sum),
   avg: convertAggregateQueryFields(fieldMap, query.avg),
   max: convertAggregateQueryFields(fieldMap, query.max),
@@ -66,6 +67,7 @@ export const transformAggregateResponse = <From, To>(
   fieldMap: QueryFieldMap<From, To>
 ): AggregateResponse<To> => ({
   count: convertAggregateNumberFields(fieldMap, response.count),
+  distinctCount: convertAggregateNumberFields(fieldMap, response.distinctCount),
   sum: convertAggregateNumberFields(fieldMap, response.sum),
   avg: convertAggregateNumberFields(fieldMap, response.avg),
   max: convertAggregateFields(fieldMap, response.max),

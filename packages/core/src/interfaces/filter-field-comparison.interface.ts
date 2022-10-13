@@ -179,6 +179,15 @@ export interface StringFieldComparisons extends CommonFieldComparisonType<string
    * ```
    */
   notILike?: string
+
+  /**
+   * For array.
+   * :${paramName}::text = ANY (${col})
+   * ```ts
+   * // field ANY ("Foo")
+   * { field: { contains: 'Foo' } }
+   */
+  contains?: string
 }
 
 type BuiltInTypes = boolean | boolean | string | string | number | Date | RegExp | bigint | symbol | null | undefined | never

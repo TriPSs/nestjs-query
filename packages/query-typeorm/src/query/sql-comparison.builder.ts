@@ -63,6 +63,9 @@ export class SQLComparisonBuilder<Entity> {
       // comparison operator (e.b. =, !=, >, <)
       return this.createComparisonSQL(normalizedCmp, col, val)
     }
+    if (normalizedCmp === 'contains') {
+      return this.containsComparisonSQL(col, val)
+    }
     if (normalizedCmp === 'is') {
       // is comparison (IS TRUE, IS FALSE, IS NULL)
       return this.isComparisonSQL(col, val)
@@ -98,6 +101,11 @@ export class SQLComparisonBuilder<Entity> {
     const operator = this.comparisonMap[cmp]
     const { paramName } = this
     return { sql: `${col} ${operator} :${paramName}`, params: { [paramName]: val } }
+  }
+
+  private containsComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {
+    const { paramName } = this
+    return { sql: `:${paramName}::text = ANY (${col})`, params: { [paramName]: val } }
   }
 
   private isComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {

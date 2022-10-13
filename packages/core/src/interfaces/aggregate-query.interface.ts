@@ -1,5 +1,6 @@
 export type AggregateQuery<DTO> = {
   count?: (keyof DTO)[]
+  distinctCount?: (keyof DTO)[]
   sum?: (keyof DTO)[]
   avg?: (keyof DTO)[]
   max?: (keyof DTO)[]
