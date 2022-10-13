@@ -107,7 +107,6 @@ export class AggregateBuilder<Entity> {
    * @param alias - optional alias to use to qualify an identifier
    */
   public build<Qb extends SelectQueryBuilder<Entity>>(qb: Qb, aggregate: AggregateQuery<Entity>, alias?: string): Qb {
-    console.log('aggregate', aggregate)
     const selects = [
       ...this.createGroupBySelect(aggregate.groupBy, alias),
       ...this.createAggSelect(AggregateFuncs.COUNT, aggregate.count, alias),
