@@ -5,7 +5,7 @@ import { GraphQLResolveInfo } from 'graphql'
 import graphqlFields from 'graphql-fields'
 
 const EXCLUDED_FIELDS = ['__typename']
-const QUERY_OPERATORS: (keyof AggregateQuery<unknown>)[] = ['groupBy', 'count', 'avg', 'sum', 'min', 'max']
+const QUERY_OPERATORS: (keyof AggregateQuery<unknown>)[] = ['groupBy', 'count', 'distinctCount', 'avg', 'sum', 'min', 'max']
 export const AggregateQueryParam = createParamDecorator(<DTO>(data: unknown, ctx: ExecutionContext) => {
   const info = GqlExecutionContext.create(ctx).getInfo<GraphQLResolveInfo>()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-argument

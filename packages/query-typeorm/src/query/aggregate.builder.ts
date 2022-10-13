@@ -7,11 +7,12 @@ enum AggregateFuncs {
   AVG = 'AVG',
   SUM = 'SUM',
   COUNT = 'COUNT',
+  DISTINCT_COUNT = 'DISTINCT_COUNT',
   MAX = 'MAX',
   MIN = 'MIN'
 }
 
-const AGG_REGEXP = /(AVG|SUM|COUNT|MAX|MIN|GROUP_BY)_(.*)/
+const AGG_REGEXP = /(AVG|SUM|COUNT|DISTINCT_COUNT|MAX|MIN|GROUP_BY)_(.*)/
 
 /**
  * @internal
@@ -42,6 +43,7 @@ export class AggregateBuilder<Entity> {
   private static getAggregateFuncSelects<Entity>(query: AggregateQuery<Entity>): string[] {
     const aggs: [AggregateFuncs, (keyof Entity)[] | undefined][] = [
       [AggregateFuncs.COUNT, query.count],
+      [AggregateFuncs.DISTINCT_COUNT, query.distinctCount],
       [AggregateFuncs.SUM, query.sum],
       [AggregateFuncs.AVG, query.avg],
       [AggregateFuncs.MAX, query.max],
@@ -105,9 +107,11 @@ export class AggregateBuilder<Entity> {
    * @param alias - optional alias to use to qualify an identifier
    */
   public build<Qb extends SelectQueryBuilder<Entity>>(qb: Qb, aggregate: AggregateQuery<Entity>, alias?: string): Qb {
+    console.log('aggregate', aggregate)
     const selects = [
       ...this.createGroupBySelect(aggregate.groupBy, alias),
       ...this.createAggSelect(AggregateFuncs.COUNT, aggregate.count, alias),
+      ...this.createAggDistinctSelect(AggregateFuncs.DISTINCT_COUNT, aggregate.distinctCount, alias),
       ...this.createAggSelect(AggregateFuncs.SUM, aggregate.sum, alias),
       ...this.createAggSelect(AggregateFuncs.AVG, aggregate.avg, alias),
       ...this.createAggSelect(AggregateFuncs.MAX, aggregate.max, alias),
@@ -127,6 +131,16 @@ export class AggregateBuilder<Entity> {
     return fields.map((field) => {
       const col = alias ? `${alias}.${field as string}` : (field as string)
       return [`${func}(${col})`, AggregateBuilder.getAggregateAlias(func, field)]
+    })
+  }
+
+  private createAggDistinctSelect(func: AggregateFuncs, fields?: (keyof Entity)[], alias?: string): [string, string][] {
+    if (!fields) {
+      return []
+    }
+    return fields.map((field) => {
+      const col = alias ? `${alias}.${field as string}` : (field as string)
+      return [`COUNT (DISTINCT ${col})`, AggregateBuilder.getAggregateAlias(func, field)]
     })
   }
 
