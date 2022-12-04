@@ -1,4 +1,13 @@
  
+## [1.1.4](https://github.com/TriPSs/nestjs-query/compare/v1.1.3...v1.1.4) (2022-12-04)
+
+
+### Performance Improvements
+
+* **query-typeorm:** Use `= TRUE` instead of `IS TRUE` so indexes on boolean fields can be used ([a4522ab](https://github.com/TriPSs/nestjs-query/commit/a4522abdfff7810168be10ed6bb5f532c110d791))
+
+
+
 ## [1.1.3](https://github.com/TriPSs/nestjs-query/compare/v1.1.2...v1.1.3) (2022-11-25)
 
 
