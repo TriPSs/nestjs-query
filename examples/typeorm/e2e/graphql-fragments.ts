@@ -4,6 +4,7 @@ export const todoItemFields = `
     completed
     description
     age
+    subTasksCount
   `
 
 export const subTaskFields = `

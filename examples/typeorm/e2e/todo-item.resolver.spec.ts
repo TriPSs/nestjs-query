@@ -71,7 +71,8 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
                 title: 'Create Nest App',
                 completed: true,
                 description: null,
-                age: expect.any(Number)
+                age: expect.any(Number),
+                subTasksCount: 3
               }
             }
           })
@@ -239,16 +240,31 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
           expect(totalCount).toBe(5)
           expect(edges).toHaveLength(5)
           expect(edges.map((e) => e.node)).toEqual([
-            { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number) },
-            { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number) },
-            { id: '3', title: 'Create Entity Service', completed: false, description: null, age: expect.any(Number) },
-            { id: '4', title: 'Add Todo Item Resolver', completed: false, description: null, age: expect.any(Number) },
+            { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number), subTasksCount: 3 },
+            { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number), subTasksCount: 3 },
+            {
+              id: '3',
+              title: 'Create Entity Service',
+              completed: false,
+              description: null,
+              age: expect.any(Number),
+              subTasksCount: 3
+            },
+            {
+              id: '4',
+              title: 'Add Todo Item Resolver',
+              completed: false,
+              description: null,
+              age: expect.any(Number),
+              subTasksCount: 3
+            },
             {
               id: '5',
               title: 'How to create item With Sub Tasks',
               completed: false,
               description: null,
-              age: expect.any(Number)
+              age: expect.any(Number),
+              subTasksCount: 3
             }
           ])
         }))
@@ -279,9 +295,16 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
           expect(totalCount).toBe(3)
           expect(edges).toHaveLength(3)
           expect(edges.map((e) => e.node)).toEqual([
-            { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number) },
-            { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number) },
-            { id: '3', title: 'Create Entity Service', completed: false, description: null, age: expect.any(Number) }
+            { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number), subTasksCount: 3 },
+            { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number), subTasksCount: 3 },
+            {
+              id: '3',
+              title: 'Create Entity Service',
+              completed: false,
+              description: null,
+              age: expect.any(Number),
+              subTasksCount: 3
+            }
           ])
         }))
 
@@ -312,8 +335,8 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
           expect(edges).toHaveLength(2)
 
           expect(edges.map((e) => e.node)).toEqual([
-            { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number) },
-            { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number) }
+            { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number), subTasksCount: 3 },
+            { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number), subTasksCount: 3 }
           ])
         }))
 
@@ -344,8 +367,15 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
           expect(edges).toHaveLength(2)
 
           expect(edges.map((e) => e.node)).toEqual([
-            { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number) },
-            { id: '4', title: 'Add Todo Item Resolver', completed: false, description: null, age: expect.any(Number) }
+            { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number), subTasksCount: 3 },
+            {
+              id: '4',
+              title: 'Add Todo Item Resolver',
+              completed: false,
+              description: null,
+              age: expect.any(Number),
+              subTasksCount: 3
+            }
           ])
         }))
 
@@ -380,14 +410,84 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
               title: 'How to create item With Sub Tasks',
               completed: false,
               description: null,
-              age: expect.any(Number)
+              age: expect.any(Number),
+              subTasksCount: 3
             },
-            { id: '4', title: 'Add Todo Item Resolver', completed: false, description: null, age: expect.any(Number) },
-            { id: '3', title: 'Create Entity Service', completed: false, description: null, age: expect.any(Number) },
-            { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number) },
-            { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number) }
+            {
+              id: '4',
+              title: 'Add Todo Item Resolver',
+              completed: false,
+              description: null,
+              age: expect.any(Number),
+              subTasksCount: 3
+            },
+            {
+              id: '3',
+              title: 'Create Entity Service',
+              completed: false,
+              description: null,
+              age: expect.any(Number),
+              subTasksCount: 3
+            },
+            { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number), subTasksCount: 3 },
+            { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number), subTasksCount: 3 }
           ])
         }))
+
+    // it(`should allow sorting on a virtual column`, () =>
+    //   request(app.getHttpServer())
+    //     .post('/graphql')
+    //     .send({
+    //       operationName: null,
+    //       variables: {},
+    //       query: `{
+    //       todoItems(sorting: [{field: subTasksCount, direction: DESC}]) {
+    //         ${pageInfoField}
+    //         ${edgeNodes(todoItemFields)}
+    //         totalCount
+    //       }
+    //     }`
+    //     })
+    //     .expect(200)
+    //     .then(({ body }) => {
+    //       const { edges, pageInfo, totalCount }: CursorConnectionType<TodoItemDTO> = body.data.todoItems
+    //       expect(pageInfo).toEqual({
+    //         endCursor: 'eyJ0eXBlIjoia2V5c2V0IiwiZmllbGRzIjpbeyJmaWVsZCI6ImlkIiwidmFsdWUiOjF9XX0=',
+    //         hasNextPage: false,
+    //         hasPreviousPage: false,
+    //         startCursor: 'eyJ0eXBlIjoia2V5c2V0IiwiZmllbGRzIjpbeyJmaWVsZCI6ImlkIiwidmFsdWUiOjV9XX0='
+    //       })
+    //       expect(totalCount).toBe(5)
+    //       expect(edges).toHaveLength(5)
+    //       expect(edges.map((e) => e.node)).toEqual([
+    //         {
+    //           id: '5',
+    //           title: 'How to create item With Sub Tasks',
+    //           completed: false,
+    //           description: null,
+    //           age: expect.any(Number),
+    //           subTasksCount: 3
+    //         },
+    //         {
+    //           id: '4',
+    //           title: 'Add Todo Item Resolver',
+    //           completed: false,
+    //           description: null,
+    //           age: expect.any(Number),
+    //           subTasksCount: 3
+    //         },
+    //         {
+    //           id: '3',
+    //           title: 'Create Entity Service',
+    //           completed: false,
+    //           description: null,
+    //           age: expect.any(Number),
+    //           subTasksCount: 3
+    //         },
+    //         { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number), subTasksCount: 3 },
+    //         { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number), subTasksCount: 3 }
+    //       ])
+    //     }))
 
     describe('paging', () => {
       it(`should allow paging with the 'first' field`, () =>
@@ -416,8 +516,15 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
             expect(totalCount).toBe(5)
             expect(edges).toHaveLength(2)
             expect(edges.map((e) => e.node)).toEqual([
-              { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number) },
-              { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number) }
+              {
+                id: '1',
+                title: 'Create Nest App',
+                completed: true,
+                description: null,
+                age: expect.any(Number),
+                subTasksCount: 3
+              },
+              { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number), subTasksCount: 3 }
             ])
           }))
 
@@ -447,13 +554,21 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
             expect(totalCount).toBe(5)
             expect(edges).toHaveLength(2)
             expect(edges.map((e) => e.node)).toEqual([
-              { id: '3', title: 'Create Entity Service', completed: false, description: null, age: expect.any(Number) },
+              {
+                id: '3',
+                title: 'Create Entity Service',
+                completed: false,
+                description: null,
+                age: expect.any(Number),
+                subTasksCount: 3
+              },
               {
                 id: '4',
                 title: 'Add Todo Item Resolver',
                 completed: false,
                 description: null,
-                age: expect.any(Number)
+                age: expect.any(Number),
+                subTasksCount: 3
               }
             ])
           }))
