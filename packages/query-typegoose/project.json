@@ -1,4 +1,5 @@
 {
+  "name": "query-typegoose",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/query-typegoose/src",
   "projectType": "library",
@@ -12,7 +13,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/query-typegoose"],
+      "outputs": ["{workspaceRoot}/coverage/packages/query-typegoose"],
       "options": {
         "jestConfig": "packages/query-typegoose/jest.config.ts",
         "passWithNoTests": true
