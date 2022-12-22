@@ -81,7 +81,7 @@ export abstract class ClassTransformerAssembler<DTO, Entity extends DeepPartial<
       if (serializer) {
         return serializer(entityOrDto)
       }
-    } else if (entityOrDto && 'constructor' in entityOrDto) {
+    } else if (entityOrDto && 'constructor' in (entityOrDto as object)) {
       // eslint-disable-next-line @typescript-eslint/ban-types
       const serializer = getAssemblerSerializer(entityOrDto.constructor as Class<unknown>)
 
