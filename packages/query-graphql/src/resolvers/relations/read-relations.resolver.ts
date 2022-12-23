@@ -48,6 +48,11 @@ const ReadOneRelationMixin =
         })
         authFilter?: Filter<Relation>
       ): Promise<Relation | undefined> {
+        // If look ahead is enabled check if the dto already has it
+        if (relation.enableLookAhead && dto[relation.dtoName]) {
+          return dto[relation.dtoName] as Relation
+        }
+
         return DataLoaderFactory.getOrCreateLoader(
           context,
           loaderName,

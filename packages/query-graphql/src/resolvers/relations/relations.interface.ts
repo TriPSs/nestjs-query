@@ -61,6 +61,10 @@ export type ResolverRelation<Relation> = {
    */
   enableAggregate?: boolean
   /**
+   * Enable look ahead mode, will join and select the relation when queried
+   */
+  enableLookAhead?: boolean
+  /**
    * Indicates if soft-deleted rows should be included in relation result.
    */
   withDeleted?: boolean
@@ -87,7 +91,7 @@ export type ResolverRelation<Relation> = {
 export type RelationTypeMap<RT> = Record<string, RT>
 
 export type ResolverOneRelation<Relation> = Omit<ResolverRelation<Relation>, 'disableFilter' | 'disableSort'>
-export type ResolverManyRelation<Relation> = ResolverRelation<Relation>
+export type ResolverManyRelation<Relation> = Omit<ResolverRelation<Relation>, 'enableLookAhead'>
 
 export type RelationsOpts<Relation = unknown> = {
   /**

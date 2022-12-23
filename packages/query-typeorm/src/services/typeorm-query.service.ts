@@ -13,6 +13,7 @@ import {
   GetByIdOptions,
   Query,
   QueryService,
+  SelectRelation,
   UpdateManyResponse,
   UpdateOneOptions
 } from '@ptc-org/nestjs-query-core'
@@ -77,8 +78,8 @@ export class TypeOrmQueryService<Entity>
    * ```
    * @param query - The Query used to filter, page, and sort rows.
    */
-  async query(query: Query<Entity>): Promise<Entity[]> {
-    return this.filterQueryBuilder.select(query).getMany()
+  async query(query: Query<Entity>, selectRelations?: SelectRelation<Entity>[]): Promise<Entity[]> {
+    return this.filterQueryBuilder.select(query, selectRelations).getMany()
   }
 
   async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
@@ -102,7 +103,7 @@ export class TypeOrmQueryService<Entity>
    * @param opts
    */
   async findById(id: string | number, opts?: FindByIdOptions<Entity>): Promise<Entity | undefined> {
-    const qb = this.filterQueryBuilder.selectById(id, opts ?? {})
+    const qb = this.filterQueryBuilder.selectById(id, opts ?? {}, opts?.selectRelations)
     if (opts?.withDeleted) {
       qb.withDeleted()
     }
@@ -205,7 +206,7 @@ export class TypeOrmQueryService<Entity>
     let updateResult: UpdateResult
 
     // If the update has relations then fetch all the id's and then do an update on the ids returned
-    if (this.filterQueryBuilder.filterHasRelations(filter)) {
+    if (this.filterQueryBuilder.hasRelations(filter)) {
       const builder = this.filterQueryBuilder.select({ filter }).distinct(true)
 
       const distinctRecords = await builder.addSelect(`${builder.alias}.id`).getRawMany()
@@ -268,7 +269,7 @@ export class TypeOrmQueryService<Entity>
   async deleteMany(filter: Filter<Entity>, opts?: DeleteManyOptions<Entity>): Promise<DeleteManyResponse> {
     let deleteResult = {} as DeleteResult
 
-    if (this.filterQueryBuilder.filterHasRelations(filter)) {
+    if (this.filterQueryBuilder.hasRelations(filter)) {
       const builder = this.filterQueryBuilder.select({ filter }).distinct(true)
 
       const distinctRecords = await builder.addSelect(`${builder.alias}.id`).getRawMany()

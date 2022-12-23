@@ -89,7 +89,7 @@ export class RelationQueryBuilder<Entity, Relation> {
   }
 
   public select(entity: Entity, query: Query<Relation>): SelectQueryBuilder<Relation> {
-    const hasRelations = this.filterQueryBuilder.filterHasRelations(query.filter)
+    const hasRelations = this.filterQueryBuilder.hasRelations(query.filter)
 
     let relationBuilder = this.createRelationQueryBuilder(entity)
     relationBuilder = hasRelations
@@ -106,7 +106,7 @@ export class RelationQueryBuilder<Entity, Relation> {
   }
 
   public batchSelect(entities: Entity[], query: Query<Relation>, withDeleted?: boolean): SelectQueryBuilder<Relation> {
-    const hasRelations = this.filterQueryBuilder.filterHasRelations(query.filter)
+    const hasRelations = this.filterQueryBuilder.hasRelations(query.filter)
     let qb = this.relationRepo.createQueryBuilder(this.relationMeta.fromAlias)
 
     if (withDeleted) {
