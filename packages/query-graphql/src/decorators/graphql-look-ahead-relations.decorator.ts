@@ -13,10 +13,10 @@ function createLookAheadInfo<DTO>(
 ): SelectRelation<DTO>[] {
   return relations
     .map((relation): SelectRelation<DTO> | boolean => {
-      if (relation.name in simpleResolveInfo.fieldsByTypeName) {
+      if (relation.name in simpleResolveInfo.fields) {
         return {
           name: relation.name,
-          query: simpleResolveInfo.fieldsByTypeName[relation.name].args || {}
+          query: (simpleResolveInfo.fields[relation.name] as QueryResolveTree<DTO>).args || {}
         }
       }
 
@@ -37,6 +37,6 @@ export const GraphQLLookAheadRelations = <DTO>(DTOClass: Class<DTO>): ParameterD
 
   return createParamDecorator((data: unknown, ctx: ExecutionContext): SelectRelation<DTO>[] => {
     const info = GqlExecutionContext.create(ctx).getInfo<ResolveInfo>()
-    return createLookAheadInfo<DTO>(relations, simplifyResolveInfo(info)) as SelectRelation<DTO>[]
+    return createLookAheadInfo<DTO>(relations, simplifyResolveInfo(info))
   })()
 }

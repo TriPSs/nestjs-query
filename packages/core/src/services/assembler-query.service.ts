@@ -66,7 +66,7 @@ export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepP
     return this.assembler.convertAsyncToDTO(this.queryService.getById(id, this.convertFilterable(opts)))
   }
 
-  query(query: Query<DTO>, selectRelations?: SelectRelation<DTO>[]): Promise<DTO[]> {
+  query(query: Query<DTO>): Promise<DTO[]> {
     return this.assembler.convertAsyncToDTOs(this.queryService.query(this.assembler.convertQuery(query)))
   }
 
