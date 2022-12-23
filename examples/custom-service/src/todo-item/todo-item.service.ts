@@ -6,6 +6,7 @@ import {
   NoOpQueryService,
   Query,
   QueryService,
+  SelectRelation,
   UpdateManyResponse
 } from '@ptc-org/nestjs-query-core'
 
@@ -27,8 +28,8 @@ export class TodoItemService extends NoOpQueryService<TodoItemDTO, TodoItemInput
     return this.queryService.createMany(newItems)
   }
 
-  query(query: Query<TodoItemDTO>): Promise<TodoItemDTO[]> {
-    return this.queryService.query(query)
+  query(query: Query<TodoItemDTO>, selectRelations?: SelectRelation<TodoItemDTO>[]): Promise<TodoItemDTO[]> {
+    return this.queryService.query(query, selectRelations)
   }
 
   findById(id: string | number): Promise<TodoItemDTO | undefined> {
