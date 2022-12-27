@@ -33,13 +33,10 @@ const hookDecorator = <H extends Hook<unknown>>(hookType: HookTypes) => {
     return defaultHook
   }
   // eslint-disable-next-line @typescript-eslint/ban-types
-  return (data: HookDecoratorArg<H> | HookDecoratorArg<H>[]) =>
+  return (...data: HookDecoratorArg<H>[]) =>
     // eslint-disable-next-line @typescript-eslint/ban-types
     (target: Function): void => {
-      if (isHookClass(data)) {
-        return Reflect.defineMetadata(key, data, target)
-      }
-      const hooks = Array.isArray(data) ? data.map((d) => getHook(d)) : [getHook(data)]
+      const hooks = data.map((d) => getHook(d))
       return Reflect.defineMetadata(key, hooks, target)
     }
 }
