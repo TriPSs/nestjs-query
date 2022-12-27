@@ -177,7 +177,9 @@ export abstract class RelationQueryService<Entity> {
       return this.batchFindRelations(RelationClass, relationName, dto, opts)
     }
 
+    const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
     let relationEntity = opts?.lookedAhead ? dto[relationName] : undefined
+
     if (!relationEntity) {
       const relationQueryBuilder = this.getRelationQueryBuilder(relationName).select(dto, {
         filter: opts?.filter,
@@ -191,7 +193,6 @@ export abstract class RelationQueryService<Entity> {
       relationEntity = await relationQueryBuilder.getOne()
     }
 
-    const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
     return relationEntity ? assembler.convertToDTO(relationEntity) : undefined
   }
 
@@ -424,7 +425,8 @@ export abstract class RelationQueryService<Entity> {
     dtos: Entity[],
     opts?: FindRelationOptions<Relation>
   ): Promise<Map<Entity, Relation | undefined>> {
-    if (opts?.lookedAhead) {
+    // If the relation is looked ahead and all the entities have it
+    if (opts?.lookedAhead && dtos.every((entity) => entity[relationName])) {
       const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
 
       return dtos.reduce((results, entity) => {
