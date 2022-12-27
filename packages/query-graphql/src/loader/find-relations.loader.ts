@@ -25,9 +25,9 @@ export class FindRelationsLoader<DTO, Relation>
     const results: (Relation | undefined)[] = []
     await Promise.all(
       [...findRelationsMap.values()].map(async (args) => {
-        const { filter, withDeleted } = args[0]
+        const { filter, withDeleted, lookedAhead } = args[0]
         const dtos = args.map((a) => a.dto)
-        const opts = { filter, withDeleted }
+        const opts = { filter, withDeleted, lookedAhead }
         const relationResults = await service.findRelation(this.RelationDTO, this.relationName, dtos, opts)
         const dtoRelations: (Relation | undefined)[] = dtos.map((dto) => relationResults.get(dto))
         dtoRelations.forEach((relation, index) => {

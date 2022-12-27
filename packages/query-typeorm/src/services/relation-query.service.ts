@@ -177,18 +177,21 @@ export abstract class RelationQueryService<Entity> {
       return this.batchFindRelations(RelationClass, relationName, dto, opts)
     }
 
-    const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
-    const relationQueryBuilder = this.getRelationQueryBuilder(relationName).select(dto, {
-      filter: opts?.filter,
-      paging: { limit: 1 }
-    })
+    let relationEntity = opts?.lookedAhead ? dto[relationName] : undefined
+    if (!relationEntity) {
+      const relationQueryBuilder = this.getRelationQueryBuilder(relationName).select(dto, {
+        filter: opts?.filter,
+        paging: { limit: 1 }
+      })
 
-    if (opts?.withDeleted) {
-      relationQueryBuilder.withDeleted()
+      if (opts?.withDeleted) {
+        relationQueryBuilder.withDeleted()
+      }
+
+      relationEntity = await relationQueryBuilder.getOne()
     }
 
-    const relationEntity = await relationQueryBuilder.getOne()
-
+    const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
     return relationEntity ? assembler.convertToDTO(relationEntity) : undefined
   }
 
@@ -421,6 +424,14 @@ export abstract class RelationQueryService<Entity> {
     dtos: Entity[],
     opts?: FindRelationOptions<Relation>
   ): Promise<Map<Entity, Relation | undefined>> {
+    if (opts?.lookedAhead) {
+      const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
+
+      return dtos.reduce((results, entity) => {
+        return results.set(entity, entity[relationName] ? assembler.convertToDTO(entity[relationName]) : undefined)
+      }, new Map<Entity, Relation>())
+    }
+
     const batchResults = await this.batchQueryRelations(
       RelationClass,
       relationName,
