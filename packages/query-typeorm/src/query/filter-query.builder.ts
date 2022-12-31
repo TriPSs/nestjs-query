@@ -6,7 +6,8 @@ import {
   Paging,
   Query,
   SelectRelation,
-  SortField
+  SortField,
+  Selection
 } from '@ptc-org/nestjs-query-core'
 import merge from 'lodash.merge'
 import {
@@ -263,7 +264,8 @@ export class FilterQueryBuilder<Entity> {
     qb: SelectQueryBuilder<Entity>,
     relationsMap?: NestedRelationsAliased,
     selectRelations?: SelectRelation<Entity>[],
-    alias?: string
+    alias?: string,
+    selection?: Selection<Entity>
   ): SelectQueryBuilder<Entity> {
     if (!relationsMap) {
       return qb
@@ -365,6 +367,13 @@ export class FilterQueryBuilder<Entity> {
     }, {})
   }
 
+  private getReferencedRelations(filter: Filter<Entity>, selection: Selection<Entity>): string[] {
+    const { relationNames } = this
+    const referencedFields = getFilterFields(filter)
+    const referencedselections = this.getObjectProps(selection) // <== edit here
+    return [...referencedFields, ...referencedselections].filter((f) => relationNames.includes(f))
+  }
+
   public getReferencedRelationsRecursive(
     metadata: EntityMetadata,
     filter: Filter<unknown>,
@@ -420,5 +429,13 @@ export class FilterQueryBuilder<Entity> {
 
   private get relationNames(): string[] {
     return this.repo.metadata.relations.map((r) => r.propertyName)
+  }
+
+  private getObjectProps(selectionInfo: Selection<Entity>) {
+    const ignoredProps = ['$aliases', '$args']
+    const obj = selectionInfo
+    const props = Object.keys(obj)
+
+    return props.filter((p) => typeof obj[p] === 'object' && !ignoredProps.includes(p))
   }
 }

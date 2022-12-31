@@ -13141,6 +13141,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql-parse-resolve-info@npm:^4.13.0":
+  version: 4.13.0
+  resolution: "graphql-parse-resolve-info@npm:4.13.0"
+  dependencies:
+    debug: ^4.1.1
+    tslib: ^2.0.1
+  peerDependencies:
+    graphql: ">=0.9 <0.14 || ^14.0.2 || ^15.4.0 || ^16.3.0"
+  checksum: a0ac79196d9a7b884a24ce59576a4537431db79536039f97a496dd4fcf919da0a481115b4d08d8b4e7ea646b2decbf67a1b589875ecbc437f269a7acc4dea893
+  languageName: node
+  linkType: hard
+
 "graphql-query-complexity@npm:0.12.0":
   version: 0.12.0
   resolution: "graphql-query-complexity@npm:0.12.0"
@@ -16723,6 +16735,7 @@ __metadata:
     eslint-plugin-simple-import-sort: ^10.0.0
     eslint-plugin-tsdoc: 0.2.17
     graphql: 16.7.1
+    graphql-parse-resolve-info: ^4.13.0
     graphql-query-complexity: 0.12.0
     graphql-subscriptions: 2.0.0
     graphql-tools: 9.0.0
@@ -21299,6 +21312,13 @@ __metadata:
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.0.1":
+  version: 2.6.0
+  resolution: "tslib@npm:2.6.0"
+  checksum: c01066038f950016a18106ddeca4649b4d76caa76ec5a31e2a26e10586a59fceb4ee45e96719bf6c715648e7c14085a81fee5c62f7e9ebee68e77a5396e5538f
   languageName: node
   linkType: hard
 

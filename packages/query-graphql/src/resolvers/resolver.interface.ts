@@ -43,7 +43,7 @@ export interface ResolverClass<DTO, QS extends QueryService<DTO, unknown, unknow
  * @internal
  * Base Resolver that takes in a service as a constructor argument.
  */
-export class BaseServiceResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> {
+export class BaseServiceResolver<DTO, QS> {
   constructor(readonly service: QS) {}
 }
 

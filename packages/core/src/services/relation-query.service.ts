@@ -1,6 +1,6 @@
 import { Class, DeepPartial } from '../common'
 import { mergeQuery } from '../helpers'
-import { AggregateQuery, AggregateResponse, Filter, FindRelationOptions, Query } from '../interfaces'
+import { AggregateQuery, AggregateResponse, Filter, FindRelationOptions, Query, Selection } from '../interfaces'
 import { NoOpQueryService } from './noop-query.service'
 import { ProxyQueryService } from './proxy-query.service'
 import { QueryService } from './query.service'
@@ -182,7 +182,8 @@ export class RelationQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: DTO[],
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<Map<DTO, Relation | undefined>>
 
   /**
@@ -196,21 +197,23 @@ export class RelationQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO,
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<Relation | undefined>
 
   async findRelation<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO | DTO[],
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<(Relation | undefined) | Map<DTO, Relation | undefined>> {
     const serviceRelation = this.getRelation<Relation>(relationName)
     if (!serviceRelation) {
       if (Array.isArray(dto)) {
-        return super.findRelation(RelationClass, relationName, dto, opts)
+        return super.findRelation(RelationClass, relationName, dto, opts, selection)
       }
-      return super.findRelation(RelationClass, relationName, dto, opts)
+      return super.findRelation(RelationClass, relationName, dto, opts, selection)
     }
     const { query: qf, service } = serviceRelation
     if (Array.isArray(dto)) {

@@ -1,10 +1,17 @@
 import { ArgsType, Resolver } from '@nestjs/graphql'
-import { Class, Filter, mergeQuery, QueryService, SelectRelation } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, mergeQuery, QueryService, SelectRelation, Query, Selection } from '@ptc-org/nestjs-query-core'
 import omit from 'lodash.omit'
 
 import { OperationGroup } from '../auth'
 import { getDTONames } from '../common'
-import { AuthorizerFilter, GraphQLResolveInfoResult, GraphQLResultInfo, HookArgs, ResolverQuery } from '../decorators'
+import {
+  AuthorizerFilter,
+  GraphQLResolveInfoResult,
+  GraphQLResultInfo,
+  HookArgs,
+  ResolverQuery,
+  SelectionInfo
+} from '../decorators'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import {
@@ -90,13 +97,19 @@ export const Readable =
         })
         authorizeFilter?: Filter<DTO>,
         @GraphQLResultInfo(DTOClass)
-        resolveInfo?: GraphQLResolveInfoResult<DTO>
+        resolveInfo?: GraphQLResolveInfoResult<DTO>,
+        @SelectionInfo(DTOClass)
+        selection?: Selection<DTO>
       ): Promise<DTO> {
-        return this.service.getById(input.id, {
-          filter: authorizeFilter,
-          withDeleted: opts?.one?.withDeleted,
-          relations: resolveInfo.relations
-        })
+        return this.service.getById(
+          input.id,
+          {
+            filter: authorizeFilter,
+            withDeleted: opts?.one?.withDeleted,
+            relations: resolveInfo.relations
+          },
+          selection
+        )
       }
 
       @ResolverQuery(
@@ -114,10 +127,12 @@ export const Readable =
         })
         authorizeFilter?: Filter<DTO>,
         @GraphQLResultInfo(DTOClass)
-        resolveInfo?: GraphQLResolveInfoResult<InferConnectionTypeFromStrategy<DTO, ExtractPagingStrategy<DTO, ReadOpts>>, DTO>
+        resolveInfo?: GraphQLResolveInfoResult<InferConnectionTypeFromStrategy<DTO, ExtractPagingStrategy<DTO, ReadOpts>>, DTO>,
+        @SelectionInfo(DTOClass)
+        selection?: Selection<DTO>
       ): Promise<InstanceType<typeof ConnectionType>> {
         return ConnectionType.createFromPromise(
-          (q) => this.service.query(q),
+          (q) => this.service.query(Object.assign({}, q, { selection } as Query<DTO>)),
           mergeQuery(query, { filter: authorizeFilter, relations: resolveInfo.relations }),
           (filter) => {
             // If the total count is fetched, then query the service

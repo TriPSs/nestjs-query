@@ -37,6 +37,7 @@ export {
   RelationOneDecoratorOpts,
   RelationTypeFunc,
   ResolverMethodOpts,
+  SelectionInfo,
   UnPagedRelation
 } from './decorators'
 export * from './federation'

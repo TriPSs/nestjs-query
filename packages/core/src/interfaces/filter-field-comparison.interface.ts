@@ -181,7 +181,7 @@ export interface StringFieldComparisons extends CommonFieldComparisonType<string
   notILike?: string
 }
 
-type BuiltInTypes = boolean | boolean | string | string | number | Date | RegExp | bigint | symbol | null | undefined | never
+export type BuiltInTypes = boolean | string | number | Date | RegExp | bigint | symbol | null | undefined | never
 
 /**
  * Type for field comparisons.

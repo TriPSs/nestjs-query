@@ -15,6 +15,7 @@ import {
   ModifyRelationOptions,
   Query,
   QueryOptions,
+  Selection,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -56,7 +57,7 @@ export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepP
     return this.assembler.convertAsyncToDTO(this.queryService.deleteOne(id, this.convertFilterable(opts)))
   }
 
-  async findById(id: string | number, opts?: FindByIdOptions<DTO>): Promise<DTO | undefined> {
+  async findById(id: string | number, opts?: FindByIdOptions<DTO>, selection?: Selection<DTO>): Promise<DTO | undefined> {
     const entity = await this.queryService.findById(id, this.convertFilterable(opts))
     if (!entity) {
       return undefined
@@ -64,7 +65,7 @@ export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepP
     return this.assembler.convertToDTO(entity)
   }
 
-  getById(id: string | number, opts?: GetByIdOptions<DTO>): Promise<DTO> {
+  getById(id: string | number, opts?: GetByIdOptions<DTO>, selection?: Selection<DTO>): Promise<DTO> {
     return this.assembler.convertAsyncToDTO(this.queryService.getById(id, this.convertFilterable(opts)))
   }
 
@@ -183,7 +184,8 @@ export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepP
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: DTO[],
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<Map<DTO, Relation | undefined>>
 
   /**
@@ -197,24 +199,26 @@ export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepP
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO,
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<Relation | undefined>
 
   async findRelation<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO | DTO[],
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<(Relation | undefined) | Map<DTO, Relation | undefined>> {
     if (Array.isArray(dto)) {
       const entities = this.assembler.convertToEntities(dto)
-      const relationMap = await this.queryService.findRelation(RelationClass, relationName, entities, opts)
+      const relationMap = await this.queryService.findRelation(RelationClass, relationName, entities, opts, selection)
       return entities.reduce((map, e, index) => {
         map.set(dto[index], relationMap.get(e))
         return map
       }, new Map<DTO, Relation | undefined>())
     }
-    return this.queryService.findRelation(RelationClass, relationName, this.assembler.convertToEntity(dto))
+    return this.queryService.findRelation(RelationClass, relationName, this.assembler.convertToEntity(dto), opts, selection)
   }
 
   removeRelation<Relation>(

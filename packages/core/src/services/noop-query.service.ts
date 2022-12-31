@@ -17,6 +17,7 @@ import {
   ModifyRelationOptions,
   Query,
   QueryOptions,
+  Selection,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -58,7 +59,7 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     return Promise.reject(new NotImplementedException('deleteOne is not implemented'))
   }
 
-  findById(id: string | number, opts?: FindByIdOptions<DTO>): Promise<DTO | undefined> {
+  findById(id: string | number, opts?: FindByIdOptions<DTO>, selection?: Selection<DTO>): Promise<DTO | undefined> {
     return Promise.reject(new NotImplementedException('findById is not implemented'))
   }
 
@@ -66,26 +67,29 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO,
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<Relation | undefined>
 
   findRelation<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: DTO[],
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<Map<DTO, Relation | undefined>>
 
   findRelation<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO | DTO[],
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<(Relation | undefined) | Map<DTO, Relation | undefined>> {
     return Promise.reject(new NotImplementedException('findRelation is not implemented'))
   }
 
-  getById(id: string | number, opts?: GetByIdOptions<DTO>): Promise<DTO> {
+  getById(id: string | number, opts?: GetByIdOptions<DTO>, selection?: Selection<DTO>): Promise<DTO> {
     return Promise.reject(new NotImplementedException('getById is not implemented'))
   }
 

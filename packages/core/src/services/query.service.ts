@@ -17,6 +17,7 @@ import {
   ModifyRelationOptions,
   Query,
   QueryOptions,
+  Selection,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -53,9 +54,10 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    * Finds a record by `id`.
    * @param id - the id of the record to find.
    * @param opts - Additional options to apply when finding by id.
+   * @param selection - SelectionInfo object representing the fields to return from query.
    * @returns the found record or undefined.
    */
-  findById(id: string | number, opts?: FindByIdOptions<DTO>): Promise<DTO | undefined>
+  findById(id: string | number, opts?: FindByIdOptions<DTO>, selection?: Selection<DTO>): Promise<DTO | undefined>
 
   /**
    * Query for an array of relations.
@@ -126,12 +128,14 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    * @param dto - The dto to find the relation on.
    * @param relationName - The name of the relation to query for.
    * @param opts - Additional options.
+   * @param selection - SelectionInfo object representing the fields to return from query.
    */
   findRelation<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO,
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<Relation | undefined>
 
   /**
@@ -141,12 +145,14 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    * @param relationName - The name of the relation to query for.
    * @param dtos - The dto to find the relation on.
    * @param opts - Additional options.
+   * @param selection - SelectionInfo object representing the fields to return from query.
    */
   findRelation<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: DTO[],
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<Map<DTO, Relation | undefined>>
 
   /**
@@ -230,9 +236,10 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    *
    * @param id - the id of the record.
    * @param opts - Additional options to apply when getting by id.
+   * @param selection - SelectionInfo object representing the fields to return from query.
    * @returns the found record or a rejected promise.
    */
-  getById(id: string | number, opts?: GetByIdOptions<DTO>): Promise<DTO>
+  getById(id: string | number, opts?: GetByIdOptions<DTO>, selection?: Selection<DTO>): Promise<DTO>
 
   /**
    * Create a single record.

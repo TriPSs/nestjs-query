@@ -16,6 +16,7 @@ import {
   Query,
   QueryOptions,
   QueryService,
+  Selection,
   UpdateManyResponse,
   UpdateOneOptions
 } from '@ptc-org/nestjs-query-core'
@@ -125,7 +126,11 @@ export class TypeOrmQueryService<Entity>
    * @param id - The id of the record to find.
    * @param opts
    */
-  public async findById(id: string | number, opts?: FindByIdOptions<Entity>): Promise<Entity | undefined> {
+  public async findById(
+    id: string | number,
+    opts?: FindByIdOptions<Entity>,
+    selection?: Selection<Entity>
+  ): Promise<Entity | undefined> {
     const qb = this.filterQueryBuilder.selectById(id, opts ?? {})
 
     if (opts?.withDeleted) {
@@ -150,8 +155,8 @@ export class TypeOrmQueryService<Entity>
    * @param id - The id of the record to find.
    * @param opts
    */
-  public async getById(id: string | number, opts?: GetByIdOptions<Entity>): Promise<Entity> {
-    const entity = await this.findById(id, opts)
+  public async getById(id: string | number, opts?: GetByIdOptions<Entity>, selection?: Selection<Entity>): Promise<Entity> {
+    const entity = await this.findById(id, opts, selection)
 
     if (!entity) {
       throw new NotFoundException(`Unable to find ${this.EntityClass.name} with id: ${id}`)

@@ -7,7 +7,8 @@ import {
   FindRelationOptions,
   GetByIdOptions,
   ModifyRelationOptions,
-  Query
+  Query,
+  Selection
 } from '@ptc-org/nestjs-query-core'
 import lodashOmit from 'lodash.omit'
 import { RelationQueryBuilder as TypeOrmRelationQueryBuilder, Repository } from 'typeorm'
@@ -150,7 +151,8 @@ export abstract class RelationQueryService<Entity> {
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: Entity[],
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Entity>
   ): Promise<Map<Entity, Relation | undefined>>
 
   /**
@@ -164,14 +166,16 @@ export abstract class RelationQueryService<Entity> {
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Entity>
   ): Promise<Relation | undefined>
 
   public async findRelation<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Entity>
   ): Promise<(Relation | undefined) | Map<Entity, Relation | undefined>> {
     if (Array.isArray(dto)) {
       return this.batchFindRelations(RelationClass, relationName, dto, opts)
@@ -371,7 +375,7 @@ export abstract class RelationQueryService<Entity> {
     const convertedQuery = assembler.convertQuery({ filter })
 
     const rawAggregates = await relationQueryBuilder
-      .batchAggregate(entities, convertedQuery, query)
+      .batchAggregate(entities, convertedQuery as unknown, query)
       .getRawMany<EntityIndexRelation<Record<string, unknown>>>()
 
     return rawAggregates.reduce((results, relationAgg) => {

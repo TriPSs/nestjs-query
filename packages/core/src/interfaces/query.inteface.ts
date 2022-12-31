@@ -1,6 +1,7 @@
 import { Filterable } from './filterable.interface'
 import { Paging } from './paging.interface'
 import { SelectRelation } from './select-relation.interface'
+import { Selection, SelectionWithConnection } from './selection.interface'
 import { SortField } from './sort-field.interface'
 
 /**
@@ -22,6 +23,7 @@ import { SortField } from './sort-field.interface'
  *   filter: { name: { like: 'Foo%' } }, // filter name LIKE "Foo%"
  *   paging: { limit: 10, offset: 20}, // LIMIT 10 OFFSET 20
  *   sorting: [{ field: 'name', direction: SortDirection.DESC }], // ORDER BY name DESC
+ *   selection: { id: true, name: true, completed: true }, // SELECT id, name, completed
  * };
  * ```
  *
@@ -41,4 +43,8 @@ export interface Query<DTO> extends Filterable<DTO> {
    * @internal this implementation is not final and subjected to change! Use at own risk!
    */
   relations?: SelectRelation<DTO>[]
+  /**
+   * Optional fields to select and fetch in the same query.
+   */
+  selection?: SelectionWithConnection<DTO>
 }

@@ -13,6 +13,7 @@ import {
   ModifyRelationOptions,
   Query,
   QueryOptions,
+  Selection,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -143,7 +144,8 @@ export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> 
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: DTO[],
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<Map<DTO, Relation | undefined>>
 
   /**
@@ -157,19 +159,21 @@ export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> 
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO,
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<Relation | undefined>
 
   async findRelation<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO | DTO[],
-    opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>,
+    selection?: Selection<Relation>
   ): Promise<(Relation | undefined) | Map<DTO, Relation | undefined>> {
     if (Array.isArray(dto)) {
-      return this.proxied.findRelation(RelationClass, relationName, dto, opts)
+      return this.proxied.findRelation(RelationClass, relationName, dto, opts, selection)
     }
-    return this.proxied.findRelation(RelationClass, relationName, dto, opts)
+    return this.proxied.findRelation(RelationClass, relationName, dto, opts, selection)
   }
 
   createMany(items: C[]): Promise<DTO[]> {
@@ -188,12 +192,12 @@ export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> 
     return this.proxied.deleteOne(id, opts)
   }
 
-  async findById(id: string | number, opts?: FindByIdOptions<DTO>): Promise<DTO | undefined> {
-    return this.proxied.findById(id, opts)
+  async findById(id: string | number, opts?: FindByIdOptions<DTO>, selection?: Selection<DTO>): Promise<DTO | undefined> {
+    return this.proxied.findById(id, opts, selection)
   }
 
-  getById(id: string | number, opts?: GetByIdOptions<DTO>): Promise<DTO> {
-    return this.proxied.getById(id, opts)
+  getById(id: string | number, opts?: GetByIdOptions<DTO>, selection?: Selection<DTO>): Promise<DTO> {
+    return this.proxied.getById(id, opts, selection)
   }
 
   query(query: Query<DTO>, opts?: QueryOptions): Promise<DTO[]> {

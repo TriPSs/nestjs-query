@@ -1,8 +1,9 @@
-import { Class, FindRelationOptions, QueryService, SelectRelations } from '@ptc-org/nestjs-query-core'
+import { Class, FindRelationOptions, QueryService, SelectRelations, Selection } from '@ptc-org/nestjs-query-core'
 
 import { NestjsQueryDataloader } from './relations.loader'
 
-export type FindRelationsArgs<DTO, Relation> = { dto: DTO } & FindRelationOptions<Relation> & SelectRelations<Relation>
+export type FindRelationsArgs<DTO, Relation> = { dto: DTO } & FindRelationOptions<Relation> &
+  SelectRelations<Relation> & { selection: Selection<Relation> }
 type FindRelationsOpts<Relation> = Omit<FindRelationOptions<Relation>, 'filter'>
 type FindRelationsMap<DTO, Relation> = Map<string, (FindRelationsArgs<DTO, Relation> & { index: number })[]>
 
@@ -25,10 +26,10 @@ export class FindRelationsLoader<DTO, Relation>
     const results: (Relation | undefined)[] = []
     await Promise.all(
       [...findRelationsMap.values()].map(async (args) => {
-        const { filter, withDeleted, lookedAhead } = args[0]
+        const { filter, withDeleted, lookedAhead, selection } = args[0]
         const dtos = args.map((a) => a.dto)
         const opts = { filter, withDeleted, lookedAhead }
-        const relationResults = await service.findRelation(this.RelationDTO, this.relationName, dtos, opts)
+        const relationResults = await service.findRelation(this.RelationDTO, this.relationName, dtos, opts, selection)
         const dtoRelations: (Relation | undefined)[] = dtos.map((dto) => relationResults.get(dto))
         dtoRelations.forEach((relation, index) => {
           results[args[index].index] = relation

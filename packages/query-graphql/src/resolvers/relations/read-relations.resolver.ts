@@ -1,10 +1,17 @@
 import { ExecutionContext } from '@nestjs/common'
 import { Args, ArgsType, Context, Parent, Resolver } from '@nestjs/graphql'
-import { Class, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, mergeQuery, QueryService, Selection } from '@ptc-org/nestjs-query-core'
 
 import { OperationGroup } from '../../auth'
 import { getDTONames } from '../../common'
-import { GraphQLResolveInfoResult, GraphQLResultInfo, RelationAuthorizerFilter, ResolverField } from '../../decorators'
+import {
+  GraphQLResolveInfoResult,
+  GraphQLResultInfo,
+  RelationAuthorizerFilter,
+  ResolverField,
+  SelectionInfo,
+  Relation
+} from '../../decorators'
 import { InjectDataLoaderConfig } from '../../decorators/inject-dataloader-config.decorator'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { CountRelationsLoader, DataLoaderFactory, FindRelationsLoader, QueryRelationsLoader } from '../../loader'
@@ -51,6 +58,8 @@ const ReadOneRelationMixin =
         authFilter?: Filter<Relation>,
         @GraphQLResultInfo(DTOClass)
         resolveInfo?: GraphQLResolveInfoResult<Relation>,
+        @SelectionInfo(relationDTO)
+        selection?: Selection<Relation>,
         @InjectDataLoaderConfig()
         dataLoaderConfig?: DataLoaderOptions
       ): Promise<Relation | undefined> {
@@ -66,7 +75,8 @@ const ReadOneRelationMixin =
         ).load({
           dto,
           filter: authFilter,
-          relations: resolveInfo.relations
+          relations: resolveInfo.relations,
+          selection
         })
       }
     }
@@ -122,7 +132,9 @@ const ReadManyRelationMixin =
         @GraphQLResultInfo(DTOClass)
         resolveInfo?: GraphQLResolveInfoResult<Relation>,
         @InjectDataLoaderConfig()
-        dataLoaderConfig?: DataLoaderOptions
+        dataLoaderConfig?: DataLoaderOptions,
+        @SelectionInfo(DTOClass)
+        selection?: Selection<Relation>
       ): Promise<InstanceType<typeof CT>> {
         const relationQuery = await transformAndValidate(RelationQA, q)
         const relationLoader = DataLoaderFactory.getOrCreateLoader(
@@ -141,7 +153,7 @@ const ReadManyRelationMixin =
 
         return CT.createFromPromise(
           (query) => relationLoader.load({ dto, query }),
-          mergeQuery(relationQuery, { filter: relationFilter, relations: resolveInfo.relations }),
+          mergeQuery(relationQuery, { filter: relationFilter, relations: resolveInfo.relations, selection }),
           (filter) => {
             // If the total count is fetched, than query the service
             if ('totalCount' in resolveInfo.info.fields) {
