@@ -392,6 +392,7 @@ Next update `app.module` to set up your db connection and the `graphql` nest mod
 <TabItem value="typeorm">
 
 ```ts
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -409,7 +410,8 @@ import { TodoItemModule } from './todo-item/todo-item.module';
       synchronize: true,
       logging: true,
     }),
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       // set to true to automatically generate schema
       autoSchemaFile: true,
     }),
@@ -425,6 +427,7 @@ export class AppModule {}
 <TabItem value="sequelize">
 
 ```ts
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -443,7 +446,8 @@ import { TodoItemModule } from './todo-item/todo-item.module';
       synchronize: true,
       logging: true,
     }),
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       // set to true to automatically generate schema
       autoSchemaFile: true,
     }),
@@ -460,6 +464,7 @@ export class AppModule {}
 <TabItem value="mongoose">
 
 ```ts
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -470,7 +475,8 @@ import { TodoItemModule } from './todo-item/todo-item.module';
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost/nest', options),
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       // set to true to automatically generate schema
       autoSchemaFile: true,
     }),
@@ -488,6 +494,7 @@ export class AppModule {}
 <TabItem value="typegoose">
 
 ```ts
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypegooseModule } from '@m8a/nestjs-typegoose';
@@ -496,7 +503,8 @@ import { TodoItemModule } from './todo-item/todo-item.module';
 @Module({
   imports: [
     TypegooseModule.forRoot('mongodb://localhost/nest', options),
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       // set to true to automatically generate schema
       autoSchemaFile: true,
     }),
