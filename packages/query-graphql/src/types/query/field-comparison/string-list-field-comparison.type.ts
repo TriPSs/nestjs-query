@@ -19,6 +19,11 @@ export function getOrCreateStringListFieldComparison(): Class<FilterFieldCompari
     @IsString()
     @IsUndefined()
     contains?: string
+
+    @Field({ nullable: true })
+    @IsString()
+    @IsUndefined()
+    containsLike?: string
   }
 
   stringListFieldComparison = StringListFieldComparison
