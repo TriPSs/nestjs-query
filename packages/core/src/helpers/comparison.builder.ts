@@ -88,6 +88,10 @@ export class ComparisonBuilder {
       const likeRegexp = this.likeSearchToRegexp(val, true)
       return compare((dto) => likeRegexp.test(dto[field] as unknown as string), false)
     }
+    if (cmp === 'containsLike') {
+      const likeRegexp = this.likeSearchToRegexp(val, true)
+      return compare((dto) => likeRegexp.test(dto[field] as unknown as string), false)
+    }
     const likeRegexp = this.likeSearchToRegexp(val, true)
     return compare((dto) => !likeRegexp.test(dto[field] as unknown as string), true)
   }

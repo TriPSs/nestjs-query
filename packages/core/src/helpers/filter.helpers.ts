@@ -2,14 +2,14 @@ import { Filter, FilterComparisons, FilterFieldComparison } from '../interfaces'
 import { FilterBuilder } from './filter.builder'
 import { QueryFieldMap } from './query.helpers'
 
-export type LikeComparisonOperators = 'like' | 'notLike' | 'iLike' | 'notILike'
+export type LikeComparisonOperators = 'like' | 'notLike' | 'iLike' | 'notILike' | 'containsLike'
 export type InComparisonOperators = 'in' | 'notIn'
 export type BetweenComparisonOperators = 'between' | 'notBetween'
 export type RangeComparisonOperators = 'gt' | 'gte' | 'lt' | 'lte'
 export type BooleanComparisonOperators = 'eq' | 'neq' | 'is' | 'isNot'
 
 export const isLikeComparisonOperator = (op: unknown): op is LikeComparisonOperators =>
-  op === 'like' || op === 'notLike' || op === 'iLike' || op === 'notILike'
+  op === 'like' || op === 'notLike' || op === 'iLike' || op === 'notILike' || op === 'containsLike'
 
 export const isInComparisonOperators = (op: unknown): op is InComparisonOperators => op === 'in' || op === 'notIn'
 
