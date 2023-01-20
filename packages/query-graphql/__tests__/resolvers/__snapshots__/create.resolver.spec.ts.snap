@@ -21,8 +21,8 @@ input CreateOneTestResolverDTOInput {
 }
 
 input CreateTestResolverDTO {
-  id: ID
-  stringField: String
+  id: ID!
+  stringField: String!
 }
 
 input CreateManyInput {
@@ -56,8 +56,8 @@ input CreateOneTestResolverDTOInput {
 }
 
 input CreateTestResolverDTO {
-  id: ID
-  stringField: String
+  id: ID!
+  stringField: String!
 }
 `;
 
@@ -81,8 +81,8 @@ input CreateManyTestResolverDTOSInput {
 }
 
 input CreateTestResolverDTO {
-  id: ID
-  stringField: String
+  id: ID!
+  stringField: String!
 }
 `;
 
@@ -117,8 +117,8 @@ input CreateManyTestResolverDTOSInput {
 }
 
 input CreateTestResolverDTO {
-  id: ID
-  stringField: String
+  id: ID!
+  stringField: String!
 }
 `;
 
@@ -143,8 +143,8 @@ input CreateOneTestResolverDTOInput {
 }
 
 input CreateTestResolverDTO {
-  id: ID
-  stringField: String
+  id: ID!
+  stringField: String!
 }
 
 input CreateManyTestResolverDTOSInput {
@@ -224,8 +224,8 @@ input CreateOneTestResolverDTOInput {
 }
 
 input CreateTestResolverDTO {
-  id: ID
-  stringField: String
+  id: ID!
+  stringField: String!
 }
 
 input CreateManyTestResolverDTOSInput {
@@ -255,8 +255,8 @@ input CreateOneTestResolverDTOInput {
 }
 
 input CreateTestResolverDTO {
-  id: ID
-  stringField: String
+  id: ID!
+  stringField: String!
 }
 
 input CreateManyTestResolverDTOSInput {
@@ -328,8 +328,8 @@ input CreateOneTestInput {
 }
 
 input CreateTest {
-  id: ID
-  stringField: String
+  id: ID!
+  stringField: String!
 }
 
 input CreateManyTestsInput {
@@ -359,8 +359,8 @@ input CreateOneTestResolverDTOInput {
 }
 
 input CreateTestResolverDTO {
-  id: ID
-  stringField: String
+  id: ID!
+  stringField: String!
 }
 
 input CreateManyTestResolverDTOSInput {
@@ -390,8 +390,8 @@ input CreateOneTestResolverDTOInput {
 }
 
 input CreateTestResolverDTO {
-  id: ID
-  stringField: String
+  id: ID!
+  stringField: String!
 }
 
 input CreateManyTestResolverDTOSInput {
