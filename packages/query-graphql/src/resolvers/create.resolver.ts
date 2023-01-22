@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 // eslint-disable-next-line max-classes-per-file
-import { Args, ArgsType, InputType, PartialType, Resolver } from '@nestjs/graphql'
+import { Args, ArgsType, InputType, OmitType, Resolver } from '@nestjs/graphql'
 import { Class, DeepPartial, Filter, QueryService } from '@ptc-org/nestjs-query-core'
 import omit from 'lodash.omit'
 
@@ -56,9 +56,9 @@ const defaultCreateDTO = <DTO, C>(dtoNames: DTONames, DTOClass: Class<DTO>): Cla
   @InputType(`Create${dtoNames.baseName}`)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  class PartialInput extends PartialType(DTOClass, InputType) {}
+  class CreateInput extends OmitType(DTOClass, [], InputType) {}
 
-  return PartialInput as Class<C>
+  return CreateInput as Class<C>
 }
 
 /** @internal */
