@@ -6,7 +6,8 @@ import {
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  VirtualColumn
 } from 'typeorm'
 
 import { SubTaskEntity } from '../sub-task/sub-task.entity'
@@ -28,6 +29,13 @@ export class TodoItemEntity {
 
   @OneToMany(() => SubTaskEntity, (subTask) => subTask.todoItem)
   subTasks!: SubTaskEntity[]
+
+  @VirtualColumn({
+    query: (alias) => `SELECT COUNT(*)
+                       FROM sub_task
+                       WHERE todo_item_id = ${alias}.id`
+  })
+  subTasksCount: number
 
   @CreateDateColumn()
   created!: Date

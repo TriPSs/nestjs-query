@@ -178,7 +178,8 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
                   title: 'Create Nest App',
                   completed: true,
                   description: null,
-                  age: expect.any(Number)
+                  age: expect.any(Number),
+                  subTasksCount: 3
                 }
               }
             }
@@ -827,7 +828,8 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
                   title: 'Create Entity',
                   completed: false,
                   description: null,
-                  age: expect.any(Number)
+                  age: expect.any(Number),
+                  subTasksCount: 4
                 }
               }
             }

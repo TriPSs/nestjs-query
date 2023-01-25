@@ -33,6 +33,9 @@ export class TodoItemDTO {
   age!: number
 
   @FilterableField()
+  subTasksCount!: number
+
+  @FilterableField()
   priority!: number
 
   @FilterableField({ nullable: true })

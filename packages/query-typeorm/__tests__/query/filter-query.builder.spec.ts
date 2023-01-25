@@ -29,7 +29,7 @@ describe('FilterQueryBuilder', (): void => {
             or: [
               { and: [{ stringType: { eq: '123' } }] },
               {
-                and: [{ stringType: { eq: '123' } }, { id: { gt: '123' } }]
+                and: [{ stringType: { eq: '123' } }, { testEntityPk: { eq: '123' } }]
               }
             ]
           },
