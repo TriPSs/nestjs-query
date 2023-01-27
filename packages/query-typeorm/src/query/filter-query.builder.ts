@@ -1,4 +1,13 @@
-import { AggregateQuery, Filter, getFilterFields, Paging, Query, SortField } from '@ptc-org/nestjs-query-core'
+import {
+  AggregateQuery,
+  AggregateQueryField,
+  AggregateQueryGroupByField,
+  Filter,
+  getFilterFields,
+  Paging,
+  Query,
+  SortField
+} from '@ptc-org/nestjs-query-core'
 import merge from 'lodash.merge'
 import {
   DeleteQueryBuilder,
@@ -103,6 +112,8 @@ export class FilterQueryBuilder<Entity> {
     qb = this.applyFilter(qb, query.filter, qb.alias)
     qb = this.applyAggregateSorting(qb, aggregate.groupBy, qb.alias)
     qb = this.applyAggregateGroupBy(qb, aggregate.groupBy, qb.alias)
+
+    console.log(qb.getQueryAndParameters())
     return qb
   }
 
@@ -193,21 +204,21 @@ export class FilterQueryBuilder<Entity> {
     }, qb)
   }
 
-  public applyAggregateGroupBy<T extends Groupable<Entity>>(qb: T, groupBy?: (keyof Entity)[], alias?: string): T {
+  public applyAggregateGroupBy<T extends Groupable<Entity>>(qb: T, groupBy?: AggregateQueryField<Entity>[], alias?: string): T {
     if (!groupBy) {
       return qb
     }
-    return groupBy.reduce((prevQb, field) => {
-      return prevQb.addGroupBy(this.aggregateBuilder.getCorrectedField(alias, field as string))
+    return groupBy.reduce((prevQb, { field }) => {
+      return prevQb.addGroupBy(AggregateBuilder.getGroupByAlias(field))
     }, qb)
   }
 
-  public applyAggregateSorting<T extends Sortable<Entity>>(qb: T, groupBy?: (keyof Entity)[], alias?: string): T {
+  public applyAggregateSorting<T extends Sortable<Entity>>(qb: T, groupBy?: AggregateQueryField<Entity>[], alias?: string): T {
     if (!groupBy) {
       return qb
     }
-    return groupBy.reduce((prevQb, field) => {
-      return prevQb.addOrderBy(this.aggregateBuilder.getCorrectedField(alias, field as string), 'ASC')
+    return groupBy.reduce((prevQb, { field }) => {
+      return prevQb.addOrderBy(AggregateBuilder.getGroupByAlias(field), 'ASC')
     }, qb)
   }
 
