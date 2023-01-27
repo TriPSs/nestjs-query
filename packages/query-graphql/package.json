@@ -32,6 +32,7 @@
     "url": "https://github.com/tripss/nestjs-query/issues"
   },
   "dependencies": {
+    "dataloader": "^2.1.0",
     "graphql-fields": "^2.0.3",
     "lodash.omit": "^4.5.0",
     "lower-case-first": "^2.0.2",
@@ -46,7 +47,6 @@
     "@nestjs/graphql": "^9.0.0 || ^10.0.0",
     "class-transformer": "^0.2.3 || 0.3.1 || ^0.5",
     "class-validator": "^0.13.0",
-    "dataloader": "^2.0.0",
     "graphql": "^16.0.0",
     "graphql-subscriptions": "^2.0.0",
     "ts-morph": "^13.0.2 || ^14.0.0 || ^15.0.0"
