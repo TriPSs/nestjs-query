@@ -1,4 +1,13 @@
  
+## [2.0.1](https://github.com/TriPSs/nestjs-query/compare/v2.0.0...v2.0.1) (2023-01-27)
+
+
+### Bug Fixes
+
+* **query-graphql:** Moved `dateloader` from `peerDependencies` to `dependencies` ([1f465c3](https://github.com/TriPSs/nestjs-query/commit/1f465c397fb0a73b8a2db2c9a51993bae35239e2))
+
+
+
 # [2.0.0](https://github.com/TriPSs/nestjs-query/compare/v1.1.7...v2.0.0) (2023-01-25)
 
 
