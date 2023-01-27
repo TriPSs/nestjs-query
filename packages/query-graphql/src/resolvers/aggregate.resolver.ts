@@ -11,10 +11,10 @@ import { GroupByAggregateMixin } from './aggregate/group-by-aggregate.resolver'
 import { transformAndValidate } from './helpers'
 import { BaseServiceResolver, NamedEndpoint, ResolverClass, ServiceResolver } from './resolver.interface'
 
-export type AggregateResolverOpts = {
+export interface AggregateResolverOpts<DTO> extends ResolverMethodOpts, NamedEndpoint {
+  AggregateDTOClass?: Class<DTO>
   enabled?: boolean
-} & ResolverMethodOpts &
-  NamedEndpoint
+}
 
 export interface AggregateResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceResolver<DTO, QS> {
   aggregate(
@@ -29,25 +29,37 @@ export interface AggregateResolver<DTO, QS extends QueryService<DTO, unknown, un
  * Mixin to add `aggregate` graphql endpoints.
  */
 export const Aggregateable =
-  <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts?: AggregateResolverOpts) =>
+  <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts?: AggregateResolverOpts<DTO>) =>
   <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<AggregateResolver<DTO, QS>> & B => {
     if (!opts || !opts.enabled) {
       return BaseClass as never
     }
 
     const { baseNameLower } = getDTONames(DTOClass)
-    const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection')
+    const commonResolverOpts = omit(
+      opts,
+      'dtoName',
+      'one',
+      'many',
+      'QueryArgs',
+      'Connection',
+      'name',
+      'description',
+      'AggregateDTOClass'
+    )
     const queryName = opts.name || `${baseNameLower}Aggregate`
     const [AR, GroupbyType] = AggregateResponseType(DTOClass)
 
+    console.log(opts.AggregateDTOClass || DTOClass)
+
     @ArgsType()
-    class AA extends AggregateArgsType(DTOClass) {}
+    class AA extends AggregateArgsType(opts.AggregateDTOClass || DTOClass) {}
 
     @Resolver(() => AR, { isAbstract: true })
     class AggregateResolverBase extends BaseClass {
       @ResolverQuery(
         () => [AR],
-        { name: queryName, description: opts.description },
+        { name: queryName, description: opts?.description },
         commonResolverOpts,
         { interceptors: [AuthorizerInterceptor(DTOClass)] },
         opts ?? {}
@@ -71,5 +83,5 @@ export const Aggregateable =
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const AggregateResolver = <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(
   DTOClass: Class<DTO>,
-  opts?: AggregateResolverOpts
+  opts?: AggregateResolverOpts<DTO>
 ): ResolverClass<DTO, QS, AggregateResolver<DTO, QS>> => Aggregateable(DTOClass, opts)(BaseServiceResolver)
