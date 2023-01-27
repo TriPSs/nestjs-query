@@ -9,11 +9,12 @@ import { AuthorizerInterceptor } from '../interceptors'
 import { AggregateArgsType, AggregateResponseType } from '../types'
 import { GroupByAggregateMixin } from './aggregate/group-by-aggregate.resolver'
 import { transformAndValidate } from './helpers'
-import { BaseServiceResolver, ResolverClass, ServiceResolver } from './resolver.interface'
+import { BaseServiceResolver, NamedEndpoint, ResolverClass, ServiceResolver } from './resolver.interface'
 
 export type AggregateResolverOpts = {
   enabled?: boolean
-} & ResolverMethodOpts
+} & ResolverMethodOpts &
+  NamedEndpoint
 
 export interface AggregateResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceResolver<DTO, QS> {
   aggregate(
@@ -36,7 +37,7 @@ export const Aggregateable =
 
     const { baseNameLower } = getDTONames(DTOClass)
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection')
-    const queryName = `${baseNameLower}Aggregate`
+    const queryName = opts.name || `${baseNameLower}Aggregate`
     const [AR, GroupbyType] = AggregateResponseType(DTOClass)
 
     @ArgsType()
@@ -46,7 +47,7 @@ export const Aggregateable =
     class AggregateResolverBase extends BaseClass {
       @ResolverQuery(
         () => [AR],
-        { name: queryName },
+        { name: queryName, description: opts.description },
         commonResolverOpts,
         { interceptors: [AuthorizerInterceptor(DTOClass)] },
         opts ?? {}
