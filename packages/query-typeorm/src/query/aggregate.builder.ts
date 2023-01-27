@@ -137,6 +137,8 @@ export class AggregateBuilder<Entity> {
           query = `DATE(DATE_FORMAT(${col}, '%Y-01-01'))`
         } else if (aggregatedField.args.by === GroupBy.MONTH) {
           query = `DATE(DATE_FORMAT(${col}, '%Y-%m-01'))`
+        } else if (aggregatedField.args.by === GroupBy.WEEK) {
+          query = `STR_TO_DATE(DATE_FORMAT(${col}, '%X-%V-01'), '%X-%V-%w')`
         }
 
         return [query, groupByAlias]

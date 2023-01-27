@@ -34,8 +34,7 @@ export const GroupByAggregateMixin =
             @Parent() dto: DTO,
             @Args('by', {
               type: () => GroupBy,
-              defaultValue: GroupBy.DAY,
-              nullable: true
+              defaultValue: GroupBy.DAY
             })
             by: string
           ): unknown {
