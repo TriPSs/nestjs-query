@@ -5299,6 +5299,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-graphql@workspace:packages/query-graphql"
   dependencies:
+    dataloader: ^2.1.0
     graphql-fields: ^2.0.3
     lodash.omit: ^4.5.0
     lower-case-first: ^2.0.2
@@ -5312,7 +5313,6 @@ __metadata:
     "@nestjs/graphql": ^9.0.0 || ^10.0.0
     class-transformer: ^0.2.3 || 0.3.1 || ^0.5
     class-validator: ^0.13.0
-    dataloader: ^2.0.0
     graphql: ^16.0.0
     graphql-subscriptions: ^2.0.0
     ts-morph: ^13.0.2 || ^14.0.0 || ^15.0.0
@@ -9610,7 +9610,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dataloader@npm:2.1.0":
+"dataloader@npm:2.1.0, dataloader@npm:^2.1.0":
   version: 2.1.0
   resolution: "dataloader@npm:2.1.0"
   checksum: bbd43496c41697766f8611f60ed3bae437b450985499140b9603a2447c10d45975d3a0661caaebaa9750bc1bc9fd154676a314423294916c8b8ca1a59a08d139
