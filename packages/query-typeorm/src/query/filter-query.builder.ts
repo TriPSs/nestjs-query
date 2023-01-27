@@ -112,8 +112,6 @@ export class FilterQueryBuilder<Entity> {
     qb = this.applyFilter(qb, query.filter, qb.alias)
     qb = this.applyAggregateSorting(qb, aggregate.groupBy, qb.alias)
     qb = this.applyAggregateGroupBy(qb, aggregate.groupBy, qb.alias)
-
-    console.log(qb.getQueryAndParameters())
     return qb
   }
 
