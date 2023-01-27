@@ -21,10 +21,9 @@ export const GroupByAggregateMixin =
     return reflector.memoize(DTOClass, aggName, () => {
       const fields = getFilterableFields(DTOClass).filter((field) => field.target === Date)
 
+      // If there are no date fields return base
       if (!fields.length) {
-        throw new Error(
-          `No fields found to create AggregationResponseType for ${DTOClass.name}. Ensure fields are annotated with @FilterableField`
-        )
+        return Base
       }
 
       return fields.reduce((RB, field) => {
