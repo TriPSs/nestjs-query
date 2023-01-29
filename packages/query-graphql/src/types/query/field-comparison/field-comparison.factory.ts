@@ -1,18 +1,3 @@
-import { Class, FilterComparisonOperators, FilterFieldComparison, isNamed } from '@rezonate/nestjs-query-core'
-import { IsBoolean, IsDate, IsOptional, ValidateNested } from 'class-validator'
-import { getOrCreateIntFieldComparison } from './int-field-comparison.type'
-import { getOrCreateStringFieldComparison } from './string-field-comparison.type'
-import { getOrCreateNumberFieldComparison } from './number-field-comparison.type'
-import { isInAllowedList } from '../helpers'
-import { getOrCreateDateFieldComparison } from './date-field-comparison.type'
-import { getOrCreateBooleanFieldComparison } from './boolean-field-comparison.type'
-import { IsUndefined } from '../../validators'
-import { getOrCreateFloatFieldComparison } from './float-field-comparison.type'
-import { getOrCreateTimestampFieldComparison } from './timestamp-field-comparison.type'
-import { getOrCreateStringListFieldComparison } from './string-list-field-comparison.type'
-import { SkipIf } from '../../../decorators'
-import { getGraphqlEnumMetadata } from '../../../common'
-import { upperCaseFirst } from 'upper-case-first'
 import {
   Field,
   Float,
@@ -24,8 +9,24 @@ import {
   ReturnTypeFunc,
   ReturnTypeFuncValue
 } from '@nestjs/graphql'
-import { Type } from 'class-transformer';
+import { Class, FilterComparisonOperators, FilterFieldComparison, isNamed } from '@rezonate/nestjs-query-core'
+import { Type } from 'class-transformer'
+import { IsBoolean, IsDate, IsOptional, ValidateNested } from 'class-validator'
+import { upperCaseFirst } from 'upper-case-first'
 
+import { getGraphqlEnumMetadata } from '../../../common'
+import { SkipIf } from '../../../decorators'
+import { IsUndefined } from '../../validators'
+import { isInAllowedList } from '../helpers'
+import { getOrCreateBooleanFieldComparison } from './boolean-field-comparison.type'
+import { getOrCreateDateFieldComparison } from './date-field-comparison.type'
+import { getOrCreateFloatFieldComparison } from './float-field-comparison.type'
+import { getOrCreateIntFieldComparison } from './int-field-comparison.type'
+import { getOrCreateJSONFieldComparison } from './json-field-comparison.type'
+import { getOrCreateNumberFieldComparison } from './number-field-comparison.type'
+import { getOrCreateStringFieldComparison } from './string-field-comparison.type'
+import { getOrCreateStringListFieldComparison } from './string-list-field-comparison.type'
+import { getOrCreateTimestampFieldComparison } from './timestamp-field-comparison.type'
 
 /** @internal */
 const filterComparisonMap = new Map<string, () => Class<FilterFieldComparison<unknown>>>()
@@ -35,6 +36,7 @@ filterComparisonMap.set('NumberFilterComparison', getOrCreateNumberFieldComparis
 filterComparisonMap.set('IntFilterComparison', getOrCreateIntFieldComparison)
 filterComparisonMap.set('FloatFilterComparison', getOrCreateFloatFieldComparison)
 filterComparisonMap.set('BooleanFilterComparison', getOrCreateBooleanFieldComparison)
+filterComparisonMap.set('JSONFilterComparison', getOrCreateJSONFieldComparison)
 filterComparisonMap.set('DateFilterComparison', getOrCreateDateFieldComparison)
 filterComparisonMap.set('DateTimeFilterComparison', getOrCreateDateFieldComparison)
 filterComparisonMap.set('TimestampFilterComparison', getOrCreateTimestampFieldComparison)
@@ -48,7 +50,8 @@ const knownTypes: Set<ReturnTypeFuncValue> = new Set([
   ID,
   Date,
   GraphQLISODateTime,
-  GraphQLTimestamp
+  GraphQLTimestamp,
+  JSON
 ])
 
 const knownArrTypes: Set<ReturnTypeFuncValue> = new Set([String])
@@ -56,7 +59,10 @@ const knownArrTypes: Set<ReturnTypeFuncValue> = new Set([String])
 const allowedBetweenTypes: Set<ReturnTypeFuncValue> = new Set([Number, Int, Float, Date, GraphQLISODateTime, GraphQLTimestamp])
 
 /** @internal */
-const getTypeName = (SomeType: ReturnTypeFuncValue): string => {
+const getTypeName = (SomeType: ReturnTypeFuncValue, isJSON?: boolean): string => {
+  if (isJSON) {
+    return 'JSON'
+  }
   if (knownTypes.has(SomeType) || isNamed(SomeType)) {
     const typeName = (SomeType as { name: string }).name
     return upperCaseFirst(typeName)
@@ -83,13 +89,14 @@ const getComparisonTypeName = <T>(fieldType: ReturnTypeFuncValue, options: Filte
   if (isCustomFieldComparison(options)) {
     return `${upperCaseFirst(options.fieldName)}FilterComparison`
   }
-  return `${getTypeName(fieldType)}FilterComparison`
+  return `${getTypeName(fieldType, options.isJSON)}FilterComparison`
 }
 
 type FilterComparisonOptions<T> = {
   FieldType: Class<T>
   fieldName: string
   allowedComparisons?: FilterComparisonOperators<T>[]
+  isJSON?: boolean
   returnTypeFunc?: ReturnTypeFunc
 }
 
