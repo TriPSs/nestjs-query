@@ -9,7 +9,6 @@ let jsonFieldComparison: Class<FilterFieldComparison<Record<string, unknown>>>
 /** @internal */
 export function getOrCreateJSONFieldComparison(): Class<FilterFieldComparison<Record<string, unknown>>> {
   if (jsonFieldComparison) {
-    console.log('jsonFieldComparison', jsonFieldComparison)
     return jsonFieldComparison
   }
 
