@@ -132,8 +132,8 @@ type TodoItemAggregateGroupBy {
   title: String
   description: String
   completed: Boolean
-  created: DateTime
-  updated: DateTime
+  created(by: GroupBy = DAY): DateTime
+  updated(by: GroupBy = DAY): DateTime
   priority: Float
   createdBy: String
   updatedBy: String
@@ -802,13 +802,13 @@ This example will aggregate all related `subTasks` that are not completed.
 When using the `enableAggregate` option it will enable aggregates on the root type as well as all relations. If you only want to expose aggregate functionality on the root type you can specify the `aggregate` option.
 
 ```ts {19}
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
-import { Module } from '@nestjs/common';
-import { TodoItemInputDTO } from './dto/todo-item-input.dto';
-import { TodoItemUpdateDTO } from './dto/todo-item-update.dto';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
+import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
+import { Module } from '@nestjs/common'
+import { TodoItemInputDTO } from './dto/todo-item-input.dto'
+import { TodoItemUpdateDTO } from './dto/todo-item-update.dto'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
 
 @Module({
   imports: [
@@ -821,10 +821,10 @@ import { TodoItemEntity } from './todo-item.entity';
           CreateDTOClass: TodoItemInputDTO,
           UpdateDTOClass: TodoItemUpdateDTO,
           aggregate: { enabled: true }
-        },
-      ],
-    }),
-  ],
+        }
+      ]
+    })
+  ]
 })
 export class TodoItemModule {}
 ```
@@ -834,37 +834,60 @@ export class TodoItemModule {}
 You can also selectively disable aggregates on an individual relation by specifying the enableAggregate option when defining the relation.
 
 ```ts {7}
-import { FilterableField, FilterableConnection, IDField } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
-import { AuthGuard } from '../../auth.guard';
-import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto';
+import { FilterableField, FilterableConnection, IDField } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
+import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'
 
 @ObjectType('TodoItem')
 @FilterableConnection('subTasks', () => SubTaskDTO, { enableAggregate: false })
 export class TodoItemDTO {
   @IDField(() => ID)
-  id!: number;
+  id!: number
 
   @FilterableField()
-  title!: string;
+  title!: string
 
   @FilterableField({ nullable: true })
-  description?: string;
+  description?: string
 
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
 
   @FilterableField(() => GraphQLISODateTime)
-  created!: Date;
+  created!: Date
 
   @FilterableField(() => GraphQLISODateTime)
-  updated!: Date;
+  updated!: Date
 
   @Field()
-  age!: number;
+  age!: number
 
   @FilterableField()
-  priority!: number;
+  priority!: number
 }
 
+```
+
+### Group aggregate on DAY/WEEK/MONTH
+
+:::caution
+This functionality only works for typeorm!
+:::
+
+You can change how datetime fields are grouped by passing `WEEK`, `MONTH` or `YEAR` to the date fields `by`.
+
+```graphql
+{
+  todoItemAggregate {
+    groupBy {
+      created(by: MONTH)
+    }
+    count {
+      id
+    }
+    sum {
+      id
+    }
+  }
+}
 ```
