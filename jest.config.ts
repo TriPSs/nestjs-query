@@ -8,8 +8,5 @@ module.exports = {
     '<rootDir>/packages/query-typegoose',
     '<rootDir>/packages/query-sequelize',
     '<rootDir>/packages/query-mongoose'
-  ],
-  testTimeout: 10000,
-  collectCoverageFrom: ['packages/**/*.ts', '!**/__tests__/**', '!**/dist/**', '!**/node_modules/**'],
-  snapshotSerializers: ['jest-snapshot-serializer-raw/always']
+  ]
 }
