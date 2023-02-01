@@ -6,7 +6,7 @@ module.exports = {
   collectCoverage: true,
   coverageReporters: ['html', 'clover'],
   collectCoverageFrom: [
-    'packages/**/*.ts',
+    '**/*.ts',
     '!**/__tests__/**',
     '!*.spec.ts',
     '!**/dist/**',

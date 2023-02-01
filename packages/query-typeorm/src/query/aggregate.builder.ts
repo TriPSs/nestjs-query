@@ -53,8 +53,9 @@ export class AggregateBuilder<Entity> {
       [AggregateFuncs.MAX, query.max],
       [AggregateFuncs.MIN, query.min]
     ]
+
     return aggs.reduce((cols, [func, fields]) => {
-      const aliases = (fields ?? []).map((field) => this.getAggregateAlias(func, field.field))
+      const aliases = (fields ?? []).map(({ field }) => this.getAggregateAlias(func, field))
       return [...cols, ...aliases]
     }, [] as string[])
   }
