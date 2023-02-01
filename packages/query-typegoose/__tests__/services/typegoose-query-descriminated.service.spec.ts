@@ -9,7 +9,6 @@ import { NestjsQueryTypegooseModule } from '../../src'
 import { TypegooseQueryService } from '../../src/services'
 import {
   MongoServer,
-  mongoServer,
   TEST_DISCRIMINATED_ENTITIES,
   TEST_REFERENCES_FOR_DISCRIMINATES,
   TestEntity,
@@ -19,7 +18,7 @@ import { TestDiscriminatedEntity } from '../__fixtures__/test-discriminated.enti
 
 const { Types } = mongoose
 
-let mongo: MongoServer
+const mongo = new MongoServer()
 
 describe('TypegooseQueryService-With Descriminates', () => {
   let moduleRef: TestingModule
@@ -41,7 +40,7 @@ describe('TypegooseQueryService-With Descriminates', () => {
   }
 
   beforeAll(async () => {
-    mongo = await mongoServer()
+    await mongo.init()
     moduleRef = await Test.createTestingModule({
       imports: [
         TypegooseModule.forRoot(mongo.getConnectionUri()),
