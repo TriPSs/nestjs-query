@@ -15,7 +15,7 @@ export type AggregateQuerySumField<DTO> = AggregateQueryField<DTO>
 export type AggregateQueryAvgField<DTO> = AggregateQueryField<DTO>
 export type AggregateQueryMaxField<DTO> = AggregateQueryField<DTO>
 export type AggregateQueryMinField<DTO> = AggregateQueryField<DTO>
-export type AggregateQueryGroupByField<DTO> = AggregateQueryField<DTO, { by: GroupBy }>
+export type AggregateQueryGroupByField<DTO> = AggregateQueryField<DTO, { by?: GroupBy }>
 
 export type AggregateQuery<DTO> = {
   count?: AggregateQueryCountField<DTO>[]
