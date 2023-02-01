@@ -32,14 +32,14 @@ export class FilterQueryBuilder<Entity extends Document> {
     readonly aggregateBuilder: AggregateBuilder<Entity> = new AggregateBuilder<Entity>()
   ) {}
 
-  buildQuery({ filter, paging, sorting }: Query<Entity>): MongooseQuery<Entity> {
+  public buildQuery({ filter, paging, sorting }: Query<Entity>): MongooseQuery<Entity> {
     return {
       filterQuery: this.buildFilterQuery(filter),
       options: { limit: paging?.limit, skip: paging?.offset, sort: this.buildSorting(sorting) }
     }
   }
 
-  buildAggregateQuery(aggregate: AggregateQuery<Entity>, filter?: Filter<Entity>): MongooseAggregateQuery<Entity> {
+  public buildAggregateQuery(aggregate: AggregateQuery<Entity>, filter?: Filter<Entity>): MongooseAggregateQuery<Entity> {
     return {
       filterQuery: this.buildFilterQuery(filter),
       aggregate: this.aggregateBuilder.build(aggregate),
@@ -47,7 +47,7 @@ export class FilterQueryBuilder<Entity extends Document> {
     }
   }
 
-  buildIdAggregateQuery(
+  public buildIdAggregateQuery(
     id: unknown | unknown[],
     filter: Filter<Entity>,
     aggregate: AggregateQuery<Entity>
@@ -59,7 +59,7 @@ export class FilterQueryBuilder<Entity extends Document> {
     }
   }
 
-  buildIdFilterQuery(id: unknown | unknown[], filter?: Filter<Entity>): FilterQuery<Entity> {
+  public buildIdFilterQuery(id: unknown | unknown[], filter?: Filter<Entity>): FilterQuery<Entity> {
     return {
       ...this.buildFilterQuery(filter),
       _id: Array.isArray(id) ? { $in: id } : id
@@ -71,7 +71,7 @@ export class FilterQueryBuilder<Entity extends Document> {
    *
    * @param filter - the filter.
    */
-  buildFilterQuery(filter?: Filter<Entity>): FilterQuery<Entity> {
+  public buildFilterQuery(filter?: Filter<Entity>): FilterQuery<Entity> {
     if (!filter) {
       return {}
     }
@@ -82,7 +82,7 @@ export class FilterQueryBuilder<Entity extends Document> {
    * Applies the ORDER BY clause to a `typeorm` QueryBuilder.
    * @param sorts - an array of SortFields to create the ORDER BY clause.
    */
-  buildSorting(sorts?: SortField<Entity>[]): MongooseSort | undefined {
+  public buildSorting(sorts?: SortField<Entity>[]): MongooseSort | undefined {
     if (!sorts) {
       return undefined
     }

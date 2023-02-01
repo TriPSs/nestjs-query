@@ -187,11 +187,27 @@ describe('MongooseQueryService', () => {
       const queryResult = await queryService.aggregate(
         {},
         {
-          count: ['id'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['id', 'dateType', 'numberType', 'stringType'],
-          min: ['id', 'dateType', 'numberType', 'stringType']
+          count: [{ field: 'id', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -226,14 +242,31 @@ describe('MongooseQueryService', () => {
       const queryResult = await queryService.aggregate(
         {},
         {
-          groupBy: ['boolType'],
-          count: ['id'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['id', 'dateType', 'numberType', 'stringType'],
-          min: ['id', 'dateType', 'numberType', 'stringType']
+          groupBy: [{ field: 'boolType', args: {} }],
+          count: [{ field: 'id', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
+
       return expect(queryResult).toEqual([
         {
           groupBy: {
@@ -295,11 +328,27 @@ describe('MongooseQueryService', () => {
       const queryResult = await queryService.aggregate(
         { stringType: { in: ['foo1', 'foo2', 'foo3'] } },
         {
-          count: ['id'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['id', 'dateType', 'numberType', 'stringType'],
-          min: ['id', 'dateType', 'numberType', 'stringType']
+          count: [{ field: 'id', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -832,7 +881,7 @@ describe('MongooseQueryService', () => {
           'testReferences',
           TEST_ENTITIES[0],
           { referenceName: { isNot: null } },
-          { count: ['id'] }
+          { count: [{ field: 'id', args: {} }] }
         )
         return expect(aggResult).toEqual([
           {
@@ -850,7 +899,7 @@ describe('MongooseQueryService', () => {
           'testReferences',
           TEST_ENTITIES[0],
           { referenceName: { isNot: null } },
-          { groupBy: ['testEntity'], count: ['id'] }
+          { groupBy: [{ field: 'testEntity', args: {} }], count: [{ field: 'id', args: {} }] }
         )
         return expect(aggResult).toEqual([
           {
@@ -871,7 +920,7 @@ describe('MongooseQueryService', () => {
           'virtualTestReferences',
           TEST_ENTITIES[0],
           { referenceName: { isNot: null } },
-          { count: ['id'] }
+          { count: [{ field: 'id', args: {} }] }
         )
         return expect(aggResult).toEqual([
           {
@@ -893,9 +942,21 @@ describe('MongooseQueryService', () => {
           entities,
           { referenceName: { isNot: null } },
           {
-            count: ['id', 'referenceName', 'testEntity'],
-            min: ['id', 'referenceName', 'testEntity'],
-            max: ['id', 'referenceName', 'testEntity']
+            count: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            min: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            max: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ]
           }
         )
 
@@ -981,10 +1042,22 @@ describe('MongooseQueryService', () => {
           entities,
           { referenceName: { isNot: null } },
           {
-            groupBy: ['testEntity'],
-            count: ['id', 'referenceName', 'testEntity'],
-            min: ['id', 'referenceName', 'testEntity'],
-            max: ['id', 'referenceName', 'testEntity']
+            groupBy: [{ field: 'testEntity', args: {} }],
+            count: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            min: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            max: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ]
           }
         )
 
@@ -1073,9 +1146,21 @@ describe('MongooseQueryService', () => {
           entities,
           { referenceName: { isNot: null } },
           {
-            count: ['id', 'referenceName', 'testEntity'],
-            min: ['id', 'referenceName', 'testEntity'],
-            max: ['id', 'referenceName', 'testEntity']
+            count: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            min: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            max: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ]
           }
         )
 
