@@ -8,7 +8,6 @@ import { NestjsQueryMongooseModule } from '../../src'
 import { MongooseQueryService } from '../../src/services'
 import {
   MongoServer,
-  mongoServer,
   TEST_ENTITIES,
   TEST_REFERENCES,
   TestEntity,
@@ -17,7 +16,7 @@ import {
   TestReferenceSchema
 } from '../__fixtures__'
 
-let mongo: MongoServer
+const mongo = new MongoServer()
 
 describe('MongooseQueryService', () => {
   let moduleRef: TestingModule
@@ -39,7 +38,8 @@ describe('MongooseQueryService', () => {
   }
 
   beforeAll(async () => {
-    mongo = await mongoServer()
+    await mongo.init()
+
     moduleRef = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot(mongo.getConnectionUri()),

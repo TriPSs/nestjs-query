@@ -9,7 +9,6 @@ import { NestjsQueryTypegooseModule } from '../../src'
 import { TypegooseQueryService } from '../../src/services'
 import {
   MongoServer,
-  mongoServer,
   TEST_DISCRIMINATED_ENTITIES,
   TEST_ENTITIES,
   TEST_REFERENCES,
@@ -19,7 +18,7 @@ import {
 
 const { Types } = mongoose
 
-let mongo: MongoServer
+const mongo = new MongoServer()
 
 describe('TypegooseQueryService', () => {
   let moduleRef: TestingModule
@@ -41,7 +40,8 @@ describe('TypegooseQueryService', () => {
   }
 
   beforeAll(async () => {
-    mongo = await mongoServer()
+    await mongo.init()
+
     moduleRef = await Test.createTestingModule({
       imports: [
         TypegooseModule.forRoot(mongo.getConnectionUri()),
