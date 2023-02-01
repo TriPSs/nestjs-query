@@ -48,9 +48,7 @@ export const Aggregateable =
       'AggregateDTOClass'
     )
     const queryName = opts.name || `${baseNameLower}Aggregate`
-    const [AR, GroupbyType] = AggregateResponseType(DTOClass)
-
-    console.log(opts.AggregateDTOClass || DTOClass)
+    const [AR, GroupByType] = AggregateResponseType(DTOClass)
 
     @ArgsType()
     class AA extends AggregateArgsType(opts.AggregateDTOClass || DTOClass) {}
@@ -78,7 +76,7 @@ export const Aggregateable =
       }
     }
 
-    return GroupByAggregateMixin(DTOClass, GroupbyType)(AggregateResolverBase)
+    return GroupByAggregateMixin(DTOClass, GroupByType)(AggregateResolverBase)
   }
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const AggregateResolver = <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(

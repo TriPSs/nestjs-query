@@ -84,7 +84,7 @@ type CustomPrefixAggregateResponse {
 }
 
 type Query {
-  aggregate: CustomPrefixAggregateResponse!
+  aggregate: [CustomPrefixAggregateResponse!]!
 }
 `;
 
@@ -138,7 +138,7 @@ type FakeTypeAggregateResponse {
 }
 
 type Query {
-  aggregate: FakeTypeAggregateResponse!
+  aggregate: [FakeTypeAggregateResponse!]!
 }
 `;
 
@@ -192,6 +192,6 @@ type FakeTypeAggregateResponse {
 }
 
 type Query {
-  aggregate: FakeTypeAggregateResponse!
+  aggregate: [FakeTypeAggregateResponse!]!
 }
 `;
