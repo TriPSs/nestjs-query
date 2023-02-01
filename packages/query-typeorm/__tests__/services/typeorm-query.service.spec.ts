@@ -310,11 +310,27 @@ describe('TypeOrmQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         {},
         {
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -349,12 +365,28 @@ describe('TypeOrmQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         {},
         {
-          groupBy: ['boolType'],
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          groupBy: [{ field: 'boolType', args: {} }],
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -418,11 +450,27 @@ describe('TypeOrmQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         { stringType: { in: ['foo1', 'foo2', 'foo3'] } },
         {
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -457,12 +505,28 @@ describe('TypeOrmQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         { stringType: { in: ['foo1', 'foo2', 'foo3'] } },
         {
-          groupBy: ['boolType'],
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          groupBy: [{ field: 'boolType', args: {} }],
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -734,7 +798,7 @@ describe('TypeOrmQueryService', (): void => {
           'testRelations',
           TEST_ENTITIES[0],
           {},
-          { count: ['testRelationPk'] }
+          { count: [{ field: 'testRelationPk', args: {} }] }
         )
         return expect(aggResult).toEqual([
           {
@@ -752,7 +816,7 @@ describe('TypeOrmQueryService', (): void => {
           'testRelations',
           TEST_ENTITIES[0],
           { testRelationPk: { notLike: '%-1' } },
-          { count: ['testRelationPk'] }
+          { count: [{ field: 'testRelationPk', args: {} }] }
         )
         return expect(aggResult).toEqual([
           {
@@ -774,9 +838,30 @@ describe('TypeOrmQueryService', (): void => {
           entities,
           {},
           {
-            count: ['testRelationPk', 'relationName', 'testEntityId'],
-            min: ['testRelationPk', 'relationName', 'testEntityId'],
-            max: ['testRelationPk', 'relationName', 'testEntityId']
+            count: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            min: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            max: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ]
           }
         )
 
@@ -862,10 +947,28 @@ describe('TypeOrmQueryService', (): void => {
           entities,
           {},
           {
-            groupBy: ['testEntityId'],
-            count: ['testRelationPk', 'relationName', 'testEntityId'],
-            min: ['testRelationPk', 'relationName', 'testEntityId'],
-            max: ['testRelationPk', 'relationName', 'testEntityId']
+            groupBy: [{ field: 'testEntityId', args: {} }],
+            count: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            min: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            max: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              { field: 'testEntityId', args: {} }
+            ]
           }
         )
 
@@ -960,9 +1063,30 @@ describe('TypeOrmQueryService', (): void => {
           entities,
           { testRelationPk: { notLike: '%-1' } },
           {
-            count: ['testRelationPk', 'relationName', 'testEntityId'],
-            min: ['testRelationPk', 'relationName', 'testEntityId'],
-            max: ['testRelationPk', 'relationName', 'testEntityId']
+            count: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            min: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            max: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ]
           }
         )
 
@@ -1048,9 +1172,30 @@ describe('TypeOrmQueryService', (): void => {
           entities,
           { relationName: { isNot: null } },
           {
-            count: ['testRelationPk', 'relationName', 'testEntityId'],
-            min: ['testRelationPk', 'relationName', 'testEntityId'],
-            max: ['testRelationPk', 'relationName', 'testEntityId']
+            count: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            min: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            max: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ]
           }
         )
 
