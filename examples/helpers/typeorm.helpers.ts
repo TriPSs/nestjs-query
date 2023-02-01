@@ -33,6 +33,8 @@ export const typeormPostgresOptions = (
     autoLoadEntities: true,
     synchronize: true,
     dropSchema: true,
+    logger: 'simple-console',
+    logging: ['error'],
     ...overrides
   } as TypeOrmModuleOptions)
 

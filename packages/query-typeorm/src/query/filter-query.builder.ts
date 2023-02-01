@@ -202,21 +202,31 @@ export class FilterQueryBuilder<Entity> {
     }, qb)
   }
 
-  public applyAggregateGroupBy<T extends Groupable<Entity>>(qb: T, groupBy?: AggregateQueryField<Entity>[], alias?: string): T {
-    if (!groupBy) {
+  public applyAggregateGroupBy<T extends Groupable<Entity>>(
+    qb: T,
+    aggregatedGroupBy?: AggregateQueryField<Entity>[],
+    alias?: string
+  ): T {
+    if (!aggregatedGroupBy) {
       return qb
     }
-    return groupBy.reduce((prevQb, { field }) => {
-      return prevQb.addGroupBy(AggregateBuilder.getGroupByAlias(field))
+
+    return aggregatedGroupBy.reduce((prevQb, aggregatedField) => {
+      return prevQb.addGroupBy(prevQb.escape(AggregateBuilder.getGroupByAlias(aggregatedField.field)))
     }, qb)
   }
 
-  public applyAggregateSorting<T extends Sortable<Entity>>(qb: T, groupBy?: AggregateQueryField<Entity>[], alias?: string): T {
-    if (!groupBy) {
+  public applyAggregateSorting<T extends Sortable<Entity>>(
+    qb: T,
+    aggregatedGroupBy?: AggregateQueryField<Entity>[],
+    alias?: string
+  ): T {
+    if (!aggregatedGroupBy) {
       return qb
     }
-    return groupBy.reduce((prevQb, { field }) => {
-      return prevQb.addOrderBy(AggregateBuilder.getGroupByAlias(field), 'ASC')
+
+    return aggregatedGroupBy.reduce((prevQb, aggregatedField) => {
+      return prevQb.addOrderBy(prevQb.escape(AggregateBuilder.getGroupByAlias(aggregatedField.field)), 'ASC')
     }, qb)
   }
 
