@@ -1,4 +1,22 @@
  
+# [2.1.0](https://github.com/TriPSs/nestjs-query/compare/v2.0.1...v2.1.0) (2023-02-02)
+
+
+### Bug Fixes
+
+* **query-graphql:** Moved `dateloader` from `peerDependencies` to `dependencies` ([b4b2ea9](https://github.com/TriPSs/nestjs-query/commit/b4b2ea942c292b735f06f9849d85da5a628d67e0))
+* **query-typeorm:** Escape the aggregated group by and sort by ([787889e](https://github.com/TriPSs/nestjs-query/commit/787889e5324a093ce9f12ca7b4a22dc638be6c02))
+
+
+### Features
+
+* Added `by` option to aggregated date fields so group by `DAY`, `MONTH` or `YEAR` (TypeORM) ([0993b93](https://github.com/TriPSs/nestjs-query/commit/0993b93bff0bdc5dee0c3394b4a6e3e60ae532b5))
+* Added support for aggregated group by week ([70764a7](https://github.com/TriPSs/nestjs-query/commit/70764a72c2761067ccde728e787b129093aa3848))
+* **query-graphql:** Added support to define different aggregate dto ([1569a58](https://github.com/TriPSs/nestjs-query/commit/1569a58e0c46bb9a905e3213a2ebbf653cf09160))
+* **query-graphql:** Added support to name the aggregate endpoints ([da70f3b](https://github.com/TriPSs/nestjs-query/commit/da70f3b435631e354c89a884ce435a9a8703b975))
+
+
+
 ## [2.0.1](https://github.com/TriPSs/nestjs-query/compare/v2.0.0...v2.0.1) (2023-01-27)
 
 
