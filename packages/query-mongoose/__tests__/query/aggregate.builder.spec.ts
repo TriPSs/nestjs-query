@@ -13,11 +13,22 @@ describe('AggregateBuilder', (): void => {
 
   it('should create an aggregate query', (): void => {
     const agg: AggregateQuery<TestEntity> = {
-      count: ['id', 'stringType'],
-      avg: ['numberType'],
-      sum: ['numberType'],
-      max: ['stringType', 'dateType', 'numberType'],
-      min: ['stringType', 'dateType', 'numberType']
+      count: [
+        { field: 'id', args: {} },
+        { field: 'stringType', args: {} }
+      ],
+      avg: [{ field: 'numberType', args: {} }],
+      sum: [{ field: 'numberType', args: {} }],
+      max: [
+        { field: 'stringType', args: {} },
+        { field: 'dateType', args: {} },
+        { field: 'numberType', args: {} }
+      ],
+      min: [
+        { field: 'stringType', args: {} },
+        { field: 'dateType', args: {} },
+        { field: 'numberType', args: {} }
+      ]
     }
     expect(createAggregateBuilder().build(agg)).toEqual({
       _id: null,

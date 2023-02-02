@@ -77,7 +77,7 @@ describe('ProxyQueryService', () => {
 
   it('should proxy to the underlying service when calling aggregate', () => {
     const filter = {}
-    const aggregate: AggregateQuery<TestType> = { count: ['foo'] }
+    const aggregate: AggregateQuery<TestType> = { count: [{ field: 'foo', args: {} }] }
     const result = [{ count: { foo: 1 } }]
     when(mockQueryService.aggregate(filter, aggregate)).thenResolve(result)
     return expect(queryService.aggregate(filter, aggregate)).resolves.toBe(result)
@@ -110,7 +110,7 @@ describe('ProxyQueryService', () => {
     const relationName = 'test'
     const dto = new TestType()
     const filter = {}
-    const aggQuery: AggregateQuery<TestType> = { count: ['foo'] }
+    const aggQuery: AggregateQuery<TestType> = { count: [{ field: 'foo', args: {} }] }
     const result = [{ count: { foo: 1 } }]
     when(mockQueryService.aggregateRelations(TestType, relationName, dto, filter, aggQuery)).thenResolve(result)
     return expect(queryService.aggregateRelations(TestType, relationName, dto, filter, aggQuery)).resolves.toBe(result)
@@ -120,7 +120,7 @@ describe('ProxyQueryService', () => {
     const relationName = 'test'
     const dtos = [new TestType()]
     const filter = {}
-    const aggQuery: AggregateQuery<TestType> = { count: ['foo'] }
+    const aggQuery: AggregateQuery<TestType> = { count: [{ field: 'foo', args: {} }] }
     const result = new Map([[{ foo: 'bar' }, [{ count: { foo: 1 } }]]])
     when(mockQueryService.aggregateRelations(TestType, relationName, dtos, filter, aggQuery)).thenResolve(result)
     return expect(queryService.aggregateRelations(TestType, relationName, dtos, filter, aggQuery)).resolves.toBe(result)

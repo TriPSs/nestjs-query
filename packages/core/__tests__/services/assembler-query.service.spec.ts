@@ -175,7 +175,7 @@ describe('AssemblerQueryService', () => {
     it('should transform the results for a single entity', () => {
       const mockQueryService = mock<QueryService<TestEntity>>()
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
-      const aggQuery: AggregateQuery<TestDTO> = { count: ['foo'] }
+      const aggQuery: AggregateQuery<TestDTO> = { count: [{ field: 'foo', args: {} }] }
       const result: AggregateResponse<TestDTO>[] = [{ count: { foo: 1 } }]
       when(
         mockQueryService.aggregateRelations(
@@ -197,7 +197,7 @@ describe('AssemblerQueryService', () => {
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
       const dto: TestDTO = { foo: 'bar' }
       const entity: TestEntity = { bar: 'bar' }
-      const aggQuery: AggregateQuery<TestDTO> = { count: ['foo'] }
+      const aggQuery: AggregateQuery<TestDTO> = { count: [{ field: 'foo', args: {} }] }
       const result: AggregateResponse<TestDTO> = { count: { foo: 1 } }
       when(
         mockQueryService.aggregateRelations(
@@ -220,7 +220,7 @@ describe('AssemblerQueryService', () => {
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
       const dto: TestDTO = { foo: 'bar' }
       const entity: TestEntity = { bar: 'bar' }
-      const aggQuery: AggregateQuery<TestDTO> = { count: ['foo'] }
+      const aggQuery: AggregateQuery<TestDTO> = { count: [{ field: 'foo', args: {} }] }
       when(
         mockQueryService.aggregateRelations(
           TestDTO,

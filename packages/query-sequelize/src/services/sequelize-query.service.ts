@@ -61,12 +61,12 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * ```
    * @param query - The Query used to filter, page, and sort rows.
    */
-  async query(query: Query<Entity>): Promise<Entity[]> {
+  public async query(query: Query<Entity>): Promise<Entity[]> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return this.model.findAll<Entity>(this.filterQueryBuilder.findOptions(query))
   }
 
-  async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
+  public async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const result = await this.model.findAll(this.filterQueryBuilder.aggregateOptions({ filter }, aggregate))
     if (!result) {
@@ -75,7 +75,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
     return AggregateBuilder.convertToAggregateResponse(result as unknown as Record<string, unknown>[])
   }
 
-  async count(filter: Filter<Entity>): Promise<number> {
+  public async count(filter: Filter<Entity>): Promise<number> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return this.model.count(this.filterQueryBuilder.countOptions({ filter }))
   }
@@ -90,7 +90,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * @param id - The id of the record to find.
    * @param opts - Additional options
    */
-  async findById(id: string | number, opts?: FindByIdOptions<Entity>): Promise<Entity | undefined> {
+  public async findById(id: string | number, opts?: FindByIdOptions<Entity>): Promise<Entity | undefined> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const model = await this.model.findOne<Entity>(this.filterQueryBuilder.findByIdOptions(id, opts ?? {}))
     if (!model) {
@@ -113,7 +113,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * @param id - The id of the record to find.
    * @param opts - Additional options
    */
-  async getById(id: string | number, opts?: GetByIdOptions<Entity>): Promise<Entity> {
+  public async getById(id: string | number, opts?: GetByIdOptions<Entity>): Promise<Entity> {
     const entity = await this.findById(id, opts ?? {})
     if (!entity) {
       throw new NotFoundException(`Unable to find ${this.model.name} with id: ${id}`)
@@ -130,7 +130,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * ```
    * @param record - The entity to create.
    */
-  async createOne(record: DeepPartial<Entity>): Promise<Entity> {
+  public async createOne(record: DeepPartial<Entity>): Promise<Entity> {
     await this.ensureEntityDoesNotExist(record)
     const changedValues = this.getChangedValues(record)
     return this.model.create<Entity>(changedValues as MakeNullishOptional<Entity>)
@@ -148,7 +148,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * ```
    * @param records - The entities to create.
    */
-  async createMany(records: DeepPartial<Entity>[]): Promise<Entity[]> {
+  public async createMany(records: DeepPartial<Entity>[]): Promise<Entity[]> {
     await Promise.all(records.map((r) => this.ensureEntityDoesNotExist(r)))
 
     return this.model.bulkCreate<Entity>(records.map((r) => this.getChangedValues(r) as MakeNullishOptional<Entity>))
@@ -165,7 +165,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * @param update - A `Partial` of the entity with fields to update.
    * @param opts - Additional options.
    */
-  async updateOne(id: number | string, update: DeepPartial<Entity>, opts?: UpdateOneOptions<Entity>): Promise<Entity> {
+  public async updateOne(id: number | string, update: DeepPartial<Entity>, opts?: UpdateOneOptions<Entity>): Promise<Entity> {
     this.ensureIdIsNotPresent(update)
     const entity = await this.getById(id, opts)
 
@@ -187,7 +187,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * @param update - A `Partial` of entity with the fields to update
    * @param filter - A Filter used to find the records to update
    */
-  async updateMany(update: DeepPartial<Entity>, filter: Filter<Entity>): Promise<UpdateManyResponse> {
+  public async updateMany(update: DeepPartial<Entity>, filter: Filter<Entity>): Promise<UpdateManyResponse> {
     this.ensureIdIsNotPresent(update)
 
     const changedValues = this.getChangedValues(update)
@@ -208,7 +208,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * @param id - The `id` of the entity to delete.
    * @param opts - Additional options.
    */
-  async deleteOne(id: string | number, opts?: DeleteOneOptions<Entity>): Promise<Entity> {
+  public async deleteOne(id: string | number, opts?: DeleteOneOptions<Entity>): Promise<Entity> {
     const entity = await this.getById(id, opts)
     await entity.destroy()
     return entity
@@ -227,7 +227,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    *
    * @param filter - A `Filter` to find records to delete.
    */
-  async deleteMany(filter: Filter<Entity>): Promise<DeleteManyResponse> {
+  public async deleteMany(filter: Filter<Entity>): Promise<DeleteManyResponse> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const deletedCount = await this.model.destroy(this.filterQueryBuilder.destroyOptions({ filter }))
     return { deletedCount: deletedCount || 0 }

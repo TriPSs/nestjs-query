@@ -39,11 +39,22 @@ describe('AggregateBuilder', (): void => {
   it('should create selects for all aggregate functions', (): void => {
     expectAggregateQuery(
       {
-        count: ['testEntityPk', 'stringType'],
-        avg: ['numberType'],
-        sum: ['numberType'],
-        max: ['stringType', 'dateType', 'numberType'],
-        min: ['stringType', 'dateType', 'numberType']
+        count: [
+          { field: 'testEntityPk', args: {} },
+          { field: 'stringType', args: {} }
+        ],
+        avg: [{ field: 'numberType', args: {} }],
+        sum: [{ field: 'numberType', args: {} }],
+        max: [
+          { field: 'stringType', args: {} },
+          { field: 'dateType', args: {} },
+          { field: 'numberType', args: {} }
+        ],
+        min: [
+          { field: 'stringType', args: {} },
+          { field: 'dateType', args: {} },
+          { field: 'numberType', args: {} }
+        ]
       },
       {
         attributes: [
@@ -65,8 +76,11 @@ describe('AggregateBuilder', (): void => {
   it('should create selects for all aggregate functions and group bys', (): void => {
     expectAggregateQuery(
       {
-        groupBy: ['stringType', 'boolType'],
-        count: ['testEntityPk']
+        groupBy: [
+          { field: 'stringType', args: {} },
+          { field: 'boolType', args: {} }
+        ],
+        count: [{ field: 'testEntityPk', args: {} }]
       },
       {
         attributes: [
@@ -79,7 +93,7 @@ describe('AggregateBuilder', (): void => {
   })
 
   describe('.convertToAggregateResponse', () => {
-    it('should convert a flat response into an Aggregtate response', () => {
+    it('should convert a flat response into an Aggregate response', () => {
       const dbResult = [
         {
           GROUP_BY_stringType: 'z',

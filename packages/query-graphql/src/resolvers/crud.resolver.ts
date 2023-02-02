@@ -29,6 +29,10 @@ export interface CRUDResolverOpts<
    * The DTO that should be used as input for update endpoints.
    */
   UpdateDTOClass?: Class<U>
+  /**
+   * The DTO that should be used for filter of the aggregate endpoint.
+   */
+  AggregateDTOClass?: Class<DTO>
   enableSubscriptions?: boolean
   pagingStrategy?: PS
   enableAggregate?: boolean
@@ -37,7 +41,7 @@ export interface CRUDResolverOpts<
   update?: UpdateResolverOpts<DTO, U>
   delete?: DeleteResolverOpts<DTO>
   referenceBy?: ReferenceResolverOpts
-  aggregate?: AggregateResolverOpts
+  aggregate?: AggregateResolverOpts<DTO>
 }
 
 export interface CRUDResolver<
@@ -61,9 +65,9 @@ function extractRelatableOpts<DTO>(
 
 function extractAggregateResolverOpts<DTO>(
   opts: CRUDResolverOpts<DTO, unknown, unknown, ReadResolverOpts<DTO>, PagingStrategies>
-): AggregateResolverOpts {
-  const { enableAggregate, aggregate } = opts
-  return mergeBaseResolverOpts<AggregateResolverOpts>({ enabled: enableAggregate, ...aggregate }, opts)
+): AggregateResolverOpts<DTO> {
+  const { AggregateDTOClass, enableAggregate, aggregate } = opts
+  return mergeBaseResolverOpts<AggregateResolverOpts<DTO>>({ enabled: enableAggregate, AggregateDTOClass, ...aggregate }, opts)
 }
 
 function extractCreateResolverOpts<DTO, C>(

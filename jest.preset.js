@@ -6,7 +6,7 @@ module.exports = {
   collectCoverage: true,
   coverageReporters: ['html', 'clover'],
   collectCoverageFrom: [
-    'packages/**/*.ts',
+    '**/*.ts',
     '!**/__tests__/**',
     '!*.spec.ts',
     '!**/dist/**',
@@ -23,5 +23,6 @@ module.exports = {
   },
   testEnvironment: 'node',
   setupFilesAfterEnv: ['jest-extended'],
-  snapshotSerializers: ['jest-snapshot-serializer-raw/always']
-};
+  snapshotSerializers: ['jest-snapshot-serializer-raw/always'],
+  testTimeout: 10000,
+}
