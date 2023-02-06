@@ -18,6 +18,16 @@ export function getOrCreateJSONFieldComparison(): Class<FilterFieldComparison<Re
     @IsString()
     @IsUndefined()
     containsLike?: string
+
+    @Field(() => Boolean, { nullable: true })
+    @IsBoolean()
+    @IsOptional()
+    is?: boolean | null
+
+    @Field(() => Boolean, { nullable: true })
+    @IsBoolean()
+    @IsOptional()
+    isNot?: boolean | null
   }
 
   jsonFieldComparison = JsonFieldComparison
