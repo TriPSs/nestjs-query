@@ -25,6 +25,9 @@ function createLookAheadInfo<DTO>(
     .filter(Boolean) as SelectRelation<DTO>[]
 }
 
+/**
+ * @internal this implementation is not final and subjected to change! Use at own risk!
+ */
 export const GraphQLLookAheadRelations = <DTO>(DTOClass: Class<DTO>): ParameterDecorator => {
   // Get all relations that have look ahead enabled
   const relations = getRelationsDescriptors(DTOClass).filter(

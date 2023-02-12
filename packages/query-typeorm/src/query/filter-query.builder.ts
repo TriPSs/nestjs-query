@@ -1,12 +1,11 @@
 import {
   AggregateQuery,
   AggregateQueryField,
-  AggregateQueryGroupByField,
-  SelectRelation,
   Filter,
   getFilterFields,
   Paging,
   Query,
+  SelectRelation,
   SortField
 } from '@ptc-org/nestjs-query-core'
 import merge from 'lodash.merge'
@@ -78,14 +77,14 @@ export class FilterQueryBuilder<Entity> {
    *
    * @param query - the query to apply.
    */
-  public select(query: Query<Entity>, selectRelations?: SelectRelation<Entity>[]): SelectQueryBuilder<Entity> {
-    const hasRelations = this.hasRelations(query.filter, selectRelations)
+  public select(query: Query<Entity>): SelectQueryBuilder<Entity> {
+    const hasRelations = this.hasRelations(query.filter, query.relations)
     let qb = this.createQueryBuilder()
     qb = hasRelations
       ? this.applyRelationJoinsRecursive(
           qb,
-          this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, selectRelations),
-          selectRelations
+          this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.relations),
+          query.relations
         )
       : qb
     qb = this.applyFilter(qb, query.filter, qb.alias)
@@ -94,19 +93,15 @@ export class FilterQueryBuilder<Entity> {
     return qb
   }
 
-  public selectById(
-    id: string | number | (string | number)[],
-    query: Query<Entity>,
-    selectRelations?: SelectRelation<Entity>[]
-  ): SelectQueryBuilder<Entity> {
-    const hasRelations = this.hasRelations(query.filter, selectRelations)
+  public selectById(id: string | number | (string | number)[], query: Query<Entity>): SelectQueryBuilder<Entity> {
+    const hasRelations = this.hasRelations(query.filter, query.relations)
 
     let qb = this.createQueryBuilder()
     qb = hasRelations
       ? this.applyRelationJoinsRecursive(
           qb,
-          this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, selectRelations),
-          selectRelations
+          this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.relations),
+          query.relations
         )
       : qb
     qb = qb.andWhereInIds(id)
@@ -256,6 +251,8 @@ export class FilterQueryBuilder<Entity> {
    * Gets relations referenced in the filter and adds joins for them to the query builder
    * @param qb - the `typeorm` QueryBuilder.
    * @param relationsMap - the relations map.
+   * @param selectRelations - additional relations to select
+   * @param alias - alias to use
    *
    * @returns the query builder for chaining
    */
@@ -271,7 +268,7 @@ export class FilterQueryBuilder<Entity> {
     const referencedRelations = Object.keys(relationsMap)
 
     return referencedRelations.reduce((rqb, relation) => {
-      const selectRelation = selectRelations && selectRelations.find(({ name }) => name === relation)
+      const selectRelation = selectRelations && selectRelations.some(({ name }) => name === relation)
       let joinMethod: 'leftJoin' | 'leftJoinAndSelect' = 'leftJoin'
 
       if (selectRelation) {
@@ -289,8 +286,6 @@ export class FilterQueryBuilder<Entity> {
 
   /**
    * Checks if a filter references any relations.
-   * @param filter
-   * @private
    *
    * @returns true if there are any referenced relations
    */

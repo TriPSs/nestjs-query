@@ -1,10 +1,9 @@
 import { Filterable } from './filterable.interface'
-import { SelectRelation } from './select-relation.interface'
+import { SelectRelations } from './select-relation.interface'
 
-export interface FindByIdOptions<DTO> extends Filterable<DTO> {
+export interface FindByIdOptions<DTO> extends Filterable<DTO>, SelectRelations<DTO> {
   /**
    * Allow also deleted records to be retrieved
    */
   withDeleted?: boolean
-  selectRelations?: SelectRelation<DTO>[]
 }

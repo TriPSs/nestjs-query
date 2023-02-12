@@ -13,7 +13,6 @@ import {
   GetByIdOptions,
   Query,
   QueryService,
-  SelectRelation,
   UpdateManyResponse,
   UpdateOneOptions
 } from '@ptc-org/nestjs-query-core'
@@ -78,8 +77,8 @@ export class TypeOrmQueryService<Entity>
    * ```
    * @param query - The Query used to filter, page, and sort rows.
    */
-  public async query(query: Query<Entity>, selectRelations?: SelectRelation<Entity>[]): Promise<Entity[]> {
-    return this.filterQueryBuilder.select(query, selectRelations).getMany()
+  public async query(query: Query<Entity>): Promise<Entity[]> {
+    return this.filterQueryBuilder.select(query).getMany()
   }
 
   public async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
@@ -103,7 +102,7 @@ export class TypeOrmQueryService<Entity>
    * @param opts
    */
   public async findById(id: string | number, opts?: FindByIdOptions<Entity>): Promise<Entity | undefined> {
-    const qb = this.filterQueryBuilder.selectById(id, opts ?? {}, opts?.selectRelations)
+    const qb = this.filterQueryBuilder.selectById(id, opts ?? {})
     if (opts?.withDeleted) {
       qb.withDeleted()
     }

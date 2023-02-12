@@ -82,12 +82,12 @@ export const Readable =
         })
         authorizeFilter?: Filter<DTO>,
         @GraphQLLookAheadRelations(DTOClass)
-        lookAheadRelations?: SelectRelation<DTO>[]
+        relations?: SelectRelation<DTO>[]
       ): Promise<DTO> {
         return this.service.getById(input.id, {
           filter: authorizeFilter,
           withDeleted: opts?.one?.withDeleted,
-          selectRelations: lookAheadRelations
+          relations
         })
       }
 
@@ -106,11 +106,11 @@ export const Readable =
         })
         authorizeFilter?: Filter<DTO>,
         @GraphQLLookAheadRelations(DTOClass)
-        lookAheadRelations?: SelectRelation<DTO>[]
+        relations?: SelectRelation<DTO>[]
       ): Promise<InstanceType<typeof ConnectionType>> {
         return ConnectionType.createFromPromise(
-          (q) => this.service.query(q, lookAheadRelations),
-          mergeQuery(query, { filter: authorizeFilter }),
+          (q) => this.service.query(q),
+          mergeQuery(query, { filter: authorizeFilter, relations }),
           (filter) => this.service.count(filter)
         )
       }

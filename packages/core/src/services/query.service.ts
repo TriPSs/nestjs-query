@@ -13,7 +13,6 @@ import {
   GetByIdOptions,
   ModifyRelationOptions,
   Query,
-  SelectRelation,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -30,7 +29,7 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    * @param selectRelations - additional relation to select and fetch in the same query.
    * @returns a promise with an array of records that match the query.
    */
-  query(query: Query<DTO>, selectRelations?: SelectRelation<DTO>[]): Promise<DTO[]>
+  query(query: Query<DTO>): Promise<DTO[]>
 
   /**
    * Perform an aggregate query
