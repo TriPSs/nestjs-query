@@ -1,4 +1,14 @@
  
+## [2.1.1](https://github.com/TriPSs/nestjs-query/compare/v2.1.0...v2.1.1) (2023-02-12)
+
+
+### Bug Fixes
+
+* **query-graphql:** Make the `imports` of `NestjsQueryGraphQLModule` optional ([4ef6574](https://github.com/TriPSs/nestjs-query/commit/4ef65743b221f4f9de7d603656b59db7ece07326))
+* **query-typeorm:** Fix RelationQueryBuilder not properly naming aliases via DriverUtils.buildAlias ([c47f93e](https://github.com/TriPSs/nestjs-query/commit/c47f93e29b06071fb3842f4ab89375e1f531bfc0))
+
+
+
 # [2.1.0](https://github.com/TriPSs/nestjs-query/compare/v2.0.1...v2.1.0) (2023-02-02)
 
 
