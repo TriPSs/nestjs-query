@@ -20,5 +20,13 @@
       }
     }
   },
-  "tags": []
+  "tags": [],
+  "implicitDependencies": [
+    "core",
+    "query-graphql",
+    "query-mongoose",
+    "query-sequelize",
+    "query-typegoose",
+    "query-typeorm"
+  ]
 }
