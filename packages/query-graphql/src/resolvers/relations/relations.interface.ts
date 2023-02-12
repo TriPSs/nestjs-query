@@ -61,7 +61,7 @@ export type ResolverRelation<Relation> = {
    */
   enableAggregate?: boolean
   /**
-   * Enable look ahead mode, will join and select the relation when queried
+   * Enable look ahead mode, will join and select the relation when queried.
    */
   enableLookAhead?: boolean
   /**

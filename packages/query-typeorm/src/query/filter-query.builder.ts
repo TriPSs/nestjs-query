@@ -268,6 +268,7 @@ export class FilterQueryBuilder<Entity> {
     const referencedRelations = Object.keys(relationsMap)
 
     return referencedRelations.reduce((rqb, relation) => {
+      // TODO:: Change to find and also apply the query for the relation
       const selectRelation = selectRelations && selectRelations.some(({ name }) => name === relation)
       let joinMethod: 'leftJoin' | 'leftJoinAndSelect' = 'leftJoin'
 
