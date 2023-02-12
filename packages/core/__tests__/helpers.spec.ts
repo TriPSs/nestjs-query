@@ -676,26 +676,50 @@ describe('getFilterFields', () => {
 describe('transformAggregateQuery', () => {
   it('should transform an aggregate query', () => {
     const aggQuery: AggregateQuery<TestDTO> = {
-      count: ['first'],
-      sum: ['age'],
-      max: ['first', 'last', 'age'],
-      min: ['first', 'last', 'age']
+      count: [{ field: 'first', args: {} }],
+      sum: [{ field: 'age', args: {} }],
+      max: [
+        { field: 'first', args: {} },
+        { field: 'last', args: {} },
+        { field: 'age', args: {} }
+      ],
+      min: [
+        { field: 'first', args: {} },
+        { field: 'last', args: {} },
+        { field: 'age', args: {} }
+      ]
     }
     const entityAggQuery: AggregateQuery<TestEntity> = {
-      count: ['firstName'],
-      sum: ['ageInYears'],
-      max: ['firstName', 'lastName', 'ageInYears'],
-      min: ['firstName', 'lastName', 'ageInYears']
+      count: [{ field: 'firstName', args: {} }],
+      sum: [{ field: 'ageInYears', args: {} }],
+      max: [
+        { field: 'firstName', args: {} },
+        { field: 'lastName', args: {} },
+        { field: 'ageInYears', args: {} }
+      ],
+      min: [
+        { field: 'firstName', args: {} },
+        { field: 'lastName', args: {} },
+        { field: 'ageInYears', args: {} }
+      ]
     }
     expect(transformAggregateQuery(aggQuery, fieldMap)).toEqual(entityAggQuery)
   })
 
   it('should throw an error if an unknown field is encountered', () => {
     const aggQuery: AggregateQuery<TestDTO> = {
-      count: ['first'],
-      sum: ['age'],
-      max: ['first', 'last', 'age'],
-      min: ['first', 'last', 'age']
+      count: [{ field: 'first', args: {} }],
+      sum: [{ field: 'age', args: {} }],
+      max: [
+        { field: 'first', args: {} },
+        { field: 'last', args: {} },
+        { field: 'age', args: {} }
+      ],
+      min: [
+        { field: 'first', args: {} },
+        { field: 'last', args: {} },
+        { field: 'age', args: {} }
+      ]
     }
     // @ts-ignore
     expect(() => transformAggregateQuery(aggQuery, { last: 'lastName' })).toThrow(

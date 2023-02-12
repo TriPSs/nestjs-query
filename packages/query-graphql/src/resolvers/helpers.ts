@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common'
 import { applyFilter, Class, Filter } from '@ptc-org/nestjs-query-core'
-import { plainToClass } from 'class-transformer'
+import { plainToInstance } from 'class-transformer'
 import { validate } from 'class-validator'
 
 import { SubscriptionArgsType, SubscriptionFilterInputType } from '../types'
@@ -10,7 +10,7 @@ export const transformAndValidate = async <T>(TClass: Class<T>, partial: T): Pro
   if (partial instanceof TClass) {
     return partial
   }
-  const transformed = plainToClass(TClass, partial)
+  const transformed = plainToInstance(TClass, partial)
   const validationErrors = await validate(transformed as unknown as Record<keyof never, unknown>)
   if (validationErrors.length) {
     throw new BadRequestException(validationErrors)

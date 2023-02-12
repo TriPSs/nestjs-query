@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { AggregateQuery } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, GroupBy } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 
 import { AggregateBuilder } from '../../src/query'
@@ -27,18 +27,52 @@ describe('AggregateBuilder', (): void => {
 
   it('should create selects for all aggregate functions', (): void => {
     expectSQLSnapshot({
-      count: ['testEntityPk'],
-      avg: ['numberType'],
-      sum: ['numberType'],
-      max: ['stringType', 'dateType', 'numberType'],
-      min: ['stringType', 'dateType', 'numberType']
+      count: [{ field: 'testEntityPk', args: {} }],
+      avg: [{ field: 'numberType', args: {} }],
+      sum: [{ field: 'numberType', args: {} }],
+      max: [
+        { field: 'stringType', args: {} },
+        { field: 'dateType', args: {} },
+        { field: 'numberType', args: {} }
+      ],
+      min: [
+        { field: 'stringType', args: {} },
+        { field: 'dateType', args: {} },
+        { field: 'numberType', args: {} }
+      ]
     })
   })
 
   it('should create selects for all aggregate functions and group bys', (): void => {
     expectSQLSnapshot({
-      groupBy: ['stringType', 'boolType'],
-      count: ['testEntityPk']
+      groupBy: [
+        { field: 'stringType', args: {} },
+        { field: 'boolType', args: {} }
+      ],
+      count: [{ field: 'testEntityPk', args: {} }]
+    })
+  })
+
+  describe('date type', () => {
+    it('should default group by day', (): void => {
+      expectSQLSnapshot({
+        groupBy: [{ field: 'dateType', args: {} }],
+        count: [{ field: 'testEntityPk', args: {} }]
+      })
+    })
+
+    it('should default group by week', (): void => {
+      expectSQLSnapshot({
+        groupBy: [{ field: 'dateType', args: { by: GroupBy.WEEK } }],
+        count: [{ field: 'testEntityPk', args: {} }]
+      })
+    })
+
+    it('should default group by month', (): void => {
+      expectSQLSnapshot({
+        groupBy: [{ field: 'dateType', args: { by: GroupBy.MONTH } }],
+        count: [{ field: 'testEntityPk', args: {} }]
+      })
     })
   })
 

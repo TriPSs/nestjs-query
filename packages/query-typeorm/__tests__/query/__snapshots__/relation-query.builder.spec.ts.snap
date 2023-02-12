@@ -7,7 +7,7 @@ SELECT
   "manyToOneRelation"."test_entity_id" AS "manyToOneRelation_test_entity_id",
   "manyToOneRelation"."uni_directional_test_entity_id" AS "manyToOneRelation_uni_directional_test_entity_id",
   "manyToOneRelation"."uni_directional_relation_test_entity_id" AS "manyToOneRelation_uni_directional_relation_test_entity_id",
-  "test_entity"."test_entity_pk" AS "test_entity_testEntityPk"
+  "test_entity"."test_entity_pk" AS "manyToOneRelation_test_entity_testEntityPk"
 FROM
   "test_relation" "manyToOneRelation"
   INNER JOIN "test_entity" "test_entity" ON "test_entity"."many_to_one_relation_id" = "manyToOneRelation"."test_relation_pk"
@@ -22,7 +22,7 @@ SELECT
   "manyToOneRelation"."test_entity_id" AS "manyToOneRelation_test_entity_id",
   "manyToOneRelation"."uni_directional_test_entity_id" AS "manyToOneRelation_uni_directional_test_entity_id",
   "manyToOneRelation"."uni_directional_relation_test_entity_id" AS "manyToOneRelation_uni_directional_relation_test_entity_id",
-  "testEntity"."test_entity_pk" AS "testEntity_testEntityPk"
+  "testEntity"."test_entity_pk" AS "manyToOneRelation_testEntity_testEntityPk"
 FROM
   "test_relation" "manyToOneRelation"
   LEFT JOIN "test_entity" "testEntity" ON "testEntity"."test_entity_pk" = "manyToOneRelation"."test_entity_id"

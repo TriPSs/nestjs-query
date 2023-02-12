@@ -61,7 +61,7 @@ export class TypeOrmQueryService<Entity>
   }
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  get EntityClass(): Class<Entity> {
+  public get EntityClass(): Class<Entity> {
     return this.repo.target as Class<Entity>
   }
 
@@ -78,17 +78,17 @@ export class TypeOrmQueryService<Entity>
    * ```
    * @param query - The Query used to filter, page, and sort rows.
    */
-  async query(query: Query<Entity>, selectRelations?: SelectRelation<Entity>[]): Promise<Entity[]> {
+  public async query(query: Query<Entity>, selectRelations?: SelectRelation<Entity>[]): Promise<Entity[]> {
     return this.filterQueryBuilder.select(query, selectRelations).getMany()
   }
 
-  async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
+  public async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
     return AggregateBuilder.asyncConvertToAggregateResponse(
       this.filterQueryBuilder.aggregate({ filter }, aggregate).getRawMany<Record<string, unknown>>()
     )
   }
 
-  async count(filter: Filter<Entity>): Promise<number> {
+  public async count(filter: Filter<Entity>): Promise<number> {
     return this.filterQueryBuilder.select({ filter }).getCount()
   }
 
@@ -102,7 +102,7 @@ export class TypeOrmQueryService<Entity>
    * @param id - The id of the record to find.
    * @param opts
    */
-  async findById(id: string | number, opts?: FindByIdOptions<Entity>): Promise<Entity | undefined> {
+  public async findById(id: string | number, opts?: FindByIdOptions<Entity>): Promise<Entity | undefined> {
     const qb = this.filterQueryBuilder.selectById(id, opts ?? {}, opts?.selectRelations)
     if (opts?.withDeleted) {
       qb.withDeleted()
@@ -125,7 +125,7 @@ export class TypeOrmQueryService<Entity>
    * @param id - The id of the record to find.
    * @param opts
    */
-  async getById(id: string | number, opts?: GetByIdOptions<Entity>): Promise<Entity> {
+  public async getById(id: string | number, opts?: GetByIdOptions<Entity>): Promise<Entity> {
     const entity = await this.findById(id, opts)
     if (!entity) {
       throw new NotFoundException(`Unable to find ${this.EntityClass.name} with id: ${id}`)
@@ -142,7 +142,7 @@ export class TypeOrmQueryService<Entity>
    * ```
    * @param record - The entity to create.
    */
-  async createOne(record: DeepPartial<Entity>): Promise<Entity> {
+  public async createOne(record: DeepPartial<Entity>): Promise<Entity> {
     const entity = await this.ensureIsEntityAndDoesNotExist(record)
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -162,7 +162,7 @@ export class TypeOrmQueryService<Entity>
    * ```
    * @param records - The entities to create.
    */
-  async createMany(records: DeepPartial<Entity>[]): Promise<Entity[]> {
+  public async createMany(records: DeepPartial<Entity>[]): Promise<Entity[]> {
     const entities = await Promise.all(records.map((r) => this.ensureIsEntityAndDoesNotExist(r)))
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -201,7 +201,7 @@ export class TypeOrmQueryService<Entity>
    * @param update - A `Partial` of entity with the fields to update
    * @param filter - A Filter used to find the records to update
    */
-  async updateMany(update: DeepPartial<Entity>, filter: Filter<Entity>): Promise<UpdateManyResponse> {
+  public async updateMany(update: DeepPartial<Entity>, filter: Filter<Entity>): Promise<UpdateManyResponse> {
     this.ensureIdIsNotPresent(update)
     let updateResult: UpdateResult
 
@@ -241,7 +241,7 @@ export class TypeOrmQueryService<Entity>
    * @param filter Additional filter to use when finding the entity to delete.
    * @param opts - Additional options.
    */
-  async deleteOne(id: string | number, opts?: DeleteOneOptions<Entity>): Promise<Entity> {
+  public async deleteOne(id: string | number, opts?: DeleteOneOptions<Entity>): Promise<Entity> {
     const entity = await this.getById(id, opts)
     if (this.useSoftDelete || opts?.useSoftDelete) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -266,7 +266,7 @@ export class TypeOrmQueryService<Entity>
    * @param filter - A `Filter` to find records to delete.
    * @param opts - Additional delete many options
    */
-  async deleteMany(filter: Filter<Entity>, opts?: DeleteManyOptions<Entity>): Promise<DeleteManyResponse> {
+  public async deleteMany(filter: Filter<Entity>, opts?: DeleteManyOptions<Entity>): Promise<DeleteManyResponse> {
     let deleteResult = {} as DeleteResult
 
     if (this.filterQueryBuilder.hasRelations(filter)) {
@@ -307,7 +307,7 @@ export class TypeOrmQueryService<Entity>
    * @param id - The `id` of the entity to restore.
    * @param opts Additional filter to use when finding the entity to restore.
    */
-  async restoreOne(id: string | number, opts?: Filterable<Entity>): Promise<Entity> {
+  public async restoreOne(id: string | number, opts?: Filterable<Entity>): Promise<Entity> {
     this.ensureSoftDeleteEnabled()
     await this.repo.restore(id)
     return this.getById(id, opts)
@@ -326,7 +326,7 @@ export class TypeOrmQueryService<Entity>
    *
    * @param filter - A `Filter` to find records to delete.
    */
-  async restoreMany(filter: Filter<Entity>): Promise<UpdateManyResponse> {
+  public async restoreMany(filter: Filter<Entity>): Promise<UpdateManyResponse> {
     this.ensureSoftDeleteEnabled()
     const result = await this.filterQueryBuilder.softDelete({ filter }).restore().execute()
     return { updatedCount: result.affected || 0 }

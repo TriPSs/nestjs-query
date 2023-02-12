@@ -51,8 +51,8 @@ describe('AggregateRelationsResolver', () => {
         }
         const filter: Filter<TestRelationDTO> = { id: { eq: 'id-2' } }
         const aggregateQuery: AggregateQuery<TestRelationDTO> = {
-          count: ['id'],
-          sum: ['testResolverId']
+          count: [{ field: 'id', args: {} }],
+          sum: [{ field: 'testResolverId', args: {} }]
         }
         const output: AggregateResponse<TestRelationDTO>[] = [
           {

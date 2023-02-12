@@ -1,4 +1,12 @@
-import { AggregateQuery, Filter, getFilterFields, Paging, Query, SortField } from '@ptc-org/nestjs-query-core'
+import {
+  AggregateQuery,
+  AggregateQueryField,
+  Filter,
+  getFilterFields,
+  Paging,
+  Query,
+  SortField
+} from '@ptc-org/nestjs-query-core'
 import sequelize, {
   Association,
   CountOptions,
@@ -56,7 +64,7 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
    *
    * @param query - the query to apply.
    */
-  findOptions(query: Query<Entity>): FindOptions {
+  public findOptions(query: Query<Entity>): FindOptions {
     let opts: FindOptions = this.applyAssociationIncludes({ subQuery: false }, query.filter)
     opts = this.applyFilter(opts, query.filter)
     opts = this.applySorting(opts, query.sorting)
@@ -70,7 +78,7 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
    * @param pk - The primary key(s) of records to find.
    * @param query - the query to apply.
    */
-  findByIdOptions(pk: string | number | (string | number)[], query: Query<Entity>): FindOptions {
+  public findByIdOptions(pk: string | number | (string | number)[], query: Query<Entity>): FindOptions {
     let opts: FindOptions = this.applyAssociationIncludes({ subQuery: false }, query.filter)
     opts = this.applyFilter(opts, {
       ...(query.filter ?? ({} as Filter<Entity>)),
@@ -87,7 +95,7 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
    * @param query - the query to apply.
    * @param aggregate - the aggregate query
    */
-  aggregateOptions(query: Query<Entity>, aggregate: AggregateQuery<Entity>): FindOptions {
+  public aggregateOptions(query: Query<Entity>, aggregate: AggregateQuery<Entity>): FindOptions {
     let opts: FindOptions = { raw: true }
     opts = this.applyAggregate(opts, aggregate)
     opts = this.applyFilter(opts, query.filter)
@@ -96,7 +104,7 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
     return opts
   }
 
-  relationAggregateOptions(query: Query<Entity>, aggregate: AggregateQuery<Entity>): FindOptions {
+  public relationAggregateOptions(query: Query<Entity>, aggregate: AggregateQuery<Entity>): FindOptions {
     // joinTableAttributes is used by many-to-many relations and must be empty.
     let opts: FindOptions = { joinTableAttributes: [], raw: true } as FindOptions
     opts = this.applyAggregate(opts, aggregate)
@@ -106,7 +114,7 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
     return opts
   }
 
-  countOptions(query: Query<Entity>): CountOptions<Entity> {
+  public countOptions(query: Query<Entity>): CountOptions<Entity> {
     let opts: CountOptions = this.applyAssociationIncludes({}, query.filter)
     opts.distinct = true
     opts = this.applyFilter(opts, query.filter)
@@ -118,7 +126,7 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
    *
    * @param query - the query to apply.
    */
-  destroyOptions(query: Query<Entity>): DestroyOptions {
+  public destroyOptions(query: Query<Entity>): DestroyOptions {
     let opts: DestroyOptions = {}
     opts = this.applyFilter(opts, query.filter)
     opts = this.applyPaging(opts, query.paging)
@@ -130,7 +138,7 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
    *
    * @param query - the query to apply.
    */
-  updateOptions(query: Query<Entity>): UpdateOptions<Entity['_attributes']> {
+  public updateOptions(query: Query<Entity>): UpdateOptions<Entity['_attributes']> {
     let opts: UpdateOptions<Entity> = { where: {} }
     opts = this.applyFilter(opts, query.filter)
     opts = this.applyPaging(opts, query.paging)
@@ -142,7 +150,7 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
    * @param qb - the `sequelize` QueryBuilder
    * @param paging - the Paging options.
    */
-  applyPaging<P extends Pageable>(qb: P, paging?: Paging): P {
+  public applyPaging<P extends Pageable>(qb: P, paging?: Paging): P {
     if (!paging) {
       return qb
     }
@@ -163,7 +171,7 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
    * @param filterable - the `sequelize` QueryBuilder.
    * @param filter - the filter.
    */
-  applyFilter<Where extends Filterable>(filterable: Where, filter?: Filter<Entity>): Where {
+  public applyFilter<Where extends Filterable>(filterable: Where, filter?: Filter<Entity>): Where {
     if (!filter) {
       return filterable
     }
@@ -177,7 +185,7 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
    * @param qb - the `sequelize` QueryBuilder.
    * @param sorts - an array of SortFields to create the ORDER BY clause.
    */
-  applySorting<T extends Sortable>(qb: T, sorts?: SortField<Entity>[]): T {
+  public applySorting<T extends Sortable>(qb: T, sorts?: SortField<Entity>[]): T {
     if (!sorts) {
       return qb
     }
@@ -199,24 +207,24 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
     return opts
   }
 
-  applyGroupBy<T extends Groupable>(qb: T, groupBy?: (keyof Entity)[]): T {
-    if (!groupBy) {
+  public applyGroupBy<T extends Groupable>(qb: T, aggregatedGroupBy?: AggregateQueryField<Entity>[]): T {
+    if (!aggregatedGroupBy) {
       return qb
     }
     // eslint-disable-next-line no-param-reassign
-    qb.group = groupBy.map((field) => {
+    qb.group = aggregatedGroupBy.map(({ field }) => {
       const colName = this.model.rawAttributes[field as string].field
       return sequelize.col(colName ?? (field as string))
     })
     return qb
   }
 
-  applyAggregateSorting<T extends Sortable>(qb: T, groupBy?: (keyof Entity)[]): T {
-    if (!groupBy) {
+  public applyAggregateSorting<T extends Sortable>(qb: T, aggregatedGroupBy?: AggregateQueryField<Entity>[]): T {
+    if (!aggregatedGroupBy) {
       return qb
     }
     // eslint-disable-next-line no-param-reassign
-    qb.order = groupBy.map((field): OrderItem => {
+    qb.order = aggregatedGroupBy.map(({ field }): OrderItem => {
       const colName = this.model.rawAttributes[field as string].field
       const col = sequelize.col(colName ?? (field as string))
       return [col, 'ASC']

@@ -268,7 +268,7 @@ export class RelationQueryBuilder<Entity, Relation> {
           (columns, column) => ({
             ...columns,
 
-            [`${joinAlias}_${column.propertyPath}`]: column.getEntityValue(entity)
+            [this.buildAlias(joinAlias, column.propertyName)]: column.getEntityValue(entity)
           }),
           {} as Partial<Entity>
         )
@@ -305,7 +305,7 @@ export class RelationQueryBuilder<Entity, Relation> {
             whereParams[paramName] = entities.map((entity) => column.getEntityValue(entity) as unknown)
 
             // Also select the columns, so we can use them to map later
-            queryBuilder.addSelect(`${joinAlias}.${column.propertyPath}`, `${joinAlias}_${column.propertyPath}`)
+            queryBuilder.addSelect(`${joinAlias}.${column.propertyPath}`, this.buildAlias(joinAlias, column.propertyName))
 
             return `${joinAlias}.${column.propertyPath} IN (:...${paramName})`
           })
@@ -522,7 +522,7 @@ export class RelationQueryBuilder<Entity, Relation> {
         params[paramName] = entities.map((entity) => column.referencedColumn.getEntityValue(entity) as unknown)
 
         // We also want to select the field, so we can map them back in the mapper
-        queryBuilder.addSelect(`${joinAlias}.${column.propertyName}`, `${joinAlias}_${column.propertyName}`)
+        queryBuilder.addSelect(`${joinAlias}.${column.propertyName}`, this.buildAlias(joinAlias, column.propertyName))
 
         return `${joinAlias}.${column.propertyName} IN (:...${paramName})`
       })
@@ -549,7 +549,7 @@ export class RelationQueryBuilder<Entity, Relation> {
       (columnsFilter, column) => ({
         ...columnsFilter,
 
-        [`${joinAlias}_${column.propertyName}`]: column.referencedColumn.getEntityValue(entity)
+        [this.buildAlias(joinAlias, column.propertyName)]: column.referencedColumn.getEntityValue(entity)
       }),
       {} as Partial<Entity>
     )
@@ -594,11 +594,11 @@ export class RelationQueryBuilder<Entity, Relation> {
   private getRelationPrimaryKeysPropertyNameAndColumnsName(): { columnName: string; propertyName: string }[] {
     return this.relationMeta.fromPrimaryKeys.map((pk) => ({
       propertyName: pk.propertyName,
-      columnName: DriverUtils.buildAlias(
-        this.relationRepo.manager.connection.driver,
-        this.relationMeta.fromAlias,
-        pk.databasePath
-      )
+      columnName: this.buildAlias(pk.databasePath)
     }))
+  }
+
+  private buildAlias(...alias: string[]): string {
+    return DriverUtils.buildAlias(this.relationRepo.manager.connection.driver, this.relationMeta.fromAlias, ...alias)
   }
 }

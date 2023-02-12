@@ -43,7 +43,7 @@ const AggregateRelationMixin =
     @ArgsType()
     class RelationQA extends AggregateArgsType(relationDTO) {}
 
-    const AR = AggregateResponseType(relationDTO, { prefix: `${dtoName}${pluralBaseName}` })
+    const [AR] = AggregateResponseType(relationDTO, { prefix: `${dtoName}${pluralBaseName}` })
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class AggregateMixin extends Base {
@@ -75,6 +75,7 @@ const AggregateRelationMixin =
       }
     }
 
+    // TODO:: Add also support for the "by" in dates
     return AggregateMixin
   }
 
