@@ -196,6 +196,18 @@ describe('FilterQueryBuilder', (): void => {
         verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never()
       })
     })
+
+    describe('with relation', () => {
+      it('should select and map relation', () => {
+        const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+        expectSelectSQLSnapshot(
+          {
+            relations: [{ name: 'oneTestRelation', query: {} }]
+          },
+          instance(mockWhereBuilder)
+        )
+      })
+    })
   })
 
   describe('#update', () => {
