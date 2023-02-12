@@ -14,7 +14,6 @@ import {
   GetByIdOptions,
   ModifyRelationOptions,
   Query,
-  SelectRelation,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -87,7 +86,7 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     return Promise.reject(new NotImplementedException('getById is not implemented'))
   }
 
-  query(query: Query<DTO>, selectRelations?: SelectRelation<DTO>[]): Promise<DTO[]> {
+  query(query: Query<DTO>): Promise<DTO[]> {
     return Promise.reject(new NotImplementedException('query is not implemented'))
   }
 

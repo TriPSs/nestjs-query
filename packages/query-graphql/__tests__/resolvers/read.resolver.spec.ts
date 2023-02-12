@@ -94,7 +94,7 @@ describe('ReadResolver', () => {
             stringField: 'foo'
           }
         ]
-        when(mockService.query(objectContaining({ ...input, paging: { limit: 2, offset: 0 } }), undefined)).thenResolve(output)
+        when(mockService.query(objectContaining({ ...input, paging: { limit: 2, offset: 0 } }))).thenResolve(output)
         const result = await resolver.queryMany(input)
         return expect(result).toEqual({
           edges: [
@@ -136,8 +136,7 @@ describe('ReadResolver', () => {
 
         when(
           mockService.query(
-            objectContaining({ filter: { and: [input.filter, authorizeFilter] }, paging: { limit: 2, offset: 0 } }),
-            undefined
+            objectContaining({ filter: { and: [input.filter, authorizeFilter] }, paging: { limit: 2, offset: 0 } })
           )
         ).thenResolve(output)
 
@@ -176,7 +175,7 @@ describe('ReadResolver', () => {
             stringField: 'foo'
           }
         ]
-        when(mockService.query(objectContaining({ ...input, paging: { limit: 2, offset: 0 } }), undefined)).thenResolve(output)
+        when(mockService.query(objectContaining({ ...input, paging: { limit: 2, offset: 0 } }))).thenResolve(output)
         const result = await resolver.queryMany(input)
         when(mockService.count(objectContaining(input.filter))).thenResolve(10)
         return expect(result.totalCount).resolves.toBe(10)
@@ -201,8 +200,7 @@ describe('ReadResolver', () => {
 
         when(
           mockService.query(
-            objectContaining({ filter: { and: [input.filter, authorizeFilter] }, paging: { limit: 2, offset: 0 } }),
-            undefined
+            objectContaining({ filter: { and: [input.filter, authorizeFilter] }, paging: { limit: 2, offset: 0 } })
           )
         ).thenResolve(output)
 
@@ -234,7 +232,7 @@ describe('ReadResolver', () => {
             stringField: 'foo'
           }
         ]
-        when(mockService.query(objectContaining({ ...input, paging: { limit: 2 } }), undefined)).thenResolve(output)
+        when(mockService.query(objectContaining({ ...input, paging: { limit: 2 } }))).thenResolve(output)
         const result = await resolver.queryMany(input)
         return expect(result).toEqual({
           nodes: output,
@@ -265,7 +263,7 @@ describe('ReadResolver', () => {
             stringField: 'foo'
           }
         ]
-        when(mockService.query(objectContaining(input), undefined)).thenResolve(output)
+        when(mockService.query(objectContaining(input))).thenResolve(output)
         const result = await resolver.queryMany(input)
         return expect(result).toEqual(output)
       })
