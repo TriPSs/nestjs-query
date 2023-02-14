@@ -269,15 +269,19 @@ export class FilterQueryBuilder<Entity> {
 
     return referencedRelations.reduce((rqb, relation) => {
       // TODO:: Change to find and also apply the query for the relation
-      const selectRelation = selectRelations && selectRelations.some(({ name }) => name === relation)
-      let joinMethod: 'leftJoin' | 'leftJoinAndSelect' = 'leftJoin'
+      const selectRelation = selectRelations && selectRelations.find(({ name }) => name === relation)
 
       if (selectRelation) {
-        joinMethod = 'leftJoinAndSelect'
+        return this.applyRelationJoinsRecursive(
+          rqb.leftJoinAndSelect(`${alias ?? rqb.alias}.${relation}`, relation),
+          relationsMap[relation],
+          selectRelation.query.relations,
+          relation
+        )
       }
 
       return this.applyRelationJoinsRecursive(
-        rqb[joinMethod](`${alias ?? rqb.alias}.${relation}`, relation),
+        rqb.leftJoin(`${alias ?? rqb.alias}.${relation}`, relation),
         relationsMap[relation],
         [],
         relation
@@ -307,11 +311,25 @@ export class FilterQueryBuilder<Entity> {
   public getReferencedRelationsRecursive(
     metadata: EntityMetadata,
     filter: Filter<unknown> = {},
-    selectRelations: SelectRelation<any>[] = []
+    selectRelations: SelectRelation<Entity>[] = []
   ): NestedRecord {
     const referencedFields = Array.from(new Set(Object.keys(filter) as (keyof Filter<unknown>)[]))
+
     const referencedRelations = selectRelations.reduce((relations, selectRelation) => {
+      const referencedRelation = metadata.relations.find((r) => r.propertyName === selectRelation.name)
+      if (!referencedRelation) {
+        return relations
+      }
+
       relations[selectRelation.name] = {}
+
+      if (selectRelation.query.relations) {
+        relations[selectRelation.name] = this.getReferencedRelationsRecursive(
+          referencedRelation.inverseEntityMetadata,
+          {},
+          selectRelation.query.relations
+        )
+      }
 
       return relations
     }, {})
@@ -323,8 +341,12 @@ export class FilterQueryBuilder<Entity> {
           prev = merge(prev, this.getReferencedRelationsRecursive(metadata, subFilter))
         }
       }
+
       const referencedRelation = metadata.relations.find((r) => r.propertyName === curr)
-      if (!referencedRelation) return prev
+      if (!referencedRelation) {
+        return prev
+      }
+
       return {
         ...prev,
         [curr]: merge(

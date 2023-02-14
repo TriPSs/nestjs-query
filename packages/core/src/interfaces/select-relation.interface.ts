@@ -2,7 +2,7 @@ import { Query } from './query.inteface'
 
 export interface SelectRelation<DTO> {
   name: string
-  query: Omit<Query<DTO>, 'relations'>
+  query: Query<DTO>
 }
 
 export interface SelectRelations<DTO> {

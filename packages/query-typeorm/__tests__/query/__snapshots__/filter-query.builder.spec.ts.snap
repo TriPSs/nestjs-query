@@ -113,6 +113,35 @@ FROM
   LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
 `;
 
+exports[`FilterQueryBuilder #select with relation should select and sub relations 1`] = `
+SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
+  "oneTestRelation"."test_relation_pk" AS "oneTestRelation_test_relation_pk",
+  "oneTestRelation"."relation_name" AS "oneTestRelation_relation_name",
+  "oneTestRelation"."test_entity_id" AS "oneTestRelation_test_entity_id",
+  "oneTestRelation"."uni_directional_test_entity_id" AS "oneTestRelation_uni_directional_test_entity_id",
+  "oneTestRelation"."uni_directional_relation_test_entity_id" AS "oneTestRelation_uni_directional_relation_test_entity_id",
+  "testEntityUniDirectional"."test_entity_pk" AS "testEntityUniDirectional_test_entity_pk",
+  "testEntityUniDirectional"."string_type" AS "testEntityUniDirectional_string_type",
+  "testEntityUniDirectional"."bool_type" AS "testEntityUniDirectional_bool_type",
+  "testEntityUniDirectional"."number_type" AS "testEntityUniDirectional_number_type",
+  "testEntityUniDirectional"."date_type" AS "testEntityUniDirectional_date_type",
+  "testEntityUniDirectional"."many_to_one_relation_id" AS "testEntityUniDirectional_many_to_one_relation_id",
+  "testEntityUniDirectional"."many_to_one_soft_delete_relation_id" AS "testEntityUniDirectional_many_to_one_soft_delete_relation_id",
+  "testEntityUniDirectional"."oneTestRelationTestRelationPk" AS "testEntityUniDirectional_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
+  LEFT JOIN "test_entity" "testEntityUniDirectional" ON "testEntityUniDirectional"."test_entity_pk" = "oneTestRelation"."uni_directional_test_entity_id"
+`;
+
 exports[`FilterQueryBuilder #select with sorting should apply ASC NULLS_FIRST sorting 1`] = `
 SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",

@@ -207,6 +207,23 @@ describe('FilterQueryBuilder', (): void => {
           instance(mockWhereBuilder)
         )
       })
+
+      it('should select and sub relations', () => {
+        const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+        expectSelectSQLSnapshot(
+          {
+            relations: [
+              {
+                name: 'oneTestRelation',
+                query: {
+                  relations: [{ name: 'testEntityUniDirectional', query: {} }]
+                }
+              }
+            ]
+          },
+          instance(mockWhereBuilder)
+        )
+      })
     })
   })
 
