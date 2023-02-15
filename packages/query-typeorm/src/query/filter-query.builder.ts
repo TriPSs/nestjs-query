@@ -78,43 +78,39 @@ export class FilterQueryBuilder<Entity> {
    * @param query - the query to apply.
    */
   public select(query: Query<Entity>): SelectQueryBuilder<Entity> {
-    const hasRelations = this.hasRelations(query.filter, query.relations)
+    const hasFilterRelations = this.hasRelations(query.filter)
     let qb = this.createQueryBuilder()
-    qb = hasRelations
-      ? this.applyRelationJoinsRecursive(
-          qb,
-          this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.relations),
-          query.relations
-        )
-      : qb
+    qb = this.applyRelationJoinsRecursive(
+      qb,
+      this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.relations),
+      query.relations
+    )
     qb = this.applyFilter(qb, query.filter, qb.alias)
     qb = this.applySorting(qb, query.sorting, qb.alias)
-    qb = this.applyPaging(qb, query.paging, hasRelations)
+    qb = this.applyPaging(qb, query.paging, hasFilterRelations)
     return qb
   }
 
   public selectById(id: string | number | (string | number)[], query: Query<Entity>): SelectQueryBuilder<Entity> {
-    const hasRelations = this.hasRelations(query.filter, query.relations)
+    const hasFilterRelations = this.hasRelations(query.filter)
 
     let qb = this.createQueryBuilder()
-    qb = hasRelations
-      ? this.applyRelationJoinsRecursive(
-          qb,
-          this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.relations),
-          query.relations
-        )
-      : qb
+    qb = this.applyRelationJoinsRecursive(
+      qb,
+      this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.relations),
+      query.relations
+    )
     qb = qb.andWhereInIds(id)
     qb = this.applyFilter(qb, query.filter, qb.alias)
     qb = this.applySorting(qb, query.sorting, qb.alias)
-    qb = this.applyPaging(qb, query.paging, hasRelations)
+    qb = this.applyPaging(qb, query.paging, hasFilterRelations)
     return qb
   }
 
   public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>): SelectQueryBuilder<Entity> {
-    const hasRelations = this.hasRelations(query.filter)
+    const hasFilterRelations = this.hasRelations(query.filter)
     let qb = this.createQueryBuilder()
-    qb = hasRelations
+    qb = hasFilterRelations
       ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsRecursive(this.repo.metadata, query.filter))
       : qb
     qb = this.applyAggregate(qb, aggregate, qb.alias)
@@ -294,18 +290,13 @@ export class FilterQueryBuilder<Entity> {
    *
    * @returns true if there are any referenced relations
    */
-  public hasRelations(filter?: Filter<Entity>, selectRelations?: SelectRelation<Entity>[]): boolean {
-    if (!filter && !selectRelations) {
+  public hasRelations(filter?: Filter<Entity>): boolean {
+    if (!filter) {
       return false
     }
-    return this.getReferencedRelations(filter || {}, selectRelations || []).length > 0
-  }
 
-  private getReferencedRelations(filter: Filter<Entity>, selectRelations: SelectRelation<Entity>[]): string[] {
     const { relationNames } = this
-    const referencedFields = getFilterFields(filter)
-    const referencedSelectRelations = selectRelations.map((relation) => relation.name)
-    return [...referencedFields, ...referencedSelectRelations].filter((f) => relationNames.includes(f))
+    return getFilterFields(filter).filter((f) => relationNames.includes(f)).length > 0
   }
 
   public getReferencedRelationsRecursive(
