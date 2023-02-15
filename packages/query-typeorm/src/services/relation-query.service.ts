@@ -426,12 +426,20 @@ export abstract class RelationQueryService<Entity> {
     opts?: FindRelationOptions<Relation>
   ): Promise<Map<Entity, Relation | undefined>> {
     // If the relation is looked ahead and all the entities have it
-    if (opts?.lookedAhead && dtos.every((entity) => entity[relationName])) {
-      const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
+    if (opts?.lookedAhead) {
+      const isNullable = this.getRelationMeta(relationName).isNullable
 
-      return dtos.reduce((results, entity) => {
-        return results.set(entity, entity[relationName] ? assembler.convertToDTO(entity[relationName]) : undefined)
-      }, new Map<Entity, Relation>())
+      // Make sure the data is there
+      if (
+        (isNullable && dtos.some((entity) => entity[relationName])) ||
+        (!isNullable && dtos.some((entity) => entity[relationName]))
+      ) {
+        const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
+
+        return dtos.reduce((results, entity) => {
+          return results.set(entity, entity[relationName] ? assembler.convertToDTO(entity[relationName]) : undefined)
+        }, new Map<Entity, Relation>())
+      }
     }
 
     const batchResults = await this.batchQueryRelations(
