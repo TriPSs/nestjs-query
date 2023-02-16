@@ -205,7 +205,7 @@ export class TypeOrmQueryService<Entity>
     let updateResult: UpdateResult
 
     // If the update has relations then fetch all the id's and then do an update on the ids returned
-    if (this.filterQueryBuilder.hasRelations(filter)) {
+    if (this.filterQueryBuilder.filterHasRelations(filter)) {
       const builder = this.filterQueryBuilder.select({ filter }).distinct(true)
 
       const distinctRecords = await builder.addSelect(`${builder.alias}.id`).getRawMany()
@@ -268,7 +268,7 @@ export class TypeOrmQueryService<Entity>
   public async deleteMany(filter: Filter<Entity>, opts?: DeleteManyOptions<Entity>): Promise<DeleteManyResponse> {
     let deleteResult = {} as DeleteResult
 
-    if (this.filterQueryBuilder.hasRelations(filter)) {
+    if (this.filterQueryBuilder.filterHasRelations(filter)) {
       const builder = this.filterQueryBuilder.select({ filter }).distinct(true)
 
       const distinctRecords = await builder.addSelect(`${builder.alias}.id`).getRawMany()

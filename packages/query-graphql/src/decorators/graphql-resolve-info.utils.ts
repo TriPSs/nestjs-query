@@ -77,7 +77,7 @@ function parseFieldNodes<DTO>(
   parentType: GraphQLCompositeType
 ): QueryResolveTree<DTO> | QueryResolveFields<DTO> {
   const asts: ReadonlyArray<FieldNode> = Array.isArray(inASTs) ? inASTs : [inASTs]
-  // TODO:: If @include is false it is still here
+
   return asts.reduce((tree, fieldNode) => {
     const alias: string = fieldNode?.alias?.value ?? fieldNode.name.value
 

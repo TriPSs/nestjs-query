@@ -89,7 +89,7 @@ export class RelationQueryBuilder<Entity, Relation> {
   }
 
   public select(entity: Entity, query: Query<Relation>): SelectQueryBuilder<Relation> {
-    const hasRelations = this.filterQueryBuilder.hasRelations(query.filter)
+    const hasRelations = this.filterQueryBuilder.filterHasRelations(query.filter)
 
     let relationBuilder = this.createRelationQueryBuilder(entity)
     relationBuilder = hasRelations

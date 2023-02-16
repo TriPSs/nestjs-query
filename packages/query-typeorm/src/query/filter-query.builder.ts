@@ -78,7 +78,7 @@ export class FilterQueryBuilder<Entity> {
    * @param query - the query to apply.
    */
   public select(query: Query<Entity>): SelectQueryBuilder<Entity> {
-    const hasFilterRelations = this.hasRelations(query.filter)
+    const hasFilterRelations = this.filterHasRelations(query.filter)
     let qb = this.createQueryBuilder()
     qb = this.applyRelationJoinsRecursive(
       qb,
@@ -92,7 +92,7 @@ export class FilterQueryBuilder<Entity> {
   }
 
   public selectById(id: string | number | (string | number)[], query: Query<Entity>): SelectQueryBuilder<Entity> {
-    const hasFilterRelations = this.hasRelations(query.filter)
+    const hasFilterRelations = this.filterHasRelations(query.filter)
 
     let qb = this.createQueryBuilder()
     qb = this.applyRelationJoinsRecursive(
@@ -108,7 +108,7 @@ export class FilterQueryBuilder<Entity> {
   }
 
   public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>): SelectQueryBuilder<Entity> {
-    const hasFilterRelations = this.hasRelations(query.filter)
+    const hasFilterRelations = this.filterHasRelations(query.filter)
     let qb = this.createQueryBuilder()
     qb = hasFilterRelations
       ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsRecursive(this.repo.metadata, query.filter))
@@ -263,6 +263,7 @@ export class FilterQueryBuilder<Entity> {
     }
     const referencedRelations = Object.keys(relationsMap)
 
+    // TODO:: If relation is not nullable use inner join?
     return referencedRelations.reduce((rqb, relation) => {
       // TODO:: Change to find and also apply the query for the relation
       const selectRelation = selectRelations && selectRelations.find(({ name }) => name === relation)
@@ -290,7 +291,7 @@ export class FilterQueryBuilder<Entity> {
    *
    * @returns true if there are any referenced relations
    */
-  public hasRelations(filter?: Filter<Entity>): boolean {
+  public filterHasRelations(filter?: Filter<Entity>): boolean {
     if (!filter) {
       return false
     }
