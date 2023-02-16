@@ -329,6 +329,7 @@ export abstract class RelationQueryService<Entity> {
    * @param entities - The entities to query relations for.
    * @param relationName - The name of relation to query for.
    * @param query - A query to filter, page or sort relations.
+   * @param withDeleted - Also query the soft deleted records
    */
   private async batchQueryRelations<Relation>(
     RelationClass: Class<Relation>,
