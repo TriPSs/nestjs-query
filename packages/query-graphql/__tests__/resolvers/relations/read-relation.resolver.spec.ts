@@ -217,7 +217,8 @@ describe('ReadRelationsResolver', () => {
                   field: 'id',
                   direction: SortDirection.ASC
                 }
-              ]
+              ],
+              relations: undefined
             })
           )
         ).thenResolve(new Map([[dto, output]]))
