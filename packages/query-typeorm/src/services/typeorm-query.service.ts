@@ -1,8 +1,10 @@
 import { MethodNotAllowedException, NotFoundException } from '@nestjs/common'
 import {
+  AggregateOptions,
   AggregateQuery,
   AggregateResponse,
   Class,
+  CountOptions,
   DeepPartial,
   DeleteManyOptions,
   DeleteManyResponse,
@@ -12,6 +14,7 @@ import {
   FindByIdOptions,
   GetByIdOptions,
   Query,
+  QueryOptions,
   QueryService,
   UpdateManyResponse,
   UpdateOneOptions
@@ -77,18 +80,39 @@ export class TypeOrmQueryService<Entity>
    * ```
    * @param query - The Query used to filter, page, and sort rows.
    */
-  public async query(query: Query<Entity>): Promise<Entity[]> {
-    return this.filterQueryBuilder.select(query).getMany()
+  public async query(query: Query<Entity>, opts?: QueryOptions): Promise<Entity[]> {
+    const qb = this.filterQueryBuilder.select(query)
+
+    if (opts?.withDeleted) {
+      qb.withDeleted()
+    }
+
+    return qb.getMany()
   }
 
-  public async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
-    return AggregateBuilder.asyncConvertToAggregateResponse(
-      this.filterQueryBuilder.aggregate({ filter }, aggregate).getRawMany<Record<string, unknown>>()
-    )
+  public async aggregate(
+    filter: Filter<Entity>,
+    aggregate: AggregateQuery<Entity>,
+    opts?: AggregateOptions
+  ): Promise<AggregateResponse<Entity>[]> {
+    const qb = this.filterQueryBuilder.aggregate({ filter }, aggregate)
+
+    if (opts?.withDeleted) {
+      qb.withDeleted()
+    }
+
+    const resultPromise = qb.getRawMany<Record<string, unknown>>()
+    return AggregateBuilder.asyncConvertToAggregateResponse(resultPromise)
   }
 
-  public async count(filter: Filter<Entity>): Promise<number> {
-    return this.filterQueryBuilder.select({ filter }).getCount()
+  public async count(filter: Filter<Entity>, opts?: CountOptions): Promise<number> {
+    const qb = this.filterQueryBuilder.select({ filter })
+
+    if (opts?.withDeleted) {
+      qb.withDeleted()
+    }
+
+    return qb.getCount()
   }
 
   /**
@@ -103,9 +127,11 @@ export class TypeOrmQueryService<Entity>
    */
   public async findById(id: string | number, opts?: FindByIdOptions<Entity>): Promise<Entity | undefined> {
     const qb = this.filterQueryBuilder.selectById(id, opts ?? {})
+
     if (opts?.withDeleted) {
       qb.withDeleted()
     }
+
     const result = await qb.getOne()
     return result === null ? undefined : result
   }
@@ -126,9 +152,11 @@ export class TypeOrmQueryService<Entity>
    */
   public async getById(id: string | number, opts?: GetByIdOptions<Entity>): Promise<Entity> {
     const entity = await this.findById(id, opts)
+
     if (!entity) {
       throw new NotFoundException(`Unable to find ${this.EntityClass.name} with id: ${id}`)
     }
+
     return entity
   }
 
