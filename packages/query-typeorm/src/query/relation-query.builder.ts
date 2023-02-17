@@ -109,10 +109,7 @@ export class RelationQueryBuilder<Entity, Relation> {
     const hasRelations = this.filterQueryBuilder.filterHasRelations(query.filter)
     let qb = this.relationRepo.createQueryBuilder(this.relationMeta.fromAlias)
 
-    if (withDeleted) {
-      qb.withDeleted()
-    }
-
+    qb.withDeleted()
     qb = hasRelations
       ? this.filterQueryBuilder.applyRelationJoinsRecursive(
           qb,
@@ -122,6 +119,10 @@ export class RelationQueryBuilder<Entity, Relation> {
     qb = this.filterQueryBuilder.applyFilter(qb, query.filter, qb.alias)
     qb = this.filterQueryBuilder.applySorting(qb, query.sorting, qb.alias)
     qb = this.filterQueryBuilder.applyPaging(qb, query.paging)
+
+    if (this.relationRepo.metadata.deleteDateColumn?.propertyName && !withDeleted) {
+      qb = qb.andWhere(`${this.relationMeta.fromAlias}.${this.relationRepo.metadata.deleteDateColumn.propertyName} IS NULL`)
+    }
 
     return this.relationMeta.batchSelect(qb, entities)
   }
