@@ -36,7 +36,7 @@ export function getOrCreateOffsetConnectionType<DTO>(
 ): StaticConnectionType<DTO, PagingStrategies.OFFSET> {
   const connectionName = getOrCreateConnectionName(TItemClass, opts)
   return reflector.memoize(TItemClass, connectionName, () => {
-    const pager = createPager<DTO>()
+    const pager = createPager<DTO>(opts.enableFetchAllWithNegative)
     const PIT = getOrCreateOffsetPageInfoType()
 
     @ObjectType(connectionName)

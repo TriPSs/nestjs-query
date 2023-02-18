@@ -20,7 +20,7 @@ export function createCursorQueryArgsType<DTO>(
 ): StaticQueryType<DTO, PagingStrategies.CURSOR> {
   const F = FilterType(DTOClass)
   const S = getOrCreateSortType(DTOClass)
-  const P = getOrCreateCursorPagingType()
+  const P = getOrCreateCursorPagingType(opts)
   const C = getOrCreateCursorConnectionType(DTOClass, opts)
 
   @ArgsType()
@@ -38,8 +38,11 @@ export function createCursorQueryArgsType<DTO>(
       description: 'Limit or page results.'
     })
     @ValidateNested()
-    @Validate(PropertyMax, ['first', opts.maxResultsSize ?? DEFAULT_QUERY_OPTS.maxResultsSize])
-    @Validate(PropertyMax, ['last', opts.maxResultsSize ?? DEFAULT_QUERY_OPTS.maxResultsSize])
+    @SkipIf(
+      () => opts.enableFetchAllWithNegative,
+      Validate(PropertyMax, ['first', opts.maxResultsSize ?? DEFAULT_QUERY_OPTS.maxResultsSize]),
+      Validate(PropertyMax, ['last', opts.maxResultsSize ?? DEFAULT_QUERY_OPTS.maxResultsSize])
+    )
     @Type(() => P)
     paging?: CursorPagingType
 
