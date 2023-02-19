@@ -78,7 +78,6 @@ export class FilterQueryBuilder<Entity> {
    * @param query - the query to apply.
    */
   public select(query: Query<Entity>): SelectQueryBuilder<Entity> {
-    const hasFilterRelations = this.filterHasRelations(query.filter)
     let qb = this.createQueryBuilder()
     qb = this.applyRelationJoinsRecursive(
       qb,
@@ -87,24 +86,12 @@ export class FilterQueryBuilder<Entity> {
     )
     qb = this.applyFilter(qb, query.filter, qb.alias)
     qb = this.applySorting(qb, query.sorting, qb.alias)
-    qb = this.applyPaging(qb, query.paging, hasFilterRelations)
+    qb = this.applyPaging(qb, query.paging, this.shouldUseSkipTake(query.filter))
     return qb
   }
 
   public selectById(id: string | number | (string | number)[], query: Query<Entity>): SelectQueryBuilder<Entity> {
-    const hasFilterRelations = this.filterHasRelations(query.filter)
-
-    let qb = this.createQueryBuilder()
-    qb = this.applyRelationJoinsRecursive(
-      qb,
-      this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.relations),
-      query.relations
-    )
-    qb = qb.andWhereInIds(id)
-    qb = this.applyFilter(qb, query.filter, qb.alias)
-    qb = this.applySorting(qb, query.sorting, qb.alias)
-    qb = this.applyPaging(qb, query.paging, hasFilterRelations)
-    return qb
+    return this.select(query).andWhereInIds(id)
   }
 
   public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>): SelectQueryBuilder<Entity> {
@@ -298,6 +285,34 @@ export class FilterQueryBuilder<Entity> {
 
     const { relationNames } = this
     return getFilterFields(filter).filter((f) => relationNames.includes(f)).length > 0
+  }
+
+  /**
+   * Checks if the query should use skip/take instead of limit/offset
+   */
+  private shouldUseSkipTake(filter?: Filter<Entity>): boolean {
+    if (!filter) {
+      return false
+    }
+
+    return (
+      getFilterFields(filter).filter((field) => {
+        const relation = this.repo.metadata.relations.find(({ propertyName }) => propertyName === field)
+
+        if (!relation) {
+          return false
+        }
+
+        if (!relation || relation.isOneToOne || relation.isManyToOne) {
+          return false
+          // } else if (relation.isOneToMany) {
+          //   TODO
+          // return false
+        } else {
+          return true
+        }
+      }).length > 0
+    )
   }
 
   public getReferencedRelationsRecursive(

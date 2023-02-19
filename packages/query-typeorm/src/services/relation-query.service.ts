@@ -254,7 +254,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationId - The id of the relation to set on the entity.
    * @param opts - Additional options
    */
-  async setRelation<Relation>(
+  public async setRelation<Relation>(
     relationName: string,
     id: string | number,
     relationId: string | number,
@@ -276,7 +276,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationIds - The ids of the relations to add.
    * @param opts - Additional options
    */
-  async removeRelations<Relation>(
+  public async removeRelations<Relation>(
     relationName: string,
     id: string | number,
     relationIds: (string | number)[],
@@ -298,7 +298,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationName - The name of the relation to query for.
    * @param relationId - The id of the relation to set on the entity.
    */
-  async removeRelation<Relation>(
+  public async removeRelation<Relation>(
     relationName: string,
     id: string | number,
     relationId: string | number,
