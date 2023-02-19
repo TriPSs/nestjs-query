@@ -175,6 +175,7 @@ export class FilterQueryBuilder<Entity> {
     if (!filter) {
       return qb
     }
+
     return this.whereBuilder.build(qb, filter, this.getReferencedRelationsRecursive(this.repo.metadata, filter), alias)
   }
 
@@ -188,6 +189,7 @@ export class FilterQueryBuilder<Entity> {
     if (!sorts) {
       return qb
     }
+
     return sorts.reduce((prevQb, { field, direction, nulls }) => {
       const col = alias ? `${alias}.${field as string}` : `${field as string}`
       return prevQb.addOrderBy(col, direction, nulls)

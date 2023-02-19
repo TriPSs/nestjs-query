@@ -93,6 +93,71 @@ LIMIT
   10 OFFSET 11
 `;
 
+exports[`FilterQueryBuilder #select with paging should use limit/offset when filtering on many to one relation 1`] = `
+SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "manyToOneRelation" ON "manyToOneRelation"."test_relation_pk" = "TestEntity"."many_to_one_relation_id"
+LIMIT
+  10 OFFSET 3
+`;
+
+exports[`FilterQueryBuilder #select with paging should use limit/offset when filtering on one to one relation 1`] = `
+SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
+LIMIT
+  10 OFFSET 3
+`;
+
+exports[`FilterQueryBuilder #select with paging should use skip/take when filtering on one to many relation 1`] = `
+SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "testRelations" ON "testRelations"."test_entity_id" = "TestEntity"."test_entity_pk"
+`;
+
+exports[`FilterQueryBuilder #select with paging skip/take - limit/offset should use skip/take when filtering on many to many relation 1`] = `
+SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_entity_many_test_relations_test_relation" "TestEntity_manyTestRelations" ON "TestEntity_manyTestRelations"."testEntityTestEntityPk" = "TestEntity"."test_entity_pk"
+  LEFT JOIN "test_relation" "manyTestRelations" ON "manyTestRelations"."test_relation_pk" = "TestEntity_manyTestRelations"."testRelationTestRelationPk"
+`;
+
 exports[`FilterQueryBuilder #select with relation should select and map relation 1`] = `
 SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
