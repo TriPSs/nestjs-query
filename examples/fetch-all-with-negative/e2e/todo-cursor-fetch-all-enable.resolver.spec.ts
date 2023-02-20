@@ -9,7 +9,7 @@ import { TodoItemCursorFetchWithNegativeEnableDTO } from '../src/todo-item/dto/t
 import { refresh, todoItems } from './fixtures'
 import { cursorPageInfoField, edgeNodes, todoItemFields } from './graphql-fragments'
 
-describe('TodoItemResolver (cursor paginatino - fetch all with negative enabled)', () => {
+describe('TodoItemResolver (cursor pagination - fetch all with negative enabled)', () => {
   let app: INestApplication
 
   beforeAll(async () => {

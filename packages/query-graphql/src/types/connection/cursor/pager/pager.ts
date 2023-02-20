@@ -37,11 +37,16 @@ export class CursorPager<DTO> implements Pager<DTO, CursorPagerResult<DTO>> {
 
   private isValidPaging(pagingMeta: PagingMeta<DTO, CursorPagingOpts<DTO>>): boolean {
     const minimumLimit = this.enableFetchAllWithNegative ? -1 : 1
+    const hasLimit = 'limit' in pagingMeta.opts && pagingMeta.opts.limit !== null
     const isValidLimit = pagingMeta.opts.limit >= minimumLimit
-    if ('offset' in pagingMeta.opts) {
-      return pagingMeta.opts.offset > 0 && isValidLimit
+    if (hasLimit && !isValidLimit) {
+      return false
     }
-    return isValidLimit
+
+    if ('offset' in pagingMeta.opts) {
+      return pagingMeta.opts.offset > 0 || hasLimit
+    }
+    return hasLimit
   }
 
   private async runQuery<Q extends Query<DTO>>(
