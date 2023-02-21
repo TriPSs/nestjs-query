@@ -311,7 +311,7 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
             }
           `
         })
-        // .expect(200)
+        .expect(200)
         .then(({ body }) => {
           const { edges, pageInfo, totalCount }: CursorConnectionType<TodoItemDTO> = body.data.todoItemsWithDeleted
 
