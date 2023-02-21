@@ -29,6 +29,9 @@ export class TodoItemDTO {
   @FilterableField(() => GraphQLISODateTime)
   updated!: Date
 
+  @FilterableField(() => GraphQLISODateTime, { nullable: true })
+  deleted?: Date
+
   @Field()
   age!: number
 

@@ -67,6 +67,18 @@ describe('TypeOrmQueryService', (): void => {
       return expect(queryResult).toEqual([TEST_ENTITIES[0]])
     })
 
+    it('should return soft-deleted entities', async () => {
+      const queryService = moduleRef.get(TestSoftDeleteEntityService)
+      const primaryKeys = TEST_SOFT_DELETE_ENTITIES.map((e) => e.testEntityPk)
+
+      await queryService.deleteMany({ testEntityPk: { in: primaryKeys } }, { useSoftDelete: true })
+
+      const queryResult = await queryService.query({}, { withDeleted: true })
+      const queriedPrimaryKeys = queryResult.map((e) => e.testEntityPk)
+
+      return expect(primaryKeys).toEqual(queriedPrimaryKeys)
+    })
+
     describe('filter on relations', () => {
       describe('deeply nested', () => {
         it('oneToOne - oneToMany', async () => {
@@ -333,6 +345,68 @@ describe('TypeOrmQueryService', (): void => {
           ]
         }
       )
+
+      return expect(queryResult).toEqual([
+        {
+          avg: {
+            numberType: 5.5
+          },
+          count: {
+            testEntityPk: 10
+          },
+          max: {
+            dateType: expect.stringMatching('2020-02-10'),
+            numberType: 10,
+            stringType: 'foo9',
+            testEntityPk: 'test-entity-9'
+          },
+          min: {
+            dateType: expect.stringMatching('2020-02-01'),
+            numberType: 1,
+            stringType: 'foo1',
+            testEntityPk: 'test-entity-1'
+          },
+          sum: {
+            numberType: 55
+          }
+        }
+      ])
+    })
+
+    it('should aggregate soft-deleted entities', async () => {
+      const queryService = moduleRef.get(TestSoftDeleteEntityService)
+      const primaryKeys = TEST_SOFT_DELETE_ENTITIES.map((e) => e.testEntityPk)
+
+      await queryService.deleteMany({ testEntityPk: { in: primaryKeys } }, { useSoftDelete: true })
+
+      const queryResult = await queryService.aggregate(
+        {},
+        {
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
+        },
+        { withDeleted: true }
+      )
+
       return expect(queryResult).toEqual([
         {
           avg: {
@@ -591,6 +665,14 @@ describe('TypeOrmQueryService', (): void => {
       const queryService = moduleRef.get(TestEntityService)
       const queryResult = await queryService.count({ stringType: { like: 'foo%' } })
       return expect(queryResult).toBe(10)
+    })
+
+    it('should count soft-deleted records', async () => {
+      const queryService = moduleRef.get(TestSoftDeleteEntityService)
+      const primaryKeys = TEST_SOFT_DELETE_ENTITIES.map((entity) => entity.testEntityPk)
+      await queryService.deleteMany({ testEntityPk: { in: primaryKeys } }, { useSoftDelete: true })
+      const queryResult = await queryService.count({ stringType: { like: 'foo%' } }, { withDeleted: true })
+      return expect(queryResult).toBe(TEST_SOFT_DELETE_ENTITIES.length)
     })
 
     describe('with relations', () => {

@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
@@ -42,6 +43,9 @@ export class TodoItemEntity {
 
   @UpdateDateColumn()
   updated!: Date
+
+  @DeleteDateColumn()
+  deleted?: Date
 
   @ManyToMany(() => TagEntity, (tag) => tag.todoItems)
   @JoinTable()
