@@ -269,114 +269,6 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
           ])
         }))
 
-    it(`should return deletedTodos and their subTasks`, async () => {
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .set(AUTH_HEADER_NAME, config.auth.header)
-        .send({
-          operationName: null,
-          variables: {},
-          query: `
-            mutation {
-              deleteManyTodoItems(
-                input: {
-                  filter: {id: { in: ["1"]} },
-                }
-              ) {
-                deletedCount
-              }
-            }
-          `
-        })
-        .expect(200, {
-          data: {
-            deleteManyTodoItems: {
-              deletedCount: 1
-            }
-          }
-        })
-
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .send({
-          operationName: null,
-          variables: {},
-          query: `
-            {
-              todoItemsWithDeleted {
-                ${pageInfoField}
-                ${edgeNodes(todoItemFields)}
-                totalCount
-              }
-            }
-          `
-        })
-        .expect(200)
-        .then(({ body }) => {
-          const { edges, pageInfo, totalCount }: CursorConnectionType<TodoItemDTO> = body.data.todoItemsWithDeleted
-
-          expect(pageInfo).toEqual({
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: 'eyJ0eXBlIjoia2V5c2V0IiwiZmllbGRzIjpbeyJmaWVsZCI6ImlkIiwidmFsdWUiOjF9XX0=',
-            endCursor: 'eyJ0eXBlIjoia2V5c2V0IiwiZmllbGRzIjpbeyJmaWVsZCI6ImlkIiwidmFsdWUiOjV9XX0='
-          })
-
-          expect(totalCount).toBe(5)
-          expect(edges).toHaveLength(5)
-
-          expect(edges.map((e) => e.node)).toEqual([
-            { id: '1', title: 'Create Nest App', completed: true, description: null, age: expect.any(Number), subTasksCount: 3 },
-            { id: '2', title: 'Create Entity', completed: false, description: null, age: expect.any(Number), subTasksCount: 3 },
-            {
-              id: '3',
-              title: 'Create Entity Service',
-              completed: false,
-              description: null,
-              age: expect.any(Number),
-              subTasksCount: 3
-            },
-            {
-              id: '4',
-              title: 'Add Todo Item Resolver',
-              completed: false,
-              description: null,
-              age: expect.any(Number),
-              subTasksCount: 3
-            },
-            {
-              id: '5',
-              title: 'How to create item With Sub Tasks',
-              completed: false,
-              description: null,
-              age: expect.any(Number),
-              subTasksCount: 3
-            }
-          ])
-        })
-
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .set(AUTH_HEADER_NAME, config.auth.header)
-        .send({
-          operationName: null,
-          variables: {},
-          query: `
-            mutation {
-              restoreOneTodoItem(
-                input: { id: "1" }
-              ) {
-                id
-              }
-            }
-          `
-        })
-        .expect(200)
-        .then(({ body }) => {
-          expect(body.data.restoreOneTodoItem).toEqual({ id: '1' })
-        })
-    })
-
     it(`should allow querying`, () =>
       request(app.getHttpServer())
         .post('/graphql')
@@ -1328,63 +1220,32 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
           expect(body.errors).toHaveLength(1)
           expect(JSON.stringify(body.errors[0])).toContain('Forbidden resource')
         }))
-    it('should allow deleting a todoItem', async () => {
-      await request(app.getHttpServer())
+    it('should allow deleting a todoItem', () =>
+      request(app.getHttpServer())
         .post('/graphql')
         .set(AUTH_HEADER_NAME, config.auth.header)
         .send({
           operationName: null,
           variables: {},
-          query: `
-            {
-              todoItem(id: "6") {
-                id
-                title
-                completed
-                deleted
-              }
+          query: `mutation {
+            deleteOneTodoItem(
+              input: { id: "6" }
+            ) {
+              id
+              title
+              completed
             }
-          `
+        }`
         })
-        .expect(200)
-        .then(({ body }) => {
-          const todoItem = body.data.todoItem
-
-          expect(todoItem.id).toBe('6')
-          expect(todoItem.title).toBe('Update Test Todo')
-          expect(todoItem.completed).toBe(true)
-          expect(todoItem.deleted).toBeNull()
-        })
-
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .set(AUTH_HEADER_NAME, config.auth.header)
-        .send({
-          operationName: null,
-          variables: {},
-          query: `
-            mutation {
-              deleteOneTodoItem(
-                input: { id: "6" }
-              ) {
-                id
-                title
-                completed
-                deleted
-              }
+        .expect(200, {
+          data: {
+            deleteOneTodoItem: {
+              id: null,
+              title: 'Update Test Todo',
+              completed: true
             }
-          `
-        })
-        .expect(200)
-        .then(({ body }) => {
-          const todoItem = body.data.deleteOneTodoItem
-
-          expect(todoItem.id).toBe('6')
-          expect(todoItem.title).toBe('Update Test Todo')
-          expect(todoItem.completed).toBe(true)
-          expect(todoItem.deleted).toEqual(expect.any(String))
-        })
-    })
+          }
+        }))
 
     it('should require an id', () =>
       request(app.getHttpServer())

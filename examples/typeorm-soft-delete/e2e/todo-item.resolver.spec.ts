@@ -170,6 +170,144 @@ describe('SoftDelete - TodoItemResolver (e2e)', () => {
           ])
         }))
 
+    it(`should return deletedTodos and their subTasks`, async () => {
+      await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: {},
+          query: `
+            mutation {
+              deleteManyTodoItems(
+                input: {
+                  filter: {id: { in: ["1"]} },
+                }
+              ) {
+                deletedCount
+              }
+            }
+          `
+        })
+        .expect(200, {
+          data: {
+            deleteManyTodoItems: {
+              deletedCount: 1
+            }
+          }
+        })
+
+      await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: {},
+          query: `
+            {
+              todoItemsWithDeleted {
+                ${pageInfoField}
+                ${edgeNodes(`
+                  ${todoItemFields}
+
+                  subTasksCount
+                  subTasks {
+                    id
+                  }
+                `)}
+              }
+            }
+          `
+        })
+        .expect(200)
+        .then(({ body }) => {
+          const { edges, pageInfo }: CursorConnectionType<TodoItemDTO> = body.data.todoItemsWithDeleted
+
+          expect(pageInfo).toEqual({
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+            endCursor: 'YXJyYXljb25uZWN0aW9uOjQ='
+          })
+
+          const description = null
+          const subTasksCount = 3
+          const subTasks = [
+            expect.objectContaining({ id: expect.any(String) }),
+            expect.objectContaining({ id: expect.any(String) }),
+            expect.objectContaining({ id: expect.any(String) })
+          ]
+
+          expect(edges).toHaveLength(5)
+          expect(edges.map((e) => e.node)).toEqual(
+            expect.arrayContaining([
+              {
+                id: '1',
+                title: 'Create Nest App',
+                completed: true,
+                description,
+                subTasksCount,
+                subTasks
+              },
+
+              {
+                id: '2',
+                title: 'Create Entity',
+                completed: false,
+                description,
+                subTasksCount,
+                subTasks
+              },
+
+              {
+                id: '3',
+                title: 'Create Entity Service',
+                completed: false,
+                description,
+                subTasksCount,
+                subTasks
+              },
+
+              {
+                id: '4',
+                title: 'Add Todo Item Resolver',
+                completed: false,
+                description,
+                subTasksCount,
+                subTasks
+              },
+
+              {
+                id: '5',
+                title: 'How to create item With Sub Tasks',
+                completed: false,
+                description,
+                subTasksCount,
+                subTasks
+              }
+            ])
+          )
+        })
+
+      await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: {},
+          query: `
+            mutation {
+              restoreOneTodoItem(
+                input: "1"
+              ) {
+                id
+              }
+            }
+          `
+        })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.data.restoreOneTodoItem).toEqual({ id: '1' })
+        })
+    })
+
     describe('paging', () => {
       it(`should allow paging with the 'first' field`, () =>
         request(app.getHttpServer())
@@ -177,12 +315,17 @@ describe('SoftDelete - TodoItemResolver (e2e)', () => {
           .send({
             operationName: null,
             variables: {},
-            query: `{
-          todoItems(paging: {first: 2}) {
-            ${pageInfoField}
-            ${edgeNodes(todoItemFields)}
-          }
-        }`
+            query: `
+              {
+                todoItems(
+                  paging: {first: 2}
+                  sorting: [{field: id, direction: ASC}]
+                ) {
+                  ${pageInfoField}
+                  ${edgeNodes(todoItemFields)}
+                }
+              }
+            `
           })
           .expect(200)
           .then(({ body }) => {
@@ -206,12 +349,17 @@ describe('SoftDelete - TodoItemResolver (e2e)', () => {
           .send({
             operationName: null,
             variables: {},
-            query: `{
-          todoItems(paging: {first: 2, after: "YXJyYXljb25uZWN0aW9uOjE="}) {
-            ${pageInfoField}
-            ${edgeNodes(todoItemFields)}
-          }
-        }`
+            query: `
+              {
+                todoItems(
+                  paging: {first: 2, after: "YXJyYXljb25uZWN0aW9uOjE="}
+                  sorting: [{field: id, direction: ASC}]
+                ) {
+                  ${pageInfoField}
+                  ${edgeNodes(todoItemFields)}
+                }
+              }
+            `
           })
           .expect(200)
           .then(({ body }) => {
