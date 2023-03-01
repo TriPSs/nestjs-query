@@ -1,7 +1,9 @@
 import { Class, DeepPartial } from '../common'
 import {
+  AggregateOptions,
   AggregateQuery,
   AggregateResponse,
+  CountOptions,
   DeleteManyResponse,
   DeleteOneOptions,
   Filter,
@@ -10,6 +12,7 @@ import {
   GetByIdOptions,
   ModifyRelationOptions,
   Query,
+  QueryOptions,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -193,16 +196,16 @@ export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> 
     return this.proxied.getById(id, opts)
   }
 
-  query(query: Query<DTO>): Promise<DTO[]> {
-    return this.proxied.query(query)
+  query(query: Query<DTO>, opts?: QueryOptions): Promise<DTO[]> {
+    return this.proxied.query(query, opts)
   }
 
-  aggregate(filter: Filter<DTO>, query: AggregateQuery<DTO>): Promise<AggregateResponse<DTO>[]> {
-    return this.proxied.aggregate(filter, query)
+  aggregate(filter: Filter<DTO>, query: AggregateQuery<DTO>, opts?: AggregateOptions): Promise<AggregateResponse<DTO>[]> {
+    return this.proxied.aggregate(filter, query, opts)
   }
 
-  count(filter: Filter<DTO>): Promise<number> {
-    return this.proxied.count(filter)
+  count(filter: Filter<DTO>, opts?: CountOptions): Promise<number> {
+    return this.proxied.count(filter, opts)
   }
 
   updateMany(update: U, filter: Filter<DTO>): Promise<UpdateManyResponse> {

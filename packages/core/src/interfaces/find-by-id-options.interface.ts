@@ -1,8 +1,4 @@
 import { Filterable } from './filterable.interface'
+import { WithDeleted } from './with-deleted.interface'
 
-export interface FindByIdOptions<DTO> extends Filterable<DTO> {
-  /**
-   * Allow also deleted records to be retrieved
-   */
-  withDeleted?: boolean
-}
+export interface FindByIdOptions<DTO> extends Filterable<DTO>, WithDeleted {}

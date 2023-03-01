@@ -3,8 +3,10 @@ import { NotImplementedException } from '@nestjs/common'
 
 import { Class, DeepPartial } from '../common'
 import {
+  AggregateOptions,
   AggregateQuery,
   AggregateResponse,
+  CountOptions,
   DeleteManyOptions,
   DeleteManyResponse,
   DeleteOneOptions,
@@ -14,6 +16,7 @@ import {
   GetByIdOptions,
   ModifyRelationOptions,
   Query,
+  QueryOptions,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -86,15 +89,15 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     return Promise.reject(new NotImplementedException('getById is not implemented'))
   }
 
-  query(query: Query<DTO>): Promise<DTO[]> {
+  query(query: Query<DTO>, opts?: QueryOptions): Promise<DTO[]> {
     return Promise.reject(new NotImplementedException('query is not implemented'))
   }
 
-  aggregate(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>): Promise<AggregateResponse<DTO>[]> {
+  aggregate(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>, opts?: AggregateOptions): Promise<AggregateResponse<DTO>[]> {
     return Promise.reject(new NotImplementedException('aggregate is not implemented'))
   }
 
-  count(filter: Filter<DTO>): Promise<number> {
+  count(filter: Filter<DTO>, opts?: CountOptions): Promise<number> {
     return Promise.reject(new NotImplementedException('count is not implemented'))
   }
 

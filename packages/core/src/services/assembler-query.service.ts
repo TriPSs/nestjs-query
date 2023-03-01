@@ -1,8 +1,10 @@
 import { Assembler } from '../assemblers'
 import { Class, DeepPartial } from '../common'
 import {
+  AggregateOptions,
   AggregateQuery,
   AggregateResponse,
+  CountOptions,
   DeleteManyResponse,
   DeleteOneOptions,
   Filter,
@@ -12,6 +14,7 @@ import {
   GetByIdOptions,
   ModifyRelationOptions,
   Query,
+  QueryOptions,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -65,20 +68,26 @@ export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepP
     return this.assembler.convertAsyncToDTO(this.queryService.getById(id, this.convertFilterable(opts)))
   }
 
-  query(query: Query<DTO>): Promise<DTO[]> {
-    return this.assembler.convertAsyncToDTOs(this.queryService.query(this.assembler.convertQuery(query)))
+  query(query: Query<DTO>, opts?: QueryOptions): Promise<DTO[]> {
+    return this.assembler.convertAsyncToDTOs(this.queryService.query(this.assembler.convertQuery(query), opts))
   }
 
-  async aggregate(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>): Promise<AggregateResponse<DTO>[]> {
+  async aggregate(
+    filter: Filter<DTO>,
+    aggregate: AggregateQuery<DTO>,
+    opts?: AggregateOptions
+  ): Promise<AggregateResponse<DTO>[]> {
     const aggregateResponse = await this.queryService.aggregate(
       this.assembler.convertQuery({ filter }).filter || {},
-      this.assembler.convertAggregateQuery(aggregate)
+      this.assembler.convertAggregateQuery(aggregate),
+      opts
     )
+
     return aggregateResponse.map((agg) => this.assembler.convertAggregateResponse(agg))
   }
 
-  count(filter: Filter<DTO>): Promise<number> {
-    return this.queryService.count(this.assembler.convertQuery({ filter }).filter || {})
+  count(filter: Filter<DTO>, opts?: CountOptions): Promise<number> {
+    return this.queryService.count(this.assembler.convertQuery({ filter }).filter || {}, opts)
   }
 
   /**

@@ -71,7 +71,7 @@ describe('ProxyQueryService', () => {
   it('should proxy to the underlying service when calling query', () => {
     const query = {}
     const result = [{ foo: 'bar' }]
-    when(mockQueryService.query(query)).thenResolve(result)
+    when(mockQueryService.query(query, undefined)).thenResolve(result)
     return expect(queryService.query(query)).resolves.toBe(result)
   })
 
@@ -79,13 +79,13 @@ describe('ProxyQueryService', () => {
     const filter = {}
     const aggregate: AggregateQuery<TestType> = { count: [{ field: 'foo', args: {} }] }
     const result = [{ count: { foo: 1 } }]
-    when(mockQueryService.aggregate(filter, aggregate)).thenResolve(result)
+    when(mockQueryService.aggregate(filter, aggregate, undefined)).thenResolve(result)
     return expect(queryService.aggregate(filter, aggregate)).resolves.toBe(result)
   })
   it('should proxy to the underlying service when calling count', () => {
     const query = {}
     const result = 1
-    when(mockQueryService.count(query)).thenResolve(result)
+    when(mockQueryService.count(query, undefined)).thenResolve(result)
     return expect(queryService.count(query)).resolves.toBe(result)
   })
   it('should proxy to the underlying service when calling queryRelations with one dto', () => {
