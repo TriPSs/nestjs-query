@@ -1,4 +1,20 @@
  
+# [2.2.0](https://github.com/TriPSs/nestjs-query/compare/v2.1.1...v2.2.0) (2023-03-01)
+
+
+### Bug Fixes
+
+* failing proxy- and assembler-query-service tests ([84e4944](https://github.com/TriPSs/nestjs-query/commit/84e49447e758f931d40e818c1420efdca8085275))
+* missing expect(200) ([34b14b0](https://github.com/TriPSs/nestjs-query/commit/34b14b072f0fd321da5b6c6c9e17a6ccf12ed44e))
+* relation-query.builder.ts only withDeleted on root level ([dcdba48](https://github.com/TriPSs/nestjs-query/commit/dcdba483dbb36e92d95af176668bb70328146b62))
+
+
+### Features
+
+* withDelete for other typeorm-query-service operations ([965c35f](https://github.com/TriPSs/nestjs-query/commit/965c35f727a1de933f1e3d02c46bfbceea856852))
+
+
+
 ## [2.1.1](https://github.com/TriPSs/nestjs-query/compare/v2.1.0...v2.1.1) (2023-02-12)
 
 
