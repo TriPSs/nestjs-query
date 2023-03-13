@@ -108,7 +108,7 @@
     "nx": "15.3.3",
     "prettier": "2.8.3",
     "sql-formatter": "^4.0.2",
-    "sqlite3": "^5.1.4",
+    "sqlite3": "^5.1.5",
     "supertest": "6.3.3",
     "ts-jest": "28.0.8",
     "ts-loader": "9.3.1",
