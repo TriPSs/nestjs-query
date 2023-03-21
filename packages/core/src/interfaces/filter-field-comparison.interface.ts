@@ -36,6 +36,10 @@ export interface BooleanFieldComparisons {
   isNot?: boolean | null
 }
 
+export interface JsonFieldComparisons {
+  containsLike?: string
+}
+
 export interface CommonFieldComparisonBetweenType<FieldType> {
   lower: FieldType
   upper: FieldType
@@ -205,6 +209,7 @@ type BuiltInTypes = boolean | boolean | string | string | number | Date | RegExp
  * Type for field comparisons.
  *
  * * `string` - [[StringFieldComparisons]]
+ * * `Record<string, unknown>` - [[JsonFieldComparisons]]
  * * `boolean|null|undefined|never` - [[BooleanFieldComparisons]]
  * * all other types use [[CommonFieldComparisonType]]
  */
@@ -213,6 +218,8 @@ type FilterFieldComparisonType<FieldType, IsKeys extends true | false> = FieldTy
   ? StringFieldComparisons // eslint-disable-next-line @typescript-eslint/ban-types
   : FieldType extends boolean | Boolean
   ? BooleanFieldComparisons
+  : FieldType extends Record<string, unknown>
+  ? JsonFieldComparisons
   : FieldType extends number | Date | RegExp | bigint | BuiltInTypes[] | symbol
   ? CommonFieldComparisonType<FieldType>
   : FieldType extends Array<infer U>
@@ -225,6 +232,7 @@ type FilterFieldComparisonType<FieldType, IsKeys extends true | false> = FieldTy
  * Type for field comparisons.
  *
  * * `string` - [[StringFieldComparisons]]
+ * * `Record<string, unknown>` - [[JsonFieldComparisons]]
  * * `boolean|null|undefined|never` - [[BooleanFieldComparisons]]
  * * all other types use [[CommonFieldComparisonType]]
  */

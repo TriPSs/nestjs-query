@@ -6,6 +6,7 @@ import { FILTERABLE_FIELD_KEY } from './constants'
 const reflector = new ArrayReflector(FILTERABLE_FIELD_KEY)
 export type FilterableFieldOptions = {
   allowedComparisons?: FilterComparisonOperators<unknown>[]
+  isJSON?: boolean
   filterRequired?: boolean
   filterOnly?: boolean
 } & FieldOptions

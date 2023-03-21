@@ -6,16 +6,17 @@
   ],
   "scripts": {
     "build": "nx run-many --target=build --all",
+    "build_and_move": "nx run-many --target=build --all && node ./scripts/move.js",
     "lint": "nx run-many --target=lint --all",
     "lint:fix": "eslint --fix --ext=.ts .",
     "lint:no-cache": "eslint --ext=.ts .",
     "prepare": "husky install",
     "test": "nx run-many --target=test --all",
     "test:e2e": "nx run-many --target=e2e --all",
-    "publish:core":  "cd dist/packages/nestjs-query-core && npm publish",
-    "publish:gql":  "cd dist/packages/nestjs-query-graphql && npm publish",
-    "publish:typeorm":  "cd dist/packages/nestjs-query-typeorm && npm publish",
-    "publish":  "npm run publish:core && npm run publish:gql && npm run publish:typeorm"
+    "publish:core": "cd dist/packages/nestjs-query-core && npm publish",
+    "publish:gql": "cd dist/packages/nestjs-query-graphql && npm publish",
+    "publish:typeorm": "cd dist/packages/nestjs-query-typeorm && npm publish",
+    "publish": "npm run publish:core && npm run publish:gql && npm run publish:typeorm"
   },
   "dependencies": {
     "@apollo/federation": "0.36.1",
@@ -118,5 +119,5 @@
     "tsconfig-paths": "4.1.0",
     "typescript": "4.8.2"
   },
-  "version": "4.0.8"
+  "version": "4.0.10"
 }

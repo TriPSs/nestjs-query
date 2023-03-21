@@ -66,6 +66,7 @@ function getOrCreateFilterType<T>(
         FieldType: target,
         fieldName: `${baseName}${upperCaseFirst(propertyName)}`,
         allowedComparisons: advancedOptions?.allowedComparisons,
+        isJSON: advancedOptions?.isJSON,
         returnTypeFunc
       })
       const nullable = advancedOptions?.filterRequired !== true
