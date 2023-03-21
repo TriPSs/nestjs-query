@@ -6,7 +6,6 @@
   ],
   "scripts": {
     "build": "nx run-many --target=build --all",
-    "build_and_move": "nx run-many --target=build --all && node ./scripts/move.js",
     "lint": "nx run-many --target=lint --all",
     "lint:fix": "eslint --fix --ext=.ts .",
     "lint:no-cache": "eslint --ext=.ts .",
