@@ -16,7 +16,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cache/Cypress
+            ~/.cache/mongodb-memory-server
             **/node_modules
           key: cache-node-modules-${{ hashFiles('yarn.lock') }}
 

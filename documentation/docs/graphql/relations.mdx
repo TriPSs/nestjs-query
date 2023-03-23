@@ -1079,6 +1079,33 @@ Sometimes you may want to expose a relation that has a different name when persi
 </TabItem>
 </Tabs>
 
+### GraphQL lookahead
+
+:::caution
+This functionality only works for typeorm!
+:::
+
+When you want to optimze your database queries you can set `enableLookAhead`, this will join and select the relation
+when it's being fetched in the query.
+
+<Tabs
+  defaultValue="relation"
+  groupId="relation-type"
+  values={[
+    { label: 'Relation', value: 'relation', },
+  ]
+  }>
+  <TabItem value="relation">
+
+```ts
+// enable enableLookAhead for the todoItem relation
+@Relation('todoItemRelation', () => TodoItemDTO, { enableLookAhead: true })
+```
+
+  </TabItem>
+</Tabs>
+
+
 ### Disable Reads
 
 To disable the `read` `queries` you can set the `disableRead` option to `true`.
