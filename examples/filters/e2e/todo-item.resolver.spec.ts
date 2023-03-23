@@ -97,7 +97,7 @@ describe('TodoItemResolver (filters - e2e)', () => {
         })
         .expect(200)
         .then(({ body }) => {
-          expect(body.errors[0].extensions.response.message[0]).toBe('filter.There was no filter provided for "completed"!')
+          expect(body.errors[0].extensions.originalError.message[0]).toBe('filter.There was no filter provided for "completed"!')
         }))
   })
 

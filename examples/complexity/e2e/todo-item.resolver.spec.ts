@@ -221,7 +221,7 @@ describe('TodoItemResolver (complexity - e2e)', () => {
           }
         }`
         })
-        .expect(400)
+        .expect(500)
         .then(({ body }) => {
           expect(body).toEqual({
             errors: [
