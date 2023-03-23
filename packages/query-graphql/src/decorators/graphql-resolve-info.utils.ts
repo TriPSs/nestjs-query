@@ -1,4 +1,14 @@
-import { ASTNode, FieldNode, getArgumentValues, getNamedType, GraphQLField, GraphQLUnionType, isCompositeType } from 'graphql'
+import {
+  ASTNode,
+  DirectiveNode,
+  FieldNode,
+  getArgumentValues,
+  getNamedType,
+  GraphQLField,
+  GraphQLUnionType,
+  isCompositeType,
+  Kind
+} from 'graphql'
 
 import type { CursorConnectionType, OffsetConnectionType } from '../types'
 import type { Query } from '@ptc-org/nestjs-query-core'
@@ -22,7 +32,7 @@ function getFieldFromAST<TContext>(
   fieldNode: ASTNode,
   parentType: GraphQLCompositeType
 ): GraphQLField<GraphQLCompositeType, TContext> | undefined {
-  if (fieldNode.kind === 'Field') {
+  if (fieldNode.kind === Kind.FIELD) {
     if (!(parentType instanceof GraphQLUnionType)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return parentType.getFields()[fieldNode.name.value]
@@ -31,6 +41,33 @@ function getFieldFromAST<TContext>(
     }
   }
   return undefined
+}
+
+function getDirectiveValue(directive: DirectiveNode, info: ResolveInfo) {
+  const arg = directive.arguments[0] // only arg on an include or skip directive is "if"
+  if (arg.value.kind !== Kind.VARIABLE) {
+    // eslint-disable-next-line
+    return !!arg.value['value']
+  }
+  return info.variableValues[arg.value.name.value]
+}
+
+function getDirectiveResults(fieldNode: FieldNode, info: ResolveInfo) {
+  const directiveResult = {
+    shouldInclude: true,
+    shouldSkip: false
+  }
+
+  return fieldNode.directives.reduce((result, directive) => {
+    switch (directive.name.value) {
+      case 'include':
+        return { ...result, shouldInclude: getDirectiveValue(directive, info) }
+      case 'skip':
+        return { ...result, shouldSkip: getDirectiveValue(directive, info) }
+      default:
+        return result
+    }
+  }, directiveResult)
 }
 
 function parseFieldNodes<DTO>(
@@ -51,6 +88,15 @@ function parseFieldNodes<DTO>(
     const fieldGqlTypeOrUndefined = getNamedType(field.type)
     if (!fieldGqlTypeOrUndefined) {
       return tree
+    }
+
+    if (fieldNode.directives && fieldNode.directives.length) {
+      const { shouldInclude, shouldSkip } = getDirectiveResults(fieldNode, resolveInfo)
+      // field/fragment is not included if either the @skip condition is true or the @include condition is false
+      // https://facebook.github.io/graphql/draft/#sec--include
+      if (shouldSkip || !shouldInclude) {
+        return tree
+      }
     }
 
     const parsedField = {

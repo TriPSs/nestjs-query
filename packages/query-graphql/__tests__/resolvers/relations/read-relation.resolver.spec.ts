@@ -65,7 +65,8 @@ describe('ReadRelationsResolver', () => {
           deepEqual([dto]),
           deepEqual({
             filter: undefined,
-            withDeleted: undefined
+            withDeleted: undefined,
+            lookedAhead: undefined
           })
         )
       ).thenResolve(new Map([[dto, output]]))
@@ -92,7 +93,8 @@ describe('ReadRelationsResolver', () => {
           deepEqual([dto]),
           deepEqual({
             filter: undefined,
-            withDeleted: undefined
+            withDeleted: undefined,
+            lookedAhead: undefined
           })
         )
       ).thenResolve(new Map([[dto, output]]))
@@ -130,7 +132,8 @@ describe('ReadRelationsResolver', () => {
           deepEqual([dto]),
           deepEqual({
             filter: undefined,
-            withDeleted: true
+            withDeleted: true,
+            lookedAhead: undefined
           })
         )
       ).thenResolve(new Map([[dto, output]]))
@@ -214,7 +217,8 @@ describe('ReadRelationsResolver', () => {
                   field: 'id',
                   direction: SortDirection.ASC
                 }
-              ]
+              ],
+              relations: undefined
             })
           )
         ).thenResolve(new Map([[dto, output]]))

@@ -1,10 +1,10 @@
 import { ExecutionContext } from '@nestjs/common'
 import { Args, ArgsType, Context, Parent, Resolver } from '@nestjs/graphql'
-import { Class, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, mergeQuery, QueryService, SelectRelation } from '@ptc-org/nestjs-query-core'
 
 import { OperationGroup } from '../../auth'
 import { getDTONames } from '../../common'
-import { RelationAuthorizerFilter, ResolverField } from '../../decorators'
+import { GraphQLLookAheadRelations, RelationAuthorizerFilter, ResolverField } from '../../decorators'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { CountRelationsLoader, DataLoaderFactory, FindRelationsLoader, QueryRelationsLoader } from '../../loader'
 import { QueryArgsType } from '../../types'
@@ -46,15 +46,21 @@ const ReadOneRelationMixin =
           operationGroup: OperationGroup.READ,
           many: false
         })
-        authFilter?: Filter<Relation>
+        authFilter?: Filter<Relation>,
+        @GraphQLLookAheadRelations(DTOClass)
+        relations?: SelectRelation<Relation>[]
       ): Promise<Relation | undefined> {
         return DataLoaderFactory.getOrCreateLoader(
           context,
           loaderName,
-          findLoader.createLoader(this.service, { withDeleted: relation.withDeleted })
+          findLoader.createLoader(this.service, {
+            withDeleted: relation.withDeleted,
+            lookedAhead: relation.enableLookAhead
+          })
         ).load({
           dto,
-          filter: authFilter
+          filter: authFilter,
+          relations
         })
       }
     }
@@ -106,7 +112,9 @@ const ReadManyRelationMixin =
           operationGroup: OperationGroup.READ,
           many: true
         })
-        relationFilter?: Filter<Relation>
+        relationFilter?: Filter<Relation>,
+        @GraphQLLookAheadRelations(relationDTO)
+        relations?: SelectRelation<Relation>[]
       ): Promise<InstanceType<typeof CT>> {
         const relationQuery = await transformAndValidate(RelationQA, q)
         const relationLoader = DataLoaderFactory.getOrCreateLoader(
@@ -121,7 +129,7 @@ const ReadManyRelationMixin =
         )
         return CT.createFromPromise(
           (query) => relationLoader.load({ dto, query }),
-          mergeQuery(relationQuery, { filter: relationFilter }),
+          mergeQuery(relationQuery, { filter: relationFilter, relations }),
           (filter) => relationCountLoader.load({ dto, filter })
         )
       }

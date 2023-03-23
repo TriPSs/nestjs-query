@@ -1,10 +1,12 @@
 {
   "name": "nestjs-query",
+  "version": "2.3.0",
   "private": true,
   "workspaces": [
     "packages/**"
   ],
   "scripts": {
+    "docker": "docker-compose -f ./examples/docker-compose.yml",
     "prepare": "husky install",
     "test:e2e": "nx e2e examples"
   },
@@ -116,6 +118,5 @@
     "tsconfig-paths": "3.14.1",
     "typescript": "4.9.4"
   },
-  "packageManager": "yarn@3.2.1",
-  "version": "2.2.0"
+  "packageManager": "yarn@3.2.1"
 }
