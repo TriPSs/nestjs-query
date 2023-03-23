@@ -108,10 +108,7 @@ export class RelationQueryBuilder<Entity, Relation> {
   public batchSelect(entities: Entity[], query: Query<Relation>, withDeleted?: boolean): SelectQueryBuilder<Relation> {
     let qb = this.relationRepo.createQueryBuilder(this.relationMeta.fromAlias)
 
-    if (withDeleted) {
-      qb.withDeleted()
-    }
-
+    qb.withDeleted()
     qb = this.filterQueryBuilder.applyRelationJoinsRecursive(
       qb,
       this.filterQueryBuilder.getReferencedRelationsRecursive(this.relationRepo.metadata, query.filter, query.relations),
@@ -120,6 +117,10 @@ export class RelationQueryBuilder<Entity, Relation> {
     qb = this.filterQueryBuilder.applyFilter(qb, query.filter, qb.alias)
     qb = this.filterQueryBuilder.applySorting(qb, query.sorting, qb.alias)
     qb = this.filterQueryBuilder.applyPaging(qb, query.paging)
+
+    if (this.relationRepo.metadata.deleteDateColumn?.propertyName && !withDeleted) {
+      qb = qb.andWhere(`${qb.alias}.${this.relationRepo.metadata.deleteDateColumn.propertyName} IS NULL`)
+    }
 
     return this.relationMeta.batchSelect(qb, entities)
   }

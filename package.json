@@ -41,7 +41,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "7.8.0",
-    "sequelize": "6.28.0",
+    "sequelize": "6.29.0",
     "sequelize-typescript": "2.1.5",
     "tslib": "^2.4.0",
     "typeorm": "0.3.11",
@@ -121,5 +121,6 @@
     "tsconfig-paths": "3.14.1",
     "typescript": "4.9.4"
   },
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@3.2.1",
+  "version": "2.2.0"
 }
