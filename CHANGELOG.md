@@ -1,4 +1,28 @@
  
+# [2.3.0](https://github.com/TriPSs/nestjs-query/compare/v2.2.0...v2.3.0) (2023-03-23)
+
+
+### Bug Fixes
+
+* Fixed looked ahead relations going through the assembler ([738e865](https://github.com/TriPSs/nestjs-query/commit/738e865ce4098249f2cb90cf2837bac67b1c6d86))
+
+
+### Features
+
+* Added `enableLookAhead` option to relations ([9efdc6f](https://github.com/TriPSs/nestjs-query/commit/9efdc6f3992a74fd50e4c05ea944eae6f389e5c5))
+
+
+### Performance Improvements
+
+* **query-typeorm:** Don't use skip/take when filtering for one to one and many to one relations ([cdd06b6](https://github.com/TriPSs/nestjs-query/commit/cdd06b6a9ae59b9e1de14e91facb166567e8562a))
+
+
+### Reverts
+
+* Revert "test: Re-enable the disabled tests that where stil ok for Mongoose" ([84670b2](https://github.com/TriPSs/nestjs-query/commit/84670b2fee2d21e671bbf2a9b7cf87b30499d064))
+
+
+
 # [2.2.0](https://github.com/TriPSs/nestjs-query/compare/v2.1.1...v2.2.0) (2023-03-01)
 
 
