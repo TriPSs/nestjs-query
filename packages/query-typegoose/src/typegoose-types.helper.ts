@@ -88,7 +88,7 @@ type CustomModelType<T, QueryHelpers = BeAnObject> = mongoose.Model<
   DocumentType<T>
 >
 
-export type ReturnModelType<U extends AnyParamConstructor<any>, QueryHelpers = BeAnObject> = CustomModelType<
+export type ReturnModelType<U extends AnyParamConstructor<unknown>, QueryHelpers = BeAnObject> = CustomModelType<
   InstanceType<U>,
   QueryHelpers
 > &
