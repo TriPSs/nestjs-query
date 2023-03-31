@@ -1,4 +1,5 @@
-import { mongoose } from '@typegoose/typegoose'
+import { DocumentType, mongoose } from '@typegoose/typegoose'
+import { AnyParamConstructor, BeAnObject, BeAnyObject, IObjectWithTypegooseFunction } from '@typegoose/typegoose/lib/types'
 
 export type ReferenceOptions = {
   type: mongoose.SchemaType
@@ -78,3 +79,17 @@ export function isVirtualTypeWithReferenceOptions(virtualType: unknown): virtual
   }
   return false
 }
+
+type CustomModelType<T, QueryHelpers = BeAnObject> = mongoose.Model<
+  T, // raw doc type
+  QueryHelpers, // query helpers
+  IObjectWithTypegooseFunction, // instance methods
+  BeAnyObject,
+  DocumentType<T>
+>
+
+export type ReturnModelType<U extends AnyParamConstructor<any>, QueryHelpers = BeAnObject> = CustomModelType<
+  InstanceType<U>,
+  QueryHelpers
+> &
+  U

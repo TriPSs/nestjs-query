@@ -13,12 +13,12 @@ import {
   UpdateManyResponse,
   UpdateOneOptions
 } from '@ptc-org/nestjs-query-core'
-import { DocumentType, mongoose, ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, mongoose } from '@typegoose/typegoose'
 import { Base } from '@typegoose/typegoose/lib/defaultClasses'
 import { PipelineStage } from 'mongoose'
 
 import { AggregateBuilder, FilterQueryBuilder } from '../query'
-import { UpdateArrayQuery } from '../typegoose-types.helper'
+import { ReturnModelType, UpdateArrayQuery } from '../typegoose-types.helper'
 import { ReferenceQueryService } from './reference-query.service'
 
 export interface TypegooseQueryServiceOpts {

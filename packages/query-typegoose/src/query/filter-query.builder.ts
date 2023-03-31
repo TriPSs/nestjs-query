@@ -1,6 +1,7 @@
 import { AggregateQuery, Filter, Query, SortDirection, SortField } from '@ptc-org/nestjs-query-core'
-import { DocumentType, mongoose, ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, mongoose } from '@typegoose/typegoose'
 
+import { ReturnModelType } from '../typegoose-types.helper'
 import { AggregateBuilder, TypegooseGroupAndAggregate } from './aggregate.builder'
 import { getSchemaKey } from './helpers'
 import { WhereBuilder } from './where.builder'
