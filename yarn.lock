@@ -4527,17 +4527,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@m8a/nestjs-typegoose@npm:8.0.5":
-  version: 8.0.5
-  resolution: "@m8a/nestjs-typegoose@npm:8.0.5"
+"@m8a/nestjs-typegoose@npm:11.0.0":
+  version: 11.0.0
+  resolution: "@m8a/nestjs-typegoose@npm:11.0.0"
   dependencies:
     is-class: 0.0.9
   peerDependencies:
-    "@nestjs/common": ^8.0.0 || ^9.0.0
-    "@nestjs/core": ^8.0.0||^9.0.0
-    "@typegoose/typegoose": ^9.0.0
-    mongoose: ^6.0.0
-  checksum: c193ecacec968c1de8af5410011dd1bbadd2df92dbabfd2d77eb70ef967b802bcbd175cb2ac64501025f3f820c43d3d168102ef5134d8db4f4f49d249c6806f5
+    "@nestjs/common": ^9.2.0
+    "@nestjs/core": ^9.2.0
+    "@typegoose/typegoose": ^11.0.0
+    mongoose: ^7.0.0
+  checksum: b0db6479aa37fdbd9bb159654f16dbb1e60f4fbf511e02132fa15d261f0632949a888360f3067891497378dd59cc2f139c74a952d901346f5fec9a937bd01aca
   languageName: node
   linkType: hard
 
@@ -4771,15 +4771,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/jwt@npm:9.0.0":
-  version: 9.0.0
-  resolution: "@nestjs/jwt@npm:9.0.0"
+"@nestjs/jwt@npm:10.0.3":
+  version: 10.0.3
+  resolution: "@nestjs/jwt@npm:10.0.3"
   dependencies:
-    "@types/jsonwebtoken": 8.5.8
-    jsonwebtoken: 8.5.1
+    "@types/jsonwebtoken": 9.0.1
+    jsonwebtoken: 9.0.0
   peerDependencies:
     "@nestjs/common": ^8.0.0 || ^9.0.0
-  checksum: c623bc710ace6345efc63d0dccff8d9f10b721b39efd94f4880bf8585a6a6a20ec00cc95fab6b913889382a0ff9327b4db02c12359eccc9e837d902bc9ba3676
+  checksum: 8c0f8184b7985adb56fba4181a390570343747a9ed740a5f282d9ad7e6c593a3351d5f507c66b38d4ef48c181feeb7344abe7067ce6fcaaecec2ec30fdf3b17c
   languageName: node
   linkType: hard
 
@@ -5441,10 +5441,10 @@ __metadata:
     lodash.merge: ^4.6.2
     tslib: ^2.4.0
   peerDependencies:
-    "@m8a/nestjs-typegoose": ^8.0.5
+    "@m8a/nestjs-typegoose": ^9.0.0 || ^10.0.0 || ^11.0.0
     "@nestjs/common": ^8.0.0 || ^9.0.0
-    "@typegoose/typegoose": ^8.0.0 || ^9.0.0
-    mongoose: ^6.5.0
+    "@typegoose/typegoose": ^9.0.0 || ^10.0.0 || ^11.0.0
+    mongoose: ^6.5.0 || ^7.0.3
   languageName: unknown
   linkType: soft
 
@@ -5772,9 +5772,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typegoose/typegoose@npm:^10.0.0":
-  version: 10.1.1
-  resolution: "@typegoose/typegoose@npm:10.1.1"
+"@typegoose/typegoose@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "@typegoose/typegoose@npm:11.0.0"
   dependencies:
     lodash: ^4.17.20
     loglevel: ^1.8.1
@@ -5782,8 +5782,8 @@ __metadata:
     semver: ^7.3.8
     tslib: ^2.5.0
   peerDependencies:
-    mongoose: ~6.9.0
-  checksum: 06628ce75bc017e4178ea3d5cb177840999771bb5becb20566cf65668e18806f6b0ac2f93e33e7db8421776cd23faf4a9ed2a3092a176e0f38cfcdf789e1460e
+    mongoose: ~7.0.3
+  checksum: 5e022088068a7fcf7af1c4bd60ff9d530860c85a0970deda04eb90208d42e34361e937b24b6cad161fbcf0a2f434198e5a7b587b020f1149c1f02a15c8e2455a
   languageName: node
   linkType: hard
 
@@ -6077,12 +6077,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jsonwebtoken@npm:8.5.8":
-  version: 8.5.8
-  resolution: "@types/jsonwebtoken@npm:8.5.8"
+"@types/jsonwebtoken@npm:9.0.1":
+  version: 9.0.1
+  resolution: "@types/jsonwebtoken@npm:9.0.1"
   dependencies:
     "@types/node": "*"
-  checksum: 56738a918c543dba30786066959f801212e7fb5cd4ec53cf7b8d227711ed358834feb9e5141f7f88ec7c642bb39757330a5a8917e3b22e0ff9084940d35f0d70
+  checksum: a7f0925e9a42ad3ae970364c63c5986d40da5c83d51d3f4e624eb0f064a380376f9e3fb3f2f837390a9ab80143f5d75fd51866da30e110f6b486a3379e1c768f
   languageName: node
   linkType: hard
 
@@ -8164,6 +8164,13 @@ __metadata:
   dependencies:
     buffer: ^5.6.0
   checksum: 83e7b64afdad5a505073a7e6206e7b345f59e7888fbcb1948fba72b6101a1baf58b7499314f8e24b650567665f7973eda048aabbb1ddcfbadfba7d6c6b0f5e83
+  languageName: node
+  linkType: hard
+
+"bson@npm:^5.0.1":
+  version: 5.1.0
+  resolution: "bson@npm:5.1.0"
+  checksum: 5e1c6235b7bc5c788116f077a076bb2fa227e8dc5ad472277c5931c0b82b747edb08c5eb4f511823c895d35c707917f6a16b8f3207104b8559dc83524706cc4a
   languageName: node
   linkType: hard
 
@@ -14484,7 +14491,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonwebtoken@npm:8.5.1, jsonwebtoken@npm:^8.2.0":
+"jsonwebtoken@npm:9.0.0":
+  version: 9.0.0
+  resolution: "jsonwebtoken@npm:9.0.0"
+  dependencies:
+    jws: ^3.2.2
+    lodash: ^4.17.21
+    ms: ^2.1.1
+    semver: ^7.3.8
+  checksum: b9181cecf9df99f1dc0253f91ba000a1aa4d91f5816d1608c0dba61a5623726a0bfe200b51df25de18c1a6000825d231ad7ce2788aa54fd48dcb760ad9eb9514
+  languageName: node
+  linkType: hard
+
+"jsonwebtoken@npm:^8.2.0":
   version: 8.5.1
   resolution: "jsonwebtoken@npm:8.5.1"
   dependencies:
@@ -15675,7 +15694,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb-connection-string-url@npm:^2.5.4":
+"mongodb-connection-string-url@npm:^2.5.4, mongodb-connection-string-url@npm:^2.6.0":
   version: 2.6.0
   resolution: "mongodb-connection-string-url@npm:2.6.0"
   dependencies:
@@ -15719,21 +15738,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:4.13.0":
-  version: 4.13.0
-  resolution: "mongodb@npm:4.13.0"
+"mongodb@npm:5.1.0":
+  version: 5.1.0
+  resolution: "mongodb@npm:5.1.0"
   dependencies:
-    "@aws-sdk/credential-providers": ^3.186.0
-    bson: ^4.7.0
-    mongodb-connection-string-url: ^2.5.4
+    bson: ^5.0.1
+    mongodb-connection-string-url: ^2.6.0
     saslprep: ^1.0.3
     socks: ^2.7.1
+  peerDependencies:
+    "@aws-sdk/credential-providers": ^3.201.0
+    mongodb-client-encryption: ^2.3.0
+    snappy: ^7.2.2
   dependenciesMeta:
-    "@aws-sdk/credential-providers":
-      optional: true
     saslprep:
       optional: true
-  checksum: 4c30eed40f639ac64069623cf7a4954e98eab81b91d61df90e7813dd2a745259cdc698f3b60bd7f37c123242b7eb0aaae6ee4e29ff2e48f5d13f187931d51f36
+  peerDependenciesMeta:
+    "@aws-sdk/credential-providers":
+      optional: true
+    mongodb-client-encryption:
+      optional: true
+    snappy:
+      optional: true
+  checksum: 993c14299ade84d4aadb06f16dccf31502b1018bf7a813d2477bf7a465854d3545a8950372e4410cd549c4426cf02b5d18cc4467eba35d031b46536e5cc79e3f
   languageName: node
   linkType: hard
 
@@ -15756,18 +15783,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongoose@npm:^6.9.1":
-  version: 6.9.1
-  resolution: "mongoose@npm:6.9.1"
+"mongoose@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "mongoose@npm:7.0.3"
   dependencies:
-    bson: ^4.7.0
+    bson: ^5.0.1
     kareem: 2.5.1
-    mongodb: 4.13.0
+    mongodb: 5.1.0
     mpath: 0.9.0
-    mquery: 4.0.3
+    mquery: 5.0.0
     ms: 2.1.3
     sift: 16.0.1
-  checksum: 4ee54e7c255857ef7d2bd1c3ffbb3465c57b5023fa3842a01f4b8792c8f6b2e8dc7d24eb48e5dcb05df1fd0c608677ad9b035f36ca2f7c6d90251b3363ad4e05
+  checksum: 0ced556b0b572aed1b866a4eff05d1e7371e0696d264f15818140f5c65368d44fb9cb4e60ab54ef209f39e91d803c74315f09d931967234561005c074050136e
   languageName: node
   linkType: hard
 
@@ -15778,12 +15805,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mquery@npm:4.0.3":
-  version: 4.0.3
-  resolution: "mquery@npm:4.0.3"
+"mquery@npm:5.0.0":
+  version: 5.0.0
+  resolution: "mquery@npm:5.0.0"
   dependencies:
     debug: 4.x
-  checksum: 16a6887ba7594e71d38969ab58c7be1866a0ffa07a559e4bb43eaefd00db2ae174aedbe2187d94f2a86dca1e07e024d03c22c39fdea09bf08dbf586a2f7ecb0c
+  checksum: 0617ead71e40e3c38ab74a1e46214d578d654bf7916abd8b3fb2ceb433bb6287adfa0960f041f16e2ac41c5ed5d7ce2268582f0a0075fff2561bcd5a3f40b417
   languageName: node
   linkType: hard
 
@@ -15942,13 +15969,13 @@ __metadata:
     "@docusaurus/module-type-aliases": 2.2.0
     "@docusaurus/preset-classic": 2.2.0
     "@jscutlery/semver": 2.26.0
-    "@m8a/nestjs-typegoose": 8.0.5
+    "@m8a/nestjs-typegoose": 11.0.0
     "@nestjs/apollo": ^10.0.22
     "@nestjs/cli": 8.2.8
     "@nestjs/common": 8.4.7
     "@nestjs/core": 8.4.7
     "@nestjs/graphql": ^10.1.3
-    "@nestjs/jwt": 9.0.0
+    "@nestjs/jwt": 10.0.3
     "@nestjs/mongoose": 9.2.0
     "@nestjs/passport": 9.0.0
     "@nestjs/platform-express": 9.1.4
@@ -15963,7 +15990,7 @@ __metadata:
     "@nrwl/node": 15.3.3
     "@nrwl/nx-cloud": 15.0.2
     "@nx-plus/docusaurus": ^15.0.0-rc.0
-    "@typegoose/typegoose": ^10.0.0
+    "@typegoose/typegoose": ^11.0.0
     "@types/express": 4.17.16
     "@types/jest": 28.1.8
     "@types/lodash.escaperegexp": 4.1.7
@@ -16007,7 +16034,7 @@ __metadata:
     jest-extended: 2.0.0
     jest-snapshot-serializer-raw: 1.2.0
     mongodb-memory-server: 8.10.2
-    mongoose: ^6.9.1
+    mongoose: ^7.0.3
     mysql2: 3.0.1
     nx: 15.3.3
     passport: 0.6.0
