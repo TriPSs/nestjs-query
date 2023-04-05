@@ -4708,9 +4708,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/core@npm:8.4.7":
-  version: 8.4.7
-  resolution: "@nestjs/core@npm:8.4.7"
+"@nestjs/core@npm:9.0.5":
+  version: 9.0.5
+  resolution: "@nestjs/core@npm:9.0.5"
   dependencies:
     "@nuxtjs/opencollective": 0.3.2
     fast-safe-stringify: 2.1.1
@@ -4720,10 +4720,10 @@ __metadata:
     tslib: 2.4.0
     uuid: 8.3.2
   peerDependencies:
-    "@nestjs/common": ^8.0.0
-    "@nestjs/microservices": ^8.0.0
-    "@nestjs/platform-express": ^8.0.0
-    "@nestjs/websockets": ^8.0.0
+    "@nestjs/common": ^9.0.0
+    "@nestjs/microservices": ^9.0.0
+    "@nestjs/platform-express": ^9.0.0
+    "@nestjs/websockets": ^9.0.0
     reflect-metadata: ^0.1.12
     rxjs: ^7.1.0
   peerDependenciesMeta:
@@ -4733,7 +4733,7 @@ __metadata:
       optional: true
     "@nestjs/websockets":
       optional: true
-  checksum: 58d18b04e03cdae4b06e06f1a60705cdbe2e81824e0a85d0be422cf8dbd39c263287196b85939718659d7eeedc2856f29744487931dbe5c2695fcd374a5fbe40
+  checksum: 34cb9dfb8f57a2e0ed42406f95a99d8264316e404d28dd2629ae47896795623a2a0c89b9105d588bddd37417905083418af869a02df5f74fc50c742a3084c61f
   languageName: node
   linkType: hard
 
@@ -15973,7 +15973,7 @@ __metadata:
     "@nestjs/apollo": ^10.0.22
     "@nestjs/cli": 8.2.8
     "@nestjs/common": 8.4.7
-    "@nestjs/core": 8.4.7
+    "@nestjs/core": 9.0.5
     "@nestjs/graphql": ^10.1.3
     "@nestjs/jwt": 10.0.3
     "@nestjs/mongoose": 9.2.0
