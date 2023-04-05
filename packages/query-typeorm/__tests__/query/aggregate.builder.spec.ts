@@ -1,16 +1,20 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AggregateQuery, GroupBy } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
+import { DataSource } from 'typeorm'
 
 import { AggregateBuilder } from '../../src/query'
-import { closeTestConnection, createTestConnection, getTestConnection } from '../__fixtures__/connection.fixture'
+import { createTestConnection } from '../__fixtures__/connection.fixture'
 import { TestEntity } from '../__fixtures__/test.entity'
 
 describe('AggregateBuilder', (): void => {
-  beforeEach(createTestConnection)
-  afterEach(closeTestConnection)
+  let dataSource: DataSource
+  beforeEach(async () => {
+    dataSource = await createTestConnection()
+  })
+  afterEach(() => dataSource.destroy())
 
-  const getRepo = () => getTestConnection().getRepository(TestEntity)
+  const getRepo = () => dataSource.getRepository(TestEntity)
   const getQueryBuilder = () => getRepo().createQueryBuilder()
   const createAggregateBuilder = () => new AggregateBuilder<TestEntity>(getRepo())
 
