@@ -1,4 +1,16 @@
  
+## [2.3.1](https://github.com/TriPSs/nestjs-query/compare/v2.3.0...v2.3.1) (2023-04-05)
+
+
+### Bug Fixes
+
+* **query-mongoose:** correct docker-compose file and e2e tests ([c661884](https://github.com/TriPSs/nestjs-query/commit/c6618848eec760c2b74a0a1b3283d0148b89a8cc))
+* **query-typegoose:** add new enhanced type   ([ddb3ebc](https://github.com/TriPSs/nestjs-query/commit/ddb3ebc62167f4b18a34f7fb3e406d7850209bfe))
+* **query-typegoose:** correct linting errors ([933cd5e](https://github.com/TriPSs/nestjs-query/commit/933cd5edb1f068adbf088fc76e2f60de2c51ba9e))
+* **query-typegoose:** update peer dependencies ([9da118a](https://github.com/TriPSs/nestjs-query/commit/9da118aa1b5524adf90239d04669b023b5afddc7))
+
+
+
 # [2.3.0](https://github.com/TriPSs/nestjs-query/compare/v2.2.0...v2.3.0) (2023-03-23)
 
 
