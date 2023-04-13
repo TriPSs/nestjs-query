@@ -29,15 +29,18 @@ const hookDecorator = <H extends Hook<unknown>>(hookType: HookTypes) => {
     if (isHookClass(hook)) {
       return hook
     }
-    const defaultHook = createDefaultHook(hook)
-    return defaultHook
+    return createDefaultHook(hook)
   }
+
   // eslint-disable-next-line @typescript-eslint/ban-types
   return (...data: HookDecoratorArg<H>[]) =>
     // eslint-disable-next-line @typescript-eslint/ban-types
     (target: Function): void => {
-      const hooks = data.map((d) => getHook(d))
-      return Reflect.defineMetadata(key, hooks, target)
+      return Reflect.defineMetadata(
+        key,
+        data.map((d) => getHook(d)),
+        target
+      )
     }
 }
 
