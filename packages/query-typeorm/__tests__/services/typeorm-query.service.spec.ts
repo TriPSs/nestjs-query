@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
+import { getDataSourceToken, InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
 import { Filter, SortDirection } from '@ptc-org/nestjs-query-core'
 import { plainToClass } from 'class-transformer'
 import { Repository } from 'typeorm'
 
 import { TypeOrmQueryService } from '../../src'
 import { FilterQueryBuilder } from '../../src/query'
-import { closeTestConnection, CONNECTION_OPTIONS, getTestConnection, refresh, truncate } from '../__fixtures__/connection.fixture'
+import { CONNECTION_OPTIONS, refresh, truncate } from '../__fixtures__/connection.fixture'
 import {
   TEST_ENTITIES,
   TEST_RELATIONS,
@@ -40,7 +40,10 @@ describe('TypeOrmQueryService', (): void => {
     }
   }
 
-  afterEach(closeTestConnection)
+  afterEach(() => {
+    const dataSource = moduleRef.get(getDataSourceToken())
+    return dataSource.destroy()
+  })
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -51,7 +54,9 @@ describe('TypeOrmQueryService', (): void => {
       providers: [TestEntityService, TestRelationService, TestSoftDeleteEntityService]
     }).compile()
 
-    await refresh()
+    const dataSource = moduleRef.get(getDataSourceToken())
+
+    await refresh(dataSource)
   })
 
   it('should create a filterQueryBuilder and assemblerService based on the repo passed in if not provided', () => {
@@ -1945,14 +1950,14 @@ describe('TypeOrmQueryService', (): void => {
 
   describe('#createMany', () => {
     it('call save on the repo with instances of entities when passed plain objects', async () => {
-      await truncate(getTestConnection())
+      await truncate(moduleRef.get(getDataSourceToken()))
       const queryService = moduleRef.get(TestEntityService)
       const created = await queryService.createMany(TEST_ENTITIES)
       expect(created).toEqual(TEST_ENTITIES)
     })
 
     it('call save on the repo with instances of entities when passed instances', async () => {
-      await truncate(getTestConnection())
+      await truncate(moduleRef.get(getDataSourceToken()))
       const instances = TEST_ENTITIES.map((e) => plainToClass(TestEntity, e))
       const queryService = moduleRef.get(TestEntityService)
       const created = await queryService.createMany(instances)
@@ -1967,7 +1972,7 @@ describe('TypeOrmQueryService', (): void => {
 
   describe('#createOne', () => {
     it('call save on the repo with an instance of the entity when passed a plain object', async () => {
-      await truncate(getTestConnection())
+      await truncate(moduleRef.get(getDataSourceToken()))
       const entity = TEST_ENTITIES[0]
       const queryService = moduleRef.get(TestEntityService)
       const created = await queryService.createOne(entity)
@@ -1975,7 +1980,7 @@ describe('TypeOrmQueryService', (): void => {
     })
 
     it('call save on the repo with an instance of the entity when passed an instance', async () => {
-      await truncate(getTestConnection())
+      await truncate(moduleRef.get(getDataSourceToken()))
       const entity = plainToClass(TestEntity, TEST_ENTITIES[0])
       const queryService = moduleRef.get(TestEntityService)
       const created = await queryService.createOne(entity)

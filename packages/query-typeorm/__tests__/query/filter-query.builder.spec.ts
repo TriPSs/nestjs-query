@@ -1,19 +1,22 @@
 import { Class, Filter, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { anything, deepEqual, instance, mock, verify, when } from 'ts-mockito'
-import { QueryBuilder, WhereExpressionBuilder } from 'typeorm'
+import { DataSource, QueryBuilder, WhereExpressionBuilder } from 'typeorm'
 
 import { FilterQueryBuilder, WhereBuilder } from '../../src/query'
-import { closeTestConnection, createTestConnection, getTestConnection } from '../__fixtures__/connection.fixture'
+import { createTestConnection } from '../__fixtures__/connection.fixture'
 import { TestEntity } from '../__fixtures__/test.entity'
 import { TestSoftDeleteEntity } from '../__fixtures__/test-soft-delete.entity'
 
 describe('FilterQueryBuilder', (): void => {
-  beforeEach(createTestConnection)
-  afterEach(closeTestConnection)
+  let connection: DataSource
+  beforeEach(async () => {
+    connection = await createTestConnection()
+  })
+  afterEach(() => connection.destroy())
 
   const getEntityQueryBuilder = <Entity>(entity: Class<Entity>, whereBuilder: WhereBuilder<Entity>): FilterQueryBuilder<Entity> =>
-    new FilterQueryBuilder(getTestConnection().getRepository(entity), whereBuilder)
+    new FilterQueryBuilder(connection.getRepository(entity), whereBuilder)
 
   const expectSQLSnapshot = <Entity>(query: QueryBuilder<Entity>): void => {
     const [sql, params] = query.getQueryAndParameters()
