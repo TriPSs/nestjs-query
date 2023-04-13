@@ -16,15 +16,15 @@ function createHookProvider(hookType: HookTypes, ...DTOClass: Class<unknown>[]):
     if (p && p.length > 0) {
       return p
     }
-    const maybeHooks = getHooksForType(hookType, cls);
+    const maybeHooks = getHooksForType(hookType, cls)
     if (maybeHooks) {
       return [
         ...maybeHooks,
         {
           provide: getHookToken(hookType, cls),
           useFactory: (...providers: Provider[]) => providers,
-          inject: maybeHooks,
-        },
+          inject: maybeHooks
+        }
       ]
     }
     return []
@@ -41,7 +41,7 @@ function getHookProviders(opts: HookProviderOptions<unknown, unknown, unknown>):
     ...createHookProvider(HookTypes.BEFORE_DELETE_ONE, DTOClass),
     ...createHookProvider(HookTypes.BEFORE_DELETE_MANY, DTOClass),
     ...createHookProvider(HookTypes.BEFORE_QUERY_MANY, DTOClass),
-    ...createHookProvider(HookTypes.BEFORE_FIND_ONE, DTOClass),
+    ...createHookProvider(HookTypes.BEFORE_FIND_ONE, DTOClass)
   ].filter((p) => !!p)
 }
 
