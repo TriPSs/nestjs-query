@@ -15,10 +15,12 @@ import { RelationsOpts, ResolverRelation } from './relations.interface'
 const RemoveOneRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    if (relation.disableRemove) {
+    // TODO:: Next major version change this to be opt-in
+    if (relation.disableRemove || relation.remove?.disabled) {
       return Base
     }
-    const commonResolverOpts = removeRelationOpts(relation)
+
+    const commonResolverOpts = relation.remove || removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
     const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
@@ -32,7 +34,16 @@ const RemoveOneRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class RemoveOneMixin extends Base {
-      @ResolverMutation(() => DTOClass, {}, commonResolverOpts, { interceptors: [AuthorizerInterceptor(DTOClass)] })
+      @ResolverMutation(
+        () => DTOClass,
+        {
+          description: relation.remove?.description
+        },
+        commonResolverOpts,
+        {
+          interceptors: [AuthorizerInterceptor(DTOClass)]
+        }
+      )
       async [`remove${baseName}From${dtoNames.baseName}`](
         @Args() setArgs: SetArgs,
         @ModifyRelationAuthorizerFilter(baseNameLower, {
@@ -52,10 +63,11 @@ const RemoveOneRelationMixin =
 const RemoveManyRelationsMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    if (relation.disableRemove) {
+    // TODO:: Next major version change this to be opt-in
+    if (relation.disableRemove || relation.remove?.disabled) {
       return Base
     }
-    const commonResolverOpts = removeRelationOpts(relation)
+    const commonResolverOpts = relation.remove || removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
     const { pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
@@ -69,7 +81,16 @@ const RemoveManyRelationsMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class Mixin extends Base {
-      @ResolverMutation(() => DTOClass, {}, commonResolverOpts, { interceptors: [AuthorizerInterceptor(DTOClass)] })
+      @ResolverMutation(
+        () => DTOClass,
+        {
+          description: relation.remove?.description
+        },
+        commonResolverOpts,
+        {
+          interceptors: [AuthorizerInterceptor(DTOClass)]
+        }
+      )
       async [`remove${pluralBaseName}From${dtoNames.baseName}`](
         @Args() addArgs: AddArgs,
         @ModifyRelationAuthorizerFilter(pluralBaseNameLower, {

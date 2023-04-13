@@ -15,10 +15,11 @@ import { RelationsOpts, ResolverRelation } from './relations.interface'
 const UpdateOneRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    if (relation.disableUpdate) {
+    // TODO:: Next major version change this to be opt-in
+    if (relation.disableUpdate || relation.update?.disabled) {
       return Base
     }
-    const commonResolverOpts = removeRelationOpts(relation)
+    const commonResolverOpts = relation.update || removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
     const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
@@ -32,9 +33,16 @@ const UpdateOneRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class UpdateOneMixin extends Base {
-      @ResolverMutation(() => DTOClass, {}, commonResolverOpts, {
-        interceptors: [AuthorizerInterceptor(DTOClass)]
-      })
+      @ResolverMutation(
+        () => DTOClass,
+        {
+          description: relation.update?.description
+        },
+        commonResolverOpts,
+        {
+          interceptors: [AuthorizerInterceptor(DTOClass)]
+        }
+      )
       async [`set${baseName}On${dtoNames.baseName}`](
         @Args() setArgs: SetArgs,
         @ModifyRelationAuthorizerFilter(baseNameLower, {
@@ -54,10 +62,11 @@ const UpdateOneRelationMixin =
 const UpdateManyRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    if (relation.disableUpdate) {
+    // TODO:: Next major version change this to be opt-in
+    if (relation.disableUpdate || relation.update?.disabled) {
       return Base
     }
-    const commonResolverOpts = removeRelationOpts(relation)
+    const commonResolverOpts = relation.update || removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
     const { pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
@@ -77,9 +86,16 @@ const UpdateManyRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class UpdateManyMixin extends Base {
-      @ResolverMutation(() => DTOClass, {}, commonResolverOpts, {
-        interceptors: [AuthorizerInterceptor(DTOClass)]
-      })
+      @ResolverMutation(
+        () => DTOClass,
+        {
+          description: relation.update?.description
+        },
+        commonResolverOpts,
+        {
+          interceptors: [AuthorizerInterceptor(DTOClass)]
+        }
+      )
       async [`add${pluralBaseName}To${dtoNames.baseName}`](
         @Args() addArgs: AddArgs,
         @ModifyRelationAuthorizerFilter(pluralBaseNameLower, {
