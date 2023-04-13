@@ -14,7 +14,7 @@ interface DTOModuleOpts<DTO> {
 
 export interface NestjsQueryGraphqlModuleOpts {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  imports: Array<Class<any> | DynamicModule | Promise<DynamicModule> | ForwardReference>
+  imports?: Array<Class<any> | DynamicModule | Promise<DynamicModule> | ForwardReference>
   services?: Provider[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   assemblers?: Class<Assembler<any, any, any, any, any, any>>[]
@@ -25,25 +25,27 @@ export interface NestjsQueryGraphqlModuleOpts {
 }
 
 export class NestjsQueryGraphQLModule {
-  static forFeature(opts: NestjsQueryGraphqlModuleOpts): DynamicModule {
+  public static forFeature(opts: NestjsQueryGraphqlModuleOpts): DynamicModule {
     const coreModule = this.getCoreModule(opts)
     const providers = this.getProviders(opts)
+    const imports = opts.imports ?? []
+
     return {
       module: NestjsQueryGraphQLModule,
-      imports: [...opts.imports, coreModule],
+      imports: [...imports, coreModule],
       providers: [...providers],
-      exports: [...providers, ...opts.imports, coreModule]
+      exports: [...providers, ...imports, coreModule]
     }
   }
 
-  static defaultPubSubProvider(): Provider<GraphQLPubSub> {
+  public static defaultPubSubProvider(): Provider<GraphQLPubSub> {
     return { provide: pubSubToken(), useValue: defaultPubSub() }
   }
 
   private static getCoreModule(opts: NestjsQueryGraphqlModuleOpts): DynamicModule {
     return NestjsQueryCoreModule.forFeature({
       assemblers: opts.assemblers,
-      imports: opts.imports
+      imports: opts.imports ?? []
     })
   }
 

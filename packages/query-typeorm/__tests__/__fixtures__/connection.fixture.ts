@@ -1,5 +1,5 @@
 // this is needed to create a query builder in typeorm :(
-import { Connection, ConnectionOptions, createConnection, getConnection } from 'typeorm'
+import { DataSource, DataSourceOptions } from 'typeorm'
 
 import { RelationOfTestRelationEntity } from './relation-of-test-relation.entity'
 import { seed } from './seeds'
@@ -9,7 +9,7 @@ import { TestRelation } from './test-relation.entity'
 import { TestSoftDeleteEntity } from './test-soft-delete.entity'
 import { TestSoftDeleteRelation } from './test-soft-delete.relation'
 
-export const CONNECTION_OPTIONS: ConnectionOptions = {
+export const CONNECTION_OPTIONS: DataSourceOptions = {
   type: 'sqlite',
   database: ':memory:',
   dropSchema: true,
@@ -25,16 +25,10 @@ export const CONNECTION_OPTIONS: ConnectionOptions = {
   logging: false
 }
 
-export function createTestConnection(): Promise<Connection> {
-  return createConnection(CONNECTION_OPTIONS)
-}
-
-export function closeTestConnection(): Promise<void> {
-  return getConnection().close()
-}
-
-export function getTestConnection(): Connection {
-  return getConnection()
+export async function createTestConnection(): Promise<DataSource> {
+  const dataSource = new DataSource(CONNECTION_OPTIONS)
+  await dataSource.initialize()
+  return dataSource
 }
 
 const tables = [
@@ -46,15 +40,14 @@ const tables = [
   'test_soft_delete_relation',
   'test_entity_many_test_relations_test_relation'
 ]
-export const truncate = async (connection: Connection): Promise<void> => {
+export const truncate = async (connection: DataSource): Promise<void> => {
   await tables.reduce(async (prev, table) => {
     await prev
-    await connection.query(`DELETE
-                            FROM ${table}`)
+    await connection.query(`DELETE FROM ${table}`)
   }, Promise.resolve())
 }
 
-export const refresh = async (connection: Connection = getConnection()): Promise<void> => {
+export const refresh = async (connection: DataSource): Promise<void> => {
   await truncate(connection)
   return seed(connection)
 }

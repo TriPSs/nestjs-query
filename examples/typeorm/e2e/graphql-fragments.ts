@@ -1,31 +1,32 @@
 export const todoItemFields = `
-    id
-    title
-    completed
-    description
-    age
-  `
+  id
+  title
+  completed
+  description
+  age
+  subTasksCount
+`
 
 export const subTaskFields = `
-id
-title
-description
-completed
-todoItemId
+  id
+  title
+  description
+  completed
+  todoItemId
 `
 
 export const tagFields = `
-id
-name
+  id
+  name
 `
 
 export const pageInfoField = `
-pageInfo{
-  hasNextPage
-  hasPreviousPage
-  startCursor
-  endCursor
-}
+  pageInfo{
+    hasNextPage
+    hasPreviousPage
+    startCursor
+    endCursor
+  }
 `
 
 export const edgeNodes = (fields: string): string => `
@@ -35,82 +36,94 @@ export const edgeNodes = (fields: string): string => `
     }
     cursor
   }  
-  `
+`
 
 export const todoItemAggregateFields = `
-count {
-  id
-  title
-  description
-  completed
-  created
-  updated
-}
-sum {
-  id
-}
-avg {
-  id
-}
-min {
-  id
-  title
-  description
-}
-max {
-  id
-  title
-  description
-}    
+  count {
+    id
+    title
+    description
+    completed
+    created
+    updated
+  }
+
+  sum {
+    id
+  }
+
+  avg {
+    id
+  }
+
+  min {
+    id
+    title
+    description
+  }
+
+  max {
+    id
+    title
+    description
+  }    
 `
 
 export const tagAggregateFields = `
-count {
-  id
-  name
-  created
-  updated
-}
-sum {
-  id
-}
-avg {
-  id
-}
-min {
-  id
-  name
-}
-max {
-  id
-  name
-}
+  count {
+    id
+    name
+    created
+    updated
+  }
+
+  sum {
+    id
+  }
+
+  avg {
+    id
+  }
+
+  min {
+    id
+    name
+  }
+
+  max {
+    id
+    name
+  }
 `
 
 export const subTaskAggregateFields = `
-count {
-  id
-  title
-  description
-  completed
-  todoItemId
-}
-sum {
-  id      
-}
-avg {
-  id
-}
-min {
-  id
-  title
-  description      
-  todoItemId
-}
-max {
-  id
-  title
-  description    
-  todoItemId
-}
+  count {
+    id
+    title
+    description
+    completed
+    todoItemId
+  }
+
+  sum {
+    id      
+  }
+
+  avg {
+    id
+  }
+
+  min {
+    id
+    title
+    description      
+    todoItemId
+  }
+
+  max {
+    id
+    title
+    description    
+    todoItemId
+  }
 `

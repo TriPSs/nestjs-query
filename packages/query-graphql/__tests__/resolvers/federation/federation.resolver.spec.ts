@@ -75,7 +75,7 @@ describe('FederationResolver', () => {
             TestRelationDTO,
             'relation',
             deepEqual([dto]),
-            deepEqual({ filter: undefined, withDeleted: undefined })
+            deepEqual({ filter: undefined, withDeleted: undefined, lookedAhead: undefined })
           )
         ).thenResolve(new Map([[dto, output]]))
         // @ts-ignore
@@ -99,7 +99,7 @@ describe('FederationResolver', () => {
             TestRelationDTO,
             'other',
             deepEqual([dto]),
-            deepEqual({ filter: undefined, withDeleted: undefined })
+            deepEqual({ filter: undefined, withDeleted: undefined, lookedAhead: undefined })
           )
         ).thenResolve(new Map([[dto, output]]))
         // @ts-ignore

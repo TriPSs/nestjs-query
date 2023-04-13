@@ -3,13 +3,12 @@ import { InjectModel, TypegooseModule } from '@m8a/nestjs-typegoose'
 import { Test, TestingModule } from '@nestjs/testing'
 import { FindRelationOptions, SortDirection } from '@ptc-org/nestjs-query-core'
 import { DocumentType, getModelForClass, mongoose } from '@typegoose/typegoose'
-import { ReturnModelType } from '@typegoose/typegoose/lib/types'
 
 import { NestjsQueryTypegooseModule } from '../../src'
 import { TypegooseQueryService } from '../../src/services'
+import { ReturnModelType } from '../../src/typegoose-types.helper'
 import {
   MongoServer,
-  mongoServer,
   TEST_DISCRIMINATED_ENTITIES,
   TEST_ENTITIES,
   TEST_REFERENCES,
@@ -19,7 +18,7 @@ import {
 
 const { Types } = mongoose
 
-let mongo: MongoServer
+const mongo = new MongoServer()
 
 describe('TypegooseQueryService', () => {
   let moduleRef: TestingModule
@@ -41,7 +40,8 @@ describe('TypegooseQueryService', () => {
   }
 
   beforeAll(async () => {
-    mongo = await mongoServer()
+    await mongo.init()
+
     moduleRef = await Test.createTestingModule({
       imports: [
         TypegooseModule.forRoot(mongo.getConnectionUri()),
@@ -185,11 +185,27 @@ describe('TypegooseQueryService', () => {
       const queryResult = await queryService.aggregate(
         {},
         {
-          count: ['id'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['id', 'dateType', 'numberType', 'stringType'],
-          min: ['id', 'dateType', 'numberType', 'stringType']
+          count: [{ field: 'id', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -224,12 +240,38 @@ describe('TypegooseQueryService', () => {
       const queryResult = await queryService.aggregate(
         {},
         {
-          groupBy: ['boolType'],
-          count: ['id'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['id', 'dateType', 'numberType', 'stringType'],
-          min: ['id', 'dateType', 'numberType', 'stringType']
+          groupBy: [{ field: 'boolType', args: {} }],
+          count: [{ field: 'id', args: {} }],
+          avg: [
+            {
+              field: 'numberType',
+              args: {}
+            }
+          ],
+          sum: [
+            {
+              field: 'numberType',
+              args: {}
+            }
+          ],
+          max: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -293,11 +335,24 @@ describe('TypegooseQueryService', () => {
       const queryResult = await queryService.aggregate(
         { stringType: { in: ['foo1', 'foo2', 'foo3'] } },
         {
-          count: ['id'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['id', 'dateType', 'numberType', 'stringType'],
-          min: ['id', 'dateType', 'numberType', 'stringType']
+          count: [{ field: 'id', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            { field: 'numberType', args: {} },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'id', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -863,7 +918,7 @@ describe('TypegooseQueryService', () => {
           'testReferences',
           TEST_ENTITIES[0],
           { referenceName: { isNot: null } },
-          { count: ['id'] }
+          { count: [{ field: 'id', args: {} }] }
         )
         return expect(aggResult).toEqual([
           {
@@ -881,7 +936,7 @@ describe('TypegooseQueryService', () => {
           'testReferences',
           TEST_ENTITIES[0],
           { referenceName: { isNot: null } },
-          { groupBy: ['testEntity'], count: ['id'] }
+          { groupBy: [{ field: 'testEntity', args: {} }], count: [{ field: 'id', args: {} }] }
         )
         return expect(aggResult).toEqual([
           {
@@ -902,7 +957,7 @@ describe('TypegooseQueryService', () => {
           'virtualTestReferences',
           TEST_ENTITIES[0],
           { referenceName: { isNot: null } },
-          { count: ['id'] }
+          { count: [{ field: 'id', args: {} }] }
         )
         return expect(aggResult).toEqual([
           {
@@ -924,9 +979,21 @@ describe('TypegooseQueryService', () => {
           entities,
           { referenceName: { isNot: null } },
           {
-            count: ['id', 'referenceName', 'testEntity'],
-            min: ['id', 'referenceName', 'testEntity'],
-            max: ['id', 'referenceName', 'testEntity']
+            count: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            min: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            max: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ]
           }
         )
 
@@ -1012,10 +1079,22 @@ describe('TypegooseQueryService', () => {
           entities,
           { referenceName: { isNot: null } },
           {
-            groupBy: ['testEntity'],
-            count: ['id', 'referenceName', 'testEntity'],
-            min: ['id', 'referenceName', 'testEntity'],
-            max: ['id', 'referenceName', 'testEntity']
+            groupBy: [{ field: 'testEntity', args: {} }],
+            count: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            min: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            max: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ]
           }
         )
 
@@ -1104,9 +1183,21 @@ describe('TypegooseQueryService', () => {
           entities,
           { referenceName: { isNot: null } },
           {
-            count: ['id', 'referenceName', 'testEntity'],
-            min: ['id', 'referenceName', 'testEntity'],
-            max: ['id', 'referenceName', 'testEntity']
+            count: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            min: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ],
+            max: [
+              { field: 'id', args: {} },
+              { field: 'referenceName', args: {} },
+              { field: 'testEntity', args: {} }
+            ]
           }
         )
 

@@ -1,4 +1,4 @@
-const nxPreset = require('@nrwl/jest/preset').default;
+const nxPreset = require('@nrwl/jest/preset').default
 
 module.exports = {
   ...nxPreset,
@@ -6,12 +6,13 @@ module.exports = {
   collectCoverage: true,
   coverageReporters: ['html', 'clover'],
   collectCoverageFrom: [
-    'packages/**/*.ts',
+    '**/*.ts',
     '!**/__tests__/**',
     '!*.spec.ts',
     '!**/dist/**',
     '!**/node_modules/**',
     '!**/jest.config.ts',
+    '!**/jest.e2e.ts'
   ],
   moduleNameMapper: {
     '@ptc-org/nestjs-query-core': process.cwd() + '/packages/core/src',
@@ -19,9 +20,10 @@ module.exports = {
     '@ptc-org/nestjs-query-typeorm': process.cwd() + '/packages/query-typeorm/src',
     '@ptc-org/nestjs-query-sequelize': process.cwd() + '/packages/query-sequelize/src',
     '@ptc-org/nestjs-query-typegoose': process.cwd() + '/packages/query-typegoose/src',
-    '@ptc-org/nestjs-query-mongoose': process.cwd() + '/packages/query-mongoose/src',
+    '@ptc-org/nestjs-query-mongoose': process.cwd() + '/packages/query-mongoose/src'
   },
   testEnvironment: 'node',
   setupFilesAfterEnv: ['jest-extended'],
-  snapshotSerializers: ['jest-snapshot-serializer-raw/always']
-};
+  snapshotSerializers: ['jest-snapshot-serializer-raw/always'],
+  testTimeout: 10000
+}

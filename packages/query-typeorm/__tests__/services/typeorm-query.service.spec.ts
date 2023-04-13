@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
+import { getDataSourceToken, InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
 import { Filter, SortDirection } from '@ptc-org/nestjs-query-core'
 import { plainToClass } from 'class-transformer'
 import { Repository } from 'typeorm'
 
 import { TypeOrmQueryService } from '../../src'
 import { FilterQueryBuilder } from '../../src/query'
-import { closeTestConnection, CONNECTION_OPTIONS, getTestConnection, refresh, truncate } from '../__fixtures__/connection.fixture'
+import { CONNECTION_OPTIONS, refresh, truncate } from '../__fixtures__/connection.fixture'
 import {
   TEST_ENTITIES,
   TEST_RELATIONS,
@@ -40,7 +40,10 @@ describe('TypeOrmQueryService', (): void => {
     }
   }
 
-  afterEach(closeTestConnection)
+  afterEach(() => {
+    const dataSource = moduleRef.get(getDataSourceToken())
+    return dataSource.destroy()
+  })
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -51,7 +54,9 @@ describe('TypeOrmQueryService', (): void => {
       providers: [TestEntityService, TestRelationService, TestSoftDeleteEntityService]
     }).compile()
 
-    await refresh()
+    const dataSource = moduleRef.get(getDataSourceToken())
+
+    await refresh(dataSource)
   })
 
   it('should create a filterQueryBuilder and assemblerService based on the repo passed in if not provided', () => {
@@ -65,6 +70,18 @@ describe('TypeOrmQueryService', (): void => {
       const queryService = moduleRef.get(TestEntityService)
       const queryResult = await queryService.query({ filter: { stringType: { eq: 'foo1' } } })
       return expect(queryResult).toEqual([TEST_ENTITIES[0]])
+    })
+
+    it('should return soft-deleted entities', async () => {
+      const queryService = moduleRef.get(TestSoftDeleteEntityService)
+      const primaryKeys = TEST_SOFT_DELETE_ENTITIES.map((e) => e.testEntityPk)
+
+      await queryService.deleteMany({ testEntityPk: { in: primaryKeys } }, { useSoftDelete: true })
+
+      const queryResult = await queryService.query({}, { withDeleted: true })
+      const queriedPrimaryKeys = queryResult.map((e) => e.testEntityPk)
+
+      return expect(primaryKeys).toEqual(queriedPrimaryKeys)
     })
 
     describe('filter on relations', () => {
@@ -310,13 +327,91 @@ describe('TypeOrmQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         {},
         {
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
+
+      return expect(queryResult).toEqual([
+        {
+          avg: {
+            numberType: 5.5
+          },
+          count: {
+            testEntityPk: 10
+          },
+          max: {
+            dateType: expect.stringMatching('2020-02-10'),
+            numberType: 10,
+            stringType: 'foo9',
+            testEntityPk: 'test-entity-9'
+          },
+          min: {
+            dateType: expect.stringMatching('2020-02-01'),
+            numberType: 1,
+            stringType: 'foo1',
+            testEntityPk: 'test-entity-1'
+          },
+          sum: {
+            numberType: 55
+          }
+        }
+      ])
+    })
+
+    it('should aggregate soft-deleted entities', async () => {
+      const queryService = moduleRef.get(TestSoftDeleteEntityService)
+      const primaryKeys = TEST_SOFT_DELETE_ENTITIES.map((e) => e.testEntityPk)
+
+      await queryService.deleteMany({ testEntityPk: { in: primaryKeys } }, { useSoftDelete: true })
+
+      const queryResult = await queryService.aggregate(
+        {},
+        {
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
+        },
+        { withDeleted: true }
+      )
+
       return expect(queryResult).toEqual([
         {
           avg: {
@@ -349,12 +444,28 @@ describe('TypeOrmQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         {},
         {
-          groupBy: ['boolType'],
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          groupBy: [{ field: 'boolType', args: {} }],
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -418,11 +529,27 @@ describe('TypeOrmQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         { stringType: { in: ['foo1', 'foo2', 'foo3'] } },
         {
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -457,12 +584,28 @@ describe('TypeOrmQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         { stringType: { in: ['foo1', 'foo2', 'foo3'] } },
         {
-          groupBy: ['boolType'],
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          groupBy: [{ field: 'boolType', args: {} }],
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -527,6 +670,14 @@ describe('TypeOrmQueryService', (): void => {
       const queryService = moduleRef.get(TestEntityService)
       const queryResult = await queryService.count({ stringType: { like: 'foo%' } })
       return expect(queryResult).toBe(10)
+    })
+
+    it('should count soft-deleted records', async () => {
+      const queryService = moduleRef.get(TestSoftDeleteEntityService)
+      const primaryKeys = TEST_SOFT_DELETE_ENTITIES.map((entity) => entity.testEntityPk)
+      await queryService.deleteMany({ testEntityPk: { in: primaryKeys } }, { useSoftDelete: true })
+      const queryResult = await queryService.count({ stringType: { like: 'foo%' } }, { withDeleted: true })
+      return expect(queryResult).toBe(TEST_SOFT_DELETE_ENTITIES.length)
     })
 
     describe('with relations', () => {
@@ -734,7 +885,7 @@ describe('TypeOrmQueryService', (): void => {
           'testRelations',
           TEST_ENTITIES[0],
           {},
-          { count: ['testRelationPk'] }
+          { count: [{ field: 'testRelationPk', args: {} }] }
         )
         return expect(aggResult).toEqual([
           {
@@ -752,7 +903,7 @@ describe('TypeOrmQueryService', (): void => {
           'testRelations',
           TEST_ENTITIES[0],
           { testRelationPk: { notLike: '%-1' } },
-          { count: ['testRelationPk'] }
+          { count: [{ field: 'testRelationPk', args: {} }] }
         )
         return expect(aggResult).toEqual([
           {
@@ -774,9 +925,30 @@ describe('TypeOrmQueryService', (): void => {
           entities,
           {},
           {
-            count: ['testRelationPk', 'relationName', 'testEntityId'],
-            min: ['testRelationPk', 'relationName', 'testEntityId'],
-            max: ['testRelationPk', 'relationName', 'testEntityId']
+            count: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            min: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            max: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ]
           }
         )
 
@@ -862,10 +1034,28 @@ describe('TypeOrmQueryService', (): void => {
           entities,
           {},
           {
-            groupBy: ['testEntityId'],
-            count: ['testRelationPk', 'relationName', 'testEntityId'],
-            min: ['testRelationPk', 'relationName', 'testEntityId'],
-            max: ['testRelationPk', 'relationName', 'testEntityId']
+            groupBy: [{ field: 'testEntityId', args: {} }],
+            count: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            min: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            max: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              { field: 'testEntityId', args: {} }
+            ]
           }
         )
 
@@ -960,9 +1150,30 @@ describe('TypeOrmQueryService', (): void => {
           entities,
           { testRelationPk: { notLike: '%-1' } },
           {
-            count: ['testRelationPk', 'relationName', 'testEntityId'],
-            min: ['testRelationPk', 'relationName', 'testEntityId'],
-            max: ['testRelationPk', 'relationName', 'testEntityId']
+            count: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            min: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            max: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ]
           }
         )
 
@@ -1048,9 +1259,30 @@ describe('TypeOrmQueryService', (): void => {
           entities,
           { relationName: { isNot: null } },
           {
-            count: ['testRelationPk', 'relationName', 'testEntityId'],
-            min: ['testRelationPk', 'relationName', 'testEntityId'],
-            max: ['testRelationPk', 'relationName', 'testEntityId']
+            count: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            min: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ],
+            max: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              {
+                field: 'testEntityId',
+                args: {}
+              }
+            ]
           }
         )
 
@@ -1718,14 +1950,14 @@ describe('TypeOrmQueryService', (): void => {
 
   describe('#createMany', () => {
     it('call save on the repo with instances of entities when passed plain objects', async () => {
-      await truncate(getTestConnection())
+      await truncate(moduleRef.get(getDataSourceToken()))
       const queryService = moduleRef.get(TestEntityService)
       const created = await queryService.createMany(TEST_ENTITIES)
       expect(created).toEqual(TEST_ENTITIES)
     })
 
     it('call save on the repo with instances of entities when passed instances', async () => {
-      await truncate(getTestConnection())
+      await truncate(moduleRef.get(getDataSourceToken()))
       const instances = TEST_ENTITIES.map((e) => plainToClass(TestEntity, e))
       const queryService = moduleRef.get(TestEntityService)
       const created = await queryService.createMany(instances)
@@ -1740,7 +1972,7 @@ describe('TypeOrmQueryService', (): void => {
 
   describe('#createOne', () => {
     it('call save on the repo with an instance of the entity when passed a plain object', async () => {
-      await truncate(getTestConnection())
+      await truncate(moduleRef.get(getDataSourceToken()))
       const entity = TEST_ENTITIES[0]
       const queryService = moduleRef.get(TestEntityService)
       const created = await queryService.createOne(entity)
@@ -1748,7 +1980,7 @@ describe('TypeOrmQueryService', (): void => {
     })
 
     it('call save on the repo with an instance of the entity when passed an instance', async () => {
-      await truncate(getTestConnection())
+      await truncate(moduleRef.get(getDataSourceToken()))
       const entity = plainToClass(TestEntity, TEST_ENTITIES[0])
       const queryService = moduleRef.get(TestEntityService)
       const created = await queryService.createOne(entity)

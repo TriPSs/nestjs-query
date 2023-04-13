@@ -1,6 +1,7 @@
 import { Filter, FilterComparisons, FilterFieldComparison } from '@ptc-org/nestjs-query-core'
-import { mongoose, ReturnModelType } from '@typegoose/typegoose'
+import { mongoose } from '@typegoose/typegoose'
 
+import { ReturnModelType } from '../typegoose-types.helper'
 import { ComparisonBuilder, EntityComparisonField } from './comparison.builder'
 
 /**

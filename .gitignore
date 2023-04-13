@@ -91,3 +91,6 @@ documentation/.docusaurus
 # Generated Docusaurus files
 .docusaurus/
 .cache-loader/
+
+# VSCode workspace files
+.vscode

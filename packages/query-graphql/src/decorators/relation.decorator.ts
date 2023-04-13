@@ -14,14 +14,14 @@ export type RelationManyDecoratorOpts<Relation> = Omit<ResolverManyRelation<Rela
 export type RelationTypeFunc<Relation> = () => Class<Relation>
 export type RelationClassDecorator<DTO> = <Cls extends Class<DTO>>(DTOClass: Cls) => Cls | void
 
-interface RelationDescriptor<Relation> {
+export interface RelationDescriptor<Relation> {
   name: string
   relationTypeFunc: RelationTypeFunc<Relation>
   isMany: boolean
   relationOpts?: Omit<ResolverRelation<Relation>, 'DTO'>
 }
 
-function getRelationsDescriptors<DTO>(DTOClass: Class<DTO>): RelationDescriptor<unknown>[] {
+export function getRelationsDescriptors<DTO>(DTOClass: Class<DTO>): RelationDescriptor<unknown>[] {
   return getPrototypeChain(DTOClass).reduce((relations, cls) => {
     const relationNames = relations.map((t) => t.name)
     const metaRelations = reflector.get<unknown, RelationDescriptor<unknown>>(cls) ?? []

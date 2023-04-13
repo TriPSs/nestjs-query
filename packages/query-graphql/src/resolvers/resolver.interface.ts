@@ -5,7 +5,7 @@ import { QueryResolverMethodOpts, SubscriptionResolverMethodOpts } from '../deco
 import { GraphQLPubSub } from '../subscription'
 import { PagingStrategies, QueryArgsTypeOpts } from '../types'
 
-type NamedEndpoint = {
+export type NamedEndpoint = {
   /** Specify to override the name of the graphql query or mutation * */
   name?: string
   /** Specify a description for the graphql query or mutation* */

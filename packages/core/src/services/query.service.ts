@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common'
 
 import { Class, DeepPartial } from '../common'
 import {
+  AggregateOptions,
   AggregateQuery,
   AggregateResponse,
+  CountOptions,
   DeleteManyOptions,
   DeleteManyResponse,
   DeleteOneOptions,
@@ -13,6 +15,7 @@ import {
   GetByIdOptions,
   ModifyRelationOptions,
   Query,
+  QueryOptions,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -26,23 +29,24 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
   /**
    * Query for multiple records of type `T`.
    * @param query - the query used to filer, page or sort records.
+   * @param selectRelations - additional relation to select and fetch in the same query.
    * @returns a promise with an array of records that match the query.
    */
-  query(query: Query<DTO>): Promise<DTO[]>
+  query(query: Query<DTO>, opts?: QueryOptions): Promise<DTO[]>
 
   /**
    * Perform an aggregate query
    * @param filter
    * @param aggregate
    */
-  aggregate(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>): Promise<AggregateResponse<DTO>[]>
+  aggregate(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>, opts?: AggregateOptions): Promise<AggregateResponse<DTO>[]>
 
   /**
    * Count the number of records that match the filter.
    * @param filter - the filter
    * @returns a promise with the total number of records.
    */
-  count(filter: Filter<DTO>): Promise<number>
+  count(filter: Filter<DTO>, opts?: CountOptions): Promise<number>
 
   /**
    * Finds a record by `id`.
@@ -283,5 +287,7 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare,@typescript-eslint/no-unused-vars -- intentional
 export function QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>>(DTOClass: Class<DTO>) {
-  return <Cls extends Class<QueryService<DTO, C, U>>>(cls: Cls): Cls | void => Injectable()(cls)
+  return <Cls extends Class<QueryService<DTO, C, U>>>(cls: Cls): Cls | void => {
+    return Injectable()(cls)
+  }
 }

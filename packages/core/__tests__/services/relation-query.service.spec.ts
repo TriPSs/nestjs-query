@@ -131,7 +131,7 @@ describe('RelationQueryService', () => {
       const result = [{ count: { foo: 1 } }]
       const filter = {}
       const relationFilter = {}
-      const relationAggregateQuery: AggregateQuery<TestType> = { count: ['foo'] }
+      const relationAggregateQuery: AggregateQuery<TestType> = { count: [{ field: 'foo', args: {} }] }
       testRelationFn.mockReturnValue({ filter: relationFilter })
       when(mockRelationService.aggregate(deepEqual(relationFilter), relationAggregateQuery)).thenResolve(result)
       await expect(queryService.aggregateRelations(TestType, relationName, dto, filter, relationAggregateQuery)).resolves.toBe(
@@ -147,7 +147,7 @@ describe('RelationQueryService', () => {
       const result = new Map([[dtos[0], relationResults]])
       const filter = {}
       const relationFilter = {}
-      const relationAggregateQuery: AggregateQuery<TestType> = { count: ['foo'] }
+      const relationAggregateQuery: AggregateQuery<TestType> = { count: [{ field: 'foo', args: {} }] }
       testRelationFn.mockReturnValue({ filter: relationFilter })
       when(mockRelationService.aggregate(deepEqual(relationFilter), relationAggregateQuery)).thenResolve(relationResults)
       return expect(
@@ -159,7 +159,7 @@ describe('RelationQueryService', () => {
       const relationName = 'unknown'
       const dto = new TestType()
       const filter = {}
-      const aggregateQuery: AggregateQuery<TestType> = { count: ['foo'] }
+      const aggregateQuery: AggregateQuery<TestType> = { count: [{ field: 'foo', args: {} }] }
       const result = [{ count: { foo: 1 } }]
       when(mockQueryService.aggregateRelations(TestType, relationName, dto, filter, aggregateQuery)).thenResolve(result)
       return expect(queryService.aggregateRelations(TestType, relationName, dto, filter, aggregateQuery)).resolves.toBe(result)
@@ -169,7 +169,7 @@ describe('RelationQueryService', () => {
       const relationName = 'unknown'
       const dtos = [new TestType()]
       const filter = {}
-      const aggregateQuery: AggregateQuery<TestType> = { count: ['foo'] }
+      const aggregateQuery: AggregateQuery<TestType> = { count: [{ field: 'foo', args: {} }] }
       const result = new Map([[dtos[0], [{ count: { foo: 1 } }]]])
       when(mockQueryService.aggregateRelations(TestType, relationName, dtos, filter, aggregateQuery)).thenResolve(result)
       return expect(queryService.aggregateRelations(TestType, relationName, dtos, filter, aggregateQuery)).resolves.toBe(result)

@@ -49,17 +49,28 @@ export type ResolverRelation<Relation> = {
   disableRead?: boolean
   /**
    * Disable update relation graphql endpoints
+   * @deprecated use .update.disabled instead
    */
   disableUpdate?: boolean
+  update?: Pick<ResolverRelation<Relation>, 'description'> & ResolverMethodOpts
   /**
    * Disable remove relation graphql endpoints
+   * @deprecated use .remove.disabled instead
    */
   disableRemove?: boolean
-
+  remove?: Pick<ResolverRelation<Relation>, 'description'> & ResolverMethodOpts
   /**
    * Enable aggregation queries.
    */
   enableAggregate?: boolean
+  aggregate?: Pick<ResolverRelation<Relation>, 'description'> &
+    Omit<ResolverMethodOpts, 'disabled'> & {
+      enabled?: boolean
+    }
+  /**
+   * Enable look ahead mode, will join and select the relation when queried.
+   */
+  enableLookAhead?: boolean
   /**
    * Indicates if soft-deleted rows should be included in relation result.
    */
@@ -87,7 +98,7 @@ export type ResolverRelation<Relation> = {
 export type RelationTypeMap<RT> = Record<string, RT>
 
 export type ResolverOneRelation<Relation> = Omit<ResolverRelation<Relation>, 'disableFilter' | 'disableSort'>
-export type ResolverManyRelation<Relation> = ResolverRelation<Relation>
+export type ResolverManyRelation<Relation> = Omit<ResolverRelation<Relation>, 'enableLookAhead'>
 
 export type RelationsOpts<Relation = unknown> = {
   /**

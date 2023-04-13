@@ -20,17 +20,15 @@ export interface AggregateRelationsResolverOpts extends RelationsOpts {
   enableAggregate?: boolean
 }
 
-type AggregateRelationOpts<Relation> = {
-  enableAggregate?: boolean
-} & ResolverRelation<Relation>
+type AggregateRelationOpts<Relation> = ResolverRelation<Relation>
 
 const AggregateRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: AggregateRelationOpts<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    if (!relation.enableAggregate) {
+    if (!relation.enableAggregate && !relation.aggregate?.enabled) {
       return Base
     }
-    const commonResolverOpts = removeRelationOpts(relation)
+    const commonResolverOpts = relation.aggregate || removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoName = getDTONames(DTOClass).baseName
     const { baseNameLower, pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, {
@@ -43,13 +41,21 @@ const AggregateRelationMixin =
     @ArgsType()
     class RelationQA extends AggregateArgsType(relationDTO) {}
 
-    const AR = AggregateResponseType(relationDTO, { prefix: `${dtoName}${pluralBaseName}` })
+    const [AR] = AggregateResponseType(relationDTO, { prefix: `${dtoName}${pluralBaseName}` })
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class AggregateMixin extends Base {
-      @ResolverField(`${pluralBaseNameLower}Aggregate`, () => [AR], {}, commonResolverOpts, {
-        interceptors: [AuthorizerInterceptor(DTOClass)]
-      })
+      @ResolverField(
+        `${pluralBaseNameLower}Aggregate`,
+        () => [AR],
+        {
+          description: relation.aggregate?.description
+        },
+        commonResolverOpts,
+        {
+          interceptors: [AuthorizerInterceptor(DTOClass)]
+        }
+      )
       async [`aggregate${pluralBaseName}`](
         @Parent() dto: DTO,
         @Args() q: RelationQA,
@@ -75,6 +81,7 @@ const AggregateRelationMixin =
       }
     }
 
+    // TODO:: Add also support for the "by" in dates
     return AggregateMixin
   }
 

@@ -1,21 +1,24 @@
 import { Class, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
+import { DataSource } from 'typeorm'
 
 import { RelationQueryBuilder } from '../../src/query'
-import { closeTestConnection, createTestConnection, getTestConnection } from '../__fixtures__/connection.fixture'
+import { createTestConnection } from '../__fixtures__/connection.fixture'
 import { TEST_ENTITIES } from '../__fixtures__/seeds'
 import { TestEntity } from '../__fixtures__/test.entity'
 import { TestRelation } from '../__fixtures__/test-relation.entity'
 
 describe('RelationQueryBuilder', (): void => {
-  beforeEach(createTestConnection)
-  afterEach(closeTestConnection)
+  let dataSource: DataSource
+  beforeEach(async () => {
+    dataSource = await createTestConnection()
+  })
+  afterEach(() => dataSource.destroy())
 
   const getRelationQueryBuilder = <Entity, Relation>(
     EntityClass: Class<Entity>,
     relationName: string
-  ): RelationQueryBuilder<Entity, Relation> =>
-    new RelationQueryBuilder(getTestConnection().getRepository(EntityClass), relationName)
+  ): RelationQueryBuilder<Entity, Relation> => new RelationQueryBuilder(dataSource.getRepository(EntityClass), relationName)
 
   const expectSQLSnapshot = <Entity, Relation>(
     EntityClass: Class<Entity>,
