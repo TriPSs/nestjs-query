@@ -1,4 +1,13 @@
  
+# [2.4.0](https://github.com/TriPSs/nestjs-query/compare/v2.3.1...v2.4.0) (2023-04-13)
+
+
+### Features
+
+* **query-graphql:** Added further control of update/remove relations ([f86afb6](https://github.com/TriPSs/nestjs-query/commit/f86afb674170b6cea5f4ad19e566125b51e2ff74))
+
+
+
 ## [2.3.1](https://github.com/TriPSs/nestjs-query/compare/v2.3.0...v2.3.1) (2023-04-05)
 
 
