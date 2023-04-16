@@ -2,9 +2,9 @@ import { Query, Resolver } from '@nestjs/graphql'
 import { AggregateQuery, AggregateResponse, Filter } from '@ptc-org/nestjs-query-core'
 import { deepEqual, objectContaining, when } from 'ts-mockito'
 
-import { AggregateRelationsResolver } from '../../../src/resolvers/relations'
-import { AggregateRelationsResolverOpts } from '../../../src/resolvers/relations/aggregate-relations.resolver'
-import { createResolverFromNest, generateSchema, TestRelationDTO, TestResolverDTO, TestService } from '../../__fixtures__'
+import { AggregateRelationsResolver } from '../../../../src/resolvers/relations'
+import { AggregateRelationsResolverOpts } from '../../../../src/resolvers/relations/aggregate-relations.resolver'
+import { createResolverFromNest, generateSchema, TestRelationDTO, TestResolverDTO, TestService } from '../../../__fixtures__'
 
 describe('AggregateRelationsResolver', () => {
   const expectResolverSDL = async (opts?: AggregateRelationsResolverOpts) => {
@@ -22,14 +22,11 @@ describe('AggregateRelationsResolver', () => {
 
   it('should not add read methods if one and many are empty', () => expectResolverSDL())
   describe('aggregate', () => {
-    it('should use the object type name', () =>
-      expectResolverSDL({ enableAggregate: true, many: { relations: { DTO: TestRelationDTO } } }))
-
-    it('should use the dtoName if provided', () =>
-      expectResolverSDL({ enableAggregate: true, many: { relations: { DTO: TestRelationDTO, dtoName: 'Test' } } }))
-
     it('should not add read methods if enableAggregate is not true', () =>
       expectResolverSDL({ many: { relations: { DTO: TestRelationDTO, disableRead: true } } }))
+
+    it('should use the object type name', () =>
+      expectResolverSDL({ enableAggregate: true, many: { relations: { DTO: TestRelationDTO } } }))
 
     describe('aggregate query', () => {
       it('should call the service aggregateRelations with the provided dto', async () => {
