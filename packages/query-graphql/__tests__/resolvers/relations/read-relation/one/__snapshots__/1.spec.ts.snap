@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReadRelationsResolver - one - 1 should use the dtoName if provided 1`] = `
+type TestResolverDTO {
+  id: ID!
+  stringField: String!
+  test: TestRelationDTO!
+}
+
+type TestRelationDTO {
+  id: ID!
+  testResolverId: String!
+}
+
+type Query {
+  test: TestResolverDTO!
+}
+`;
