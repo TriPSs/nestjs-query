@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql'
+import { Directive, Field, ObjectType } from '@nestjs/graphql'
 import { Class } from '@ptc-org/nestjs-query-core'
 
 import { ConnectionCursorScalar, ConnectionCursorType } from '../../cursor.scalar'
@@ -21,6 +21,7 @@ export const getOrCreatePageInfoType = (): PageInfoTypeConstructor => {
     return pageInfoType
   }
 
+  @Directive('@shareable')
   @ObjectType('PageInfo')
   class PageInfoTypeImpl implements PageInfoType {
     constructor(
