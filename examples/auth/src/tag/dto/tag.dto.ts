@@ -19,7 +19,10 @@ import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 
 @ObjectType('Tag')
 @QueryOptions({ enableTotalCount: true })
-@FilterableCursorConnection('todoItems', () => TodoItemDTO)
+@FilterableCursorConnection('todoItems', () => TodoItemDTO, {
+  update: { enabled: true },
+  remove: { enabled: true }
+})
 @BeforeCreateOne((input: CreateOneInputType<TagDTO>, context: UserContext) => {
   input.input.createdBy = context.req.user.username
   return input

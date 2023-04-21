@@ -16,7 +16,7 @@ import { TodoItemModule } from './todo-item/todo-item.module'
       subscriptions: {
         'graphql-ws': true
       },
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/subscriptions/schema.gql',
       formatError: formatGraphqlError
     }),
     SubTaskModule,

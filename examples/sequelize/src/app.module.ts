@@ -14,7 +14,7 @@ import { TodoItemModule } from './todo-item/todo-item.module'
     SequelizeModule.forRoot(sequelizeOrmConfig('sequelize')),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/sequelize/schema.gql',
       context: ({ req }: { req: { headers: Record<string, string> } }): GqlContext => ({ request: req }),
       formatError: formatGraphqlError
     }),

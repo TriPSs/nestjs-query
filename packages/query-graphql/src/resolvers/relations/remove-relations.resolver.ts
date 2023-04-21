@@ -3,14 +3,14 @@ import { Args, ArgsType, InputType, Resolver } from '@nestjs/graphql'
 import { Class, ModifyRelationOptions, QueryService } from '@ptc-org/nestjs-query-core'
 
 import { OperationGroup } from '../../auth'
-import { getDTONames } from '../../common'
-import { ModifyRelationAuthorizerFilter, ResolverMutation } from '../../decorators'
+import { getDTONames, mergeBaseResolverOpts } from '../../common'
+import { ModifyRelationAuthorizerFilter } from '../../decorators'
 import { ResolverRelationMutation } from '../../decorators/resolver-relation-mutation.decorator'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { MutationArgsType, RelationInputType, RelationsInputType } from '../../types'
 import { transformAndValidate } from '../helpers'
 import { BaseServiceResolver, ServiceResolver } from '../resolver.interface'
-import { flattenRelations } from './helpers'
+import { flattenRelations, removeRelationOpts } from './helpers'
 import { RelationsOpts, ResolverRelation } from './relations.interface'
 
 const RemoveOneRelationMixin =
@@ -20,6 +20,7 @@ const RemoveOneRelationMixin =
       return Base
     }
 
+    const commonResolverOpts = removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
     const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
@@ -36,9 +37,10 @@ const RemoveOneRelationMixin =
       @ResolverRelationMutation(
         () => DTOClass,
         {
-          description: relation.remove?.description
+          description: relation.remove?.description,
+          complexity: relation.remove?.complexity
         },
-        relation.remove,
+        mergeBaseResolverOpts(relation.remove, commonResolverOpts),
         {
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }
@@ -65,6 +67,8 @@ const RemoveManyRelationsMixin =
     if (!relation.remove?.enabled) {
       return Base
     }
+
+    const commonResolverOpts = removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
     const { pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
@@ -81,9 +85,10 @@ const RemoveManyRelationsMixin =
       @ResolverRelationMutation(
         () => DTOClass,
         {
-          description: relation.remove?.description
+          description: relation.remove?.description,
+          complexity: relation.remove?.complexity
         },
-        relation.remove,
+        mergeBaseResolverOpts(relation.remove, commonResolverOpts),
         {
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }

@@ -1006,10 +1006,12 @@ functionality.
 * `update`
     * `enabled` -  Set to `true` to enable update operations.
     * `description` -  The description of the update operation.
+    * `complexity` - Set to specify relation complexity. For more info see [complexity docs](https://docs.nestjs.com/graphql/complexity)
     * `decorators=[]` - An array of custom `PropertyDecorator` or `MethodDecorators` to add to the endpoint.
 * `remove`
     * `enabled` -  Set to `true` to enable remove operations.
     * `description` -  The description of the remove operation.
+    * `complexity` - Set to specify relation complexity. For more info see [complexity docs](https://docs.nestjs.com/graphql/complexity)
     * `decorators=[]` - An array of custom `PropertyDecorator` or `MethodDecorators` to add to the endpoint.
 * `allowFiltering` - Set to `true` to allow filtering on the relation.
 * `guards=[]` - An array of [guards](https://docs.nestjs.com/guards) to add to `update` and `remove` endpoints.

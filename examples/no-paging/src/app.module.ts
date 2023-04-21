@@ -13,7 +13,7 @@ import { TodoItemModule } from './todo-item/todo-item.module'
     TypeOrmModule.forRoot(typeormOrmConfig('no_paging')),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/no-paging/schema.gql',
       formatError: formatGraphqlError
     }),
     SubTaskModule,

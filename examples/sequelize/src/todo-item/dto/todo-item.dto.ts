@@ -8,8 +8,16 @@ import { TagDTO } from '../../tag/dto/tag.dto'
 @ObjectType('TodoItem')
 @KeySet(['id'])
 @QueryOptions({ enableTotalCount: true })
-@FilterableCursorConnection('subTasks', () => SubTaskDTO, { guards: [AuthGuard] })
-@FilterableCursorConnection('tags', () => TagDTO, { guards: [AuthGuard] })
+@FilterableCursorConnection('subTasks', () => SubTaskDTO, {
+  update: { enabled: true },
+  remove: { enabled: true },
+  guards: [AuthGuard]
+})
+@FilterableCursorConnection('tags', () => TagDTO, {
+  update: { enabled: true },
+  remove: { enabled: true },
+  guards: [AuthGuard]
+})
 export class TodoItemDTO {
   @FilterableField(() => ID)
   id!: number

@@ -12,7 +12,7 @@ import { TodoItemModule } from './todo-item/todo-item.module'
     TypeOrmModule.forRoot(typeormOrmConfig('typeorm_soft_delete')),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/typeorm-soft-delete/schema.gql',
       formatError: formatGraphqlError
     }),
 

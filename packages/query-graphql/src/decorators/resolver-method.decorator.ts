@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UsePipes
 } from '@nestjs/common'
+import { Complexity } from '@nestjs/graphql'
 import { Class } from '@ptc-org/nestjs-query-core'
 
 export interface BaseResolverOptions {
@@ -39,6 +40,7 @@ export interface ResolverMethodOpts extends BaseResolverOptions {
 export interface ResolverRelationMethodOpts extends BaseResolverOptions {
   /** Set to true to enable the endpoint */
   enabled?: boolean
+  complexity?: Complexity
 }
 
 /**

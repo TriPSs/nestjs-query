@@ -15,7 +15,7 @@ import { TodoItemModule } from './todo-item/todo-item.module'
     TypeOrmModule.forRoot(typeormOrmConfig('complexity')),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/complexity/schema.gql',
       formatError: formatGraphqlError
     }),
     SubTaskModule,

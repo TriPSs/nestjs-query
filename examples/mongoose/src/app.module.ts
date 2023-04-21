@@ -16,7 +16,7 @@ const { uri, ...options } = mongooseConfig('mongoose')
     MongooseModule.forRoot(uri, options),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/mongoose/schema.gql',
       context: ({ req }: { req: { headers: Record<string, string> } }): GqlContext => ({ request: req }),
       formatError: formatGraphqlError
     }),
