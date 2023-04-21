@@ -34,6 +34,14 @@ export interface ResolverMethodOpts extends BaseResolverOptions {
 }
 
 /**
+ * Options for relation resolver methods.
+ */
+export interface ResolverRelationMethodOpts extends BaseResolverOptions {
+  /** Set to true to enable the endpoint */
+  enabled?: boolean
+}
+
+/**
  * @internal
  * Creates a unique set of items.
  * @param arrs - An array of arrays to de duplicate.
@@ -51,6 +59,15 @@ function createSetArray<T>(...arrs: T[][]): T[] {
  */
 export function isDisabled(opts: ResolverMethodOpts[]): boolean {
   return !!opts.find((o) => o.disabled)
+}
+
+/**
+ * @internal
+ * Returns true if any of the [[ResolverRelationMethodOpts]] are disabled.
+ * @param opts - The array of [[ResolverRelationMethodOpts]] to check.
+ */
+export function isEnabled(opts: ResolverRelationMethodOpts[]): boolean {
+  return opts.some((o) => o.enabled)
 }
 
 /**

@@ -9,8 +9,15 @@ import { TagDTO } from '../../tag/dto/tag.dto'
 @ObjectType('TodoItem')
 @KeySet(['id'])
 @QueryOptions({ enableTotalCount: true })
-@CursorConnection('subTasks', () => SubTaskDTO, { disableRemove: true, guards: [AuthGuard] })
-@CursorConnection('tags', () => TagDTO, { guards: [AuthGuard] })
+@CursorConnection('subTasks', () => SubTaskDTO, {
+  update: { enabled: true },
+  guards: [AuthGuard]
+})
+@CursorConnection('tags', () => TagDTO, {
+  update: { enabled: true },
+  remove: { enabled: true },
+  guards: [AuthGuard]
+})
 export class TodoItemDTO {
   @ObjectId()
   _id: mongoose.Types.ObjectId

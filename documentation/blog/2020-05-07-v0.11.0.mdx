@@ -53,7 +53,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { TodoItemDTO } from '../todo-item/todo-item.dto.ts';
 
 @ObjectType('SubTask')
-@Relation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@Relation('todoItem', () => TodoItemDTO, { update: { enabled: true } })
 export class SubTaskDTO {
   @FilterableField(() => ID)
   id!: string;
@@ -87,7 +87,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
 
 @ObjectType('TodoItem')
-@Connection('subTasks', () => SubTaskDTO, { disableRemove: true })
+@Connection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 export class TodoItemDTO {
   @FilterableField(() => ID)
   id!: string;

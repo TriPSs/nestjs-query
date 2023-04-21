@@ -6,8 +6,13 @@ import { TagDTO } from '../../tag/dto/tag.dto'
 
 @ObjectType('TodoItem')
 @QueryOptions({ pagingStrategy: PagingStrategies.OFFSET, enableTotalCount: true })
-@OffsetConnection('subTasks', () => SubTaskDTO, { disableRemove: true })
-@OffsetConnection('tags', () => TagDTO)
+@OffsetConnection('subTasks', () => SubTaskDTO, {
+  update: { enabled: true }
+})
+@OffsetConnection('tags', () => TagDTO, {
+  update: { enabled: true },
+  remove: { enabled: true }
+})
 export class TodoItemDTO {
   @FilterableField(() => ID)
   id!: number

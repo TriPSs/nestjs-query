@@ -5,21 +5,21 @@ import { Class, ModifyRelationOptions, QueryService } from '@ptc-org/nestjs-quer
 import { OperationGroup } from '../../auth'
 import { getDTONames } from '../../common'
 import { ModifyRelationAuthorizerFilter, ResolverMutation } from '../../decorators'
+import { ResolverRelationMutation } from '../../decorators/resolver-relation-mutation.decorator'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { MutationArgsType, RelationInputType, RelationsInputType } from '../../types'
 import { transformAndValidate } from '../helpers'
 import { BaseServiceResolver, ServiceResolver } from '../resolver.interface'
-import { flattenRelations, removeRelationOpts } from './helpers'
+import { flattenRelations } from './helpers'
 import { RelationsOpts, ResolverRelation } from './relations.interface'
 
 const UpdateOneRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    // TODO:: Next major version change this to be opt-in
-    if (relation.disableUpdate || relation.update?.disabled) {
+    if (!relation.update?.enabled) {
       return Base
     }
-    const commonResolverOpts = relation.update || removeRelationOpts(relation)
+
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
     const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
@@ -33,12 +33,12 @@ const UpdateOneRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class UpdateOneMixin extends Base {
-      @ResolverMutation(
+      @ResolverRelationMutation(
         () => DTOClass,
         {
           description: relation.update?.description
         },
-        commonResolverOpts,
+        relation.update,
         {
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }
@@ -62,11 +62,10 @@ const UpdateOneRelationMixin =
 const UpdateManyRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    // TODO:: Next major version change this to be opt-in
-    if (relation.disableUpdate || relation.update?.disabled) {
+    if (!relation.update?.enabled) {
       return Base
     }
-    const commonResolverOpts = relation.update || removeRelationOpts(relation)
+
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
     const { pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
@@ -86,12 +85,12 @@ const UpdateManyRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class UpdateManyMixin extends Base {
-      @ResolverMutation(
+      @ResolverRelationMutation(
         () => DTOClass,
         {
           description: relation.update?.description
         },
-        commonResolverOpts,
+        relation.update,
         {
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }
@@ -108,7 +107,7 @@ const UpdateManyRelationMixin =
         return this.service.addRelations(relationName, input.id, input.relationIds, modifyRelationsFilter)
       }
 
-      @ResolverMutation(() => DTOClass, {}, commonResolverOpts, {
+      @ResolverRelationMutation(() => DTOClass, {}, relation.update, {
         interceptors: [AuthorizerInterceptor(DTOClass)]
       })
       async [`set${pluralBaseName}On${dtoNames.baseName}`](

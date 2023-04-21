@@ -30,9 +30,12 @@ import { UserDTO } from '../../user/user.dto'
     return { ownerId: { eq: context.req.user.id } }
   }
 })
-@Relation('owner', () => UserDTO, { disableRemove: true, disableUpdate: true })
-@FilterableCursorConnection('subTasks', () => SubTaskDTO, { disableRemove: true })
-@FilterableCursorConnection('tags', () => TagDTO)
+@Relation('owner', () => UserDTO)
+@FilterableCursorConnection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
+@FilterableCursorConnection('tags', () => TagDTO, {
+  update: { enabled: true },
+  remove: { enabled: true }
+})
 export class TodoItemDTO {
   @FilterableField(() => ID)
   id!: number

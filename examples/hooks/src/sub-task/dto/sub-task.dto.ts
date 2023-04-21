@@ -5,7 +5,9 @@ import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 
 @ObjectType('SubTask')
 @KeySet(['id'])
-@FilterableRelation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@FilterableRelation('todoItem', () => TodoItemDTO, {
+  update: { enabled: true }
+})
 export class SubTaskDTO {
   @FilterableField(() => ID)
   id!: number
