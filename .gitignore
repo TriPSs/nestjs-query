@@ -83,8 +83,6 @@ tsconfig.tsbuildinfo
 # intelliJ workspace files
 .idea
 
-schema.gql
-
 documentation/.docusaurus
 /**/package-lock.json
 

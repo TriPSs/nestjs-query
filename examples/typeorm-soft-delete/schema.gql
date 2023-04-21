@@ -1,0 +1,637 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type TodoItem {
+  id: ID!
+  title: String!
+  description: String
+  completed: Boolean!
+  subTasksCount: Float!
+  created: DateTime!
+  updated: DateTime!
+  subTasks(
+    """Specify to filter the records returned."""
+    filter: SubTaskFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [SubTaskSort!]! = []
+  ): [SubTask!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input SubTaskFilter {
+  and: [SubTaskFilter!]
+  or: [SubTaskFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  todoItemId: StringFieldComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+  todoItem: SubTaskFilterTodoItemFilter
+}
+
+input IDFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: ID
+  neq: ID
+  gt: ID
+  gte: ID
+  lt: ID
+  lte: ID
+  like: ID
+  notLike: ID
+  iLike: ID
+  notILike: ID
+  in: [ID!]
+  notIn: [ID!]
+}
+
+input StringFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
+}
+
+input BooleanFieldComparison {
+  is: Boolean
+  isNot: Boolean
+}
+
+input DateFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: DateTime
+  neq: DateTime
+  gt: DateTime
+  gte: DateTime
+  lt: DateTime
+  lte: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  between: DateFieldComparisonBetween
+  notBetween: DateFieldComparisonBetween
+}
+
+input DateFieldComparisonBetween {
+  lower: DateTime!
+  upper: DateTime!
+}
+
+input SubTaskFilterTodoItemFilter {
+  and: [SubTaskFilterTodoItemFilter!]
+  or: [SubTaskFilterTodoItemFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  subTasksCount: NumberFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+}
+
+input NumberFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: Float
+  neq: Float
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  in: [Float!]
+  notIn: [Float!]
+  between: NumberFieldComparisonBetween
+  notBetween: NumberFieldComparisonBetween
+}
+
+input NumberFieldComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
+input SubTaskSort {
+  field: SubTaskSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum SubTaskSortFields {
+  id
+  title
+  description
+  completed
+  created
+  updated
+  todoItemId
+  createdBy
+  updatedBy
+}
+
+"""Sort Directions"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+"""Sort Nulls Options"""
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+type SubTask {
+  id: ID!
+  title: String!
+  description: String
+  completed: Boolean!
+  created: DateTime!
+  updated: DateTime!
+  todoItemId: String!
+  createdBy: String
+  updatedBy: String
+  todoItem: TodoItem!
+}
+
+type DeleteManyResponse {
+  """The number of records deleted."""
+  deletedCount: Int!
+}
+
+type SubTaskDeleteResponse {
+  id: ID
+  title: String
+  description: String
+  completed: Boolean
+  created: DateTime
+  updated: DateTime
+  todoItemId: String
+  createdBy: String
+  updatedBy: String
+}
+
+type UpdateManyResponse {
+  """The number of records updated."""
+  updatedCount: Int!
+}
+
+type SubTaskEdge {
+  """The node containing the SubTask"""
+  node: SubTask!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+"""Cursor for paging through collections"""
+scalar ConnectionCursor
+
+type PageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
+
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
+}
+
+type SubTaskConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [SubTaskEdge!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type SubTaskAggregateGroupBy {
+  id: ID
+  title: String
+  description: String
+  completed: Boolean
+  created(by: GroupBy! = DAY): DateTime
+  updated(by: GroupBy! = DAY): DateTime
+  todoItemId: String
+  createdBy: String
+  updatedBy: String
+}
+
+"""Group by"""
+enum GroupBy {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
+type SubTaskCountAggregate {
+  id: Int
+  title: Int
+  description: Int
+  completed: Int
+  created: Int
+  updated: Int
+  todoItemId: Int
+  createdBy: Int
+  updatedBy: Int
+}
+
+type SubTaskSumAggregate {
+  id: Float
+}
+
+type SubTaskAvgAggregate {
+  id: Float
+}
+
+type SubTaskMinAggregate {
+  id: ID
+  title: String
+  description: String
+  created: DateTime
+  updated: DateTime
+  todoItemId: String
+  createdBy: String
+  updatedBy: String
+}
+
+type SubTaskMaxAggregate {
+  id: ID
+  title: String
+  description: String
+  created: DateTime
+  updated: DateTime
+  todoItemId: String
+  createdBy: String
+  updatedBy: String
+}
+
+type SubTaskAggregateResponse {
+  groupBy: SubTaskAggregateGroupBy
+  count: SubTaskCountAggregate
+  sum: SubTaskSumAggregate
+  avg: SubTaskAvgAggregate
+  min: SubTaskMinAggregate
+  max: SubTaskMaxAggregate
+}
+
+type TodoItemEdge {
+  """The node containing the TodoItem"""
+  node: TodoItem!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type TodoItemConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TodoItemEdge!]!
+}
+
+type TodoItemDeleteResponse {
+  id: ID
+  title: String
+  description: String
+  completed: Boolean
+  subTasksCount: Float
+  created: DateTime
+  updated: DateTime
+}
+
+type Query {
+  subTaskAggregate(
+    """Filter to find records to aggregate on"""
+    filter: SubTaskAggregateFilter
+  ): [SubTaskAggregateResponse!]!
+  subTask(
+    """The id of the record to find."""
+    id: ID!
+  ): SubTask!
+  subTasks(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: SubTaskFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [SubTaskSort!]! = []
+  ): SubTaskConnection!
+  todoItemsWithDeleted(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: TodoItemFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoItemSort!]! = []
+  ): TodoItemConnection!
+  todoItem(
+    """The id of the record to find."""
+    id: ID!
+  ): TodoItem!
+  todoItems(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: TodoItemFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoItemSort!]! = []
+  ): TodoItemConnection!
+}
+
+input SubTaskAggregateFilter {
+  and: [SubTaskAggregateFilter!]
+  or: [SubTaskAggregateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  todoItemId: StringFieldComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+}
+
+input CursorPaging {
+  """Paginate before opaque cursor"""
+  before: ConnectionCursor
+
+  """Paginate after opaque cursor"""
+  after: ConnectionCursor
+
+  """Paginate first"""
+  first: Int
+
+  """Paginate last"""
+  last: Int
+}
+
+input TodoItemFilter {
+  and: [TodoItemFilter!]
+  or: [TodoItemFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  subTasksCount: NumberFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  subTasks: TodoItemFilterSubTaskFilter
+}
+
+input TodoItemFilterSubTaskFilter {
+  and: [TodoItemFilterSubTaskFilter!]
+  or: [TodoItemFilterSubTaskFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  todoItemId: StringFieldComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+}
+
+input TodoItemSort {
+  field: TodoItemSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum TodoItemSortFields {
+  id
+  title
+  description
+  completed
+  subTasksCount
+  created
+  updated
+}
+
+type Mutation {
+  setTodoItemOnSubTask(input: SetTodoItemOnSubTaskInput!): SubTask!
+  createOneSubTask(input: CreateOneSubTaskInput!): SubTask!
+  createManySubTasks(input: CreateManySubTasksInput!): [SubTask!]!
+  updateOneSubTask(input: UpdateOneSubTaskInput!): SubTask!
+  updateManySubTasks(input: UpdateManySubTasksInput!): UpdateManyResponse!
+  deleteOneSubTask(input: DeleteOneSubTaskInput!): SubTaskDeleteResponse!
+  deleteManySubTasks(input: DeleteManySubTasksInput!): DeleteManyResponse!
+  restoreOneTodoItem(input: ID!): TodoItem!
+  restoreManyTodoItems(input: TodoItemFilter!): UpdateManyResponse!
+  addSubTasksToTodoItem(input: AddSubTasksToTodoItemInput!): TodoItem!
+  setSubTasksOnTodoItem(input: SetSubTasksOnTodoItemInput!): TodoItem!
+  createOneTodoItem(input: CreateOneTodoItemInput!): TodoItem!
+  createManyTodoItems(input: CreateManyTodoItemsInput!): [TodoItem!]!
+  updateOneTodoItem(input: UpdateOneTodoItemInput!): TodoItem!
+  updateManyTodoItems(input: UpdateManyTodoItemsInput!): UpdateManyResponse!
+  deleteOneTodoItem(input: DeleteOneTodoItemInput!): TodoItemDeleteResponse!
+  deleteManyTodoItems(input: DeleteManyTodoItemsInput!): DeleteManyResponse!
+}
+
+input SetTodoItemOnSubTaskInput {
+  """The id of the record."""
+  id: ID!
+
+  """The id of relation."""
+  relationId: ID!
+}
+
+input CreateOneSubTaskInput {
+  """The record to create"""
+  subTask: SubTaskInput!
+}
+
+input SubTaskInput {
+  title: String!
+  description: String
+  completed: Boolean!
+  todoItemId: ID!
+}
+
+input CreateManySubTasksInput {
+  """Array of records to create"""
+  subTasks: [SubTaskInput!]!
+}
+
+input UpdateOneSubTaskInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: SubTaskUpdate!
+}
+
+input SubTaskUpdate {
+  title: String!
+  description: String
+  completed: Boolean
+  todoItemId: String
+}
+
+input UpdateManySubTasksInput {
+  """Filter used to find fields to update"""
+  filter: SubTaskUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: SubTaskUpdate!
+}
+
+input SubTaskUpdateFilter {
+  and: [SubTaskUpdateFilter!]
+  or: [SubTaskUpdateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  todoItemId: StringFieldComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+}
+
+input DeleteOneSubTaskInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteManySubTasksInput {
+  """Filter to find records to delete"""
+  filter: SubTaskDeleteFilter!
+}
+
+input SubTaskDeleteFilter {
+  and: [SubTaskDeleteFilter!]
+  or: [SubTaskDeleteFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  todoItemId: StringFieldComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+}
+
+input AddSubTasksToTodoItemInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
+input SetSubTasksOnTodoItemInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
+input CreateOneTodoItemInput {
+  """The record to create"""
+  todoItem: TodoItemInput!
+}
+
+input TodoItemInput {
+  title: String!
+  completed: Boolean!
+}
+
+input CreateManyTodoItemsInput {
+  """Array of records to create"""
+  todoItems: [TodoItemInput!]!
+}
+
+input UpdateOneTodoItemInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: TodoItemUpdate!
+}
+
+input TodoItemUpdate {
+  title: String
+  completed: Boolean
+}
+
+input UpdateManyTodoItemsInput {
+  """Filter used to find fields to update"""
+  filter: TodoItemUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: TodoItemUpdate!
+}
+
+input TodoItemUpdateFilter {
+  and: [TodoItemUpdateFilter!]
+  or: [TodoItemUpdateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  subTasksCount: NumberFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+}
+
+input DeleteOneTodoItemInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteManyTodoItemsInput {
+  """Filter to find records to delete"""
+  filter: TodoItemDeleteFilter!
+}
+
+input TodoItemDeleteFilter {
+  and: [TodoItemDeleteFilter!]
+  or: [TodoItemDeleteFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  subTasksCount: NumberFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+}
