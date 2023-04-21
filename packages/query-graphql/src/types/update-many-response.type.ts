@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql'
+import { Directive, Field, Int, ObjectType } from '@nestjs/graphql'
 import { Class, UpdateManyResponse } from '@ptc-org/nestjs-query-core'
 
 /** @internal */
@@ -8,7 +8,7 @@ export const UpdateManyResponseType = (): Class<UpdateManyResponse> => {
   if (updateManyResponseType) {
     return updateManyResponseType
   }
-
+  @Directive('@shareable')
   @ObjectType('UpdateManyResponse')
   class UpdateManyResponseTypeImpl implements UpdateManyResponse {
     @Field(() => Int, { description: 'The number of records updated.' })

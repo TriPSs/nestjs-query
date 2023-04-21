@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql'
+import { Directive, Field, ObjectType } from '@nestjs/graphql'
 import { Class } from '@ptc-org/nestjs-query-core'
 
 import { OffsetPageInfoType } from '../interfaces'
@@ -15,6 +15,7 @@ export const getOrCreateOffsetPageInfoType = (): OffsetPageInfoTypeConstructor =
     return pageInfoType
   }
 
+  @Directive('@shareable')
   @ObjectType('OffsetPageInfo')
   class PageInfoTypeImpl implements OffsetPageInfoType {
     constructor(hasNextPage: boolean, hasPreviousPage: boolean) {

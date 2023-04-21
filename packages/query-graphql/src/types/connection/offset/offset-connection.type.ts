@@ -1,5 +1,5 @@
 import { NotImplementedException } from '@nestjs/common'
-import { Field, Int, ObjectType } from '@nestjs/graphql'
+import { Directive, Field, Int, ObjectType } from '@nestjs/graphql'
 import { Class, MapReflector, Query } from '@ptc-org/nestjs-query-core'
 
 import { getGraphqlObjectName } from '../../../common'
@@ -39,6 +39,7 @@ export function getOrCreateOffsetConnectionType<DTO>(
     const pager = createPager<DTO>()
     const PIT = getOrCreateOffsetPageInfoType()
 
+    @Directive('@shareable')
     @ObjectType(connectionName)
     class AbstractConnection implements OffsetConnectionType<DTO> {
       static get resolveType() {
