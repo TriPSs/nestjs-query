@@ -11,7 +11,7 @@ import { TodoItemModule } from './todo-item/todo-item.module'
     TypeOrmModule.forRoot(typeormOrmConfig('federation_todo_item')),
     GraphQLModule.forRoot({
       driver: ApolloFederationDriver,
-      autoSchemaFile: 'schema.gql'
+      autoSchemaFile: 'examples/todo-item-graphql/schema.gql'
     }),
     TodoItemModule
   ]

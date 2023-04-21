@@ -15,7 +15,7 @@ import { UserModule } from './user/user.module'
     TypeOrmModule.forRoot(typeormOrmConfig('auth')),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/auth/schema.gql',
       installSubscriptionHandlers: true,
       subscriptions: {
         'subscriptions-transport-ws': {

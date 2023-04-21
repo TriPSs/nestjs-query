@@ -6,8 +6,13 @@ import { TagDTO } from '../../tag/dto/tag.dto'
 
 @ObjectType('TodoItem')
 @QueryOptions({ pagingStrategy: PagingStrategies.NONE })
-@UnPagedRelation('subTasks', () => SubTaskDTO, { disableRemove: true })
-@UnPagedRelation('tags', () => TagDTO)
+@UnPagedRelation('subTasks', () => SubTaskDTO, {
+  update: { enabled: true }
+})
+@UnPagedRelation('tags', () => TagDTO, {
+  update: { enabled: true },
+  remove: { enabled: true }
+})
 export class TodoItemDTO {
   @FilterableField(() => ID)
   id!: number

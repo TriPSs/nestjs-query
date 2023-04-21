@@ -1,0 +1,697 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Tag {
+  id: CustomID!
+  name: String!
+  created: DateTime!
+  updated: DateTime!
+  todoItems(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: TodoItemFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoItemSort!]! = []
+  ): TagTodoItemsConnection!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input CursorPaging {
+  """Paginate before opaque cursor"""
+  before: ConnectionCursor
+
+  """Paginate after opaque cursor"""
+  after: ConnectionCursor
+
+  """Paginate first"""
+  first: Int
+
+  """Paginate last"""
+  last: Int
+}
+
+"""Cursor for paging through collections"""
+scalar ConnectionCursor
+
+input TodoItemFilter {
+  and: [TodoItemFilter!]
+  or: [TodoItemFilter!]
+  id: CustomIDScalarFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+}
+
+input CustomIDScalarFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: CustomID
+  neq: CustomID
+  gt: CustomID
+  gte: CustomID
+  lt: CustomID
+  lte: CustomID
+  like: CustomID
+  notLike: CustomID
+  iLike: CustomID
+  notILike: CustomID
+  in: [CustomID!]
+  notIn: [CustomID!]
+}
+
+input StringFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
+}
+
+input BooleanFieldComparison {
+  is: Boolean
+  isNot: Boolean
+}
+
+input DateFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: DateTime
+  neq: DateTime
+  gt: DateTime
+  gte: DateTime
+  lt: DateTime
+  lte: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  between: DateFieldComparisonBetween
+  notBetween: DateFieldComparisonBetween
+}
+
+input DateFieldComparisonBetween {
+  lower: DateTime!
+  upper: DateTime!
+}
+
+input TodoItemSort {
+  field: TodoItemSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum TodoItemSortFields {
+  id
+  title
+  description
+  completed
+  created
+  updated
+}
+
+"""Sort Directions"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+"""Sort Nulls Options"""
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+type TodoItem {
+  id: CustomID!
+  title: String!
+  description: String
+  completed: Boolean!
+  subTasks(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: SubTaskFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [SubTaskSort!]! = []
+  ): TodoItemSubTasksConnection!
+  tags(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: TagFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TagSort!]! = []
+  ): TodoItemTagsConnection!
+}
+
+input SubTaskFilter {
+  and: [SubTaskFilter!]
+  or: [SubTaskFilter!]
+  id: CustomIDScalarFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  todoItemId: CustomIDScalarFilterComparison
+}
+
+input SubTaskSort {
+  field: SubTaskSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum SubTaskSortFields {
+  id
+  title
+  description
+  completed
+  created
+  updated
+  todoItemId
+}
+
+input TagFilter {
+  and: [TagFilter!]
+  or: [TagFilter!]
+  id: CustomIDScalarFilterComparison
+  name: StringFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+}
+
+input TagSort {
+  field: TagSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum TagSortFields {
+  id
+  name
+  created
+  updated
+}
+
+type SubTask {
+  id: CustomID!
+  title: String!
+  description: String
+  completed: Boolean!
+  created: DateTime!
+  updated: DateTime!
+  todoItemId: CustomID!
+  todoItem: TodoItem!
+}
+
+type DeleteManyResponse {
+  """The number of records deleted."""
+  deletedCount: Int!
+}
+
+type SubTaskDeleteResponse {
+  id: CustomID
+  title: String
+  description: String
+  completed: Boolean
+  created: DateTime
+  updated: DateTime
+  todoItemId: CustomID
+}
+
+type UpdateManyResponse {
+  """The number of records updated."""
+  updatedCount: Int!
+}
+
+type SubTaskEdge {
+  """The node containing the SubTask"""
+  node: SubTask!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type PageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
+
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
+}
+
+type SubTaskConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [SubTaskEdge!]!
+}
+
+type TagDeleteResponse {
+  id: CustomID
+  name: String
+  created: DateTime
+  updated: DateTime
+}
+
+type TagEdge {
+  """The node containing the Tag"""
+  node: Tag!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type TagConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TagEdge!]!
+}
+
+type TodoItemEdge {
+  """The node containing the TodoItem"""
+  node: TodoItem!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type TagTodoItemsConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TodoItemEdge!]!
+}
+
+type TodoItemDeleteResponse {
+  id: CustomID
+  title: String
+  description: String
+  completed: Boolean
+}
+
+type TodoItemConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TodoItemEdge!]!
+}
+
+type TodoItemTagsConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TagEdge!]!
+}
+
+type TodoItemSubTasksConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [SubTaskEdge!]!
+}
+
+"""Global ID custom scalar type"""
+scalar CustomID
+
+type Query {
+  subTask(
+    """The id of the record to find."""
+    id: CustomID!
+  ): SubTask!
+  subTasks(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: SubTaskFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [SubTaskSort!]! = []
+  ): SubTaskConnection!
+  todoItem(
+    """The id of the record to find."""
+    id: CustomID!
+  ): TodoItem!
+  todoItems(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: TodoItemFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoItemSort!]! = []
+  ): TodoItemConnection!
+  tag(
+    """The id of the record to find."""
+    id: CustomID!
+  ): Tag!
+  tags(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: TagFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TagSort!]! = []
+  ): TagConnection!
+}
+
+type Mutation {
+  setTodoItemOnSubTask(input: SetTodoItemOnSubTaskInput!): SubTask!
+  createOneSubTask(input: CreateOneSubTaskInput!): SubTask!
+  createManySubTasks(input: CreateManySubTasksInput!): [SubTask!]!
+  updateOneSubTask(input: UpdateOneSubTaskInput!): SubTask!
+  updateManySubTasks(input: UpdateManySubTasksInput!): UpdateManyResponse!
+  deleteOneSubTask(input: DeleteOneSubTaskInput!): SubTaskDeleteResponse!
+  deleteManySubTasks(input: DeleteManySubTasksInput!): DeleteManyResponse!
+  addSubTasksToTodoItem(input: AddSubTasksToTodoItemInput!): TodoItem!
+  setSubTasksOnTodoItem(input: SetSubTasksOnTodoItemInput!): TodoItem!
+  addTagsToTodoItem(input: AddTagsToTodoItemInput!): TodoItem!
+  setTagsOnTodoItem(input: SetTagsOnTodoItemInput!): TodoItem!
+  removeTagsFromTodoItem(input: RemoveTagsFromTodoItemInput!): TodoItem!
+  createOneTodoItem(input: CreateOneTodoItemInput!): TodoItem!
+  createManyTodoItems(input: CreateManyTodoItemsInput!): [TodoItem!]!
+  updateOneTodoItem(input: UpdateOneTodoItemInput!): TodoItem!
+  updateManyTodoItems(input: UpdateManyTodoItemsInput!): UpdateManyResponse!
+  deleteOneTodoItem(input: DeleteOneTodoItemInput!): TodoItemDeleteResponse!
+  deleteManyTodoItems(input: DeleteManyTodoItemsInput!): DeleteManyResponse!
+  addTodoItemsToTag(input: AddTodoItemsToTagInput!): Tag!
+  setTodoItemsOnTag(input: SetTodoItemsOnTagInput!): Tag!
+  removeTodoItemsFromTag(input: RemoveTodoItemsFromTagInput!): Tag!
+  createOneTag(input: CreateOneTagInput!): Tag!
+  createManyTags(input: CreateManyTagsInput!): [Tag!]!
+  updateOneTag(input: UpdateOneTagInput!): Tag!
+  updateManyTags(input: UpdateManyTagsInput!): UpdateManyResponse!
+  deleteOneTag(input: DeleteOneTagInput!): TagDeleteResponse!
+  deleteManyTags(input: DeleteManyTagsInput!): DeleteManyResponse!
+}
+
+input SetTodoItemOnSubTaskInput {
+  """The id of the record."""
+  id: CustomID!
+
+  """The id of relation."""
+  relationId: CustomID!
+}
+
+input CreateOneSubTaskInput {
+  """The record to create"""
+  subTask: SubTaskInput!
+}
+
+input SubTaskInput {
+  title: String!
+  description: String
+  completed: Boolean!
+  todoItemId: CustomID!
+}
+
+input CreateManySubTasksInput {
+  """Array of records to create"""
+  subTasks: [SubTaskInput!]!
+}
+
+input UpdateOneSubTaskInput {
+  """The id of the record to update"""
+  id: CustomID!
+
+  """The update to apply."""
+  update: SubTaskUpdate!
+}
+
+input SubTaskUpdate {
+  title: String!
+  description: String
+  completed: Boolean
+  todoItemId: CustomID
+}
+
+input UpdateManySubTasksInput {
+  """Filter used to find fields to update"""
+  filter: SubTaskUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: SubTaskUpdate!
+}
+
+input SubTaskUpdateFilter {
+  and: [SubTaskUpdateFilter!]
+  or: [SubTaskUpdateFilter!]
+  id: CustomIDScalarFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  todoItemId: CustomIDScalarFilterComparison
+}
+
+input DeleteOneSubTaskInput {
+  """The id of the record to delete."""
+  id: CustomID!
+}
+
+input DeleteManySubTasksInput {
+  """Filter to find records to delete"""
+  filter: SubTaskDeleteFilter!
+}
+
+input SubTaskDeleteFilter {
+  and: [SubTaskDeleteFilter!]
+  or: [SubTaskDeleteFilter!]
+  id: CustomIDScalarFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  todoItemId: CustomIDScalarFilterComparison
+}
+
+input AddSubTasksToTodoItemInput {
+  """The id of the record."""
+  id: CustomID!
+
+  """The ids of the relations."""
+  relationIds: [CustomID!]!
+}
+
+input SetSubTasksOnTodoItemInput {
+  """The id of the record."""
+  id: CustomID!
+
+  """The ids of the relations."""
+  relationIds: [CustomID!]!
+}
+
+input AddTagsToTodoItemInput {
+  """The id of the record."""
+  id: CustomID!
+
+  """The ids of the relations."""
+  relationIds: [CustomID!]!
+}
+
+input SetTagsOnTodoItemInput {
+  """The id of the record."""
+  id: CustomID!
+
+  """The ids of the relations."""
+  relationIds: [CustomID!]!
+}
+
+input RemoveTagsFromTodoItemInput {
+  """The id of the record."""
+  id: CustomID!
+
+  """The ids of the relations."""
+  relationIds: [CustomID!]!
+}
+
+input CreateOneTodoItemInput {
+  """The record to create"""
+  todoItem: TodoItemInput!
+}
+
+input TodoItemInput {
+  title: String!
+  completed: Boolean!
+}
+
+input CreateManyTodoItemsInput {
+  """Array of records to create"""
+  todoItems: [TodoItemInput!]!
+}
+
+input UpdateOneTodoItemInput {
+  """The id of the record to update"""
+  id: CustomID!
+
+  """The update to apply."""
+  update: TodoItemUpdate!
+}
+
+input TodoItemUpdate {
+  title: String
+  completed: Boolean
+}
+
+input UpdateManyTodoItemsInput {
+  """Filter used to find fields to update"""
+  filter: TodoItemUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: TodoItemUpdate!
+}
+
+input TodoItemUpdateFilter {
+  and: [TodoItemUpdateFilter!]
+  or: [TodoItemUpdateFilter!]
+  id: CustomIDScalarFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+}
+
+input DeleteOneTodoItemInput {
+  """The id of the record to delete."""
+  id: CustomID!
+}
+
+input DeleteManyTodoItemsInput {
+  """Filter to find records to delete"""
+  filter: TodoItemDeleteFilter!
+}
+
+input TodoItemDeleteFilter {
+  and: [TodoItemDeleteFilter!]
+  or: [TodoItemDeleteFilter!]
+  id: CustomIDScalarFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+}
+
+input AddTodoItemsToTagInput {
+  """The id of the record."""
+  id: CustomID!
+
+  """The ids of the relations."""
+  relationIds: [CustomID!]!
+}
+
+input SetTodoItemsOnTagInput {
+  """The id of the record."""
+  id: CustomID!
+
+  """The ids of the relations."""
+  relationIds: [CustomID!]!
+}
+
+input RemoveTodoItemsFromTagInput {
+  """The id of the record."""
+  id: CustomID!
+
+  """The ids of the relations."""
+  relationIds: [CustomID!]!
+}
+
+input CreateOneTagInput {
+  """The record to create"""
+  tag: TagInput!
+}
+
+input TagInput {
+  name: String!
+}
+
+input CreateManyTagsInput {
+  """Array of records to create"""
+  tags: [TagInput!]!
+}
+
+input UpdateOneTagInput {
+  """The id of the record to update"""
+  id: CustomID!
+
+  """The update to apply."""
+  update: TagInput!
+}
+
+input UpdateManyTagsInput {
+  """Filter used to find fields to update"""
+  filter: TagUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: TagInput!
+}
+
+input TagUpdateFilter {
+  and: [TagUpdateFilter!]
+  or: [TagUpdateFilter!]
+  id: CustomIDScalarFilterComparison
+  name: StringFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+}
+
+input DeleteOneTagInput {
+  """The id of the record to delete."""
+  id: CustomID!
+}
+
+input DeleteManyTagsInput {
+  """Filter to find records to delete"""
+  filter: TagDeleteFilter!
+}
+
+input TagDeleteFilter {
+  and: [TagDeleteFilter!]
+  or: [TagDeleteFilter!]
+  id: CustomIDScalarFilterComparison
+  name: StringFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+}

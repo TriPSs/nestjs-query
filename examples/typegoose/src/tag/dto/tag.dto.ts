@@ -24,7 +24,7 @@ import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 @ObjectType('Tag')
 @KeySet(['id'])
 @QueryOptions({ enableTotalCount: true })
-@CursorConnection('todoItems', () => TodoItemDTO, { disableUpdate: true, disableRemove: true })
+@CursorConnection('todoItems', () => TodoItemDTO)
 @BeforeCreateOne((input: CreateOneInputType<TagDTO>, context: GqlContext) => {
   input.input.createdBy = getUserName(context)
   return input

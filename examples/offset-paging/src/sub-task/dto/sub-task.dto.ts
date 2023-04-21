@@ -5,7 +5,9 @@ import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 
 @ObjectType('SubTask')
 @QueryOptions({ pagingStrategy: PagingStrategies.OFFSET, enableTotalCount: true })
-@Relation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@Relation('todoItem', () => TodoItemDTO, {
+  update: { enabled: true }
+})
 export class SubTaskDTO {
   @FilterableField(() => ID)
   id!: number

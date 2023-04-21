@@ -1,0 +1,27 @@
+---
+title: v2.x.x to v3.x.x
+---
+
+## Relation decorators
+
+In versions prior to `v3.0.0` the relation decorators had `disableRemove: true` and `disableUpdate: true` as default,
+from `v3.0.0` and onward this behavior will now be opt-in instead of opt-out.
+
+Also, support for NestJS 8 and TypeORM prior versions of `v0.3.15` has been dropped.
+
+### Old
+
+The old `@Relation` with update and remove disabled would look like this
+
+```ts
+@Relation('todoItem', () => TodoItem, {
+  disableUpdate: true,
+  disableRemove: true
+})
+```
+
+### New
+
+```ts
+@Relation('todoItem', () => TodoItem)
+```

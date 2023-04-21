@@ -3,8 +3,9 @@ import { Args, ArgsType, InputType, Resolver } from '@nestjs/graphql'
 import { Class, ModifyRelationOptions, QueryService } from '@ptc-org/nestjs-query-core'
 
 import { OperationGroup } from '../../auth'
-import { getDTONames } from '../../common'
-import { ModifyRelationAuthorizerFilter, ResolverMutation } from '../../decorators'
+import { getDTONames, mergeBaseResolverOpts } from '../../common'
+import { ModifyRelationAuthorizerFilter } from '../../decorators'
+import { ResolverRelationMutation } from '../../decorators/resolver-relation-mutation.decorator'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { MutationArgsType, RelationInputType, RelationsInputType } from '../../types'
 import { transformAndValidate } from '../helpers'
@@ -15,11 +16,11 @@ import { RelationsOpts, ResolverRelation } from './relations.interface'
 const UpdateOneRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    // TODO:: Next major version change this to be opt-in
-    if (relation.disableUpdate || relation.update?.disabled) {
+    if (!relation.update?.enabled) {
       return Base
     }
-    const commonResolverOpts = relation.update || removeRelationOpts(relation)
+
+    const commonResolverOpts = removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
     const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
@@ -33,12 +34,13 @@ const UpdateOneRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class UpdateOneMixin extends Base {
-      @ResolverMutation(
+      @ResolverRelationMutation(
         () => DTOClass,
         {
-          description: relation.update?.description
+          description: relation.update?.description,
+          complexity: relation.update?.complexity
         },
-        commonResolverOpts,
+        mergeBaseResolverOpts(relation.update, commonResolverOpts),
         {
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }
@@ -62,11 +64,11 @@ const UpdateOneRelationMixin =
 const UpdateManyRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    // TODO:: Next major version change this to be opt-in
-    if (relation.disableUpdate || relation.update?.disabled) {
+    if (!relation.update?.enabled) {
       return Base
     }
-    const commonResolverOpts = relation.update || removeRelationOpts(relation)
+
+    const commonResolverOpts = removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
     const { pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
@@ -86,12 +88,13 @@ const UpdateManyRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class UpdateManyMixin extends Base {
-      @ResolverMutation(
+      @ResolverRelationMutation(
         () => DTOClass,
         {
-          description: relation.update?.description
+          description: relation.update?.description,
+          complexity: relation.update?.complexity
         },
-        commonResolverOpts,
+        mergeBaseResolverOpts(relation.update, commonResolverOpts),
         {
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }
@@ -108,9 +111,16 @@ const UpdateManyRelationMixin =
         return this.service.addRelations(relationName, input.id, input.relationIds, modifyRelationsFilter)
       }
 
-      @ResolverMutation(() => DTOClass, {}, commonResolverOpts, {
-        interceptors: [AuthorizerInterceptor(DTOClass)]
-      })
+      @ResolverRelationMutation(
+        () => DTOClass,
+        {
+          complexity: relation.update?.complexity
+        },
+        mergeBaseResolverOpts(relation.update, commonResolverOpts),
+        {
+          interceptors: [AuthorizerInterceptor(DTOClass)]
+        }
+      )
       async [`set${pluralBaseName}On${dtoNames.baseName}`](
         @Args() addArgs: SetArgs,
         @ModifyRelationAuthorizerFilter(pluralBaseNameLower, {

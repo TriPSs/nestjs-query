@@ -6,8 +6,15 @@ import { TagDTO } from '../../tag/dto/tag.dto'
 
 @ObjectType('TodoItem')
 @QueryOptions({ enableTotalCount: true })
-@CursorConnection('subTasks', () => SubTaskDTO, { disableRemove: true, complexity: 5 })
-@CursorConnection('tags', () => TagDTO, { complexity: 10 })
+@CursorConnection('subTasks', () => SubTaskDTO, {
+  complexity: 5,
+  update: { enabled: true }
+})
+@CursorConnection('tags', () => TagDTO, {
+  complexity: 10,
+  update: { enabled: true },
+  remove: { enabled: true }
+})
 export class TodoItemDTO {
   @FilterableField(() => ID, { complexity: 1 })
   id!: number

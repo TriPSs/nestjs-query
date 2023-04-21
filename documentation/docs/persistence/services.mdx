@@ -702,7 +702,7 @@ import { FilterableField, IDField, Relation } from '@ptc-org/nestjs-query-graphq
 import { TodoItem } from '../todo-item/todo-item';
 
 @ObjectType()
-@Relation('todoItem', () => TodoItem, { disableRemove: true })
+@Relation('todoItem', () => TodoItem, { update: { enabled: true } })
 @Entity({ name: 'sub_task' })
 export class SubTask {
   @IDField(() => ID)
@@ -764,7 +764,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { TodoItem } from '../todo-item/entity/todo-item';
 
 @ObjectType()
-@Relation('todoItem', () => TodoItem, { disableRemove: true })
+@Relation('todoItem', () => TodoItem, { update: { enabled: true } })
 @Table
 export class SubTaskEntity extends Model<SubTaskEntity, Partial<SubTaskEntity>> {
   @IDField(() => ID)

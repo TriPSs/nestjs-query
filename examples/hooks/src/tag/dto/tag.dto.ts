@@ -15,7 +15,10 @@ import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 
 @ObjectType('Tag')
 @KeySet(['id'])
-@FilterableCursorConnection('todoItems', () => TodoItemDTO)
+@FilterableCursorConnection('todoItems', () => TodoItemDTO, {
+  update: { enabled: true },
+  remove: { enabled: true }
+})
 @BeforeCreateOne(CreatedByHook)
 @BeforeCreateMany(CreatedByHook)
 @BeforeUpdateOne(UpdatedByHook)

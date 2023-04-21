@@ -135,7 +135,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { TodoItemDTO } from '../todo-item/todo-item.dto.ts';
 
 @ObjectType('SubTask')
-@Relation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@Relation('todoItem', () => TodoItemDTO, { update: { enabled: true } })
 export class SubTaskDTO {
   @FilterableField(() => ID)
   id!: string;
@@ -163,10 +163,6 @@ The `@Relation` decorator lets `nestjs-query` know to expose the following endpo
 * `setTodoItemOnSubTask` - A `mutation` to set the `TodoItem` on a `SubTask`.
 * `removeTodoItemFromSubTask` - A `mutation` to remove a `TodoItem`/`SubTask` relation.
     * **NOTE** This does not typically remove either record just removes the relation.
-
-:::note
-In this example we `disableRemove`, because `todoItem` is not nullable, by specifying the `disableRemove` option.
-:::
 
 To set up the resolver you can use the `NestjsQueryGraphQLModule`.
 
@@ -216,7 +212,7 @@ input RelationInput {
 ```
 
 :::note
-If `disableRemove` was set to `false` or not specified a `removeTodoItemFromSubTask` mutation would also be exposed with the same arguments as `setTodoItemOnSubTask`.
+If `remove.enabled` was set to `true` a `removeTodoItemFromSubTask` mutation would also be exposed with the same arguments as `setTodoItemOnSubTask`.
 :::
 
 ## @FilterableRelation
@@ -239,7 +235,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { TodoItemDTO } from '../todo-item/todo-item.dto.ts';
 
 @ObjectType('SubTask')
-@FilterableRelation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@FilterableRelation('todoItem', () => TodoItemDTO)
 export class SubTaskDTO {
   @IDField(() => ID)
   id!: string;
@@ -310,7 +306,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
 
 @ObjectType('TodoItem')
-@UnPagedRelation('subTasks', () => SubTaskDTO, { disableRemove: true })
+@UnPagedRelation('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 export class TodoItemDTO {
   @IDField(() => ID)
   id!: string;
@@ -336,10 +332,6 @@ When specifying a many relation a couple of endpoints will automatically be gene
     * The `subTasks` property will accept a [query](../concepts/queries.mdx) to allow you to filter, and sort results.
     * The `subTasks` will be returned as an array of results.
 * `addSubTasksToTodoItem` - A `mutation` to add `SubTasks` to a `TodoItem`.
-
-:::note
-In this example we `disableRemove` because `SubTasks` cannot exist without a `TodoItem`.
-:::
 
 To set up the resolver you can use the `NestjsQueryGraphQLModule`.
 
@@ -391,7 +383,7 @@ input RelationsInput {
 ```
 
 :::note
-If `disableRemove` was set to `false` or not specified a `removeSubTasksFromTodoItem` mutation would also be exposed with the same arguments as `addSubTasksToTodoItem`.
+If `remove.enabled` was set to `true` a `removeSubTasksFromTodoItem` mutation would also be exposed with the same arguments as `addSubTasksToTodoItem`.
 :::
 
 ## @FilterableUnPagedRelation
@@ -416,7 +408,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
 
 @ObjectType('TodoItem')
-@FilterableUnPagedRelation('subTasks', () => SubTaskDTO, { disableRemove: true })
+@FilterableUnPagedRelation('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 export class TodoItemDTO {
   @IDField(() => ID)
   id!: string;
@@ -499,7 +491,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
 
 @ObjectType('TodoItem')
-@OffsetConnection('subTasks', () => SubTaskDTO, { disableRemove: true })
+@OffsetConnection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 export class TodoItemDTO {
   @IDField(() => ID)
   id!: string;
@@ -527,10 +519,6 @@ When specifying a `@OffsetConnection` relation a couple of endpoints will automa
     * The `subTasks` property will return a offset based [connection](./types.mdx#connectiontype) to page through
     results.
 * `addSubTasksToTodoItem` - A `mutation` to add `SubTasks` to a `TodoItem`.
-
-:::note
-In this example we `disableRemove` because `SubTasks` cannot exist without a `TodoItem`.
-:::
 
 To set up the resolver you can use the `NestjsQueryGraphQLModule`.
 
@@ -585,7 +573,7 @@ input RelationsInput {
 ```
 
 :::note
-If `disableRemove` was set to `false` or not specified a `removeSubTasksFromTodoItem` mutation would also be exposed with the same arguments as `addSubTasksToTodoItem`.
+If `remove.enabled` was set to `true` a `removeSubTasksFromTodoItem` mutation would also be exposed with the same arguments as `addSubTasksToTodoItem`.
 :::
 
 ### Total Count Example
@@ -605,7 +593,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
 
 @ObjectType('TodoItem')
-@OffsetConnection('subTasks', () => SubTaskDTO, { disableRemove: true, enableTotalCount: true })
+@OffsetConnection('subTasks', () => SubTaskDTO, { update: { enabled: true }, enableTotalCount: true })
 export class TodoItemDTO {
   @IDField(() => ID)
   id!: string;
@@ -674,7 +662,7 @@ import { SubTaskDTO } from '../sub-task/sub-task.dto'
 
 @ObjectType('TodoItem')
 @QueryOptions({ pagingStrategy: PagingStrategies.OFFSET })
-@FilterableOffsetConnection('subTasks', () => SubTaskDTO, { disableRemove: true })
+@FilterableOffsetConnection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 export class TodoItemDTO {
   @IDField(() => ID)
   id!: string;
@@ -756,7 +744,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
 
 @ObjectType('TodoItem')
-@CursorConnection('subTasks', () => SubTaskDTO, { disableRemove: true })
+@CursorConnection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 export class TodoItemDTO {
   @IDField(() => ID)
   id!: string;
@@ -785,10 +773,6 @@ following are generated.
     * The `subTasks` property will return a cursor based [connection](./types.mdx#connectiontype) to page through
     results.
 * `addSubTasksToTodoItem` - A `mutation` to add `SubTasks` to a `TodoItem`.
-
-:::note
-In this example we `disableRemove` because `SubTasks` cannot exist without a `TodoItem`.
-:::
 
 To set up the resolver you can use the `NestjsQueryGraphQLModule`.
 
@@ -843,7 +827,7 @@ input RelationsInput {
 ```
 
 :::note
-If `disableRemove` was set to `false` or not specified a `removeSubTasksFromTodoItem` mutation would also be exposed with the same arguments as `addSubTasksToTodoItem`.
+If `remove.enabled` was set to `true` a `removeSubTasksFromTodoItem` mutation would also be exposed with the same arguments as `addSubTasksToTodoItem`.
 :::
 
 ### Total Count Example
@@ -863,7 +847,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
 
 @ObjectType('TodoItem')
-@CursorConnection('subTasks', () => SubTaskDTO, { disableRemove: true, enableTotalCount: true })
+@CursorConnection('subTasks', () => SubTaskDTO, { update: { enabled: true }, enableTotalCount: true })
 export class TodoItemDTO {
   @IDField(() => ID)
   id!: string;
@@ -930,7 +914,7 @@ import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
 
 @ObjectType('TodoItem')
-@FilterableCursorConnection('subTasks', () => SubTaskDTO, { disableRemove: true })
+@FilterableCursorConnection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 export class TodoItemDTO {
   @IDField(() => ID)
   id!: string;
@@ -1019,8 +1003,16 @@ functionality.
 * `nullable` - Set to `true` if the relation is nullable.
 * `complexity` - Set to specify relation complexity. For more info see [complexity docs](https://docs.nestjs.com/graphql/complexity)
 * `disableRead` -  Set to `true` to disable read operations.
-* `disableUpdate` -  Set to `true` to disable update operations.
-* `disableRemove` -  Set to `true` to disable remove operations.
+* `update`
+    * `enabled` -  Set to `true` to enable update operations.
+    * `description` -  The description of the update operation.
+    * `complexity` - Set to specify relation complexity. For more info see [complexity docs](https://docs.nestjs.com/graphql/complexity)
+    * `decorators=[]` - An array of custom `PropertyDecorator` or `MethodDecorators` to add to the endpoint.
+* `remove`
+    * `enabled` -  Set to `true` to enable remove operations.
+    * `description` -  The description of the remove operation.
+    * `complexity` - Set to specify relation complexity. For more info see [complexity docs](https://docs.nestjs.com/graphql/complexity)
+    * `decorators=[]` - An array of custom `PropertyDecorator` or `MethodDecorators` to add to the endpoint.
 * `allowFiltering` - Set to `true` to allow filtering on the relation.
 * `guards=[]` - An array of [guards](https://docs.nestjs.com/guards) to add to `update` and `remove` endpoints.
 * `interceptors=[]` - An array of [interceptors](https://docs.nestjs.com/interceptors) to add to `update` and `remove` endpoints.
@@ -1199,9 +1191,9 @@ To disable the `filter` or `sorting` of relations you can set the `disableFilter
   </TabItem>
 </Tabs>
 
-### Disable Updates
+### Enable Updates
 
-To disable the `update` `mutations` you can set the `disableUpdate` option to `true`.
+To enable the `update` `mutations` you can set the `update.enabled` option to `true`.
 
 <Tabs
   defaultValue="relation"
@@ -1217,7 +1209,7 @@ To disable the `update` `mutations` you can set the `disableUpdate` option to `t
 
 ```ts
 // disable updates to the relation
-@Relation('todoItem', () => TodoItemDTO, { disableUpdate: true })
+@Relation('todoItem', () => TodoItemDTO, { update: { enabled: true } })
 ```
 
 </TabItem>
@@ -1225,7 +1217,7 @@ To disable the `update` `mutations` you can set the `disableUpdate` option to `t
 
 ```ts
 // disable updating subTasks
-@CursorConnection('subTasks', () => SubTaskDTO, { disableUpdate: true })
+@CursorConnection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 ```
 
 </TabItem>
@@ -1233,7 +1225,7 @@ To disable the `update` `mutations` you can set the `disableUpdate` option to `t
 
 ```ts
 // disable updating subTasks
-@OffsetConnection('subTasks', () => SubTaskDTO, { disableUpdate: true })
+@OffsetConnection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 ```
 
 </TabItem>
@@ -1241,15 +1233,15 @@ To disable the `update` `mutations` you can set the `disableUpdate` option to `t
 
 ```ts
 // disable updating subTasks
-@UnPagedRelation('subTasks', () => SubTaskDTO, { disableUpdate: true })
+@UnPagedRelation('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 ```
 
 </TabItem>
 </Tabs>
 
-### Disable Removes
+### Enable Removes
 
-To disable the `remove` `mutations` you can set the `disableRemove` option to `true`.
+To enable the `remove` `mutations` you can set the `remove.enabled` option to `true`.
 
 <Tabs
   defaultValue="relation"
@@ -1265,7 +1257,7 @@ To disable the `remove` `mutations` you can set the `disableRemove` option to `t
 
 ```ts
 // disable removing the relation
-@Relation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@Relation('todoItem', () => TodoItemDTO, { update: { enabled: true } })
 ```
 
 </TabItem>
@@ -1273,7 +1265,7 @@ To disable the `remove` `mutations` you can set the `disableRemove` option to `t
 
 ```ts
 // disable removing subTasks from the connection
-@CursorConnection('subTasks', () => SubTaskDTO, { disableRemove: true })
+@CursorConnection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 ```
 
 </TabItem>
@@ -1281,7 +1273,7 @@ To disable the `remove` `mutations` you can set the `disableRemove` option to `t
 
 ```ts
 // disable removing subTasks from the connection
-@OffsetConnection('subTasks', () => SubTaskDTO, { disableRemove: true })
+@OffsetConnection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 ```
 
 </TabItem>
@@ -1289,7 +1281,7 @@ To disable the `remove` `mutations` you can set the `disableRemove` option to `t
 
 ```ts
 // disable removing subTasks from the relations
-@UnPagedRelation('subTasks', () => SubTaskDTO, { disableRemove: true })
+@UnPagedRelation('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 ```
 
 </TabItem>

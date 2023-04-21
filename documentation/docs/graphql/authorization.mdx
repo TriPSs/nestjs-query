@@ -125,8 +125,8 @@ import { UserContext } from '../../auth/auth.interfaces';
 
 @ObjectType('TodoItem')
 @Authorize({ authorize: (context: UserContext) => ({ ownerId: { eq: context.req.user.id } }) })
-@FilterableRelation('owner', () => UserDTO, { disableRemove: true, disableUpdate: true })
-@FilterableConnection('subTasks', () => SubTaskDTO, { disableRemove: true })
+@FilterableRelation('owner', () => UserDTO)
+@FilterableConnection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 @FilterableConnection('tags', () => TagDTO)
 export class TodoItemDTO {
   @IDField(() => ID)
@@ -193,7 +193,7 @@ import { UserContext } from '../../auth/auth.interfaces';
 
 @ObjectType('SubTask')
 @Authorize({ authorize: (context: UserContext) => ({ ownerId: { eq: context.req.user.id } }) })
-@FilterableRelation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@FilterableRelation('todoItem', () => TodoItemDTO, { update: { enabled: true } })
 export class SubTaskDTO {
   @IDField(() => ID)
   id!: number;
@@ -237,7 +237,7 @@ For example you could define the subtasks with the `auth` option, only allowing 
 
 ```ts
 @FilterableConnection('subTasks', () => SubTaskDTO, {
-  disableRemove: true,
+  update: { enabled: true },
   auth: {
     authorize: (context: UserContext) => ({ ownerId: { eq: context.req.user.id }, completed: { is: true }}),
   },
@@ -292,8 +292,8 @@ import { SubTaskAuthorizer } from '../sub-task.authorizer';
 
 @ObjectType('SubTask')
 @Authorize(SubTaskAuthorizer)
-@FilterableRelation('owner', () => UserDTO, { disableRemove: true, disableUpdate: true })
-@FilterableRelation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@FilterableRelation('owner', () => UserDTO)
+@FilterableRelation('todoItem', () => TodoItemDTO, { update: { enabled: true } })
 export class SubTaskDTO {
   @IDField(() => ID)
   id!: number;
