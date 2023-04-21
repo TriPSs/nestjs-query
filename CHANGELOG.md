@@ -1,4 +1,24 @@
  
+# [3.0.0-alpha.0](https://github.com/TriPSs/nestjs-query/compare/v2.4.0...v3.0.0-alpha.0) (2023-04-21)
+
+
+### Bug Fixes
+
+* **graphql:** fix lint issues ([03548b3](https://github.com/TriPSs/nestjs-query/commit/03548b3cd060aac568406f84bd9939123005ebdd))
+
+
+### Features
+
+* Added multi hooks support ([1d15f2d](https://github.com/TriPSs/nestjs-query/commit/1d15f2d15751ffa85496aaafb6027bf14eff323f))
+* **query-graphql:** Implemented new `update` and `remove` for relations ([6241d48](https://github.com/TriPSs/nestjs-query/commit/6241d489d614521a0fd512dbe6344412465c34d5))
+
+
+### BREAKING CHANGES
+
+* **query-graphql:** `disableUpdate` and `disableRemove` are removed and default disabled.
+
+
+
 # [2.4.0](https://github.com/TriPSs/nestjs-query/compare/v2.3.1...v2.4.0) (2023-04-13)
 
 
