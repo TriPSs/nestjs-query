@@ -45,8 +45,7 @@
     "sequelize": "6.29.0",
     "sequelize-typescript": "2.1.5",
     "tslib": "^2.4.0",
-    "typeorm": "0.3.11",
-    "typeorm-seeding": "1.6.1"
+    "typeorm": "^0.3.15"
   },
   "devDependencies": {
     "@actions/core": "^1.10.0",

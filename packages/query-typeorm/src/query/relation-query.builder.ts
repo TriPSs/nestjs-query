@@ -598,6 +598,11 @@ export class RelationQueryBuilder<Entity, Relation> {
   }
 
   private buildAlias(...alias: string[]): string {
-    return DriverUtils.buildAlias(this.relationRepo.manager.connection.driver, this.relationMeta.fromAlias, ...alias)
+    alias.unshift(this.relationMeta.fromAlias)
+    const buildOptions = {
+      shorten: false,
+      joiner: '_'
+    }
+    return DriverUtils.buildAlias(this.relationRepo.manager.connection.driver, buildOptions, ...alias)
   }
 }
