@@ -4,10 +4,10 @@ exports[`None paging strategy QueryArgsType with manual options create a query f
 type Query {
   test(
     """Specify to filter the records returned."""
-    filter: TestQueryFilter = {}
+    filter: TestQueryFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestQuerySort!] = []
+    sorting: [TestQuerySort!]! = []
   ): String!
 }
 
@@ -223,10 +223,10 @@ exports[`None paging strategy QueryArgsType with manual options options allow ap
 type Query {
   test(
     """Specify to filter the records returned."""
-    filter: NoPagingQueryOptionsDTOFilter = {booleanField: {is: true}}
+    filter: NoPagingQueryOptionsDTOFilter! = {booleanField: {is: true}}
 
     """Specify to sort results."""
-    sorting: [NoPagingQueryOptionsDTOSort!] = [{field: booleanField, direction: DESC}]
+    sorting: [NoPagingQueryOptionsDTOSort!]! = [{field: booleanField, direction: DESC}]
   ): String!
 }
 
@@ -445,7 +445,7 @@ type Query {
     filter: TestFilterRequiredDtoFilter!
 
     """Specify to sort results."""
-    sorting: [TestFilterRequiredDtoSort!] = []
+    sorting: [TestFilterRequiredDtoSort!]! = []
   ): String!
 }
 

@@ -1,4 +1,4 @@
-import { Field, FieldOptions, ReturnTypeFunc } from '@nestjs/graphql'
+import { Field, FieldOptions, ReturnTypeFunc, ReturnTypeFuncValue } from '@nestjs/graphql'
 import { ArrayReflector, Class, FilterComparisonOperators, getPrototypeChain } from '@ptc-org/nestjs-query-core'
 
 import { FILTERABLE_FIELD_KEY } from './constants'
@@ -13,7 +13,7 @@ export type FilterableFieldOptions = {
 export interface FilterableFieldDescriptor {
   propertyName: string
   target: Class<unknown>
-  returnTypeFunc?: ReturnTypeFunc
+  returnTypeFunc?: ReturnTypeFunc<ReturnTypeFuncValue>
   advancedOptions?: FilterableFieldOptions
 }
 

@@ -6,10 +6,10 @@ type TestResolverDTO {
   stringField: String!
   relations(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: CursorPaging! = {first: 10}
 
     """Specify to sort results."""
-    sorting: [TestRelationDTOSort!] = []
+    sorting: [TestRelationDTOSort!]! = []
   ): TestResolverDTORelationsConnection!
 }
 

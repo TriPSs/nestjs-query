@@ -60,13 +60,13 @@ type OffsetQueryOptionsDTO {
 type Query {
   test(
     """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
+    paging: OffsetPaging! = {limit: 10}
 
     """Specify to filter the records returned."""
-    filter: TestQueryFilter = {}
+    filter: TestQueryFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestQuerySort!] = []
+    sorting: [TestQuerySort!]! = []
   ): String!
 }
 
@@ -340,13 +340,13 @@ type OffsetQueryOptionsDTO {
 type Query {
   test(
     """Limit or page results."""
-    paging: OffsetPaging = {limit: 2}
+    paging: OffsetPaging! = {limit: 2}
 
     """Specify to filter the records returned."""
-    filter: OffsetQueryOptionsDTOFilter = {booleanField: {is: true}}
+    filter: OffsetQueryOptionsDTOFilter! = {booleanField: {is: true}}
 
     """Specify to sort results."""
-    sorting: [OffsetQueryOptionsDTOSort!] = [{field: booleanField, direction: DESC}]
+    sorting: [OffsetQueryOptionsDTOSort!]! = [{field: booleanField, direction: DESC}]
   ): String!
 }
 
@@ -620,13 +620,13 @@ type OffsetQueryOptionsDTO {
 type Query {
   test(
     """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
+    paging: OffsetPaging! = {limit: 10}
 
     """Specify to filter the records returned."""
     filter: TestFilterRequiredDtoFilter!
 
     """Specify to sort results."""
-    sorting: [TestFilterRequiredDtoSort!] = []
+    sorting: [TestFilterRequiredDtoSort!]! = []
   ): String!
 }
 

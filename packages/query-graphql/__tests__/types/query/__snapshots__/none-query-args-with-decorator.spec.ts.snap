@@ -4,10 +4,10 @@ exports[`QueryArgsType with decorator options no paging query args options allow
 type Query {
   test(
     """Specify to filter the records returned."""
-    filter: NoPagingQueryOptionsDTOFilter = {booleanField: {is: true}}
+    filter: NoPagingQueryOptionsDTOFilter! = {booleanField: {is: true}}
 
     """Specify to sort results."""
-    sorting: [NoPagingQueryOptionsDTOSort!] = [{field: booleanField, direction: DESC}]
+    sorting: [NoPagingQueryOptionsDTOSort!]! = [{field: booleanField, direction: DESC}]
   ): String!
 }
 

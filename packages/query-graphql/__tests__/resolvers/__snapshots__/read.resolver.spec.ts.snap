@@ -50,13 +50,13 @@ type OffsetPageInfo {
 type Query {
   testResolverDTOS(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: CursorPaging! = {first: 10}
 
     """Specify to filter the records returned."""
-    filter: TestResolverDTOFilter = {}
+    filter: TestResolverDTOFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestResolverDTOSort!] = []
+    sorting: [TestResolverDTOSort!]! = []
   ): TestResolverDTOConnection!
   test: TestResolverDTO!
 }
@@ -196,13 +196,13 @@ type Query {
     other: String!
 
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: CursorPaging! = {first: 10}
 
     """Specify to filter the records returned."""
-    filter: TestResolverDTOFilter = {}
+    filter: TestResolverDTOFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestResolverDTOSort!] = []
+    sorting: [TestResolverDTOSort!]! = []
   ): TestResolverDTOConnection!
   test: TestResolverDTO!
 }
@@ -388,13 +388,13 @@ type Query {
   ): TestResolverDTO!
   testResolverDTOS(
     """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
+    paging: OffsetPaging! = {limit: 10}
 
     """Specify to filter the records returned."""
-    filter: TestResolverDTOFilter = {}
+    filter: TestResolverDTOFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestResolverDTOSort!] = []
+    sorting: [TestResolverDTOSort!]! = []
   ): TestResolverDTOConnection!
   test: TestResolverDTO!
 }
@@ -526,13 +526,13 @@ type Query {
   ): TestResolverDTO!
   testResolverDTOS(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: CursorPaging! = {first: 10}
 
     """Specify to filter the records returned."""
-    filter: TestResolverDTOFilter = {}
+    filter: TestResolverDTOFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestResolverDTOSort!] = []
+    sorting: [TestResolverDTOSort!]! = []
   ): TestResolverDTOConnection!
   test: TestResolverDTO!
 }
@@ -670,13 +670,13 @@ type Query {
   ): TestResolverDTO!
   testResolverDTOS(
     """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
+    paging: OffsetPaging! = {limit: 10}
 
     """Specify to filter the records returned."""
-    filter: TestResolverDTOFilter = {}
+    filter: TestResolverDTOFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestResolverDTOSort!] = []
+    sorting: [TestResolverDTOSort!]! = []
   ): TestResolverDTOConnection!
   test: TestResolverDTO!
 }
@@ -808,13 +808,13 @@ type Query {
   ): TestResolverDTO!
   testResolverDTOS(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: CursorPaging! = {first: 10}
 
     """Specify to filter the records returned."""
-    filter: TestResolverDTOFilter = {}
+    filter: TestResolverDTOFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestResolverDTOSort!] = []
+    sorting: [TestResolverDTOSort!]! = []
   ): TestResolverDTOConnection!
   test: TestResolverDTO!
 }
@@ -952,13 +952,13 @@ type Query {
   ): TestResolverDTO!
   testResolverDTOS(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: CursorPaging! = {first: 10}
 
     """Specify to filter the records returned."""
-    filter: TestResolverDTOFilter = {}
+    filter: TestResolverDTOFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestResolverDTOSort!] = []
+    sorting: [TestResolverDTOSort!]! = []
   ): TestResolverDTOConnection!
   test: TestResolverDTO!
 }
@@ -1096,13 +1096,13 @@ type Query {
   ): TestResolverDTO!
   testResolverDTOS(
     """Limit or page results."""
-    paging: OffsetPaging = {limit: 10}
+    paging: OffsetPaging! = {limit: 10}
 
     """Specify to filter the records returned."""
-    filter: TestResolverDTOFilter = {}
+    filter: TestResolverDTOFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestResolverDTOSort!] = []
+    sorting: [TestResolverDTOSort!]! = []
   ): TestResolverDTOConnection!
   test: TestResolverDTO!
 }
@@ -1275,13 +1275,13 @@ type Query {
   test: TestResolverDTO!
   tests(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: CursorPaging! = {first: 10}
 
     """Specify to filter the records returned."""
-    filter: TestResolverDTOFilter = {}
+    filter: TestResolverDTOFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestResolverDTOSort!] = []
+    sorting: [TestResolverDTOSort!]! = []
   ): TestConnection!
 }
 
@@ -1418,13 +1418,13 @@ type Query {
   ): TestResolverDTO!
   read_many_test(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: CursorPaging! = {first: 10}
 
     """Specify to filter the records returned."""
-    filter: TestResolverDTOFilter = {}
+    filter: TestResolverDTOFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestResolverDTOSort!] = []
+    sorting: [TestResolverDTOSort!]! = []
   ): TestResolverDTOConnection!
   test: TestResolverDTO!
 }
@@ -1562,13 +1562,13 @@ type Query {
   ): TestResolverDTO!
   testResolverDTOS(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: CursorPaging! = {first: 10}
 
     """Specify to filter the records returned."""
-    filter: TestResolverDTOFilter = {}
+    filter: TestResolverDTOFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestResolverDTOSort!] = []
+    sorting: [TestResolverDTOSort!]! = []
   ): TestResolverDTOConnection!
   test: TestResolverDTO!
 }
