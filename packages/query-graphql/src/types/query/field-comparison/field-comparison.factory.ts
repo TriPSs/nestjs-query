@@ -79,7 +79,7 @@ type FilterComparisonOptions<T> = {
   FieldType: Class<T>
   fieldName: string
   allowedComparisons?: FilterComparisonOperators<T>[]
-  returnTypeFunc?: ReturnTypeFunc<ReturnTypeFuncValue>
+  returnTypeFunc?: ReturnTypeFunc
 }
 
 /** @internal */
