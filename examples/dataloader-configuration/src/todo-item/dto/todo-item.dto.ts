@@ -1,0 +1,37 @@
+import { GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql'
+import { FilterableField, UnPagedRelation } from '@ptc-org/nestjs-query-graphql'
+
+import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'
+import { TagDTO } from '../../tag/dto/tag.dto'
+
+@ObjectType('TodoItem')
+@UnPagedRelation('subTasks', () => SubTaskDTO, {
+  update: { enabled: true }
+})
+@UnPagedRelation('tags', () => TagDTO, {
+  update: { enabled: true },
+  remove: { enabled: true }
+})
+export class TodoItemDTO {
+  @FilterableField(() => ID)
+  id!: number
+
+  @FilterableField()
+  title!: string
+
+  @FilterableField({ nullable: true })
+  description?: string
+
+  @FilterableField({
+    name: 'isCompleted'
+  })
+  completed!: boolean
+
+  @FilterableField(() => GraphQLISODateTime, { filterOnly: true })
+  created!: Date
+
+  @FilterableField(() => GraphQLISODateTime, { filterOnly: true })
+  updated!: Date
+
+  subTasks!: SubTaskDTO[]
+}
