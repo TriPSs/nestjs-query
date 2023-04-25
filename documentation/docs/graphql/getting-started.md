@@ -12,6 +12,7 @@ The `@ptc-org/nestjs-query-graphql` package provided base `Resolvers` and graphq
 
 * [DTOs](./dtos.mdx) - Documentation about the use of DTOs and associated annotations.
 * [Resolvers](./resolvers.mdx) - Documentation about crud resolvers and their usage.
+* [Dataloaders](./dataloaders.mdx) - Documentation about configuring the generated dataloaders.
 * [Queries](./queries.mdx) - Documentation about the provided graphql query endpoints.
 * [Mutations](./mutations.mdx) -  Documentation about the provided graphql mutation endpoints.
 * [Hooks](./hooks.mdx) -  Documentation about hooks (e.g before create one).
