@@ -1,4 +1,8 @@
  
+# [3.0.0-alpha.1](https://github.com/TriPSs/nestjs-query/compare/v3.0.0-alpha.0...v3.0.0-alpha.1) (2023-04-21)
+
+
+
 # [3.0.0-alpha.0](https://github.com/TriPSs/nestjs-query/compare/v2.4.0...v3.0.0-alpha.0) (2023-04-21)
 
 
