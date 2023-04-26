@@ -25,3 +25,18 @@ The old `@Relation` with update and remove disabled would look like this
 ```ts
 @Relation('todoItem', () => TodoItem)
 ```
+
+To enable it again:
+
+```ts
+@Relation('todoItem', () => TodoItem, {
+  update: {
+    enabled: true,
+    // other options now available like: description, decorators etc
+  },
+  remove: {
+    enabled: true,
+    // other options now available like: description, decorators etc
+  }
+})
+```
