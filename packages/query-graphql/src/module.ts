@@ -34,7 +34,7 @@ export interface NestjsQueryGraphqlModuleFeatureOpts {
 @Module({})
 export class NestjsQueryGraphQLCoreModule {
   public static forRoot(opts: NestjsQueryGraphqlModuleRootOpts): DynamicModule {
-    const providers = [{ provide: dataLoaderOptionsToken(), useValue: opts.dataLoader ?? {} }]
+    const providers = [{ provide: dataLoaderOptionsToken, useValue: opts.dataLoader ?? {} }]
 
     return {
       module: NestjsQueryGraphQLCoreModule,
