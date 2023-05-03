@@ -85,6 +85,7 @@ export class RelationQueryBuilder<Entity, Relation> {
   }
 
   public select(entity: Entity, query: Query<Relation>): SelectQueryBuilder<Relation> {
+    const tableColumns = this.relationRepo.metadata.columns;
     const hasRelations = this.filterQueryBuilder.filterHasRelations(query.filter)
 
     let relationBuilder = this.createRelationQueryBuilder(entity)
@@ -95,7 +96,7 @@ export class RelationQueryBuilder<Entity, Relation> {
         )
       : relationBuilder
 
-    relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, query.filter, relationBuilder.alias)
+    relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, tableColumns, query.filter, relationBuilder.alias)
     relationBuilder = this.filterQueryBuilder.applyPaging(relationBuilder, query.paging)
 
     return this.filterQueryBuilder.applySorting(relationBuilder, query.sorting, relationBuilder.alias)
@@ -179,9 +180,10 @@ export class RelationQueryBuilder<Entity, Relation> {
     query: Query<Relation>,
     aggregateQuery: AggregateQuery<Relation>
   ): SelectQueryBuilder<Relation> {
+    const tableColumns = this.relationRepo.metadata.columns;
     let relationBuilder = this.createRelationQueryBuilder(entity)
     relationBuilder = this.filterQueryBuilder.applyAggregate(relationBuilder, aggregateQuery, relationBuilder.alias)
-    relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, query.filter, relationBuilder.alias)
+    relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, tableColumns, query.filter, relationBuilder.alias)
     relationBuilder = this.filterQueryBuilder.applyAggregateSorting(
       relationBuilder,
       aggregateQuery.groupBy,

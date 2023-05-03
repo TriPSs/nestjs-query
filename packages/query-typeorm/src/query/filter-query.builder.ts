@@ -13,6 +13,7 @@ import { SoftDeleteQueryBuilder } from 'typeorm/query-builder/SoftDeleteQueryBui
 
 import { AggregateBuilder } from './aggregate.builder'
 import { WhereBuilder } from './where.builder'
+import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata'
 
 /**
  * @internal
@@ -71,12 +72,13 @@ export class FilterQueryBuilder<Entity> {
    */
   public select(query: Query<Entity>, repo?: Repository<Entity>): SelectQueryBuilder<Entity> {
     if(repo) this.repo = repo;
+    const tableColumns = this.repo.metadata.columns;
     const hasRelations = this.filterHasRelations(query.filter)
     let qb = this.createQueryBuilder()
     qb = hasRelations
       ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsRecursive(this.repo.metadata, query.filter))
       : qb
-    qb = this.applyFilter(qb, query.filter, qb.alias)
+    qb = this.applyFilter(qb, tableColumns, query.filter, qb.alias)
     qb = this.applySorting(qb, query.sorting, qb.alias)
     qb = this.applyPaging(qb, query.paging, hasRelations)
     return qb
@@ -84,12 +86,13 @@ export class FilterQueryBuilder<Entity> {
 
   public selectById(id: string | number | (string | number)[], query: Query<Entity>): SelectQueryBuilder<Entity> {
     const hasRelations = this.filterHasRelations(query.filter)
+    const tableColumns = this.repo.metadata.columns;
     let qb = this.createQueryBuilder()
     qb = hasRelations
       ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsRecursive(this.repo.metadata, query.filter))
       : qb
     qb = qb.andWhereInIds(Array.isArray(id) ? id : [id])
-    qb = this.applyFilter(qb, query.filter, qb.alias)
+    qb = this.applyFilter(qb, tableColumns, query.filter, qb.alias)
     qb = this.applySorting(qb, query.sorting, qb.alias)
     qb = this.applyPaging(qb, query.paging, hasRelations)
     return qb
@@ -97,12 +100,14 @@ export class FilterQueryBuilder<Entity> {
 
   public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>): SelectQueryBuilder<Entity> {
     const hasRelations = this.filterHasRelations(query.filter)
+    const tableColumns = this.repo.metadata.columns;
+
     let qb = this.createQueryBuilder()
     qb = hasRelations
       ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsRecursive(this.repo.metadata, query.filter))
       : qb
     qb = this.applyAggregate(qb, aggregate, qb.alias)
-    qb = this.applyFilter(qb, query.filter, qb.alias)
+    qb = this.applyFilter(qb, tableColumns, query.filter, qb.alias)
     qb = this.applyAggregateSorting(qb, aggregate.groupBy, qb.alias)
     qb = this.applyAggregateGroupBy(qb, aggregate.groupBy, qb.alias)
     return qb
@@ -114,7 +119,8 @@ export class FilterQueryBuilder<Entity> {
    * @param query - the query to apply.
    */
   public delete(query: Query<Entity>): DeleteQueryBuilder<Entity> {
-    return this.applyFilter(this.repo.createQueryBuilder().delete(), query.filter)
+    const tableColumns = this.repo.metadata.columns;
+    return this.applyFilter(this.repo.createQueryBuilder().delete(), tableColumns, query.filter)
   }
 
   /**
@@ -123,7 +129,8 @@ export class FilterQueryBuilder<Entity> {
    * @param query - the query to apply.
    */
   public softDelete(query: Query<Entity>): SoftDeleteQueryBuilder<Entity> {
-    return this.applyFilter(this.repo.createQueryBuilder().softDelete() as SoftDeleteQueryBuilder<Entity>, query.filter)
+    const tableColumns = this.repo.metadata.columns;
+    return this.applyFilter(this.repo.createQueryBuilder().softDelete() as SoftDeleteQueryBuilder<Entity>, tableColumns, query.filter)
   }
 
   /**
@@ -132,7 +139,8 @@ export class FilterQueryBuilder<Entity> {
    * @param query - the query to apply.
    */
   public update(query: Query<Entity>): UpdateQueryBuilder<Entity> {
-    const qb = this.applyFilter(this.repo.createQueryBuilder().update(), query.filter)
+    const tableColumns = this.repo.metadata.columns;
+    const qb = this.applyFilter(this.repo.createQueryBuilder().update(), tableColumns, query.filter)
     return this.applySorting(qb, query.sorting)
   }
 
@@ -172,11 +180,11 @@ export class FilterQueryBuilder<Entity> {
    * @param filter - the filter.
    * @param alias - optional alias to use to qualify an identifier
    */
-  public applyFilter<Where extends WhereExpressionBuilder>(qb: Where, filter?: Filter<Entity>, alias?: string): Where {
+  public applyFilter<Where extends WhereExpressionBuilder>(qb: Where, columns:ColumnMetadata[], filter?: Filter<Entity>, alias?: string): Where {
     if (!filter) {
       return qb
     }
-    return this.whereBuilder.build(qb, filter, this.getReferencedRelationsRecursive(this.repo.metadata, filter), alias)
+    return this.whereBuilder.build(qb, filter, this.getReferencedRelationsRecursive(this.repo.metadata, filter), columns, alias)
   }
 
   /**

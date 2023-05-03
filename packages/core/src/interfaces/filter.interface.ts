@@ -64,6 +64,10 @@ type FilterGrouping<T> = {
   or?: Filter<T>[]
 }
 
+type FreeTextFilter = {
+  freeTextQuery?:string;
+}
+
 /**
  * Filter for type T.
  *
@@ -112,4 +116,4 @@ type FilterGrouping<T> = {
  *
  * @typeparam T - the type of object to filter on.
  */
-export type Filter<T> = FilterGrouping<T> & FilterComparisons<T>
+export type Filter<T> = FilterGrouping<T> & FilterComparisons<T> & FreeTextFilter

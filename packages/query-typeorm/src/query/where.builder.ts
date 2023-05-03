@@ -5,6 +5,36 @@ import type { WhereExpressionBuilder } from 'typeorm'
 
 import { NestedRecord } from './filter-query.builder'
 import { EntityComparisonField, SQLComparisonBuilder } from './sql-comparison.builder'
+import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata'
+import { ColumnType } from 'typeorm/driver/types/ColumnTypes'
+
+const FreeTextColumnTypes = new Set<ColumnType>([
+  "tinytext",
+  "mediumtext",
+  "text",
+  "ntext",
+  "citext",
+  "longtext",
+  "shorttext",
+  "linestring",
+  "multilinestring",
+  "character varying",
+  "varying character",
+  "char varying",
+  "national varchar",
+  "character",
+  "native character",
+  "varchar",
+  "char",
+  "nchar",
+  "national char",
+  "varchar2",
+  "nvarchar2",
+  "alphanum",
+  "shorttext",
+  "string",
+  String,
+])
 
 /**
  * @internal
@@ -18,6 +48,7 @@ export class WhereBuilder<Entity> {
    * @param where - the `typeorm` WhereExpression
    * @param filter - the filter to build the WHERE clause from.
    * @param relationNames - the relations tree.
+   * @param columns - the entity columns definition.
    * @param alias - optional alias to use to qualify an identifier
    */
 
@@ -25,16 +56,34 @@ export class WhereBuilder<Entity> {
     where: Where,
     filter: Filter<Entity>,
     relationNames: NestedRecord,
-    alias?: string
+    columns:ColumnMetadata[],
+    alias?: string,
   ): Where {
-    const { and, or } = filter
+    const { and, or, freeTextQuery } = filter
+    if(freeTextQuery) {
+      this.filterFreeText(where, freeTextQuery, columns, relationNames, alias);
+    }
     if (and && and.length) {
-      this.filterAnd(where, and, relationNames, alias)
+      this.filterAnd(where, and, relationNames, columns, alias)
     }
     if (or && or.length) {
-      this.filterOr(where, or, relationNames, alias)
+      this.filterOr(where, or, relationNames, columns, alias)
     }
-    return this.filterFields(where, filter, relationNames, alias)
+    return this.filterFields(where, filter, columns, relationNames, alias)
+  }
+
+  private filterFreeText<Where extends WhereExpressionBuilder>(
+    where: Where,
+    freeTextQuery: string,
+    columns:ColumnMetadata[],
+    relationNames: NestedRecord,
+    alias?: string
+  ): Where {
+    const getFilter = (c:ColumnMetadata) => ({[c.isArray? 'containsLike' : 'iLike' ]:`%${freeTextQuery}%`}) as {iLike:string} | {containsLike:string};
+    const filterableColumns = columns.filter(c => FreeTextColumnTypes.has(c.type));
+    return where.andWhere(
+      new Brackets((qb) => filterableColumns.reduce((w, c) => qb.orWhere(this.createBrackets({[c.propertyName]: getFilter(c)} as Filter<Entity>, relationNames, columns, alias)), qb))
+    )
   }
 
   /**
@@ -49,10 +98,11 @@ export class WhereBuilder<Entity> {
     where: Where,
     filters: Filter<Entity>[],
     relationNames: NestedRecord,
+    columns:ColumnMetadata[],
     alias?: string
   ): Where {
     return where.andWhere(
-      new Brackets((qb) => filters.reduce((w, f) => qb.andWhere(this.createBrackets(f, relationNames, alias)), qb))
+      new Brackets((qb) => filters.reduce((w, f) => qb.andWhere(this.createBrackets(f, relationNames, columns, alias)), qb))
     )
   }
 
@@ -68,10 +118,12 @@ export class WhereBuilder<Entity> {
     where: Where,
     filter: Filter<Entity>[],
     relationNames: NestedRecord,
+    columns:ColumnMetadata[],
+
     alias?: string
   ): Where {
     return where.andWhere(
-      new Brackets((qb) => filter.reduce((w, f) => qb.orWhere(this.createBrackets(f, relationNames, alias)), qb))
+      new Brackets((qb) => filter.reduce((w, f) => qb.orWhere(this.createBrackets(f, relationNames, columns, alias)), qb))
     )
   }
 
@@ -85,8 +137,10 @@ export class WhereBuilder<Entity> {
    * @param relationNames - the relations tree.
    * @param alias - optional alias to use to qualify an identifier
    */
-  private createBrackets(filter: Filter<Entity>, relationNames: NestedRecord, alias?: string): Brackets {
-    return new Brackets((qb) => this.build(qb, filter, relationNames, alias))
+  private createBrackets(filter: Filter<Entity>, relationNames: NestedRecord,
+                         columns:ColumnMetadata[],
+                         alias?: string): Brackets {
+    return new Brackets((qb) => this.build(qb, filter, relationNames, columns, alias))
   }
 
   /**
@@ -99,15 +153,17 @@ export class WhereBuilder<Entity> {
   private filterFields<Where extends WhereExpressionBuilder>(
     where: Where,
     filter: Filter<Entity>,
+    columns:ColumnMetadata[],
     relationNames: NestedRecord,
     alias?: string
   ): Where {
     return Object.keys(filter).reduce((w, field) => {
-      if (field !== 'and' && field !== 'or') {
+      if (field !== 'and' && field !== 'or' && field !== 'freeTextQuery') {
         return this.withFilterComparison(
           where,
           field as keyof Entity,
           this.getField(filter, field as keyof Entity),
+          columns,
           relationNames,
           alias
         )
@@ -127,11 +183,12 @@ export class WhereBuilder<Entity> {
     where: Where,
     field: T,
     cmp: FilterFieldComparison<Entity[T]>,
+    columns:ColumnMetadata[],
     relationNames: NestedRecord,
     alias?: string
   ): Where {
     if (relationNames[field as string]) {
-      return this.withRelationFilter(where, field, cmp as Filter<Entity[T]>, relationNames[field as string])
+      return this.withRelationFilter(where, field, cmp as Filter<Entity[T]>, columns, relationNames[field as string])
     }
     return where.andWhere(
       new Brackets((qb) => {
@@ -148,12 +205,13 @@ export class WhereBuilder<Entity> {
     where: Where,
     field: T,
     cmp: Filter<Entity[T]>,
+    columns:ColumnMetadata[],
     relationNames: NestedRecord
   ): Where {
     return where.andWhere(
       new Brackets((qb) => {
         const relationWhere = new WhereBuilder<Entity[T]>()
-        return relationWhere.build(qb, cmp, relationNames, field as string)
+        return relationWhere.build(qb, cmp, relationNames, columns, field as string)
       })
     )
   }

@@ -15,6 +15,10 @@ const reflector = new MapReflector('nestjs-query:filter-type')
 
 export type FilterTypeOptions = {
   allowedBooleanExpressions?: ('and' | 'or')[]
+  /**
+   * Disable the free text query
+   */
+  disableFreeTextQuery?:boolean;
 }
 
 export type FilterableRelations = Record<string, Class<unknown>>
@@ -35,7 +39,7 @@ function getOrCreateFilterType<T>(
   filterableRelations: FilterableRelations = {}
 ): FilterConstructor<T> {
   return reflector.memoize(TClass, name, () => {
-    const { allowedBooleanExpressions }: FilterTypeOptions = getQueryOptions(TClass) ?? {}
+    const { allowedBooleanExpressions, disableFreeTextQuery }: FilterTypeOptions = getQueryOptions(TClass) ?? {}
     const fields = getFilterableFields(TClass)
 
     if (!fields.length) {
@@ -48,6 +52,10 @@ function getOrCreateFilterType<T>(
     @InputType(name)
     class GraphQLFilter {
       static hasRequiredFilters: boolean = hasRequiredFilters
+
+      @SkipIf(() => disableFreeTextQuery, Field(() => String, { nullable: true }))
+      @Type(() => String)
+      freeTextQuery?:string;
 
       @ValidateNested()
       @SkipIf(() => isNotAllowedComparison('and'), Field(() => [GraphQLFilter], { nullable: true }))
