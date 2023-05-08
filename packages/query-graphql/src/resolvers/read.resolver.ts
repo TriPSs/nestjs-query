@@ -1,6 +1,7 @@
 import { ArgsType, Resolver } from '@nestjs/graphql'
 import { Class, Filter, mergeQuery, QueryService } from '@rezonate/nestjs-query-core'
 import omit from 'lodash.omit'
+import Papa from 'papaparse';
 
 import { OperationGroup } from '../auth'
 import { getDTONames } from '../common'
@@ -36,6 +37,11 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
     query: QueryType<DTO, PagingStrategies>,
     authorizeFilter?: Filter<DTO>
   ): Promise<InferConnectionTypeFromStrategy<DTO, PS>>
+
+  queryManyToCSV(
+    query: QueryType<DTO, PagingStrategies>,
+    authorizeFilter?: Filter<DTO>
+  ):Promise<string>
 
   findById(id: FindOneArgsType, authorizeFilter?: Filter<DTO>): Promise<DTO | undefined>
 }
@@ -104,6 +110,25 @@ export const Readable =
           mergeQuery(query, { filter: authorizeFilter }),
           (filter) => this.service.count(filter)
         )
+      }
+
+      @ResolverQuery(
+        () => String,
+        { name: `${readManyQueryName}CSV`, description: opts?.many?.description },
+        commonResolverOpts,
+        { interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)] },
+        opts.many ?? {}
+      )
+      async queryManyToCSV(
+        @HookArgs() query: QA,
+        @AuthorizerFilter({
+          operationGroup: OperationGroup.READ,
+          many: true
+        })
+          authorizeFilter?: Filter<DTO>
+      ) {
+          const res = await this.service.query(query);
+          return Papa.unparse(res);
       }
     }
 

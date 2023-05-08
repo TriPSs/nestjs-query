@@ -1742,6 +1742,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@json2csv/formatters@npm:^6.1.3":
+  version: 6.1.3
+  resolution: "@json2csv/formatters@npm:6.1.3"
+  checksum: cec4956364f45220f9d109de5c1b193e970bd83e53ce1b912879b878ef93c3e60f63aa31de226e30e3a4d2f344ac895421153a3e4b136d774283134dd117e550
+  languageName: node
+  linkType: hard
+
 "@json2csv/plainjs@npm:^6.1.2":
   version: 6.1.2
   resolution: "@json2csv/plainjs@npm:6.1.2"
@@ -1750,6 +1757,17 @@ __metadata:
     "@streamparser/json": ^0.0.10
     lodash.get: ^4.4.2
   checksum: fa6ea262c14204cc4bb43530f5d1ff2cad790818de7a777c68979a1faa99d450074de5b37d9979d4c30169743e3c2a2c669670d6e2e20214d7cc0c50e5474333
+  languageName: node
+  linkType: hard
+
+"@json2csv/plainjs@npm:^6.1.3":
+  version: 6.1.3
+  resolution: "@json2csv/plainjs@npm:6.1.3"
+  dependencies:
+    "@json2csv/formatters": ^6.1.3
+    "@streamparser/json": ^0.0.12
+    lodash.get: ^4.4.2
+  checksum: 2d90b68958cf4390ec332f604b2e8ee87526125ddb4dafe965c0d68cd49d977ac360fade6ba9e4b993d529a4821ef066c5768e7433d3dc71fa996e86b69b7a66
   languageName: node
   linkType: hard
 
@@ -2842,6 +2860,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@streamparser/json@npm:^0.0.12":
+  version: 0.0.12
+  resolution: "@streamparser/json@npm:0.0.12"
+  checksum: 976975f0169253c6397240434ca8bb87c09be09597b949a8d473be009a6aac6469d5e0df8c8bc47b5a0a9e679ebb48d415f4bcef3169cb1707e45e9296211197
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:1":
   version: 1.1.2
   resolution: "@tootallnate/once@npm:1.1.2"
@@ -3270,6 +3295,15 @@ __metadata:
   version: 2.4.1
   resolution: "@types/normalize-package-data@npm:2.4.1"
   checksum: e87bccbf11f95035c89a132b52b79ce69a1e3652fe55962363063c9c0dae0fe2477ebc585e03a9652adc6f381d24ba5589cc5e51849df4ced3d3e004a7d40ed5
+  languageName: node
+  linkType: hard
+
+"@types/papaparse@npm:^5.3.7":
+  version: 5.3.7
+  resolution: "@types/papaparse@npm:5.3.7"
+  dependencies:
+    "@types/node": "*"
+  checksum: 5ffa6fc81c0f41cd18c9c015599b3690f2a19ee553dec85e92c17bd1ef4a045e0ba4973d8bd49aed9f83fcba3b0ec280ebbe0a0def66701c0b4860c691444694
   languageName: node
   linkType: hard
 
@@ -10028,7 +10062,7 @@ __metadata:
     "@commitlint/cli": 17.1.2
     "@commitlint/config-angular": 17.1.0
     "@jorgebodega/typeorm-seeding": 5.0.1
-    "@json2csv/plainjs": ^6.1.2
+    "@json2csv/plainjs": ^6.1.3
     "@nestjs/apollo": ^10.1.0
     "@nestjs/cli": 9.1.2
     "@nestjs/common": ^9.3.10
@@ -10052,12 +10086,14 @@ __metadata:
     "@types/graphql": 14.5.0
     "@types/graphql-fields": 1.3.4
     "@types/jest": 29.0.0
+    "@types/json2csv": ^5.0.3
     "@types/lodash.escaperegexp": 4.1.7
     "@types/lodash.filter": 4.6.7
     "@types/lodash.merge": 4.6.7
     "@types/lodash.omit": 4.5.7
     "@types/lodash.pick": 4.4.7
     "@types/node": 18.7.15
+    "@types/papaparse": ^5.3.7
     "@types/passport-jwt": 3.0.6
     "@types/passport-local": 1.0.34
     "@types/pluralize": 0.0.29
@@ -10095,6 +10131,7 @@ __metadata:
     jest-snapshot-serializer-raw: 1.2.0
     npm: ^9.6.2
     nx: 14.6.4
+    papaparse: ^5.4.1
     passport: 0.6.0
     passport-jwt: 4.0.0
     passport-local: 1.0.0
@@ -10842,6 +10879,13 @@ __metadata:
   bin:
     pacote: lib/bin.js
   checksum: 109388e873615cdad342f5dbd3639389c00aaac2c84b824dcb1a9460b4cf1c66264387b1d0200b1769abda7feca94165804d1308ca5e59904ae24d489d3bfb13
+  languageName: node
+  linkType: hard
+
+"papaparse@npm:^5.4.1":
+  version: 5.4.1
+  resolution: "papaparse@npm:5.4.1"
+  checksum: fc9e52f7158dca3517c229e3309065b1ab5da6c7194572fba4f31ff138bc43e3c91182cc40365cc828f97fe10d0aca416068fd731661058bea0f69ddb84a411a
   languageName: node
   linkType: hard
 
