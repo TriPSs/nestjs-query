@@ -5,8 +5,10 @@ import { Class, Filter, mergeQuery, QueryService, SelectRelation } from '@ptc-or
 import { OperationGroup } from '../../auth'
 import { getDTONames } from '../../common'
 import { GraphQLLookAheadRelations, RelationAuthorizerFilter, ResolverField } from '../../decorators'
+import { InjectDataLoaderConfig } from '../../decorators/inject-dataloader-config.decorator'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { CountRelationsLoader, DataLoaderFactory, FindRelationsLoader, QueryRelationsLoader } from '../../loader'
+import { DataLoaderOptions } from '../../pipes/inject-data-loader-config.pipe'
 import { QueryArgsType } from '../../types'
 import { transformAndValidate } from '../helpers'
 import { BaseServiceResolver, ServiceResolver } from '../resolver.interface'
@@ -48,15 +50,19 @@ const ReadOneRelationMixin =
         })
         authFilter?: Filter<Relation>,
         @GraphQLLookAheadRelations(DTOClass)
-        relations?: SelectRelation<Relation>[]
+        relations?: SelectRelation<Relation>[],
+        @InjectDataLoaderConfig()
+        dataLoaderConfig?: DataLoaderOptions
       ): Promise<Relation | undefined> {
         return DataLoaderFactory.getOrCreateLoader(
           context,
           loaderName,
-          findLoader.createLoader(this.service, {
-            withDeleted: relation.withDeleted,
-            lookedAhead: relation.enableLookAhead
-          })
+          () =>
+            findLoader.createLoader(this.service, {
+              withDeleted: relation.withDeleted,
+              lookedAhead: relation.enableLookAhead
+            }),
+          dataLoaderConfig
         ).load({
           dto,
           filter: authFilter,
@@ -114,19 +120,25 @@ const ReadManyRelationMixin =
         })
         relationFilter?: Filter<Relation>,
         @GraphQLLookAheadRelations(relationDTO)
-        relations?: SelectRelation<Relation>[]
+        relations?: SelectRelation<Relation>[],
+        @InjectDataLoaderConfig()
+        dataLoaderConfig?: DataLoaderOptions
       ): Promise<InstanceType<typeof CT>> {
         const relationQuery = await transformAndValidate(RelationQA, q)
         const relationLoader = DataLoaderFactory.getOrCreateLoader(
           context,
           relationLoaderName,
-          queryLoader.createLoader(this.service)
+          () => queryLoader.createLoader(this.service),
+          dataLoaderConfig
         )
+
         const relationCountLoader = DataLoaderFactory.getOrCreateLoader(
           context,
           countRelationLoaderName,
-          countLoader.createLoader(this.service)
+          () => countLoader.createLoader(this.service),
+          dataLoaderConfig
         )
+
         return CT.createFromPromise(
           (query) => relationLoader.load({ dto, query }),
           mergeQuery(relationQuery, { filter: relationFilter, relations }),

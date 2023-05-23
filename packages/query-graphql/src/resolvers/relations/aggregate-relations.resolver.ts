@@ -5,8 +5,10 @@ import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QuerySer
 import { OperationGroup } from '../../auth'
 import { getDTONames } from '../../common'
 import { AggregateQueryParam, RelationAuthorizerFilter, ResolverField } from '../../decorators'
+import { InjectDataLoaderConfig } from '../../decorators/inject-dataloader-config.decorator'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { AggregateRelationsLoader, DataLoaderFactory } from '../../loader'
+import { DataLoaderOptions } from '../../pipes/inject-data-loader-config.pipe'
 import { AggregateArgsType, AggregateResponseType } from '../../types'
 import { transformAndValidate } from '../helpers'
 import { BaseServiceResolver, ServiceResolver } from '../resolver.interface'
@@ -65,14 +67,18 @@ const AggregateRelationMixin =
           operationGroup: OperationGroup.AGGREGATE,
           many: true
         })
-        relationFilter?: Filter<Relation>
+        relationFilter?: Filter<Relation>,
+        @InjectDataLoaderConfig()
+        dataLoaderConfig?: DataLoaderOptions
       ): Promise<AggregateResponse<Relation>> {
         const qa = await transformAndValidate(RelationQA, q)
         const loader = DataLoaderFactory.getOrCreateLoader(
           context,
           aggregateRelationLoaderName,
-          aggregateLoader.createLoader(this.service)
+          () => aggregateLoader.createLoader(this.service),
+          dataLoaderConfig
         )
+
         return loader.load({
           dto,
           filter: mergeFilter(qa.filter ?? {}, relationFilter ?? {}),

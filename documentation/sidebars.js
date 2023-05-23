@@ -49,6 +49,7 @@ module.exports = {
       'graphql/getting-started',
       'graphql/dtos',
       'graphql/resolvers',
+      'graphql/dataloaders',
       'graphql/queries',
       'graphql/mutations',
       'graphql/paging',
