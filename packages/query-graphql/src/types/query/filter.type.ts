@@ -45,8 +45,8 @@ function getFilterableRelations(relations: Record<string, ResolverRelation<unkno
 }
 
 function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth: number): FilterConstructor<T> {
-  const suffix = Number.isFinite(depth) ? '' : 'Deep'
-  const $name = `${name}${suffix}`
+  const prefix = Number.isFinite(depth) ? '' : 'Deep'
+  const $name = `${prefix}${name}`
 
   return reflector.memoize(TClass, $name, () => {
     const { one = {}, many = {} } = getRelations(TClass)
