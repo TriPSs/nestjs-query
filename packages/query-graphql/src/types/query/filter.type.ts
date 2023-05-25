@@ -19,7 +19,7 @@ const internalCache = new Map<Class<unknown>, Map<string, FilterConstructor<unkn
 
 export type FilterTypeOptions = {
   allowedBooleanExpressions?: ('and' | 'or')[]
-  filterDepth?: number | 'infinite'
+  filterDepth?: number
 }
 
 export type FilterableRelations = Record<string, Class<unknown>>
@@ -108,7 +108,7 @@ function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth = 0): Fi
       Type(() => FC)(GraphQLFilter.prototype, propertyName)
     })
 
-    if (filterDepth === 'infinite' || depth <= filterDepth - 1) {
+    if (depth <= filterDepth - 1) {
       Object.keys(filterableRelations).forEach((field) => {
         const FieldType = filterableRelations[field]
         // if filterDepth is infinite, we don't want to
@@ -118,7 +118,7 @@ function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth = 0): Fi
         //      `UserFilter -> UserFilterPostFilter -> UserFilterPostFilterCategoryFilter`
         //      this would lead to an infinite loop, so we just use the base name
         //      `UserFilter -> PostFilter -> CategoryFilter`
-        const previousName = filterDepth === 'infinite' ? '' : name
+        const previousName = Number.isFinite(filterDepth) ? name : ''
 
         if (FieldType) {
           const FC = getOrCreateFilterType(FieldType, `${previousName}${getObjectTypeName(FieldType)}Filter`)
