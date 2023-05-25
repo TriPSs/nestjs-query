@@ -121,7 +121,7 @@ function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth = 0): Fi
         const previousName = Number.isFinite(filterDepth) ? name : ''
 
         if (FieldType) {
-          const FC = getOrCreateFilterType(FieldType, `${previousName}${getObjectTypeName(FieldType)}Filter`)
+          const FC = getOrCreateFilterType(FieldType, `${previousName}${getObjectTypeName(FieldType)}Filter`, depth + 1)
 
           ValidateNested()(GraphQLFilter.prototype, field)
           Field(() => FC, { nullable: true })(GraphQLFilter.prototype, field)
