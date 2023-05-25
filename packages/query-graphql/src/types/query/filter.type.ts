@@ -44,7 +44,7 @@ function getFilterableRelations(relations: Record<string, ResolverRelation<unkno
   return filterableRelations
 }
 
-function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth = 0): FilterConstructor<T> {
+function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth: number): FilterConstructor<T> {
   return reflector.memoize(TClass, name, () => {
     const { one = {}, many = {} } = getRelations(TClass)
 
@@ -135,7 +135,7 @@ function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth = 0): Fi
 }
 
 export function FilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}Filter`)
+  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}Filter`, 0)
 }
 
 export function DeleteFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
