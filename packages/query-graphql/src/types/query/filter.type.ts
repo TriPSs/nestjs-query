@@ -45,14 +45,14 @@ function getFilterableRelations(relations: Record<string, ResolverRelation<unkno
 }
 
 function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth: number): FilterConstructor<T> {
-  return reflector.memoize(TClass, name, () => {
+  const suffix = Number.isFinite(depth) ? '' : 'Deep'
+  const $name = `${name}${suffix}`
+
+  return reflector.memoize(TClass, $name, () => {
     const { one = {}, many = {} } = getRelations(TClass)
 
     const filterableRelations: FilterableRelations = { ...getFilterableRelations(one), ...getFilterableRelations(many) }
-    const filterOptions: FilterTypeOptions = getQueryOptions(TClass) ?? {}
-
-    const { allowedBooleanExpressions } = filterOptions
-    const { filterDepth = 1 } = filterOptions
+    const { allowedBooleanExpressions }: FilterTypeOptions = getQueryOptions(TClass) ?? {}
 
     const fields = getFilterableFields(TClass)
 
@@ -63,7 +63,7 @@ function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth: number)
     const hasRequiredFilters = fields.some((f) => f.advancedOptions?.filterRequired === true)
     const isNotAllowedComparison = (val: 'and' | 'or') => !isInAllowedList(allowedBooleanExpressions, val)
 
-    @InputType(name)
+    @InputType($name)
     class GraphQLFilter {
       static hasRequiredFilters: boolean = hasRequiredFilters
 
@@ -82,12 +82,12 @@ function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth: number)
     // otherwise add it to the cache early so we don't get into an infinite loop
     let TClassCache = internalCache.get(TClass)
 
-    if (TClassCache && TClassCache.has(name)) {
-      return TClassCache.get(name) as FilterConstructor<T>
+    if (TClassCache && TClassCache.has($name)) {
+      return TClassCache.get($name) as FilterConstructor<T>
     } else {
       TClassCache = TClassCache ?? new Map()
 
-      TClassCache.set(name, GraphQLFilter)
+      TClassCache.set($name, GraphQLFilter)
       internalCache.set(TClass, TClassCache)
     }
 
@@ -108,7 +108,7 @@ function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth: number)
       Type(() => FC)(GraphQLFilter.prototype, propertyName)
     })
 
-    if (depth <= filterDepth - 1) {
+    if (depth > 0) {
       Object.keys(filterableRelations).forEach((field) => {
         const FieldType = filterableRelations[field]
         // if filterDepth is infinite, we don't want to
@@ -118,10 +118,10 @@ function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth: number)
         //      `UserFilter -> UserFilterPostFilter -> UserFilterPostFilterCategoryFilter`
         //      this would lead to an infinite loop, so we just use the base name
         //      `UserFilter -> PostFilter -> CategoryFilter`
-        const previousName = Number.isFinite(filterDepth) ? name : ''
+        const previousName = Number.isFinite(depth) ? name : ''
 
         if (FieldType) {
-          const FC = getOrCreateFilterType(FieldType, `${previousName}${getObjectTypeName(FieldType)}Filter`, depth + 1)
+          const FC = getOrCreateFilterType(FieldType, `${previousName}${getObjectTypeName(FieldType)}Filter`, depth - 1)
 
           ValidateNested()(GraphQLFilter.prototype, field)
           Field(() => FC, { nullable: true })(GraphQLFilter.prototype, field)
@@ -135,21 +135,22 @@ function getOrCreateFilterType<T>(TClass: Class<T>, name: string, depth: number)
 }
 
 export function FilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}Filter`, 0)
+  const { filterDepth = 1 }: FilterTypeOptions = getQueryOptions(TClass) ?? {}
+  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}Filter`, filterDepth)
 }
 
 export function DeleteFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}DeleteFilter`, 1)
+  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}DeleteFilter`, 0)
 }
 
 export function UpdateFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}UpdateFilter`, 1)
+  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}UpdateFilter`, 0)
 }
 
 export function SubscriptionFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}SubscriptionFilter`, 1)
+  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}SubscriptionFilter`, 0)
 }
 
 export function AggregateFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}AggregateFilter`, 1)
+  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}AggregateFilter`, 0)
 }
