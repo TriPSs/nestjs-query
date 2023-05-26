@@ -50,9 +50,15 @@ module.exports = {
       'graphql/dtos',
       'graphql/resolvers',
       'graphql/dataloaders',
-      'graphql/queries',
+      {
+        'Queries': [
+          'graphql/queries/endpoints',
+          'graphql/queries/filtering',
+          'graphql/queries/paging',
+          'graphql/queries/sorting'
+        ],
+      },
       'graphql/mutations',
-      'graphql/paging',
       'graphql/hooks',
       'graphql/authorization',
       'graphql/aggregations',
