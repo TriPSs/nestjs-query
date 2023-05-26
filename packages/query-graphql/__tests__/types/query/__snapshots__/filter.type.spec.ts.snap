@@ -516,16 +516,16 @@ input TestBetweenComparisonStringFieldFilterComparison {
 
 exports[`filter types FilterType filterDepth option different filterDepth options shouldn't affect each other 1`] = `
 type Query {
-  testA(input: DeepTestFilterDepth_ShouldNotAffectFilter!): Int!
+  testA(input: TestFilterDepth_ShouldNotAffectDeepFilter!): Int!
   testB(input: TestFilterDepth_ShouldNotAffect_RelationAFilter!): Int!
 }
 
-input DeepTestFilterDepth_ShouldNotAffectFilter {
-  and: [DeepTestFilterDepth_ShouldNotAffectFilter!]
-  or: [DeepTestFilterDepth_ShouldNotAffectFilter!]
+input TestFilterDepth_ShouldNotAffectDeepFilter {
+  and: [TestFilterDepth_ShouldNotAffectDeepFilter!]
+  or: [TestFilterDepth_ShouldNotAffectDeepFilter!]
   id: NumberFieldComparison
   numberField: NumberFieldComparison
-  filterableRelation: DeepTestFilterDepth_ShouldNotAffect_RelationAFilter
+  filterableRelation: TestFilterDepth_ShouldNotAffect_RelationADeepFilter
 }
 
 input NumberFieldComparison {
@@ -548,13 +548,13 @@ input NumberFieldComparisonBetween {
   upper: Float!
 }
 
-input DeepTestFilterDepth_ShouldNotAffect_RelationAFilter {
-  and: [DeepTestFilterDepth_ShouldNotAffect_RelationAFilter!]
-  or: [DeepTestFilterDepth_ShouldNotAffect_RelationAFilter!]
+input TestFilterDepth_ShouldNotAffect_RelationADeepFilter {
+  and: [TestFilterDepth_ShouldNotAffect_RelationADeepFilter!]
+  or: [TestFilterDepth_ShouldNotAffect_RelationADeepFilter!]
   id: NumberFieldComparison
   relationName: StringFieldComparison
   relationAge: NumberFieldComparison
-  filterableRelation: DeepTestRelationDtoFilter
+  filterableRelation: TestRelationDtoDeepFilter
 }
 
 input StringFieldComparison {
@@ -574,9 +574,9 @@ input StringFieldComparison {
   notIn: [String!]
 }
 
-input DeepTestRelationDtoFilter {
-  and: [DeepTestRelationDtoFilter!]
-  or: [DeepTestRelationDtoFilter!]
+input TestRelationDtoDeepFilter {
+  and: [TestRelationDtoDeepFilter!]
+  or: [TestRelationDtoDeepFilter!]
   id: NumberFieldComparison
   relationName: StringFieldComparison
   relationAge: NumberFieldComparison
@@ -762,15 +762,15 @@ input TestFilterDepth_2FilterTestFilterDepth_2_RelationAFilterTestRelationDtoFil
 
 exports[`filter types FilterType filterDepth option should generate a infinite deep filter-type 1`] = `
 type Query {
-  test(input: DeepTestFilterDepth_InfiniteFilter!): Int!
+  test(input: TestFilterDepth_InfiniteDeepFilter!): Int!
 }
 
-input DeepTestFilterDepth_InfiniteFilter {
-  and: [DeepTestFilterDepth_InfiniteFilter!]
-  or: [DeepTestFilterDepth_InfiniteFilter!]
+input TestFilterDepth_InfiniteDeepFilter {
+  and: [TestFilterDepth_InfiniteDeepFilter!]
+  or: [TestFilterDepth_InfiniteDeepFilter!]
   id: NumberFieldComparison
   numberField: NumberFieldComparison
-  filterableRelation: DeepTestFilterDepth_Infinite_RelationAFilter
+  filterableRelation: TestFilterDepth_Infinite_RelationADeepFilter
 }
 
 input NumberFieldComparison {
@@ -793,13 +793,13 @@ input NumberFieldComparisonBetween {
   upper: Float!
 }
 
-input DeepTestFilterDepth_Infinite_RelationAFilter {
-  and: [DeepTestFilterDepth_Infinite_RelationAFilter!]
-  or: [DeepTestFilterDepth_Infinite_RelationAFilter!]
+input TestFilterDepth_Infinite_RelationADeepFilter {
+  and: [TestFilterDepth_Infinite_RelationADeepFilter!]
+  or: [TestFilterDepth_Infinite_RelationADeepFilter!]
   id: NumberFieldComparison
   relationName: StringFieldComparison
   relationAge: NumberFieldComparison
-  filterableRelation: DeepTestRelationDtoFilter
+  filterableRelation: TestRelationDtoDeepFilter
 }
 
 input StringFieldComparison {
@@ -819,9 +819,9 @@ input StringFieldComparison {
   notIn: [String!]
 }
 
-input DeepTestRelationDtoFilter {
-  and: [DeepTestRelationDtoFilter!]
-  or: [DeepTestRelationDtoFilter!]
+input TestRelationDtoDeepFilter {
+  and: [TestRelationDtoDeepFilter!]
+  or: [TestRelationDtoDeepFilter!]
   id: NumberFieldComparison
   relationName: StringFieldComparison
   relationAge: NumberFieldComparison
