@@ -5,7 +5,7 @@ title: Endpoints
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-The [CRUDResolver](./resolvers.mdx) automatically exposes two query endpoints. The endpoints names will be derived from
+The [CRUDResolver](../resolvers) automatically exposes two query endpoints. The endpoints names will be derived from
 name provided to `@ObjectType` or the class name.
 
 The following examples are based on the following `TodoItemDTO`
@@ -92,11 +92,11 @@ The following example finds a `TodoItem` by id.
 ## Querying
 
 As described above the `CRUDResolver` will expose a query method called `todoItems`. The result will be either
-a [`connection`](https://relay.dev/graphql/connections.htm) or array depending on the [paging strategy you choose](./paging.mdx)
+a [`connection`](https://relay.dev/graphql/connections.htm) or array depending on the [paging strategy you choose](./paging)
 
 :::note
 All examples below assume that a connection is returned but filtering and sorting work the same way for all paging
-strategies. To read how to page collections read the [paging docs](./paging.mdx)
+strategies. To read how to page collections read the [paging docs](./paging)
 :::
 
 By default if you do not provided an arguments you can query for all records.
