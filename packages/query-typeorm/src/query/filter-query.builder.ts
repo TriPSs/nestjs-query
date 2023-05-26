@@ -79,14 +79,17 @@ export class FilterQueryBuilder<Entity> {
    */
   public select(query: Query<Entity>): SelectQueryBuilder<Entity> {
     let qb = this.createQueryBuilder()
+
     qb = this.applyRelationJoinsRecursive(
       qb,
       this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.relations),
       query.relations
     )
+
     qb = this.applyFilter(qb, query.filter, qb.alias)
     qb = this.applySorting(qb, query.sorting, qb.alias)
     qb = this.applyPaging(qb, query.paging, this.shouldUseSkipTake(query.filter))
+
     return qb
   }
 
@@ -245,32 +248,41 @@ export class FilterQueryBuilder<Entity> {
     qb: SelectQueryBuilder<Entity>,
     relationsMap?: NestedRecord,
     selectRelations?: SelectRelation<Entity>[],
-    alias?: string
+    alias?: string,
+    counters = new Map<string, number>()
   ): SelectQueryBuilder<Entity> {
     if (!relationsMap) {
       return qb
     }
+
     const referencedRelations = Object.keys(relationsMap)
 
     // TODO:: If relation is not nullable use inner join?
-    return referencedRelations.reduce((rqb, relation) => {
+    return referencedRelations.reduce((rqb, relation, i) => {
       // TODO:: Change to find and also apply the query for the relation
       const selectRelation = selectRelations && selectRelations.find(({ name }) => name === relation)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const count = (counters.get(relation) ?? -1) + 1
+      const relationAlias = count === 0 ? relation : `${relation}_${count}`
+
+      counters.set(relation, count)
 
       if (selectRelation) {
         return this.applyRelationJoinsRecursive(
-          rqb.leftJoinAndSelect(`${alias ?? rqb.alias}.${relation}`, relation),
+          rqb.leftJoinAndSelect(`${alias ?? rqb.alias}.${relation}`, relationAlias),
           relationsMap[relation],
           selectRelation.query.relations,
-          relation
+          relationAlias,
+          counters
         )
       }
 
       return this.applyRelationJoinsRecursive(
-        rqb.leftJoin(`${alias ?? rqb.alias}.${relation}`, relation),
+        rqb.leftJoin(`${alias ?? rqb.alias}.${relation}`, relationAlias),
         relationsMap[relation],
         [],
-        relation
+        relationAlias,
+        counters
       )
     }, qb)
   }
