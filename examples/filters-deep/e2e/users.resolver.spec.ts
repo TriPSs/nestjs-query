@@ -104,20 +104,20 @@ describe('UsersResolver (filters-deep - e2e)', () => {
               filter: {
                 # "John Doe", "Jane Doe", "Post 1 Only", "Post 2 Only", "Post 3 Only", "Post 4 Only", "Post 5 Only", "Post 6 Only"
                 firstName: {
-                  iLike: "%%"
+                  like: "%"
                 }
 
                 # "John Doe", "Jane Doe", "Post 1 Only", "Post 2 Only", "Post 3 Only", "Post 4 Only", "Post 5 Only", "Post 6 Only"
                 and: [
                   {
                     lastName: {
-                      iLike: "%%"
+                      like: "%"
                     }
                   },
 
                   {
                     firstName: {
-                      iLike: "%%"
+                      like: "%"
                     }
                   }
                 ]
