@@ -258,7 +258,7 @@ export class FilterQueryBuilder<Entity> {
     const referencedRelations = Object.keys(relationsMap)
 
     // TODO:: If relation is not nullable use inner join?
-    return referencedRelations.reduce((rqb, relation, i) => {
+    return referencedRelations.reduce((rqb, relation) => {
       // TODO:: Change to find and also apply the query for the relation
       const selectRelation = selectRelations && selectRelations.find(({ name }) => name === relation)
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
