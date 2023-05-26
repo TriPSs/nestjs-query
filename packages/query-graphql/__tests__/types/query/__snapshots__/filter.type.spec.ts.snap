@@ -828,6 +828,154 @@ input TestRelationDtoDeepFilter {
 }
 `;
 
+exports[`filter types FilterType filterDepth option should generate filter types with suffix / 0-level depth 1`] = `
+type Query {
+  testA(input: TestFilterDepth_ShouldNotAffectUpdateFilter!): Int!
+  testB(input: TestFilterDepth_ShouldNotAffect_RelationAUpdateFilter!): Int!
+}
+
+input TestFilterDepth_ShouldNotAffectUpdateFilter {
+  and: [TestFilterDepth_ShouldNotAffectUpdateFilter!]
+  or: [TestFilterDepth_ShouldNotAffectUpdateFilter!]
+  id: NumberFieldComparison
+  numberField: NumberFieldComparison
+}
+
+input NumberFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: Float
+  neq: Float
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  in: [Float!]
+  notIn: [Float!]
+  between: NumberFieldComparisonBetween
+  notBetween: NumberFieldComparisonBetween
+}
+
+input NumberFieldComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
+input TestFilterDepth_ShouldNotAffect_RelationAUpdateFilter {
+  and: [TestFilterDepth_ShouldNotAffect_RelationAUpdateFilter!]
+  or: [TestFilterDepth_ShouldNotAffect_RelationAUpdateFilter!]
+  id: NumberFieldComparison
+  relationName: StringFieldComparison
+  relationAge: NumberFieldComparison
+}
+
+input StringFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
+}
+`;
+
+exports[`filter types FilterType filterDepth option should return cached types 1`] = `
+type Query {
+  testA(input: TestFilterDepth_ShouldNotAffectDeepFilter!): Int!
+  testB(input: TestFilterDepth_ShouldNotAffect_RelationAFilter!): Int!
+}
+
+input TestFilterDepth_ShouldNotAffectDeepFilter {
+  and: [TestFilterDepth_ShouldNotAffectDeepFilter!]
+  or: [TestFilterDepth_ShouldNotAffectDeepFilter!]
+  id: NumberFieldComparison
+  numberField: NumberFieldComparison
+  filterableRelation2: TestFilterDepth_ShouldNotAffect_RelationADeepFilter
+  filterableRelation1: TestFilterDepth_ShouldNotAffect_RelationADeepFilter
+}
+
+input NumberFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: Float
+  neq: Float
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  in: [Float!]
+  notIn: [Float!]
+  between: NumberFieldComparisonBetween
+  notBetween: NumberFieldComparisonBetween
+}
+
+input NumberFieldComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
+input TestFilterDepth_ShouldNotAffect_RelationADeepFilter {
+  and: [TestFilterDepth_ShouldNotAffect_RelationADeepFilter!]
+  or: [TestFilterDepth_ShouldNotAffect_RelationADeepFilter!]
+  id: NumberFieldComparison
+  relationName: StringFieldComparison
+  relationAge: NumberFieldComparison
+  filterableRelation2: TestRelationDtoDeepFilter
+  filterableRelation1: TestRelationDtoDeepFilter
+}
+
+input StringFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
+}
+
+input TestRelationDtoDeepFilter {
+  and: [TestRelationDtoDeepFilter!]
+  or: [TestRelationDtoDeepFilter!]
+  id: NumberFieldComparison
+  relationName: StringFieldComparison
+  relationAge: NumberFieldComparison
+}
+
+input TestFilterDepth_ShouldNotAffect_RelationAFilter {
+  and: [TestFilterDepth_ShouldNotAffect_RelationAFilter!]
+  or: [TestFilterDepth_ShouldNotAffect_RelationAFilter!]
+  id: NumberFieldComparison
+  relationName: StringFieldComparison
+  relationAge: NumberFieldComparison
+  filterableRelation2: TestFilterDepth_ShouldNotAffect_RelationAFilterTestRelationDtoFilter
+  filterableRelation1: TestFilterDepth_ShouldNotAffect_RelationAFilterTestRelationDtoFilter
+}
+
+input TestFilterDepth_ShouldNotAffect_RelationAFilterTestRelationDtoFilter {
+  and: [TestFilterDepth_ShouldNotAffect_RelationAFilterTestRelationDtoFilter!]
+  or: [TestFilterDepth_ShouldNotAffect_RelationAFilterTestRelationDtoFilter!]
+  id: NumberFieldComparison
+  relationName: StringFieldComparison
+  relationAge: NumberFieldComparison
+}
+`;
+
 exports[`filter types FilterType filterRequired option should only expose allowed comparisons 1`] = `
 type Query {
   test(input: TestComparisonDtoFilter!): Int!

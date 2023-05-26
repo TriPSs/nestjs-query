@@ -567,6 +567,102 @@ describe('filter types', (): void => {
         const schema = await generateSchema([FilterTypeSpec])
         expect(schema).toMatchSnapshot()
       })
+
+      it('should return cached types', async () => {
+        @ObjectType('TestFilterDepth_ShouldNotAffect_RelationA')
+        @QueryOptions({ filterDepth: 1 })
+        @FilterableRelation('filterableRelation1', () => TestRelation)
+        @FilterableRelation('filterableRelation2', () => TestRelation)
+        class TestFilterDepthShouldNotAffectRelationADto extends BaseType {
+          @FilterableField()
+          relationName!: string
+
+          @FilterableField()
+          relationAge!: number
+        }
+
+        @ObjectType('TestFilterDepth_ShouldNotAffect')
+        @QueryOptions({ filterDepth: Number.POSITIVE_INFINITY })
+        @FilterableRelation('filterableRelation1', () => TestFilterDepthShouldNotAffectRelationADto)
+        @FilterableRelation('filterableRelation2', () => TestFilterDepthShouldNotAffectRelationADto)
+        class TestFilterDepthShouldNotAffectDto extends BaseType {
+          @FilterableField()
+          numberField!: number
+        }
+
+        const TestFilterDepthFilter = FilterType(TestFilterDepthShouldNotAffectDto)
+        const TestFilterDepthRelationAFilter = FilterType(TestFilterDepthShouldNotAffectRelationADto)
+
+        @Resolver()
+        class FilterTypeSpec {
+          @Query(() => Int)
+          testA(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            @Args('input', { type: () => TestFilterDepthFilter }) input: unknown
+          ): number {
+            return 1
+          }
+
+          @Query(() => Int)
+          testB(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            @Args('input', { type: () => TestFilterDepthRelationAFilter }) input: unknown
+          ): number {
+            return 1
+          }
+        }
+
+        const schema = await generateSchema([FilterTypeSpec])
+        expect(schema).toMatchSnapshot()
+      })
+
+      it('should generate filter types with suffix / 0-level depth', async () => {
+        @ObjectType('TestFilterDepth_ShouldNotAffect_RelationA')
+        @QueryOptions({ filterDepth: 1 })
+        @FilterableRelation('filterableRelation1', () => TestRelation)
+        @FilterableRelation('filterableRelation2', () => TestRelation)
+        class TestFilterDepthShouldNotAffectRelationADto extends BaseType {
+          @FilterableField()
+          relationName!: string
+
+          @FilterableField()
+          relationAge!: number
+        }
+
+        @ObjectType('TestFilterDepth_ShouldNotAffect')
+        @QueryOptions({ filterDepth: Number.POSITIVE_INFINITY })
+        @FilterableRelation('filterableRelation1', () => TestFilterDepthShouldNotAffectRelationADto)
+        @FilterableRelation('filterableRelation2', () => TestFilterDepthShouldNotAffectRelationADto)
+        class TestFilterDepthShouldNotAffectDto extends BaseType {
+          @FilterableField()
+          numberField!: number
+        }
+
+        const TestFilterDepthFilter = UpdateFilterType(TestFilterDepthShouldNotAffectDto)
+        const TestFilterDepthRelationAFilter = UpdateFilterType(TestFilterDepthShouldNotAffectRelationADto)
+
+        @Resolver()
+        class FilterTypeSpec {
+          @Query(() => Int)
+          testA(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            @Args('input', { type: () => TestFilterDepthFilter }) input: unknown
+          ): number {
+            return 1
+          }
+
+          @Query(() => Int)
+          testB(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            @Args('input', { type: () => TestFilterDepthRelationAFilter }) input: unknown
+          ): number {
+            return 1
+          }
+        }
+
+        const schema = await generateSchema([FilterTypeSpec])
+        expect(schema).toMatchSnapshot()
+      })
     })
   })
 
