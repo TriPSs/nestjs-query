@@ -9,8 +9,8 @@ import { BaseResolverOptions } from './resolver-method.decorator'
 
 export const reflector = new ArrayReflector(RELATION_KEY)
 
-export type RelationOneDecoratorOpts<Relation> = Omit<ResolverOneRelation<Relation>, 'DTO' | 'allowFiltering'>
-export type RelationManyDecoratorOpts<Relation> = Omit<ResolverManyRelation<Relation>, 'DTO' | 'allowFiltering'>
+export type RelationOneDecoratorOpts<Relation> = Omit<ResolverOneRelation<Relation>, 'DTO' | 'allowFiltering' | 'filterDepth'>
+export type RelationManyDecoratorOpts<Relation> = Omit<ResolverManyRelation<Relation>, 'DTO' | 'allowFiltering' | 'filterDepth'>
 export type RelationTypeFunc<Relation> = () => Class<Relation>
 export type RelationClassDecorator<DTO> = <Cls extends Class<DTO>>(DTOClass: Cls) => Cls | void
 
