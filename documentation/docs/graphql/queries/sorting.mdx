@@ -1,0 +1,241 @@
+---
+title: Sorting
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+You can sort by one or more fields by using the `sorting` parameter.
+
+The `sorting` parameter is an array where each item has the following options.
+
+* `field!` - The name of the field to sort by.
+* `direction!` - The direction to sort either `ASC` or `DESC`.
+* `nulls?` - Optional field to set nulls sort order `NULLS_FIRST` or `NULLS_last`
+
+In this example we sort by title descending.
+
+<Tabs
+  defaultValue="graphql"
+  values={[
+    { label: 'GraphQL', value: 'graphql', },
+    { label: 'Response', value: 'response', },
+  ]
+}>
+<TabItem value="graphql">
+
+```graphql
+{
+  todoItems(sorting: [{ field: title, direction: DESC }]) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
+        title
+        completed
+        created
+        updated
+      }
+      cursor
+    }
+  }
+}
+
+```
+
+</TabItem>
+<TabItem value="response">
+
+```json
+{
+  "data": {
+    "todoItems": {
+      "pageInfo": {
+        "hasNextPage": false,
+        "hasPreviousPage": false,
+        "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
+        "endCursor": "YXJyYXljb25uZWN0aW9uOjQ="
+      },
+      "edges": [
+        {
+          "node": {
+            "id": "1",
+            "title": "Create One Todo Item",
+            "completed": false,
+            "created": "2020-01-14T07:00:31.763Z",
+            "updated": "2020-01-14T07:00:31.763Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjA="
+        },
+        {
+          "node": {
+            "id": "5",
+            "title": "Create Many Todo Items - 4",
+            "completed": true,
+            "created": "2020-01-14T07:01:27.805Z",
+            "updated": "2020-01-14T07:01:27.805Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjE="
+        },
+        {
+          "node": {
+            "id": "4",
+            "title": "Create Many Todo Items - 3",
+            "completed": false,
+            "created": "2020-01-14T07:01:27.805Z",
+            "updated": "2020-01-14T07:01:27.805Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjI="
+        },
+        {
+          "node": {
+            "id": "3",
+            "title": "Create Many Todo Items - 2",
+            "completed": true,
+            "created": "2020-01-14T07:00:34.111Z",
+            "updated": "2020-01-14T07:00:34.111Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjM="
+        },
+        {
+          "node": {
+            "id": "2",
+            "title": "Create Many Todo Items - 1",
+            "completed": false,
+            "created": "2020-01-14T07:00:34.111Z",
+            "updated": "2020-01-14T07:00:34.111Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjQ="
+        }
+      ]
+    }
+  }
+}
+```
+</TabItem>
+</Tabs>
+
+In this example we sort by completed and title.
+
+<Tabs
+  defaultValue="graphql"
+  values={[
+    { label: 'GraphQL', value: 'graphql', },
+    { label: 'Response', value: 'response', },
+  ]
+}>
+<TabItem value="graphql">
+
+```graphql
+{
+  todoItems(
+    sorting: [
+      { field: completed, direction: ASC }
+      { field: title, direction: DESC }
+    ]
+  ) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
+        title
+        completed
+        created
+        updated
+      }
+      cursor
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="response">
+
+```json
+{
+  "data": {
+    "todoItems": {
+      "pageInfo": {
+        "hasNextPage": false,
+        "hasPreviousPage": false,
+        "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
+        "endCursor": "YXJyYXljb25uZWN0aW9uOjQ="
+      },
+      "edges": [
+        {
+          "node": {
+            "id": "1",
+            "title": "Create One Todo Item",
+            "completed": false,
+            "created": "2020-01-14T07:00:31.763Z",
+            "updated": "2020-01-14T07:00:31.763Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjA="
+        },
+        {
+          "node": {
+            "id": "4",
+            "title": "Create Many Todo Items - 3",
+            "completed": false,
+            "created": "2020-01-14T07:01:27.805Z",
+            "updated": "2020-01-14T07:01:27.805Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjE="
+        },
+        {
+          "node": {
+            "id": "2",
+            "title": "Create Many Todo Items - 1",
+            "completed": false,
+            "created": "2020-01-14T07:00:34.111Z",
+            "updated": "2020-01-14T07:00:34.111Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjI="
+        },
+        {
+          "node": {
+            "id": "5",
+            "title": "Create Many Todo Items - 4",
+            "completed": true,
+            "created": "2020-01-14T07:01:27.805Z",
+            "updated": "2020-01-14T07:01:27.805Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjM="
+        },
+        {
+          "node": {
+            "id": "3",
+            "title": "Create Many Todo Items - 2",
+            "completed": true,
+            "created": "2020-01-14T07:00:34.111Z",
+            "updated": "2020-01-14T07:00:34.111Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjQ="
+        }
+      ]
+    }
+  }
+}
+```
+</TabItem>
+</Tabs>
+
+## Setting a default sort
+
+When querying the default is based on the persistence layer. You can override the default by using the QueryOptions decorator on your DTO.
+
+You can find the documentation and an example in the [QueryOptions reference](../dtos.mdx#default-sort).
+
+
+

@@ -419,7 +419,7 @@ export class TodoItemDTO {
 
 By default `nestjs-query` uses a `cursor` based paging strategy and returns a [connection](https://relay.dev/graphql/connections.htm) for all query many endpoints.
 
-For a more in-depth overview of paging check out the [paging docs](./paging.mdx)
+For a more in-depth overview of paging check out the [paging docs](./queries/paging)
 
 You can override the default `pagingStrategy` to one of the following alternatives
 
@@ -701,6 +701,86 @@ export class TodoItemDTO {
   title!: string;
 
   @Field()
+  completed!: boolean;
+
+  @Field(() => GraphQLISODateTime)
+  created!: Date;
+
+  @Field(() => GraphQLISODateTime)
+  updated!: Date;
+}
+
+```
+
+### Generated filter-type depth
+
+When querying the default filter is one level deep. You can specify the generated filter-type depth by
+using the `filterDepth` option.
+
+#### `n`-levels deep
+
+To generate a filter-type that is `n`-levels deep you can set the `filterDepth` option to `n`.
+Each level will be generated as a new input type with the name from the previous level as a prefix.
+In the following example it would generate `TodoItemFilter`, `TodoItemFilterSubTaskFilter` and `TodoItemFilterTagFilter`.
+
+```ts title="todo-item.dto.ts" {8,9}
+import { FilterableField, IDField, QueryOptions } from '@ptc-org/nestjs-query-graphql';
+import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
+
+import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'
+import { TagDTO } from '../../tag/dto/tag.dto'
+
+@ObjectType('TodoItem')
+// generate a filter-type that is 2 levels deep
+@QueryOptions({ filterDepth: 2 })
+@CursorConnection('subTasks', () => SubTaskDTO)
+@CursorConnection('tags', () => TagDTO)
+export class TodoItemDTO {
+  @IDField(() => ID)
+  id!: string;
+
+  @FilterableField()
+  title!: string;
+
+  @FilterableField()
+  completed!: boolean;
+
+  @Field(() => GraphQLISODateTime)
+  created!: Date;
+
+  @Field(() => GraphQLISODateTime)
+  updated!: Date;
+}
+
+```
+
+#### infinite depth
+
+To generate a filter-type with infinite depth you can set the `filterDepth` option to `Number.POSITIVE_INFINITY`.
+
+This will generate flat filter-types for each related entity.
+In the following example it would generate `TodoItemDeepFilter`, `SubTaskDeepFilter` and `TagDeepFilter`.
+
+```ts title="todo-item.dto.ts" {8,9}
+import { FilterableField, IDField, QueryOptions } from '@ptc-org/nestjs-query-graphql';
+import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
+
+import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'
+import { TagDTO } from '../../tag/dto/tag.dto'
+
+@ObjectType('TodoItem')
+// generate a filter-type with infinite depth
+@QueryOptions({ filterDepth: Number.POSITIVE_INFINITY })
+@CursorConnection('subTasks', () => SubTaskDTO)
+@CursorConnection('tags', () => TagDTO)
+export class TodoItemDTO {
+  @IDField(() => ID)
+  id!: string;
+
+  @FilterableField()
+  title!: string;
+
+  @FilterableField()
   completed!: boolean;
 
   @Field(() => GraphQLISODateTime)
