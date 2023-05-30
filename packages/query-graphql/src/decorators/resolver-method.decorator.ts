@@ -32,6 +32,7 @@ export interface BaseResolverOptions {
 export interface ResolverMethodOpts extends BaseResolverOptions {
   /** Set to true to disable the endpoint */
   disabled?: boolean
+  complexity?: Complexity
 }
 
 /**

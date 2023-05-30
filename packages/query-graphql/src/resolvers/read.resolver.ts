@@ -69,7 +69,11 @@ export const Readable =
     class ReadResolverBase extends BaseClass {
       @ResolverQuery(
         () => DTOClass,
-        { name: readOneQueryName, description: opts?.one?.description },
+        {
+          name: readOneQueryName,
+          description: opts?.one?.description,
+          complexity: opts?.one?.complexity
+        },
         commonResolverOpts,
         { interceptors: [HookInterceptor(HookTypes.BEFORE_FIND_ONE, DTOClass), AuthorizerInterceptor(DTOClass)] },
         opts.one ?? {}
@@ -93,7 +97,7 @@ export const Readable =
 
       @ResolverQuery(
         () => QueryArgs.ConnectionType.resolveType,
-        { name: readManyQueryName, description: opts?.many?.description },
+        { name: readManyQueryName, description: opts?.many?.description, complexity: opts?.many?.complexity },
         commonResolverOpts,
         { interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)] },
         opts.many ?? {}
