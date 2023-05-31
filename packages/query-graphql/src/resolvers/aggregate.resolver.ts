@@ -57,7 +57,7 @@ export const Aggregateable =
     class AggregateResolverBase extends BaseClass {
       @ResolverQuery(
         () => [AR],
-        { name: queryName, description: opts?.description },
+        { name: queryName, description: opts?.description, complexity: opts?.complexity },
         commonResolverOpts,
         { interceptors: [AuthorizerInterceptor(DTOClass)] },
         opts ?? {}

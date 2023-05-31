@@ -127,7 +127,7 @@ export const Updateable =
     class UpdateResolverBase extends BaseClass {
       @ResolverMutation(
         () => DTOClass,
-        { name: updateOneMutationName, description: opts?.one?.description },
+        { name: updateOneMutationName, description: opts?.one?.description, complexity: opts?.one?.complexity },
         {
           interceptors: [HookInterceptor(HookTypes.BEFORE_UPDATE_ONE, UpdateDTOClass, DTOClass), AuthorizerInterceptor(DTOClass)]
         },
@@ -152,7 +152,7 @@ export const Updateable =
 
       @ResolverMutation(
         () => UMR,
-        { name: updateManyMutationName, description: opts?.many?.description },
+        { name: updateManyMutationName, description: opts?.many?.description, complexity: opts?.many?.complexity },
         {
           interceptors: [HookInterceptor(HookTypes.BEFORE_UPDATE_MANY, UpdateDTOClass, DTOClass), AuthorizerInterceptor(DTOClass)]
         },
