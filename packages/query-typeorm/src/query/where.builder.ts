@@ -3,7 +3,7 @@ import { Brackets } from 'typeorm'
 
 import type { WhereExpressionBuilder } from 'typeorm'
 
-import { NestedRecord } from './filter-query.builder'
+import { NestedRelationAliased } from './filter-query.builder'
 import { EntityComparisonField, SQLComparisonBuilder } from './sql-comparison.builder'
 
 /**
@@ -24,21 +24,20 @@ export class WhereBuilder<Entity> {
   public build<Where extends WhereExpressionBuilder>(
     where: Where,
     filter: Filter<Entity>,
-    relationNames: NestedRecord,
-    alias?: string,
-    counters = new Map<string, number>()
+    relationNames: NestedRelationAliased,
+    alias?: string
   ): Where {
     const { and, or } = filter
 
     if (and && and.length) {
-      this.filterAnd(where, and, relationNames, alias, counters)
+      this.filterAnd(where, and, relationNames, alias)
     }
 
     if (or && or.length) {
-      this.filterOr(where, or, relationNames, alias, counters)
+      this.filterOr(where, or, relationNames, alias)
     }
 
-    return this.filterFields(where, filter, relationNames, alias, counters)
+    return this.filterFields(where, filter, relationNames, alias)
   }
 
   /**
@@ -52,12 +51,11 @@ export class WhereBuilder<Entity> {
   private filterAnd<Where extends WhereExpressionBuilder>(
     where: Where,
     filters: Filter<Entity>[],
-    relationNames: NestedRecord,
-    alias: string | undefined,
-    counters: Map<string, number>
+    relationNames: NestedRelationAliased,
+    alias: string | undefined
   ): Where {
     return where.andWhere(
-      new Brackets((qb) => filters.reduce((w, f) => qb.andWhere(this.createBrackets(f, relationNames, alias, counters)), qb))
+      new Brackets((qb) => filters.reduce((w, f) => qb.andWhere(this.createBrackets(f, relationNames, alias)), qb))
     )
   }
 
@@ -72,12 +70,11 @@ export class WhereBuilder<Entity> {
   private filterOr<Where extends WhereExpressionBuilder>(
     where: Where,
     filter: Filter<Entity>[],
-    relationNames: NestedRecord,
-    alias: string | undefined,
-    counters: Map<string, number>
+    relationNames: NestedRelationAliased,
+    alias: string | undefined
   ): Where {
     return where.andWhere(
-      new Brackets((qb) => filter.reduce((w, f) => qb.orWhere(this.createBrackets(f, relationNames, alias, counters)), qb))
+      new Brackets((qb) => filter.reduce((w, f) => qb.orWhere(this.createBrackets(f, relationNames, alias)), qb))
     )
   }
 
@@ -91,13 +88,8 @@ export class WhereBuilder<Entity> {
    * @param relationNames - the relations tree.
    * @param alias - optional alias to use to qualify an identifier
    */
-  private createBrackets(
-    filter: Filter<Entity>,
-    relationNames: NestedRecord,
-    alias: string | undefined,
-    counters: Map<string, number>
-  ): Brackets {
-    return new Brackets((qb) => this.build(qb, filter, relationNames, alias, counters))
+  private createBrackets(filter: Filter<Entity>, relationNames: NestedRelationAliased, alias: string | undefined): Brackets {
+    return new Brackets((qb) => this.build(qb, filter, relationNames, alias))
   }
 
   /**
@@ -110,9 +102,8 @@ export class WhereBuilder<Entity> {
   private filterFields<Where extends WhereExpressionBuilder>(
     where: Where,
     filter: Filter<Entity>,
-    relationNames: NestedRecord,
-    alias: string | undefined,
-    counters: Map<string, number>
+    relationNames: NestedRelationAliased,
+    alias: string | undefined
   ): Where {
     return Object.keys(filter).reduce((w, field) => {
       if (field !== 'and' && field !== 'or') {
@@ -121,8 +112,7 @@ export class WhereBuilder<Entity> {
           field as keyof Entity,
           this.getField(filter, field as keyof Entity),
           relationNames,
-          alias,
-          counters
+          alias
         )
       }
       return w
@@ -140,20 +130,17 @@ export class WhereBuilder<Entity> {
     where: Where,
     field: T,
     cmp: FilterFieldComparison<Entity[T]>,
-    relationNames: NestedRecord,
-    alias: string | undefined,
-    counters: Map<string, number>
+    relationNames: NestedRelationAliased,
+    alias: string | undefined
   ): Where {
     if (relationNames[field as string]) {
-      return this.withRelationFilter(where, field, cmp as Filter<Entity[T]>, relationNames[field as string], counters)
+      return this.withRelationFilter(where, field, cmp as Filter<Entity[T]>, relationNames[field as string].value)
     }
 
     return where.andWhere(
       new Brackets((qb) => {
         const opts = Object.keys(cmp) as (keyof FilterFieldComparison<Entity[T]>)[]
-
-        const count = counters.get(alias) ?? 0
-        const $alias = count === 0 ? alias : `${alias}_${count}`
+        const $alias = relationNames[alias]?.alias ?? alias
 
         const sqlComparisons = opts.map((cmpType) =>
           this.sqlComparisonBuilder.build(field, cmpType, cmp[cmpType] as EntityComparisonField<Entity, T>, $alias)
@@ -168,19 +155,13 @@ export class WhereBuilder<Entity> {
     where: Where,
     field: T,
     cmp: Filter<Entity[T]>,
-    relationNames: NestedRecord,
-    counters: Map<string, number>
+    relationNames: NestedRelationAliased
   ): Where {
     return where.andWhere(
       new Brackets((qb) => {
         const relationWhere = new WhereBuilder<Entity[T]>()
-        const count = (counters.get(field as string) ?? -1) + 1
-        if (field as string) counters.set(field as string, count)
-
-        return relationWhere.build(qb, cmp, relationNames, field as string, counters)
+        return relationWhere.build(qb, cmp, relationNames, field as string)
       })
     )
   }
-
-  private branchCount = -1
 }
