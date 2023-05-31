@@ -65,16 +65,16 @@ describe('FilterQueryBuilder', (): void => {
       expect(qb.getReferencedRelationsWithAliasRecursive(qb.repo.metadata, complexQuery)).toEqual({
         oneTestRelation: {
           alias: 'oneTestRelation',
-          value: {
+          relations: {
             manyTestEntities: {
               alias: 'manyTestEntities',
-              value: {
+              relations: {
                 oneTestRelation: {
                   alias: 'oneTestRelation_1',
-                  value: {
+                  relations: {
                     manyTestEntities: {
                       alias: 'manyTestEntities_1',
-                      value: {}
+                      relations: {}
                     }
                   }
                 }
@@ -83,7 +83,7 @@ describe('FilterQueryBuilder', (): void => {
 
             relationOfTestRelation: {
               alias: 'relationOfTestRelation',
-              value: {}
+              relations: {}
             }
           }
         }
@@ -137,23 +137,23 @@ describe('FilterQueryBuilder', (): void => {
       expect(qb.getReferencedRelationsWithAliasRecursive(qb.repo.metadata, query)).toEqual({
         testRelations: {
           alias: 'testRelations',
-          value: {}
+          relations: {}
         },
 
         oneTestRelation: {
           alias: 'oneTestRelation',
-          value: {
+          relations: {
             relationsOfTestRelation: {
               alias: 'relationsOfTestRelation',
-              value: {}
+              relations: {}
             },
 
             testEntity: {
               alias: 'testEntity',
-              value: {
+              relations: {
                 testRelations: {
                   alias: 'testRelations_1',
-                  value: {}
+                  relations: {}
                 }
               }
             }

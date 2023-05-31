@@ -3,7 +3,7 @@ import { Brackets } from 'typeorm'
 
 import type { WhereExpressionBuilder } from 'typeorm'
 
-import { NestedRelationAliased } from './filter-query.builder'
+import { NestedRelationsAliased } from './filter-query.builder'
 import { EntityComparisonField, SQLComparisonBuilder } from './sql-comparison.builder'
 
 /**
@@ -24,7 +24,7 @@ export class WhereBuilder<Entity> {
   public build<Where extends WhereExpressionBuilder>(
     where: Where,
     filter: Filter<Entity>,
-    relationNames: NestedRelationAliased,
+    relationNames: NestedRelationsAliased,
     alias?: string
   ): Where {
     const { and, or } = filter
@@ -51,7 +51,7 @@ export class WhereBuilder<Entity> {
   private filterAnd<Where extends WhereExpressionBuilder>(
     where: Where,
     filters: Filter<Entity>[],
-    relationNames: NestedRelationAliased,
+    relationNames: NestedRelationsAliased,
     alias: string | undefined
   ): Where {
     return where.andWhere(
@@ -70,7 +70,7 @@ export class WhereBuilder<Entity> {
   private filterOr<Where extends WhereExpressionBuilder>(
     where: Where,
     filter: Filter<Entity>[],
-    relationNames: NestedRelationAliased,
+    relationNames: NestedRelationsAliased,
     alias: string | undefined
   ): Where {
     return where.andWhere(
@@ -88,7 +88,7 @@ export class WhereBuilder<Entity> {
    * @param relationNames - the relations tree.
    * @param alias - optional alias to use to qualify an identifier
    */
-  private createBrackets(filter: Filter<Entity>, relationNames: NestedRelationAliased, alias: string | undefined): Brackets {
+  private createBrackets(filter: Filter<Entity>, relationNames: NestedRelationsAliased, alias: string | undefined): Brackets {
     return new Brackets((qb) => this.build(qb, filter, relationNames, alias))
   }
 
@@ -102,7 +102,7 @@ export class WhereBuilder<Entity> {
   private filterFields<Where extends WhereExpressionBuilder>(
     where: Where,
     filter: Filter<Entity>,
-    relationNames: NestedRelationAliased,
+    relationNames: NestedRelationsAliased,
     alias: string | undefined
   ): Where {
     return Object.keys(filter).reduce((w, field) => {
@@ -130,20 +130,18 @@ export class WhereBuilder<Entity> {
     where: Where,
     field: T,
     cmp: FilterFieldComparison<Entity[T]>,
-    relationNames: NestedRelationAliased,
+    relationNames: NestedRelationsAliased,
     alias: string | undefined
   ): Where {
     if (relationNames[field as string]) {
-      return this.withRelationFilter(where, field, cmp as Filter<Entity[T]>, relationNames[field as string].value)
+      return this.withRelationFilter(where, field, cmp as Filter<Entity[T]>, relationNames)
     }
 
     return where.andWhere(
       new Brackets((qb) => {
         const opts = Object.keys(cmp) as (keyof FilterFieldComparison<Entity[T]>)[]
-        const $alias = relationNames[alias]?.alias ?? alias
-
         const sqlComparisons = opts.map((cmpType) =>
-          this.sqlComparisonBuilder.build(field, cmpType, cmp[cmpType] as EntityComparisonField<Entity, T>, $alias)
+          this.sqlComparisonBuilder.build(field, cmpType, cmp[cmpType] as EntityComparisonField<Entity, T>, alias)
         )
 
         sqlComparisons.map(({ sql, params }) => qb.orWhere(sql, params))
@@ -155,12 +153,16 @@ export class WhereBuilder<Entity> {
     where: Where,
     field: T,
     cmp: Filter<Entity[T]>,
-    relationNames: NestedRelationAliased
+    relationNames: NestedRelationsAliased
   ): Where {
     return where.andWhere(
       new Brackets((qb) => {
         const relationWhere = new WhereBuilder<Entity[T]>()
-        return relationWhere.build(qb, cmp, relationNames, field as string)
+        const nestedRelationAliased = relationNames[field as string]
+        const nestedRelationAliasedAlias = nestedRelationAliased.alias
+        const nestedRelationAliasedRelationNames = nestedRelationAliased.relations
+
+        return relationWhere.build(qb, cmp, nestedRelationAliasedRelationNames, nestedRelationAliasedAlias)
       })
     )
   }

@@ -65,10 +65,10 @@ export interface NestedRecord<E = unknown> {
  *
  * Nested aliased type
  */
-export interface NestedRelationAliased {
+export interface NestedRelationsAliased {
   [keys: string]: {
     alias: string
-    value: NestedRelationAliased
+    relations: NestedRelationsAliased
   }
 }
 
@@ -261,7 +261,7 @@ export class FilterQueryBuilder<Entity> {
    */
   public applyRelationJoinsRecursive(
     qb: SelectQueryBuilder<Entity>,
-    relationsMap?: NestedRelationAliased,
+    relationsMap?: NestedRelationsAliased,
     selectRelations?: SelectRelation<Entity>[],
     alias?: string
   ): SelectQueryBuilder<Entity> {
@@ -274,7 +274,7 @@ export class FilterQueryBuilder<Entity> {
     // TODO:: If relation is not nullable use inner join?
     return referencedRelations.reduce((rqb, [relationKey, relation]) => {
       const relationAlias = relation.alias
-      const relationChildren = relation.value
+      const relationChildren = relation.relations
 
       // TODO:: Change to find and also apply the query for the relation
       const selectRelation = selectRelations && selectRelations.find(({ name }) => name === relationKey)
@@ -344,12 +344,12 @@ export class FilterQueryBuilder<Entity> {
     metadata: EntityMetadata,
     filter: Filter<unknown> = {},
     selectRelations: SelectRelation<Entity>[] = []
-  ): NestedRelationAliased {
+  ): NestedRelationsAliased {
     const referencedRelations = this.getReferencedRelationsRecursive(metadata, filter, selectRelations)
     return this.injectRelationsAliasRecursive(referencedRelations)
   }
 
-  private injectRelationsAliasRecursive(relations: NestedRecord, counter = new Map<string, number>()): NestedRelationAliased {
+  private injectRelationsAliasRecursive(relations: NestedRecord, counter = new Map<string, number>()): NestedRelationsAliased {
     return Object.entries(relations).reduce((prev, [name, children]) => {
       const count = (counter.get(name) ?? -1) + 1
       const alias = count === 0 ? name : `${name}_${count}`
@@ -359,7 +359,7 @@ export class FilterQueryBuilder<Entity> {
         ...prev,
         [name]: {
           alias,
-          value: this.injectRelationsAliasRecursive(children, counter)
+          relations: this.injectRelationsAliasRecursive(children, counter)
         }
       }
     }, {})
