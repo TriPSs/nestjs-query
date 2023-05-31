@@ -90,11 +90,11 @@ export class FilterQueryBuilder<Entity> {
    * @param query - the query to apply.
    */
   public select(query: Query<Entity>): SelectQueryBuilder<Entity> {
-    let qb = this.createQueryBuilder().distinct(true)
+    let qb = this.createQueryBuilder()
 
     qb = this.applyRelationJoinsRecursive(
       qb,
-      this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.relations),
+      this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, query.filter, query.relations),
       query.relations
     )
 
@@ -114,7 +114,7 @@ export class FilterQueryBuilder<Entity> {
     let qb = this.createQueryBuilder()
 
     qb = hasFilterRelations
-      ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsRecursive(this.repo.metadata, query.filter))
+      ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, query.filter))
       : qb
 
     qb = this.applyAggregate(qb, aggregate, qb.alias)
@@ -194,7 +194,7 @@ export class FilterQueryBuilder<Entity> {
       return qb
     }
 
-    return this.whereBuilder.build(qb, filter, this.getReferencedRelationsRecursive(this.repo.metadata, filter), alias)
+    return this.whereBuilder.build(qb, filter, this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, filter), alias)
   }
 
   /**
@@ -340,12 +340,12 @@ export class FilterQueryBuilder<Entity> {
     )
   }
 
-  public getReferencedRelationsRecursive(
+  public getReferencedRelationsWithAliasRecursive(
     metadata: EntityMetadata,
     filter: Filter<unknown> = {},
     selectRelations: SelectRelation<Entity>[] = []
   ): NestedRelationAliased {
-    const referencedRelations = this.getReferencedRelationsFlatRecursive(metadata, filter, selectRelations)
+    const referencedRelations = this.getReferencedRelationsRecursive(metadata, filter, selectRelations)
     return this.injectRelationsAliasRecursive(referencedRelations)
   }
 
@@ -365,10 +365,10 @@ export class FilterQueryBuilder<Entity> {
     }, {})
   }
 
-  private getReferencedRelationsFlatRecursive(
+  public getReferencedRelationsRecursive(
     metadata: EntityMetadata,
     filter: Filter<unknown>,
-    selectRelations: SelectRelation<Entity>[]
+    selectRelations: SelectRelation<Entity>[] = []
   ): NestedRecord {
     const referencedFields = Array.from(new Set(Object.keys(filter) as (keyof Filter<unknown>)[]))
 
@@ -383,7 +383,7 @@ export class FilterQueryBuilder<Entity> {
 
       if (selectRelation.query.relations) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        relations[selectRelation.name] = this.getReferencedRelationsFlatRecursive(
+        relations[selectRelation.name] = this.getReferencedRelationsRecursive(
           referencedRelation.inverseEntityMetadata,
           {},
           selectRelation.query.relations
@@ -398,7 +398,7 @@ export class FilterQueryBuilder<Entity> {
 
       if ((curr === 'and' || curr === 'or') && currFilterValue) {
         for (const subFilter of currFilterValue) {
-          prev = merge(prev, this.getReferencedRelationsFlatRecursive(metadata, subFilter, []))
+          prev = merge(prev, this.getReferencedRelationsRecursive(metadata, subFilter, []))
         }
       }
 
@@ -412,7 +412,7 @@ export class FilterQueryBuilder<Entity> {
         ...prev,
         [curr]: merge(
           (prev as NestedRecord)[curr],
-          this.getReferencedRelationsFlatRecursive(referencedRelation.inverseEntityMetadata, currFilterValue, [])
+          this.getReferencedRelationsRecursive(referencedRelation.inverseEntityMetadata, currFilterValue, [])
         )
       }
     }, referencedRelations)
