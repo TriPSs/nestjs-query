@@ -90,7 +90,7 @@ export class FilterQueryBuilder<Entity> {
    * @param query - the query to apply.
    */
   public select(query: Query<Entity>): SelectQueryBuilder<Entity> {
-    let qb = this.createQueryBuilder()
+    let qb = this.createQueryBuilder().distinct(true)
 
     qb = this.applyRelationJoinsRecursive(
       qb,
