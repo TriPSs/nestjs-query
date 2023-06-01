@@ -24,6 +24,145 @@ describe('FilterQueryBuilder', (): void => {
     expect(formatSql(sql, { params })).toMatchSnapshot()
   }
 
+  describe('#getReferencedRelationsWithAliasRecursive', () => {
+    it('with deeply nested and / or', () => {
+      const complexQuery: Filter<TestEntity> = {
+        and: [
+          {
+            oneTestRelation: {
+              manyTestEntities: {
+                oneTestRelation: {
+                  manyTestEntities: {
+                    stringType: { eq: '123' }
+                  }
+                }
+              }
+            }
+          },
+
+          {
+            or: [
+              { and: [{ stringType: { eq: '123' } }] },
+              {
+                and: [{ stringType: { eq: '123' } }, { testEntityPk: { eq: '123' } }]
+              }
+            ]
+          },
+
+          {
+            stringType: { eq: '345' },
+            or: [
+              { oneTestRelation: { relationName: { eq: '123' } } },
+              { oneTestRelation: { relationOfTestRelation: { testRelationId: { eq: 'e1' } } } }
+            ]
+          }
+        ]
+      }
+
+      const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+      const qb = getEntityQueryBuilder(TestEntity, instance(mockWhereBuilder))
+
+      expect(qb.getReferencedRelationsWithAliasRecursive(qb.repo.metadata, complexQuery)).toEqual({
+        oneTestRelation: {
+          alias: 'oneTestRelation',
+          relations: {
+            manyTestEntities: {
+              alias: 'manyTestEntities',
+              relations: {
+                oneTestRelation: {
+                  alias: 'oneTestRelation_1',
+                  relations: {
+                    manyTestEntities: {
+                      alias: 'manyTestEntities_1',
+                      relations: {}
+                    }
+                  }
+                }
+              }
+            },
+
+            relationOfTestRelation: {
+              alias: 'relationOfTestRelation',
+              relations: {}
+            }
+          }
+        }
+      })
+    })
+
+    it('with nested and / or', () => {
+      const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+      const qb = getEntityQueryBuilder(TestEntity, instance(mockWhereBuilder))
+
+      const query: Filter<TestEntity> = {
+        stringType: { eq: '123' },
+
+        and: [
+          {
+            boolType: { is: true }
+          },
+          {
+            testRelations: {
+              relationName: { eq: '123' }
+            }
+          }
+        ],
+
+        or: [
+          {
+            boolType: { is: true }
+          },
+          {
+            oneTestRelation: {
+              testRelationPk: { eq: '123' },
+              testEntity: {
+                testRelations: {
+                  relationName: { eq: '123' }
+                }
+              }
+            }
+          },
+          {
+            oneTestRelation: {
+              relationsOfTestRelation: {
+                testRelationId: {
+                  eq: '123'
+                }
+              }
+            }
+          }
+        ]
+      }
+
+      expect(qb.getReferencedRelationsWithAliasRecursive(qb.repo.metadata, query)).toEqual({
+        testRelations: {
+          alias: 'testRelations',
+          relations: {}
+        },
+
+        oneTestRelation: {
+          alias: 'oneTestRelation',
+          relations: {
+            relationsOfTestRelation: {
+              alias: 'relationsOfTestRelation',
+              relations: {}
+            },
+
+            testEntity: {
+              alias: 'testEntity',
+              relations: {
+                testRelations: {
+                  alias: 'testRelations_1',
+                  relations: {}
+                }
+              }
+            }
+          }
+        }
+      })
+    })
+  })
+
   describe('#getReferencedRelationsRecursive', () => {
     it('with deeply nested and / or', () => {
       const complexQuery: Filter<TestEntity> = {

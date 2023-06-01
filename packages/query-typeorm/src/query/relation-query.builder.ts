@@ -95,7 +95,7 @@ export class RelationQueryBuilder<Entity, Relation> {
     relationBuilder = hasRelations
       ? this.filterQueryBuilder.applyRelationJoinsRecursive(
           relationBuilder,
-          this.filterQueryBuilder.getReferencedRelationsRecursive(this.relationRepo.metadata, query.filter)
+          this.filterQueryBuilder.getReferencedRelationsWithAliasRecursive(this.relationRepo.metadata, query.filter)
         )
       : relationBuilder
 
@@ -111,7 +111,7 @@ export class RelationQueryBuilder<Entity, Relation> {
     qb.withDeleted()
     qb = this.filterQueryBuilder.applyRelationJoinsRecursive(
       qb,
-      this.filterQueryBuilder.getReferencedRelationsRecursive(this.relationRepo.metadata, query.filter, query.relations),
+      this.filterQueryBuilder.getReferencedRelationsWithAliasRecursive(this.relationRepo.metadata, query.filter, query.relations),
       query.relations
     )
     qb = this.filterQueryBuilder.applyFilter(qb, query.filter, qb.alias)
