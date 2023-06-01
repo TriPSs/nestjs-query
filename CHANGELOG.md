@@ -1,4 +1,30 @@
  
+# [3.0.0-alpha.2](https://github.com/TriPSs/nestjs-query/compare/v3.0.0-alpha.1...v3.0.0-alpha.2) (2023-06-01)
+
+
+### Bug Fixes
+
+* `ILIKE` is no valid MySQL syntax ([8f86c1b](https://github.com/TriPSs/nestjs-query/commit/8f86c1bf3f832c3918055e1c59fd04e4baeea9bc))
+* alias generation ([c2a44a3](https://github.com/TriPSs/nestjs-query/commit/c2a44a31b4dc30542fe393ace44f2c369c0b68e1))
+* failing build ([fcc1ce0](https://github.com/TriPSs/nestjs-query/commit/fcc1ce0e88aaf7a166a27c6e1c91543058cbb74b))
+* fallback DataLoaderOptions ([0ff87bb](https://github.com/TriPSs/nestjs-query/commit/0ff87bbcbe2f989cbd9fdd4368327add54a8e260))
+* increment depth ([bfc9d49](https://github.com/TriPSs/nestjs-query/commit/bfc9d49dd88e0bf785fffaa7aca788440b581bd6))
+* lint ([6341b4e](https://github.com/TriPSs/nestjs-query/commit/6341b4eff4fc04dc0d94e13e9be07bd12c19444e))
+* make `dataLoaderOptionsToken` a const ([d6cb3ab](https://github.com/TriPSs/nestjs-query/commit/d6cb3abd43d327b02020d705c7a061fbcc3fefb6))
+* name clashing and filter depth overriding ([827fe91](https://github.com/TriPSs/nestjs-query/commit/827fe915a7c31b625e0cec9a4cc6f2180aabd734))
+* omit filterDepth from relation-decorators ([2444712](https://github.com/TriPSs/nestjs-query/commit/244471256f995c7a77c90e3b5fdddad9fc7c527b))
+* only query for distinct entries ([654075e](https://github.com/TriPSs/nestjs-query/commit/654075efd5a18f6ac81f4a17cedd4059207b311f))
+* **query-typeorm:** name collision on deeply nested filters ([327300e](https://github.com/TriPSs/nestjs-query/commit/327300e0a796ce9e52b9b6c50a0ecca1ca61ec19))
+* revert ([3f5d8bf](https://github.com/TriPSs/nestjs-query/commit/3f5d8bfd186cc926402129c8b08b0a013df561c1))
+
+
+### Features
+
+* add configurable dataloader ([84d17d9](https://github.com/TriPSs/nestjs-query/commit/84d17d98e1dbb4b6e25775a668ef2df1ba3d2f64))
+* **query-graphql:** Added support for `complexity` to queries and mutations ([c2699ab](https://github.com/TriPSs/nestjs-query/commit/c2699ab356f75e8ed39a9ffe940846141640f497))
+
+
+
 # [3.0.0-alpha.1](https://github.com/TriPSs/nestjs-query/compare/v3.0.0-alpha.0...v3.0.0-alpha.1) (2023-04-21)
 
 
