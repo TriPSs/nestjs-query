@@ -104,6 +104,7 @@ type FilterComparisonOptions<T> = {
 export function createFilterComparisonType<T>(options: FilterComparisonOptions<T>): Class<FilterFieldComparison<T>> {
   const { FieldType, returnTypeFunc } = options
   const fieldType = returnTypeFunc ? returnTypeFunc() : FieldType
+  const firstTypeOfArray = Array.isArray(fieldType) ? fieldType[0] : fieldType
   const inputName = getComparisonTypeName(fieldType, options)
   const generator = filterComparisonMap.get(inputName)
 
@@ -213,6 +214,11 @@ export function createFilterComparisonType<T>(options: FilterComparisonOptions<T
     @ValidateNested()
     @Type(() => FcBetween)
     notBetween?: T
+
+    @SkipIf(isNotAllowed('contains'), Field(() => firstTypeOfArray, { nullable: true }))
+    @IsUndefined()
+    @Type(() => FieldType)
+    contains?: string
   }
 
   filterComparisonMap.set(inputName, () => Fc)
