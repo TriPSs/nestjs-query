@@ -38,7 +38,9 @@ SELECT
 FROM
   "test_entity_relation_entity" "testEntityRelation"
 WHERE
-  ("testEntityRelation"."test_entity_id" = test-entity-id-1)
+  (
+    "testEntityRelation"."test_entity_id" = test-entity-id-1
+  )
 `;
 
 exports[`RelationQueryBuilder #select many to many on non owning side should work with many to many 1`] = `
@@ -106,7 +108,9 @@ FROM
   "test_entity" "testEntityUniDirectional"
   INNER JOIN "test_relation" "test_relation" ON "test_relation"."uni_directional_test_entity_id" = "testEntityUniDirectional"."test_entity_pk"
 WHERE
-  ("test_relation"."test_relation_pk" = test-relation-id-1)
+  (
+    "test_relation"."test_relation_pk" = test-relation-id-1
+  )
 `;
 
 exports[`RelationQueryBuilder #select many to one should work with one entity 1`] = `
@@ -123,7 +127,9 @@ FROM
   "test_entity" "testEntity"
   INNER JOIN "test_relation" "test_relation" ON "test_relation"."test_entity_id" = "testEntity"."test_entity_pk"
 WHERE
-  ("test_relation"."test_relation_pk" = test-relation-id-1)
+  (
+    "test_relation"."test_relation_pk" = test-relation-id-1
+  )
 `;
 
 exports[`RelationQueryBuilder #select one to many should query with a single entity 1`] = `
@@ -136,7 +142,9 @@ SELECT
 FROM
   "test_relation" "testRelations"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    "testRelations"."test_entity_id" = test-entity-id-1
+  )
 `;
 
 exports[`RelationQueryBuilder #select one to one on non owning side 1`] = `
@@ -181,7 +189,9 @@ SELECT
 FROM
   "test_relation" "testRelations"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    "testRelations"."test_entity_id" = test-entity-id-1
+  )
   AND ("testRelations"."relation_name" = foo)
 `;
 
@@ -195,9 +205,13 @@ SELECT
 FROM
   "test_relation" "testRelations"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    "testRelations"."test_entity_id" = test-entity-id-1
+  )
 LIMIT
-  10 OFFSET 10
+  10
+OFFSET
+  10
 `;
 
 exports[`RelationQueryBuilder #select with paging should apply paging args going forward 1`] = `
@@ -210,9 +224,13 @@ SELECT
 FROM
   "test_relation" "testRelations"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    "testRelations"."test_entity_id" = test-entity-id-1
+  )
 LIMIT
-  10 OFFSET 11
+  10
+OFFSET
+  11
 `;
 
 exports[`RelationQueryBuilder #select with sorting should apply ASC NULLS_FIRST sorting 1`] = `
@@ -225,7 +243,9 @@ SELECT
 FROM
   "test_relation" "testRelations"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    "testRelations"."test_entity_id" = test-entity-id-1
+  )
 ORDER BY
   "testRelations"."relation_name" ASC NULLS FIRST
 `;
@@ -240,7 +260,9 @@ SELECT
 FROM
   "test_relation" "testRelations"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    "testRelations"."test_entity_id" = test-entity-id-1
+  )
 ORDER BY
   "testRelations"."relation_name" ASC NULLS LAST
 `;
@@ -255,7 +277,9 @@ SELECT
 FROM
   "test_relation" "testRelations"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    "testRelations"."test_entity_id" = test-entity-id-1
+  )
 ORDER BY
   "testRelations"."relation_name" ASC
 `;
@@ -270,7 +294,9 @@ SELECT
 FROM
   "test_relation" "testRelations"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    "testRelations"."test_entity_id" = test-entity-id-1
+  )
 ORDER BY
   "testRelations"."relation_name" DESC NULLS FIRST
 `;
@@ -285,7 +311,9 @@ SELECT
 FROM
   "test_relation" "testRelations"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    "testRelations"."test_entity_id" = test-entity-id-1
+  )
 ORDER BY
   "testRelations"."relation_name" DESC NULLS LAST
 `;
@@ -300,7 +328,9 @@ SELECT
 FROM
   "test_relation" "testRelations"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    "testRelations"."test_entity_id" = test-entity-id-1
+  )
 ORDER BY
   "testRelations"."relation_name" DESC
 `;
@@ -315,7 +345,9 @@ SELECT
 FROM
   "test_relation" "testRelations"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    "testRelations"."test_entity_id" = test-entity-id-1
+  )
 ORDER BY
   "testRelations"."relation_name" ASC,
   "testRelations"."test_relation_pk" DESC
