@@ -98,7 +98,8 @@
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "import/no-extraneous-dependencies": "off",
-        "jest/expect-expect": "off"
+        "jest/expect-expect": "off",
+        "@nx/enforce-module-boundaries": ["off"]
       }
     }
   ]
