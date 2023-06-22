@@ -1,12 +1,7 @@
 {
   "root": true,
-  "ignorePatterns": [
-    "**/*"
-  ],
-  "plugins": [
-    "@nrwl/nx",
-    "simple-import-sort"
-  ],
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nx", "simple-import-sort"],
   "extends": [
     "airbnb-typescript/base",
     "eslint:recommended",
@@ -24,14 +19,9 @@
   },
   "overrides": [
     {
-      "files": [
-        "*.ts",
-        "*.tsx",
-        "*.js",
-        "*.jsx"
-      ],
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@nrwl/nx/enforce-module-boundaries": [
+        "@nx/enforce-module-boundaries": [
           "error",
           {
             "enforceBuildableLibDependency": true,
@@ -39,33 +29,20 @@
             "depConstraints": [
               {
                 "sourceTag": "*",
-                "onlyDependOnLibsWithTags": [
-                  "*"
-                ]
+                "onlyDependOnLibsWithTags": ["*"]
               }
             ]
           }
         ],
-        "semi": [
-          "warn",
-          "never"
-        ]
+        "semi": ["warn", "never"]
       }
     },
     {
-      "files": [
-        "*.ts",
-        "*.tsx"
-      ],
-      "extends": [
-        "plugin:@nrwl/nx/typescript"
-      ],
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nx/typescript"],
       "rules": {
         // airbnb default is 1
-        "max-classes-per-file": [
-          "error",
-          5
-        ],
+        "max-classes-per-file": ["error", 5],
         // never allow default export
         "import/prefer-default-export": "off",
         // never allow default export
@@ -89,24 +66,15 @@
           {
             "groups": [
               // Packages. `react` related packages come first.
-              [
-                "^react",
-                "^@?\\w"
-              ],
+              ["^react", "^@?\\w"],
               // "type" imports.
-              [
-                "^.*\\u0000$"
-              ],
+              ["^.*\\u0000$"],
               // Absolute imports and other imports such as Vue-style `@/foo`.
               // Anything not matched in another group.
-              [
-                "^"
-              ],
+              ["^"],
               // Relative imports.
               // Anything that starts with a dot.
-              [
-                "^\\."
-              ]
+              ["^\\."]
             ]
           }
         ],
@@ -114,27 +82,15 @@
       }
     },
     {
-      "files": [
-        "*.js",
-        "*.jsx"
-      ],
-      "extends": [
-        "plugin:@nrwl/nx/javascript"
-      ],
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript"],
       "rules": {}
     },
     {
-      "files": [
-        "*.spec.ts",
-        "*/__fixtures__/*.ts"
-      ],
-      "extends": [
-        "plugin:@nrwl/nx/typescript"
-      ],
+      "files": ["*.spec.ts", "*/__fixtures__/*.ts"],
+      "extends": ["plugin:@nx/typescript"],
       "rules": {
-        "max-classes-per-file": [
-          "off"
-        ],
+        "max-classes-per-file": ["off"],
         "@typescript-eslint/no-unsafe-assignment": "off",
         "@typescript-eslint/no-unsafe-argument": "off",
         "@typescript-eslint/no-unsafe-member-access": "off",
