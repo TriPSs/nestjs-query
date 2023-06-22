@@ -21,7 +21,7 @@
     "camel-case": "^4.1.2",
     "lodash.escaperegexp": "^4.1.2",
     "lodash.merge": "^4.6.2",
-    "tslib": "^2.4.0"
+    "tslib": "^2.5.3"
   },
   "peerDependencies": {
     "@nestjs/common": "^9.0.0 || ^10.0.0",

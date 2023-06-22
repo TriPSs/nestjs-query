@@ -32,7 +32,6 @@ services:
 
   mongo:
     image: "mongo:5.0"
-    restart: always
     ports:
       - "27017:27017"
     volumes:
@@ -40,7 +39,6 @@ services:
 
   mongo-express:
     image: "mongo-express:latest"
-    restart: always
     ports:
       - 8081:8081
 

@@ -32,12 +32,12 @@
     "url": "https://github.com/tripss/nestjs-query/issues"
   },
   "dependencies": {
-    "dataloader": "^2.1.0",
+    "dataloader": "^2.2.2",
     "graphql-fields": "^2.0.3",
     "lodash.omit": "^4.5.0",
     "lower-case-first": "^2.0.2",
     "pluralize": "^8.0.0",
-    "tslib": "^2.4.0",
+    "tslib": "^2.5.3",
     "upper-case-first": "^2.0.2"
   },
   "peerDependencies": {
