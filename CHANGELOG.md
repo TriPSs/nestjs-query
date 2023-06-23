@@ -1,4 +1,18 @@
  
+# [3.0.0](https://github.com/TriPSs/nestjs-query/compare/v3.0.0-alpha.2...v3.0.0) (2023-06-23)
+
+
+### Features
+
+* Updated to `nestjs@10` ([489d32b](https://github.com/TriPSs/nestjs-query/commit/489d32b60ce352ba204cd3036e44a51f86d10e53))
+
+
+### BREAKING CHANGES
+
+* Dropped support for `nestjs@8`
+
+
+
 # [3.0.0-alpha.2](https://github.com/TriPSs/nestjs-query/compare/v3.0.0-alpha.1...v3.0.0-alpha.2) (2023-06-01)
 
 
