@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { InjectableOptions } from '@nestjs/common/decorators/core/injectable.decorator'
 
 import { Class, DeepPartial } from '../common'
 import {
@@ -286,8 +287,8 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
  * @param DTOClass - the DTO class that the QueryService is used for.
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare,@typescript-eslint/no-unused-vars -- intentional
-export function QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>>(DTOClass: Class<DTO>) {
+export function QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>>(DTOClass: Class<DTO>, options?: InjectableOptions) {
   return <Cls extends Class<QueryService<DTO, C, U>>>(cls: Cls): Cls | void => {
-    return Injectable()(cls)
+    return Injectable(options)(cls)
   }
 }

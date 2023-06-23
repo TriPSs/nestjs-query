@@ -1,21 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FilterQueryBuilder #delete with filter should call whereBuilder#build if there is a filter 1`] = `
-DELETE FROM
-  "test_entity"
+DELETE FROM "test_entity"
 WHERE
   "string_type" = 'foo'
 `;
 
-exports[`FilterQueryBuilder #delete with paging should ignore paging args 1`] = `
-DELETE FROM
-  "test_entity"
-`;
+exports[`FilterQueryBuilder #delete with paging should ignore paging args 1`] = `DELETE FROM "test_entity"`;
 
-exports[`FilterQueryBuilder #delete with sorting should ignore sorting 1`] = `
-DELETE FROM
-  "test_entity"
-`;
+exports[`FilterQueryBuilder #delete with sorting should ignore sorting 1`] = `DELETE FROM "test_entity"`;
 
 exports[`FilterQueryBuilder #select with filter should call whereBuilder#build if there is a filter 1`] = `
 SELECT
@@ -74,7 +67,9 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 LIMIT
-  10 OFFSET 10
+  10
+OFFSET
+  10
 `;
 
 exports[`FilterQueryBuilder #select with paging should apply paging args going forward 1`] = `
@@ -90,7 +85,9 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 LIMIT
-  10 OFFSET 11
+  10
+OFFSET
+  11
 `;
 
 exports[`FilterQueryBuilder #select with paging should use limit/offset when filtering on many to one relation 1`] = `
@@ -107,7 +104,9 @@ FROM
   "test_entity" "TestEntity"
   LEFT JOIN "test_relation" "manyToOneRelation" ON "manyToOneRelation"."test_relation_pk" = "TestEntity"."many_to_one_relation_id"
 LIMIT
-  10 OFFSET 3
+  10
+OFFSET
+  3
 `;
 
 exports[`FilterQueryBuilder #select with paging should use limit/offset when filtering on one to one relation 1`] = `
@@ -124,7 +123,9 @@ FROM
   "test_entity" "TestEntity"
   LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
 LIMIT
-  10 OFFSET 3
+  10
+OFFSET
+  3
 `;
 
 exports[`FilterQueryBuilder #select with paging should use skip/take when filtering on one to many relation 1`] = `
@@ -323,8 +324,7 @@ ORDER BY
 `;
 
 exports[`FilterQueryBuilder #softDelete with filter should call whereBuilder#build if there is a filter 1`] = `
-UPDATE
-  "test_soft_delete_entity"
+UPDATE "test_soft_delete_entity"
 SET
   "deleted_at" = CURRENT_TIMESTAMP
 WHERE
@@ -332,22 +332,19 @@ WHERE
 `;
 
 exports[`FilterQueryBuilder #softDelete with paging should ignore paging args 1`] = `
-UPDATE
-  "test_soft_delete_entity"
+UPDATE "test_soft_delete_entity"
 SET
   "deleted_at" = CURRENT_TIMESTAMP
 `;
 
 exports[`FilterQueryBuilder #softDelete with sorting should ignore sorting 1`] = `
-UPDATE
-  "test_soft_delete_entity"
+UPDATE "test_soft_delete_entity"
 SET
   "deleted_at" = CURRENT_TIMESTAMP
 `;
 
 exports[`FilterQueryBuilder #update with filter should call whereBuilder#build if there is a filter 1`] = `
-UPDATE
-  "test_entity"
+UPDATE "test_entity"
 SET
   "string_type" = baz
 WHERE
@@ -355,15 +352,13 @@ WHERE
 `;
 
 exports[`FilterQueryBuilder #update with paging should ignore paging args 1`] = `
-UPDATE
-  "test_entity"
+UPDATE "test_entity"
 SET
   "string_type" = baz
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply ASC NULLS_FIRST sorting 1`] = `
-UPDATE
-  "test_entity"
+UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
@@ -371,8 +366,7 @@ ORDER BY
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply ASC NULLS_LAST sorting 1`] = `
-UPDATE
-  "test_entity"
+UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
@@ -380,8 +374,7 @@ ORDER BY
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply ASC sorting 1`] = `
-UPDATE
-  "test_entity"
+UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
@@ -389,8 +382,7 @@ ORDER BY
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply DESC NULLS_FIRST sorting 1`] = `
-UPDATE
-  "test_entity"
+UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
@@ -398,8 +390,7 @@ ORDER BY
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply DESC NULLS_LAST sorting 1`] = `
-UPDATE
-  "test_entity"
+UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
@@ -407,8 +398,7 @@ ORDER BY
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply DESC sorting 1`] = `
-UPDATE
-  "test_entity"
+UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
@@ -416,8 +406,7 @@ ORDER BY
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply multiple sorts 1`] = `
-UPDATE
-  "test_entity"
+UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
