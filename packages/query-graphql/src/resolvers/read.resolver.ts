@@ -4,7 +4,7 @@ import omit from 'lodash.omit'
 
 import { OperationGroup } from '../auth'
 import { getDTONames } from '../common'
-import { AuthorizerFilter, GraphQLLookAheadRelations, HookArgs, ResolverQuery } from '../decorators'
+import { AuthorizerFilter, GraphQLResolveInfoResult, GraphQLResultInfo, HookArgs, ResolverQuery } from '../decorators'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import {
@@ -35,10 +35,14 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
   queryMany(
     query: QueryType<DTO, PagingStrategies>,
     authorizeFilter?: Filter<DTO>,
-    selectRelations?: SelectRelation<DTO>[]
+    resolveInfo?: GraphQLResolveInfoResult<InferConnectionTypeFromStrategy<DTO, PS>, DTO>
   ): Promise<InferConnectionTypeFromStrategy<DTO, PS>>
 
-  findById(id: FindOneArgsType, authorizeFilter?: Filter<DTO>, selectRelations?: SelectRelation<DTO>[]): Promise<DTO | undefined>
+  findById(
+    id: FindOneArgsType,
+    authorizeFilter?: Filter<DTO>,
+    resolveInfo?: GraphQLResolveInfoResult<DTO>
+  ): Promise<DTO | undefined>
 }
 
 /**
@@ -85,13 +89,13 @@ export const Readable =
           many: false
         })
         authorizeFilter?: Filter<DTO>,
-        @GraphQLLookAheadRelations(DTOClass)
-        relations?: SelectRelation<DTO>[]
+        @GraphQLResultInfo(DTOClass)
+        resolveInfo?: GraphQLResolveInfoResult<DTO>
       ): Promise<DTO> {
         return this.service.getById(input.id, {
           filter: authorizeFilter,
           withDeleted: opts?.one?.withDeleted,
-          relations
+          relations: resolveInfo.relations
         })
       }
 
@@ -109,13 +113,20 @@ export const Readable =
           many: true
         })
         authorizeFilter?: Filter<DTO>,
-        @GraphQLLookAheadRelations(DTOClass)
-        relations?: SelectRelation<DTO>[]
+        @GraphQLResultInfo(DTOClass)
+        resolveInfo?: GraphQLResolveInfoResult<InferConnectionTypeFromStrategy<DTO, ExtractPagingStrategy<DTO, ReadOpts>>, DTO>
       ): Promise<InstanceType<typeof ConnectionType>> {
         return ConnectionType.createFromPromise(
           (q) => this.service.query(q),
-          mergeQuery(query, { filter: authorizeFilter, relations }),
-          (filter) => this.service.count(filter)
+          mergeQuery(query, { filter: authorizeFilter, relations: resolveInfo.relations }),
+          (filter) => {
+            // If the total count is fetched, then query the service
+            if ('totalCount' in resolveInfo.info.fields) {
+              return this.service.count(filter)
+            }
+
+            return Promise.resolve(0)
+          }
         )
       }
     }

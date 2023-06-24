@@ -68,13 +68,22 @@ export function getOrCreateOffsetConnectionType<DTO>(
         this.totalCountFn = totalCountFn ?? DEFAULT_COUNT
       }
 
-      @Field(() => PIT, { description: 'Paging information' })
+      @Field(() => PIT, {
+        description: 'Paging information'
+      })
       pageInfo!: OffsetPageInfoType
 
-      @Field(() => [TItemClass], { description: 'Array of nodes.' })
+      @Field(() => [TItemClass], {
+        description: 'Array of nodes.'
+      })
       nodes!: DTO[]
 
-      @SkipIf(() => !opts.enableTotalCount, Field(() => Int, { description: 'Fetch total count of records' }))
+      @SkipIf(
+        () => !opts.enableTotalCount,
+        Field(() => Int, {
+          description: 'Fetch total count of records'
+        })
+      )
       get totalCount(): Promise<number> {
         return this.totalCountFn()
       }
