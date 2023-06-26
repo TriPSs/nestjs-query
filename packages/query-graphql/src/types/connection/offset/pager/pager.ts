@@ -16,6 +16,8 @@ const DEFAULT_PAGING_META = <DTO>(query: Query<DTO>): OffsetPagingMeta<DTO> => (
 })
 
 export class OffsetPager<DTO> implements Pager<DTO, OffsetPagerResult<DTO>> {
+  constructor(private readonly enableFetchAllWithNegative?: boolean) {}
+
   async page<Q extends Query<DTO>>(queryMany: QueryMany<DTO, Q>, query: Q, count: Count<DTO>): Promise<OffsetPagerResult<DTO>> {
     const pagingMeta = this.getPageMeta(query)
     if (!this.isValidPaging(pagingMeta)) {
@@ -26,7 +28,7 @@ export class OffsetPager<DTO> implements Pager<DTO, OffsetPagerResult<DTO>> {
   }
 
   private isValidPaging(pagingMeta: OffsetPagingMeta<DTO>): boolean {
-    return pagingMeta.opts.limit > 0
+    return pagingMeta.opts.limit >= (this.enableFetchAllWithNegative ? -1 : 1)
   }
 
   private async runQuery<Q extends Query<DTO>>(
@@ -66,10 +68,13 @@ export class OffsetPager<DTO> implements Pager<DTO, OffsetPagerResult<DTO>> {
 
   private createQuery<Q extends OffsetQueryArgsType<DTO>>(query: Q, pagingMeta: OffsetPagingMeta<DTO>): Q {
     const { limit, offset } = pagingMeta.opts
-    return { ...query, paging: { limit: limit + 1, offset } }
+    const paging = { limit: limit + 1, offset }
+    if (this.enableFetchAllWithNegative && limit === -1) delete paging.limit
+    return { ...query, paging }
   }
 
   private checkForExtraNode(nodes: DTO[], opts: OffsetPagingOpts): DTO[] {
+    if (this.enableFetchAllWithNegative && opts.limit === -1) return nodes
     const returnNodes = [...nodes]
     const hasExtraNode = nodes.length > opts.limit
     if (hasExtraNode) {

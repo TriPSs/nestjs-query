@@ -8,6 +8,7 @@ interface BaseConnectionOptions {
   enableTotalCount?: boolean
   connectionName?: string
   disableKeySetPagination?: boolean
+  enableFetchAllWithNegative?: boolean
 }
 
 export interface CursorConnectionOptions extends BaseConnectionOptions {

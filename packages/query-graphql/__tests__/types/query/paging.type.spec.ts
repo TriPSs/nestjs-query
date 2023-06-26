@@ -6,7 +6,7 @@ import { getOrCreateCursorPagingType } from '../../../src/types/query/paging'
 import { generateSchema } from '../../__fixtures__'
 
 describe('PagingType', (): void => {
-  const CursorPaging = getOrCreateCursorPagingType()
+  const CursorPaging = getOrCreateCursorPagingType({})
   it('should create the correct filter graphql schema', async () => {
     @InputType()
     class Paging extends CursorPaging {}
