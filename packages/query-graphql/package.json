@@ -49,6 +49,6 @@
     "class-validator": "^0.14.0",
     "graphql": "^16.0.0",
     "graphql-subscriptions": "^2.0.0",
-    "ts-morph": "^13.0.2 || ^14.0.0 || ^15.0.0"
+    "ts-morph": "^19.0.0"
   }
 }
