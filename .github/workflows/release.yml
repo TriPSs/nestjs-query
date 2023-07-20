@@ -77,19 +77,19 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: version
+      - name: Version
         if: ${{ inputs.environment == 'prod' }}
         run: yarn nx run workspace:version
 
-      - name: version (Alpha)
+      - name: Version (Alpha)
         if: ${{ inputs.environment == 'alpha' }}
         run: yarn nx run workspace:version --releaseAs=${{inputs.releaseAs}} --preid=alpha
 
-      - name: build
-        run: nx run-many --target=build --all
+      - name: Build
+        run: yarn nx run-many --target=build --all
 
-      - name: publish
-        run: nx run-many --target=publish --all
+      - name: Publish
+        run: yarn nx run-many --target=publish --all
 
       - name: Push GIT
         run: git push --follow-tags origin ${{ needs.prepare-env.outputs.GITHUB_HEAD_REF }}
