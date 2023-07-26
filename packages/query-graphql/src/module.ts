@@ -6,6 +6,7 @@ import { ReadResolverOpts } from './resolvers'
 import { defaultPubSub, GraphQLPubSub, pubSubToken } from './subscription'
 import { PagingStrategies } from './types/query/paging'
 import { ConnectionCursorScalar } from './types'
+import { RelativeDateScalar } from './types/relative-date-scalar.type'
 
 interface DTOModuleOpts<DTO> {
   DTOClass: Class<DTO>
@@ -60,7 +61,7 @@ export class NestjsQueryGraphQLModule {
   }
 
   private static getScalarsProviders() {
-    return [ConnectionCursorScalar];
+    return [ConnectionCursorScalar, RelativeDateScalar];
   }
 
   private static getPubSubProviders(opts: NestjsQueryGraphqlModuleOpts): Provider<GraphQLPubSub>[] {

@@ -22,6 +22,7 @@ export { DeleteManyResponseType } from './delete-many-reponse.type'
 export { DeleteOneInputType } from './delete-one-input.type'
 export { FindOneArgsType } from './find-one-args.type'
 export { MutationArgsType } from './mutation-args.type'
+export { RelativeDateScalar } from './relative-date-scalar.type'
 export {
   CursorPagingType,
   CursorQueryArgsType,

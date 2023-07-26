@@ -4,6 +4,7 @@ import { Type } from 'class-transformer'
 import { IsBoolean, IsDate, IsOptional, ValidateNested } from 'class-validator'
 
 import { IsUndefined } from '../../validators'
+import { RelativeDateScalar } from '../../relative-date-scalar.type'
 
 /** @internal */
 let dateFieldComparison: Class<FilterFieldComparison<Date>>
@@ -37,44 +38,36 @@ export function getOrCreateDateFieldComparison(): Class<FilterFieldComparison<Da
     @IsOptional()
     isNot?: boolean | null
 
-    @Field(() => GraphQLISODateTime, { nullable: true })
+    @Field(() => RelativeDateScalar, { nullable: true })
     @IsUndefined()
-    @IsDate()
     eq?: Date
 
-    @Field(() => GraphQLISODateTime, { nullable: true })
+    @Field(() => RelativeDateScalar, { nullable: true })
     @IsUndefined()
-    @IsDate()
     neq?: Date
 
-    @Field(() => GraphQLISODateTime, { nullable: true })
+    @Field(() => RelativeDateScalar, { nullable: true })
     @IsUndefined()
-    @IsDate()
     gt?: Date
 
-    @Field(() => GraphQLISODateTime, { nullable: true })
+    @Field(() => RelativeDateScalar, { nullable: true })
     @IsUndefined()
-    @IsDate()
     gte?: Date
 
-    @Field(() => GraphQLISODateTime, { nullable: true })
+    @Field(() => RelativeDateScalar, { nullable: true })
     @IsUndefined()
-    @IsDate()
     lt?: Date
 
-    @Field(() => GraphQLISODateTime, { nullable: true })
+    @Field(() => RelativeDateScalar, { nullable: true })
     @IsUndefined()
-    @IsDate()
     lte?: Date;
 
-    @Field(() => [GraphQLISODateTime], { nullable: true })
+    @Field(() => [RelativeDateScalar], { nullable: true })
     @IsUndefined()
-    @IsDate({ each: true })
     in?: Date[]
 
-    @Field(() => [GraphQLISODateTime], { nullable: true })
+    @Field(() => [RelativeDateScalar], { nullable: true })
     @IsUndefined()
-    @IsDate({ each: true })
     notIn?: Date[]
 
     @Field(() => DateFieldComparisonBetween, { nullable: true })
