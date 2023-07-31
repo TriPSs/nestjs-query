@@ -124,16 +124,10 @@ export const Readable =
               resolveInfo: resolveInfo?.info
             }),
           mergeQuery(query, { filter: authorizeFilter, relations: resolveInfo?.relations }),
-          (filter) => {
-            // If the total count is fetched, then query the service
-            if (!resolveInfo || 'totalCount' in resolveInfo.info.fields) {
-              return this.service.count(filter, {
-                withDeleted: opts?.many?.withDeleted
-              })
-            }
-
-            return Promise.resolve(0)
-          }
+          (filter) =>
+            this.service.count(filter, {
+              withDeleted: opts?.many?.withDeleted
+            })
         )
       }
     }

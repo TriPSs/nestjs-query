@@ -143,14 +143,7 @@ const ReadManyRelationMixin =
         return CT.createFromPromise(
           (query) => relationLoader.load({ dto, query }),
           mergeQuery(relationQuery, { filter: relationFilter, relations: resolveInfo?.relations }),
-          (filter) => {
-            // If the total count is fetched, then query the service
-            if (!resolveInfo || 'totalCount' in resolveInfo.info.fields) {
-              return relationCountLoader.load({ dto, filter })
-            }
-
-            return Promise.resolve(0)
-          }
+          (filter) => relationCountLoader.load({ dto, filter })
         )
       }
     }
