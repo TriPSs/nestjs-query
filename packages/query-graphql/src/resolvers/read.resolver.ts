@@ -117,7 +117,10 @@ export const Readable =
         resolveInfo?: GraphQLResolveInfoResult<InferConnectionTypeFromStrategy<DTO, ExtractPagingStrategy<DTO, ReadOpts>>, DTO>
       ): Promise<InstanceType<typeof ConnectionType>> {
         return ConnectionType.createFromPromise(
-          (q) => this.service.query(q),
+          (q) =>
+            this.service.query(q, {
+              withDeleted: opts?.many?.withDeleted
+            }),
           mergeQuery(query, { filter: authorizeFilter, relations: resolveInfo.relations }),
           (filter) => {
             // If the total count is fetched, then query the service
