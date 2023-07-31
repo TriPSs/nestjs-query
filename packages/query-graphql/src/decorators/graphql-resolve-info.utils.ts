@@ -121,27 +121,31 @@ function isCursorPaging<DTO>(info: unknown): info is QueryResolveTree<CursorConn
 }
 
 export function simplifyResolveInfo<DTO>(resolveInfo: ResolveInfo): QueryResolveTree<DTO> {
-  const simpleInfo = parseFieldNodes(resolveInfo.fieldNodes, resolveInfo, null, resolveInfo.parentType)
+  return parseFieldNodes<DTO>(resolveInfo.fieldNodes, resolveInfo, null, resolveInfo.parentType) as QueryResolveTree<DTO>
+}
 
+export function removePagingFromSimplifiedInfo<DTO>(simpleInfo: QueryResolveTree<DTO>) {
   if (isOffsetPaging(simpleInfo)) {
     return simpleInfo.fields.nodes as QueryResolveTree<DTO>
   } else if (isCursorPaging(simpleInfo)) {
     return simpleInfo.fields.edges.fields.node as QueryResolveTree<DTO>
   }
 
-  return simpleInfo as QueryResolveTree<DTO>
+  return simpleInfo
 }
 
 export function createLookAheadInfo<DTO>(
   relations: RelationDescriptor<unknown>[],
   simpleResolveInfo: QueryResolveTree<DTO>
 ): SelectRelation<DTO>[] {
+  const simplifiedInfoWithoutPaging = removePagingFromSimplifiedInfo(simpleResolveInfo)
+
   return relations
     .map((relation): SelectRelation<DTO> | boolean => {
-      if (relation.name in simpleResolveInfo.fields) {
+      if (relation.name in simplifiedInfoWithoutPaging.fields) {
         return {
           name: relation.name,
-          query: (simpleResolveInfo.fields[relation.name] as QueryResolveTree<DTO>).args || {}
+          query: (simplifiedInfoWithoutPaging.fields[relation.name] as QueryResolveTree<DTO>).args || {}
         }
       }
 
