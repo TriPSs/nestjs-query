@@ -95,8 +95,8 @@ export const Readable =
         return this.service.getById(input.id, {
           filter: authorizeFilter,
           withDeleted: opts?.one?.withDeleted,
-          relations: resolveInfo.relations,
-          resolveInfo: resolveInfo.info
+          relations: resolveInfo?.relations,
+          resolveInfo: resolveInfo?.info
         })
       }
 
@@ -121,12 +121,12 @@ export const Readable =
           (q) =>
             this.service.query(q, {
               withDeleted: opts?.many?.withDeleted,
-              resolveInfo: resolveInfo.info
+              resolveInfo: resolveInfo?.info
             }),
-          mergeQuery(query, { filter: authorizeFilter, relations: resolveInfo.relations }),
+          mergeQuery(query, { filter: authorizeFilter, relations: resolveInfo?.relations }),
           (filter) => {
             // If the total count is fetched, then query the service
-            if (resolveInfo && 'totalCount' in resolveInfo.info.fields) {
+            if (!resolveInfo || 'totalCount' in resolveInfo.info.fields) {
               return this.service.count(filter, {
                 withDeleted: opts?.many?.withDeleted
               })

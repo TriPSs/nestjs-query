@@ -14,14 +14,16 @@ describe('AggregateRelationsLoader', () => {
     }
 
     it('should return a function that accepts aggregate args', () => {
-      const service = mock<QueryService<DTO>>()
+      const service = mock<QueryService<unknown>>()
       const queryRelationsLoader = new AggregateRelationsLoader(RelationDTO, 'relation')
       expect(queryRelationsLoader.createLoader(instance(service))).toBeInstanceOf(Function)
     })
 
     it('should try to load the relations with the query args', () => {
       const service = mock<QueryService<DTO>>()
-      const aggregateRelationsLoader = new AggregateRelationsLoader(RelationDTO, 'relation').createLoader(instance(service))
+      const aggregateRelationsLoader = new AggregateRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation').createLoader(
+        instance(service)
+      )
       const filter = {}
       const aggregate: AggregateQuery<RelationDTO> = { count: [{ field: 'id', args: {} }] }
       const dtos = [{ id: 'dto-1' }, { id: 'dto-2' }]
@@ -45,7 +47,9 @@ describe('AggregateRelationsLoader', () => {
 
     it('should try return an empty aggregate result for each dto if no results are found', () => {
       const service = mock<QueryService<DTO>>()
-      const aggregateRelationsLoader = new AggregateRelationsLoader(RelationDTO, 'relation').createLoader(instance(service))
+      const aggregateRelationsLoader = new AggregateRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation').createLoader(
+        instance(service)
+      )
       const filter = {}
       const aggregate: AggregateQuery<RelationDTO> = { count: [{ field: 'id', args: {} }] }
       const dtos = [{ id: 'dto-1' }, { id: 'dto-2' }]
@@ -63,7 +67,9 @@ describe('AggregateRelationsLoader', () => {
 
     it('should group queryRelations calls by filter and return in the correct order', () => {
       const service = mock<QueryService<DTO>>()
-      const queryRelationsLoader = new AggregateRelationsLoader(RelationDTO, 'relation').createLoader(instance(service))
+      const queryRelationsLoader = new AggregateRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation').createLoader(
+        instance(service)
+      )
       const filter1 = { id: { gt: 'a' } }
       const filter2 = {}
       const aggregate: AggregateQuery<RelationDTO> = { count: [{ field: 'id', args: {} }] }
@@ -112,7 +118,9 @@ describe('AggregateRelationsLoader', () => {
 
     it('should group queryRelations calls by aggregate and return in the correct order', () => {
       const service = mock<QueryService<DTO>>()
-      const queryRelationsLoader = new AggregateRelationsLoader(RelationDTO, 'relation').createLoader(instance(service))
+      const queryRelationsLoader = new AggregateRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation').createLoader(
+        instance(service)
+      )
       const filter = {}
       const aggregate1: AggregateQuery<RelationDTO> = { count: [{ field: 'id', args: {} }] }
       const aggregate2: AggregateQuery<RelationDTO> = { sum: [{ field: 'id', args: {} }] }

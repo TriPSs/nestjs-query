@@ -21,6 +21,7 @@ const mongo = new MongoServer()
 describe('MongooseQueryService', () => {
   let moduleRef: TestingModule
   let TestEntityModel: Model<TestEntity>
+  // let TestReferenceModel: Model<TestReference>
 
   class TestEntityService extends MongooseQueryService<TestEntity> {
     constructor(@InjectModel(TestEntity.name) readonly model: Model<TestEntity>) {
@@ -32,7 +33,7 @@ describe('MongooseQueryService', () => {
   class TestReferenceService extends MongooseQueryService<TestReference> {
     constructor(@InjectModel(TestReference.name) readonly model: Model<TestReference>) {
       super(model)
-      TestReferenceModel = model
+      // TestReferenceModel = model
     }
   }
 

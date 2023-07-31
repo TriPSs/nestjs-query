@@ -59,7 +59,7 @@ const ReadOneRelationMixin =
           loaderName,
           () =>
             findLoader.createLoader(this.service, {
-              resolveInfo: resolveInfo.info,
+              resolveInfo: resolveInfo?.info,
               withDeleted: relation.withDeleted,
               lookedAhead: relation.enableLookAhead
             }),
@@ -67,7 +67,7 @@ const ReadOneRelationMixin =
         ).load({
           dto,
           filter: authFilter,
-          relations: resolveInfo.relations
+          relations: resolveInfo?.relations
         })
       }
     }
@@ -142,10 +142,10 @@ const ReadManyRelationMixin =
 
         return CT.createFromPromise(
           (query) => relationLoader.load({ dto, query }),
-          mergeQuery(relationQuery, { filter: relationFilter, relations: resolveInfo.relations }),
+          mergeQuery(relationQuery, { filter: relationFilter, relations: resolveInfo?.relations }),
           (filter) => {
-            // If the total count is fetched, than query the service
-            if ('totalCount' in resolveInfo.info.fields) {
+            // If the total count is fetched, then query the service
+            if (!resolveInfo || 'totalCount' in resolveInfo.info.fields) {
               return relationCountLoader.load({ dto, filter })
             }
 

@@ -1,8 +1,9 @@
 import { Query, Resolver } from '@nestjs/graphql'
-import { SortDirection } from '@ptc-org/nestjs-query-core'
+import { QueryResolveTree, SortDirection } from '@ptc-org/nestjs-query-core'
 import {
   CursorQueryArgsType,
   NonePagingQueryArgsType,
+  OffsetConnectionType,
   OffsetQueryArgsType,
   PagingStrategies
 } from '@ptc-org/nestjs-query-graphql'
@@ -300,12 +301,17 @@ describe('ReadRelationsResolver - basics', () => {
             objectContaining({ ...query, paging: { limit: 2, offset: 0 } })
           )
         ).thenResolve(new Map([[dto, output]]))
+        const partialResolveInfoWithTotalCount = {
+          fields: { totalCount: {} }
+        } as Partial<QueryResolveTree<OffsetConnectionType<TestResolverDTO>>>
+
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        const result = await resolver.queryRelations(dto, query, {})
+        const result = await resolver.queryRelations(dto, query, {}, {}, { info: partialResolveInfoWithTotalCount })
         when(
           mockService.countRelations(TestRelationDTO, 'relations', deepEqual([dto]), objectContaining(query.filter))
         ).thenResolve(new Map([[dto, 10]]))
+
         return expect(result.totalCount).resolves.toBe(10)
       })
 

@@ -1,4 +1,4 @@
-import { AggregateQuery, QueryService, RelationQueryService } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, QueryService, QueryServiceRelation, RelationQueryService } from '@ptc-org/nestjs-query-core'
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito'
 
 describe('RelationQueryService', () => {
@@ -12,7 +12,7 @@ describe('RelationQueryService', () => {
 
   const relations = {
     test: { service: instance(mockRelationService), query: testRelationFn }
-  }
+  } as Record<string, QueryServiceRelation<TestType, unknown>>
 
   afterEach(() => {
     reset(mockQueryService)
