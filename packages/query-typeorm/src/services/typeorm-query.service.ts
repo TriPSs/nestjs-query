@@ -80,7 +80,7 @@ export class TypeOrmQueryService<Entity>
    * ```
    * @param query - The Query used to filter, page, and sort rows.
    */
-  public async query(query: Query<Entity>, opts?: QueryOptions): Promise<Entity[]> {
+  public async query(query: Query<Entity>, opts?: QueryOptions<Entity>): Promise<Entity[]> {
     const qb = this.filterQueryBuilder.select(query)
 
     if (opts?.withDeleted) {

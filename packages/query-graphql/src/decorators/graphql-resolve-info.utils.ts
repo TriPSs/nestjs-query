@@ -12,22 +12,8 @@ import {
 
 import type { CursorConnectionType, OffsetConnectionType } from '../types'
 import type { RelationDescriptor } from './relation.decorator'
-import type { Query, SelectRelation } from '@ptc-org/nestjs-query-core'
+import type { QueryResolveFields, QueryResolveTree, SelectRelation } from '@ptc-org/nestjs-query-core'
 import type { GraphQLCompositeType, GraphQLResolveInfo as ResolveInfo, SelectionNode } from 'graphql'
-
-type QueryResolveFields<DTO> = {
-  [key in keyof DTO]: QueryResolveTree<
-    // If the key is a array get the type of the array
-    DTO[key] extends ArrayLike<unknown> ? DTO[key][number] : DTO[key]
-  >
-}
-
-export interface QueryResolveTree<DTO> {
-  name: string
-  alias: string
-  args?: Query<DTO>
-  fields: QueryResolveFields<DTO>
-}
 
 function getFieldFromAST<TContext>(
   fieldNode: ASTNode,
@@ -135,10 +121,7 @@ function isCursorPaging<DTO>(info: unknown): info is QueryResolveTree<CursorConn
 }
 
 export function simplifyResolveInfo<DTO>(resolveInfo: ResolveInfo): QueryResolveTree<DTO> {
-  const simpleInfo = parseFieldNodes(resolveInfo.fieldNodes, resolveInfo, null, resolveInfo.parentType) as
-    | QueryResolveTree<DTO>
-    | QueryResolveTree<OffsetConnectionType<DTO>>
-    | QueryResolveTree<CursorConnectionType<DTO>>
+  const simpleInfo = parseFieldNodes(resolveInfo.fieldNodes, resolveInfo, null, resolveInfo.parentType)
 
   if (isOffsetPaging(simpleInfo)) {
     return simpleInfo.fields.nodes as QueryResolveTree<DTO>

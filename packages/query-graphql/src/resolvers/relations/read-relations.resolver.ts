@@ -59,6 +59,7 @@ const ReadOneRelationMixin =
           loaderName,
           () =>
             findLoader.createLoader(this.service, {
+              resolveInfo: resolveInfo.info,
               withDeleted: relation.withDeleted,
               lookedAhead: relation.enableLookAhead
             }),

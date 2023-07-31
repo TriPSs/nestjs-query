@@ -1,10 +1,10 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 
-import type { Class, SelectRelation } from '@ptc-org/nestjs-query-core'
+import type { Class, QueryResolveTree, SelectRelation } from '@ptc-org/nestjs-query-core'
 import type { GraphQLResolveInfo as ResolveInfo } from 'graphql'
 
-import { createLookAheadInfo, QueryResolveTree, simplifyResolveInfo } from './graphql-resolve-info.utils'
+import { createLookAheadInfo, simplifyResolveInfo } from './graphql-resolve-info.utils'
 import { getRelationsDescriptors } from './relation.decorator'
 
 export interface GraphQLResolveInfoResult<InfoDTO, RelationsDTO = InfoDTO> {

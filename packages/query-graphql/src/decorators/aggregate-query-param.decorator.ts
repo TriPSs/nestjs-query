@@ -1,9 +1,10 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
-import { AggregateQuery } from '@ptc-org/nestjs-query-core'
 import { GraphQLResolveInfo } from 'graphql'
 
-import { QueryResolveTree, simplifyResolveInfo } from './graphql-resolve-info.utils'
+import type { AggregateQuery, QueryResolveTree } from '@ptc-org/nestjs-query-core'
+
+import { simplifyResolveInfo } from './graphql-resolve-info.utils'
 
 const QUERY_OPERATORS: (keyof AggregateQuery<unknown>)[] = ['groupBy', 'count', 'avg', 'sum', 'min', 'max']
 

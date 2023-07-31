@@ -1,5 +1,5 @@
 import { ArgsType, Resolver } from '@nestjs/graphql'
-import { Class, Filter, mergeQuery, QueryService, SelectRelation } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
 import omit from 'lodash.omit'
 
 import { OperationGroup } from '../auth'
@@ -35,7 +35,7 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
   queryMany(
     query: QueryType<DTO, PagingStrategies>,
     authorizeFilter?: Filter<DTO>,
-    resolveInfo?: GraphQLResolveInfoResult<InferConnectionTypeFromStrategy<DTO, PS>, DTO>
+    resolveInfo?: GraphQLResolveInfoResult<DTO, DTO>
   ): Promise<InferConnectionTypeFromStrategy<DTO, PS>>
 
   findById(
@@ -95,7 +95,8 @@ export const Readable =
         return this.service.getById(input.id, {
           filter: authorizeFilter,
           withDeleted: opts?.one?.withDeleted,
-          relations: resolveInfo.relations
+          relations: resolveInfo.relations,
+          resolveInfo: resolveInfo.info
         })
       }
 
@@ -114,12 +115,13 @@ export const Readable =
         })
         authorizeFilter?: Filter<DTO>,
         @GraphQLResultInfo(DTOClass)
-        resolveInfo?: GraphQLResolveInfoResult<InferConnectionTypeFromStrategy<DTO, ExtractPagingStrategy<DTO, ReadOpts>>, DTO>
+        resolveInfo?: GraphQLResolveInfoResult<DTO, DTO>
       ): Promise<InstanceType<typeof ConnectionType>> {
         return ConnectionType.createFromPromise(
           (q) =>
             this.service.query(q, {
-              withDeleted: opts?.many?.withDeleted
+              withDeleted: opts?.many?.withDeleted,
+              resolveInfo: resolveInfo.info
             }),
           mergeQuery(query, { filter: authorizeFilter, relations: resolveInfo.relations }),
           (filter) => {
