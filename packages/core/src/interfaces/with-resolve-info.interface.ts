@@ -1,4 +1,4 @@
-import { QueryResolveTree } from '@ptc-org/nestjs-query-core'
+import { QueryResolveTree } from './query-resolve-info.interface'
 
 export interface WithResolveInfo<DTO> {
   /**

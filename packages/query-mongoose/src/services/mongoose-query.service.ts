@@ -19,10 +19,6 @@ import { Document, Model as MongooseModel, PipelineStage, UpdateQuery } from 'mo
 import { AggregateBuilder, FilterQueryBuilder } from '../query'
 import { ReferenceQueryService } from './reference-query.service'
 
-type MongoDBUpdatedOutput = {
-  nModified: number
-}
-
 type MongoDBDeletedOutput = {
   deletedCount: number
 }

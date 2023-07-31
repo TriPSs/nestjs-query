@@ -9,8 +9,7 @@ import {
   ModifyRelationOptions,
   Query
 } from '@ptc-org/nestjs-query-core'
-import { ModelCtor as SequelizeModelCtor } from 'sequelize'
-import { MakeNullishOptional } from 'sequelize/types/utils'
+import { ModelStatic as SequelizeModelCtor } from 'sequelize'
 import { Model, ModelCtor } from 'sequelize-typescript'
 
 import { AggregateBuilder, FilterQueryBuilder } from '../query'
