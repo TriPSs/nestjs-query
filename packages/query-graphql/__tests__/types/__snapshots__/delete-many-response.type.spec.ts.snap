@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeleteManyResponseType should create a @nestjs/graphql object type 1`] = `
-type DeleteManyResponse {
+"type DeleteManyResponse {
   """The number of records deleted."""
   deletedCount: Int!
 }
 
 type Query {
   deleteTest: DeleteManyResponse!
-}
+}"
 `;

@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ReadRelationsResolver - many - 2 should not add sorting argument if disableSorting is true 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
   relations(
@@ -108,5 +108,5 @@ type TestResolverDTORelationsConnection {
 
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;

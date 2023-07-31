@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AggregateRelationsResolver - 2 aggregate should use the dtoName if provided 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
   testsAggregate(
@@ -80,5 +80,5 @@ type TestResolverDTOTestsAggregateResponse {
 
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;

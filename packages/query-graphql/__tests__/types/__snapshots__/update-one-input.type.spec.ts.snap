@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UpdateOneInputType should create an input type with a custom id and update type as fields 1`] = `
-type Query {
+"type Query {
   updateTest(input: UpdateOneCustomId!): Int!
 }
 
@@ -15,11 +15,11 @@ input UpdateOneCustomId {
 
 input FakeUpdateOneType {
   name: String!
-}
+}"
 `;
 
 exports[`UpdateOneInputType should create an input type with the id and update type as fields 1`] = `
-type Query {
+"type Query {
   updateTest(input: UpdateOne!): Int!
 }
 
@@ -33,5 +33,5 @@ input UpdateOne {
 
 input FakeUpdateOneType {
   name: String!
-}
+}"
 `;
