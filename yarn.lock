@@ -15849,13 +15849,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-snapshot-serializer-raw@npm:2.0.0":
-  version: 2.0.0
-  resolution: "jest-snapshot-serializer-raw@npm:2.0.0"
-  checksum: cc652c1ea1ac6125f9b533f44184b7c87e3f7cad88d99254ec98c09b837fd7c4677c143bcdbff214539462685eca39552577f660d649cf46fb5aa7de41c28949
-  languageName: node
-  linkType: hard
-
 "jest-snapshot@npm:^29.5.0":
   version: 29.5.0
   resolution: "jest-snapshot@npm:29.5.0"
@@ -17695,7 +17688,6 @@ __metadata:
     husky: 8.0.3
     jest: 29.6.2
     jest-extended: 4.0.0
-    jest-snapshot-serializer-raw: 2.0.0
     mongodb-memory-server: 8.13.0
     mongoose: ^7.4.1
     mysql2: 3.5.2
