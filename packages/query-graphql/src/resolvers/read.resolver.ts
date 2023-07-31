@@ -126,8 +126,10 @@ export const Readable =
           mergeQuery(query, { filter: authorizeFilter, relations: resolveInfo.relations }),
           (filter) => {
             // If the total count is fetched, then query the service
-            if ('totalCount' in resolveInfo.info.fields) {
-              return this.service.count(filter)
+            if (resolveInfo && 'totalCount' in resolveInfo.info.fields) {
+              return this.service.count(filter, {
+                withDeleted: opts?.many?.withDeleted
+              })
             }
 
             return Promise.resolve(0)
