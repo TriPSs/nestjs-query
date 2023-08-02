@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AggregateArgsType should create an aggregate type with the correct fields for each type 1`] = `
-type Query {
+"type Query {
   aggregate(
     """Filter to find records to aggregate on"""
     filter: FakeTypeAggregateFilter
@@ -82,5 +82,5 @@ scalar DateTime
 input DateFieldComparisonBetween {
   lower: DateTime!
   upper: DateTime!
-}
+}"
 `;

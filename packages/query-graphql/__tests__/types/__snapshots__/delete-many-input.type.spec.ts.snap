@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeleteManyInputType should create an args type with the field as the type 1`] = `
-type Query {
+"type Query {
   test(input: DeleteMany!): Int!
 }
 
@@ -31,5 +31,5 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
