@@ -8,7 +8,13 @@ import { createLookAheadInfo, simplifyResolveInfo } from './graphql-resolve-info
 import { getRelationsDescriptors } from './relation.decorator'
 
 export interface GraphQLResolveInfoResult<InfoDTO, RelationsDTO = InfoDTO> {
+  /**
+   * @internal this implementation is not final and subjected to change! Use at own risk!
+   */
   info?: QueryResolveTree<InfoDTO>
+  /**
+   * @internal this implementation is not final and subjected to change! Use at own risk!
+   */
   relations?: SelectRelation<RelationsDTO>[]
 }
 
