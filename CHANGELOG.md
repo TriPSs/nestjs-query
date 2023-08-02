@@ -1,4 +1,36 @@
  
+# [4.0.0](https://github.com/TriPSs/nestjs-query/compare/v3.0.2...v4.0.0) (2023-08-02)
+
+
+### Bug Fixes
+
+* **query-graphql:** Fixed `GraphQLResultInfo` always returning info without paging ([89de5c7](https://github.com/TriPSs/nestjs-query/commit/89de5c700bf57ba271d592503b39482ee2b45027))
+* **query-graphql:** Fixed `queryMany` not using `withDeleted` option ([27fe0f8](https://github.com/TriPSs/nestjs-query/commit/27fe0f8e566cda5b6d16e878882591d830989a79))
+* **query-graphql:** Fixed `withDeleted` not being passed to count of the service ([25180b3](https://github.com/TriPSs/nestjs-query/commit/25180b32c47344e7b7ad19f80b68f7bce1b5dca8))
+
+
+### Code Refactoring
+
+* Drop support for older versions of `class-transformer` ([e282592](https://github.com/TriPSs/nestjs-query/commit/e282592807feb30ef44e045ac88f2a4e5c6b2fbb))
+
+
+### Features
+
+* **query-graphql:** Look ahead `totalCount` ([e4713a9](https://github.com/TriPSs/nestjs-query/commit/e4713a99d943cef4e69d89b31e002d6bad7910b8)), closes [#137](https://github.com/TriPSs/nestjs-query/issues/137)
+* **query-graphql:** Look ahead `totalCount` ([#151](https://github.com/TriPSs/nestjs-query/issues/151)) ([03d648f](https://github.com/TriPSs/nestjs-query/commit/03d648f2227d59acea61874cb3c10dcc73ce519c)), closes [#137](https://github.com/TriPSs/nestjs-query/issues/137)
+
+
+### Reverts
+
+* **query-graphql:** Revert look ahead of `totalCount` as this was already done ([5c7e0c6](https://github.com/TriPSs/nestjs-query/commit/5c7e0c6dd63b0cafb7b5c9598ed24b5588944623))
+
+
+### BREAKING CHANGES
+
+* Versions of `class-transformer` older than 0.5 are no longer supported
+
+
+
 ## [3.0.2](https://github.com/TriPSs/nestjs-query/compare/v3.0.1...v3.0.2) (2023-07-20)
 
 
