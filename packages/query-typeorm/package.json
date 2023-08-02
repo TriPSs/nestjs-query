@@ -22,13 +22,13 @@
     "lodash.filter": "^4.6.0",
     "lodash.merge": "^4.6.2",
     "lodash.omit": "^4.5.0",
-    "tslib": "^2.5.3",
+    "tslib": "^2.6.1",
     "uuid": "^9.0.0"
   },
   "peerDependencies": {
     "@nestjs/common": "^9.0.0 || ^10.0.0",
     "@nestjs/typeorm": "^9.0.0 || ^10.0.0",
-    "class-transformer": "^0.2.3 || 0.3.1 || ^0.5",
+    "class-transformer": "^0.5",
     "typeorm": "^0.3.15"
   },
   "repository": {

@@ -15,6 +15,5 @@ export default {
   moduleFileExtensions: ['ts', 'js', 'html'],
   testMatch: ['**/examples/**/e2e/**/*.spec.ts'],
   setupFilesAfterEnv: ['jest-extended'],
-  snapshotSerializers: ['jest-snapshot-serializer-raw/always'],
   coverageDirectory: './coverage/examples'
 }

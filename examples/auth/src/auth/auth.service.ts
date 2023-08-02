@@ -9,7 +9,10 @@ import { LoginResponseDto } from './dto/login-response.dto'
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectQueryService(UserEntity) private usersService: QueryService<UserEntity>, private jwtService: JwtService) {}
+  constructor(
+    @InjectQueryService(UserEntity) private usersService: QueryService<UserEntity>,
+    private jwtService: JwtService
+  ) {}
 
   async validateUser(username: string, pass: string): Promise<AuthenticatedUser | null> {
     const [user] = await this.usersService.query({ filter: { username: { eq: username } }, paging: { limit: 1 } })

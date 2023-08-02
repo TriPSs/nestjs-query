@@ -43,7 +43,8 @@ const tables = [
 export const truncate = async (connection: DataSource): Promise<void> => {
   await tables.reduce(async (prev, table) => {
     await prev
-    await connection.query(`DELETE FROM ${table}`)
+    await connection.query(`DELETE
+                            FROM ${table}`)
   }, Promise.resolve())
 }
 

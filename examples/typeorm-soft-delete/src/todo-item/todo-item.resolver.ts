@@ -7,6 +7,7 @@ import { TodoItemService } from './todo-item.service'
 
 @ArgsType()
 export class TodoItemQuery extends QueryArgsType(TodoItemDTO) {}
+
 export const TodoItemConnection = TodoItemQuery.ConnectionType
 
 @Resolver(() => TodoItemDTO)

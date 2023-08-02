@@ -25,13 +25,16 @@ const convertAggregateNumberFields = <From, To>(
   if (!response) {
     return undefined
   }
-  return Object.keys(response).reduce((toResponse, fromField) => {
-    const otherKey = fieldMap[fromField as keyof From] as keyof To
-    if (!otherKey) {
-      throw new Error(`No corresponding field found for '${fromField}' when transforming aggregateQuery`)
-    }
-    return { ...toResponse, [otherKey]: response[fromField as keyof From] }
-  }, {} as Record<keyof To, number>)
+  return Object.keys(response).reduce(
+    (toResponse, fromField) => {
+      const otherKey = fieldMap[fromField as keyof From] as keyof To
+      if (!otherKey) {
+        throw new Error(`No corresponding field found for '${fromField}' when transforming aggregateQuery`)
+      }
+      return { ...toResponse, [otherKey]: response[fromField as keyof From] }
+    },
+    {} as Record<keyof To, number>
+  )
 }
 
 const convertAggregateFields = <From, To>(

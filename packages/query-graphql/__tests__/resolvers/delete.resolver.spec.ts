@@ -25,7 +25,10 @@ describe('DeleteResolver', () => {
   const createTestResolver = (opts?: DeleteResolverOpts<TestResolverDTO>) => {
     @Resolver(() => TestResolverDTO)
     class TestResolver extends DeleteResolver(TestResolverDTO, opts) {
-      constructor(service: TestService, @InjectPubSub() readonly pubSub: PubSub) {
+      constructor(
+        service: TestService,
+        @InjectPubSub() readonly pubSub: PubSub
+      ) {
         super(service)
       }
     }

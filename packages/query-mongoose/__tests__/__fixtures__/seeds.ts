@@ -11,7 +11,7 @@ export const TEST_ENTITIES: TestEntity[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
       dateType: new Date(`2020-02-${i} 12:00`),
       numberType: i,
       stringType: `foo${i}`
-    } as TestEntity)
+    }) as TestEntity
 )
 
 export const TEST_REFERENCES: TestReference[] = TEST_ENTITIES.reduce(

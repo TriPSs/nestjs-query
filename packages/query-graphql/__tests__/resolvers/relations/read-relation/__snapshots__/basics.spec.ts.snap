@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ReadRelationsResolver - basics one should not add read one methods if disableRead is true 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
@@ -46,11 +46,11 @@ type OffsetPageInfo {
 
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;
 
 exports[`ReadRelationsResolver - basics one should use the object type name 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
   relation: TestRelationDTO!
@@ -96,11 +96,11 @@ type OffsetPageInfo {
 
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;
 
 exports[`ReadRelationsResolver - basics should not add read methods if one and many are empty 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
@@ -145,5 +145,5 @@ type OffsetPageInfo {
 
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;

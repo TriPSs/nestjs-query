@@ -8,6 +8,7 @@ export const DeleteManyResponseType = (): Class<DeleteManyResponse> => {
   if (deleteManyResponseType) {
     return deleteManyResponseType
   }
+
   @Directive('@shareable')
   @ObjectType('DeleteManyResponse')
   class DeleteManyResponseTypeImpl implements DeleteManyResponse {

@@ -10,6 +10,7 @@ import { TagModule } from './tag/tag.module'
 import { TodoItemModule } from './todo-item/todo-item.module'
 
 const { uri, ...options } = mongooseConfig('mongoose')
+
 @Module({
   imports: [
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

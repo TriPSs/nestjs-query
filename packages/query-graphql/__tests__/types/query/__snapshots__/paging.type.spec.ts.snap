@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PagingType should create the correct filter graphql schema 1`] = `
-type Query {
+"type Query {
   test(input: Paging!): Int!
 }
 
@@ -20,5 +20,5 @@ input Paging {
 }
 
 """Cursor for paging through collections"""
-scalar ConnectionCursor
+scalar ConnectionCursor"
 `;

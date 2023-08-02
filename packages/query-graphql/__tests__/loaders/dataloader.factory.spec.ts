@@ -13,7 +13,7 @@ describe('DataLoaderFactory', () => {
   })
 
   describe('getOrCreateLoader', () => {
-    const createContext = (): ExecutionContext => ({} as unknown as ExecutionContext)
+    const createContext = (): ExecutionContext => ({}) as unknown as ExecutionContext
     const dataloadFn = (args: ReadonlyArray<string>): Promise<string[]> => Promise.resolve([...args])
 
     it('should create a dataloader and add it to the context', () => {

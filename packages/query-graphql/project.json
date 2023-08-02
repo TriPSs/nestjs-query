@@ -6,14 +6,20 @@
   "targets": {
     "lint": {
       "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["packages/query-graphql/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/query-graphql/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/packages/query-graphql"],
+      "outputs": [
+        "{workspaceRoot}/coverage/packages/query-graphql"
+      ],
       "options": {
         "jestConfig": "packages/query-graphql/jest.config.ts",
         "passWithNoTests": true
@@ -21,13 +27,17 @@
     },
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/query-graphql",
         "tsConfig": "packages/query-graphql/tsconfig.lib.json",
         "packageJson": "packages/query-graphql/package.json",
         "main": "packages/query-graphql/src/index.ts",
-        "assets": ["packages/query-graphql/*.md"],
+        "assets": [
+          "packages/query-graphql/*.md"
+        ],
         "updateBuildableProjectDepsInPackageJson": true,
         "buildableProjectDepsInPackageJsonType": "dependencies"
       }
@@ -44,5 +54,7 @@
     }
   },
   "tags": [],
-  "implicitDependencies": ["core"]
+  "implicitDependencies": [
+    "core"
+  ]
 }

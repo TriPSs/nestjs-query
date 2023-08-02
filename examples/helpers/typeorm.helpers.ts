@@ -17,7 +17,7 @@ export const typeormMysqlOptions = (
     synchronize: true,
     dropSchema: true,
     ...overrides
-  } as TypeOrmModuleOptions)
+  }) as TypeOrmModuleOptions
 
 export const typeormPostgresOptions = (
   username: string,
@@ -36,7 +36,7 @@ export const typeormPostgresOptions = (
     logger: 'simple-console',
     logging: ['error'],
     ...overrides
-  } as TypeOrmModuleOptions)
+  }) as TypeOrmModuleOptions
 
 export const typeormOrmConfig = (
   username: string,

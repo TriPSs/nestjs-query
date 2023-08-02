@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CursorConnectionType should create the connection SDL 1`] = `
-type Test {
+"type Test {
   stringField: String!
   numberField: Float!
   boolField: Boolean!
@@ -42,11 +42,11 @@ type TestConnection {
 
 type Query {
   test: TestConnection!
-}
+}"
 `;
 
 exports[`CursorConnectionType should create the connection SDL with totalCount if enabled 1`] = `
-type Test {
+"type Test {
   stringField: String!
   numberField: Float!
   boolField: Boolean!
@@ -102,5 +102,5 @@ type TestTotalCountConnection {
 
 type Query {
   test: TestTotalCountConnection!
-}
+}"
 `;

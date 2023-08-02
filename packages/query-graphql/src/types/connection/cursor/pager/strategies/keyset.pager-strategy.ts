@@ -7,7 +7,10 @@ import { decodeBase64, encodeBase64, hasBeforeCursor, isBackwardPaging, isForwar
 import { KeySetCursorPayload, KeySetPagingOpts, PagerStrategy } from './pager-strategy'
 
 export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
-  constructor(readonly DTOClass: Class<DTO>, readonly pageFields: (keyof DTO)[]) {}
+  constructor(
+    readonly DTOClass: Class<DTO>,
+    readonly pageFields: (keyof DTO)[]
+  ) {}
 
   fromCursorArgs(cursor: CursorPagingType): KeySetPagingOpts<DTO> {
     const { defaultSort } = this
