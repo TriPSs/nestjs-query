@@ -18,12 +18,15 @@ interface ReferenceDescriptor<DTO, Reference> {
 }
 
 function getReferenceDescriptors<DTO>(DTOClass: Class<DTO>): ReferenceDescriptor<DTO, unknown>[] {
-  return getPrototypeChain(DTOClass).reduce((references, cls) => {
-    const referenceNames = references.map((r) => r.name)
-    const metaReferences = reflector.get<DTO, ReferenceDescriptor<DTO, unknown>>(cls as Class<DTO>) ?? []
-    const inheritedReferences = metaReferences.filter((t) => !referenceNames.includes(t.name))
-    return [...inheritedReferences, ...references]
-  }, [] as ReferenceDescriptor<DTO, unknown>[])
+  return getPrototypeChain(DTOClass).reduce(
+    (references, cls) => {
+      const referenceNames = references.map((r) => r.name)
+      const metaReferences = reflector.get<DTO, ReferenceDescriptor<DTO, unknown>>(cls as Class<DTO>) ?? []
+      const inheritedReferences = metaReferences.filter((t) => !referenceNames.includes(t.name))
+      return [...inheritedReferences, ...references]
+    },
+    [] as ReferenceDescriptor<DTO, unknown>[]
+  )
 }
 
 function convertReferencesToOpts<DTO>(

@@ -12,7 +12,10 @@ type AggregateRelationsMap<DTO, Relation> = Map<string, (AggregateRelationsArgs<
 export class AggregateRelationsLoader<DTO, Relation>
   implements NestjsQueryDataloader<DTO, AggregateRelationsArgs<DTO, Relation>, AggregateResponse<Relation> | Error>
 {
-  constructor(readonly RelationDTO: Class<Relation>, readonly relationName: string) {}
+  constructor(
+    readonly RelationDTO: Class<Relation>,
+    readonly relationName: string
+  ) {}
 
   createLoader(service: QueryService<DTO, unknown, unknown>) {
     return async (

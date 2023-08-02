@@ -9,7 +9,8 @@
 
 # `@ptc-org/nestjs-query-typeorm`
 
-This package provides a code first implementation of graphql CRUD endpoints. It is built on top of of [nestjs](https://nestjs.com/).
+This package provides a code first implementation of graphql CRUD endpoints. It is built on top of
+of [nestjs](https://nestjs.com/).
 
 ## Installation
 

@@ -13,6 +13,7 @@ function createTestResolverDTO() {
     @FilterableField()
     stringField!: string
   }
+
   return TestResolverDTO
 }
 
@@ -25,6 +26,7 @@ function getTestRelationDTO() {
     @FilterableField()
     testResolverId!: string
   }
+
   return TestRelationDTO
 }
 
@@ -34,6 +36,7 @@ describe('ReferencesRelationMixin', () => {
   })
   const expectResolverSDL = async (opts?: ReferencesOpts<{ id: string; stringField: string }>) => {
     const TestResolverDTO = createTestResolverDTO()
+
     @Resolver(() => TestResolverDTO)
     class TestSDLResolver extends ReferencesRelationsResolver(TestResolverDTO, opts ?? {}) {
       @Query(() => TestResolverDTO)
@@ -55,6 +58,7 @@ describe('ReferencesRelationMixin', () => {
 
   it('should return a references type from the passed in dto', async () => {
     const TestResolverDTO = createTestResolverDTO()
+
     @Resolver(() => TestResolverDTO)
     class TestResolver extends ReferencesRelationsResolver(TestResolverDTO, {
       reference: { DTO: getTestRelationDTO(), keys: { id: 'stringField' } }
@@ -63,6 +67,7 @@ describe('ReferencesRelationMixin', () => {
         super(service)
       }
     }
+
     const { resolver } = await createResolverFromNest(TestResolver)
     const dto = {
       id: 'id-1',

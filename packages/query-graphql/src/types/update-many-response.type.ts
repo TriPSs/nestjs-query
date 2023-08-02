@@ -8,6 +8,7 @@ export const UpdateManyResponseType = (): Class<UpdateManyResponse> => {
   if (updateManyResponseType) {
     return updateManyResponseType
   }
+
   @Directive('@shareable')
   @ObjectType('UpdateManyResponse')
   class UpdateManyResponseTypeImpl implements UpdateManyResponse {

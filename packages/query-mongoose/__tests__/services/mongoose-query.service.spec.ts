@@ -21,6 +21,7 @@ const mongo = new MongoServer()
 describe('MongooseQueryService', () => {
   let moduleRef: TestingModule
   let TestEntityModel: Model<TestEntity>
+
   // let TestReferenceModel: Model<TestReference>
 
   class TestEntityService extends MongooseQueryService<TestEntity> {

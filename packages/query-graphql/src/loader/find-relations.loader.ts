@@ -9,7 +9,10 @@ type FindRelationsMap<DTO, Relation> = Map<string, (FindRelationsArgs<DTO, Relat
 export class FindRelationsLoader<DTO, Relation>
   implements NestjsQueryDataloader<DTO, FindRelationsArgs<DTO, Relation>, Relation | undefined | Error>
 {
-  constructor(readonly RelationDTO: Class<Relation>, readonly relationName: string) {}
+  constructor(
+    readonly RelationDTO: Class<Relation>,
+    readonly relationName: string
+  ) {}
 
   public createLoader(service: QueryService<DTO, unknown, unknown>, opts?: FindRelationsOpts<Relation>) {
     return async (args: ReadonlyArray<FindRelationsArgs<DTO, Relation>>): Promise<(Relation | undefined | Error)[]> => {

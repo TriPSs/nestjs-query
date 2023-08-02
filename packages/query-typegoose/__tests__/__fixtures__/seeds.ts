@@ -12,7 +12,7 @@ export const TEST_ENTITIES: DocumentType<TestEntity>[] = [1, 2, 3, 4, 5, 6, 7, 8
       dateType: new Date(`2020-02-${i} 12:00`),
       numberType: i,
       stringType: `foo${i}`
-    } as DocumentType<TestEntity>)
+    }) as DocumentType<TestEntity>
 )
 
 export const TEST_DISCRIMINATED_ENTITIES: DocumentType<TestDiscriminatedEntity>[] = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(
@@ -23,7 +23,7 @@ export const TEST_DISCRIMINATED_ENTITIES: DocumentType<TestDiscriminatedEntity>[
       numberType: i,
       stringType: `foo${i}-descrim`,
       stringType2: `bar${i}-descrim`
-    } as DocumentType<TestDiscriminatedEntity>)
+    }) as DocumentType<TestDiscriminatedEntity>
 )
 
 export const TEST_REFERENCES: DocumentType<TestReference>[] = TEST_ENTITIES.reduce(

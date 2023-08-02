@@ -55,7 +55,10 @@ export class TypeOrmQueryService<Entity>
 
   readonly useSoftDelete: boolean
 
-  constructor(readonly repo: Repository<Entity>, opts?: TypeOrmQueryServiceOpts<Entity>) {
+  constructor(
+    readonly repo: Repository<Entity>,
+    opts?: TypeOrmQueryServiceOpts<Entity>
+  ) {
     super()
 
     this.filterQueryBuilder = opts?.filterQueryBuilder ?? new FilterQueryBuilder<Entity>(this.repo)

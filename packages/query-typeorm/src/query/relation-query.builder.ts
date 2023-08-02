@@ -82,7 +82,10 @@ export class RelationQueryBuilder<Entity, Relation> {
    */
   private existingAlias: Alias
 
-  constructor(readonly repo: Repository<Entity>, readonly relation: string) {
+  constructor(
+    readonly repo: Repository<Entity>,
+    readonly relation: string
+  ) {
     this.relationRepo = this.repo.manager.getRepository<Relation>(this.relationMeta.from)
     this.filterQueryBuilder = new FilterQueryBuilder<Relation>(this.relationRepo)
     this.paramCount = 0

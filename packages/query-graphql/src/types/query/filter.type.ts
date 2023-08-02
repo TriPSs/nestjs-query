@@ -26,6 +26,7 @@ export type FilterableRelations = Record<string, Class<unknown>>
 
 export interface FilterConstructor<T> {
   hasRequiredFilters: boolean
+
   new (): Filter<T>
 }
 

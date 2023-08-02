@@ -110,7 +110,10 @@ function createEntityAutoResolver<DTO, Entity extends DeepPartial<Entity>, C, U,
 
   @Resolver(() => DTOClass)
   class AutoResolver extends CRUDResolver(DTOClass, resolverOpts) {
-    constructor(@InjectQueryService(EntityClass) service: QueryService<Entity, C, U>, @InjectPubSub() readonly pubSub: PubSub) {
+    constructor(
+      @InjectQueryService(EntityClass) service: QueryService<Entity, C, U>,
+      @InjectPubSub() readonly pubSub: PubSub
+    ) {
       super(new Service(service))
     }
   }
@@ -148,7 +151,10 @@ function createServiceAutoResolver<DTO, Service, C, U, R, PS extends PagingStrat
 
   @Resolver(() => DTOClass)
   class AutoResolver extends CRUDResolver(DTOClass, resolverOpts) {
-    constructor(@Inject(ServiceClass) service: QueryService<DTO, C, U>, @InjectPubSub() readonly pubSub: PubSub) {
+    constructor(
+      @Inject(ServiceClass) service: QueryService<DTO, C, U>,
+      @InjectPubSub() readonly pubSub: PubSub
+    ) {
       super(service)
     }
   }
