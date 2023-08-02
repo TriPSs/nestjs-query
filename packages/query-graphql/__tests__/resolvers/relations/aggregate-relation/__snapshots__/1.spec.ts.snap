@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AggregateRelationsResolver aggregate should not add read methods if enableAggregate is not true 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;
 
 exports[`AggregateRelationsResolver aggregate should use the object type name 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
   relationsAggregate(
@@ -91,16 +91,16 @@ type TestResolverDTORelationsAggregateResponse {
 
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;
 
 exports[`AggregateRelationsResolver should not add read methods if one and many are empty 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;

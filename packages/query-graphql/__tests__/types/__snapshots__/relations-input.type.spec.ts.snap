@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`RelationsInputType should create an input type with a custom parent and relation id 1`] = `
-type Query {
+"type Query {
   test(input: RelationsCustomParentRelationIdInput!): Int!
 }
 
@@ -11,11 +11,11 @@ input RelationsCustomParentRelationIdInput {
 
   """The ids of the relations."""
   relationIds: [String!]!
-}
+}"
 `;
 
 exports[`RelationsInputType should create an input type with a custom parent id 1`] = `
-type Query {
+"type Query {
   test(input: RelationsCustomParentIdInput!): Int!
 }
 
@@ -25,11 +25,11 @@ input RelationsCustomParentIdInput {
 
   """The ids of the relations."""
   relationIds: [ID!]!
-}
+}"
 `;
 
 exports[`RelationsInputType should create an input type with a custom relation id 1`] = `
-type Query {
+"type Query {
   test(input: RelationsCustomRelationIdInput!): Int!
 }
 
@@ -39,11 +39,11 @@ input RelationsCustomRelationIdInput {
 
   """The ids of the relations."""
   relationIds: [String!]!
-}
+}"
 `;
 
 exports[`RelationsInputType should create an input type with an id and relationIds fields 1`] = `
-type Query {
+"type Query {
   test(input: RelationsInput!): Int!
 }
 
@@ -53,5 +53,5 @@ input RelationsInput {
 
   """The ids of the relations."""
   relationIds: [ID!]!
-}
+}"
 `;

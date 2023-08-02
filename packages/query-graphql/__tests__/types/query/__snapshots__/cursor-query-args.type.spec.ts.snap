@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Cursor paging strategy QueryArgsType with manual options create a query for string fields 1`] = `
-type TestQuery {
+"type TestQuery {
   idField: ID!
   idFieldOption: ID
   stringField: String!
@@ -277,11 +277,11 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;
 
 exports[`Cursor paging strategy QueryArgsType with manual options options allow apply the options to the generated SDL 1`] = `
-type TestQuery {
+"type TestQuery {
   idField: ID!
   idFieldOption: ID
   stringField: String!
@@ -569,11 +569,11 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;
 
 exports[`Cursor paging strategy QueryArgsType with manual options should make the filter required if there is a filterRequired field 1`] = `
-type TestQuery {
+"type TestQuery {
   idField: ID!
   idFieldOption: ID
   stringField: String!
@@ -709,5 +709,5 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;

@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Offset paging strategy QueryArgsType with decorator options allow apply the options to the generated SDL 1`] = `
-type TestQuery {
+"type TestQuery {
   idField: ID!
   idFieldOption: ID
   stringField: String!
@@ -254,5 +254,5 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;

@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`filter types DeleteFilterType should create the correct filter graphql schema 1`] = `
-type Query {
+"type Query {
   test(input: TestDtoFilter!): Int!
 }
 
@@ -213,11 +213,11 @@ scalar Timestamp
 input TimestampFieldComparisonBetween {
   lower: Timestamp!
   upper: Timestamp!
-}
+}"
 `;
 
 exports[`filter types FilterType allowedBooleanExpressions option no boolean expressions should only expose allowed comparisons 1`] = `
-type Query {
+"type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
@@ -244,11 +244,11 @@ input NumberFieldComparison {
 input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
-}
+}"
 `;
 
 exports[`filter types FilterType allowedBooleanExpressions option only and boolean expressions should only expose allowed comparisons 1`] = `
-type Query {
+"type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
@@ -282,11 +282,11 @@ input NumberFieldComparison {
 input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
-}
+}"
 `;
 
 exports[`filter types FilterType allowedBooleanExpressions option only or boolean expressions should only expose allowed comparisons 1`] = `
-type Query {
+"type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
@@ -320,11 +320,11 @@ input NumberFieldComparison {
 input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
-}
+}"
 `;
 
 exports[`filter types FilterType allowedComparisons option should only expose allowed comparisons 1`] = `
-type Query {
+"type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
@@ -408,11 +408,11 @@ input TestAllowedComparisonNumberFieldFilterComparison {
 input TestAllowedComparisonStringFieldFilterComparison {
   like: String
   notLike: String
-}
+}"
 `;
 
 exports[`filter types FilterType allowedComparisons option should only expose between/not between comparisons for allowed types 1`] = `
-type Query {
+"type Query {
   test(input: TestBetweenComparisonDtoFilter!): Int!
 }
 
@@ -511,11 +511,11 @@ input TestBetweenComparisonNumberFieldFilterComparisonBetween {
 
 input TestBetweenComparisonStringFieldFilterComparison {
   eq: String
-}
+}"
 `;
 
 exports[`filter types FilterType filterDepth option different filterDepth options shouldn't affect each other 1`] = `
-type Query {
+"type Query {
   testA(input: TestFilterDepth_ShouldNotAffectDeepFilter!): Int!
   testB(input: TestFilterDepth_ShouldNotAffect_RelationAFilter!): Int!
 }
@@ -597,11 +597,11 @@ input TestFilterDepth_ShouldNotAffect_RelationAFilterTestRelationDtoFilter {
   id: NumberFieldComparison
   relationName: StringFieldComparison
   relationAge: NumberFieldComparison
-}
+}"
 `;
 
 exports[`filter types FilterType filterDepth option should generate a 0-level deep filter-type 1`] = `
-type Query {
+"type Query {
   test(input: TestFilterDepth_0Filter!): Int!
 }
 
@@ -630,11 +630,11 @@ input NumberFieldComparison {
 input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
-}
+}"
 `;
 
 exports[`filter types FilterType filterDepth option should generate a 1-level deep filter-type 1`] = `
-type Query {
+"type Query {
   test(input: TestFilterDepth_1Filter!): Int!
 }
 
@@ -689,11 +689,11 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
 
 exports[`filter types FilterType filterDepth option should generate a 2-level deep filter-type 1`] = `
-type Query {
+"type Query {
   test(input: TestFilterDepth_2Filter!): Int!
 }
 
@@ -757,11 +757,11 @@ input TestFilterDepth_2FilterTestFilterDepth_2_RelationAFilterTestRelationDtoFil
   id: NumberFieldComparison
   relationName: StringFieldComparison
   relationAge: NumberFieldComparison
-}
+}"
 `;
 
 exports[`filter types FilterType filterDepth option should generate a infinite deep filter-type 1`] = `
-type Query {
+"type Query {
   test(input: TestFilterDepth_InfiniteDeepFilter!): Int!
 }
 
@@ -825,11 +825,11 @@ input TestRelationDtoDeepFilter {
   id: NumberFieldComparison
   relationName: StringFieldComparison
   relationAge: NumberFieldComparison
-}
+}"
 `;
 
 exports[`filter types FilterType filterDepth option should generate filter types with suffix / 0-level depth 1`] = `
-type Query {
+"type Query {
   testA(input: TestFilterDepth_ShouldNotAffectUpdateFilter!): Int!
   testB(input: TestFilterDepth_ShouldNotAffect_RelationAUpdateFilter!): Int!
 }
@@ -884,11 +884,11 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
 
 exports[`filter types FilterType filterDepth option should return cached types 1`] = `
-type Query {
+"type Query {
   testA(input: TestFilterDepth_ShouldNotAffectDeepFilter!): Int!
   testB(input: TestFilterDepth_ShouldNotAffect_RelationAFilter!): Int!
 }
@@ -973,11 +973,11 @@ input TestFilterDepth_ShouldNotAffect_RelationAFilterTestRelationDtoFilter {
   id: NumberFieldComparison
   relationName: StringFieldComparison
   relationAge: NumberFieldComparison
-}
+}"
 `;
 
 exports[`filter types FilterType filterRequired option should only expose allowed comparisons 1`] = `
-type Query {
+"type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
@@ -1047,11 +1047,11 @@ scalar DateTime
 input DateFieldComparisonBetween {
   lower: DateTime!
   upper: DateTime!
-}
+}"
 `;
 
 exports[`filter types FilterType should create the correct filter graphql schema 1`] = `
-type Query {
+"type Query {
   test(input: TestDtoFilter!): Int!
 }
 
@@ -1279,11 +1279,11 @@ input TestFilterDtoFilterTestRelationDtoFilter {
   id: NumberFieldComparison
   relationName: StringFieldComparison
   relationAge: NumberFieldComparison
-}
+}"
 `;
 
 exports[`filter types SubscriptionFilterType should create the correct filter graphql schema 1`] = `
-type Query {
+"type Query {
   test(input: TestDtoFilter!): Int!
 }
 
@@ -1495,11 +1495,11 @@ scalar Timestamp
 input TimestampFieldComparisonBetween {
   lower: Timestamp!
   upper: Timestamp!
-}
+}"
 `;
 
 exports[`filter types UpdateFilterType should create the correct filter graphql schema 1`] = `
-type Query {
+"type Query {
   test(input: TestDtoFilter!): Int!
 }
 
@@ -1711,5 +1711,5 @@ scalar Timestamp
 input TimestampFieldComparisonBetween {
   lower: Timestamp!
   upper: Timestamp!
-}
+}"
 `;
