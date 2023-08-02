@@ -1,10 +1,10 @@
 import { ExecutionContext } from '@nestjs/common'
 import { Args, ArgsType, Context, Parent, Resolver } from '@nestjs/graphql'
-import { Class, Filter, mergeQuery, QueryService, SelectRelation } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
 
 import { OperationGroup } from '../../auth'
 import { getDTONames } from '../../common'
-import { GraphQLLookAheadRelations, RelationAuthorizerFilter, ResolverField } from '../../decorators'
+import { GraphQLResolveInfoResult, GraphQLResultInfo, RelationAuthorizerFilter, ResolverField } from '../../decorators'
 import { InjectDataLoaderConfig } from '../../decorators/inject-dataloader-config.decorator'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { CountRelationsLoader, DataLoaderFactory, FindRelationsLoader, QueryRelationsLoader } from '../../loader'
@@ -49,8 +49,8 @@ const ReadOneRelationMixin =
           many: false
         })
         authFilter?: Filter<Relation>,
-        @GraphQLLookAheadRelations(DTOClass)
-        relations?: SelectRelation<Relation>[],
+        @GraphQLResultInfo(DTOClass)
+        resolveInfo?: GraphQLResolveInfoResult<Relation>,
         @InjectDataLoaderConfig()
         dataLoaderConfig?: DataLoaderOptions
       ): Promise<Relation | undefined> {
@@ -59,6 +59,7 @@ const ReadOneRelationMixin =
           loaderName,
           () =>
             findLoader.createLoader(this.service, {
+              resolveInfo: resolveInfo?.info,
               withDeleted: relation.withDeleted,
               lookedAhead: relation.enableLookAhead
             }),
@@ -66,7 +67,7 @@ const ReadOneRelationMixin =
         ).load({
           dto,
           filter: authFilter,
-          relations
+          relations: resolveInfo?.relations
         })
       }
     }
@@ -119,8 +120,8 @@ const ReadManyRelationMixin =
           many: true
         })
         relationFilter?: Filter<Relation>,
-        @GraphQLLookAheadRelations(relationDTO)
-        relations?: SelectRelation<Relation>[],
+        @GraphQLResultInfo(DTOClass)
+        resolveInfo?: GraphQLResolveInfoResult<Relation>,
         @InjectDataLoaderConfig()
         dataLoaderConfig?: DataLoaderOptions
       ): Promise<InstanceType<typeof CT>> {
@@ -141,7 +142,7 @@ const ReadManyRelationMixin =
 
         return CT.createFromPromise(
           (query) => relationLoader.load({ dto, query }),
-          mergeQuery(relationQuery, { filter: relationFilter, relations }),
+          mergeQuery(relationQuery, { filter: relationFilter, relations: resolveInfo?.relations }),
           (filter) => relationCountLoader.load({ dto, filter })
         )
       }

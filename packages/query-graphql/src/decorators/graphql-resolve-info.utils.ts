@@ -11,22 +11,9 @@ import {
 } from 'graphql'
 
 import type { CursorConnectionType, OffsetConnectionType } from '../types'
-import type { Query } from '@ptc-org/nestjs-query-core'
+import type { RelationDescriptor } from './relation.decorator'
+import type { QueryResolveFields, QueryResolveTree, SelectRelation } from '@ptc-org/nestjs-query-core'
 import type { GraphQLCompositeType, GraphQLResolveInfo as ResolveInfo, SelectionNode } from 'graphql'
-
-type QueryResolveFields<DTO> = {
-  [key in keyof DTO]: QueryResolveTree<
-    // If the key is a array get the type of the array
-    DTO[key] extends ArrayLike<unknown> ? DTO[key][number] : DTO[key]
-  >
-}
-
-export interface QueryResolveTree<DTO> {
-  name: string
-  alias: string
-  args?: Query<DTO>
-  fields: QueryResolveFields<DTO>
-}
 
 function getFieldFromAST<TContext>(
   fieldNode: ASTNode,
@@ -134,16 +121,35 @@ function isCursorPaging<DTO>(info: unknown): info is QueryResolveTree<CursorConn
 }
 
 export function simplifyResolveInfo<DTO>(resolveInfo: ResolveInfo): QueryResolveTree<DTO> {
-  const simpleInfo = parseFieldNodes(resolveInfo.fieldNodes, resolveInfo, null, resolveInfo.parentType) as
-    | QueryResolveTree<DTO>
-    | QueryResolveTree<OffsetConnectionType<DTO>>
-    | QueryResolveTree<CursorConnectionType<DTO>>
+  return parseFieldNodes<DTO>(resolveInfo.fieldNodes, resolveInfo, null, resolveInfo.parentType) as QueryResolveTree<DTO>
+}
 
+export function removePagingFromSimplifiedInfo<DTO>(simpleInfo: QueryResolveTree<DTO>) {
   if (isOffsetPaging(simpleInfo)) {
     return simpleInfo.fields.nodes as QueryResolveTree<DTO>
   } else if (isCursorPaging(simpleInfo)) {
     return simpleInfo.fields.edges.fields.node as QueryResolveTree<DTO>
   }
 
-  return simpleInfo as QueryResolveTree<DTO>
+  return simpleInfo
+}
+
+export function createLookAheadInfo<DTO>(
+  relations: RelationDescriptor<unknown>[],
+  simpleResolveInfo: QueryResolveTree<DTO>
+): SelectRelation<DTO>[] {
+  const simplifiedInfoWithoutPaging = removePagingFromSimplifiedInfo(simpleResolveInfo)
+
+  return relations
+    .map((relation): SelectRelation<DTO> | boolean => {
+      if (relation.name in simplifiedInfoWithoutPaging.fields) {
+        return {
+          name: relation.name,
+          query: (simplifiedInfoWithoutPaging.fields[relation.name] as QueryResolveTree<DTO>).args || {}
+        }
+      }
+
+      return false
+    })
+    .filter(Boolean) as SelectRelation<DTO>[]
 }
