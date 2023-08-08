@@ -7,6 +7,7 @@ type Tag {
   name: String!
   created: DateTime!
   updated: DateTime!
+  fakeDate: DateTime!
   createdBy: String
   updatedBy: String
   todoItemsAggregate(
@@ -165,6 +166,7 @@ input TodoItemFilterTagFilter {
   name: StringFieldComparison
   created: DateFieldComparison
   updated: DateFieldComparison
+  fakeDate: DateFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
 }
@@ -277,6 +279,7 @@ input TagAggregateFilter {
   name: StringFieldComparison
   created: DateFieldComparison
   updated: DateFieldComparison
+  fakeDate: DateFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
 }
@@ -336,6 +339,7 @@ input TagFilter {
   name: StringFieldComparison
   created: DateFieldComparison
   updated: DateFieldComparison
+  fakeDate: DateFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
   todoItems: TagFilterTodoItemFilter
@@ -367,6 +371,7 @@ enum TagSortFields {
   name
   created
   updated
+  fakeDate
   createdBy
   updatedBy
 }
@@ -515,6 +520,7 @@ type TagDeleteResponse {
   name: String
   created: DateTime
   updated: DateTime
+  fakeDate: DateTime
   createdBy: String
   updatedBy: String
 }
@@ -543,6 +549,7 @@ type TagAggregateGroupBy {
   name: String
   created(by: GroupBy! = DAY): DateTime
   updated(by: GroupBy! = DAY): DateTime
+  fakeDate(by: GroupBy! = DAY): DateTime
   createdBy: String
   updatedBy: String
 }
@@ -552,6 +559,7 @@ type TagCountAggregate {
   name: Int
   created: Int
   updated: Int
+  fakeDate: Int
   createdBy: Int
   updatedBy: Int
 }
@@ -569,6 +577,7 @@ type TagMinAggregate {
   name: String
   created: DateTime
   updated: DateTime
+  fakeDate: DateTime
   createdBy: String
   updatedBy: String
 }
@@ -578,6 +587,7 @@ type TagMaxAggregate {
   name: String
   created: DateTime
   updated: DateTime
+  fakeDate: DateTime
   createdBy: String
   updatedBy: String
 }
@@ -804,6 +814,7 @@ type TodoItemTagsAggregateGroupBy {
   name: String
   created: DateTime
   updated: DateTime
+  fakeDate: DateTime
   createdBy: String
   updatedBy: String
 }
@@ -813,6 +824,7 @@ type TodoItemTagsCountAggregate {
   name: Int
   created: Int
   updated: Int
+  fakeDate: Int
   createdBy: Int
   updatedBy: Int
 }
@@ -830,6 +842,7 @@ type TodoItemTagsMinAggregate {
   name: String
   created: DateTime
   updated: DateTime
+  fakeDate: DateTime
   createdBy: String
   updatedBy: String
 }
@@ -839,6 +852,7 @@ type TodoItemTagsMaxAggregate {
   name: String
   created: DateTime
   updated: DateTime
+  fakeDate: DateTime
   createdBy: String
   updatedBy: String
 }
@@ -1286,6 +1300,7 @@ input TagUpdateFilter {
   name: StringFieldComparison
   created: DateFieldComparison
   updated: DateFieldComparison
+  fakeDate: DateFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
 }
@@ -1307,6 +1322,7 @@ input TagDeleteFilter {
   name: StringFieldComparison
   created: DateFieldComparison
   updated: DateFieldComparison
+  fakeDate: DateFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
 }

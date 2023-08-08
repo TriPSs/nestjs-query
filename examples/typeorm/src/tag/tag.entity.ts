@@ -16,6 +16,11 @@ export class TagEntity {
   @UpdateDateColumn()
   updated!: Date
 
+  @Column({
+    default: () => 'NOW()'
+  })
+  fakeDate!: Date
+
   @ManyToMany((): ObjectType<TodoItemEntity> => TodoItemEntity, (td) => td.tags)
   todoItems!: TodoItemEntity[]
 

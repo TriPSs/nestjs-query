@@ -369,6 +369,59 @@ describe('TagResolver (typeorm - e2e)', () => {
             }
           ])
         }))
+
+    describe('grouping on date', () => {
+      it(`should allow grouping on month`, () =>
+        request(app.getHttpServer())
+          .post('/graphql')
+          .send({
+            operationName: null,
+            variables: {},
+            // language=graphql
+            query: `{
+              tagAggregate {
+                groupBy {
+                  fakeDate(by: MONTH)
+                }
+                sum {
+                  id
+                }
+              }
+            }`
+          })
+          .expect(200)
+          .then(({ body }) => {
+            const res: AggregateResponse<TodoItemDTO>[] = body.data.tagAggregate
+            expect(res).toHaveLength(1)
+            expect(res[0].sum).toEqual({ id: 15 })
+          }))
+
+      it(`should allow grouping on day`, () =>
+        request(app.getHttpServer())
+          .post('/graphql')
+          .send({
+            operationName: null,
+            variables: {},
+            // language=graphql
+            query: `{
+              tagAggregate {
+                groupBy {
+                  fakeDate(by: DAY)
+                }
+                sum {
+                  id
+                }
+              }
+            }`
+          })
+          .expect(200)
+          .then(({ body }) => {
+            const res: AggregateResponse<TodoItemDTO>[] = body.data.tagAggregate
+            expect(res).toHaveLength(2)
+            expect(res[0].sum).toEqual({ id: 1 })
+            expect(res[1].sum).toEqual({ id: 14 })
+          }))
+    })
   })
 
   describe('create one', () => {

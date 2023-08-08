@@ -15,7 +15,10 @@ export const refresh = async (connection: Connection): Promise<void> => {
   const subTaskRepo = connection.getRepository(SubTaskEntity)
   const tagsRepo = connection.getRepository(TagEntity)
 
-  const urgentTag = await tagsRepo.save({ name: 'Urgent' })
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+
+  const urgentTag = await tagsRepo.save({ name: 'Urgent', fakeDate: yesterday })
   const homeTag = await tagsRepo.save({ name: 'Home' })
   const workTag = await tagsRepo.save({ name: 'Work' })
   const questionTag = await tagsRepo.save({ name: 'Question' })

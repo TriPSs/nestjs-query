@@ -56,6 +56,9 @@ export class TagDTO {
   @FilterableField(() => GraphQLISODateTime)
   updated!: Date
 
+  @FilterableField(() => GraphQLISODateTime)
+  fakeDate!: Date
+
   @FilterableField({ nullable: true })
   createdBy?: string
 
