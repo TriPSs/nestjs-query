@@ -2,6 +2,7 @@ import { Field, FieldOptions, ReturnTypeFunc } from '@nestjs/graphql'
 import { ArrayReflector, Class, FilterComparisonOperators, getPrototypeChain } from '@rezonate/nestjs-query-core'
 
 import { FILTERABLE_FIELD_KEY } from './constants'
+import { getRelations } from './relation.decorator'
 
 const reflector = new ArrayReflector(FILTERABLE_FIELD_KEY)
 export type FilterableFieldOptions = {
@@ -16,6 +17,11 @@ export interface FilterableFieldDescriptor {
   target: Class<unknown>
   returnTypeFunc?: ReturnTypeFunc
   advancedOptions?: FilterableFieldOptions
+}
+
+export interface FilterableRelationFields extends FilterableFieldDescriptor{
+  propertyName: string
+  relationPropertyName: string;
 }
 
 /**
@@ -103,4 +109,20 @@ export function getFilterableFields<DTO>(DTOClass: Class<DTO>): FilterableFieldD
     const newFields = typeFields.filter((t) => !existingFieldNames.includes(t.propertyName))
     return [...newFields, ...fields]
   }, [] as FilterableFieldDescriptor[])
+}
+
+
+export function getFilterableRelationFields<DTO>(DTOClass: Class<DTO>): FilterableRelationFields[] {
+  const { one = {} } = getRelations(DTOClass)
+  return Object.entries(one).flatMap(([relationPropertyName, relation]) => {
+    const fields = getFilterableFields(relation.DTO);
+    return fields.map(f => ({...f, relationPropertyName}))
+  })
+}
+
+export function getFilterableRelationFieldsNames<DTO>(DTOClass: Class<DTO>, DTOFieldsNames: string[]) {
+  const fields = getFilterableRelationFields(DTOClass);
+  const parentFields = new Set(DTOFieldsNames.map(f => f.toLowerCase()));
+  const nonConflictingFields = fields.filter(field => !parentFields.has(`${field.relationPropertyName}${field.propertyName}`.toLowerCase()));
+  return nonConflictingFields.map((field) => `${field.relationPropertyName}_${field.propertyName}`);
 }

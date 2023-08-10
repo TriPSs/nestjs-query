@@ -5,6 +5,9 @@ import { IsEnum, IsIn } from 'class-validator'
 import { getGraphqlObjectName } from '../../common'
 import { getFilterableFields } from '../../decorators'
 import { IsUndefined } from '../validators'
+import {
+  getFilterableRelationFieldsNames
+} from '../../decorators/filterable-field.decorator'
 
 registerEnumType(SortDirection, {
   name: 'SortDirection', // this one is mandatory
@@ -27,8 +30,15 @@ export function getOrCreateSortType<T>(TClass: Class<T>): Class<SortField<T>> {
       throw new Error(`No fields found to create SortType for ${TClass.name}. Ensure fields are annotated with @FilterableField`)
     }
 
-    const fieldNames = fields.map((field) => field.propertyName)
-    const fieldNameMap = fieldNames.reduce((acc, field) => ({ ...acc, [field]: field }), {})
+    const fieldNames = fields.map((field) => field.propertyName);
+
+    const relationFieldNames = getFilterableRelationFieldsNames(TClass, fieldNames);
+
+    const fieldNameMap = {
+        ...fieldNames.reduce((acc, field) => ({ ...acc, [field]: field }), {}),
+        ...relationFieldNames.reduce((acc, field) => ({ ...acc, [field]: field }), {})
+    };
+
     registerEnumType(fieldNameMap, { name: `${prefix}SortFields` })
 
     @InputType(`${prefix}Sort`)
