@@ -1,61 +1,59 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { AggregateQuery, Class, Query } from '@rezonate/nestjs-query-core'
-import lodashFilter from 'lodash.filter'
 import { Brackets, ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm'
 import { DriverUtils } from 'typeorm/driver/DriverUtils'
-import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata'
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata'
 import { Alias } from 'typeorm/query-builder/Alias'
 
 import { AggregateBuilder } from './aggregate.builder'
 import { FilterQueryBuilder } from './filter-query.builder'
-import { WhereExpressionBuilder } from 'typeorm/query-builder/WhereExpressionBuilder'
 
 interface JoinCondition {
-  leftHand: string;
-  rightHand: string;
+  leftHand: string
+  rightHand: string
 }
 
 interface JoinColumn {
-  target: Class<unknown> | string;
-  alias: string;
-  conditions: JoinCondition[];
+  target: Class<unknown> | string
+  alias: string
+  conditions: JoinCondition[]
 }
 
 type SQLFragment = {
-  sql: string;
-  params: ObjectLiteral;
-};
+  sql: string
+  params: ObjectLiteral
+}
 
 type UnionSQLFragment = {
-  joinCondition?: string;
-} & SQLFragment;
+  joinCondition?: string
+} & SQLFragment
 
 type PrimaryKey = {
-  databasePath: string;
-  selectPath: string;
-  propertyName: string;
-};
+  databasePath: string
+  selectPath: string
+  propertyName: string
+}
 
 interface RelationQuery<Relation, Entity> {
-  relation: RelationMetadata;
-  from: Class<Relation>;
-  fromAlias: string;
-  fromPrimaryKeys: PrimaryKey[];
-  joins: JoinColumn[];
-  whereCondition(entities: Entity): SQLFragment;
+  relation: RelationMetadata
+  from: Class<Relation>
+  fromAlias: string
+  fromPrimaryKeys: PrimaryKey[]
+  joins: JoinColumn[]
+
+  whereCondition(entities: Entity): SQLFragment
 }
 
 type UnionQueries = {
-  unions: string[];
+  unions: string[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  parameters: ObjectLiteral;
-};
+  parameters: ObjectLiteral
+}
 
 export type EntityIndexRelation<Relation> = Relation & {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  __nestjsQuery__entityIndex__: number;
-};
+  __nestjsQuery__entityIndex__: number
+}
 
 /**
  * @internal
@@ -85,76 +83,80 @@ export class RelationQueryBuilder<Entity, Relation> {
   }
 
   public select(entity: Entity, query: Query<Relation>): SelectQueryBuilder<Relation> {
-    const tableColumns = this.relationRepo.metadata.columns;
+    const tableColumns = this.relationRepo.metadata.columns
     const hasRelations = this.filterQueryBuilder.filterHasRelations(query.filter)
 
     let relationBuilder = this.createRelationQueryBuilder(entity)
     relationBuilder = hasRelations
       ? this.filterQueryBuilder.applyRelationJoinsRecursive(
-          relationBuilder,
-          this.filterQueryBuilder.getReferencedRelationsRecursive(this.relationRepo.metadata, query.filter)
-        )
+        relationBuilder,
+        this.filterQueryBuilder.getReferencedRelationsRecursive(this.relationRepo.metadata, query.filter)
+      )
       : relationBuilder
 
-    relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, tableColumns, query.filter, relationBuilder.alias)
+    relationBuilder = this.filterQueryBuilder.applyFilter(
+      relationBuilder,
+      tableColumns,
+      query.filter,
+      query.sorting,
+      relationBuilder.alias
+    )
     relationBuilder = this.filterQueryBuilder.applyPaging(relationBuilder, query.paging)
 
     return this.filterQueryBuilder.applySorting(relationBuilder, query.sorting, relationBuilder.alias)
   }
 
-  public batchSelect(entities: Entity[], query: Query<Relation>, withDeleted?: boolean): SelectQueryBuilder<EntityIndexRelation<Relation>> {
-    const meta = this.relationMeta;
-    const unionFragment = this.createUnionSelectSubQuery(entities, query, withDeleted);
+  public batchSelect(
+    entities: Entity[],
+    query: Query<Relation>,
+    withDeleted?: boolean
+  ): SelectQueryBuilder<EntityIndexRelation<Relation>> {
+    const meta = this.relationMeta
+    const unionFragment = this.createUnionSelectSubQuery(entities, query, withDeleted)
 
     const unionedBuilder = this.relationRepo
       .createQueryBuilder(meta.fromAlias)
       .addSelect(`${this.escapedUnionAlias}.${this.escapedEntityIndexColName}`, this.entityIndexColName)
-      .innerJoin(`(${unionFragment.sql})`, this.unionAlias, unionFragment.joinCondition, unionFragment.params);
+      .innerJoin(`(${unionFragment.sql})`, this.unionAlias, unionFragment.joinCondition, unionFragment.params)
 
-    if(withDeleted)
-      unionedBuilder.withDeleted()
+    if (withDeleted) unionedBuilder.withDeleted()
 
     return this.filterQueryBuilder.applySorting(
       unionedBuilder.addOrderBy(`${this.escapedUnionAlias}.${this.escapedEntityIndexColName}`, 'ASC'),
       query.sorting,
-      unionedBuilder.alias,
-    ) as SelectQueryBuilder<EntityIndexRelation<Relation>>;
+      unionedBuilder.alias
+    ) as SelectQueryBuilder<EntityIndexRelation<Relation>>
   }
 
   private createUnionSelectSubQuery(entities: Entity[], query: Query<Relation>, withDeleted?: boolean): UnionSQLFragment {
-    const { fromPrimaryKeys, fromAlias } = this.relationMeta;
+    const { fromPrimaryKeys, fromAlias } = this.relationMeta
     const subQueries = entities.map((e, index) => {
-      const subQuery = this.select(e, query);
-      if (withDeleted) subQuery.withDeleted();
-      return subQuery
-        .select(fromPrimaryKeys.map((fpk) => fpk.selectPath))
-        .addSelect(`${index}`, this.entityIndexColName);
-    });
+      const subQuery = this.select(e, query)
+      if (withDeleted) subQuery.withDeleted()
+      return subQuery.select(fromPrimaryKeys.map((fpk) => fpk.selectPath)).addSelect(`${index}`, this.entityIndexColName)
+    })
     const unionSqls = subQueries.reduce(
       ({ unions, parameters }: UnionQueries, sq) => ({
         unions: [...unions, sq.getQuery()],
-        parameters: { ...parameters, ...sq.getParameters() },
+        parameters: { ...parameters, ...sq.getParameters() }
       }),
-      { unions: [], parameters: {} },
-    );
+      { unions: [], parameters: {} }
+    )
 
-    const unionSql = unionSqls.unions
-      .map((u) => `SELECT * FROM (${u}) AS ${this.escapeName(fromAlias)}`)
-      .join(' UNION ALL ');
+    const unionSql = unionSqls.unions.map((u) => `SELECT *
+                                                  FROM (${u}) AS ${this.escapeName(fromAlias)}`).join(' UNION ALL ')
     const joinCondition = fromPrimaryKeys
-      .map(
-        (fpk) => `${fpk.selectPath} = ${this.escapedUnionAlias}.${this.escapeName(`${fromAlias}_${fpk.databasePath}`)}`,
-      )
-      .join(' AND ');
-    return { sql: unionSql, params: unionSqls.parameters, joinCondition };
+      .map((fpk) => `${fpk.selectPath} = ${this.escapedUnionAlias}.${this.escapeName(`${fromAlias}_${fpk.databasePath}`)}`)
+      .join(' AND ')
+    return { sql: unionSql, params: unionSqls.parameters, joinCondition }
   }
 
   private get escapedUnionAlias() {
-    return this.escapeName(this.unionAlias);
+    return this.escapeName(this.unionAlias)
   }
 
   private get escapedEntityIndexColName(): string {
-    return this.escapeName(this.entityIndexColName);
+    return this.escapeName(this.entityIndexColName)
   }
 
   public batchAggregate(
@@ -180,10 +182,10 @@ export class RelationQueryBuilder<Entity, Relation> {
     query: Query<Relation>,
     aggregateQuery: AggregateQuery<Relation>
   ): SelectQueryBuilder<Relation> {
-    const tableColumns = this.relationRepo.metadata.columns;
+    const tableColumns = this.relationRepo.metadata.columns
     let relationBuilder = this.createRelationQueryBuilder(entity)
     relationBuilder = this.filterQueryBuilder.applyAggregate(relationBuilder, aggregateQuery, relationBuilder.alias)
-    relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, tableColumns, query.filter, relationBuilder.alias)
+    relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, tableColumns, query.filter, [], relationBuilder.alias)
     relationBuilder = this.filterQueryBuilder.applyAggregateSorting(
       relationBuilder,
       aggregateQuery.groupBy,
@@ -229,7 +231,7 @@ export class RelationQueryBuilder<Entity, Relation> {
     const subQueries = entities.map((e, index) => {
       const subQuery = this.aggregate(e, query, aggregateQuery)
       return subQuery.addSelect(`${index}`, this.entityIndexColName)
-    });
+    })
     const unionSqls = subQueries.reduce(
       ({ unions, parameters }: UnionQueries, sq) => ({
         unions: [...unions, sq.getQuery()],
@@ -292,18 +294,18 @@ export class RelationQueryBuilder<Entity, Relation> {
       fromPrimaryKeys,
       joins,
       whereCondition: (entity): SQLFragment => {
-        const params: ObjectLiteral = {};
+        const params: ObjectLiteral = {}
         const sql = relation.entityMetadata.primaryColumns
           .map((column) => {
-            const paramName = this.getParamName(aliasName);
+            const paramName = this.getParamName(aliasName)
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            params[paramName] = column.getEntityValue(entity);
-            return `${aliasName}.${column.propertyPath} = :${paramName}`;
+            params[paramName] = column.getEntityValue(entity)
+            return `${aliasName}.${column.propertyPath} = :${paramName}`
           })
-          .join(' AND ');
-        return { sql, params };
+          .join(' AND ')
+        return { sql, params }
       }
-    };
+    }
   }
 
   private getOneToManyOrOneToOneNotOwnerMeta(relation: RelationMetadata): RelationQuery<Relation, Entity> {
@@ -322,18 +324,18 @@ export class RelationQueryBuilder<Entity, Relation> {
       fromPrimaryKeys,
       joins: [],
       whereCondition: (entity): SQLFragment => {
-        const params: ObjectLiteral = {};
+        const params: ObjectLiteral = {}
         const sql = columns
           .map((col) => {
-            const paramName = this.getParamName(aliasName);
+            const paramName = this.getParamName(aliasName)
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            params[paramName] = col.referencedColumn.getEntityValue(entity);
-            return `${aliasName}.${col.propertyPath} = :${paramName}`;
+            params[paramName] = col.referencedColumn.getEntityValue(entity)
+            return `${aliasName}.${col.propertyPath} = :${paramName}`
           })
-          .join(' AND ');
-        return { sql, params };
+          .join(' AND ')
+        return { sql, params }
       }
-    };
+    }
   }
 
   private getManyToManyOwnerMeta(relation: RelationMetadata): RelationQuery<Relation, Entity> {
@@ -363,18 +365,18 @@ export class RelationQueryBuilder<Entity, Relation> {
       fromPrimaryKeys,
       joins,
       whereCondition: (entity): SQLFragment => {
-        const params: ObjectLiteral = {};
+        const params: ObjectLiteral = {}
         const sql = relation.joinColumns
           .map((joinColumn) => {
-            const paramName = this.getParamName(joinColumn.propertyName);
+            const paramName = this.getParamName(joinColumn.propertyName)
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            params[paramName] = joinColumn.referencedColumn.getEntityValue(entity);
-            return `${joinAlias}.${joinColumn.propertyName} = :${paramName}`;
+            params[paramName] = joinColumn.referencedColumn.getEntityValue(entity)
+            return `${joinAlias}.${joinColumn.propertyName} = :${paramName}`
           })
-          .join(' AND ');
-        return { sql, params };
+          .join(' AND ')
+        return { sql, params }
       }
-    };
+    }
   }
 
   private getManyToManyNotOwnerMetadata(relation: RelationMetadata): RelationQuery<Relation, Entity> {
@@ -404,21 +406,21 @@ export class RelationQueryBuilder<Entity, Relation> {
       fromPrimaryKeys,
       joins,
       whereCondition: (entity): SQLFragment => {
-        const params: ObjectLiteral = {};
+        const params: ObjectLiteral = {}
 
         const sql = relation.inverseRelation.inverseJoinColumns
           .map((inverseJoinColumn) => {
-            const paramName = this.getParamName(inverseJoinColumn.propertyName);
+            const paramName = this.getParamName(inverseJoinColumn.propertyName)
 
-            params[paramName] = inverseJoinColumn.referencedColumn.getEntityValue(entity);
+            params[paramName] = inverseJoinColumn.referencedColumn.getEntityValue(entity)
 
-            return `${joinAlias}.${inverseJoinColumn.propertyName} = :${paramName}`;
+            return `${joinAlias}.${inverseJoinColumn.propertyName} = :${paramName}`
           })
-          .join(' AND ');
+          .join(' AND ')
 
-        return { sql, params };
+        return { sql, params }
       }
-    };
+    }
   }
 
   private getParamName(prefix: string): string {
@@ -445,8 +447,8 @@ export class RelationQueryBuilder<Entity, Relation> {
       columnName: DriverUtils.buildColumnAlias(
         this.relationRepo.manager.connection.driver,
         this.relationMeta.fromAlias,
-        pk.databasePath,
-      ),
-    }));
+        pk.databasePath
+      )
+    }))
   }
 }

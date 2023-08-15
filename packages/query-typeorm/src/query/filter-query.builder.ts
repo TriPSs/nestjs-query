@@ -71,14 +71,17 @@ export class FilterQueryBuilder<Entity> {
    * @param repo
    */
   public select(query: Query<Entity>, repo?: Repository<Entity>): SelectQueryBuilder<Entity> {
-    if(repo) this.repo = repo;
-    const tableColumns = this.repo.metadata.columns;
+    if (repo) this.repo = repo
+    const tableColumns = this.repo.metadata.columns
     const hasRelations = this.filterHasRelations(query.filter, query.sorting)
     let qb = this.createQueryBuilder()
     qb = hasRelations
-      ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.sorting))
+      ? this.applyRelationJoinsRecursive(
+          qb,
+          this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.sorting)
+        )
       : qb
-    qb = this.applyFilter(qb, tableColumns, query.filter, qb.alias)
+    qb = this.applyFilter(qb, tableColumns, query.filter, query.sorting, qb.alias)
     qb = this.applySorting(qb, query.sorting, qb.alias)
     qb = this.applyPaging(qb, query.paging, hasRelations)
     return qb
@@ -86,13 +89,13 @@ export class FilterQueryBuilder<Entity> {
 
   public selectById(id: string | number | (string | number)[], query: Query<Entity>): SelectQueryBuilder<Entity> {
     const hasRelations = this.filterHasRelations(query.filter)
-    const tableColumns = this.repo.metadata.columns;
+    const tableColumns = this.repo.metadata.columns
     let qb = this.createQueryBuilder()
     qb = hasRelations
       ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsRecursive(this.repo.metadata, query.filter))
       : qb
     qb = qb.andWhereInIds(Array.isArray(id) ? id : [id])
-    qb = this.applyFilter(qb, tableColumns, query.filter, qb.alias)
+    qb = this.applyFilter(qb, tableColumns, query.filter, [], qb.alias)
     qb = this.applySorting(qb, query.sorting, qb.alias)
     qb = this.applyPaging(qb, query.paging, hasRelations)
     return qb
@@ -100,14 +103,14 @@ export class FilterQueryBuilder<Entity> {
 
   public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>): SelectQueryBuilder<Entity> {
     const hasRelations = this.filterHasRelations(query.filter)
-    const tableColumns = this.repo.metadata.columns;
+    const tableColumns = this.repo.metadata.columns
 
     let qb = this.createQueryBuilder()
     qb = hasRelations
       ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsRecursive(this.repo.metadata, query.filter))
       : qb
     qb = this.applyAggregate(qb, aggregate, qb.alias)
-    qb = this.applyFilter(qb, tableColumns, query.filter, qb.alias)
+    qb = this.applyFilter(qb, tableColumns, query.filter, [], qb.alias)
     qb = this.applyAggregateSorting(qb, aggregate.groupBy, qb.alias)
     qb = this.applyAggregateGroupBy(qb, aggregate.groupBy, qb.alias)
     return qb
@@ -119,7 +122,7 @@ export class FilterQueryBuilder<Entity> {
    * @param query - the query to apply.
    */
   public delete(query: Query<Entity>): DeleteQueryBuilder<Entity> {
-    const tableColumns = this.repo.metadata.columns;
+    const tableColumns = this.repo.metadata.columns
     return this.applyFilter(this.repo.createQueryBuilder().delete(), tableColumns, query.filter)
   }
 
@@ -129,8 +132,12 @@ export class FilterQueryBuilder<Entity> {
    * @param query - the query to apply.
    */
   public softDelete(query: Query<Entity>): SoftDeleteQueryBuilder<Entity> {
-    const tableColumns = this.repo.metadata.columns;
-    return this.applyFilter(this.repo.createQueryBuilder().softDelete() as SoftDeleteQueryBuilder<Entity>, tableColumns, query.filter)
+    const tableColumns = this.repo.metadata.columns
+    return this.applyFilter(
+      this.repo.createQueryBuilder().softDelete() as SoftDeleteQueryBuilder<Entity>,
+      tableColumns,
+      query.filter
+    )
   }
 
   /**
@@ -139,7 +146,7 @@ export class FilterQueryBuilder<Entity> {
    * @param query - the query to apply.
    */
   public update(query: Query<Entity>): UpdateQueryBuilder<Entity> {
-    const tableColumns = this.repo.metadata.columns;
+    const tableColumns = this.repo.metadata.columns
     const qb = this.applyFilter(this.repo.createQueryBuilder().update(), tableColumns, query.filter)
     return this.applySorting(qb, query.sorting)
   }
@@ -180,11 +187,23 @@ export class FilterQueryBuilder<Entity> {
    * @param filter - the filter.
    * @param alias - optional alias to use to qualify an identifier
    */
-  public applyFilter<Where extends WhereExpressionBuilder>(qb: Where, columns:ColumnMetadata[], filter?: Filter<Entity>, alias?: string): Where {
+  public applyFilter<Where extends WhereExpressionBuilder>(
+    qb: Where,
+    columns: ColumnMetadata[],
+    filter?: Filter<Entity>,
+    sort: SortField<any>[] = [],
+    alias?: string
+  ): Where {
     if (!filter) {
       return qb
     }
-    return this.whereBuilder.build(qb, filter, this.getReferencedRelationsRecursive(this.repo.metadata, filter, []), columns, alias)
+    return this.whereBuilder.build(
+      qb,
+      filter,
+      this.getReferencedRelationsRecursive(this.repo.metadata, filter, sort),
+      columns,
+      alias
+    )
   }
 
   /**
@@ -194,18 +213,16 @@ export class FilterQueryBuilder<Entity> {
    * @param alias - optional alias to use to qualify an identifier
    */
   public applySorting<T extends Sortable<Entity>>(qb: T, sorts?: SortField<Entity>[], alias?: string): T {
-    const relations = new Set(this.repo.metadata.relations.map(r => r.propertyName));
+    const relations = new Set(this.repo.metadata.relations.map((r) => r.propertyName))
     if (!sorts) {
       return qb
     }
     return sorts.reduce((prevQb, { field, direction, nulls }) => {
-      let fieldName = field.toString();
-      let [relationName, ...relationFields] = fieldName.split('_')
-      let col:string;
-      if(relationName && relations.has(relationName))
-        col = `${relationName}.${relationFields.join('')}`;
-      else
-        col = alias ? `${alias}.${fieldName}` : `${fieldName}`
+      const fieldName = field.toString()
+      const [relationName, ...relationFields] = fieldName.split('_')
+      let col: string
+      if (relationName && relations.has(relationName)) col = `${relationName}.${relationFields.join('')}`
+      else col = alias ? `${alias}.${fieldName}` : `${fieldName}`
       return prevQb.addOrderBy(col, direction, nulls)
     }, qb)
   }
@@ -268,22 +285,28 @@ export class FilterQueryBuilder<Entity> {
    *
    * @returns true if there are any referenced relations
    */
-  public filterHasRelations(filter?: Filter<Entity>, sort?:SortField<Entity>[]): boolean {
+  public filterHasRelations(filter?: Filter<Entity>, sort?: SortField<Entity>[]): boolean {
     if (!filter && !sort) {
       return false
     }
     return this.getReferencedRelations(filter, sort).length > 0
   }
 
-  private getReferencedRelations(filter: Filter<Entity>, sort:SortField<Entity>[] = []): string[] {
+  private getReferencedRelations(filter: Filter<Entity>, sort: SortField<Entity>[] = []): string[] {
     const { relationNames } = this
     const referencedFields = getFilterFields(filter)
-    const referencedSortFields = [...new Set(sort.map(f => f.field.toString().split("_")[0]))]
+    const referencedSortFields = [...new Set(sort.map((f) => f.field.toString().split('_')[0]))]
     return [...referencedFields, ...referencedSortFields].filter((f) => relationNames.includes(f))
   }
 
-  getReferencedRelationsRecursive(metadata: EntityMetadata, filter: Filter<unknown> = {}, sort:SortField<any>[] = []): NestedRecord {
-    const referencedFields = Array.from(new Set([...Object.keys(filter) as (keyof Filter<unknown>)[], ...sort.map(s => s.field.toString())]))
+  getReferencedRelationsRecursive(
+    metadata: EntityMetadata,
+    filter: Filter<unknown> = {},
+    sort: SortField<any>[] = []
+  ): NestedRecord {
+    const referencedFields = Array.from(
+      new Set([...(Object.keys(filter) as (keyof Filter<unknown>)[]), ...sort.map((s) => s.field.toString())])
+    )
     return referencedFields.reduce((prev, curr) => {
       const currFilterValue = filter[curr]
       if ((curr === 'and' || curr === 'or') && currFilterValue) {
@@ -291,13 +314,13 @@ export class FilterQueryBuilder<Entity> {
           prev = merge(prev, this.getReferencedRelationsRecursive(metadata, subFilter, []))
         }
       }
-      let [relationField] = curr.split('_');
-      let isSortRelation = false;
+      const [relationField] = curr.split('_')
+      let isSortRelation = false
       const referencedRelation = metadata.relations.find((r) => {
-        if(r.propertyName === curr) return true;
-        if(r.propertyName === relationField) {
-          isSortRelation = true;
-          return true;
+        if (r.propertyName === curr) return true
+        if (r.propertyName === relationField) {
+          isSortRelation = true
+          return true
         }
       })
       if (!referencedRelation) return prev
