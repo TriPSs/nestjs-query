@@ -6,35 +6,26 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/query-typeorm",
         "tsConfig": "packages/query-typeorm/tsconfig.lib.json",
         "packageJson": "packages/query-typeorm/package.json",
         "main": "packages/query-typeorm/src/index.ts",
-        "assets": [
-          "packages/query-typeorm/*.md"
-        ]
+        "assets": ["packages/query-typeorm/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "lint": {
       "executor": "@nx/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/query-typeorm/**/*.ts"
-        ]
+        "lintFilePatterns": ["packages/query-typeorm/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/packages/query-typeorm"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/packages/query-typeorm"],
       "options": {
         "jestConfig": "packages/query-typeorm/jest.config.ts",
         "passWithNoTests": true
@@ -52,7 +43,5 @@
     }
   },
   "tags": [],
-  "implicitDependencies": [
-    "core"
-  ]
+  "implicitDependencies": ["core"]
 }
