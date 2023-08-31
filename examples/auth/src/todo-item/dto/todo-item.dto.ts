@@ -5,6 +5,7 @@ import {
   Authorize,
   FilterableCursorConnection,
   FilterableField,
+  OperationGroup,
   QueryOptions,
   Relation
 } from '@ptc-org/nestjs-query-graphql'
@@ -20,11 +21,12 @@ import { UserDTO } from '../../user/user.dto'
   authorize: (context: UserContext, authorizationContext?: AuthorizationContext) => {
     if (
       context.req.user.username === 'nestjs-query-3' &&
-      (authorizationContext?.operationGroup === 'read' || authorizationContext?.operationGroup === 'aggregate')
+      (authorizationContext?.operationGroup === OperationGroup.READ ||
+        authorizationContext?.operationGroup === OperationGroup.AGGREGATE)
     ) {
       return {}
     }
-    if (context.req.user.username === 'nestjs-query-3' && authorizationContext?.operationGroup === 'create') {
+    if (context.req.user.username === 'nestjs-query-3' && authorizationContext?.operationGroup === OperationGroup.CREATE) {
       throw new UnauthorizedException()
     }
     return { ownerId: { eq: context.req.user.id } }
