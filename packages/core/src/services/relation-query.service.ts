@@ -15,7 +15,8 @@ export class RelationQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO
 
   constructor(queryService: QueryService<DTO, C, U>, relations: Record<string, QueryServiceRelation<DTO, unknown>>)
 
-  constructor(relations: Record<string, QueryServiceRelation<DTO, unknown>>)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(relations: Record<string, QueryServiceRelation<DTO, any>>)
 
   constructor(
     queryService: QueryService<DTO, C, U> | Record<string, QueryServiceRelation<DTO, unknown>>,
