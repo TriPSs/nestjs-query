@@ -35,7 +35,7 @@ export const GroupByAggregateMixin =
             @Args('by', {
               type: () => GroupBy,
               defaultValue: GroupBy.DAY
-            })
+            }) // eslint-disable-next-line @typescript-eslint/no-unused-vars
             by: string
           ): unknown {
             return dto[field.propertyName]

@@ -48,7 +48,7 @@ export class FilterQueryBuilder<Entity extends Document> {
   }
 
   public buildIdAggregateQuery(
-    id: unknown | unknown[],
+    id: unknown,
     filter: Filter<Entity>,
     aggregate: AggregateQuery<Entity>
   ): MongooseAggregateQuery<Entity> {
@@ -59,7 +59,7 @@ export class FilterQueryBuilder<Entity extends Document> {
     }
   }
 
-  public buildIdFilterQuery(id: unknown | unknown[], filter?: Filter<Entity>): FilterQuery<Entity> {
+  public buildIdFilterQuery(id: unknown, filter?: Filter<Entity>): FilterQuery<Entity> {
     return {
       ...this.buildFilterQuery(filter),
       _id: Array.isArray(id) ? { $in: id } : id

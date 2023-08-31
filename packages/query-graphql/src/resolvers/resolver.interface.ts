@@ -43,6 +43,7 @@ export interface ResolverClass<DTO, QS extends QueryService<DTO, unknown, unknow
  * @internal
  * Base Resolver that takes in a service as a constructor argument.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class BaseServiceResolver<DTO, QS> {
   constructor(readonly service: QS) {}
 }

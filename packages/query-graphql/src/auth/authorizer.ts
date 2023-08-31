@@ -43,5 +43,5 @@ export interface Authorizer<DTO> extends CustomAuthorizer<DTO> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     context: any,
     authorizerContext: AuthorizationContext
-  ): Promise<Filter<unknown | undefined>>
+  ): Promise<Filter<unknown> | undefined>
 }
