@@ -82,8 +82,14 @@ export class SortBuilder {
       case SortNulls.NULLS_FIRST:
         return nullsFirstSort
       case SortNulls.NULLS_LAST:
-      default:
         return nullsLastSort
+      default:
+        switch (direction) {
+          case SortDirection.DESC:
+            return nullsLastSort
+          default:
+            return nullsFirstSort
+        }
     }
   }
 }
