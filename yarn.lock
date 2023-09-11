@@ -5939,8 +5939,10 @@ __metadata:
   dependencies:
     camel-case: ^4.1.2
     lodash.filter: ^4.6.0
+    lodash.keys: ^4.2.0
     lodash.merge: ^4.6.2
     lodash.omit: ^4.5.0
+    lodash.pickby: ^4.6.0
     tslib: ^2.6.2
     uuid: ^9.0.0
   peerDependencies:
@@ -6960,6 +6962,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.keys@npm:4.2.7":
+  version: 4.2.7
+  resolution: "@types/lodash.keys@npm:4.2.7"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 2da5cdc5c306c759d8647687701c3a550cb268ba7b644773fede824d94d79e3d753f0f7cf63762809afeacccbd68223954be0ba6958b34750e20329f56825d50
+  languageName: node
+  linkType: hard
+
 "@types/lodash.merge@npm:4.6.7":
   version: 4.6.7
   resolution: "@types/lodash.merge@npm:4.6.7"
@@ -6984,6 +6995,15 @@ __metadata:
   dependencies:
     "@types/lodash": "*"
   checksum: 78428a83b5d85e75bd13fb632030f9adb08dfc5bde3a9b6a302434fe7ac98e62919f87a7337e0ba674017d63bc57a8855ef863f5fcecd25e63b1d39eba2e4697
+  languageName: node
+  linkType: hard
+
+"@types/lodash.pickby@npm:4.6.7":
+  version: 4.6.7
+  resolution: "@types/lodash.pickby@npm:4.6.7"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 1a4d85dd4ce371352b65dead78e1c6d89c4d59c440bfd9b27023b1113c8610115f2dda17c056b94697f7bfbd947bd8abfe0afd5195b65e2675b404e0e1542fae
   languageName: node
   linkType: hard
 
@@ -15665,6 +15685,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.keys@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "lodash.keys@npm:4.2.0"
+  checksum: 055576c8c4a0bacc0c1da9bcbb520e6e70dcf94c609495263686c62c8242a440293e9ab8387a7398dda529cb05b76e8f783c3fd3d6ba7bc6d5d6d2e08e8512ae
+  languageName: node
+  linkType: hard
+
 "lodash.memoize@npm:4.x, lodash.memoize@npm:^4.1.2":
   version: 4.1.2
   resolution: "lodash.memoize@npm:4.1.2"
@@ -15697,6 +15724,13 @@ __metadata:
   version: 4.4.0
   resolution: "lodash.pick@npm:4.4.0"
   checksum: 2c36cab7da6b999a20bd3373b40e31a3ef81fa264f34a6979c852c5bc8ac039379686b27380f0cb8e3781610844fafec6949c6fbbebc059c98f8fa8570e3675f
+  languageName: node
+  linkType: hard
+
+"lodash.pickby@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "lodash.pickby@npm:4.6.0"
+  checksum: a554d898c15bcd3218e4005b95b5146210bd862010c7d242d17106ee36aed9b9209a858ce974136ab1faadd86a82297761c206fda7f1886278bac827145c5536
   languageName: node
   linkType: hard
 
@@ -16772,9 +16806,11 @@ __metadata:
     "@types/jest": 29.5.4
     "@types/lodash.escaperegexp": 4.1.7
     "@types/lodash.filter": 4.6.7
+    "@types/lodash.keys": 4.2.7
     "@types/lodash.merge": 4.6.7
     "@types/lodash.omit": 4.5.7
     "@types/lodash.pick": 4.4.7
+    "@types/lodash.pickby": 4.6.7
     "@types/node": 20.5.7
     "@types/passport-jwt": 3.0.9
     "@types/passport-local": 1.0.35
