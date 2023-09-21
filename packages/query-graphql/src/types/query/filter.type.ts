@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql'
+import { Field, InputType, TypeMetadataStorage } from '@nestjs/graphql'
 import { Class, Filter, MapReflector } from '@ptc-org/nestjs-query-core'
 import { Type } from 'class-transformer'
 import { ValidateNested } from 'class-validator'
@@ -103,12 +103,15 @@ function getOrCreateFilterType<T>(
 
     const { baseName } = getDTONames(TClass)
     fields.forEach(({ propertyName, target, advancedOptions, returnTypeFunc }) => {
-      const FC = createFilterComparisonType({
-        FieldType: target,
-        fieldName: `${baseName}${upperCaseFirst(propertyName)}`,
-        allowedComparisons: advancedOptions?.allowedComparisons,
-        returnTypeFunc
-      })
+      const objectTypeMetadata = TypeMetadataStorage.getObjectTypeMetadataByTarget(target)
+      const FC = objectTypeMetadata
+        ? getOrCreateFilterType(target, typeName, suffix, depth)
+        : createFilterComparisonType({
+            FieldType: target,
+            fieldName: `${baseName}${upperCaseFirst(propertyName)}`,
+            allowedComparisons: advancedOptions?.allowedComparisons,
+            returnTypeFunc
+          })
       const nullable = advancedOptions?.filterRequired !== true
       ValidateNested()(GraphQLFilter.prototype, propertyName)
       if (advancedOptions?.filterRequired) {
