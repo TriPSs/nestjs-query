@@ -18,7 +18,8 @@ export class WhereBuilder<Entity extends Document> {
    * @param filter - the filter to build the WHERE clause from.
    */
   build(filter: Filter<Entity>): FilterQuery<Entity> {
-    const { and, or } = filter
+    const normalizedFilter = this.getNormalizedFilter(filter)
+    const { and, or } = normalizedFilter
     let ands: FilterQuery<Entity>[] = []
     let ors: FilterQuery<Entity>[] = []
     let filterQuery: FilterQuery<Entity> = {}
@@ -28,7 +29,7 @@ export class WhereBuilder<Entity extends Document> {
     if (or && or.length) {
       ors = or.map((f) => this.build(f))
     }
-    const filterAnds = this.filterFields(filter)
+    const filterAnds = this.filterFields(normalizedFilter)
     if (filterAnds) {
       ands = [...ands, filterAnds]
     }
@@ -40,6 +41,38 @@ export class WhereBuilder<Entity extends Document> {
     }
     return filterQuery
   }
+
+  /**
+   * Normalizes a filter to a dot notation filter for objects with sub objects.
+   * @param filter - the filter to normalize.
+   * @private
+   */
+  private getNormalizedFilter(filter: Filter<Entity>): Filter<Entity> {
+    if (!this.isGraphQLFilter(filter)) return filter
+    const newFilter = {}
+    const keys = Object.keys(filter)
+    // Converting to dot notation
+    for (const key of keys) {
+      const value = filter[key]
+      if (!['and', 'or'].includes(key) && this.isGraphQLFilter(value)) {
+        const subFilter = this.getNormalizedFilter(value as Filter<Entity>)
+        for (const subKey of Object.keys(subFilter)) {
+          newFilter[`${key}.${subKey}`] = subFilter[subKey]
+        }
+      } else {
+        newFilter[key] = value
+      }
+    }
+    return newFilter
+  }
+
+  /**
+   * Checks if a filter is a GraphQLFilter.
+   * @param filter - the filter to check.
+   * @private
+   */
+  private isGraphQLFilter = (filter: unknown) =>
+    typeof filter === `object` && !Array.isArray(filter) && filter?.constructor?.name === 'GraphQLFilter'
 
   /**
    * Creates field comparisons from a filter. This method will ignore and/or properties.

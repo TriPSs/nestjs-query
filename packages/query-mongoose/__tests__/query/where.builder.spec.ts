@@ -1,5 +1,9 @@
+import { ObjectType } from '@nestjs/graphql'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Filter } from '@ptc-org/nestjs-query-core'
-import { FilterQuery, model } from 'mongoose'
+import { FilterableField, FilterType } from '@ptc-org/nestjs-query-graphql'
+import { plainToClass } from 'class-transformer'
+import { Document, FilterQuery, model } from 'mongoose'
 
 import { WhereBuilder } from '../../src/query'
 import { TestEntity, TestEntitySchema } from '../__fixtures__/test.entity'
@@ -7,8 +11,12 @@ import { TestEntity, TestEntitySchema } from '../__fixtures__/test.entity'
 describe('WhereBuilder', (): void => {
   const createWhereBuilder = () => new WhereBuilder<TestEntity>(model('TestEntity', TestEntitySchema))
 
-  const expectFilter = (filter: Filter<TestEntity>, expectedFilterQuery: FilterQuery<TestEntity>): void => {
-    const actual = createWhereBuilder().build(filter)
+  const expectFilter = <T = TestEntity>(
+    filter: Filter<T>,
+    expectedFilterQuery: FilterQuery<T>,
+    whereBuilder?: WhereBuilder<Document>
+  ): void => {
+    const actual = (whereBuilder ?? createWhereBuilder()).build(filter)
     expect(actual).toEqual(expectedFilterQuery)
   }
 
@@ -37,7 +45,7 @@ describe('WhereBuilder', (): void => {
   })
 
   it('and multiple field comparisons together', (): void => {
-    expectFilter(
+    expectFilter<TestEntity>(
       {
         numberType: { eq: 1 },
         stringType: { like: 'foo%' },
@@ -55,7 +63,7 @@ describe('WhereBuilder', (): void => {
 
   describe('and', (): void => {
     it('and multiple expressions together', (): void => {
-      expectFilter(
+      expectFilter<TestEntity>(
         {
           and: [{ numberType: { gt: 10 } }, { numberType: { lt: 20 } }, { numberType: { gte: 30 } }, { numberType: { lte: 40 } }]
         },
@@ -71,7 +79,7 @@ describe('WhereBuilder', (): void => {
     })
 
     it('and multiple filters together with multiple fields', (): void => {
-      expectFilter(
+      expectFilter<TestEntity>(
         {
           and: [
             { numberType: { gt: 10 }, stringType: { like: 'foo%' } },
@@ -88,7 +96,7 @@ describe('WhereBuilder', (): void => {
     })
 
     it('should support nested ors', (): void => {
-      expectFilter(
+      expectFilter<TestEntity>(
         {
           and: [
             { or: [{ numberType: { gt: 10 } }, { numberType: { lt: 20 } }] },
@@ -127,7 +135,7 @@ describe('WhereBuilder', (): void => {
     })
 
     it('and multiple and filters together', (): void => {
-      expectFilter(
+      expectFilter<TestEntity>(
         {
           or: [
             { numberType: { gt: 10 }, stringType: { like: 'foo%' } },
@@ -156,7 +164,7 @@ describe('WhereBuilder', (): void => {
     })
 
     it('should support nested ands', (): void => {
-      expectFilter(
+      expectFilter<TestEntity>(
         {
           or: [
             { and: [{ numberType: { gt: 10 } }, { numberType: { lt: 20 } }] },
@@ -173,6 +181,52 @@ describe('WhereBuilder', (): void => {
             }
           ]
         }
+      )
+    })
+
+    it('should support nested GraphqlFilter', (): void => {
+      @ObjectType()
+      @Schema({ _id: false })
+      class TestSubObjectDTO {
+        @FilterableField()
+        @Prop({ required: false })
+        numberType?: number
+      }
+      const TestSubObjectSchema = SchemaFactory.createForClass(TestSubObjectDTO)
+      @ObjectType()
+      @Schema()
+      class TestMainObject extends Document {
+        @FilterableField(() => TestSubObjectDTO)
+        @Prop({ type: TestSubObjectSchema, required: true })
+        subType: TestSubObjectDTO
+      }
+      const TestMainObjectSchema = SchemaFactory.createForClass(TestMainObject)
+
+      const filterObject: Filter<TestMainObject> = {
+        or: [
+          { and: [{ subType: { numberType: { gt: 10 } } }, { subType: { numberType: { lt: 20 } } }] },
+          { and: [{ subType: { numberType: { gte: 30 } } }, { subType: { numberType: { lte: 40 } } }] }
+        ]
+      }
+
+      const TestSubObjectFilter = FilterType(TestMainObject)
+      const filterInstance = plainToClass(TestSubObjectFilter, filterObject)
+
+      const whereBuilder = new WhereBuilder<TestMainObject>(model('TestMainObject', TestMainObjectSchema))
+
+      expectFilter<TestMainObject>(
+        filterInstance,
+        {
+          $or: [
+            {
+              $and: [{ $and: [{ 'subType.numberType': { $gt: 10 } }] }, { $and: [{ 'subType.numberType': { $lt: 20 } }] }]
+            },
+            {
+              $and: [{ $and: [{ 'subType.numberType': { $gte: 30 } }] }, { $and: [{ 'subType.numberType': { $lte: 40 } }] }]
+            }
+          ]
+        },
+        whereBuilder
       )
     })
   })
