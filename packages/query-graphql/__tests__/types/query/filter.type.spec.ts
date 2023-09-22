@@ -176,6 +176,23 @@ describe('filter types', (): void => {
       expect(filterInstance.or[0]).toBeInstanceOf(TestGraphQLFilter)
     })
 
+    it('should create filter for sub objects', () => {
+      @ObjectType('TestSubObjectType')
+      class TestSubObjectType {
+        @FilterableField(() => TestDto)
+        subType!: TestDto
+      }
+      const TestSubObjectFilter = FilterType(TestSubObjectType)
+
+      const filterObject: Filter<TestSubObjectType> = {
+        or: [{ subType: { stringField: { eq: 'foo' } } }]
+      }
+      const filterInstance = plainToClass(TestSubObjectFilter, filterObject)
+      const subType = filterInstance.or[0].subType as Filter<TestDto>
+      expect(subType.stringField.eq).toBe(`foo`)
+      expect(subType.constructor.name).toBe(`GraphQLFilter`)
+    })
+
     describe('allowedComparisons option', () => {
       @ObjectType('TestAllowedComparison')
       class TestAllowedComparisonsDto extends BaseType {
