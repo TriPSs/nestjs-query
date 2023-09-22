@@ -15,7 +15,7 @@ import { IsBoolean, IsDate, IsOptional, ValidateNested } from 'class-validator'
 import { upperCaseFirst } from 'upper-case-first'
 
 import { getGraphqlEnumMetadata } from '../../../common'
-import { SkipIf, composeDecorators } from '../../../decorators'
+import { composeDecorators, SkipIf } from '../../../decorators'
 import { IsUndefined } from '../../validators'
 import { isInAllowedList } from '../helpers'
 import { getOrCreateBooleanFieldComparison } from './boolean-field-comparison.type'
@@ -70,8 +70,8 @@ const isCustomFieldComparison = <T>(options: FilterComparisonOptions<T>): boolea
   !!options.allowedComparisons || !!options.decorators
 
 const getComparisonTypeName = <T>(fieldType: ReturnTypeFuncValue, options: FilterComparisonOptions<T>): string => {
-  if (options.filterTypeNamePrefix) {
-    return `${options.filterTypeNamePrefix}FilterComparison`
+  if (options.typeNamePrefix) {
+    return `${options.typeNamePrefix}FilterComparison`
   }
   if (isCustomFieldComparison(options)) {
     return `${upperCaseFirst(options.fieldName)}FilterComparison`
@@ -85,7 +85,7 @@ type FilterComparisonOptions<T> = {
   allowedComparisons?: FilterComparisonOperators<T>[]
   returnTypeFunc?: ReturnTypeFunc<ReturnTypeFuncValue>
   decorators?: PropertyDecorator[]
-  filterTypeNamePrefix?: string
+  typeNamePrefix?: string
 }
 
 /** @internal */
