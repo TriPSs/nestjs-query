@@ -110,7 +110,8 @@ function getOrCreateFilterType<T>(
             FieldType: target,
             fieldName: `${baseName}${upperCaseFirst(propertyName)}`,
             allowedComparisons: advancedOptions?.allowedComparisons,
-            returnTypeFunc
+            returnTypeFunc,
+            decorators: advancedOptions?.filterDecorators
           })
       const nullable = advancedOptions?.filterRequired !== true
       ValidateNested()(GraphQLFilter.prototype, propertyName)

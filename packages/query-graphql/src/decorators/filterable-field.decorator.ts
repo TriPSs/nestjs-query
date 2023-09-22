@@ -8,6 +8,7 @@ export type FilterableFieldOptions = {
   allowedComparisons?: FilterComparisonOperators<unknown>[]
   filterRequired?: boolean
   filterOnly?: boolean
+  filterDecorators?: PropertyDecorator[]
 } & FieldOptions
 
 export interface FilterableFieldDescriptor {
