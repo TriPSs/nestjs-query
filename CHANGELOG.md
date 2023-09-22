@@ -1,4 +1,20 @@
  
+# [4.1.0](https://github.com/TriPSs/nestjs-query/compare/v4.0.0...v4.1.0) (2023-09-22)
+
+
+### Bug Fixes
+
+* added support for typegoose ([9494d97](https://github.com/TriPSs/nestjs-query/commit/9494d975683a8a6dcbe210033e465afb3d67061c))
+* sub objects in mongoose are resolved ([27db7ee](https://github.com/TriPSs/nestjs-query/commit/27db7eea1d43cca9f8ac1968971454631c658e8b))
+* test snapshots ([6a620ec](https://github.com/TriPSs/nestjs-query/commit/6a620ec30d7f336b4b8e55bc253b6a63c63ad05f))
+
+
+### Features
+
+* added test cases ([ccd897c](https://github.com/TriPSs/nestjs-query/commit/ccd897c48f9ecb5edb4c0c91084d71bc0bca1ddf))
+
+
+
 # [4.0.0](https://github.com/TriPSs/nestjs-query/compare/v3.0.2...v4.0.0) (2023-08-02)
 
 
