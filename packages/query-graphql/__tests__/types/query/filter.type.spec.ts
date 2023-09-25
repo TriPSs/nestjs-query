@@ -275,6 +275,69 @@ describe('filter types', (): void => {
       })
     })
 
+    describe('filterDecorators option', () => {
+      const appliedProperties: { target: unknown; propertyKey: string | symbol }[] = []
+      const TestDecorator = (): PropertyDecorator => {
+        return (target: unknown, propertyKey: string | symbol): void => {
+          appliedProperties.push({ target, propertyKey })
+        }
+      }
+      @ObjectType('TestFilterDecorators')
+      class TestFilterDecoratorsDto extends BaseType {
+        @FilterableField()
+        boolField!: boolean
+
+        @FilterableField({ filterDecorators: [TestDecorator()] })
+        dateField!: Date
+
+        @FilterableField(() => Float, { filterDecorators: [TestDecorator()] })
+        floatField!: number
+      }
+
+      FilterType(TestFilterDecoratorsDto)
+
+      it('should apply the decorator to the correct fields', () => {
+        expect(appliedProperties).toMatchSnapshot()
+      })
+    })
+
+    describe('typeNamePrefix option', () => {
+      @ObjectType('TestTypeNamePrefix')
+      class TestTypeNamePrefixDto extends BaseType {
+        @FilterableField()
+        boolField!: boolean
+
+        @FilterableField({ filterTypeNamePrefix: `MyDate` })
+        dateField!: Date
+
+        @FilterableField({ filterTypeNamePrefix: `MyCustomFloat` })
+        floatField!: number
+      }
+
+      const TestGraphQLTestTypeNamePrefixFilter: Class<Filter<TestTypeNamePrefixDto>> = FilterType(TestTypeNamePrefixDto)
+
+      it('should apply correct type name prefix', async () => {
+        @Resolver()
+        class FilterTypeSpec {
+          @Query(() => TestTypeNamePrefixDto)
+          test(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            @Args('input', { type: () => TestGraphQLTestTypeNamePrefixFilter }) input: typeof TestGraphQLTestTypeNamePrefixFilter
+          ): TestTypeNamePrefixDto {
+            return {
+              id: 1,
+              boolField: true,
+              dateField: new Date(),
+              floatField: 1
+            }
+          }
+        }
+
+        const schema = await generateSchema([FilterTypeSpec])
+        expect(schema).toMatchSnapshot()
+      })
+    })
+
     describe('allowedBooleanExpressions option', () => {
       describe('only and boolean expressions', () => {
         @ObjectType('TestAllowedComparisons')
