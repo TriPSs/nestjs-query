@@ -47,6 +47,7 @@
   "devDependencies": {
     "@actions/core": "^1.10.0",
     "@apollo/gateway": "2.5.3",
+    "@apollo/subgraph": "2.5.5",
     "@commitlint/cli": "17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
     "@docusaurus/module-type-aliases": "2.4.1",
