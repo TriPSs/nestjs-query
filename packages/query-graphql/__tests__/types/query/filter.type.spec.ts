@@ -307,10 +307,10 @@ describe('filter types', (): void => {
         @FilterableField()
         boolField!: boolean
 
-        @FilterableField({ filterTypeNamePrefix: `MyDate` })
+        @FilterableField({ overrideFilterTypeNamePrefix: `MyDate` })
         dateField!: Date
 
-        @FilterableField({ filterTypeNamePrefix: `MyCustomFloat` })
+        @FilterableField({ overrideFilterTypeNamePrefix: `MyCustomFloat` })
         floatField!: number
       }
 

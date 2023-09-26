@@ -9,7 +9,7 @@ export type FilterableFieldOptions = {
   filterRequired?: boolean
   filterOnly?: boolean
   filterDecorators?: PropertyDecorator[]
-  filterTypeNamePrefix?: string
+  overrideFilterTypeNamePrefix?: string
 } & FieldOptions
 
 export interface FilterableFieldDescriptor {

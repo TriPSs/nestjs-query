@@ -70,8 +70,8 @@ const isCustomFieldComparison = <T>(options: FilterComparisonOptions<T>): boolea
   !!options.allowedComparisons || !!options.decorators
 
 const getComparisonTypeName = <T>(fieldType: ReturnTypeFuncValue, options: FilterComparisonOptions<T>): string => {
-  if (options.typeNamePrefix) {
-    return `${options.typeNamePrefix}FilterComparison`
+  if (options.overrideTypeNamePrefix) {
+    return `${options.overrideTypeNamePrefix}FilterComparison`
   }
   if (isCustomFieldComparison(options)) {
     return `${upperCaseFirst(options.fieldName)}FilterComparison`
@@ -85,7 +85,7 @@ type FilterComparisonOptions<T> = {
   allowedComparisons?: FilterComparisonOperators<T>[]
   returnTypeFunc?: ReturnTypeFunc<ReturnTypeFuncValue>
   decorators?: PropertyDecorator[]
-  typeNamePrefix?: string
+  overrideTypeNamePrefix?: string
 }
 
 /** @internal */
