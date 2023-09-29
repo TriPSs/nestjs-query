@@ -1,4 +1,21 @@
  
+# [4.2.0](https://github.com/TriPSs/nestjs-query/compare/v4.1.0...v4.2.0) (2023-09-29)
+
+
+### Bug Fixes
+
+* querying for one-to-many or one-to-one relationships in typeorm would not return any entities because of an implementation error when filtering for the correct results after batch selecting all related entities. ([2fbf0b7](https://github.com/TriPSs/nestjs-query/commit/2fbf0b7bb68fa3318798c6f46bebcd8092cc2b07))
+* renamed option ([f06b493](https://github.com/TriPSs/nestjs-query/commit/f06b4930d1ce2c220b2a9fdd6b477f0b446b79bf))
+
+
+### Features
+
+* added custom prefix ([5813ed7](https://github.com/TriPSs/nestjs-query/commit/5813ed7fef67a0c495b8b91a117b42ea86d9bd55))
+* added test cases ([124e50b](https://github.com/TriPSs/nestjs-query/commit/124e50b8a361ecc0809a75b10f1ee4ca325041e8))
+* custom decorators for filter ([5d803bd](https://github.com/TriPSs/nestjs-query/commit/5d803bd0ae590c6b649238bca98c85dd55728cba))
+
+
+
 # [4.1.0](https://github.com/TriPSs/nestjs-query/compare/v4.0.0...v4.1.0) (2023-09-22)
 
 
