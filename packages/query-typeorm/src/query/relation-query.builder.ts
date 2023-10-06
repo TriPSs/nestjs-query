@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { AggregateQuery, Class, Query } from '@ptc-org/nestjs-query-core'
 import lodashFilter from 'lodash.filter'
+import lodashKeys from 'lodash.keys'
+import lodashPickBy from 'lodash.pickby'
 import { Brackets, ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm'
 import { DriverUtils } from 'typeorm/driver/DriverUtils'
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata'
@@ -357,16 +359,21 @@ export class RelationQueryBuilder<Entity, Relation> {
       fromAlias: aliasName,
       fromPrimaryKeys,
       joins: [],
-      mapRelations: (entity: Entity, relations: Relation[]): Relation[] => {
-        const filter = columns.reduce(
+      mapRelations: <RawRelation>(entity: Entity, relations: Relation[], rawRelations: RawRelation[]): Relation[] => {
+        // create a filter for the raw relation array to filter only for the objects that are related to this entity
+        // do this by building an alias based on the column database name for filtering
+        // e.g. if the entity is a customer, look for a customer id in the raw relation entity object.
+        const rawFilter = columns.reduce(
           (columnsFilter, column) => ({
             ...columnsFilter,
-            [column.propertyName]: column.referencedColumn.getEntityValue(entity)
+            [this.buildAlias(column.databaseName)]: column.referencedColumn.getEntityValue(entity)
           }),
           {} as Partial<Entity>
         )
-
-        return lodashFilter(relations, filter) as Relation[]
+        // find all indices where the raw relation entity matches the filter
+        const rawIndices = lodashKeys(lodashPickBy(rawRelations, rawFilter)).map((idx) => +idx)
+        // return all mapped entities by using the indices that were calculated using the raw entities
+        return rawIndices.map((idx) => relations[idx])
       },
       batchSelect: (qb: SelectQueryBuilder<Relation>, entities: Entity[]) => {
         const params = {}
