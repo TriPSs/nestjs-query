@@ -4,16 +4,19 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { typeormOrmConfig } from '../../../helpers'
-import { TagModule } from './tag/tag.module'
+import { UserModule } from './user/user.module'
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(typeormOrmConfig('federation_tag')),
+    TypeOrmModule.forRoot(typeormOrmConfig('federation_user')),
     GraphQLModule.forRoot({
       driver: ApolloFederationDriver,
-      autoSchemaFile: 'examples/federation/tag-graphql/schema.gql'
+      autoSchemaFile: {
+        federation: 2,
+        path: 'examples/federation-v2/user-graphql/schema.gql'
+      }
     }),
-    TagModule
+    UserModule
   ]
 })
 export class AppModule {}
