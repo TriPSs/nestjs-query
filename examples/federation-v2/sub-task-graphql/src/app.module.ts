@@ -4,18 +4,19 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { typeormOrmConfig } from '../../../helpers'
-import { UserModule } from './user/user.module'
+import { SubTaskModule } from './sub-task/sub-task.module'
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(typeormOrmConfig('federation_user')),
+    TypeOrmModule.forRoot(typeormOrmConfig('federation_sub_task')),
     GraphQLModule.forRoot({
       driver: ApolloFederationDriver,
       autoSchemaFile: {
-        federation: 2
+        federation: 2,
+        path: 'examples/federation-v2/sub-task-graphql/schema.gql'
       }
     }),
-    UserModule
+    SubTaskModule
   ]
 })
 export class AppModule {}

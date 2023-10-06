@@ -5,10 +5,11 @@ import request from 'supertest'
 import { Connection } from 'typeorm'
 
 import { AppModule } from '../src/app.module'
-import { SubTaskDTO } from '../src/sub-task/dto/sub-task.dto'
-import { edgeNodes, pageInfoField, refresh, subTaskFields, todoItemFields } from './__fixtures__'
+import { TodoItemDTO } from '../src/todo-item/dto/todo-item.dto'
+import { refresh } from './fixtures'
+import { edgeNodes, pageInfoField, todoItemFields } from './graphql-fragments'
 
-describe('Federated - SubTaskResolver (e2e)', () => {
+describe('Federated v2 - TodoItemResolver (e2e)', () => {
   let app: INestApplication
 
   beforeAll(async () => {
@@ -33,88 +34,16 @@ describe('Federated - SubTaskResolver (e2e)', () => {
 
   afterAll(() => refresh(app.get(Connection)))
 
-  const subTasks = [
-    { id: '1', title: 'Create Nest App - Sub Task 1', completed: true, description: null, todoItemId: 1 },
-    { id: '2', title: 'Create Nest App - Sub Task 2', completed: false, description: null, todoItemId: 1 },
-    { id: '3', title: 'Create Nest App - Sub Task 3', completed: false, description: null, todoItemId: 1 },
-    { id: '4', title: 'Create Entity - Sub Task 1', completed: true, description: null, todoItemId: 2 },
-    { id: '5', title: 'Create Entity - Sub Task 2', completed: false, description: null, todoItemId: 2 },
-    { id: '6', title: 'Create Entity - Sub Task 3', completed: false, description: null, todoItemId: 2 },
-    {
-      id: '7',
-      title: 'Create Entity Service - Sub Task 1',
-      completed: true,
-      description: null,
-      todoItemId: 3
-    },
-    {
-      id: '8',
-      title: 'Create Entity Service - Sub Task 2',
-      completed: false,
-      description: null,
-      todoItemId: 3
-    },
-    {
-      id: '9',
-      title: 'Create Entity Service - Sub Task 3',
-      completed: false,
-      description: null,
-      todoItemId: 3
-    },
-    {
-      id: '10',
-      title: 'Add Todo Item Resolver - Sub Task 1',
-      completed: true,
-      description: null,
-      todoItemId: 4
-    },
-    {
-      completed: false,
-      description: null,
-      id: '11',
-      title: 'Add Todo Item Resolver - Sub Task 2',
-      todoItemId: 4
-    },
-    {
-      completed: false,
-      description: null,
-      id: '12',
-      title: 'Add Todo Item Resolver - Sub Task 3',
-      todoItemId: 4
-    },
-    {
-      completed: true,
-      description: null,
-      id: '13',
-      title: 'How to create item With Sub Tasks - Sub Task 1',
-      todoItemId: 5
-    },
-    {
-      completed: false,
-      description: null,
-      id: '14',
-      title: 'How to create item With Sub Tasks - Sub Task 2',
-      todoItemId: 5
-    },
-    {
-      completed: false,
-      description: null,
-      id: '15',
-      title: 'How to create item With Sub Tasks - Sub Task 3',
-      todoItemId: 5
-    }
-  ]
-
   describe('find one', () => {
-    it(`should a sub task by id`, () =>
+    it(`should find a todo item by id`, () =>
       request(app.getHttpServer())
         .post('/graphql')
         .send({
           operationName: null,
           variables: {},
           query: `{
-          subTask(id: 1) {
-            ${subTaskFields}
+          todoItem(id: 1) {
+            ${todoItemFields}
           }
         }`
         })
@@ -122,26 +51,94 @@ describe('Federated - SubTaskResolver (e2e)', () => {
         .then(({ body }) => {
           expect(body).toEqual({
             data: {
-              subTask: {
+              todoItem: {
                 id: '1',
-                title: 'Create Nest App - Sub Task 1',
+                title: 'Create Nest App',
                 completed: true,
-                description: null,
-                todoItemId: 1
+                description: null
               }
             }
           })
         }))
 
-    it(`should throw item not found on non existing sub task`, () =>
+    it(`should find a todo and assignee`, () =>
       request(app.getHttpServer())
         .post('/graphql')
         .send({
           operationName: null,
           variables: {},
           query: `{
-          subTask(id: 100) {
-            ${subTaskFields}
+            todoItem(id: 1) {
+              ${todoItemFields}
+              assigneeId
+              assignee {
+                id
+                __typename
+              }
+            }
+          }`
+        })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toEqual({
+            data: {
+              todoItem: {
+                id: '1',
+                title: 'Create Nest App',
+                completed: true,
+                description: null,
+                assigneeId: '1',
+                assignee: {
+                  id: '1',
+                  __typename: 'User'
+                }
+              }
+            }
+          })
+        }))
+
+    it(`should return null if there is no assignee`, () =>
+      request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: {},
+          query: `{
+              todoItem(id: 5) {
+                ${todoItemFields}
+                assigneeId
+                assignee {
+                  id
+                  __typename
+                }
+              }
+            }`
+        })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toEqual({
+            data: {
+              todoItem: {
+                id: '5',
+                title: 'How to create item With Sub Tasks',
+                completed: false,
+                description: null,
+                assigneeId: null,
+                assignee: null
+              }
+            }
+          })
+        }))
+
+    it(`should throw item not found on non existing todo item`, () =>
+      request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: {},
+          query: `{
+          todoItem(id: 100) {
+            ${todoItemFields}
           }
         }`
         })
@@ -149,33 +146,6 @@ describe('Federated - SubTaskResolver (e2e)', () => {
         .then(({ body }) => {
           expect(body.errors).toHaveLength(1)
           expect(body.errors[0].message).toContain('Unable to find')
-        }))
-
-    it(`should return a todo item`, () =>
-      request(app.getHttpServer())
-        .post('/graphql')
-        .send({
-          operationName: null,
-          variables: {},
-          query: `{
-          subTask(id: 1) {
-            todoItem {
-              ${todoItemFields}
-            }
-          }
-        }`
-        })
-        .expect(200)
-        .then(({ body }) => {
-          expect(body).toEqual({
-            data: {
-              subTask: {
-                todoItem: {
-                  id: '1'
-                }
-              }
-            }
-          })
         }))
   })
 
@@ -187,23 +157,29 @@ describe('Federated - SubTaskResolver (e2e)', () => {
           operationName: null,
           variables: {},
           query: `{
-          subTasks {
+          todoItems {
             ${pageInfoField}
-            ${edgeNodes(subTaskFields)}
+            ${edgeNodes(todoItemFields)}
           }
         }`
         })
         .expect(200)
         .then(({ body }) => {
-          const { edges, pageInfo }: CursorConnectionType<SubTaskDTO> = body.data.subTasks
+          const { edges, pageInfo }: CursorConnectionType<TodoItemDTO> = body.data.todoItems
           expect(pageInfo).toEqual({
-            endCursor: 'YXJyYXljb25uZWN0aW9uOjk=',
-            hasNextPage: true,
+            endCursor: 'YXJyYXljb25uZWN0aW9uOjQ=',
+            hasNextPage: false,
             hasPreviousPage: false,
             startCursor: 'YXJyYXljb25uZWN0aW9uOjA='
           })
-          expect(edges).toHaveLength(10)
-          expect(edges.map((e) => e.node)).toEqual(subTasks.slice(0, 10))
+          expect(edges).toHaveLength(5)
+          expect(edges.map((e) => e.node)).toEqual([
+            { id: '1', title: 'Create Nest App', completed: true, description: null },
+            { id: '2', title: 'Create Entity', completed: false, description: null },
+            { id: '3', title: 'Create Entity Service', completed: false, description: null },
+            { id: '4', title: 'Add Todo Item Resolver', completed: false, description: null },
+            { id: '5', title: 'How to create item With Sub Tasks', completed: false, description: null }
+          ])
         }))
 
     it(`should allow querying`, () =>
@@ -213,15 +189,15 @@ describe('Federated - SubTaskResolver (e2e)', () => {
           operationName: null,
           variables: {},
           query: `{
-          subTasks(filter: { id: { in: [1, 2, 3] } }) {
+          todoItems(filter: { id: { in: [1, 2, 3] } }) {
             ${pageInfoField}
-            ${edgeNodes(subTaskFields)}
+            ${edgeNodes(todoItemFields)}
           }
         }`
         })
         .expect(200)
         .then(({ body }) => {
-          const { edges, pageInfo }: CursorConnectionType<SubTaskDTO> = body.data.subTasks
+          const { edges, pageInfo }: CursorConnectionType<TodoItemDTO> = body.data.todoItems
           expect(pageInfo).toEqual({
             endCursor: 'YXJyYXljb25uZWN0aW9uOjI=',
             hasNextPage: false,
@@ -229,7 +205,11 @@ describe('Federated - SubTaskResolver (e2e)', () => {
             startCursor: 'YXJyYXljb25uZWN0aW9uOjA='
           })
           expect(edges).toHaveLength(3)
-          expect(edges.map((e) => e.node)).toEqual(subTasks.slice(0, 3))
+          expect(edges.map((e) => e.node)).toEqual([
+            { id: '1', title: 'Create Nest App', completed: true, description: null },
+            { id: '2', title: 'Create Entity', completed: false, description: null },
+            { id: '3', title: 'Create Entity Service', completed: false, description: null }
+          ])
         }))
 
     it(`should allow sorting`, () =>
@@ -239,23 +219,29 @@ describe('Federated - SubTaskResolver (e2e)', () => {
           operationName: null,
           variables: {},
           query: `{
-          subTasks(sorting: [{field: id, direction: DESC}]) {
+          todoItems(sorting: [{field: id, direction: DESC}]) {
             ${pageInfoField}
-            ${edgeNodes(subTaskFields)}
+            ${edgeNodes(todoItemFields)}
           }
         }`
         })
         .expect(200)
         .then(({ body }) => {
-          const { edges, pageInfo }: CursorConnectionType<SubTaskDTO> = body.data.subTasks
+          const { edges, pageInfo }: CursorConnectionType<TodoItemDTO> = body.data.todoItems
           expect(pageInfo).toEqual({
-            endCursor: 'YXJyYXljb25uZWN0aW9uOjk=',
-            hasNextPage: true,
+            endCursor: 'YXJyYXljb25uZWN0aW9uOjQ=',
+            hasNextPage: false,
             hasPreviousPage: false,
             startCursor: 'YXJyYXljb25uZWN0aW9uOjA='
           })
-          expect(edges).toHaveLength(10)
-          expect(edges.map((e) => e.node)).toEqual(subTasks.slice().reverse().slice(0, 10))
+          expect(edges).toHaveLength(5)
+          expect(edges.map((e) => e.node)).toEqual([
+            { id: '5', title: 'How to create item With Sub Tasks', completed: false, description: null },
+            { id: '4', title: 'Add Todo Item Resolver', completed: false, description: null },
+            { id: '3', title: 'Create Entity Service', completed: false, description: null },
+            { id: '2', title: 'Create Entity', completed: false, description: null },
+            { id: '1', title: 'Create Nest App', completed: true, description: null }
+          ])
         }))
 
     describe('paging', () => {
@@ -266,15 +252,15 @@ describe('Federated - SubTaskResolver (e2e)', () => {
             operationName: null,
             variables: {},
             query: `{
-          subTasks(paging: {first: 2}) {
+          todoItems(paging: {first: 2}) {
             ${pageInfoField}
-            ${edgeNodes(subTaskFields)}
+            ${edgeNodes(todoItemFields)}
           }
         }`
           })
           .expect(200)
           .then(({ body }) => {
-            const { edges, pageInfo }: CursorConnectionType<SubTaskDTO> = body.data.subTasks
+            const { edges, pageInfo }: CursorConnectionType<TodoItemDTO> = body.data.todoItems
             expect(pageInfo).toEqual({
               endCursor: 'YXJyYXljb25uZWN0aW9uOjE=',
               hasNextPage: true,
@@ -282,7 +268,10 @@ describe('Federated - SubTaskResolver (e2e)', () => {
               startCursor: 'YXJyYXljb25uZWN0aW9uOjA='
             })
             expect(edges).toHaveLength(2)
-            expect(edges.map((e) => e.node)).toEqual(subTasks.slice(0, 2))
+            expect(edges.map((e) => e.node)).toEqual([
+              { id: '1', title: 'Create Nest App', completed: true, description: null },
+              { id: '2', title: 'Create Entity', completed: false, description: null }
+            ])
           }))
 
       it(`should allow paging with the 'first' field and 'after'`, () =>
@@ -292,15 +281,15 @@ describe('Federated - SubTaskResolver (e2e)', () => {
             operationName: null,
             variables: {},
             query: `{
-          subTasks(paging: {first: 2, after: "YXJyYXljb25uZWN0aW9uOjE="}) {
+          todoItems(paging: {first: 2, after: "YXJyYXljb25uZWN0aW9uOjE="}) {
             ${pageInfoField}
-            ${edgeNodes(subTaskFields)}
+            ${edgeNodes(todoItemFields)}
           }
         }`
           })
           .expect(200)
           .then(({ body }) => {
-            const { edges, pageInfo }: CursorConnectionType<SubTaskDTO> = body.data.subTasks
+            const { edges, pageInfo }: CursorConnectionType<TodoItemDTO> = body.data.todoItems
             expect(pageInfo).toEqual({
               endCursor: 'YXJyYXljb25uZWN0aW9uOjM=',
               hasNextPage: true,
@@ -308,141 +297,150 @@ describe('Federated - SubTaskResolver (e2e)', () => {
               startCursor: 'YXJyYXljb25uZWN0aW9uOjI='
             })
             expect(edges).toHaveLength(2)
-            expect(edges.map((e) => e.node)).toEqual(subTasks.slice(2, 4))
+            expect(edges.map((e) => e.node)).toEqual([
+              { id: '3', title: 'Create Entity Service', completed: false, description: null },
+              { id: '4', title: 'Add Todo Item Resolver', completed: false, description: null }
+            ])
           }))
     })
   })
 
   describe('create one', () => {
-    it('should allow creating a subTask', () =>
+    it('should allow creating a todoItem', () =>
       request(app.getHttpServer())
         .post('/graphql')
         .send({
           operationName: null,
           variables: {},
           query: `mutation {
-            createOneSubTask(
+            createOneTodoItem(
               input: {
-                subTask: { title: "Test SubTask", completed: false, todoItemId: "1" }
+                todoItem: { title: "Test Todo", completed: false }
               }
             ) {
-              ${subTaskFields}
+              id
+              title
+              completed
             }
         }`
         })
         .expect(200, {
           data: {
-            createOneSubTask: {
-              id: '16',
-              title: 'Test SubTask',
-              description: null,
-              completed: false,
-              todoItemId: 1
+            createOneTodoItem: {
+              id: '6',
+              title: 'Test Todo',
+              completed: false
             }
           }
         }))
 
-    it('should validate a subTask', () =>
+    it('should validate a todoItem', () =>
       request(app.getHttpServer())
         .post('/graphql')
         .send({
           operationName: null,
           variables: {},
           query: `mutation {
-            createOneSubTask(
+            createOneTodoItem(
               input: {
-                subTask: { title: "", completed: false, todoItemId: "1" }
+                todoItem: { title: "Test Todo with a too long title!", completed: false }
               }
             ) {
-              ${subTaskFields}
+              id
+              title
+              completed
             }
         }`
         })
         .expect(200)
         .then(({ body }) => {
           expect(body.errors).toHaveLength(1)
-          expect(JSON.stringify(body.errors[0])).toContain('title should not be empty')
+          expect(JSON.stringify(body.errors[0])).toContain('title must be shorter than or equal to 20 characters')
         }))
   })
 
   describe('create many', () => {
-    it('should allow creating a subTask', () =>
+    it('should allow creating a todoItem', () =>
       request(app.getHttpServer())
         .post('/graphql')
         .send({
           operationName: null,
           variables: {},
           query: `mutation {
-            createManySubTasks(
+            createManyTodoItems(
               input: {
-                subTasks: [
-                  { title: "Test Create Many SubTask - 1", completed: false, todoItemId: "2" },
-                  { title: "Test Create Many SubTask - 2", completed: true, todoItemId: "2" },
+                todoItems: [
+                  { title: "Many Test Todo 1", completed: false },
+                  { title: "Many Test Todo 2", completed: true }
                 ]
               }
             ) {
-              ${subTaskFields}
+              id
+              title
+              completed
             }
         }`
         })
         .expect(200, {
           data: {
-            createManySubTasks: [
-              { id: '17', title: 'Test Create Many SubTask - 1', description: null, completed: false, todoItemId: 2 },
-              { id: '18', title: 'Test Create Many SubTask - 2', description: null, completed: true, todoItemId: 2 }
+            createManyTodoItems: [
+              { id: '7', title: 'Many Test Todo 1', completed: false },
+              { id: '8', title: 'Many Test Todo 2', completed: true }
             ]
           }
         }))
 
-    it('should validate a subTask', () =>
+    it('should validate a todoItem', () =>
       request(app.getHttpServer())
         .post('/graphql')
         .send({
           operationName: null,
           variables: {},
           query: `mutation {
-            createManySubTasks(
+            createManyTodoItems(
               input: {
-                subTasks: [{ title: "", completed: false, todoItemId: "2" }]
+                todoItems: [{ title: "Test Todo With A Really Long Title", completed: false }]
               }
             ) {
-              ${subTaskFields}
+              id
+              title
+              completed
             }
         }`
         })
         .expect(200)
         .then(({ body }) => {
           expect(body.errors).toHaveLength(1)
-          expect(JSON.stringify(body.errors[0])).toContain('title should not be empty')
+          expect(JSON.stringify(body.errors[0])).toContain('title must be shorter than or equal to 20 characters')
         }))
   })
 
   describe('update one', () => {
-    it('should allow updating a subTask', () =>
+    it('should allow updating a todoItem', () =>
       request(app.getHttpServer())
         .post('/graphql')
         .send({
           operationName: null,
           variables: {},
           query: `mutation {
-            updateOneSubTask(
+            updateOneTodoItem(
               input: {
-                id: "16",
-                update: { title: "Update Test Sub Task", completed: true }
+                id: "6",
+                update: { title: "Update Test Todo", completed: true }
               }
             ) {
-              ${subTaskFields}
+              id
+              title
+              completed
             }
         }`
         })
         .expect(200, {
           data: {
-            updateOneSubTask: {
-              id: '16',
-              title: 'Update Test Sub Task',
-              description: null,
-              completed: true,
-              todoItemId: 1
+            updateOneTodoItem: {
+              id: '6',
+              title: 'Update Test Todo',
+              completed: true
             }
           }
         }))
@@ -454,9 +452,9 @@ describe('Federated - SubTaskResolver (e2e)', () => {
           operationName: null,
           variables: {},
           query: `mutation {
-            updateOneSubTask(
+            updateOneTodoItem(
               input: {
-                update: { title: "Update Test Sub Task" }
+                update: { title: "Update Test Todo With A Really Long Title" }
               }
             ) {
               id
@@ -468,7 +466,7 @@ describe('Federated - SubTaskResolver (e2e)', () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.errors).toHaveLength(1)
-          expect(body.errors[0].message).toBe('Field "UpdateOneSubTaskInput.id" of required type "ID!" was not provided.')
+          expect(body.errors[0].message).toBe('Field "UpdateOneTodoItemInput.id" of required type "ID!" was not provided.')
         }))
 
     it('should validate an update', () =>
@@ -478,10 +476,10 @@ describe('Federated - SubTaskResolver (e2e)', () => {
           operationName: null,
           variables: {},
           query: `mutation {
-            updateOneSubTask(
+            updateOneTodoItem(
               input: {
-                id: "16",
-                update: { title: "" }
+                id: "6",
+                update: { title: "Update Test Todo With A Really Long Title" }
               }
             ) {
               id
@@ -493,21 +491,21 @@ describe('Federated - SubTaskResolver (e2e)', () => {
         .expect(200)
         .then(({ body }) => {
           expect(body.errors).toHaveLength(1)
-          expect(JSON.stringify(body.errors[0])).toContain('title should not be empty')
+          expect(JSON.stringify(body.errors[0])).toContain('title must be shorter than or equal to 20 characters')
         }))
   })
 
   describe('update many', () => {
-    it('should allow updating a subTask', () =>
+    it('should allow updating a todoItem', () =>
       request(app.getHttpServer())
         .post('/graphql')
         .send({
           operationName: null,
           variables: {},
           query: `mutation {
-            updateManySubTasks(
+            updateManyTodoItems(
               input: {
-                filter: {id: { in: ["17", "18"]} },
+                filter: {id: { in: ["7", "8"]} },
                 update: { title: "Update Many Test", completed: true }
               }
             ) {
@@ -517,7 +515,7 @@ describe('Federated - SubTaskResolver (e2e)', () => {
         })
         .expect(200, {
           data: {
-            updateManySubTasks: {
+            updateManyTodoItems: {
               updatedCount: 2
             }
           }
@@ -530,7 +528,7 @@ describe('Federated - SubTaskResolver (e2e)', () => {
           operationName: null,
           variables: {},
           query: `mutation {
-            updateManySubTasks(
+            updateManyTodoItems(
               input: {
                 update: { title: "Update Many Test", completed: true }
               }
@@ -543,7 +541,7 @@ describe('Federated - SubTaskResolver (e2e)', () => {
         .then(({ body }) => {
           expect(body.errors).toHaveLength(1)
           expect(body.errors[0].message).toBe(
-            'Field "UpdateManySubTasksInput.filter" of required type "SubTaskUpdateFilter!" was not provided.'
+            'Field "UpdateManyTodoItemsInput.filter" of required type "TodoItemUpdateFilter!" was not provided.'
           )
         }))
 
@@ -554,7 +552,7 @@ describe('Federated - SubTaskResolver (e2e)', () => {
           operationName: null,
           variables: {},
           query: `mutation {
-            updateManySubTasks(
+            updateManyTodoItems(
               input: {
                 filter: { },
                 update: { title: "Update Many Test", completed: true }
@@ -572,28 +570,28 @@ describe('Federated - SubTaskResolver (e2e)', () => {
   })
 
   describe('delete one', () => {
-    it('should allow deleting a subTask', () =>
+    it('should allow deleting a todoItem', () =>
       request(app.getHttpServer())
         .post('/graphql')
         .send({
           operationName: null,
           variables: {},
           query: `mutation {
-            deleteOneSubTask(
-              input: { id: "16" }
+            deleteOneTodoItem(
+              input: { id: "6" }
             ) {
-              ${subTaskFields}
+              id
+              title
+              completed
             }
         }`
         })
         .expect(200, {
           data: {
-            deleteOneSubTask: {
+            deleteOneTodoItem: {
               id: null,
-              title: 'Update Test Sub Task',
-              completed: true,
-              description: null,
-              todoItemId: 1
+              title: 'Update Test Todo',
+              completed: true
             }
           }
         }))
@@ -605,31 +603,33 @@ describe('Federated - SubTaskResolver (e2e)', () => {
           operationName: null,
           variables: {},
           query: `mutation {
-            deleteOneSubTask(
+            deleteOneTodoItem(
               input: { }
             ) {
-              ${subTaskFields}
+              id
+              title
+              completed
             }
         }`
         })
         .expect(400)
         .then(({ body }) => {
           expect(body.errors).toHaveLength(1)
-          expect(body.errors[0].message).toBe('Field "DeleteOneSubTaskInput.id" of required type "ID!" was not provided.')
+          expect(body.errors[0].message).toBe('Field "DeleteOneTodoItemInput.id" of required type "ID!" was not provided.')
         }))
   })
 
   describe('delete many', () => {
-    it('should allow updating a subTask', () =>
+    it('should allow updating a todoItem', () =>
       request(app.getHttpServer())
         .post('/graphql')
         .send({
           operationName: null,
           variables: {},
           query: `mutation {
-            deleteManySubTasks(
+            deleteManyTodoItems(
               input: {
-                filter: {id: { in: ["17", "18"]} },
+                filter: {id: { in: ["7", "8"]} },
               }
             ) {
               deletedCount
@@ -638,7 +638,7 @@ describe('Federated - SubTaskResolver (e2e)', () => {
         })
         .expect(200, {
           data: {
-            deleteManySubTasks: {
+            deleteManyTodoItems: {
               deletedCount: 2
             }
           }
@@ -651,7 +651,7 @@ describe('Federated - SubTaskResolver (e2e)', () => {
           operationName: null,
           variables: {},
           query: `mutation {
-            deleteManySubTasks(
+            deleteManyTodoItems(
               input: { }
             ) {
               deletedCount
@@ -662,7 +662,7 @@ describe('Federated - SubTaskResolver (e2e)', () => {
         .then(({ body }) => {
           expect(body.errors).toHaveLength(1)
           expect(body.errors[0].message).toBe(
-            'Field "DeleteManySubTasksInput.filter" of required type "SubTaskDeleteFilter!" was not provided.'
+            'Field "DeleteManyTodoItemsInput.filter" of required type "TodoItemDeleteFilter!" was not provided.'
           )
         }))
 
@@ -673,7 +673,7 @@ describe('Federated - SubTaskResolver (e2e)', () => {
           operationName: null,
           variables: {},
           query: `mutation {
-            deleteManySubTasks(
+            deleteManyTodoItems(
               input: {
                 filter: { },
               }

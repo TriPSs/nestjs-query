@@ -11,7 +11,7 @@ import { TodoItemReferenceDTO } from '../src/tag/dto/todo-item-reference.dto'
 import { refresh } from './fixtures'
 import { edgeNodes, pageInfoField, tagFields, todoItemFields } from './graphql-fragments'
 
-describe('Federated - TagResolver (e2e)', () => {
+describe('Federated v2 - TagResolver (e2e)', () => {
   let app: INestApplication
 
   beforeAll(async () => {
