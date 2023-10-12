@@ -29,8 +29,8 @@ export const GroupByAggregateMixin =
       return fields.reduce((RB, field) => {
         @Resolver(() => AR, { isAbstract: true })
         class ReadOneMixin extends RB {
-          @ResolverField(field.propertyName, () => field.target, { nullable: true })
-          [field.propertyName](
+          @ResolverField(field.schemaName, () => field.target, { nullable: true })
+          [field.schemaName](
             @Parent() dto: DTO,
             @Args('by', {
               type: () => GroupBy,
