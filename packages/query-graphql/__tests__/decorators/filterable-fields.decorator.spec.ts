@@ -92,21 +92,21 @@ describe('FilterableField decorator', (): void => {
 
     it('should return filterable fields for a type', () => {
       expect(getFilterableFields(BaseType)).toEqual([
-        { propertyName: 'id', target: Number, returnTypeFunc: expect.any(Function) }
+        { propertyName: 'id', schemaName: 'id', target: Number, returnTypeFunc: expect.any(Function) }
       ])
     })
 
     it('should return inherited filterable fields for a type', () => {
       expect(getFilterableFields(ImplementingClass)).toEqual([
-        { propertyName: 'id', target: Number, returnTypeFunc: expect.any(Function) },
-        { propertyName: 'implemented', target: Boolean }
+        { propertyName: 'id', schemaName: 'id', target: Number, returnTypeFunc: expect.any(Function) },
+        { propertyName: 'implemented', schemaName: 'implemented', target: Boolean }
       ])
     })
 
     it('should exclude duplicate fields inherited filterable fields for a type', () => {
       expect(getFilterableFields(DuplicateImplementor)).toEqual([
-        { propertyName: 'implemented', target: Boolean },
-        { propertyName: 'id', target: Number, advancedOptions: { name: 'test' } }
+        { propertyName: 'implemented', schemaName: 'implemented', target: Boolean, advancedOptions: undefined },
+        { propertyName: 'id', schemaName: 'test', target: Number, advancedOptions: { name: 'test' } }
       ])
     })
   })

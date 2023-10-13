@@ -9,8 +9,11 @@ export class TodoItemDTO {
   @FilterableField()
   title!: string
 
-  @FilterableField({ nullable: true })
-  description?: string
+  @FilterableField({
+    name: 'description',
+    nullable: true
+  })
+  'todo item description'?: string
 
   @FilterableField({
     filterRequired: true

@@ -102,25 +102,25 @@ function getOrCreateFilterType<T>(
     }
 
     const { baseName } = getDTONames(TClass)
-    fields.forEach(({ propertyName, target, advancedOptions, returnTypeFunc }) => {
+    fields.forEach(({ schemaName, target, advancedOptions, returnTypeFunc }) => {
       const objectTypeMetadata = TypeMetadataStorage.getObjectTypeMetadataByTarget(target)
       const FC = objectTypeMetadata
         ? getOrCreateFilterType(target, typeName, suffix, depth)
         : createFilterComparisonType({
             FieldType: target,
-            fieldName: `${baseName}${upperCaseFirst(propertyName)}`,
+            fieldName: `${baseName}${upperCaseFirst(schemaName)}`,
             allowedComparisons: advancedOptions?.allowedComparisons,
             returnTypeFunc,
             decorators: advancedOptions?.filterDecorators,
             overrideTypeNamePrefix: advancedOptions?.overrideFilterTypeNamePrefix
           })
       const nullable = advancedOptions?.filterRequired !== true
-      ValidateNested()(GraphQLFilter.prototype, propertyName)
+      ValidateNested()(GraphQLFilter.prototype, schemaName)
       if (advancedOptions?.filterRequired) {
-        HasRequiredFilter()(GraphQLFilter.prototype, propertyName)
+        HasRequiredFilter()(GraphQLFilter.prototype, schemaName)
       }
-      Field(() => FC, { nullable })(GraphQLFilter.prototype, propertyName)
-      Type(() => FC)(GraphQLFilter.prototype, propertyName)
+      Field(() => FC, { name: schemaName, nullable })(GraphQLFilter.prototype, schemaName)
+      Type(() => FC)(GraphQLFilter.prototype, schemaName)
     })
 
     if (depth > 0) {

@@ -27,7 +27,7 @@ input TodoItemFilter {
   id: IDFilterComparison
   title: StringFieldComparison
   description: StringFieldComparison
-  completed: BooleanFieldComparison
+  isCompleted: BooleanFieldComparison
   created: DateFieldComparison
   updated: DateFieldComparison
 }
@@ -101,7 +101,7 @@ enum TodoItemSortFields {
   id
   title
   description
-  completed
+  isCompleted
   created
   updated
 }
@@ -567,7 +567,7 @@ input TodoItemUpdateFilter {
   id: IDFilterComparison
   title: StringFieldComparison
   description: StringFieldComparison
-  completed: BooleanFieldComparison
+  isCompleted: BooleanFieldComparison
   created: DateFieldComparison
   updated: DateFieldComparison
 }
@@ -588,7 +588,7 @@ input TodoItemDeleteFilter {
   id: IDFilterComparison
   title: StringFieldComparison
   description: StringFieldComparison
-  completed: BooleanFieldComparison
+  isCompleted: BooleanFieldComparison
   created: DateFieldComparison
   updated: DateFieldComparison
 }
