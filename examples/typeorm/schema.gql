@@ -43,6 +43,8 @@ input TodoItemAggregateFilter {
   priority: NumberFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
+  tags: TodoItemAggregateFilterTagAggregateFilter
+  subTasks: TodoItemAggregateFilterSubTaskAggregateFilter
 }
 
 input IDFilterComparison {
@@ -122,6 +124,31 @@ input NumberFieldComparison {
 input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
+}
+
+input TodoItemAggregateFilterTagAggregateFilter {
+  and: [TodoItemAggregateFilterTagAggregateFilter!]
+  or: [TodoItemAggregateFilterTagAggregateFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+}
+
+input TodoItemAggregateFilterSubTaskAggregateFilter {
+  and: [TodoItemAggregateFilterSubTaskAggregateFilter!]
+  or: [TodoItemAggregateFilterSubTaskAggregateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  todoItemId: StringFieldComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
 }
 
 input CursorPaging {
@@ -268,6 +295,22 @@ input SubTaskAggregateFilter {
   todoItemId: StringFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
+  todoItem: SubTaskAggregateFilterTodoItemAggregateFilter
+}
+
+input SubTaskAggregateFilterTodoItemAggregateFilter {
+  and: [SubTaskAggregateFilterTodoItemAggregateFilter!]
+  or: [SubTaskAggregateFilterTodoItemAggregateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  subTasksCount: NumberFieldComparison
+  priority: NumberFieldComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
 }
 
 input TagAggregateFilter {
@@ -277,6 +320,22 @@ input TagAggregateFilter {
   name: StringFieldComparison
   created: DateFieldComparison
   updated: DateFieldComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+  todoItems: TagAggregateFilterTodoItemAggregateFilter
+}
+
+input TagAggregateFilterTodoItemAggregateFilter {
+  and: [TagAggregateFilterTodoItemAggregateFilter!]
+  or: [TagAggregateFilterTodoItemAggregateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  subTasksCount: NumberFieldComparison
+  priority: NumberFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
 }

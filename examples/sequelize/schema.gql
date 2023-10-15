@@ -38,6 +38,8 @@ input TodoItemAggregateFilter {
   created: DateFieldComparison
   updated: DateFieldComparison
   priority: NumberFieldComparison
+  tags: TodoItemAggregateFilterTagAggregateFilter
+  subTasks: TodoItemAggregateFilterSubTaskAggregateFilter
 }
 
 input IDFilterComparison {
@@ -117,6 +119,27 @@ input NumberFieldComparison {
 input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
+}
+
+input TodoItemAggregateFilterTagAggregateFilter {
+  and: [TodoItemAggregateFilterTagAggregateFilter!]
+  or: [TodoItemAggregateFilterTagAggregateFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+}
+
+input TodoItemAggregateFilterSubTaskAggregateFilter {
+  and: [TodoItemAggregateFilterSubTaskAggregateFilter!]
+  or: [TodoItemAggregateFilterSubTaskAggregateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  todoItemId: NumberFieldComparison
 }
 
 input CursorPaging {
@@ -248,6 +271,19 @@ input SubTaskAggregateFilter {
   created: DateFieldComparison
   updated: DateFieldComparison
   todoItemId: NumberFieldComparison
+  todoItem: SubTaskAggregateFilterTodoItemAggregateFilter
+}
+
+input SubTaskAggregateFilterTodoItemAggregateFilter {
+  and: [SubTaskAggregateFilterTodoItemAggregateFilter!]
+  or: [SubTaskAggregateFilterTodoItemAggregateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  priority: NumberFieldComparison
 }
 
 input TagAggregateFilter {
@@ -257,6 +293,19 @@ input TagAggregateFilter {
   name: StringFieldComparison
   created: DateFieldComparison
   updated: DateFieldComparison
+  todoItems: TagAggregateFilterTodoItemAggregateFilter
+}
+
+input TagAggregateFilterTodoItemAggregateFilter {
+  and: [TagAggregateFilterTodoItemAggregateFilter!]
+  or: [TagAggregateFilterTodoItemAggregateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
+  priority: NumberFieldComparison
 }
 
 input SubTaskFilter {
