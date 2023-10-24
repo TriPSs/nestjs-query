@@ -385,6 +385,19 @@ input SubTaskAggregateFilter {
   todoItemId: StringFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
+  todoItem: SubTaskAggregateFilterTodoItemAggregateFilter
+}
+
+input SubTaskAggregateFilterTodoItemAggregateFilter {
+  and: [SubTaskAggregateFilterTodoItemAggregateFilter!]
+  or: [SubTaskAggregateFilterTodoItemAggregateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  subTasksCount: NumberFieldComparison
+  created: DateFieldComparison
+  updated: DateFieldComparison
 }
 
 input CursorPaging {

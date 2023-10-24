@@ -86,7 +86,10 @@ export type ResolverRelation<Relation> = {
 
 export type RelationTypeMap<RT> = Record<string, RT>
 
-export type ResolverOneRelation<Relation> = Omit<ResolverRelation<Relation>, 'disableFilter' | 'disableSort'>
+export type ResolverOneRelation<Relation> = Omit<
+  ResolverRelation<Relation>,
+  'disableFilter' | 'disableSort' | 'enableAggregate' | 'aggregate'
+>
 export type ResolverManyRelation<Relation> = Omit<ResolverRelation<Relation>, 'enableLookAhead'>
 
 export type RelationsOpts<Relation = unknown> = {

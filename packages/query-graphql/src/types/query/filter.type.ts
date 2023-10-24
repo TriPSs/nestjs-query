@@ -167,5 +167,6 @@ export function SubscriptionFilterType<T>(TClass: Class<T>): FilterConstructor<T
 }
 
 export function AggregateFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  return getOrCreateFilterType(TClass, null, 'Aggregate', 0)
+  const { filterDepth = 1 }: FilterTypeOptions = getQueryOptions(TClass) ?? {}
+  return getOrCreateFilterType(TClass, null, 'Aggregate', filterDepth)
 }
