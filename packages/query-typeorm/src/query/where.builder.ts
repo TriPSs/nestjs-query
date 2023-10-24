@@ -86,7 +86,7 @@ export class WhereBuilder<Entity> {
       new Brackets((qb) =>
         filterableColumns.reduce(
           (w, c) =>
-            qb.orWhere(this.createBrackets({ [c.propertyName]: getFilter(c) } as Filter<Entity>, relationNames, columns, alias)),
+            qb.orWhere(this.createBrackets({ [c.databaseName]: getFilter(c) } as Filter<Entity>, relationNames, columns, alias)),
           qb
         )
       )
