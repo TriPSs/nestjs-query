@@ -86,9 +86,9 @@ export class SortBuilder {
       default:
         switch (direction) {
           case SortDirection.DESC:
-            return nullsFirstSort
-          default:
             return nullsLastSort
+          default:
+            return nullsFirstSort
         }
     }
   }

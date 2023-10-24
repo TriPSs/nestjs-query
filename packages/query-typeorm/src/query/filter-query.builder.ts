@@ -1,4 +1,13 @@
-import { AggregateQuery, Filter, getFilterFields, Paging, Query, SortField } from '@rezonate/nestjs-query-core'
+import {
+  AggregateQuery,
+  Filter,
+  getFilterFields,
+  Paging,
+  Query,
+  SortDirection,
+  SortField,
+  SortNulls
+} from '@rezonate/nestjs-query-core'
 import merge from 'lodash.merge'
 import {
   DeleteQueryBuilder,
@@ -217,7 +226,7 @@ export class FilterQueryBuilder<Entity> {
     if (!sorts) {
       return qb
     }
-    return sorts.reduce((prevQb, { field, direction, nulls }) => {
+    return sorts.reduce((prevQb, { field, direction, nulls = this.getNullsOrderBasedOnSortDirection(direction) }) => {
       const fieldName = field.toString()
       const [relationName, ...relationFields] = fieldName.split('_')
       let col: string
@@ -336,5 +345,12 @@ export class FilterQueryBuilder<Entity> {
 
   private get relationNames(): string[] {
     return this.repo.metadata.relations.map((r) => r.propertyName)
+  }
+
+  private getNullsOrderBasedOnSortDirection(sortDirection: SortDirection): SortNulls {
+    if (sortDirection === SortDirection.ASC) {
+      return SortNulls.NULLS_FIRST
+    }
+    return SortNulls.NULLS_LAST
   }
 }
