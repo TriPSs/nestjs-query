@@ -18,6 +18,7 @@ import {
   transformAggregateQuery,
   transformAggregateResponse,
   transformFilter,
+  transformFilterComparisons,
   transformQuery,
   transformSort
 } from '@ptc-org/nestjs-query-core'
@@ -1489,6 +1490,22 @@ describe('getFilterComparisons', () => {
     expect(getFilterComparisons(f2, 'bar')).toEqual(expect.arrayContaining([{ gt: 0 }, { lt: 3 }]))
     expect(getFilterComparisons(f3, 'bar')).toEqual(expect.arrayContaining([{ gt: 0 }, { lt: 5 }]))
     expect(getFilterComparisons(f4, 'bar')).toEqual(expect.arrayContaining([{ gt: 0 }, { lt: 3 }, { lt: 5 }]))
+  })
+})
+
+describe('transformFilterComparisons', () => {
+  type Foo = {
+    bar: number
+    baz: number
+  }
+
+  it('should transform filter comparisons back to valid filter', () => {
+    const f0: Filter<Foo> = {
+      bar: { gt: 0 },
+      baz: { gt: 1 }
+    }
+    expect(getFilterComparisons(f0, 'bar')).toEqual(expect.arrayContaining([{ gt: 0 }]))
+    expect(transformFilterComparisons<Foo, 'bar'>(getFilterComparisons(f0, 'bar'), 'bar')).toEqual({ bar: { gt: 0 } })
   })
 })
 
