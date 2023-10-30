@@ -1,6 +1,6 @@
 {
   "name": "@rezonate/nestjs-query-graphql",
-  "version": "4.3.2",
+  "version": "4.3.5",
   "description": "Nestjs graphql query adapter",
   "author": "doug-martin <doug@dougamartin.com>",
   "homepage": "https://github.com/Rezonate-io/nestjs-query#readme",
