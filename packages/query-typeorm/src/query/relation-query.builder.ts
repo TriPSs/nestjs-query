@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { AggregateQuery, Class, Query } from '@ptc-org/nestjs-query-core'
 import lodashFilter from 'lodash.filter'
-import lodashKeys from 'lodash.keys'
-import lodashPickBy from 'lodash.pickby'
 import { Brackets, ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm'
 import { DriverUtils } from 'typeorm/driver/DriverUtils'
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata'
@@ -370,10 +368,20 @@ export class RelationQueryBuilder<Entity, Relation> {
           }),
           {} as Partial<Entity>
         )
-        // find all indices where the raw relation entity matches the filter
-        const rawIndices = lodashKeys(lodashPickBy(rawRelations, rawFilter)).map((idx) => +idx)
-        // return all mapped entities by using the indices that were calculated using the raw entities
-        return rawIndices.map((idx) => relations[idx])
+
+        // First filter the raw relations with the PK of the entity, then filter the relations
+        // with the PK of the raw relation
+        return lodashFilter(rawRelations, rawFilter).reduce((entityRelations, rawRelation) => {
+          const filter = this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
+            (columnsFilter, column) => ({
+              ...columnsFilter,
+              [column.propertyName]: rawRelation[column.columnName]
+            }),
+            {} as Partial<Entity>
+          )
+
+          return entityRelations.concat(lodashFilter(relations, filter) as Relation[])
+        }, [] as Relation[])
       },
       batchSelect: (qb: SelectQueryBuilder<Relation>, entities: Entity[]) => {
         const params = {}
@@ -387,7 +395,8 @@ export class RelationQueryBuilder<Entity, Relation> {
           })
           .join(' AND ')
 
-        return qb.andWhere(where, params)
+        // Distinct the query so the joins cannot cause duplicate data
+        return qb.distinct(true).andWhere(where, params)
       },
       whereCondition: (entity: Entity): SQLFragment => {
         const params: ObjectLiteral = {}

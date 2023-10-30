@@ -75,6 +75,17 @@ export const mergeFilter = <T>(base: Filter<T>, source: Filter<T>): Filter<T> =>
   }
   return { and: [source, base] } as Filter<T>
 }
+export const mergeFilters = <T>(...filters: Filter<T>[]): Filter<T> => {
+  const newFilter = { and: [] } as Filter<T>
+
+  for (const filter of filters) {
+    if (Object.keys(filter).length) {
+      newFilter.and.push(filter)
+    }
+  }
+
+  return newFilter
+}
 
 export const getFilterFields = <DTO>(filter: Filter<DTO>): string[] => {
   const fieldSet: Set<string> = Object.keys(filter).reduce((fields: Set<string>, filterField: string): Set<string> => {
