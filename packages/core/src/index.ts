@@ -20,6 +20,7 @@ export {
   getFilterOmitting,
   invertSort,
   mergeFilter,
+  mergeFilters,
   mergeQuery,
   QueryFieldMap,
   transformAggregateQuery,
