@@ -79,8 +79,8 @@ export const mergeFilters = <T>(...filters: Filter<T>[]): Filter<T> => {
   const newFilter = { and: [] } as Filter<T>
 
   for (const filter of filters) {
-    if (!Object.keys(filter).length) {
-      filter.and.push(filter)
+    if (Object.keys(filter).length) {
+      newFilter.and.push(filter)
     }
   }
 

@@ -9,6 +9,7 @@ import {
   getFilterFields,
   getFilterOmitting,
   mergeFilter,
+  mergeFilters,
   Paging,
   Query,
   QueryFieldMap,
@@ -1566,5 +1567,35 @@ describe('mergeFilter', () => {
     }
     expect(mergeFilter(filter, {})).toEqual(filter)
     expect(mergeFilter({}, filter)).toEqual(filter)
+  })
+})
+
+describe('mergeFilters', () => {
+  type Foo = {
+    bar: number
+    baz: number
+  }
+
+  it('should merge three filters', () => {
+    const f1: Filter<Foo> = {
+      bar: { gt: 0 }
+    }
+    const f2: Filter<Foo> = {
+      baz: { gt: 0 }
+    }
+    const f3: Filter<Foo> = {
+      baz: { lt: 0 }
+    }
+    expect(mergeFilters(f1, f2, f3)).toEqual({
+      and: expect.arrayContaining([f1, f2, f3])
+    })
+  })
+
+  it('should noop if one of the filters is empty', () => {
+    const filter: Filter<Foo> = {
+      bar: { gt: 0 }
+    }
+    expect(mergeFilters(filter, {})).toEqual({ and: [filter] })
+    expect(mergeFilters({}, filter)).toEqual({ and: [filter] })
   })
 })
