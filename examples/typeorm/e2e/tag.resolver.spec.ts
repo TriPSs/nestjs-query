@@ -396,6 +396,31 @@ describe('TagResolver (typeorm - e2e)', () => {
             expect(res[0].sum).toEqual({ id: 15 })
           }))
 
+      it(`should allow grouping on week`, () =>
+        request(app.getHttpServer())
+          .post('/graphql')
+          .send({
+            operationName: null,
+            variables: {},
+            // language=graphql
+            query: `{
+              tagAggregate {
+                groupBy {
+                  fakeDate(by: WEEK)
+                }
+                sum {
+                  id
+                }
+              }
+            }`
+          })
+          .expect(200)
+          .then(({ body }) => {
+            const res: AggregateResponse<TodoItemDTO>[] = body.data.tagAggregate
+            expect(res).toHaveLength(1)
+            expect(res[0].sum).toEqual({ id: 15 })
+          }))
+
       it(`should allow grouping on day`, () =>
         request(app.getHttpServer())
           .post('/graphql')

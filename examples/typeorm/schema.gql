@@ -134,6 +134,7 @@ input TodoItemAggregateFilterTagAggregateFilter {
   name: StringFieldComparison
   created: DateFieldComparison
   updated: DateFieldComparison
+  fakeDate: DateFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
 }
