@@ -127,8 +127,17 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
         if (fieldSet.has(field)) {
           return payload
         }
+
+        let value = dto[field];
+        // If the sort field is a relation field
+        if(/_/.test(field as string)) {
+          let [relationName, ...relationFields] = (field as string).split('_');
+          if (relationName && dto[relationName]) {
+            value = dto[relationName][relationFields.join('')];
+          }
+        }
         fieldSet.add(field)
-        payload.fields.push({ field, value: dto[field] })
+        payload.fields.push({ field, value })
         return payload
       },
       { type: 'keyset', fields: [] }
