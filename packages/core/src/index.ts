@@ -20,11 +20,13 @@ export {
   getFilterOmitting,
   invertSort,
   mergeFilter,
+  mergeFilters,
   mergeQuery,
   QueryFieldMap,
   transformAggregateQuery,
   transformAggregateResponse,
   transformFilter,
+  transformFilterComparisons,
   transformQuery,
   transformSort
 } from './helpers'

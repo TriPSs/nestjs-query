@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql'
+import { Field, InputType, TypeMetadataStorage } from '@nestjs/graphql'
 import { Class, Filter, MapReflector } from '@ptc-org/nestjs-query-core'
 import { Type } from 'class-transformer'
 import { ValidateNested } from 'class-validator'
@@ -102,20 +102,25 @@ function getOrCreateFilterType<T>(
     }
 
     const { baseName } = getDTONames(TClass)
-    fields.forEach(({ propertyName, target, advancedOptions, returnTypeFunc }) => {
-      const FC = createFilterComparisonType({
-        FieldType: target,
-        fieldName: `${baseName}${upperCaseFirst(propertyName)}`,
-        allowedComparisons: advancedOptions?.allowedComparisons,
-        returnTypeFunc
-      })
+    fields.forEach(({ schemaName, target, advancedOptions, returnTypeFunc }) => {
+      const objectTypeMetadata = TypeMetadataStorage.getObjectTypeMetadataByTarget(target)
+      const FC = objectTypeMetadata
+        ? getOrCreateFilterType(target, typeName, suffix, depth)
+        : createFilterComparisonType({
+            FieldType: target,
+            fieldName: `${baseName}${upperCaseFirst(schemaName)}`,
+            allowedComparisons: advancedOptions?.allowedComparisons,
+            returnTypeFunc,
+            decorators: advancedOptions?.filterDecorators,
+            overrideTypeNamePrefix: advancedOptions?.overrideFilterTypeNamePrefix
+          })
       const nullable = advancedOptions?.filterRequired !== true
-      ValidateNested()(GraphQLFilter.prototype, propertyName)
+      ValidateNested()(GraphQLFilter.prototype, schemaName)
       if (advancedOptions?.filterRequired) {
-        HasRequiredFilter()(GraphQLFilter.prototype, propertyName)
+        HasRequiredFilter()(GraphQLFilter.prototype, schemaName)
       }
-      Field(() => FC, { nullable })(GraphQLFilter.prototype, propertyName)
-      Type(() => FC)(GraphQLFilter.prototype, propertyName)
+      Field(() => FC, { name: schemaName, nullable })(GraphQLFilter.prototype, schemaName)
+      Type(() => FC)(GraphQLFilter.prototype, schemaName)
     })
 
     if (depth > 0) {
@@ -162,5 +167,6 @@ export function SubscriptionFilterType<T>(TClass: Class<T>): FilterConstructor<T
 }
 
 export function AggregateFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  return getOrCreateFilterType(TClass, null, 'Aggregate', 0)
+  const { filterDepth = 1 }: FilterTypeOptions = getQueryOptions(TClass) ?? {}
+  return getOrCreateFilterType(TClass, null, 'Aggregate', filterDepth)
 }

@@ -1,6 +1,6 @@
 {
   "name": "@ptc-org/nestjs-query-typeorm",
-  "version": "4.0.0",
+  "version": "4.2.0",
   "description": "Typeorm adapter for @ptc-org/nestjs-query-core",
   "author": "doug-martin <doug@dougamartin.com>",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
@@ -22,8 +22,8 @@
     "lodash.filter": "^4.6.0",
     "lodash.merge": "^4.6.2",
     "lodash.omit": "^4.5.0",
-    "tslib": "^2.6.1",
-    "uuid": "^9.0.0"
+    "tslib": "^2.6.2",
+    "uuid": "^9.0.1"
   },
   "peerDependencies": {
     "@nestjs/common": "^9.0.0 || ^10.0.0",

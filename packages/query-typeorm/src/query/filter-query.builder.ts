@@ -217,6 +217,7 @@ export class FilterQueryBuilder<Entity> {
   public applyAggregateGroupBy<T extends Groupable<Entity>>(
     qb: T,
     aggregatedGroupBy?: AggregateQueryField<Entity>[],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     alias?: string
   ): T {
     if (!aggregatedGroupBy) {
@@ -231,6 +232,7 @@ export class FilterQueryBuilder<Entity> {
   public applyAggregateSorting<T extends Sortable<Entity>>(
     qb: T,
     aggregatedGroupBy?: AggregateQueryField<Entity>[],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     alias?: string
   ): T {
     if (!aggregatedGroupBy) {

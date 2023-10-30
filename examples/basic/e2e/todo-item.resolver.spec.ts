@@ -287,6 +287,40 @@ describe('TodoItemResolver (basic - e2e)', () => {
           ])
         }))
 
+    it(`should allow sorting (custom name)`, () =>
+      request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: {},
+          // language=graphql
+          query: `{
+            todoItems(sorting: [{field: isCompleted, direction: DESC},{field: id, direction: DESC}]) {
+              ${pageInfoField}
+              ${edgeNodes(todoItemFields)}
+            }
+          }`
+        })
+        .expect(200)
+        .then(({ body }) => {
+          const { edges, pageInfo }: CursorConnectionType<TodoItemDTO> = body.data.todoItems
+          expect(pageInfo).toEqual({
+            endCursor: 'YXJyYXljb25uZWN0aW9uOjQ=',
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: 'YXJyYXljb25uZWN0aW9uOjA='
+          })
+          expect(edges).toHaveLength(5)
+
+          expect(edges.map((e) => e.node)).toEqual([
+            { id: '1', title: 'Create Nest App', isCompleted: true, description: null },
+            { id: '5', title: 'How to create item With Sub Tasks', isCompleted: false, description: null },
+            { id: '4', title: 'Add Todo Item Resolver', isCompleted: false, description: null },
+            { id: '3', title: 'Create Entity Service', isCompleted: false, description: null },
+            { id: '2', title: 'Create Entity', isCompleted: false, description: null }
+          ])
+        }))
+
     describe('paging', () => {
       it(`should allow paging with the 'first' field`, () =>
         request(app.getHttpServer())

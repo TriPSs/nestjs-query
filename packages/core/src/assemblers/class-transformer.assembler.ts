@@ -54,6 +54,7 @@ export abstract class ClassTransformerAssembler<DTO, Entity extends DeepPartial<
     return plainToClass(cls, obj)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public isConstructor(x: any) {
     const handler = {
       construct() {

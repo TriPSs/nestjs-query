@@ -1,6 +1,6 @@
 {
   "name": "@ptc-org/nestjs-query-sequelize",
-  "version": "4.0.0",
+  "version": "4.2.0",
   "description": "Sequelize adapter for @ptc-org/nestjs-query-core",
   "author": "doug-martin <doug@dougamartin.com>",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
@@ -20,7 +20,7 @@
   "dependencies": {
     "camel-case": "^4.1.2",
     "lodash.pick": "4.4.0",
-    "tslib": "^2.6.1"
+    "tslib": "^2.6.2"
   },
   "peerDependencies": {
     "@nestjs/common": "^9.0.0 || ^10.0.0",

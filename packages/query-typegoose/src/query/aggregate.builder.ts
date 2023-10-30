@@ -78,7 +78,7 @@ export class AggregateBuilder<Entity> {
     return aggregatedFields.reduce((agg: Aggregate, { field }) => {
       const aggAlias = `${func}_${field as string}`
       const fieldAlias = `$${getSchemaKey(String(field))}`
-      if (func === 'count') {
+      if (func === AggregateFuncs.COUNT) {
         return {
           ...agg,
           [aggAlias]: {

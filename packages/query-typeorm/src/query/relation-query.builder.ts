@@ -357,16 +357,31 @@ export class RelationQueryBuilder<Entity, Relation> {
       fromAlias: aliasName,
       fromPrimaryKeys,
       joins: [],
-      mapRelations: (entity: Entity, relations: Relation[]): Relation[] => {
-        const filter = columns.reduce(
+      mapRelations: <RawRelation>(entity: Entity, relations: Relation[], rawRelations: RawRelation[]): Relation[] => {
+        // create a filter for the raw relation array to filter only for the objects that are related to this entity
+        // do this by building an alias based on the column database name for filtering
+        // e.g. if the entity is a customer, look for a customer id in the raw relation entity object.
+        const rawFilter = columns.reduce(
           (columnsFilter, column) => ({
             ...columnsFilter,
-            [column.propertyName]: column.referencedColumn.getEntityValue(entity)
+            [this.buildAlias(column.databaseName)]: column.referencedColumn.getEntityValue(entity)
           }),
           {} as Partial<Entity>
         )
 
-        return lodashFilter(relations, filter) as Relation[]
+        // First filter the raw relations with the PK of the entity, then filter the relations
+        // with the PK of the raw relation
+        return lodashFilter(rawRelations, rawFilter).reduce((entityRelations, rawRelation) => {
+          const filter = this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
+            (columnsFilter, column) => ({
+              ...columnsFilter,
+              [column.propertyName]: rawRelation[column.columnName]
+            }),
+            {} as Partial<Entity>
+          )
+
+          return entityRelations.concat(lodashFilter(relations, filter) as Relation[])
+        }, [] as Relation[])
       },
       batchSelect: (qb: SelectQueryBuilder<Relation>, entities: Entity[]) => {
         const params = {}
@@ -380,7 +395,8 @@ export class RelationQueryBuilder<Entity, Relation> {
           })
           .join(' AND ')
 
-        return qb.andWhere(where, params)
+        // Distinct the query so the joins cannot cause duplicate data
+        return qb.distinct(true).andWhere(where, params)
       },
       whereCondition: (entity: Entity): SQLFragment => {
         const params: ObjectLiteral = {}

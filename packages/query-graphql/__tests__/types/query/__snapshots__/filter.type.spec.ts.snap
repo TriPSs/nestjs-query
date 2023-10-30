@@ -1,7 +1,45 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`filter types DeleteFilterType should create the correct filter graphql schema 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestDtoFilter!): Int!
 }
 
@@ -74,11 +112,6 @@ input DateFieldComparison {
   between: DateFieldComparisonBetween
   notBetween: DateFieldComparisonBetween
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 input DateFieldComparisonBetween {
   lower: DateTime!
@@ -159,13 +192,6 @@ input StringEnumFilterComparison {
   notIn: [StringEnum!]
 }
 
-enum StringEnum {
-  ONE_STR
-  TWO_STR
-  THREE_STR
-  FOUR_STR
-}
-
 input NumberEnumFilterComparison {
   is: Boolean
   isNot: Boolean
@@ -183,13 +209,6 @@ input NumberEnumFilterComparison {
   notIn: [NumberEnum!]
 }
 
-enum NumberEnum {
-  ONE
-  TWO
-  THREE
-  FOUR
-}
-
 input TimestampFieldComparison {
   is: Boolean
   isNot: Boolean
@@ -205,11 +224,6 @@ input TimestampFieldComparison {
   notBetween: TimestampFieldComparisonBetween
 }
 
-"""
-\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
-"""
-scalar Timestamp
-
 input TimestampFieldComparisonBetween {
   lower: Timestamp!
   upper: Timestamp!
@@ -217,7 +231,45 @@ input TimestampFieldComparisonBetween {
 `;
 
 exports[`filter types FilterType allowedBooleanExpressions option no boolean expressions should only expose allowed comparisons 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
@@ -248,7 +300,45 @@ input NumberFieldComparisonBetween {
 `;
 
 exports[`filter types FilterType allowedBooleanExpressions option only and boolean expressions should only expose allowed comparisons 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
@@ -286,7 +376,45 @@ input NumberFieldComparisonBetween {
 `;
 
 exports[`filter types FilterType allowedBooleanExpressions option only or boolean expressions should only expose allowed comparisons 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
@@ -324,7 +452,45 @@ input NumberFieldComparisonBetween {
 `;
 
 exports[`filter types FilterType allowedComparisons option should only expose allowed comparisons 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
@@ -381,11 +547,6 @@ input TestAllowedComparisonDateFieldFilterComparison {
   neq: DateTime
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 input TestAllowedComparisonFloatFieldFilterComparison {
   gt: Float
   gte: Float
@@ -412,7 +573,45 @@ input TestAllowedComparisonStringFieldFilterComparison {
 `;
 
 exports[`filter types FilterType allowedComparisons option should only expose between/not between comparisons for allowed types 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestBetweenComparisonDtoFilter!): Int!
 }
 
@@ -474,11 +673,6 @@ input TestBetweenComparisonDateFieldFilterComparisonBetween {
   upper: DateTime!
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 input TestBetweenComparisonFloatFieldFilterComparison {
   between: TestBetweenComparisonFloatFieldFilterComparisonBetween
   notBetween: TestBetweenComparisonFloatFieldFilterComparisonBetween
@@ -514,8 +708,147 @@ input TestBetweenComparisonStringFieldFilterComparison {
 }"
 `;
 
+exports[`filter types FilterType filterDecorators option should apply the decorator to the correct fields 1`] = `
+[
+  {
+    "propertyKey": "eq",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "neq",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "gt",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "gte",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "lt",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "lte",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "like",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "notLike",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "iLike",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "notILike",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "in",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "notIn",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "eq",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "neq",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "gt",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "gte",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "lt",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "lte",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "like",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "notLike",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "iLike",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "notILike",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "in",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "notIn",
+    "target": Fc {},
+  },
+]
+`;
+
 exports[`filter types FilterType filterDepth option different filterDepth options shouldn't affect each other 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   testA(input: TestFilterDepth_ShouldNotAffectDeepFilter!): Int!
   testB(input: TestFilterDepth_ShouldNotAffect_RelationAFilter!): Int!
 }
@@ -601,7 +934,45 @@ input TestFilterDepth_ShouldNotAffect_RelationAFilterTestRelationDtoFilter {
 `;
 
 exports[`filter types FilterType filterDepth option should generate a 0-level deep filter-type 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestFilterDepth_0Filter!): Int!
 }
 
@@ -634,7 +1005,45 @@ input NumberFieldComparisonBetween {
 `;
 
 exports[`filter types FilterType filterDepth option should generate a 1-level deep filter-type 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestFilterDepth_1Filter!): Int!
 }
 
@@ -693,7 +1102,45 @@ input StringFieldComparison {
 `;
 
 exports[`filter types FilterType filterDepth option should generate a 2-level deep filter-type 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestFilterDepth_2Filter!): Int!
 }
 
@@ -761,7 +1208,45 @@ input TestFilterDepth_2FilterTestFilterDepth_2_RelationAFilterTestRelationDtoFil
 `;
 
 exports[`filter types FilterType filterDepth option should generate a infinite deep filter-type 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestFilterDepth_InfiniteDeepFilter!): Int!
 }
 
@@ -829,7 +1314,45 @@ input TestRelationDtoDeepFilter {
 `;
 
 exports[`filter types FilterType filterDepth option should generate filter types with suffix / 0-level depth 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   testA(input: TestFilterDepth_ShouldNotAffectUpdateFilter!): Int!
   testB(input: TestFilterDepth_ShouldNotAffect_RelationAUpdateFilter!): Int!
 }
@@ -888,7 +1411,45 @@ input StringFieldComparison {
 `;
 
 exports[`filter types FilterType filterDepth option should return cached types 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   testA(input: TestFilterDepth_ShouldNotAffectDeepFilter!): Int!
   testB(input: TestFilterDepth_ShouldNotAffect_RelationAFilter!): Int!
 }
@@ -977,7 +1538,45 @@ input TestFilterDepth_ShouldNotAffect_RelationAFilterTestRelationDtoFilter {
 `;
 
 exports[`filter types FilterType filterRequired option should only expose allowed comparisons 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
@@ -1038,11 +1637,6 @@ input DateFieldComparison {
   between: DateFieldComparisonBetween
   notBetween: DateFieldComparisonBetween
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 input DateFieldComparisonBetween {
   lower: DateTime!
@@ -1282,8 +1876,179 @@ input TestFilterDtoFilterTestRelationDtoFilter {
 }"
 `;
 
+exports[`filter types FilterType typeNamePrefix option should apply correct type name prefix 1`] = `
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type TestTypeNamePrefix {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+}
+
+type Query {
+  test(input: TestTypeNamePrefixFilter!): TestTypeNamePrefix!
+}
+
+input TestTypeNamePrefixFilter {
+  and: [TestTypeNamePrefixFilter!]
+  or: [TestTypeNamePrefixFilter!]
+  id: NumberFieldComparison
+  boolField: BooleanFieldComparison
+  dateField: MyDateFilterComparison
+  floatField: MyCustomFloatFilterComparison
+}
+
+input NumberFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: Float
+  neq: Float
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  in: [Float!]
+  notIn: [Float!]
+  between: NumberFieldComparisonBetween
+  notBetween: NumberFieldComparisonBetween
+}
+
+input NumberFieldComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
+input BooleanFieldComparison {
+  is: Boolean
+  isNot: Boolean
+}
+
+input MyDateFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: DateTime
+  neq: DateTime
+  gt: DateTime
+  gte: DateTime
+  lt: DateTime
+  lte: DateTime
+  like: DateTime
+  notLike: DateTime
+  iLike: DateTime
+  notILike: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  between: MyDateFilterComparisonBetween
+  notBetween: MyDateFilterComparisonBetween
+}
+
+input MyDateFilterComparisonBetween {
+  lower: DateTime!
+  upper: DateTime!
+}
+
+input MyCustomFloatFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: Float
+  neq: Float
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  like: Float
+  notLike: Float
+  iLike: Float
+  notILike: Float
+  in: [Float!]
+  notIn: [Float!]
+  between: MyCustomFloatFilterComparisonBetween
+  notBetween: MyCustomFloatFilterComparisonBetween
+}
+
+input MyCustomFloatFilterComparisonBetween {
+  lower: Float!
+  upper: Float!
+}"
+`;
+
 exports[`filter types SubscriptionFilterType should create the correct filter graphql schema 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestDtoFilter!): Int!
 }
 
@@ -1357,11 +2122,6 @@ input DateFieldComparison {
   notBetween: DateFieldComparisonBetween
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 input DateFieldComparisonBetween {
   lower: DateTime!
   upper: DateTime!
@@ -1441,13 +2201,6 @@ input StringEnumFilterComparison {
   notIn: [StringEnum!]
 }
 
-enum StringEnum {
-  ONE_STR
-  TWO_STR
-  THREE_STR
-  FOUR_STR
-}
-
 input NumberEnumFilterComparison {
   is: Boolean
   isNot: Boolean
@@ -1465,13 +2218,6 @@ input NumberEnumFilterComparison {
   notIn: [NumberEnum!]
 }
 
-enum NumberEnum {
-  ONE
-  TWO
-  THREE
-  FOUR
-}
-
 input TimestampFieldComparison {
   is: Boolean
   isNot: Boolean
@@ -1487,11 +2233,6 @@ input TimestampFieldComparison {
   notBetween: TimestampFieldComparisonBetween
 }
 
-"""
-\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
-"""
-scalar Timestamp
-
 input TimestampFieldComparisonBetween {
   lower: Timestamp!
   upper: Timestamp!
@@ -1499,7 +2240,45 @@ input TimestampFieldComparisonBetween {
 `;
 
 exports[`filter types UpdateFilterType should create the correct filter graphql schema 1`] = `
-"type Query {
+"type TestFilterDto {
+  id: Float!
+  boolField: Boolean!
+  dateField: DateTime!
+  floatField: Float!
+  intField: Int!
+  numberField: Float!
+  stringField: String!
+  stringEnumField: StringEnum!
+  numberEnumField: NumberEnum!
+  timestampField: Timestamp!
+  nonFilterField: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum StringEnum {
+  ONE_STR
+  TWO_STR
+  THREE_STR
+  FOUR_STR
+}
+
+enum NumberEnum {
+  ONE
+  TWO
+  THREE
+  FOUR
+}
+
+"""
+\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
   test(input: TestDtoFilter!): Int!
 }
 
@@ -1573,11 +2352,6 @@ input DateFieldComparison {
   notBetween: DateFieldComparisonBetween
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 input DateFieldComparisonBetween {
   lower: DateTime!
   upper: DateTime!
@@ -1657,13 +2431,6 @@ input StringEnumFilterComparison {
   notIn: [StringEnum!]
 }
 
-enum StringEnum {
-  ONE_STR
-  TWO_STR
-  THREE_STR
-  FOUR_STR
-}
-
 input NumberEnumFilterComparison {
   is: Boolean
   isNot: Boolean
@@ -1681,13 +2448,6 @@ input NumberEnumFilterComparison {
   notIn: [NumberEnum!]
 }
 
-enum NumberEnum {
-  ONE
-  TWO
-  THREE
-  FOUR
-}
-
 input TimestampFieldComparison {
   is: Boolean
   isNot: Boolean
@@ -1702,11 +2462,6 @@ input TimestampFieldComparison {
   between: TimestampFieldComparisonBetween
   notBetween: TimestampFieldComparisonBetween
 }
-
-"""
-\`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
-"""
-scalar Timestamp
 
 input TimestampFieldComparisonBetween {
   lower: Timestamp!

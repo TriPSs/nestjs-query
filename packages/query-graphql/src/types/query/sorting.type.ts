@@ -28,7 +28,7 @@ export function getOrCreateSortType<T>(TClass: Class<T>): Class<SortField<T>> {
     }
 
     const fieldNames = fields.map((field) => field.propertyName)
-    const fieldNameMap = fieldNames.reduce((acc, field) => ({ ...acc, [field]: field }), {})
+    const fieldNameMap = fields.reduce((acc, field) => ({ ...acc, [field.schemaName]: field.propertyName }), {})
     registerEnumType(fieldNameMap, { name: `${prefix}SortFields` })
 
     @InputType(`${prefix}Sort`)

@@ -8,10 +8,13 @@ export type FilterableFieldOptions = {
   allowedComparisons?: FilterComparisonOperators<unknown>[]
   filterRequired?: boolean
   filterOnly?: boolean
+  filterDecorators?: PropertyDecorator[]
+  overrideFilterTypeNamePrefix?: string
 } & FieldOptions
 
 export interface FilterableFieldDescriptor {
   propertyName: string
+  schemaName: string
   target: Class<unknown>
   returnTypeFunc?: ReturnTypeFunc<ReturnTypeFuncValue>
   advancedOptions?: FilterableFieldOptions
@@ -76,6 +79,7 @@ export function FilterableField(
     const Ctx = Reflect.getMetadata('design:type', target, propertyName) as Class<unknown>
     reflector.append(target.constructor as Class<unknown>, {
       propertyName: propertyName.toString(),
+      schemaName: advancedOptions?.name || propertyName.toString(),
       target: Ctx,
       returnTypeFunc,
       advancedOptions

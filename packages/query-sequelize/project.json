@@ -6,20 +6,14 @@
   "targets": {
     "lint": {
       "executor": "@nx/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/query-sequelize/**/*.ts"
-        ]
+        "lintFilePatterns": ["packages/query-sequelize/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/packages/query-sequelize"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/packages/query-sequelize"],
       "options": {
         "jestConfig": "packages/query-sequelize/jest.config.ts",
         "passWithNoTests": true
@@ -27,17 +21,14 @@
     },
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/query-sequelize",
         "tsConfig": "packages/query-sequelize/tsconfig.lib.json",
         "packageJson": "packages/query-sequelize/package.json",
         "main": "packages/query-sequelize/src/index.ts",
-        "assets": [
-          "packages/query-sequelize/*.md"
-        ]
+        "assets": ["packages/query-sequelize/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "version": {
@@ -52,7 +43,5 @@
     }
   },
   "tags": [],
-  "implicitDependencies": [
-    "core"
-  ]
+  "implicitDependencies": ["core"]
 }

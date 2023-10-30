@@ -6,7 +6,6 @@ import {
   NoOpQueryService,
   Query,
   QueryService,
-  SelectRelation,
   UpdateManyResponse
 } from '@ptc-org/nestjs-query-core'
 

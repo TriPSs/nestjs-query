@@ -176,6 +176,23 @@ describe('filter types', (): void => {
       expect(filterInstance.or[0]).toBeInstanceOf(TestGraphQLFilter)
     })
 
+    it('should create filter for sub objects', () => {
+      @ObjectType('TestSubObjectType')
+      class TestSubObjectType {
+        @FilterableField(() => TestDto)
+        subType!: TestDto
+      }
+      const TestSubObjectFilter = FilterType(TestSubObjectType)
+
+      const filterObject: Filter<TestSubObjectType> = {
+        or: [{ subType: { stringField: { eq: 'foo' } } }]
+      }
+      const filterInstance = plainToClass(TestSubObjectFilter, filterObject)
+      const subType = filterInstance.or[0].subType as Filter<TestDto>
+      expect(subType.stringField.eq).toBe(`foo`)
+      expect(subType.constructor.name).toBe(`GraphQLFilter`)
+    })
+
     describe('allowedComparisons option', () => {
       @ObjectType('TestAllowedComparison')
       class TestAllowedComparisonsDto extends BaseType {
@@ -254,6 +271,69 @@ describe('filter types', (): void => {
         }
 
         const schema = await generateSchema([FilterBetweenTypeSpec])
+        expect(schema).toMatchSnapshot()
+      })
+    })
+
+    describe('filterDecorators option', () => {
+      const appliedProperties: { target: unknown; propertyKey: string | symbol }[] = []
+      const TestDecorator = (): PropertyDecorator => {
+        return (target: unknown, propertyKey: string | symbol): void => {
+          appliedProperties.push({ target, propertyKey })
+        }
+      }
+      @ObjectType('TestFilterDecorators')
+      class TestFilterDecoratorsDto extends BaseType {
+        @FilterableField()
+        boolField!: boolean
+
+        @FilterableField({ filterDecorators: [TestDecorator()] })
+        dateField!: Date
+
+        @FilterableField(() => Float, { filterDecorators: [TestDecorator()] })
+        floatField!: number
+      }
+
+      FilterType(TestFilterDecoratorsDto)
+
+      it('should apply the decorator to the correct fields', () => {
+        expect(appliedProperties).toMatchSnapshot()
+      })
+    })
+
+    describe('typeNamePrefix option', () => {
+      @ObjectType('TestTypeNamePrefix')
+      class TestTypeNamePrefixDto extends BaseType {
+        @FilterableField()
+        boolField!: boolean
+
+        @FilterableField({ overrideFilterTypeNamePrefix: `MyDate` })
+        dateField!: Date
+
+        @FilterableField({ overrideFilterTypeNamePrefix: `MyCustomFloat` })
+        floatField!: number
+      }
+
+      const TestGraphQLTestTypeNamePrefixFilter: Class<Filter<TestTypeNamePrefixDto>> = FilterType(TestTypeNamePrefixDto)
+
+      it('should apply correct type name prefix', async () => {
+        @Resolver()
+        class FilterTypeSpec {
+          @Query(() => TestTypeNamePrefixDto)
+          test(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            @Args('input', { type: () => TestGraphQLTestTypeNamePrefixFilter }) input: typeof TestGraphQLTestTypeNamePrefixFilter
+          ): TestTypeNamePrefixDto {
+            return {
+              id: 1,
+              boolField: true,
+              dateField: new Date(),
+              floatField: 1
+            }
+          }
+        }
+
+        const schema = await generateSchema([FilterTypeSpec])
         expect(schema).toMatchSnapshot()
       })
     })

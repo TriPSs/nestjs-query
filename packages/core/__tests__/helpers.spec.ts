@@ -9,6 +9,7 @@ import {
   getFilterFields,
   getFilterOmitting,
   mergeFilter,
+  mergeFilters,
   Paging,
   Query,
   QueryFieldMap,
@@ -18,6 +19,7 @@ import {
   transformAggregateQuery,
   transformAggregateResponse,
   transformFilter,
+  transformFilterComparisons,
   transformQuery,
   transformSort
 } from '@ptc-org/nestjs-query-core'
@@ -1492,6 +1494,22 @@ describe('getFilterComparisons', () => {
   })
 })
 
+describe('transformFilterComparisons', () => {
+  type Foo = {
+    bar: number
+    baz: number
+  }
+
+  it('should transform filter comparisons back to valid filter', () => {
+    const f0: Filter<Foo> = {
+      bar: { gt: 0 },
+      baz: { gt: 1 }
+    }
+    expect(getFilterComparisons(f0, 'bar')).toEqual(expect.arrayContaining([{ gt: 0 }]))
+    expect(transformFilterComparisons<Foo, 'bar'>(getFilterComparisons(f0, 'bar'), 'bar')).toEqual({ bar: { gt: 0 } })
+  })
+})
+
 describe('getFilterOmitting', () => {
   type Foo = {
     bar: number
@@ -1549,5 +1567,35 @@ describe('mergeFilter', () => {
     }
     expect(mergeFilter(filter, {})).toEqual(filter)
     expect(mergeFilter({}, filter)).toEqual(filter)
+  })
+})
+
+describe('mergeFilters', () => {
+  type Foo = {
+    bar: number
+    baz: number
+  }
+
+  it('should merge three filters', () => {
+    const f1: Filter<Foo> = {
+      bar: { gt: 0 }
+    }
+    const f2: Filter<Foo> = {
+      baz: { gt: 0 }
+    }
+    const f3: Filter<Foo> = {
+      baz: { lt: 0 }
+    }
+    expect(mergeFilters(f1, f2, f3)).toEqual({
+      and: expect.arrayContaining([f1, f2, f3])
+    })
+  })
+
+  it('should noop if one of the filters is empty', () => {
+    const filter: Filter<Foo> = {
+      bar: { gt: 0 }
+    }
+    expect(mergeFilters(filter, {})).toEqual({ and: [filter] })
+    expect(mergeFilters({}, filter)).toEqual({ and: [filter] })
   })
 })
