@@ -11,7 +11,7 @@ import { UserModule } from './user/user.module'
     TypeOrmModule.forRoot(typeormOrmConfig('federation_user')),
     GraphQLModule.forRoot({
       driver: ApolloFederationDriver,
-      autoSchemaFile: 'examples/user-graphql/schema.gql'
+      autoSchemaFile: 'examples/federation/user-graphql/schema.gql'
     }),
     UserModule
   ]

@@ -127,6 +127,21 @@ export const getFilterComparisons = <DTO, K extends keyof FilterComparisons<DTO>
   return [...results]
 }
 
+export const transformFilterComparisons = <DTO, K extends keyof FilterComparisons<DTO>>(
+  filterComparisons: FilterFieldComparison<DTO[K]>[],
+  key: K
+): Filter<DTO> => {
+  return {
+    [key]: filterComparisons.reduce(
+      (flatFilter, filter) => ({
+        ...flatFilter,
+        ...filter
+      }),
+      {}
+    )
+  } as Filter<DTO>
+}
+
 /*
 getFilterComparisons only returns the first layer, this one will return everything, it only returns the same
 item multiple times, that needs to be fixed first

@@ -23,7 +23,7 @@
     "lodash.merge": "^4.6.2",
     "lodash.omit": "^4.5.0",
     "tslib": "^2.6.2",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "peerDependencies": {
     "@nestjs/common": "^9.0.0 || ^10.0.0",

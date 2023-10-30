@@ -99,6 +99,26 @@ describe('TodoItemResolver (filters - e2e)', () => {
         .then(({ body }) => {
           expect(body.errors[0].extensions.originalError.message[0]).toBe('filter.There was no filter provided for "completed"!')
         }))
+
+    it(`should accepted "description" filter`, () =>
+      request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: {},
+          query: `{
+          todoItems (filter: { description: { isNot: null }, completed: { is: false } }) {
+            ${pageInfoField}
+            ${edgeNodes(todoItemFields)}
+          }
+        }`
+        })
+        .expect(200)
+        .then(({ body }) => {
+          const { edges }: CursorConnectionType<TodoItemDTO & { description: string }> = body.data.todoItems
+          expect(edges).toHaveLength(1)
+          expect(edges[0].node.description).toBe('test description')
+        }))
   })
 
   afterAll(async () => {

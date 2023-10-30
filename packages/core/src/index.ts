@@ -26,6 +26,7 @@ export {
   transformAggregateQuery,
   transformAggregateResponse,
   transformFilter,
+  transformFilterComparisons,
   transformQuery,
   transformSort
 } from './helpers'
