@@ -5,21 +5,15 @@
   "projectType": "application",
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "examples/**/*.ts"
-        ]
+        "lintFilePatterns": ["examples/**/*.ts"]
       }
     },
     "e2e": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/examples"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/examples"],
       "options": {
         "jestConfig": "jest.e2e.ts",
         "runInBand": true
@@ -27,12 +21,5 @@
     }
   },
   "tags": [],
-  "implicitDependencies": [
-    "core",
-    "query-graphql",
-    "query-mongoose",
-    "query-sequelize",
-    "query-typegoose",
-    "query-typeorm"
-  ]
+  "implicitDependencies": ["core", "query-graphql", "query-mongoose", "query-sequelize", "query-typegoose", "query-typeorm"]
 }

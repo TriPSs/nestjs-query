@@ -13,7 +13,7 @@ describe('WhereBuilder', (): void => {
   const expectFilterQuery = <T = TestEntity>(
     filter: Filter<T>,
     expectedFilterQuery: mongoose.FilterQuery<T>,
-    whereBuilder?: WhereBuilder<unknown>
+    whereBuilder?: WhereBuilder<T>
   ): void => {
     const actual = (whereBuilder ?? createWhereBuilder()).build(filter)
     expect(actual).toEqual(expectedFilterQuery)
