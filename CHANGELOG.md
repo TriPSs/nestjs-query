@@ -1,4 +1,24 @@
  
+# [4.3.0](https://github.com/TriPSs/nestjs-query/compare/v4.2.0...v4.3.0) (2023-10-30)
+
+
+### Bug Fixes
+
+* add `@apollo/subgraph` dep ([e22e3d6](https://github.com/TriPSs/nestjs-query/commit/e22e3d62c64342f52ed634a9bf8cdc1219ed7df5))
+* **query-graphql:** Fixed `@FilterableRelation` not showing in aggregate filters ([23d9caf](https://github.com/TriPSs/nestjs-query/commit/23d9caf2225cb181543810569bb5437288aa5477))
+* **query-graphql:** Fixed `@Relation`/`@FilterableRelation` exposing aggregate options ([2a5395d](https://github.com/TriPSs/nestjs-query/commit/2a5395d8b1da3370ead1a1f38c170e232087b85c))
+* **query-graphql:** Fixed `FilterableField` not respecting `name` option ([95aebd7](https://github.com/TriPSs/nestjs-query/commit/95aebd7fd86c0072f81af05e67e24009c7391b98)), closes [#169](https://github.com/TriPSs/nestjs-query/issues/169)
+* **query-graphql:** Fixed union types crashing `@GraphQLResultInfo` ([51cfe27](https://github.com/TriPSs/nestjs-query/commit/51cfe27647f999c84dd7c6ded558a7ca85d6e334))
+* **query-typeorm:** Align mapRelations of one to many with many to many ([1c21c59](https://github.com/TriPSs/nestjs-query/commit/1c21c5929fe569bb466f9c3aea1db186f5ebbeea)), closes [#115](https://github.com/TriPSs/nestjs-query/issues/115) [#175](https://github.com/TriPSs/nestjs-query/issues/175)
+
+
+### Features
+
+* **query-core:** Added `mergeFilters` helper ([18d0f20](https://github.com/TriPSs/nestjs-query/commit/18d0f2048ed065840eead10c732a256e9010c206))
+* **query-core:** Added `transformFilterComparisons` filter helper ([e81eceb](https://github.com/TriPSs/nestjs-query/commit/e81eceb9ab1f2a4d2cdf45ca65069262de6c85ef))
+
+
+
 # [4.2.0](https://github.com/TriPSs/nestjs-query/compare/v4.1.0...v4.2.0) (2023-09-29)
 
 
