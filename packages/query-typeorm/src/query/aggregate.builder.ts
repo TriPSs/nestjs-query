@@ -8,6 +8,7 @@ import {
 } from '@ptc-org/nestjs-query-core'
 import { camelCase } from 'camel-case'
 import { Repository, SelectQueryBuilder } from 'typeorm'
+import { DriverUtils } from 'typeorm/driver/DriverUtils'
 
 enum AggregateFuncs {
   AVG = 'AVG',
@@ -24,7 +25,11 @@ const AGG_REGEXP = /(AVG|SUM|COUNT|MAX|MIN|GROUP_BY)_(.*)/
  * Builds a WHERE clause from a Filter.
  */
 export class AggregateBuilder<Entity> {
-  constructor(readonly repo: Repository<Entity>) {}
+  private readonly isPostgres: boolean
+
+  constructor(readonly repo: Repository<Entity>) {
+    this.isPostgres = DriverUtils.isPostgresFamily(repo.manager.connection.driver)
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   public static async asyncConvertToAggregateResponse<Entity>(
@@ -134,12 +139,23 @@ export class AggregateBuilder<Entity> {
 
       if (this.isAggregateQueryGroupByField(aggregatedField)) {
         let query = `DATE(${col})`
-        if (aggregatedField.args.by === GroupBy.YEAR) {
-          query = `DATE(DATE_FORMAT(${col}, '%Y-01-01'))`
-        } else if (aggregatedField.args.by === GroupBy.MONTH) {
-          query = `DATE(DATE_FORMAT(${col}, '%Y-%m-01'))`
-        } else if (aggregatedField.args.by === GroupBy.WEEK) {
-          query = `STR_TO_DATE(DATE_FORMAT(${col}, '%X-%V-01'), '%X-%V-%w')`
+
+        if (this.isPostgres) {
+          if (aggregatedField.args.by === GroupBy.YEAR) {
+            query = `DATE(TO_CHAR(${col}, 'YYYY-01-01'))`
+          } else if (aggregatedField.args.by === GroupBy.MONTH) {
+            query = `DATE(TO_CHAR(${col}, 'YYYY-mm-01'))`
+          } else if (aggregatedField.args.by === GroupBy.WEEK) {
+            query = `TO_DATE(TO_CHAR(${col}, 'YYYY-WW-01'), 'YYYY-WW-01')`
+          }
+        } else {
+          if (aggregatedField.args.by === GroupBy.YEAR) {
+            query = `DATE(DATE_FORMAT(${col}, '%Y-01-01'))`
+          } else if (aggregatedField.args.by === GroupBy.MONTH) {
+            query = `DATE(DATE_FORMAT(${col}, '%Y-%m-01'))`
+          } else if (aggregatedField.args.by === GroupBy.WEEK) {
+            query = `STR_TO_DATE(DATE_FORMAT(${col}, '%X-%V-01'), '%X-%V-%w')`
+          }
         }
 
         return [query, groupByAlias]
