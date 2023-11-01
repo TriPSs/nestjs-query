@@ -1,4 +1,14 @@
  
+## [4.3.1](https://github.com/TriPSs/nestjs-query/compare/v4.3.0...v4.3.1) (2023-11-01)
+
+
+### Bug Fixes
+
+* **query-typeorm:** Fixed group by `WEEK`, `MONTH` and `YEAR` not working in Postgres ([7e60f09](https://github.com/TriPSs/nestjs-query/commit/7e60f097b35d72ad3bcc8178598800f751b360a8)), closes [#163](https://github.com/TriPSs/nestjs-query/issues/163)
+* **query-typeorm:** Updated test for `createTypeOrmQueryServiceProviders` ([ea6ae5d](https://github.com/TriPSs/nestjs-query/commit/ea6ae5d218031800bc2504dbf67ed897f6c3bbd2))
+
+
+
 # [4.3.0](https://github.com/TriPSs/nestjs-query/compare/v4.2.0...v4.3.0) (2023-10-30)
 
 
