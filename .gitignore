@@ -92,3 +92,5 @@ documentation/.docusaurus
 
 # VSCode workspace files
 .vscode
+
+.nx/cache

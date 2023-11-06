@@ -5,21 +5,15 @@
   "projectType": "library",
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/query-typegoose/**/*.ts"
-        ]
+        "lintFilePatterns": ["packages/query-typegoose/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/packages/query-typegoose"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/packages/query-typegoose"],
       "options": {
         "jestConfig": "packages/query-typegoose/jest.config.ts",
         "passWithNoTests": true
@@ -27,17 +21,13 @@
     },
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/query-typegoose",
         "tsConfig": "packages/query-typegoose/tsconfig.lib.json",
         "packageJson": "packages/query-typegoose/package.json",
         "main": "packages/query-typegoose/src/index.ts",
-        "assets": [
-          "packages/query-typegoose/*.md"
-        ],
+        "assets": ["packages/query-typegoose/*.md"],
         "updateBuildableProjectDepsInPackageJson": true,
         "buildableProjectDepsInPackageJsonType": "dependencies"
       }
@@ -54,7 +44,5 @@
     }
   },
   "tags": [],
-  "implicitDependencies": [
-    "core"
-  ]
+  "implicitDependencies": ["core"]
 }
