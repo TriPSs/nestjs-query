@@ -12,7 +12,7 @@ class HooksTransformer<T> implements PipeTransform {
   @Inject(REQUEST) protected readonly request: Request
 
   public async transform(value: T, metadata: ArgumentMetadata): Promise<MutationArgsType<T> | Query<T>> {
-    const transformedValue = this.transformValue<T>(value, metadata.metatype)
+    const transformedValue = this.transformValue(value, metadata.metatype)
 
     if (metadata.type === 'query') {
       return this.runQueryHooks(transformedValue as BuildableQueryType<T>)
@@ -21,7 +21,7 @@ class HooksTransformer<T> implements PipeTransform {
     return this.runMutationHooks(transformedValue)
   }
 
-  private transformValue<T>(value: T, type?: Class<T>): T {
+  private transformValue(value: T, type?: Class<T>): T {
     if (!type || value instanceof type) {
       return value
     }

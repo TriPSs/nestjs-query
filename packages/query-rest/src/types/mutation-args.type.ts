@@ -7,7 +7,6 @@ export interface MutationArgsType<Input> {
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export function MutationArgsType<Input>(InputClass: Class<Input>): Class<MutationArgsType<Input>> {
-
   class MutationArgs extends (InputClass as Type) implements MutationArgsType<Input> {
     public get input() {
       return this as never as Input

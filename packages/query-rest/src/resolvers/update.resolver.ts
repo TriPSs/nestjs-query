@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import { Param } from '@nestjs/common'
-import { PartialType } from '@nestjs/mapped-types'
+import { PartialType } from '@nestjs/swagger'
 import { Class, DeepPartial, Filter, QueryService } from '@ptc-org/nestjs-query-core'
 import omit from 'lodash.omit'
 

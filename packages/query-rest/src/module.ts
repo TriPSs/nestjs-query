@@ -17,6 +17,7 @@ export interface NestjsQueryRestModuleFeatureOpts {
   services?: Provider[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   assemblers?: Class<Assembler<any, any, any, any, any, any>>[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   endpoints?: AutoResolverOpts<any, any, unknown, unknown, ReadResolverOpts<any>, PagingStrategies>[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   // resolvers?: AutoResolverOpts<any, any, unknown, unknown, ReadResolverOpts<any>, PagingStrategies>[]

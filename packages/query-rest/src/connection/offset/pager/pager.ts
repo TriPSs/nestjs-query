@@ -1,4 +1,4 @@
-import { Filter, Query } from '@ptc-org/nestjs-query-core'
+import { Query } from '@ptc-org/nestjs-query-core'
 
 import { Count, Pager, QueryMany } from '../../interfaces'
 import { OffsetPagerResult, OffsetPagingMeta, OffsetPagingOpts, QueryResults } from './interfaces'

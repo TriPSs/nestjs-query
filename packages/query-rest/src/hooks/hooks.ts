@@ -3,7 +3,8 @@ import { Class, Query } from '@ptc-org/nestjs-query-core'
 
 import {
   // CreateManyInputType,
-  CreateOneInputType, UpdateOneInputType
+  CreateOneInputType,
+  UpdateOneInputType
   // DeleteManyInputType,
   // DeleteOneInputType,
   // FindOneArgsType,

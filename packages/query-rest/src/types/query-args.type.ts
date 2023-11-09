@@ -3,7 +3,8 @@ import { Class } from '@ptc-org/nestjs-query-core'
 import { removeUndefinedValues } from '../common'
 import { getQueryOptions } from '../decorators'
 import {
-  DEFAULT_QUERY_OPTS, NonePagingQueryArgsTypeOpts,
+  DEFAULT_QUERY_OPTS,
+  NonePagingQueryArgsTypeOpts,
   OffsetQueryArgsTypeOpts,
   PagingStrategies,
   QueryArgsTypeOpts,
@@ -43,6 +44,7 @@ export function QueryArgsType<DTO>(DTOClass: Class<DTO>, opts?: QueryArgsTypeOpt
     return createOffsetQueryArgs(DTOClass, mergedOpts)
   }
 
-  return createOffsetQueryArgs(DTOClass, mergedOpts as any)
+  // TODO:: Support none paging type
+  return createOffsetQueryArgs(DTOClass, mergedOpts as never)
   //   return createNonePagingQueryArgsType(DTOClass, mergedOpts)
 }

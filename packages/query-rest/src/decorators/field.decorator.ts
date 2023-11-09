@@ -57,7 +57,7 @@ export function Field(
 
   const returnedType = returnTypeFunc?.()
   const isArray = returnedType && Array.isArray(returnedType)
-  const type = isArray ? returnedType[0] : returnedType
+  const type = (isArray ? returnedType[0] : returnedType) as never
 
   if (
     advancedOptions !== undefined &&

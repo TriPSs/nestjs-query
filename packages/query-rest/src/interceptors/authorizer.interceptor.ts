@@ -12,7 +12,7 @@ export function AuthorizerInterceptor<DTO>(DTOClass: Class<DTO>): Class<NestInte
     constructor(@InjectAuthorizer(DTOClass) readonly authorizer: Authorizer<DTO>) {}
 
     public intercept(context: ExecutionContext, next: CallHandler) {
-      const request = context.switchToHttp().getRequest()
+      const request = context.switchToHttp().getRequest<AuthorizerContext<DTO>>()
       request.authorizer = this.authorizer
 
       return next.handle()

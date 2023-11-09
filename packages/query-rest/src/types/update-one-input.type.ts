@@ -15,11 +15,9 @@ export function UpdateOneInputType<DTO, U>(DTOClass: Class<DTO>, UpdateClass: Cl
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   class UpdateOneInput extends UpdateClass implements UpdateOneInputType<U> {
-
     public get update() {
       return this as never as U
     }
-
   }
 
   Object.defineProperty(UpdateOneInput, 'name', {
