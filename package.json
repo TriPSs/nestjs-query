@@ -22,6 +22,7 @@
     "@nestjs/passport": "10.0.2",
     "@nestjs/platform-express": "10.2.7",
     "@nestjs/sequelize": "10.0.0",
+    "@nestjs/swagger": "^7.1.15",
     "@nestjs/typeorm": "^10.0.0",
     "class-validator": "0.14.0",
     "clsx": "^2.0.0",

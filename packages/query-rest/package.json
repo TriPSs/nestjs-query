@@ -1,0 +1,49 @@
+{
+  "name": "@ptc-org/nestjs-query-rest",
+  "version": "4.3.0",
+  "description": "Nestjs rest query adapter",
+  "author": "doug-martin <doug@dougamartin.com>",
+  "homepage": "https://github.com/tripss/nestjs-query#readme",
+  "keywords": [
+    "reset",
+    "crud",
+    "nestjs"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "__tests__"
+  },
+  "files": [
+    "src/**"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tripss/nestjs-query.git",
+    "directory": "packages/query-rest"
+  },
+  "bugs": {
+    "url": "https://github.com/tripss/nestjs-query/issues"
+  },
+  "dependencies": {
+    "lodash.omit": "^4.5.0",
+    "lower-case-first": "^2.0.2",
+    "pluralize": "^8.0.0",
+    "tslib": "^2.6.2",
+    "upper-case-first": "^2.0.2"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^9.0.0 || ^10.0.0",
+    "@nestjs/core": "^9.0.0 || ^10.0.0",
+    "@nestjs/graphql": "^11.0.0 || ^12.0.0",
+    "@nestjs/swagger": "^7.0.0",
+    "class-transformer": "^0.5",
+    "class-validator": "^0.14.0",
+    "ts-morph": "^19.0.0"
+  }
+}
