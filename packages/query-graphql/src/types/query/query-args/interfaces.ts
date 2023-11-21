@@ -16,6 +16,11 @@ export type BaseQueryArgsTypeOpts<DTO> = {
    */
   maxResultsSize?: number
   /**
+   * The maximum number of results that can be returned from a svc query.
+   * [Default=1000]
+   */
+  CSVPageLimit?: number
+  /**
    * The default sort for queries.
    * [Default=[]]
    */

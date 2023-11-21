@@ -5,7 +5,7 @@ import Papa from 'papaparse';
 
 import { OperationGroup } from '../auth'
 import { getDTONames } from '../common'
-import { AuthorizerFilter, HookArgs, ResolverQuery } from '../decorators'
+import {AuthorizerFilter, getQueryOptions, HookArgs, ResolverQuery} from '../decorators'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import {
@@ -18,6 +18,9 @@ import {
 } from '../types'
 import { CursorQueryArgsTypeOpts, QueryType, StaticQueryType } from '../types/query'
 import { BaseServiceResolver, ExtractPagingStrategy, ResolverClass, ResolverOpts, ServiceResolver } from './resolver.interface'
+import { DEFAULT_QUERY_OPTS } from '../types/query/query-args'
+
+const QUERY_ARGS_TOKEN = Symbol('QUERY_ARGS_TOKEN');
 
 export type ReadResolverFromOpts<
   DTO,
@@ -46,6 +49,8 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
   findById(id: FindOneArgsType, authorizeFilter?: Filter<DTO>): Promise<DTO | undefined>
 }
 
+export const getQueryArgs =  <DTO>(DTOClass: Class<DTO>) => QueryArgsType(DTOClass, {}).FilterType
+
 /**
  * @internal
  * Mixin to add `read` graphql endpoints.
@@ -61,6 +66,8 @@ export const Readable =
     const readManyQueryName = opts.many?.name ?? pluralBaseNameLower
     const { QueryArgs = QueryArgsType(DTOClass, { ...opts, connectionName: `${baseName}Connection` }) } = opts
     const { ConnectionType } = QueryArgs
+
+    Reflect.defineMetadata(QUERY_ARGS_TOKEN, QueryArgs, DTOClass);
 
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection', 'withDeleted')
 
@@ -127,8 +134,9 @@ export const Readable =
         })
           authorizeFilter?: Filter<DTO>
       ) {
-          const res = await this.service.query(query);
-          return Papa.unparse(res);
+        const limitValue = getQueryOptions(DTOClass).CSVPageLimit || DEFAULT_QUERY_OPTS.CSVPageLimit
+        const res = await this.service.query({ ...query, paging: { ...query.paging, limit: limitValue } })
+        return Papa.unparse(res)
       }
     }
 
