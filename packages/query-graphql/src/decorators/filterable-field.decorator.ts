@@ -5,21 +5,21 @@ import { FILTERABLE_FIELD_KEY } from './constants'
 import { getRelations } from './relation.decorator'
 
 const reflector = new ArrayReflector(FILTERABLE_FIELD_KEY)
-export type FilterableFieldOptions = {
+export type FilterableFieldOptions<T = any> = {
   allowedComparisons?: FilterComparisonOperators<unknown>[]
   isJSON?: boolean
   filterRequired?: boolean
   filterOnly?: boolean
-} & FieldOptions
+} & FieldOptions<T>
 
-export interface FilterableFieldDescriptor {
+export interface FilterableFieldDescriptor<T = any> {
   propertyName: string
   target: Class<unknown>
   returnTypeFunc?: ReturnTypeFunc
-  advancedOptions?: FilterableFieldOptions
+  advancedOptions?: FilterableFieldOptions<T>
 }
 
-export interface FilterableRelationFields extends FilterableFieldDescriptor{
+export interface FilterableRelationFields<T = any> extends FilterableFieldDescriptor<T>{
   propertyName: string
   relationPropertyName: string;
 }
