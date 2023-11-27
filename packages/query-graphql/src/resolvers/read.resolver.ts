@@ -9,7 +9,7 @@ import {AuthorizerFilter, getQueryOptions, HookArgs, ResolverQuery} from '../dec
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import {
-  ConnectionOptions,
+  ConnectionOptions, FilterType,
   FindOneArgsType,
   InferConnectionTypeFromStrategy,
   PagingStrategies,
@@ -49,7 +49,7 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
   findById(id: FindOneArgsType, authorizeFilter?: Filter<DTO>): Promise<DTO | undefined>
 }
 
-export const getQueryArgs =  <DTO>(DTOClass: Class<DTO>) => QueryArgsType(DTOClass, {}).FilterType
+export const getQueryArgs =  <DTO>(DTOClass: Class<DTO>) => FilterType(DTOClass)
 
 /**
  * @internal
