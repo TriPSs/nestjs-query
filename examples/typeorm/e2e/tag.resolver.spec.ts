@@ -443,8 +443,12 @@ describe('TagResolver (typeorm - e2e)', () => {
           .then(({ body }) => {
             const res: AggregateResponse<TodoItemDTO>[] = body.data.tagAggregate
             expect(res).toHaveLength(2)
-            expect(res[0].sum).toEqual({ id: 1 })
-            expect(res[1].sum).toEqual({ id: 14 })
+
+            // First of the month we switched the days so they stay in the same month
+            const isFirstOfMonth = new Date().getDate() === 1
+
+            expect(res[isFirstOfMonth ? 1 : 0].sum).toEqual({ id: 1 })
+            expect(res[isFirstOfMonth ? 0 : 1].sum).toEqual({ id: 14 })
           }))
     })
   })
