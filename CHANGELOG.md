@@ -1,4 +1,13 @@
  
+## [4.3.2](https://github.com/TriPSs/nestjs-query/compare/v4.3.1...v4.3.2) (2023-12-01)
+
+
+### Bug Fixes
+
+* Use the provided connection name ([96fd3e6](https://github.com/TriPSs/nestjs-query/commit/96fd3e6219c9df162156dc95d64d5ebbefdba681))
+
+
+
 ## [4.3.1](https://github.com/TriPSs/nestjs-query/compare/v4.3.0...v4.3.1) (2023-11-01)
 
 
