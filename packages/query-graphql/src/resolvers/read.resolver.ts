@@ -58,7 +58,8 @@ export const Readable =
     const { baseNameLower, pluralBaseNameLower, baseName } = getDTONames(DTOClass, opts)
     const readOneQueryName = opts.one?.name ?? baseNameLower
     const readManyQueryName = opts.many?.name ?? pluralBaseNameLower
-    const { QueryArgs = QueryArgsType(DTOClass, { ...opts, connectionName: `${baseName}Connection` }) } = opts
+    // TODO:: Remove "connectionName" here in next major version
+    const { QueryArgs = QueryArgsType(DTOClass, { connectionName: `${baseName}Connection`, ...opts }) } = opts
     const { ConnectionType } = QueryArgs
 
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection', 'withDeleted')
