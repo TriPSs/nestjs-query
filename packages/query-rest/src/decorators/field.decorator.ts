@@ -1,11 +1,14 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
 import { Expose, Type } from 'class-transformer'
-import { IsNotEmpty, IsOptional } from 'class-validator'
+import { IsEnum, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator'
 
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
 
-export type FieldOptions = Omit<ApiPropertyOptions, 'type' | 'isArray'>
+export type FieldOptions = ApiPropertyOptions & {
+  // prevents the IsEnum decorator from being added
+  skipIsEnum?: boolean
+}
 
 /**
  * Decorator for Fields that should be filterable through a [[FilterType]]
@@ -57,14 +60,11 @@ export function Field(
 
   const returnedType = returnTypeFunc?.()
   const isArray = returnedType && Array.isArray(returnedType)
-  const type = (isArray ? returnedType[0] : returnedType) as never
+  const type = isArray ? returnedType[0] : returnedType
 
-  if (
-    advancedOptions !== undefined &&
-    advancedOptions.required === undefined &&
-    (advancedOptions.nullable || advancedOptions.default !== undefined)
-  ) {
-    advancedOptions.required = false
+  const options = {
+    required: !advancedOptions?.nullable && advancedOptions?.default === undefined,
+    ...advancedOptions
   }
 
   const decorators = [
@@ -72,20 +72,26 @@ export function Field(
     ApiProperty({
       type,
       isArray,
-      ...advancedOptions
+      ...options
     })
   ]
 
-  if (advancedOptions !== undefined && advancedOptions.required !== undefined) {
-    if (advancedOptions.required) {
-      decorators.push(IsNotEmpty())
-    } else {
-      decorators.push(IsOptional())
-    }
+  if (options.required) {
+    decorators.push(IsNotEmpty())
+  } else {
+    decorators.push(IsOptional())
   }
 
   if (type) {
     decorators.push(Type(() => type))
+
+    if (typeof type === 'function') {
+      decorators.push(ValidateNested())
+    }
+  }
+
+  if (options.enum && options.skipIsEnum) {
+    decorators.push(IsEnum(options.enum))
   }
 
   return applyDecorators(...decorators)
