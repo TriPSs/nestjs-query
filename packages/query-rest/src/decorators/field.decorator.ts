@@ -64,6 +64,7 @@ export function Field(
 
   const options = {
     required: !advancedOptions?.nullable && advancedOptions?.default === undefined,
+    example: advancedOptions?.default,
     ...advancedOptions
   }
 
