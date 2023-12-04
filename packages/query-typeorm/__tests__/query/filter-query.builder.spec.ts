@@ -1,7 +1,7 @@
 import { Class, Filter, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { anything, deepEqual, instance, mock, verify, when } from 'ts-mockito'
-import { DataSource, QueryBuilder, WhereExpressionBuilder } from 'typeorm'
+import { Connection, DataSource, Driver, EntityManager, QueryBuilder, Repository, WhereExpressionBuilder } from 'typeorm'
 
 import { FilterQueryBuilder, WhereBuilder } from '../../src/query'
 import { createTestConnection } from '../__fixtures__/connection.fixture'
@@ -230,6 +230,7 @@ describe('FilterQueryBuilder', (): void => {
     })
   })
 
+
   describe('#select', () => {
     const expectSelectSQLSnapshot = (query: Query<TestEntity>, whereBuilder: WhereBuilder<TestEntity>): void => {
       const selectQueryBuilder = getEntityQueryBuilder(TestEntity, whereBuilder).select(query)
@@ -302,6 +303,28 @@ describe('FilterQueryBuilder', (): void => {
           instance(mockWhereBuilder)
         )
       })
+
+      it('should apply filtering on one to many relations query filter', () => {
+        const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+        when(mockWhereBuilder.build(anything(), anything(), anything(), anything())).thenCall((qb: WhereExpressionBuilder) => qb)
+
+        expectSelectSQLSnapshot(
+          {
+            filter: { stringType: { eq: 'test' } },
+            relations: [{
+              name: 'oneTestRelation',
+              query: {
+                filter: {
+                  numberType: { eq: 123 }
+                },
+              },
+
+            }]
+          },
+          instance(mockWhereBuilder)
+        )
+      })
+
 
       it('should use limit/offset when filtering on one to one relation', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
@@ -422,6 +445,7 @@ describe('FilterQueryBuilder', (): void => {
           instance(mockWhereBuilder)
         )
       })
+
     })
   })
 
