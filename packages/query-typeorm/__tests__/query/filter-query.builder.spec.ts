@@ -230,7 +230,6 @@ describe('FilterQueryBuilder', (): void => {
     })
   })
 
-
   describe('#select', () => {
     const expectSelectSQLSnapshot = (query: Query<TestEntity>, whereBuilder: WhereBuilder<TestEntity>): void => {
       const selectQueryBuilder = getEntityQueryBuilder(TestEntity, whereBuilder).select(query)
@@ -423,7 +422,6 @@ describe('FilterQueryBuilder', (): void => {
           instance(mockWhereBuilder)
         )
       })
-
     })
   })
 

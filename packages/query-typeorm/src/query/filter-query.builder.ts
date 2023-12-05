@@ -82,7 +82,7 @@ export class FilterQueryBuilder<Entity> {
     readonly repo: Repository<Entity>,
     readonly whereBuilder: WhereBuilder<Entity> = new WhereBuilder<Entity>(),
     readonly aggregateBuilder: AggregateBuilder<Entity> = new AggregateBuilder<Entity>(repo)
-  ) { }
+  ) {}
 
   /**
    * Create a `typeorm` SelectQueryBuilder with `WHERE`, `ORDER BY` and `LIMIT/OFFSET` clauses.
@@ -282,10 +282,10 @@ export class FilterQueryBuilder<Entity> {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 
       if (selectRelation) {
-        rqb = rqb.leftJoinAndSelect(`${alias ?? rqb.alias}.${relationKey}`, relationAlias);
+        rqb = rqb.leftJoinAndSelect(`${alias ?? rqb.alias}.${relationKey}`, relationAlias)
         // Apply filter for the current relation
-        rqb = this.applyFilter(rqb, selectRelation.query.filter, relationAlias);
-        return this.applyRelationJoinsRecursive(rqb, relationChildren, selectRelation.query.relations, relationAlias);
+        rqb = this.applyFilter(rqb, selectRelation.query.filter, relationAlias)
+        return this.applyRelationJoinsRecursive(rqb, relationChildren, selectRelation.query.relations, relationAlias)
       }
 
       return this.applyRelationJoinsRecursive(
