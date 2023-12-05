@@ -1,10 +1,10 @@
 import { applyDecorators } from '@nestjs/common'
-import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
+import { ApiPropertyOptions } from '@nestjs/swagger'
 import { ArrayReflector, Class, getPrototypeChain } from '@ptc-org/nestjs-query-core'
-import { Expose } from 'class-transformer'
 
 import { ReturnTypeFunc, ReturnTypeFuncValue } from '../interfaces/return-type-func'
 import { FILTERABLE_FIELD_KEY } from './constants'
+import { Field } from './field.decorator'
 
 const reflector = new ArrayReflector(FILTERABLE_FIELD_KEY)
 export type FilterableFieldOptions = {
@@ -91,13 +91,7 @@ export function FilterableField(
       return undefined
     }
 
-    applyDecorators(
-      Expose(),
-      ApiProperty({
-        type: returnTypeFunc,
-        ...advancedOptions
-      })
-    )(target, propertyName, descriptor)
+    applyDecorators(Field(() => returnTypeFunc, advancedOptions))(target, propertyName, descriptor)
   }
 }
 
