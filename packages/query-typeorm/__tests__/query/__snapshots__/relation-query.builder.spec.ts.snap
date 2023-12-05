@@ -179,6 +179,52 @@ WHERE
   ("test_entity"."test_entity_pk" = test-entity-id-1)"
 `;
 
+exports[`RelationQueryBuilder #select with filter should apply filtering from relations query filter 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
+  "oneTestRelation"."test_relation_pk" AS "oneTestRelation_test_relation_pk",
+  "oneTestRelation"."relation_name" AS "oneTestRelation_relation_name",
+  "oneTestRelation"."test_entity_id" AS "oneTestRelation_test_entity_id",
+  "oneTestRelation"."uni_directional_test_entity_id" AS "oneTestRelation_uni_directional_test_entity_id",
+  "oneTestRelation"."uni_directional_relation_test_entity_id" AS "oneTestRelation_uni_directional_relation_test_entity_id"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
+WHERE
+  (oneTestRelation.numberType = 123)
+  AND ("TestEntity"."string_type" = test)"
+`;
+
+exports[`RelationQueryBuilder #select with filter should apply filtering on one to many relations and use relations query filter 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
+  "oneTestRelation"."test_relation_pk" AS "oneTestRelation_test_relation_pk",
+  "oneTestRelation"."relation_name" AS "oneTestRelation_relation_name",
+  "oneTestRelation"."test_entity_id" AS "oneTestRelation_test_entity_id",
+  "oneTestRelation"."uni_directional_test_entity_id" AS "oneTestRelation_uni_directional_test_entity_id",
+  "oneTestRelation"."uni_directional_relation_test_entity_id" AS "oneTestRelation_uni_directional_relation_test_entity_id"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
+WHERE
+  (oneTestRelation.numberType = 123)
+  AND ("TestEntity"."string_type" = test)"
+`;
+
 exports[`RelationQueryBuilder #select with filter should call whereBuilder#build if there is a filter 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
