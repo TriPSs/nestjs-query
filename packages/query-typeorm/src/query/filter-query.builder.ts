@@ -278,17 +278,14 @@ export class FilterQueryBuilder<Entity> {
       const relationAlias = relation.alias
       const relationChildren = relation.relations
 
-      // TODO:: Change to find and also apply the query for the relation
       const selectRelation = selectRelations && selectRelations.find(({ name }) => name === relationKey)
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 
       if (selectRelation) {
-        return this.applyRelationJoinsRecursive(
-          rqb.leftJoinAndSelect(`${alias ?? rqb.alias}.${relationKey}`, relationAlias),
-          relationChildren,
-          selectRelation.query.relations,
-          relationAlias
-        )
+        rqb = rqb.leftJoinAndSelect(`${alias ?? rqb.alias}.${relationKey}`, relationAlias)
+        // Apply filter for the current relation
+        rqb = this.applyFilter(rqb, selectRelation.query.filter, relationAlias)
+        return this.applyRelationJoinsRecursive(rqb, relationChildren, selectRelation.query.relations, relationAlias)
       }
 
       return this.applyRelationJoinsRecursive(
