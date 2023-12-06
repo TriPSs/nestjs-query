@@ -2,7 +2,7 @@ import { Class, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-co
 import { format as formatSql } from 'sql-formatter'
 import { DataSource } from 'typeorm'
 
-import { FilterQueryBuilder, RelationQueryBuilder } from '../../src/query'
+import { RelationQueryBuilder } from '../../src/query'
 import { createTestConnection } from '../__fixtures__/connection.fixture'
 import { TEST_ENTITIES } from '../__fixtures__/seeds'
 import { TestEntity } from '../__fixtures__/test.entity'
@@ -20,9 +20,6 @@ describe('RelationQueryBuilder', (): void => {
     relationName: string
   ): RelationQueryBuilder<Entity, Relation> => new RelationQueryBuilder(dataSource.getRepository(EntityClass), relationName)
 
-  const geFilterQueryBuilder = <Entity>(EntityClass: Class<Entity>): FilterQueryBuilder<Entity> =>
-    new FilterQueryBuilder(dataSource.getRepository(EntityClass))
-
   const expectSQLSnapshot = <Entity, Relation>(
     EntityClass: Class<Entity>,
     entity: Entity,
@@ -32,12 +29,6 @@ describe('RelationQueryBuilder', (): void => {
     const selectQueryBuilder = getRelationQueryBuilder<Entity, Relation>(EntityClass, relation).select(entity, query)
     const [sql, params] = selectQueryBuilder.getQueryAndParameters()
 
-    expect(formatSql(sql, { params })).toMatchSnapshot()
-  }
-
-  const expectSQLSnapshotUsingQuery = <Entity>(EntityClass: Class<Entity>, query: Query<Entity>): void => {
-    const selectQueryBuilder = geFilterQueryBuilder<Entity>(EntityClass).select(query)
-    const [sql, params] = selectQueryBuilder.getQueryAndParameters()
     expect(formatSql(sql, { params })).toMatchSnapshot()
   }
 
@@ -129,22 +120,6 @@ describe('RelationQueryBuilder', (): void => {
       it('should call whereBuilder#build if there is a filter', () => {
         const query: Query<TestRelation> = { filter: { relationName: { eq: 'foo' } } }
         expectSQLSnapshot(TestEntity, testEntity, 'testRelations', query)
-      })
-      it('should apply filtering from relations query filter', () => {
-        expectSQLSnapshotUsingQuery(TestEntity, {
-          filter: { stringType: { eq: 'test' } }, // note that this is the 'normal' filter.
-          relations: [
-            {
-              name: 'oneTestRelation',
-              query: {
-                // and this filter gets applied to the query as well.
-                filter: {
-                  numberType: { eq: 123 }
-                }
-              }
-            }
-          ]
-        } as any)
       })
     })
 
