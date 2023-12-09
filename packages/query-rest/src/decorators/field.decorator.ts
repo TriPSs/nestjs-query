@@ -1,12 +1,14 @@
-import { applyDecorators } from '@nestjs/common'
+import { applyDecorators, Type as NestjsType } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
 import { Expose, Type } from 'class-transformer'
-import { IsEnum, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator'
+import { ArrayMaxSize, IsEnum, IsNotEmpty, IsObject, IsOptional, MaxLength, MinLength, ValidateNested } from 'class-validator'
 
-import { ReturnTypeFunc } from '../interfaces/return-type-func'
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type ReturnTypeFuncValue = NestjsType | Function | object | symbol
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ReturnTypeFunc<T extends ReturnTypeFuncValue = any> = (returns?: void) => T
 
-export type FieldOptions = ApiPropertyOptions & {
-  // prevents the IsEnum decorator from being added
+export type FieldOptions = Omit<ApiPropertyOptions, 'type' | 'isArray'> & {
   skipIsEnum?: boolean
 }
 
@@ -77,6 +79,18 @@ export function Field(
     })
   ]
 
+  if (isArray && options.maxItems !== undefined) {
+    decorators.push(ArrayMaxSize(options.maxItems))
+  }
+
+  if (options.minLength) {
+    decorators.push(MinLength(options.minLength))
+  }
+
+  if (options.maxLength) {
+    decorators.push(MaxLength(options.maxLength))
+  }
+
   if (options.required) {
     decorators.push(IsNotEmpty())
   } else {
@@ -84,14 +98,18 @@ export function Field(
   }
 
   if (type) {
-    decorators.push(Type(() => type as never))
+    decorators.push(Type(() => type))
 
     if (typeof type === 'function') {
       decorators.push(ValidateNested())
+
+      if (!isArray) {
+        decorators.push(IsObject())
+      }
     }
   }
 
-  if (options.enum && options.skipIsEnum) {
+  if (options.enum && !options.skipIsEnum) {
     decorators.push(IsEnum(options.enum))
   }
 
