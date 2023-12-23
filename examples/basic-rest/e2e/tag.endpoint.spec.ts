@@ -47,7 +47,7 @@ describe('TagResolver (basic rest - e2e)', () => {
         .get('/tag-dtos')
         .expect(200)
         .then(({ body }) => {
-          const { nodes, pageInfo }: OffsetConnectionType<TagDTO> = body
+          const { nodes }: OffsetConnectionType<TagDTO> = body
           expect(nodes).toHaveLength(5)
           expect(nodes.map((e) => e)).toMatchObject(tags)
         }))
