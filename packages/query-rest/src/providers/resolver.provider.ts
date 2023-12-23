@@ -66,7 +66,7 @@ const getEndpointToken = <DTO>(DTOClass: Class<DTO>): string => `${DTOClass.name
 function createEntityAutoResolver<DTO, Entity extends DeepPartial<Entity>, C, U, R, PS extends PagingStrategies>(
   resolverOpts: EntityCRUDAutoResolverOpts<DTO, Entity, C, U, R, PS>
 ): Type {
-  const { DTOClass, EntityClass } = resolverOpts
+  const { DTOClass, EntityClass, basePath } = resolverOpts
   const { endpointName } = getDTONames(DTOClass)
 
   class Service extends AssemblerQueryService<DTO, Entity, C, C, U, U> {
@@ -76,7 +76,7 @@ function createEntityAutoResolver<DTO, Entity extends DeepPartial<Entity>, C, U,
     }
   }
 
-  @Controller(endpointName)
+  @Controller(basePath || endpointName)
   class AutoResolver extends CRUDResolver(DTOClass, resolverOpts) {
     constructor(@InjectQueryService(EntityClass) service: QueryService<Entity, C, U>) {
       super(new Service(service))
@@ -91,10 +91,10 @@ function createEntityAutoResolver<DTO, Entity extends DeepPartial<Entity>, C, U,
 function createAssemblerAutoResolver<DTO, Asmblr, C, U, R, PS extends PagingStrategies>(
   resolverOpts: AssemblerCRUDAutoResolverOpts<DTO, Asmblr, C, U, R, PS>
 ): Type {
-  const { DTOClass, AssemblerClass } = resolverOpts
+  const { DTOClass, AssemblerClass, basePath } = resolverOpts
   const { endpointName } = getDTONames(DTOClass)
 
-  @Controller(endpointName)
+  @Controller(basePath || endpointName)
   class AutoResolver extends CRUDResolver(DTOClass, resolverOpts) {
     constructor(
       @InjectAssemblerQueryService(AssemblerClass as unknown as Class<Assembler<DTO, unknown, C, unknown, U, unknown>>)
@@ -112,10 +112,10 @@ function createAssemblerAutoResolver<DTO, Asmblr, C, U, R, PS extends PagingStra
 function createServiceAutoResolver<DTO, Service, C, U, R, PS extends PagingStrategies>(
   resolverOpts: ServiceCRUDAutoResolverOpts<DTO, Service, C, U, R, PS>
 ): Type {
-  const { DTOClass, ServiceClass } = resolverOpts
+  const { DTOClass, ServiceClass, basePath } = resolverOpts
   const { endpointName } = getDTONames(DTOClass)
 
-  @Controller(endpointName)
+  @Controller(basePath || endpointName)
   class AutoResolver extends CRUDResolver(DTOClass, resolverOpts) {
     constructor(@Inject(ServiceClass) service: QueryService<DTO, C, U>) {
       super(service)

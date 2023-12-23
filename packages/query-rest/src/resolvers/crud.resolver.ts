@@ -36,6 +36,7 @@ export interface CRUDResolverOpts<
   update?: UpdateResolverOpts<DTO, U>
   delete?: DeleteResolverOpts<DTO>
 
+  basePath?: string
   tags?: string[]
 }
 
@@ -83,7 +84,7 @@ function extractUpdateResolverOpts<DTO, U>(
 function extractDeleteResolverOpts<DTO>(
   opts: CRUDResolverOpts<DTO, unknown, unknown, ReadResolverOpts<DTO>, PagingStrategies>
 ): DeleteResolverOpts<DTO> {
-  const { delete: deleteArgs } = opts
+  const { delete: deleteArgs = {} } = opts
   return mergeBaseResolverOpts<DeleteResolverOpts<DTO>>(deleteArgs, opts)
 }
 

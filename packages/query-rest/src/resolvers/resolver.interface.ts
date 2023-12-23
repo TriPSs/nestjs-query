@@ -3,7 +3,7 @@ import { QueryService } from '@ptc-org/nestjs-query-core'
 
 import { DTONamesOpts } from '../common'
 import { QueryOptionsDecoratorOpts, QueryResolverMethodOpts } from '../decorators'
-import { PagingStrategies, QueryArgsTypeOpts } from '../types'
+import { PagingStrategies, QueryArgsTypeOpts } from '../types/query'
 
 export type NamedEndpoint = {
   /** Specify to override the name of the graphql query or mutation * */

@@ -8,7 +8,8 @@ import { ConnectionOptions, InferConnectionTypeFromStrategy } from '../connectio
 import { AuthorizerFilter, Get, QueryHookArgs } from '../decorators'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
-import { OffsetQueryArgsTypeOpts, PagingStrategies, QueryArgsType, QueryArgsTypeOpts, QueryType, StaticQueryType } from '../types'
+import { QueryArgsType } from '../types'
+import { OffsetQueryArgsTypeOpts, PagingStrategies, QueryArgsTypeOpts, QueryType, StaticQueryType } from '../types/query'
 import { BaseServiceResolver, ExtractPagingStrategy, ResolverClass, ResolverOpts, ServiceResolver } from './resolver.interface'
 
 export type ReadResolverFromOpts<

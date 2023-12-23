@@ -1,14 +1,12 @@
-import { applyDecorators, Type as NestjsType } from '@nestjs/common'
+import { applyDecorators } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
 import { Expose, Type } from 'class-transformer'
 import { ArrayMaxSize, IsEnum, IsNotEmpty, IsObject, IsOptional, MaxLength, MinLength, ValidateNested } from 'class-validator'
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type ReturnTypeFuncValue = NestjsType | Function | object | symbol
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ReturnTypeFunc<T extends ReturnTypeFuncValue = any> = (returns?: void) => T
+import { ReturnTypeFunc } from '../interfaces/return-type-func'
 
-export type FieldOptions = Omit<ApiPropertyOptions, 'type' | 'isArray'> & {
+export type FieldOptions = ApiPropertyOptions & {
+  // prevents the IsEnum decorator from being added
   skipIsEnum?: boolean
 }
 
