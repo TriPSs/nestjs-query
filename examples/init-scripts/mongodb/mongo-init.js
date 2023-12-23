@@ -1,3 +1,4 @@
+/* eslint-disable */
 db.createUser({
   user: 'mongoose',
   pwd: 'mongoose',
