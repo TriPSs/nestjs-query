@@ -18,17 +18,13 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["packages/query-typeorm/**/*.ts"]
-      }
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/packages/query-typeorm"],
       "options": {
-        "jestConfig": "packages/query-typeorm/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "packages/query-typeorm/jest.config.ts"
       }
     },
     "version": {
