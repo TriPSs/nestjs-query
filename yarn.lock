@@ -347,7 +347,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/composition@npm:2.6.2":
+"@apollo/composition@npm:^2.2.3":
   version: 2.6.2
   resolution: "@apollo/composition@npm:2.6.2"
   dependencies:
@@ -359,7 +359,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/federation-internals@npm:2.6.2":
+"@apollo/federation-internals@npm:2.6.2, @apollo/federation-internals@npm:^2.2.3":
   version: 2.6.2
   resolution: "@apollo/federation-internals@npm:2.6.2"
   dependencies:
@@ -386,31 +386,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/gateway@npm:2.6.2":
-  version: 2.6.2
-  resolution: "@apollo/gateway@npm:2.6.2"
+"@apollo/gateway@npm:2.2.3":
+  version: 2.2.3
+  resolution: "@apollo/gateway@npm:2.2.3"
   dependencies:
-    "@apollo/composition": 2.6.2
-    "@apollo/federation-internals": 2.6.2
-    "@apollo/query-planner": 2.6.2
-    "@apollo/server-gateway-interface": ^1.1.0
-    "@apollo/usage-reporting-protobuf": ^4.1.0
-    "@apollo/utils.createhash": ^2.0.0
-    "@apollo/utils.fetcher": ^2.0.0
-    "@apollo/utils.isnodelike": ^2.0.0
-    "@apollo/utils.keyvaluecache": ^2.1.0
-    "@apollo/utils.logger": ^2.0.0
+    "@apollo/composition": ^2.2.3
+    "@apollo/federation-internals": ^2.2.3
+    "@apollo/query-planner": ^2.2.3
+    "@apollo/server-gateway-interface": ^1.0.2
+    "@apollo/usage-reporting-protobuf": ^4.0.0
+    "@apollo/utils.createhash": ^1.1.0
+    "@apollo/utils.fetcher": ^1.1.0
+    "@apollo/utils.isnodelike": ^1.1.0
+    "@apollo/utils.logger": ^1.0.0
     "@josephg/resolvable": ^1.0.1
     "@opentelemetry/api": ^1.0.1
     "@types/node-fetch": ^2.6.2
     async-retry: ^1.3.3
     loglevel: ^1.6.1
+    lru-cache: ^7.13.1
     make-fetch-happen: ^11.0.0
     node-abort-controller: ^3.0.1
     node-fetch: ^2.6.7
   peerDependencies:
     graphql: ^16.5.0
-  checksum: 48f1deaeb1f98cfe96e0d2139ad38670fe6de457b87a788aa6bd314f5ea9f0e6ab025997858e9e958ec4999758c2929a371befd8261b89c892a2e34ac7e04910
+  checksum: ab31538cca91954ee2fe2f44f3efa2775962bc41e11125e6e74e5a0f741f333da33b8ed48faa7a265d019792ef15f96465e844658332ca05d2b0846c9bd6216f
   languageName: node
   linkType: hard
 
@@ -475,7 +475,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/query-planner@npm:2.6.2":
+"@apollo/query-planner@npm:^2.2.3":
   version: 2.6.2
   resolution: "@apollo/query-planner@npm:2.6.2"
   dependencies:
@@ -491,7 +491,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/server-gateway-interface@npm:^1.1.0, @apollo/server-gateway-interface@npm:^1.1.1":
+"@apollo/server-gateway-interface@npm:^1.0.2, @apollo/server-gateway-interface@npm:^1.1.1":
   version: 1.1.1
   resolution: "@apollo/server-gateway-interface@npm:1.1.1"
   dependencies:
@@ -552,35 +552,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/subgraph@npm:2.6.2":
-  version: 2.6.2
-  resolution: "@apollo/subgraph@npm:2.6.2"
+"@apollo/subgraph@npm:2.2.3":
+  version: 2.2.3
+  resolution: "@apollo/subgraph@npm:2.2.3"
   dependencies:
     "@apollo/cache-control-types": ^1.0.2
-    "@apollo/federation-internals": 2.6.2
+    "@apollo/federation-internals": ^2.2.3
   peerDependencies:
     graphql: ^16.5.0
-  checksum: 6d91523e8f65f7bd8148d9ecf82c1968cf92c15f7aa46e264c072ec5d6e275f31ae3510b924c9415f429a4c3d868b9c8c90791c04dc19cd6a0b936d82b21b274
+  checksum: 38b3566b1250da770fa6c0084cf1ec1bf6b59fc423d4f8ecf6f68bee1f33e2affc6bd04953a0e9fe8dd6eeb3864428709c750099b993a49e8a319af7f538cce9
   languageName: node
   linkType: hard
 
-"@apollo/subgraph@npm:^0.6.1":
-  version: 0.6.1
-  resolution: "@apollo/subgraph@npm:0.6.1"
-  dependencies:
-    "@apollo/cache-control-types": ^1.0.2
-  peerDependencies:
-    graphql: ^15.8.0 || ^16.0.0
-  checksum: 84ecb35d7c93a8d6194cc0c3d154172ab42dffff6227777c90e9f02b9f769d0f4dc9503ca9fdb23f447c7ceaa9125617bc971f4211c6af9f52f1fe63d28f8a14
-  languageName: node
-  linkType: hard
-
-"@apollo/usage-reporting-protobuf@npm:^4.1.0, @apollo/usage-reporting-protobuf@npm:^4.1.1":
+"@apollo/usage-reporting-protobuf@npm:^4.0.0, @apollo/usage-reporting-protobuf@npm:^4.1.0, @apollo/usage-reporting-protobuf@npm:^4.1.1":
   version: 4.1.1
   resolution: "@apollo/usage-reporting-protobuf@npm:4.1.1"
   dependencies:
     "@apollo/protobufjs": 1.2.7
   checksum: 899f13cfb57cfe4320e50fff84254604c25538620aa5a56bad06fb4fc929a8842237b376a5ab6d82800d9aceacc8e79ccae01a1c11e85456d4a9ed50a6fe40ee
+  languageName: node
+  linkType: hard
+
+"@apollo/utils.createhash@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@apollo/utils.createhash@npm:1.1.0"
+  dependencies:
+    "@apollo/utils.isnodelike": ^1.1.0
+    sha.js: ^2.4.11
+  checksum: 46790cb7af2a050f2614c356abb436da2a5fe4b7e55b487460900953a3e9ffb906c2fae2f3a219d7fcc9db795e5dac4fff64feabdc29abe8825266fafda9efd2
   languageName: node
   linkType: hard
 
@@ -603,10 +602,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@apollo/utils.fetcher@npm:^1.1.0":
+  version: 1.1.1
+  resolution: "@apollo/utils.fetcher@npm:1.1.1"
+  checksum: 7f2284cfddeb59775dc471d20d0a447049f32c069df429ac4aa7b733bd341f6cc9b755fd37226a73b00a4c9fa7f598cb2f5ce0a98dc22a2ce9217cc6947f5f09
+  languageName: node
+  linkType: hard
+
 "@apollo/utils.fetcher@npm:^2.0.0":
   version: 2.0.1
   resolution: "@apollo/utils.fetcher@npm:2.0.1"
   checksum: 9cb0e759f61c6d2bfe3319eeb273e30e52212fa79e59da0ae29ac96fa735cb1bb333b6a97c39df62e36acb0c4a15d62d1bc6b0027a9ca41f5d1c995561b668f2
+  languageName: node
+  linkType: hard
+
+"@apollo/utils.isnodelike@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@apollo/utils.isnodelike@npm:1.1.0"
+  checksum: 66d620b9db01a919858138e99e2227a793912aafa5deed3eedbaa3b29e1364b6e82c111562743951dd56f4574c331a34f83d864f0d648f5e32c9555653f121af
   languageName: node
   linkType: hard
 
@@ -15646,7 +15659,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:^7.10.1, lru-cache@npm:^7.14.1, lru-cache@npm:^7.7.1":
+"lru-cache@npm:^7.10.1, lru-cache@npm:^7.13.1, lru-cache@npm:^7.14.1, lru-cache@npm:^7.7.1":
   version: 7.18.3
   resolution: "lru-cache@npm:7.18.3"
   checksum: e550d772384709deea3f141af34b6d4fa392e2e418c1498c078de0ee63670f1f46f5eee746e8ef7e69e1c895af0d4224e62ee33e66a543a14763b0f2e74c1356
@@ -17266,9 +17279,9 @@ __metadata:
   dependencies:
     "@actions/core": ^1.10.1
     "@apollo/federation": 0.38.1
-    "@apollo/gateway": 2.6.2
+    "@apollo/gateway": 2.2.3
     "@apollo/server": ^4.9.5
-    "@apollo/subgraph": 2.6.2
+    "@apollo/subgraph": 2.2.3
     "@commitlint/cli": 18.4.3
     "@commitlint/config-conventional": ^18.4.3
     "@docusaurus/core": 3.0.1
