@@ -98,7 +98,7 @@ export function Field(
   }
 
   if (type) {
-    decorators.push(Type(() => type))
+    decorators.push(Type(() => type as never))
 
     if (typeof type === 'function') {
       decorators.push(ValidateNested())
