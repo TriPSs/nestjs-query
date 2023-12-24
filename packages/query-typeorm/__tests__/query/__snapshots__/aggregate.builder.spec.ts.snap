@@ -10,7 +10,7 @@ FROM
 
 exports[`AggregateBuilder date type should default group by month 1`] = `
 "SELECT
-  DATE (
+  DATE(
     DATE_FORMAT ("TestEntity"."date_type", '%Y-%m-01')
   ) AS "GROUP_BY_dateType",
   COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
