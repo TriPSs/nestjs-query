@@ -1,4 +1,19 @@
  
+# [5.0.0-alpha.0](https://github.com/TriPSs/nestjs-query/compare/v4.3.3...v5.0.0-alpha.0) (2023-12-24)
+
+
+### Bug Fixes
+
+* **query-mongoose:** Fixed `count` changed to `countDocuments` ([fc2a899](https://github.com/TriPSs/nestjs-query/commit/fc2a89951613f349f75eac4e14d8cb597b1eada2))
+
+
+### BREAKING CHANGES
+
+* **query-mongoose:** `mongoose` has been updated to new major version.
+ [See breaking changes](https://github.com/Automattic/mongoose/releases/tag/8.0.0-rc0)
+
+
+
 ## [4.3.3](https://github.com/TriPSs/nestjs-query/compare/v4.3.2...v4.3.3) (2023-12-06)
 
 
