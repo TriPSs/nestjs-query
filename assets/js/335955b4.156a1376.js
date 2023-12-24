@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknestjs_query=self.webpackChunknestjs_query||[]).push([[9105],{3384:s=>{s.exports=JSON.parse('{"label":"minor","permalink":"/nestjs-query/blog/tags/minor","allTagsPath":"/nestjs-query/blog/tags","count":9}')}}]);

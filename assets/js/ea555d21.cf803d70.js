@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknestjs_query=self.webpackChunknestjs_query||[]).push([[4737],{497:s=>{s.exports=JSON.parse('{"label":"graphql","permalink":"/nestjs-query/blog/tags/graphql","allTagsPath":"/nestjs-query/blog/tags","count":1,"unlisted":false}')}}]);
