@@ -264,7 +264,7 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
               completed: false,
               description: null,
               age: expect.any(Number),
-              subTasksCount: 3
+              subTasksCount: 2
             }
           ])
         }))
@@ -411,7 +411,7 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
               completed: false,
               description: null,
               age: expect.any(Number),
-              subTasksCount: 3
+              subTasksCount: 2
             },
             {
               id: '4',
