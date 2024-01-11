@@ -858,7 +858,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/generator@npm:^7.22.7, @babel/generator@npm:^7.22.9, @babel/generator@npm:^7.7.2":
+"@babel/generator@npm:^7.22.9, @babel/generator@npm:^7.7.2":
   version: 7.22.9
   resolution: "@babel/generator@npm:7.22.9"
   dependencies:
@@ -2925,45 +2925,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/traverse@npm:^7.16.0, @babel/traverse@npm:^7.22.6, @babel/traverse@npm:^7.22.8":
-  version: 7.22.8
-  resolution: "@babel/traverse@npm:7.22.8"
-  dependencies:
-    "@babel/code-frame": ^7.22.5
-    "@babel/generator": ^7.22.7
-    "@babel/helper-environment-visitor": ^7.22.5
-    "@babel/helper-function-name": ^7.22.5
-    "@babel/helper-hoist-variables": ^7.22.5
-    "@babel/helper-split-export-declaration": ^7.22.6
-    "@babel/parser": ^7.22.7
-    "@babel/types": ^7.22.5
-    debug: ^4.1.0
-    globals: ^11.1.0
-  checksum: a381369bc3eedfd13ed5fef7b884657f1c29024ea7388198149f0edc34bd69ce3966e9f40188d15f56490a5e12ba250ccc485f2882b53d41b054fccefb233e33
-  languageName: node
-  linkType: hard
-
-"@babel/traverse@npm:^7.22.11":
-  version: 7.22.11
-  resolution: "@babel/traverse@npm:7.22.11"
-  dependencies:
-    "@babel/code-frame": ^7.22.10
-    "@babel/generator": ^7.22.10
-    "@babel/helper-environment-visitor": ^7.22.5
-    "@babel/helper-function-name": ^7.22.5
-    "@babel/helper-hoist-variables": ^7.22.5
-    "@babel/helper-split-export-declaration": ^7.22.6
-    "@babel/parser": ^7.22.11
-    "@babel/types": ^7.22.11
-    debug: ^4.1.0
-    globals: ^11.1.0
-  checksum: 4ad62d548ca8b95dbf45bae16cc167428f174f3c837d55a5878b1f17bdbc8b384d6df741dc7c461b62c04d881cf25644d3ab885909ba46e3ac43224e2b15b504
-  languageName: node
-  linkType: hard
-
-"@babel/traverse@npm:^7.23.6":
-  version: 7.23.6
-  resolution: "@babel/traverse@npm:7.23.6"
+"@babel/traverse@npm:^7.16.0, @babel/traverse@npm:^7.22.11, @babel/traverse@npm:^7.22.6, @babel/traverse@npm:^7.22.8, @babel/traverse@npm:^7.23.6":
+  version: 7.23.7
+  resolution: "@babel/traverse@npm:7.23.7"
   dependencies:
     "@babel/code-frame": ^7.23.5
     "@babel/generator": ^7.23.6
@@ -2975,7 +2939,7 @@ __metadata:
     "@babel/types": ^7.23.6
     debug: ^4.3.1
     globals: ^11.1.0
-  checksum: 48f2eac0e86b6cb60dab13a5ea6a26ba45c450262fccdffc334c01089e75935f7546be195e260e97f6e43cea419862eda095018531a2718fef8189153d479f88
+  checksum: d4a7afb922361f710efc97b1e25ec343fab8b2a4ddc81ca84f9a153f22d4482112cba8f263774be8d297918b6c4767c7a98988ab4e53ac73686c986711dd002e
   languageName: node
   linkType: hard
 
