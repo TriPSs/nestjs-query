@@ -434,6 +434,28 @@ describe('TodoItemResolver (typeorm - e2e)', () => {
           ])
         }))
 
+    it('should allow filtering on a virtual column', () =>
+      request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: {},
+          // language=graphql
+          query: `{
+            todoItems(filter: {subTasksCount: {lt: 3}}) {
+              ${pageInfoField}
+              ${edgeNodes(todoItemFields)}
+              totalCount
+            }
+          }`
+        })
+        .expect(200)
+        .then(({ body }) => {
+          const { edges, totalCount }: CursorConnectionType<TodoItemDTO> = body.data.todoItems
+          expect(totalCount).toBe(1)
+          expect(edges).toHaveLength(1)
+        }))
+
     // it(`should allow sorting on a virtual column`, () =>
     //   request(app.getHttpServer())
     //     .post('/graphql')
