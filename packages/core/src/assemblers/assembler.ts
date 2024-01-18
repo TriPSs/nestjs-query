@@ -14,13 +14,13 @@ export interface Assembler<
    * Convert an entity to a DTO
    * @param entity - the entity to convert
    */
-  convertToDTO(entity: Entity): DTO
+  convertToDTO(entity: Entity): Promise<DTO> | DTO
 
   /**
    * Convert a DTO to an entity.
    * @param dto - The dto to convert.
    */
-  convertToEntity(dto: DTO): Entity
+  convertToEntity(dto: DTO): Promise<Entity> | Entity
 
   /**
    * Convert a DTO query to an entity query.
@@ -44,55 +44,31 @@ export interface Assembler<
    * Convert a create dto input to the equivalent create entity type
    * @param createDTO
    */
-  convertToCreateEntity(createDTO: CreateDTO): CreateEntity
+  convertToCreateEntity(createDTO: CreateDTO): Promise<CreateEntity> | CreateEntity
 
   /**
    * Convert a update dto input to the equivalent update entity type
    * @param createDTO
    */
-  convertToUpdateEntity(createDTO: UpdateDTO): UpdateEntity
+  convertToUpdateEntity(createDTO: UpdateDTO): Promise<UpdateEntity> | UpdateEntity
 
   /**
    * Convert an array of entities to a an of DTOs
    * @param entities - the entities to convert.
    */
-  convertToDTOs(entities: Entity[]): DTO[]
+  convertToDTOs(entities: Entity[]): Promise<DTO[]>
 
   /**
    * Convert an array of DTOs to an array of entities.
    * @param dtos - the dtos to convert.
    */
-  convertToEntities(dtos: DTO[]): Entity[]
-
-  /**
-   * Convert an entity to a DTO.
-   * @param entity - the promise that should resolve with the entity.
-   */
-  convertAsyncToDTO(entity: Promise<Entity>): Promise<DTO>
-
-  /**
-   * Convert an array of entities to an array of DTOs.
-   * @param entities - the promise that should resolve with the entity array.
-   */
-  convertAsyncToDTOs(entities: Promise<Entity[]>): Promise<DTO[]>
-
-  /**
-   * Convert a DTO to an entity.
-   * @param dto - the promise that should resolve with the DTO.
-   */
-  convertAsyncToEntity(dto: Promise<DTO>): Promise<Entity>
-
-  /**
-   * Convert an array of DTOs to an array of entities.
-   * @param dtos - the promise that should resolve with the dtos.
-   */
-  convertAsyncToEntities(dtos: Promise<DTO[]>): Promise<Entity[]>
+  convertToEntities(dtos: DTO[]): Promise<Entity[]>
 
   /**
    * Convert an array of create DTOs to an array of create entities
    * @param createDtos
    */
-  convertToCreateEntities(createDtos: CreateDTO[]): CreateEntity[]
+  convertToCreateEntities(createDtos: CreateDTO[]): Promise<CreateEntity[]>
 }
 
 const assemblerReflector = new ValueReflector(ASSEMBLER_CLASSES_KEY)

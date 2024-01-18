@@ -70,7 +70,7 @@ export abstract class RelationQueryService<Entity> {
     const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
     const relationQueryBuilder = this.getRelationQueryBuilder(relationName)
 
-    return assembler.convertAsyncToDTOs(relationQueryBuilder.select(dto, assembler.convertQuery(query)).getMany())
+    return assembler.convertToDTOs(await relationQueryBuilder.select(dto, assembler.convertQuery(query)).getMany())
   }
 
   public async aggregateRelations<Relation>(
@@ -344,11 +344,14 @@ export abstract class RelationQueryService<Entity> {
     const relationQueryBuilder = this.getRelationQueryBuilder(relationName)
     const entityRelations = await relationQueryBuilder.batchSelect(entities, convertedQuery, withDeleted).getRawAndEntities()
 
-    return entities.reduce((results, entity) => {
+    const results = new Map<Entity, Relation[]>()
+    for (const entity of entities) {
       const relations = relationQueryBuilder.relationMeta.mapRelations(entity, entityRelations.entities, entityRelations.raw)
 
-      return results.set(entity, assembler.convertToDTOs(relations))
-    }, new Map<Entity, Relation[]>())
+      results.set(entity, await assembler.convertToDTOs(relations))
+    }
+
+    return results
   }
 
   /**
@@ -437,9 +440,12 @@ export abstract class RelationQueryService<Entity> {
       ) {
         const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
 
-        return dtos.reduce((results, entity) => {
-          return results.set(entity, entity[relationName] ? assembler.convertToDTO(entity[relationName]) : undefined)
-        }, new Map<Entity, Relation>())
+        const results = new Map<Entity, Relation>()
+        for (const entity of dtos) {
+          results.set(entity, entity[relationName] ? await assembler.convertToDTO(entity[relationName]) : undefined)
+        }
+
+        return results
       }
     }
 
