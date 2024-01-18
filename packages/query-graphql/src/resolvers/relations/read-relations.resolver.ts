@@ -84,13 +84,13 @@ const ReadManyRelationMixin =
     const commonResolverOpts = removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoName = getDTONames(DTOClass).baseName
-    const { pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
-    const relationName = relation.relationName ?? pluralBaseNameLower
-    const relationLoaderName = `load${pluralBaseName}For${DTOClass.name}`
-    const countRelationLoaderName = `count${pluralBaseName}For${DTOClass.name}`
+    const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
+    const relationName = relation.relationName ?? baseNameLower
+    const relationLoaderName = `load${baseName}For${DTOClass.name}`
+    const countRelationLoaderName = `count${baseName}For${DTOClass.name}`
     const queryLoader = new QueryRelationsLoader<DTO, Relation>(relationDTO, relationName)
     const countLoader = new CountRelationsLoader<DTO, Relation>(relationDTO, relationName)
-    const connectionName = `${dtoName}${pluralBaseName}Connection`
+    const connectionName = `${dtoName}${baseName}Connection`
 
     @ArgsType()
     class RelationQA extends QueryArgsType(relationDTO, {
@@ -105,17 +105,17 @@ const ReadManyRelationMixin =
     @Resolver(() => DTOClass, { isAbstract: true })
     class ReadManyMixin extends Base {
       @ResolverField(
-        pluralBaseNameLower,
+        baseNameLower,
         () => CT.resolveType,
         { nullable: relation.nullable, complexity: relation.complexity, description: relation?.description },
         commonResolverOpts,
         { interceptors: [AuthorizerInterceptor(DTOClass)] }
       )
-      async [`query${pluralBaseName}`](
+      async [`query${baseName}`](
         @Parent() dto: DTO,
         @Args() q: RelationQA,
         @Context() context: ExecutionContext,
-        @RelationAuthorizerFilter(pluralBaseNameLower, {
+        @RelationAuthorizerFilter(baseNameLower, {
           operationGroup: OperationGroup.READ,
           many: true
         })
