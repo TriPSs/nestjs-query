@@ -1,4 +1,14 @@
  
+# [4.4.0](https://github.com/TriPSs/nestjs-query/compare/v5.0.0-alpha.0...v4.4.0) (2024-01-11)
+
+
+### Features
+
+* **query-typeorm:** Support virtual columns in filtering ([0603562](https://github.com/TriPSs/nestjs-query/commit/06035623a783478c760946e801078dfdbbad7ea3)), closes [#67](https://github.com/TriPSs/nestjs-query/issues/67)
+* **query-typeorm:** Support virtual columns in sorting ([cb997cf](https://github.com/TriPSs/nestjs-query/commit/cb997cfdea1984d351ec3f544c72dca48a1cf1c3)), closes [#67](https://github.com/TriPSs/nestjs-query/issues/67)
+
+
+
 # [5.0.0-alpha.0](https://github.com/TriPSs/nestjs-query/compare/v4.3.3...v5.0.0-alpha.0) (2023-12-24)
 
 

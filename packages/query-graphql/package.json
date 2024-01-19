@@ -1,6 +1,6 @@
 {
   "name": "@ptc-org/nestjs-query-graphql",
-  "version": "5.0.0-alpha.0",
+  "version": "4.4.0",
   "description": "Nestjs graphql query adapter",
   "author": "doug-martin <doug@dougamartin.com>",
   "homepage": "https://github.com/tripss/nestjs-query#readme",

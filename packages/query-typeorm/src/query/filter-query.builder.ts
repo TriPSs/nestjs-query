@@ -21,6 +21,7 @@ import {
 import { SoftDeleteQueryBuilder } from 'typeorm/query-builder/SoftDeleteQueryBuilder'
 
 import { AggregateBuilder } from './aggregate.builder'
+import { SQLComparisonBuilder } from './sql-comparison.builder'
 import { WhereBuilder } from './where.builder'
 
 /**
@@ -78,11 +79,19 @@ export interface NestedRelationsAliased {
  * Class that will convert a Query into a `typeorm` Query Builder.
  */
 export class FilterQueryBuilder<Entity> {
+  private readonly virtualColumns: string[] = []
+
   constructor(
     readonly repo: Repository<Entity>,
-    readonly whereBuilder: WhereBuilder<Entity> = new WhereBuilder<Entity>(),
+    readonly whereBuilder: WhereBuilder<Entity> = new WhereBuilder<Entity>(
+      new SQLComparisonBuilder<Entity>(SQLComparisonBuilder.DEFAULT_COMPARISON_MAP, repo)
+    ),
     readonly aggregateBuilder: AggregateBuilder<Entity> = new AggregateBuilder<Entity>(repo)
-  ) {}
+  ) {
+    this.virtualColumns = repo.metadata.columns
+      .filter(({ isVirtualProperty }) => isVirtualProperty)
+      .map(({ propertyName }) => propertyName)
+  }
 
   /**
    * Create a `typeorm` SelectQueryBuilder with `WHERE`, `ORDER BY` and `LIMIT/OFFSET` clauses.
@@ -209,7 +218,12 @@ export class FilterQueryBuilder<Entity> {
     }
 
     return sorts.reduce((prevQb, { field, direction, nulls }) => {
-      const col = alias ? `${alias}.${field as string}` : `${field as string}`
+      let col = alias ? `${alias}.${field as string}` : `${field as string}`
+
+      if (this.virtualColumns.includes(field as string)) {
+        col = prevQb.escape(alias ? `${alias}_${field as string}` : `${field as string}`)
+      }
+
       return prevQb.addOrderBy(col, direction, nulls)
     }, qb)
   }
