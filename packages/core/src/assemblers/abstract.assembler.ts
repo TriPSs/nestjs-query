@@ -34,49 +34,29 @@ export abstract class AbstractAssembler<DTO, Entity, C = DeepPartial<DTO>, CE = 
     this.EntityClass = EntityClas
   }
 
-  abstract convertToDTO(entity: Entity): DTO
+  public abstract convertToDTO(entity: Entity): Promise<DTO> | DTO
 
-  abstract convertToEntity(dto: DTO): Entity
+  public abstract convertToEntity(dto: DTO): Promise<Entity> | Entity
 
-  abstract convertQuery(query: Query<DTO>): Query<Entity>
+  public abstract convertQuery(query: Query<DTO>): Query<Entity>
 
-  abstract convertAggregateQuery(aggregate: AggregateQuery<DTO>): AggregateQuery<Entity>
+  public abstract convertAggregateQuery(aggregate: AggregateQuery<DTO>): AggregateQuery<Entity>
 
-  abstract convertAggregateResponse(aggregate: AggregateResponse<Entity>): AggregateResponse<DTO>
+  public abstract convertAggregateResponse(aggregate: AggregateResponse<Entity>): AggregateResponse<DTO>
 
-  abstract convertToCreateEntity(create: C): CE
+  public abstract convertToCreateEntity(create: C): Promise<CE> | CE
 
-  abstract convertToUpdateEntity(update: U): UE
+  public abstract convertToUpdateEntity(update: U): Promise<UE> | UE
 
-  convertToDTOs(entities: Entity[]): DTO[] {
-    return entities.map((e) => this.convertToDTO(e))
+  public convertToDTOs(entities: Entity[]): Promise<DTO[]> {
+    return Promise.all(entities.map((e) => this.convertToDTO(e)))
   }
 
-  convertToEntities(dtos: DTO[]): Entity[] {
-    return dtos.map((dto) => this.convertToEntity(dto))
+  public convertToEntities(dtos: DTO[]): Promise<Entity[]> {
+    return Promise.all(dtos.map((dto) => this.convertToEntity(dto)))
   }
 
-  convertToCreateEntities(createDtos: C[]): CE[] {
-    return createDtos.map((c) => this.convertToCreateEntity(c))
-  }
-
-  async convertAsyncToDTO(entity: Promise<Entity>): Promise<DTO> {
-    const e = await entity
-    return this.convertToDTO(e)
-  }
-
-  async convertAsyncToDTOs(entities: Promise<Entity[]>): Promise<DTO[]> {
-    const es = await entities
-    return this.convertToDTOs(es)
-  }
-
-  async convertAsyncToEntity(dto: Promise<DTO>): Promise<Entity> {
-    const d = await dto
-    return this.convertToEntity(d)
-  }
-
-  async convertAsyncToEntities(dtos: Promise<DTO[]>): Promise<Entity[]> {
-    const ds = await dtos
-    return this.convertToEntities(ds)
+  public convertToCreateEntities(createDtos: C[]): Promise<CE[]> {
+    return Promise.all(createDtos.map((c) => this.convertToCreateEntity(c)))
   }
 }

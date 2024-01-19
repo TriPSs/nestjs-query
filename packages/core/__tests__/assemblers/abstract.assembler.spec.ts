@@ -93,44 +93,16 @@ describe('ClassTransformerAssembler', () => {
   })
 
   describe('convertToDTOs', () => {
-    it('should call the convertToDTO implementation', () => {
+    it('should call the convertToDTO implementation', async () => {
       const assembler = new TestAssembler()
-      expect(assembler.convertToDTOs([testEntity])).toEqual([testDTO])
-    })
-  })
-
-  describe('convertAsyncToDTO', () => {
-    it('should call the convertToDTO implementation with the resolved value', () => {
-      const assembler = new TestAssembler()
-      return expect(assembler.convertAsyncToDTO(Promise.resolve(testEntity))).resolves.toEqual(testDTO)
-    })
-  })
-
-  describe('convertAsyncToDTOs', () => {
-    it('should call the convertToDTO implementation with the resolved value', () => {
-      const assembler = new TestAssembler()
-      return expect(assembler.convertAsyncToDTOs(Promise.resolve([testEntity]))).resolves.toEqual([testDTO])
+      expect(await assembler.convertToDTOs([testEntity])).toEqual([testDTO])
     })
   })
 
   describe('convertToEntities', () => {
-    it('should call the convertToEntity implementation', () => {
+    it('should call the convertToEntity implementation', async () => {
       const assembler = new TestAssembler()
-      expect(assembler.convertToEntities([testDTO])).toEqual([testEntity])
-    })
-  })
-
-  describe('convertAsyncToEntity', () => {
-    it('should call the convertToEntity implementation with the resolved value', () => {
-      const assembler = new TestAssembler()
-      return expect(assembler.convertAsyncToEntity(Promise.resolve(testDTO))).resolves.toEqual(testEntity)
-    })
-  })
-
-  describe('convertAsyncToEntities', () => {
-    it('should call the convertToEntity implementation with the resolved value', () => {
-      const assembler = new TestAssembler()
-      return expect(assembler.convertAsyncToEntities(Promise.resolve([testDTO]))).resolves.toEqual([testEntity])
+      expect(await assembler.convertToEntities([testDTO])).toEqual([testEntity])
     })
   })
 })

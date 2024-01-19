@@ -354,7 +354,7 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
     return entities.reduce(async (mapPromise, e) => {
       const map = await mapPromise
       const relations = await this.ensureIsEntity(e).$get(relationName as keyof Entity, findOptions)
-      map.set(e, assembler.convertToDTOs(relations as unknown as Model[]))
+      map.set(e, await assembler.convertToDTOs(relations as unknown as Model[]))
       return map
     }, Promise.resolve(new Map<Entity, Relation[]>()))
   }
@@ -418,7 +418,7 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
         relationQueryBuilder.findOptions(opts ?? {})
       )
       if (relation) {
-        map.set(e, assembler.convertToDTO(relation as unknown as Model))
+        map.set(e, await assembler.convertToDTO(relation as unknown as Model))
       }
       return map
     }, Promise.resolve(new Map<Entity, Relation | undefined>()))
