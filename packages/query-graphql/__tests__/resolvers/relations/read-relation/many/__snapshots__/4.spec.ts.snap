@@ -4,7 +4,7 @@ exports[`ReadRelationsResolver - many - 4 should use the dtoName if provided 1`]
 "type TestResolverDTO {
   id: ID!
   stringField: String!
-  tests(
+  test(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
 
@@ -13,7 +13,7 @@ exports[`ReadRelationsResolver - many - 4 should use the dtoName if provided 1`]
 
     """Specify to sort results."""
     sorting: [TestRelationDTOSort!]! = []
-  ): TestResolverDTOTestsConnection!
+  ): TestResolverDTOTestConnection!
 }
 
 input CursorPaging {
@@ -124,7 +124,7 @@ type PageInfo {
   endCursor: ConnectionCursor
 }
 
-type TestResolverDTOTestsConnection {
+type TestResolverDTOTestConnection {
   """Paging information"""
   pageInfo: PageInfo!
 

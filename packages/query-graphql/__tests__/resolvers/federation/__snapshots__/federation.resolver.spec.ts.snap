@@ -67,7 +67,7 @@ type TestFederated {
     """Specify to sort results."""
     sorting: [TestRelationDTOSort!]! = []
   ): [TestRelationDTO!]!
-  relationOffsetConnections(
+  relationOffset(
     """Limit or page results."""
     paging: OffsetPaging! = {limit: 10}
 
@@ -76,7 +76,7 @@ type TestFederated {
 
     """Specify to sort results."""
     sorting: [TestRelationDTOSort!]! = []
-  ): TestFederatedRelationOffsetConnectionsConnection!
+  ): TestFederatedRelationOffsetConnection!
   relationCursorConnections(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
@@ -216,7 +216,7 @@ type OffsetPageInfo {
   hasPreviousPage: Boolean
 }
 
-type TestFederatedRelationOffsetConnectionsConnection {
+type TestFederatedRelationOffsetConnection {
   """Paging information"""
   pageInfo: OffsetPageInfo!
 
