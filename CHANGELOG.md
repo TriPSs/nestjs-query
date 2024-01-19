@@ -1,4 +1,25 @@
  
+# [5.0.0](https://github.com/TriPSs/nestjs-query/compare/v4.4.0...v5.0.0) (2024-01-19)
+
+
+### Bug Fixes
+
+* **query-graphql:** Fixed relations not respecting the given name ([24aeca7](https://github.com/TriPSs/nestjs-query/commit/24aeca7e26eb13c02970d7fb9b1c16ca277595c0)), closes [#217](https://github.com/TriPSs/nestjs-query/issues/217)
+
+
+### Features
+
+* Make assemblers `convert*` methods async ([9f9af3b](https://github.com/TriPSs/nestjs-query/commit/9f9af3ba233be5faa25c95e713aa39e2c3110578)), closes [#215](https://github.com/TriPSs/nestjs-query/issues/215)
+
+
+### BREAKING CHANGES
+
+* **query-graphql:** Relation names are no longer automatically pluralized and respect the given name
+* All `convert*` methods are now async.
+`convertAsyncTo*` methods are dropped in favor of async `convertTo`.
+
+
+
 # [4.4.0](https://github.com/TriPSs/nestjs-query/compare/v5.0.0-alpha.0...v4.4.0) (2024-01-11)
 
 
