@@ -1,7 +1,17 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
 import { Expose, Type } from 'class-transformer'
-import { ArrayMaxSize, IsEnum, IsNotEmpty, IsObject, IsOptional, MaxLength, MinLength, ValidateNested } from 'class-validator'
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  MaxLength,
+  MinLength,
+  ValidateNested
+} from 'class-validator'
 
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
 
@@ -96,12 +106,14 @@ export function Field(
   }
 
   if (type) {
-    decorators.push(Type(() => type as never))
+    decorators.push(Type(() => type))
 
     if (typeof type === 'function') {
       decorators.push(ValidateNested())
 
-      if (!isArray) {
+      if (isArray) {
+        decorators.push(IsArray())
+      } else {
         decorators.push(IsObject())
       }
     }
