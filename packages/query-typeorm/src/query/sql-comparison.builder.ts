@@ -1,5 +1,5 @@
 import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
-import { ObjectLiteral } from 'typeorm'
+import { ObjectLiteral, Repository } from 'typeorm'
 
 import { randomString } from '../common'
 
@@ -37,7 +37,10 @@ export class SQLComparisonBuilder<Entity> {
     notilike: 'NOT ILIKE'
   }
 
-  constructor(readonly comparisonMap: Record<string, string> = SQLComparisonBuilder.DEFAULT_COMPARISON_MAP) {}
+  constructor(
+    readonly comparisonMap: Record<string, string> = SQLComparisonBuilder.DEFAULT_COMPARISON_MAP,
+    readonly repo?: Repository<Entity>
+  ) {}
 
   private get paramName(): string {
     return `param${randomString()}`
@@ -51,13 +54,13 @@ export class SQLComparisonBuilder<Entity> {
    * @param val - the value to compare to
    * @param alias - alias for the field.
    */
-  build<F extends keyof Entity>(
+  public build<F extends keyof Entity>(
     field: F,
     cmp: FilterComparisonOperators<Entity[F]>,
     val: EntityComparisonField<Entity, F>,
     alias?: string
   ): CmpSQLType {
-    const col = alias ? `${alias}.${field as string}` : `${field as string}`
+    const col = this.getCol(field as string, alias)
     const normalizedCmp = (cmp as string).toLowerCase()
     if (this.comparisonMap[normalizedCmp]) {
       // comparison operator (e.b. =, !=, >, <)
@@ -187,5 +190,17 @@ export class SQLComparisonBuilder<Entity> {
     val: EntityComparisonField<Entity, F>
   ): val is CommonFieldComparisonBetweenType<Entity[F]> {
     return val !== null && typeof val === 'object' && 'lower' in val && 'upper' in val
+  }
+
+  private getCol(field: string, alias?: string): string {
+    if (this.repo) {
+      const column = this.repo.metadata.columns.find(({ databasePath }) => databasePath === field)
+
+      if (column && column.isVirtualProperty) {
+        return `(${column.query(alias)})`
+      }
+    }
+
+    return alias ? `${alias}.${field}` : `${field}`
   }
 }

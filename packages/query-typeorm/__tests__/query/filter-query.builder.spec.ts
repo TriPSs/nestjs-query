@@ -252,6 +252,32 @@ describe('FilterQueryBuilder', (): void => {
         )
         expectSelectSQLSnapshot(query, instance(mockWhereBuilder))
       })
+
+      it('should apply filtering from relations query filter', () => {
+        const expectSQLSnapshotUsingQuery = <Entity>(EntityClass: Class<Entity>, query: Query<Entity>): void => {
+          const geFilterQueryBuilder = (e: Class<Entity>): FilterQueryBuilder<Entity> =>
+            new FilterQueryBuilder(connection.getRepository(e))
+
+          const selectQueryBuilder = geFilterQueryBuilder(EntityClass).select(query)
+          const [sql, params] = selectQueryBuilder.getQueryAndParameters()
+          expect(formatSql(sql, { params })).toMatchSnapshot()
+        }
+
+        expectSQLSnapshotUsingQuery(TestEntity, {
+          filter: { stringType: { eq: 'test' } }, // note that this is the 'normal' filter.
+          relations: [
+            {
+              name: 'oneTestRelation',
+              query: {
+                // and this filter gets applied to the query as well.
+                filter: {
+                  numberType: { eq: 123 }
+                }
+              }
+            }
+          ]
+        } as any)
+      })
     })
 
     describe('with paging', () => {

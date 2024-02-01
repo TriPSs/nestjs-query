@@ -60,10 +60,10 @@ export type ConnectionType<DTO> = OffsetConnectionType<DTO> | CursorConnectionTy
 export type InferConnectionTypeFromStrategy<DTO, S extends PagingStrategies> = S extends PagingStrategies.NONE
   ? ArrayConnectionType<DTO>
   : S extends PagingStrategies.OFFSET
-  ? OffsetConnectionType<DTO>
-  : S extends PagingStrategies.CURSOR
-  ? CursorConnectionType<DTO>
-  : never
+    ? OffsetConnectionType<DTO>
+    : S extends PagingStrategies.CURSOR
+      ? CursorConnectionType<DTO>
+      : never
 
 export type QueryMany<DTO, Q extends Query<DTO>> = (query: Q) => Promise<DTO[]>
 export type Count<DTO> = (filter: Filter<DTO>) => Promise<number>

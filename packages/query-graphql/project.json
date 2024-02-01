@@ -6,17 +6,13 @@
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["packages/query-graphql/**/*.ts"]
-      }
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/packages/query-graphql"],
       "options": {
-        "jestConfig": "packages/query-graphql/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "packages/query-graphql/jest.config.ts"
       }
     },
     "build": {

@@ -80,7 +80,7 @@ export class MongooseQueryService<Entity extends Document>
 
   public count(filter: Filter<Entity>): Promise<number> {
     const filterQuery = this.filterQueryBuilder.buildFilterQuery(filter)
-    return this.Model.count(filterQuery).exec()
+    return this.Model.countDocuments(filterQuery).exec()
   }
 
   /**

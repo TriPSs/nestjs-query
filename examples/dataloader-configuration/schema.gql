@@ -197,7 +197,7 @@ type SubTask {
   created: DateTime!
   updated: DateTime!
   todoItemId: String!
-  todoItems(
+  todoItem(
     """Specify to filter the records returned."""
     filter: TodoItemFilter! = {}
 

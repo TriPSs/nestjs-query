@@ -111,7 +111,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     if (!refFilter) {
       return 0
     }
-    return relationModel.count(referenceQueryBuilder.buildFilterQuery(refFilter)).exec()
+    return relationModel.countDocuments(referenceQueryBuilder.buildFilterQuery(refFilter)).exec()
   }
 
   public findRelation<Relation>(
@@ -386,6 +386,6 @@ export abstract class ReferenceQueryService<Entity extends Document> {
   ): Promise<number> {
     const referenceModel = this.getReferenceModel<Relation>(relationName)
     const referenceQueryBuilder = this.getReferenceQueryBuilder<Relation>(relationName)
-    return referenceModel.count(referenceQueryBuilder.buildIdFilterQuery(relationIds, filter)).exec()
+    return referenceModel.countDocuments(referenceQueryBuilder.buildIdFilterQuery(relationIds, filter)).exec()
   }
 }

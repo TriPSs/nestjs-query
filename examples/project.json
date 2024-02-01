@@ -6,14 +6,7 @@
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
-      "options": {
-        "lintFilePatterns": [
-          "examples/**/*.ts"
-        ]
-      }
+      "outputs": ["{options.outputFile}"]
     },
     "e2e": {
       "executor": "@nx/jest:jest",
@@ -22,7 +15,8 @@
       ],
       "options": {
         "jestConfig": "jest.e2e.ts",
-        "runInBand": true
+        "runInBand": true,
+        "passWithNoTests": false
       }
     }
   },

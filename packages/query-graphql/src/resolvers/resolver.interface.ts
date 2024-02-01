@@ -59,5 +59,5 @@ export type MergePagingStrategyOpts<
 > = Opts['pagingStrategy'] extends PagingStrategies
   ? Opts
   : S extends PagingStrategies
-  ? Omit<Opts, 'pagingStrategy'> & { pagingStrategy: S }
-  : Opts
+    ? Omit<Opts, 'pagingStrategy'> & { pagingStrategy: S }
+    : Opts

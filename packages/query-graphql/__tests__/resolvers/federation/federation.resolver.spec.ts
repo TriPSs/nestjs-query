@@ -31,8 +31,12 @@ describe('FederationResolver', () => {
   @Relation('relation', () => TestRelationDTO)
   @Relation('custom', () => TestRelationDTO, { relationName: 'other' })
   @UnPagedRelation('unPagedRelations', () => TestRelationDTO)
-  @OffsetConnection('relationOffsetConnection', () => TestRelationDTO)
-  @CursorConnection('relationCursorConnection', () => TestRelationDTO)
+  @OffsetConnection('relationOffset', () => TestRelationDTO, {
+    relationName: 'relationOffsetConnection'
+  })
+  @CursorConnection('relationCursorConnections', () => TestRelationDTO, {
+    relationName: 'relationCursorConnection'
+  })
   class TestFederatedDTO extends TestResolverDTO {
     @FilterableField(() => ID)
     id!: string
@@ -131,7 +135,7 @@ describe('FederationResolver', () => {
         when(
           mockService.queryRelations(
             TestRelationDTO,
-            'relationCursorConnections',
+            'relationCursorConnection',
             deepEqual([dto]),
             objectContaining({ ...query, paging: { limit: 2, offset: 0 } })
           )
@@ -181,14 +185,14 @@ describe('FederationResolver', () => {
       when(
         mockService.queryRelations(
           TestRelationDTO,
-          'relationOffsetConnections',
+          'relationOffsetConnection',
           deepEqual([dto]),
           objectContaining({ ...query, paging: { limit: 2 } })
         )
       ).thenResolve(new Map([[dto, output]]))
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      const result = await resolver.queryRelationOffsetConnections(dto, query, {})
+      const result = await resolver.queryRelationOffset(dto, query, {})
       return expect(result).toEqual({
         nodes: output,
         pageInfo: { hasNextPage: false, hasPreviousPage: false },

@@ -4,13 +4,13 @@ exports[`ReadRelationsResolver - many - 2 should not add sorting argument if dis
 "type TestResolverDTO {
   id: ID!
   stringField: String!
-  relations(
+  relation(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
 
     """Specify to filter the records returned."""
     filter: TestRelationDTOFilter! = {}
-  ): TestResolverDTORelationsConnection!
+  ): TestResolverDTORelationConnection!
 }
 
 input CursorPaging {
@@ -98,7 +98,7 @@ type PageInfo {
   endCursor: ConnectionCursor
 }
 
-type TestResolverDTORelationsConnection {
+type TestResolverDTORelationConnection {
   """Paging information"""
   pageInfo: PageInfo!
 

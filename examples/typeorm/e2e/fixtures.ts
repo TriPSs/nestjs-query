@@ -15,10 +15,14 @@ export const refresh = async (connection: Connection): Promise<void> => {
   const subTaskRepo = connection.getRepository(SubTaskEntity)
   const tagsRepo = connection.getRepository(TagEntity)
 
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
+  const yesterdayOrTomorrow = new Date()
+  if (yesterdayOrTomorrow.getDate() === 1) {
+    yesterdayOrTomorrow.setDate(yesterdayOrTomorrow.getDate() + 1)
+  } else {
+    yesterdayOrTomorrow.setDate(yesterdayOrTomorrow.getDate() - 1)
+  }
 
-  const urgentTag = await tagsRepo.save({ name: 'Urgent', fakeDate: yesterday })
+  const urgentTag = await tagsRepo.save({ name: 'Urgent', fakeDate: yesterdayOrTomorrow })
   const homeTag = await tagsRepo.save({ name: 'Home' })
   const workTag = await tagsRepo.save({ name: 'Work' })
   const questionTag = await tagsRepo.save({ name: 'Question' })
@@ -37,15 +41,17 @@ export const refresh = async (connection: Connection): Promise<void> => {
     }
   ])
 
-  await subTaskRepo.save(
-    todoItems.reduce(
-      (subTasks, todo) => [
-        ...subTasks,
-        { completed: true, title: `${todo.title} - Sub Task 1`, todoItem: todo },
-        { completed: false, title: `${todo.title} - Sub Task 2`, todoItem: todo },
-        { completed: false, title: `${todo.title} - Sub Task 3`, todoItem: todo }
-      ],
-      [] as Partial<SubTaskEntity>[]
-    )
+  const subTasksEntities = todoItems.reduce(
+    (subTasks, todo) => [
+      ...subTasks,
+      { completed: true, title: `${todo.title} - Sub Task 1`, todoItem: todo },
+      { completed: false, title: `${todo.title} - Sub Task 2`, todoItem: todo },
+      { completed: false, title: `${todo.title} - Sub Task 3`, todoItem: todo }
+    ],
+    [] as Partial<SubTaskEntity>[]
   )
+
+  subTasksEntities.pop()
+
+  await subTaskRepo.save(subTasksEntities)
 }

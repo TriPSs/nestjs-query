@@ -1,4 +1,78 @@
  
+# [5.0.0](https://github.com/TriPSs/nestjs-query/compare/v4.4.0...v5.0.0) (2024-01-19)
+
+
+### Bug Fixes
+
+* **query-graphql:** Fixed relations not respecting the given name ([24aeca7](https://github.com/TriPSs/nestjs-query/commit/24aeca7e26eb13c02970d7fb9b1c16ca277595c0)), closes [#217](https://github.com/TriPSs/nestjs-query/issues/217)
+
+
+### Features
+
+* Make assemblers `convert*` methods async ([9f9af3b](https://github.com/TriPSs/nestjs-query/commit/9f9af3ba233be5faa25c95e713aa39e2c3110578)), closes [#215](https://github.com/TriPSs/nestjs-query/issues/215)
+
+
+### BREAKING CHANGES
+
+* **query-graphql:** Relation names are no longer automatically pluralized and respect the given name
+* All `convert*` methods are now async.
+`convertAsyncTo*` methods are dropped in favor of async `convertTo`.
+
+
+
+# [4.4.0](https://github.com/TriPSs/nestjs-query/compare/v5.0.0-alpha.0...v4.4.0) (2024-01-11)
+
+
+### Features
+
+* **query-typeorm:** Support virtual columns in filtering ([0603562](https://github.com/TriPSs/nestjs-query/commit/06035623a783478c760946e801078dfdbbad7ea3)), closes [#67](https://github.com/TriPSs/nestjs-query/issues/67)
+* **query-typeorm:** Support virtual columns in sorting ([cb997cf](https://github.com/TriPSs/nestjs-query/commit/cb997cfdea1984d351ec3f544c72dca48a1cf1c3)), closes [#67](https://github.com/TriPSs/nestjs-query/issues/67)
+
+
+
+# [5.0.0-alpha.0](https://github.com/TriPSs/nestjs-query/compare/v4.3.3...v5.0.0-alpha.0) (2023-12-24)
+
+
+### Bug Fixes
+
+* **query-mongoose:** Fixed `count` changed to `countDocuments` ([fc2a899](https://github.com/TriPSs/nestjs-query/commit/fc2a89951613f349f75eac4e14d8cb597b1eada2))
+
+
+### BREAKING CHANGES
+
+* **query-mongoose:** `mongoose` has been updated to new major version.
+ [See breaking changes](https://github.com/Automattic/mongoose/releases/tag/8.0.0-rc0)
+
+
+
+## [4.3.3](https://github.com/TriPSs/nestjs-query/compare/v4.3.2...v4.3.3) (2023-12-06)
+
+
+### Bug Fixes
+
+* Resolve SQL Relationship Filtering ([25b892f](https://github.com/TriPSs/nestjs-query/commit/25b892fa19e4745d4d8fa51714e592921b10357e))
+
+
+
+## [4.3.2](https://github.com/TriPSs/nestjs-query/compare/v4.3.1...v4.3.2) (2023-12-01)
+
+
+### Bug Fixes
+
+* Use the provided connection name ([96fd3e6](https://github.com/TriPSs/nestjs-query/commit/96fd3e6219c9df162156dc95d64d5ebbefdba681))
+
+
+
+## [4.3.1](https://github.com/TriPSs/nestjs-query/compare/v4.3.0...v4.3.1) (2023-11-01)
+
+
+### Bug Fixes
+
+* **query-typeorm:** Fixed group by `WEEK`, `MONTH` and `YEAR` not working in Postgres ([7e60f09](https://github.com/TriPSs/nestjs-query/commit/7e60f097b35d72ad3bcc8178598800f751b360a8)), closes [#163](https://github.com/TriPSs/nestjs-query/issues/163)
+* **query-typeorm:** Updated test for `createTypeOrmQueryServiceProviders` ([ea6ae5d](https://github.com/TriPSs/nestjs-query/commit/ea6ae5d218031800bc2504dbf67ed897f6c3bbd2))
+
+
+
 # [4.3.0](https://github.com/TriPSs/nestjs-query/compare/v4.2.0...v4.3.0) (2023-10-30)
 
 
