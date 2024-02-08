@@ -8,7 +8,8 @@ import {
   SerializeOptions,
   UseInterceptors
 } from '@nestjs/common'
-import { ApiBody, ApiBodyOptions, ApiOperation, ApiOperationOptions, ApiResponse } from '@nestjs/swagger'
+import { ApiBody, ApiBodyOptions, ApiOperation, ApiOperationOptions, ApiParam, ApiResponse } from '@nestjs/swagger'
+import { isArray } from 'class-validator'
 
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
 import { isDisabled, ResolverMethod, ResolverMethodOpts } from './resolver-method.decorator'
@@ -42,18 +43,45 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator) 
       return (): void => {}
     }
 
-    const decorators = [method(options?.path), ResolverMethod(options, ...resolverOpts)]
+    if (!options.path) {
+      options.path = []
+    }
+
+    const paths: string[] = options.path && !isArray(options.path) ? ([options.path] as string[]) : (options.path as string[])
+
+    const decorators = [method(paths), ResolverMethod(options, ...resolverOpts)]
+      // Add all params to the swagger definition
+      .concat(
+        paths.reduce(
+          (params, path) =>
+            params.concat(
+              path
+                .split('/')
+                .filter((partialPath) => partialPath.startsWith(':'))
+                .map((param) => param.replace(':', ''))
+                .filter((param) => param !== 'id')
+                .map((param) =>
+                  ApiParam({
+                    name: param,
+                    type: 'string',
+                    required: true
+                  })
+                )
+            ),
+          [] as MethodDecorator[]
+        )
+      )
 
     if (returnTypeFunc) {
       const returnedType = returnTypeFunc()
-      const isArray = Array.isArray(returnedType)
-      const type = isArray ? returnedType[0] : returnedType
+      const returnTypeIsArray = Array.isArray(returnedType)
+      const type = returnTypeIsArray ? returnedType[0] : returnedType
 
       decorators.push(
         ApiResponse({
           status: 200,
           type,
-          isArray
+          isArray: returnTypeIsArray
         })
       )
 
