@@ -115,11 +115,10 @@ export class TypeOrmQueryService<Entity>
       qb.withDeleted()
     }
 
-    // Check if we have any relation that could return the same record twice, if not than we create
-    // our own count as TypeORM still decides to add "DISTINCT" to it which makes it slow
-    const hasManyRelation = qb.expressionMap.joinAttributes.some((join) => join.isMany)
-    if (hasManyRelation) {
-      // If we have relations than just do what TypeORM does
+    // Check if we have any relation that could cause the same record to be returned twice, if not than we create
+    // our own count as TypeORM still decides to add "DISTINCT" to it, which makes it slow
+    if (qb.expressionMap.joinAttributes.some((join) => join.isMany)) {
+      // If we have relations than do what TypeORM does
       return qb.getCount()
     }
 
