@@ -134,7 +134,7 @@ export class TypeOrmQueryService<Entity>
       .setOption('disable-global-order')
       .execute()) as { cnt?: number }[]
 
-    return result?.[0]?.cnt ?? 0
+    return parseInt(`${result?.[0]?.cnt ?? 0}`)
   }
 
   /**
