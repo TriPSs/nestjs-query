@@ -1,4 +1,13 @@
  
+# [5.1.0-alpha.0](https://github.com/TriPSs/nestjs-query/compare/v5.0.0...v5.1.0-alpha.0) (2024-02-12)
+
+
+### Performance Improvements
+
+* **query-typeorm:** Custom count implementation for better performance ([eb89f32](https://github.com/TriPSs/nestjs-query/commit/eb89f32475875850062a635731ddfc0fd96d2455))
+
+
+
 # [5.0.0](https://github.com/TriPSs/nestjs-query/compare/v4.4.0...v5.0.0) (2024-01-19)
 
 
