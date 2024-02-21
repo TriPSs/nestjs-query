@@ -219,6 +219,11 @@ export function createFilterComparisonType<T>(options: FilterComparisonOptions<T
     @IsUndefined()
     @Type(() => FieldType)
     contains?: string
+
+    @SkipIf(isNotAllowed('notContains'), Field(() => firstTypeOfArray, { nullable: true }))
+    @IsUndefined()
+    @Type(() => FieldType)
+    notContains?: string
   }
 
   filterComparisonMap.set(inputName, () => Fc)

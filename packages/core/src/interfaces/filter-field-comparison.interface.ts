@@ -195,6 +195,15 @@ export interface StringFieldComparisons extends CommonFieldComparisonType<string
 
   /**
    * For array.
+   * NOT :${paramName}::text = ANY (${col})
+   * ```ts
+   * // field ANY ("Foo")
+   * { field: { notContains: 'Foo' } }
+   */
+  notContains?: string
+
+  /**
+   * For array.
    * :${col}::text ILIKE %${paramName}%
    * ```ts
    * // field ILIKE %Foo%
