@@ -66,6 +66,9 @@ export class SQLComparisonBuilder<Entity> {
     if (normalizedCmp === 'contains') {
       return this.containsComparisonSQL(col, val)
     }
+    if (normalizedCmp === 'notcontains') {
+      return this.notContainsComparisonSQL(col, val)
+    }
     if (normalizedCmp === 'containslike') {
       return this.containsLikeComparisonSQL(col, val)
     }
@@ -109,6 +112,11 @@ export class SQLComparisonBuilder<Entity> {
   private containsComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {
     const { paramName } = this
     return { sql: `:${paramName}::text = ANY (${col})`, params: { [paramName]: val } }
+  }
+
+  private notContainsComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {
+    const { paramName } = this
+    return { sql: `NOT :${paramName}::text = ANY (${col})`, params: { [paramName]: val } }
   }
 
   private containsLikeComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {
