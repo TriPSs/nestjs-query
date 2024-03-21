@@ -1,6 +1,5 @@
 import { ArgsType, Resolver } from '@nestjs/graphql'
 import { Class, Filter, mergeQuery, QueryService } from '@rezonate/nestjs-query-core'
-import { flatten } from 'flat'
 import omit from 'lodash.omit'
 import Papa from 'papaparse'
 
@@ -49,6 +48,18 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
 }
 
 export const getQueryArgs = <DTO>(DTOClass: Class<DTO>) => FilterType(DTOClass)
+
+const serializeNestedObjects = (obj: Record<string, any>): Record<string, any> => {
+  const result: Record<string, any> = {}
+  Object.entries(obj).forEach(([key, value]) => {
+    if (typeof value === 'object' && value !== null) {
+      result[key] = JSON.stringify(value)
+    } else {
+      result[key] = value
+    }
+  })
+  return result
+}
 
 /**
  * @internal
@@ -138,7 +149,7 @@ export const Readable =
       ) {
         const limitValue = getQueryOptions(DTOClass).CSVPageLimit || DEFAULT_QUERY_OPTS.CSVPageLimit
         const res = await this.service.query({ ...query, paging: { ...query.paging, limit: limitValue } })
-        return Papa.unparse(res.map((r) => flatten(r)))
+        return Papa.unparse(res.map((r) => serializeNestedObjects(r)))
       }
     }
 
