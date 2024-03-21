@@ -1,15 +1,16 @@
 import { ArgsType, Resolver } from '@nestjs/graphql'
 import { Class, Filter, mergeQuery, QueryService } from '@rezonate/nestjs-query-core'
 import omit from 'lodash.omit'
-import Papa from 'papaparse';
+import Papa from 'papaparse'
 
 import { OperationGroup } from '../auth'
 import { getDTONames } from '../common'
-import {AuthorizerFilter, getQueryOptions, HookArgs, ResolverQuery} from '../decorators'
+import { AuthorizerFilter, getQueryOptions, HookArgs, ResolverQuery } from '../decorators'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import {
-  ConnectionOptions, FilterType,
+  ConnectionOptions,
+  FilterType,
   FindOneArgsType,
   InferConnectionTypeFromStrategy,
   PagingStrategies,
@@ -17,10 +18,10 @@ import {
   QueryArgsTypeOpts
 } from '../types'
 import { CursorQueryArgsTypeOpts, QueryType, StaticQueryType } from '../types/query'
-import { BaseServiceResolver, ExtractPagingStrategy, ResolverClass, ResolverOpts, ServiceResolver } from './resolver.interface'
 import { DEFAULT_QUERY_OPTS } from '../types/query/query-args'
+import { BaseServiceResolver, ExtractPagingStrategy, ResolverClass, ResolverOpts, ServiceResolver } from './resolver.interface'
 
-const QUERY_ARGS_TOKEN = Symbol('QUERY_ARGS_TOKEN');
+const QUERY_ARGS_TOKEN = Symbol('QUERY_ARGS_TOKEN')
 
 export type ReadResolverFromOpts<
   DTO,
@@ -41,15 +42,24 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
     authorizeFilter?: Filter<DTO>
   ): Promise<InferConnectionTypeFromStrategy<DTO, PS>>
 
-  queryManyToCSV(
-    query: QueryType<DTO, PagingStrategies>,
-    authorizeFilter?: Filter<DTO>
-  ):Promise<string>
+  queryManyToCSV(query: QueryType<DTO, PagingStrategies>, authorizeFilter?: Filter<DTO>): Promise<string>
 
   findById(id: FindOneArgsType, authorizeFilter?: Filter<DTO>): Promise<DTO | undefined>
 }
 
-export const getQueryArgs =  <DTO>(DTOClass: Class<DTO>) => FilterType(DTOClass)
+export const getQueryArgs = <DTO>(DTOClass: Class<DTO>) => FilterType(DTOClass)
+
+const serializeNestedObjects = (obj: Record<string, any>): Record<string, any> => {
+  const result: Record<string, any> = {}
+  Object.entries(obj).forEach(([key, value]) => {
+    if (typeof value === 'object' && value !== null) {
+      result[key] = JSON.stringify(value)
+    } else {
+      result[key] = value
+    }
+  })
+  return result
+}
 
 /**
  * @internal
@@ -67,7 +77,7 @@ export const Readable =
     const { QueryArgs = QueryArgsType(DTOClass, { ...opts, connectionName: `${baseName}Connection` }) } = opts
     const { ConnectionType } = QueryArgs
 
-    Reflect.defineMetadata(QUERY_ARGS_TOKEN, QueryArgs, DTOClass);
+    Reflect.defineMetadata(QUERY_ARGS_TOKEN, QueryArgs, DTOClass)
 
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection', 'withDeleted')
 
@@ -94,7 +104,10 @@ export const Readable =
         })
         authorizeFilter?: Filter<DTO>
       ): Promise<DTO> {
-        return this.service.getById(input.id, { filter: authorizeFilter, withDeleted: opts?.one?.withDeleted })
+        return this.service.getById(input.id, {
+          filter: authorizeFilter,
+          withDeleted: opts?.one?.withDeleted
+        })
       }
 
       @ResolverQuery(
@@ -132,11 +145,11 @@ export const Readable =
           operationGroup: OperationGroup.READ,
           many: true
         })
-          authorizeFilter?: Filter<DTO>
+        authorizeFilter?: Filter<DTO>
       ) {
         const limitValue = getQueryOptions(DTOClass).CSVPageLimit || DEFAULT_QUERY_OPTS.CSVPageLimit
         const res = await this.service.query({ ...query, paging: { ...query.paging, limit: limitValue } })
-        return Papa.unparse(res)
+        return Papa.unparse(res.map((r) => serializeNestedObjects(r)))
       }
     }
 
