@@ -1,6 +1,6 @@
 {
   "name": "@ptc-org/nestjs-query-typegoose",
-  "version": "5.0.0",
+  "version": "5.1.0-alpha.2",
   "description": "Typegoose adapter for @ptc-org/nestjs-query-core",
   "author": "john mcinall<johnmcinall@gmail.com>",
   "homepage": "https://github.com/tripss/nestjs-query#readme",

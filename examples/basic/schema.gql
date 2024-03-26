@@ -163,6 +163,13 @@ type TodoItem {
     """Specify to sort results."""
     sorting: [TagSort!]! = []
   ): TodoItemTagsConnection!
+  allSubTasks(
+    """Specify to filter the records returned."""
+    filter: SubTaskFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [SubTaskSort!]! = []
+  ): [SubTask!]!
 }
 
 input SubTaskFilter {
@@ -403,7 +410,10 @@ type Mutation {
   setSubTasksOnTodoItem(input: SetSubTasksOnTodoItemInput!): TodoItem!
   addTagsToTodoItem(input: AddTagsToTodoItemInput!): TodoItem!
   setTagsOnTodoItem(input: SetTagsOnTodoItemInput!): TodoItem!
+  addAllSubTasksToTodoItem(input: AddAllSubTasksToTodoItemInput!): TodoItem!
+  setAllSubTasksOnTodoItem(input: SetAllSubTasksOnTodoItemInput!): TodoItem!
   removeTagsFromTodoItem(input: RemoveTagsFromTodoItemInput!): TodoItem!
+  removeAllSubTasksFromTodoItem(input: RemoveAllSubTasksFromTodoItemInput!): TodoItem!
   createOneTodoItem(input: CreateOneTodoItemInput!): TodoItem!
   createManyTodoItems(input: CreateManyTodoItemsInput!): [TodoItem!]!
   updateOneTodoItem(input: UpdateOneTodoItemInput!): TodoItem!
@@ -535,7 +545,31 @@ input SetTagsOnTodoItemInput {
   relationIds: [ID!]!
 }
 
+input AddAllSubTasksToTodoItemInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
+input SetAllSubTasksOnTodoItemInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
 input RemoveTagsFromTodoItemInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
+input RemoveAllSubTasksFromTodoItemInput {
   """The id of the record."""
   id: ID!
 

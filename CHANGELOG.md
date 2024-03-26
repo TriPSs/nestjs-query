@@ -1,4 +1,26 @@
  
+# [5.1.0-alpha.2](https://github.com/TriPSs/nestjs-query/compare/v5.1.0-alpha.1...v5.1.0-alpha.2) (2024-03-26)
+
+
+### Bug Fixes
+
+* **query-graphql:** Fixed relations update/aggregate not respecting the given name ([c252b2a](https://github.com/TriPSs/nestjs-query/commit/c252b2af48eafa9be67665f9f61c1eb9c9ab6778)), closes [#239](https://github.com/TriPSs/nestjs-query/issues/239)
+
+
+
+# [5.1.0-alpha.1](https://github.com/TriPSs/nestjs-query/compare/v5.1.0-alpha.0...v5.1.0-alpha.1) (2024-02-12)
+
+
+
+# [5.1.0-alpha.0](https://github.com/TriPSs/nestjs-query/compare/v5.0.0...v5.1.0-alpha.0) (2024-02-12)
+
+
+### Performance Improvements
+
+* **query-typeorm:** Custom count implementation for better performance ([eb89f32](https://github.com/TriPSs/nestjs-query/commit/eb89f32475875850062a635731ddfc0fd96d2455))
+
+
+
 # [5.0.0](https://github.com/TriPSs/nestjs-query/compare/v4.4.0...v5.0.0) (2024-01-19)
 
 

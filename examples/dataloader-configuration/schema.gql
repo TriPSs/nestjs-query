@@ -365,8 +365,8 @@ input CursorPaging {
 }
 
 type Mutation {
-  addTodoItemsToSubTask(input: AddTodoItemsToSubTaskInput!): SubTask!
-  setTodoItemsOnSubTask(input: SetTodoItemsOnSubTaskInput!): SubTask!
+  addTodoItemToSubTask(input: AddTodoItemToSubTaskInput!): SubTask!
+  setTodoItemOnSubTask(input: SetTodoItemOnSubTaskInput!): SubTask!
   createOneSubTask(input: CreateOneSubTaskInput!): SubTask!
   createManySubTasks(input: CreateManySubTasksInput!): [SubTask!]!
   updateOneSubTask(input: UpdateOneSubTaskInput!): SubTask!
@@ -395,7 +395,7 @@ type Mutation {
   deleteManyTags(input: DeleteManyTagsInput!): DeleteManyResponse!
 }
 
-input AddTodoItemsToSubTaskInput {
+input AddTodoItemToSubTaskInput {
   """The id of the record."""
   id: ID!
 
@@ -403,7 +403,7 @@ input AddTodoItemsToSubTaskInput {
   relationIds: [ID!]!
 }
 
-input SetTodoItemsOnSubTaskInput {
+input SetTodoItemOnSubTaskInput {
   """The id of the record."""
   id: ID!
 
