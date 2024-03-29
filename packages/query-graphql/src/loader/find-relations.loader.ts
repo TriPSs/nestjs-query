@@ -52,7 +52,7 @@ export class FindRelationsLoader<DTO, Relation>
         map.set(filterJson, [])
       }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      map.get(filterJson)!.push({ ...args, ...opts, index })
+      map.get(filterJson).push({ ...args, ...opts, index })
       return map
     }, new Map<string, (FindRelationsArgs<DTO, Relation> & { index: number })[]>())
   }
