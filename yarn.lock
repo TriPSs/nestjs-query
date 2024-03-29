@@ -5530,7 +5530,7 @@ __metadata:
   peerDependencies:
     "@nestjs/common": ^9.0.0 || ^10.0.0
     "@nestjs/mongoose": ^9.0.0 || ^10.0.0
-    mongoose: ^6.5.0
+    mongoose: ^6.5.0 || ^7.0.0 || ^8.0.0
   languageName: unknown
   linkType: soft
 
@@ -5562,7 +5562,7 @@ __metadata:
     "@m8a/nestjs-typegoose": ^9.0.0 || ^10.0.0 || ^11.0.0
     "@nestjs/common": ^9.0.0 || ^10.0.0
     "@typegoose/typegoose": ^9.0.0 || ^10.0.0 || ^11.0.0
-    mongoose: ^6.5.0 || ^7.0.3
+    mongoose: ^6.5.0 || ^7.0.3 || ^8.0.0
   languageName: unknown
   linkType: soft
 
