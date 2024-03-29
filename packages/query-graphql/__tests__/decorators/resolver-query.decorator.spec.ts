@@ -36,7 +36,7 @@ describe('ResolverQuery decorator', (): void => {
     const opts: resolverDecorator.ResolverMethodOpts[] = [{}]
     createTestResolver(() => Boolean, { name: 'test' }, ...opts)
 
-    const [rt, ao] = querySpy.mock.calls[0]!
+    const [rt, ao] = querySpy.mock.calls[0]
     expect(rt()).toEqual(Boolean)
     expect(ao).toEqual({ name: 'test' })
   })

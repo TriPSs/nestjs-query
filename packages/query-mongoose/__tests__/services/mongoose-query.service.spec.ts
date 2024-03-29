@@ -830,9 +830,9 @@ describe('MongooseQueryService', () => {
           filter: { referenceName: { isNot: null } }
         })
         expect(queryResult.size).toBe(3)
-        expect(convertDocuments(queryResult.get(entities[0])!)).toEqual(TEST_REFERENCES.slice(0, 3))
-        expect(convertDocuments(queryResult.get(entities[1])!)).toEqual(TEST_REFERENCES.slice(3, 6))
-        expect(convertDocuments(queryResult.get(entities[2])!)).toEqual(TEST_REFERENCES.slice(6, 9))
+        expect(convertDocuments(queryResult.get(entities[0]))).toEqual(TEST_REFERENCES.slice(0, 3))
+        expect(convertDocuments(queryResult.get(entities[1]))).toEqual(TEST_REFERENCES.slice(3, 6))
+        expect(convertDocuments(queryResult.get(entities[2]))).toEqual(TEST_REFERENCES.slice(6, 9))
       })
 
       it('should apply a filter per entity', async () => {
@@ -843,9 +843,9 @@ describe('MongooseQueryService', () => {
           filter: { referenceName: { in: references.map((r) => r.referenceName) } }
         })
         expect(queryResult.size).toBe(3)
-        expect(convertDocuments(queryResult.get(entities[0])!)).toEqual([references[0]])
-        expect(convertDocuments(queryResult.get(entities[1])!)).toEqual([references[1]])
-        expect(convertDocuments(queryResult.get(entities[2])!)).toEqual([references[2]])
+        expect(convertDocuments(queryResult.get(entities[0]))).toEqual([references[0]])
+        expect(convertDocuments(queryResult.get(entities[1]))).toEqual([references[1]])
+        expect(convertDocuments(queryResult.get(entities[2]))).toEqual([references[2]])
       })
 
       it('should apply paging per entity', async () => {
@@ -855,9 +855,9 @@ describe('MongooseQueryService', () => {
           paging: { limit: 2, offset: 1 }
         })
         expect(queryResult.size).toBe(3)
-        expect(convertDocuments(queryResult.get(entities[0])!)).toEqual(TEST_REFERENCES.slice(1, 3))
-        expect(convertDocuments(queryResult.get(entities[1])!)).toEqual(TEST_REFERENCES.slice(4, 6))
-        expect(convertDocuments(queryResult.get(entities[2])!)).toEqual(TEST_REFERENCES.slice(7, 9))
+        expect(convertDocuments(queryResult.get(entities[0]))).toEqual(TEST_REFERENCES.slice(1, 3))
+        expect(convertDocuments(queryResult.get(entities[1]))).toEqual(TEST_REFERENCES.slice(4, 6))
+        expect(convertDocuments(queryResult.get(entities[2]))).toEqual(TEST_REFERENCES.slice(7, 9))
       })
 
       it('should return an empty array if no results are found.', async () => {
@@ -867,8 +867,8 @@ describe('MongooseQueryService', () => {
           filter: { referenceName: { isNot: null } }
         })
         expect(queryResult.size).toBe(2)
-        expect(convertDocuments(queryResult.get(entities[0])!)).toEqual(TEST_REFERENCES.slice(0, 3))
-        expect(convertDocuments(queryResult.get(entities[1])!)).toEqual([])
+        expect(convertDocuments(queryResult.get(entities[0]))).toEqual(TEST_REFERENCES.slice(0, 3))
+        expect(convertDocuments(queryResult.get(entities[1]))).toEqual([])
       })
     })
   })

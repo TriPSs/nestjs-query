@@ -24,7 +24,7 @@ describe('hook decorators', () => {
       @BeforeCreateOne(hookFn)
       class Test {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_ONE, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -36,7 +36,7 @@ describe('hook decorators', () => {
 
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_ONE, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -51,7 +51,7 @@ describe('hook decorators', () => {
       @BeforeCreateOne(childHookFn)
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_ONE, Test)
       expect(new Stored[0]().run).toBe(childHookFn)
     })
 
@@ -72,7 +72,7 @@ describe('hook decorators', () => {
       @BeforeCreateMany(hookFn)
       class Test {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_MANY, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -84,7 +84,7 @@ describe('hook decorators', () => {
 
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_MANY, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -99,7 +99,7 @@ describe('hook decorators', () => {
       @BeforeCreateMany(childHookFn)
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_CREATE_MANY, Test)
       expect(new Stored[0]().run).toBe(childHookFn)
     })
 
@@ -120,7 +120,7 @@ describe('hook decorators', () => {
       @BeforeUpdateOne(hookFn)
       class Test {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_ONE, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -132,7 +132,7 @@ describe('hook decorators', () => {
 
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_ONE, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -147,7 +147,7 @@ describe('hook decorators', () => {
       @BeforeUpdateOne(childHookFn)
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_ONE, Test)
       expect(new Stored[0]().run).toBe(childHookFn)
     })
 
@@ -168,7 +168,7 @@ describe('hook decorators', () => {
       @BeforeUpdateMany(hookFn)
       class Test {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_MANY, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -180,7 +180,7 @@ describe('hook decorators', () => {
 
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_MANY, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -195,7 +195,7 @@ describe('hook decorators', () => {
       @BeforeUpdateMany(childHookFn)
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_UPDATE_MANY, Test)
       expect(new Stored[0]().run).toBe(childHookFn)
     })
 
@@ -216,7 +216,7 @@ describe('hook decorators', () => {
       @BeforeDeleteOne(hookFn)
       class Test {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_ONE, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -228,7 +228,7 @@ describe('hook decorators', () => {
 
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_ONE, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -243,7 +243,7 @@ describe('hook decorators', () => {
       @BeforeDeleteOne(childHookFn)
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_ONE, Test)
       expect(new Stored[0]().run).toBe(childHookFn)
     })
 
@@ -264,7 +264,7 @@ describe('hook decorators', () => {
       @BeforeDeleteMany(hookFn)
       class Test {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_MANY, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -276,7 +276,7 @@ describe('hook decorators', () => {
 
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_MANY, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -291,7 +291,7 @@ describe('hook decorators', () => {
       @BeforeDeleteMany(childHookFn)
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_DELETE_MANY, Test)
       expect(new Stored[0]().run).toBe(childHookFn)
     })
 
@@ -312,7 +312,7 @@ describe('hook decorators', () => {
       @BeforeQueryMany(hookFn)
       class Test {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_QUERY_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_QUERY_MANY, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -324,7 +324,7 @@ describe('hook decorators', () => {
 
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_QUERY_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_QUERY_MANY, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -339,7 +339,7 @@ describe('hook decorators', () => {
       @BeforeQueryMany(childHookFn)
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_QUERY_MANY, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_QUERY_MANY, Test)
       expect(new Stored[0]().run).toBe(childHookFn)
     })
 
@@ -360,7 +360,7 @@ describe('hook decorators', () => {
       @BeforeFindOne(hookFn)
       class Test {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_FIND_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_FIND_ONE, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -372,7 +372,7 @@ describe('hook decorators', () => {
 
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_FIND_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_FIND_ONE, Test)
       expect(new Stored[0]().run).toBe(hookFn)
     })
 
@@ -387,7 +387,7 @@ describe('hook decorators', () => {
       @BeforeFindOne(childHookFn)
       class Test extends Base {}
 
-      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_FIND_ONE, Test)!
+      const Stored: Class<Hook<any>>[] = getHooksForType(HookTypes.BEFORE_FIND_ONE, Test)
       expect(new Stored[0]().run).toBe(childHookFn)
     })
 
