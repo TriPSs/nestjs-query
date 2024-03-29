@@ -17,11 +17,11 @@ export abstract class ClassTransformerAssembler<DTO, Entity extends DeepPartial<
   DeepPartial<DTO>,
   DeepPartial<Entity>
 > {
-  public convertToDTO(entity: Entity): DTO {
+  public convertToDTO(entity: Entity): DTO | Promise<DTO> {
     return this.convert(this.DTOClass, this.toPlain(entity))
   }
 
-  public convertToEntity(dto: DTO): Entity {
+  public convertToEntity(dto: DTO): Entity | Promise<Entity> {
     return this.convert(this.EntityClass, this.toPlain(dto))
   }
 
@@ -37,11 +37,11 @@ export abstract class ClassTransformerAssembler<DTO, Entity extends DeepPartial<
     return aggregate as unknown as AggregateResponse<DTO>
   }
 
-  public convertToCreateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> {
+  public convertToCreateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> | Promise<DeepPartial<Entity>> {
     return this.convert(this.EntityClass, create)
   }
 
-  public convertToUpdateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> {
+  public convertToUpdateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> | Promise<DeepPartial<Entity>> {
     return this.convert(this.EntityClass, create)
   }
 
