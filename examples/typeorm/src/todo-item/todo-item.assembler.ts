@@ -6,7 +6,7 @@ import { TodoItemEntity } from './todo-item.entity'
 @Assembler(TodoItemDTO, TodoItemEntity)
 export class TodoItemAssembler extends ClassTransformerAssembler<TodoItemDTO, TodoItemEntity> {
   convertToDTO(entity: TodoItemEntity): TodoItemDTO {
-    const dto = super.convertToDTO(entity)
+    const dto = super.convertToDTO(entity) as TodoItemDTO
     dto.age = Date.now() - entity.created.getMilliseconds()
     return dto
   }
