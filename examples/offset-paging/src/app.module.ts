@@ -13,7 +13,7 @@ import { TodoItemModule } from './todo-item/todo-item.module'
     TypeOrmModule.forRoot(typeormOrmConfig('limit_offset')),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/offset-paging/schema.gql',
       formatError: formatGraphqlError
     }),
     SubTaskModule,

@@ -4,9 +4,11 @@ import { Class, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-c
 
 import { OperationGroup } from '../../auth'
 import { getDTONames } from '../../common'
-import { RelationAuthorizerFilter, ResolverField } from '../../decorators'
+import { GraphQLResolveInfoResult, GraphQLResultInfo, RelationAuthorizerFilter, ResolverField } from '../../decorators'
+import { InjectDataLoaderConfig } from '../../decorators/inject-dataloader-config.decorator'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { CountRelationsLoader, DataLoaderFactory, FindRelationsLoader, QueryRelationsLoader } from '../../loader'
+import { DataLoaderOptions } from '../../pipes/inject-data-loader-config.pipe'
 import { QueryArgsType } from '../../types'
 import { transformAndValidate } from '../helpers'
 import { BaseServiceResolver, ServiceResolver } from '../resolver.interface'
@@ -46,15 +48,26 @@ const ReadOneRelationMixin =
           operationGroup: OperationGroup.READ,
           many: false
         })
-        authFilter?: Filter<Relation>
+        authFilter?: Filter<Relation>,
+        @GraphQLResultInfo(DTOClass)
+        resolveInfo?: GraphQLResolveInfoResult<Relation>,
+        @InjectDataLoaderConfig()
+        dataLoaderConfig?: DataLoaderOptions
       ): Promise<Relation | undefined> {
         return DataLoaderFactory.getOrCreateLoader(
           context,
           loaderName,
-          findLoader.createLoader(this.service, { withDeleted: relation.withDeleted })
+          () =>
+            findLoader.createLoader(this.service, {
+              resolveInfo: resolveInfo?.info,
+              withDeleted: relation.withDeleted,
+              lookedAhead: relation.enableLookAhead
+            }),
+          dataLoaderConfig
         ).load({
           dto,
-          filter: authFilter
+          filter: authFilter,
+          relations: resolveInfo?.relations
         })
       }
     }
@@ -71,13 +84,13 @@ const ReadManyRelationMixin =
     const commonResolverOpts = removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoName = getDTONames(DTOClass).baseName
-    const { pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
-    const relationName = relation.relationName ?? pluralBaseNameLower
-    const relationLoaderName = `load${pluralBaseName}For${DTOClass.name}`
-    const countRelationLoaderName = `count${pluralBaseName}For${DTOClass.name}`
+    const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
+    const relationName = relation.relationName ?? baseNameLower
+    const relationLoaderName = `load${baseName}For${DTOClass.name}`
+    const countRelationLoaderName = `count${baseName}For${DTOClass.name}`
     const queryLoader = new QueryRelationsLoader<DTO, Relation>(relationDTO, relationName)
     const countLoader = new CountRelationsLoader<DTO, Relation>(relationDTO, relationName)
-    const connectionName = `${dtoName}${pluralBaseName}Connection`
+    const connectionName = `${dtoName}${baseName}Connection`
 
     @ArgsType()
     class RelationQA extends QueryArgsType(relationDTO, {
@@ -92,36 +105,44 @@ const ReadManyRelationMixin =
     @Resolver(() => DTOClass, { isAbstract: true })
     class ReadManyMixin extends Base {
       @ResolverField(
-        pluralBaseNameLower,
+        baseNameLower,
         () => CT.resolveType,
         { nullable: relation.nullable, complexity: relation.complexity, description: relation?.description },
         commonResolverOpts,
         { interceptors: [AuthorizerInterceptor(DTOClass)] }
       )
-      async [`query${pluralBaseName}`](
+      async [`query${baseName}`](
         @Parent() dto: DTO,
         @Args() q: RelationQA,
         @Context() context: ExecutionContext,
-        @RelationAuthorizerFilter(pluralBaseNameLower, {
+        @RelationAuthorizerFilter(baseNameLower, {
           operationGroup: OperationGroup.READ,
           many: true
         })
-        relationFilter?: Filter<Relation>
+        relationFilter?: Filter<Relation>,
+        @GraphQLResultInfo(DTOClass)
+        resolveInfo?: GraphQLResolveInfoResult<Relation>,
+        @InjectDataLoaderConfig()
+        dataLoaderConfig?: DataLoaderOptions
       ): Promise<InstanceType<typeof CT>> {
         const relationQuery = await transformAndValidate(RelationQA, q)
         const relationLoader = DataLoaderFactory.getOrCreateLoader(
           context,
           relationLoaderName,
-          queryLoader.createLoader(this.service)
+          () => queryLoader.createLoader(this.service),
+          dataLoaderConfig
         )
+
         const relationCountLoader = DataLoaderFactory.getOrCreateLoader(
           context,
           countRelationLoaderName,
-          countLoader.createLoader(this.service)
+          () => countLoader.createLoader(this.service),
+          dataLoaderConfig
         )
+
         return CT.createFromPromise(
           (query) => relationLoader.load({ dto, query }),
-          mergeQuery(relationQuery, { filter: relationFilter }),
+          mergeQuery(relationQuery, { filter: relationFilter, relations: resolveInfo?.relations }),
           (filter) => relationCountLoader.load({ dto, filter })
         )
       }

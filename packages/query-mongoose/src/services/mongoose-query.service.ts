@@ -19,10 +19,6 @@ import { Document, Model as MongooseModel, PipelineStage, UpdateQuery } from 'mo
 import { AggregateBuilder, FilterQueryBuilder } from '../query'
 import { ReferenceQueryService } from './reference-query.service'
 
-type MongoDBUpdatedOutput = {
-  nModified: number
-}
-
 type MongoDBDeletedOutput = {
   deletedCount: number
 }
@@ -67,12 +63,12 @@ export class MongooseQueryService<Entity extends Document>
    * ```
    * @param query - The Query used to filter, page, and sort rows.
    */
-  async query(query: Query<Entity>): Promise<Entity[]> {
+  public async query(query: Query<Entity>): Promise<Entity[]> {
     const { filterQuery, options } = this.filterQueryBuilder.buildQuery(query)
     return this.Model.find(filterQuery, {}, options).exec()
   }
 
-  async aggregate(filter: Filter<Entity>, aggregateQuery: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
+  public async aggregate(filter: Filter<Entity>, aggregateQuery: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
     const { aggregate, filterQuery, options } = this.filterQueryBuilder.buildAggregateQuery(aggregateQuery, filter)
     const aggPipeline: PipelineStage[] = [{ $match: filterQuery }, { $group: aggregate }]
     if (options.sort) {
@@ -82,9 +78,9 @@ export class MongooseQueryService<Entity extends Document>
     return AggregateBuilder.convertToAggregateResponse(aggResult)
   }
 
-  count(filter: Filter<Entity>): Promise<number> {
+  public count(filter: Filter<Entity>): Promise<number> {
     const filterQuery = this.filterQueryBuilder.buildFilterQuery(filter)
-    return this.Model.count(filterQuery).exec()
+    return this.Model.countDocuments(filterQuery).exec()
   }
 
   /**
@@ -97,7 +93,7 @@ export class MongooseQueryService<Entity extends Document>
    * @param id - The id of the record to find.
    * @param opts - Additional options
    */
-  async findById(id: string | number, opts?: FindByIdOptions<Entity>): Promise<Entity | undefined> {
+  public async findById(id: string | number, opts?: FindByIdOptions<Entity>): Promise<Entity | undefined> {
     const filterQuery = this.filterQueryBuilder.buildIdFilterQuery(id, opts?.filter)
     const doc = await this.Model.findOne(filterQuery)
     if (!doc) {
@@ -120,7 +116,7 @@ export class MongooseQueryService<Entity extends Document>
    * @param id - The id of the record to find.
    * @param opts - Additional options
    */
-  async getById(id: string, opts?: GetByIdOptions<Entity>): Promise<Entity> {
+  public async getById(id: string, opts?: GetByIdOptions<Entity>): Promise<Entity> {
     const doc = await this.findById(id, opts)
     if (!doc) {
       throw new NotFoundException(`Unable to find ${this.Model.modelName} with id: ${id}`)
@@ -154,7 +150,7 @@ export class MongooseQueryService<Entity extends Document>
    * ```
    * @param records - The entities to create.
    */
-  async createMany(records: DeepPartial<Entity>[]): Promise<Entity[]> {
+  public async createMany(records: DeepPartial<Entity>[]): Promise<Entity[]> {
     records.forEach((r) => this.ensureIdIsNotPresent(r))
     return this.Model.create(records)
   }
@@ -170,7 +166,7 @@ export class MongooseQueryService<Entity extends Document>
    * @param update - A `Partial` of the entity with fields to update.
    * @param opts - Additional options
    */
-  async updateOne(id: string, update: DeepPartial<Entity>, opts?: UpdateOneOptions<Entity>): Promise<Entity> {
+  public async updateOne(id: string, update: DeepPartial<Entity>, opts?: UpdateOneOptions<Entity>): Promise<Entity> {
     this.ensureIdIsNotPresent(update)
     const filterQuery = this.filterQueryBuilder.buildIdFilterQuery(id, opts?.filter)
 
@@ -198,7 +194,7 @@ export class MongooseQueryService<Entity extends Document>
    * @param update - A `Partial` of entity with the fields to update
    * @param filter - A Filter used to find the records to update
    */
-  async updateMany(update: DeepPartial<Entity>, filter: Filter<Entity>): Promise<UpdateManyResponse> {
+  public async updateMany(update: DeepPartial<Entity>, filter: Filter<Entity>): Promise<UpdateManyResponse> {
     this.ensureIdIsNotPresent(update)
     const filterQuery = this.filterQueryBuilder.buildFilterQuery(filter)
     const res = await this.Model.updateMany(filterQuery, this.getUpdateQuery(update)).exec()
@@ -217,7 +213,7 @@ export class MongooseQueryService<Entity extends Document>
    * @param id - The `id` of the entity to delete.
    * @param opts - Additional filter to use when finding the entity to delete.
    */
-  async deleteOne(id: string, opts?: DeleteOneOptions<Entity>): Promise<Entity> {
+  public async deleteOne(id: string, opts?: DeleteOneOptions<Entity>): Promise<Entity> {
     const filterQuery = this.filterQueryBuilder.buildIdFilterQuery(id, opts?.filter)
     const doc = await this.Model.findOneAndDelete(filterQuery)
     if (!doc) {
@@ -239,7 +235,7 @@ export class MongooseQueryService<Entity extends Document>
    *
    * @param filter - A `Filter` to find records to delete.
    */
-  async deleteMany(filter: Filter<Entity>): Promise<DeleteManyResponse> {
+  public async deleteMany(filter: Filter<Entity>): Promise<DeleteManyResponse> {
     const filterQuery = this.filterQueryBuilder.buildFilterQuery(filter)
     const res = (await this.Model.deleteMany(filterQuery).exec()) as MongoDBDeletedOutput
     return { deletedCount: res.deletedCount || 0 }

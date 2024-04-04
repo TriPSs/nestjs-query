@@ -5,7 +5,10 @@ import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 
 @ObjectType('SubTask')
 @QueryOptions({ enableTotalCount: true })
-@Relation('todoItem', () => TodoItemDTO, { disableRemove: true, complexity: 5 })
+@Relation('todoItem', () => TodoItemDTO, {
+  complexity: 5,
+  update: { enabled: true }
+})
 export class SubTaskDTO {
   @FilterableField(() => ID, { complexity: 1 })
   id!: number

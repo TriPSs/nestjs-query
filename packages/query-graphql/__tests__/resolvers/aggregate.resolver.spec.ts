@@ -7,7 +7,7 @@ import { AggregateResolver, AggregateResolverOpts } from '../../src/resolvers/ag
 import { createResolverFromNest, generateSchema, TestResolverDTO, TestService } from '../__fixtures__'
 
 describe('AggregateResolver', () => {
-  const expectResolverSDL = async (opts?: AggregateResolverOpts) => {
+  const expectResolverSDL = async (opts?: AggregateResolverOpts<TestResolverDTO>) => {
     @Resolver(() => TestResolverDTO)
     class TestSDLResolver extends AggregateResolver(TestResolverDTO, opts) {
       @Query(() => TestResolverDTO)
@@ -41,7 +41,7 @@ describe('AggregateResolver', () => {
           stringField: { eq: 'foo' }
         }
       }
-      const aggregateQuery: AggregateQuery<TestResolverDTO> = { count: ['id'] }
+      const aggregateQuery: AggregateQuery<TestResolverDTO> = { count: [{ field: 'id', args: {} }] }
       const output: AggregateResponse<TestResolverDTO>[] = [
         {
           count: { id: 10 }

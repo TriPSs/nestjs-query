@@ -1,7 +1,36 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`AggregateBuilder date type should default group by day 1`] = `
+"SELECT
+  "TestEntity"."date_type" AS "GROUP_BY_dateType",
+  COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
+FROM
+  "test_entity" "TestEntity""
+`;
+
+exports[`AggregateBuilder date type should default group by month 1`] = `
+"SELECT
+  DATE(
+    DATE_FORMAT ("TestEntity"."date_type", '%Y-%m-01')
+  ) AS "GROUP_BY_dateType",
+  COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
+FROM
+  "test_entity" "TestEntity""
+`;
+
+exports[`AggregateBuilder date type should default group by week 1`] = `
+"SELECT
+  STR_TO_DATE (
+    DATE_FORMAT ("TestEntity"."date_type", '%X-%V-01'),
+    '%X-%V-%w'
+  ) AS "GROUP_BY_dateType",
+  COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
+FROM
+  "test_entity" "TestEntity""
+`;
+
 exports[`AggregateBuilder should create selects for all aggregate functions 1`] = `
-SELECT
+"SELECT
   COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk",
   SUM("TestEntity"."number_type") AS "SUM_numberType",
   AVG("TestEntity"."number_type") AS "AVG_numberType",
@@ -12,14 +41,14 @@ SELECT
   MIN("TestEntity"."date_type") AS "MIN_dateType",
   MIN("TestEntity"."number_type") AS "MIN_numberType"
 FROM
-  "test_entity" "TestEntity"
+  "test_entity" "TestEntity""
 `;
 
 exports[`AggregateBuilder should create selects for all aggregate functions and group bys 1`] = `
-SELECT
+"SELECT
   "TestEntity"."string_type" AS "GROUP_BY_stringType",
   "TestEntity"."bool_type" AS "GROUP_BY_boolType",
   COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
 FROM
-  "test_entity" "TestEntity"
+  "test_entity" "TestEntity""
 `;

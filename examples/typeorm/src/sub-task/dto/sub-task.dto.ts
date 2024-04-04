@@ -6,7 +6,10 @@ import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 @ObjectType('SubTask')
 @KeySet(['id'])
 @QueryOptions({ enableTotalCount: true })
-@FilterableRelation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@FilterableRelation('todoItem', () => TodoItemDTO, {
+  enableLookAhead: true,
+  update: { enabled: true }
+})
 export class SubTaskDTO {
   @FilterableField(() => ID)
   id!: number

@@ -1,6 +1,7 @@
 import { Filter, FilterComparisons, FilterFieldComparison } from '@ptc-org/nestjs-query-core'
-import { mongoose, ReturnModelType } from '@typegoose/typegoose'
+import { mongoose } from '@typegoose/typegoose'
 
+import { ReturnModelType } from '../typegoose-types.helper'
 import { ComparisonBuilder, EntityComparisonField } from './comparison.builder'
 
 /**
@@ -18,7 +19,8 @@ export class WhereBuilder<Entity> {
    * @param filter - the filter to build the WHERE clause from.
    */
   public build(filter: Filter<Entity>): mongoose.FilterQuery<new () => Entity> {
-    const { and, or } = filter
+    const normalizedFilter = this.getNormalizedFilter(filter)
+    const { and, or } = normalizedFilter
     let ands: mongoose.FilterQuery<Entity>[] = []
     let ors: mongoose.FilterQuery<Entity>[] = []
     let filterQuery: mongoose.FilterQuery<Entity> = {}
@@ -31,7 +33,7 @@ export class WhereBuilder<Entity> {
       ors = or.map((f) => this.build(f))
     }
 
-    const filterAnds = this.filterFields(filter)
+    const filterAnds = this.filterFields(normalizedFilter)
     if (filterAnds) {
       ands = [...ands, filterAnds]
     }
@@ -45,6 +47,38 @@ export class WhereBuilder<Entity> {
 
     return filterQuery
   }
+
+  /**
+   * Normalizes a filter to a dot notation filter for objects with sub objects.
+   * @param filter - the filter to normalize.
+   * @private
+   */
+  private getNormalizedFilter(filter: Filter<Entity>): Filter<Entity> {
+    if (!this.isGraphQLFilter(filter)) return filter
+    const newFilter = {}
+    const keys = Object.keys(filter)
+    // Converting to dot notation
+    for (const key of keys) {
+      const value = filter[key]
+      if (!['and', 'or'].includes(key) && this.isGraphQLFilter(value)) {
+        const subFilter = this.getNormalizedFilter(value as Filter<Entity>)
+        for (const subKey of Object.keys(subFilter)) {
+          newFilter[`${key}.${subKey}`] = subFilter[subKey]
+        }
+      } else {
+        newFilter[key] = value
+      }
+    }
+    return newFilter
+  }
+
+  /**
+   * Checks if a filter is a GraphQLFilter.
+   * @param filter - the filter to check.
+   * @private
+   */
+  private isGraphQLFilter = (filter: unknown) =>
+    typeof filter === `object` && !Array.isArray(filter) && filter?.constructor?.name === 'GraphQLFilter'
 
   /**
    * Creates field comparisons from a filter. This method will ignore and/or properties.

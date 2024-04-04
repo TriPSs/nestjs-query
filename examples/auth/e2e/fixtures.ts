@@ -29,23 +29,26 @@ export const refresh = async (connection: Connection): Promise<void> => {
   const questionTag = await tagsRepo.save({ name: 'Question' })
   const blockedTag = await tagsRepo.save({ name: 'Blocked' })
 
-  const todoItems: TodoItemEntity[] = await users.reduce(async (prev, user) => {
-    const allTodos = await prev
-    const userTodos = await todoRepo.save([
-      { title: 'Create Nest App', completed: true, priority: 0, tags: [urgentTag, homeTag], owner: user },
-      { title: 'Create Entity', completed: false, priority: 1, tags: [urgentTag, workTag], owner: user },
-      { title: 'Create Entity Service', completed: false, priority: 2, tags: [blockedTag, workTag], owner: user },
-      { title: 'Add Todo Item Resolver', completed: false, priority: 3, tags: [blockedTag, homeTag], owner: user },
-      {
-        title: 'How to create item With Sub Tasks',
-        completed: false,
-        priority: 4,
-        tags: [questionTag, blockedTag],
-        owner: user
-      }
-    ])
-    return [...allTodos, ...userTodos]
-  }, Promise.resolve([] as TodoItemEntity[]))
+  const todoItems: TodoItemEntity[] = await users.reduce(
+    async (prev, user) => {
+      const allTodos = await prev
+      const userTodos = await todoRepo.save([
+        { title: 'Create Nest App', completed: true, priority: 0, tags: [urgentTag, homeTag], owner: user },
+        { title: 'Create Entity', completed: false, priority: 1, tags: [urgentTag, workTag], owner: user },
+        { title: 'Create Entity Service', completed: false, priority: 2, tags: [blockedTag, workTag], owner: user },
+        { title: 'Add Todo Item Resolver', completed: false, priority: 3, tags: [blockedTag, homeTag], owner: user },
+        {
+          title: 'How to create item With Sub Tasks',
+          completed: false,
+          priority: 4,
+          tags: [questionTag, blockedTag],
+          owner: user
+        }
+      ])
+      return [...allTodos, ...userTodos]
+    },
+    Promise.resolve([] as TodoItemEntity[])
+  )
 
   await subTaskRepo.save(
     todoItems.reduce(

@@ -1,12 +1,13 @@
 import { getModelToken } from '@m8a/nestjs-typegoose'
 import { FactoryProvider } from '@nestjs/common'
 import { AssemblerSerializer, getQueryServiceToken } from '@ptc-org/nestjs-query-core'
-import { DocumentType, mongoose, ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, mongoose } from '@typegoose/typegoose'
 import { Base } from '@typegoose/typegoose/lib/defaultClasses'
 import { isClass } from 'is-class'
 
 import { TypegooseQueryService } from './services'
 import { TypegooseClass, TypegooseClassWithOptions, TypegooseDiscriminator } from './typegoose-interface.helpers'
+import { ReturnModelType } from './typegoose-types.helper'
 
 type ClassOrDiscriminator = TypegooseClassWithOptions | TypegooseDiscriminator
 type TypegooseInput = TypegooseClass | ClassOrDiscriminator
@@ -33,7 +34,7 @@ function createTypegooseQueryServiceProvider<Entity extends Base>(
 ): FactoryProvider {
   const inputModel = ensureProperInput(model)
   if (!inputModel) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions,@typescript-eslint/no-base-to-string
     throw new Error(`Model definitions ${model} is incorrect.`)
   }
   const modelName = inputModel.typegooseClass?.name

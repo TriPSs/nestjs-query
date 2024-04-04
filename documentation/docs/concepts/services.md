@@ -295,12 +295,8 @@ import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto';
 
 @ObjectType('TodoItem')
 @KeySet(['id'])
-@FilterableConnection('subTasks', () => SubTaskDTO, { disableRemove: true })
-@FilterableConnection('completedSubTasks', () => SubTaskDTO, {
-  // disable remove and update because it is a virtual relation
-  disableRemove: true,
-  disableUpdate: true,
-})
+@FilterableConnection('subTasks', () => SubTaskDTO)
+@FilterableConnection('completedSubTasks', () => SubTaskDTO)
 export class TodoItemDTO {
   @IDField(() => ID)
   id!: number;

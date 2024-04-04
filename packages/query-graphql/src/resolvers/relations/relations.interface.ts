@@ -4,6 +4,7 @@ import { Class } from '@ptc-org/nestjs-query-core'
 import { AuthorizerOptions } from '../../auth'
 import { DTONamesOpts } from '../../common'
 import { ResolverMethodOpts } from '../../decorators'
+import { ResolverRelationMethodOpts } from '../../decorators/resolver-method.decorator'
 import { ConnectionOptions, QueryArgsTypeOpts } from '../../types'
 
 export type ReferencesKeys<DTO, Reference> = {
@@ -48,18 +49,9 @@ export type ResolverRelation<Relation> = {
    */
   disableRead?: boolean
   /**
-   * Disable update relation graphql endpoints
+   * Enable look ahead mode, will join and select the relation when queried.
    */
-  disableUpdate?: boolean
-  /**
-   * Disable remove relation graphql endpoints
-   */
-  disableRemove?: boolean
-
-  /**
-   * Enable aggregation queries.
-   */
-  enableAggregate?: boolean
+  enableLookAhead?: boolean
   /**
    * Indicates if soft-deleted rows should be included in relation result.
    */
@@ -78,6 +70,14 @@ export type ResolverRelation<Relation> = {
 
   complexity?: Complexity
 
+  update?: Pick<ResolverRelation<Relation>, 'description'> & ResolverRelationMethodOpts
+  remove?: Pick<ResolverRelation<Relation>, 'description'> & ResolverRelationMethodOpts
+  /**
+   * Enable aggregation queries.
+   */
+  enableAggregate?: boolean
+  aggregate?: Pick<ResolverRelation<Relation>, 'description'> & ResolverRelationMethodOpts
+
   auth?: AuthorizerOptions<Relation>
 } & DTONamesOpts &
   ResolverMethodOpts &
@@ -86,8 +86,11 @@ export type ResolverRelation<Relation> = {
 
 export type RelationTypeMap<RT> = Record<string, RT>
 
-export type ResolverOneRelation<Relation> = Omit<ResolverRelation<Relation>, 'disableFilter' | 'disableSort'>
-export type ResolverManyRelation<Relation> = ResolverRelation<Relation>
+export type ResolverOneRelation<Relation> = Omit<
+  ResolverRelation<Relation>,
+  'disableFilter' | 'disableSort' | 'enableAggregate' | 'aggregate'
+>
+export type ResolverManyRelation<Relation> = Omit<ResolverRelation<Relation>, 'enableLookAhead'>
 
 export type RelationsOpts<Relation = unknown> = {
   /**

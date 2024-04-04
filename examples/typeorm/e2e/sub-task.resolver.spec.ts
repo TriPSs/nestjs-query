@@ -98,13 +98,6 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
       id: '14',
       title: 'How to create item With Sub Tasks - Sub Task 2',
       todoItemId: '5'
-    },
-    {
-      completed: false,
-      description: null,
-      id: '15',
-      title: 'How to create item With Sub Tasks - Sub Task 3',
-      todoItemId: '5'
     }
   ]
 
@@ -211,7 +204,7 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
             hasPreviousPage: false,
             startCursor: 'eyJ0eXBlIjoia2V5c2V0IiwiZmllbGRzIjpbeyJmaWVsZCI6ImlkIiwidmFsdWUiOjF9XX0='
           })
-          expect(totalCount).toBe(15)
+          expect(totalCount).toBe(14)
           expect(edges).toHaveLength(10)
           expect(edges.map((e) => e.node)).toEqual(subTasks.slice(0, 10))
         }))
@@ -290,12 +283,12 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
         .then(({ body }) => {
           const { edges, pageInfo, totalCount }: CursorConnectionType<SubTaskDTO> = body.data.subTasks
           expect(pageInfo).toEqual({
-            endCursor: 'eyJ0eXBlIjoia2V5c2V0IiwiZmllbGRzIjpbeyJmaWVsZCI6ImlkIiwidmFsdWUiOjZ9XX0=',
+            endCursor: 'eyJ0eXBlIjoia2V5c2V0IiwiZmllbGRzIjpbeyJmaWVsZCI6ImlkIiwidmFsdWUiOjV9XX0=',
             hasNextPage: true,
             hasPreviousPage: false,
-            startCursor: 'eyJ0eXBlIjoia2V5c2V0IiwiZmllbGRzIjpbeyJmaWVsZCI6ImlkIiwidmFsdWUiOjE1fV19'
+            startCursor: 'eyJ0eXBlIjoia2V5c2V0IiwiZmllbGRzIjpbeyJmaWVsZCI6ImlkIiwidmFsdWUiOjE0fV19'
           })
-          expect(totalCount).toBe(15)
+          expect(totalCount).toBe(14)
           expect(edges).toHaveLength(10)
           expect(edges.map((e) => e.node)).toEqual(subTasks.slice().reverse().slice(0, 10))
         }))
@@ -324,7 +317,7 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
               hasPreviousPage: false,
               startCursor: 'eyJ0eXBlIjoia2V5c2V0IiwiZmllbGRzIjpbeyJmaWVsZCI6ImlkIiwidmFsdWUiOjF9XX0='
             })
-            expect(totalCount).toBe(15)
+            expect(totalCount).toBe(14)
             expect(edges).toHaveLength(2)
             expect(edges.map((e) => e.node)).toEqual(subTasks.slice(0, 2))
           }))
@@ -352,7 +345,7 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
               hasPreviousPage: true,
               startCursor: 'eyJ0eXBlIjoia2V5c2V0IiwiZmllbGRzIjpbeyJmaWVsZCI6ImlkIiwidmFsdWUiOjN9XX0='
             })
-            expect(totalCount).toBe(15)
+            expect(totalCount).toBe(14)
             expect(edges).toHaveLength(2)
             expect(edges.map((e) => e.node)).toEqual(subTasks.slice(2, 4))
           }))
@@ -377,13 +370,13 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
           const res: AggregateResponse<TodoItemDTO>[] = body.data.subTaskAggregate
           expect(res).toEqual([
             {
-              count: { id: 15, title: 15, description: 0, completed: 15, todoItemId: 15 },
-              sum: { id: 120 },
-              avg: { id: 8 },
+              count: { id: 14, title: 14, description: 0, completed: 14, todoItemId: 14 },
+              sum: { id: 105 },
+              avg: { id: 7.5 },
               min: { id: '1', title: 'Add Todo Item Resolver - Sub Task 1', description: null, todoItemId: '1' },
               max: {
-                id: '15',
-                title: 'How to create item With Sub Tasks - Sub Task 3',
+                id: '14',
+                title: 'How to create item With Sub Tasks - Sub Task 2',
                 description: null,
                 todoItemId: '5'
               }
@@ -443,7 +436,7 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
         .expect(200, {
           data: {
             createOneSubTask: {
-              id: '16',
+              id: '15',
               title: 'Test SubTask',
               description: null,
               completed: false,
@@ -498,8 +491,8 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
         .expect(200, {
           data: {
             createManySubTasks: [
-              { id: '17', title: 'Test Create Many SubTask - 1', description: null, completed: false, todoItemId: '2' },
-              { id: '18', title: 'Test Create Many SubTask - 2', description: null, completed: true, todoItemId: '2' }
+              { id: '16', title: 'Test Create Many SubTask - 1', description: null, completed: false, todoItemId: '2' },
+              { id: '17', title: 'Test Create Many SubTask - 2', description: null, completed: true, todoItemId: '2' }
             ]
           }
         }))
@@ -552,7 +545,7 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
               title: 'Update Test Sub Task',
               description: null,
               completed: true,
-              todoItemId: '1'
+              todoItemId: '2'
             }
           }
         }))
@@ -617,7 +610,7 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
           query: `mutation {
             updateManySubTasks(
               input: {
-                filter: {id: { in: ["17", "18"]} },
+                filter: {id: { in: ["16", "17"]} },
                 update: { title: "Update Many Test", completed: true }
               }
             ) {
@@ -690,7 +683,7 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
           variables: {},
           query: `mutation {
             deleteOneSubTask(
-              input: { id: "16" }
+              input: { id: "15" }
             ) {
               ${subTaskFields}
             }
@@ -700,8 +693,8 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
           data: {
             deleteOneSubTask: {
               id: null,
-              title: 'Update Test Sub Task',
-              completed: true,
+              title: 'Test SubTask',
+              completed: false,
               description: null,
               todoItemId: '1'
             }
@@ -749,7 +742,7 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
         .expect(200, {
           data: {
             deleteManySubTasks: {
-              deletedCount: 2
+              deletedCount: 1
             }
           }
         }))
@@ -829,7 +822,7 @@ describe('SubTaskResolver (typeorm - e2e)', () => {
                   completed: false,
                   description: null,
                   age: expect.any(Number),
-                  subTasksCount: 4
+                  subTasksCount: 5
                 }
               }
             }

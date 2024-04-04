@@ -9,8 +9,7 @@ import {
   ModifyRelationOptions,
   Query
 } from '@ptc-org/nestjs-query-core'
-import { ModelCtor as SequelizeModelCtor } from 'sequelize'
-import { MakeNullishOptional } from 'sequelize/types/utils'
+import { ModelStatic as SequelizeModelCtor } from 'sequelize'
 import { Model, ModelCtor } from 'sequelize-typescript'
 
 import { AggregateBuilder, FilterQueryBuilder } from '../query'
@@ -355,7 +354,7 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
     return entities.reduce(async (mapPromise, e) => {
       const map = await mapPromise
       const relations = await this.ensureIsEntity(e).$get(relationName as keyof Entity, findOptions)
-      map.set(e, assembler.convertToDTOs(relations as unknown as Model[]))
+      map.set(e, await assembler.convertToDTOs(relations as unknown as Model[]))
       return map
     }, Promise.resolve(new Map<Entity, Relation[]>()))
   }
@@ -419,7 +418,7 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
         relationQueryBuilder.findOptions(opts ?? {})
       )
       if (relation) {
-        map.set(e, assembler.convertToDTO(relation as unknown as Model))
+        map.set(e, await assembler.convertToDTO(relation as unknown as Model))
       }
       return map
     }, Promise.resolve(new Map<Entity, Relation | undefined>()))

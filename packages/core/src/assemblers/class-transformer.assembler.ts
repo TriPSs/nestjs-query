@@ -17,36 +17,36 @@ export abstract class ClassTransformerAssembler<DTO, Entity extends DeepPartial<
   DeepPartial<DTO>,
   DeepPartial<Entity>
 > {
-  convertToDTO(entity: Entity): DTO {
+  public convertToDTO(entity: Entity): DTO | Promise<DTO> {
     return this.convert(this.DTOClass, this.toPlain(entity))
   }
 
-  convertToEntity(dto: DTO): Entity {
+  public convertToEntity(dto: DTO): Entity | Promise<Entity> {
     return this.convert(this.EntityClass, this.toPlain(dto))
   }
 
-  convertQuery(query: Query<DTO>): Query<Entity> {
+  public convertQuery(query: Query<DTO>): Query<Entity> {
     return query as unknown as Query<Entity>
   }
 
-  convertAggregateQuery(aggregate: AggregateQuery<DTO>): AggregateQuery<Entity> {
+  public convertAggregateQuery(aggregate: AggregateQuery<DTO>): AggregateQuery<Entity> {
     return aggregate as unknown as AggregateQuery<Entity>
   }
 
-  convertAggregateResponse(aggregate: AggregateResponse<Entity>): AggregateResponse<DTO> {
+  public convertAggregateResponse(aggregate: AggregateResponse<Entity>): AggregateResponse<DTO> {
     return aggregate as unknown as AggregateResponse<DTO>
   }
 
-  convertToCreateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> {
+  public convertToCreateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> | Promise<DeepPartial<Entity>> {
     return this.convert(this.EntityClass, create)
   }
 
-  convertToUpdateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> {
+  public convertToUpdateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> | Promise<DeepPartial<Entity>> {
     return this.convert(this.EntityClass, create)
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  convert<T>(cls: Class<T>, obj: object): T {
+  public convert<T>(cls: Class<T>, obj: object): T {
     const deserializer = getAssemblerDeserializer(cls)
     if (deserializer) {
       return deserializer(obj)
@@ -54,7 +54,8 @@ export abstract class ClassTransformerAssembler<DTO, Entity extends DeepPartial<
     return plainToClass(cls, obj)
   }
 
-  isConstructor(x: any) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public isConstructor(x: any) {
     const handler = {
       construct() {
         return handler
@@ -70,7 +71,7 @@ export abstract class ClassTransformerAssembler<DTO, Entity extends DeepPartial<
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  toPlain(entityOrDto: Entity | DTO): object {
+  public toPlain(entityOrDto: Entity | DTO): object {
     if (entityOrDto && entityOrDto instanceof this.EntityClass) {
       const serializer = getAssemblerSerializer(this.EntityClass)
       if (serializer) {

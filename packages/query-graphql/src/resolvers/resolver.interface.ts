@@ -5,7 +5,7 @@ import { QueryResolverMethodOpts, SubscriptionResolverMethodOpts } from '../deco
 import { GraphQLPubSub } from '../subscription'
 import { PagingStrategies, QueryArgsTypeOpts } from '../types'
 
-type NamedEndpoint = {
+export type NamedEndpoint = {
   /** Specify to override the name of the graphql query or mutation * */
   name?: string
   /** Specify a description for the graphql query or mutation* */
@@ -43,7 +43,8 @@ export interface ResolverClass<DTO, QS extends QueryService<DTO, unknown, unknow
  * @internal
  * Base Resolver that takes in a service as a constructor argument.
  */
-export class BaseServiceResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export class BaseServiceResolver<DTO, QS> {
   constructor(readonly service: QS) {}
 }
 
@@ -58,5 +59,5 @@ export type MergePagingStrategyOpts<
 > = Opts['pagingStrategy'] extends PagingStrategies
   ? Opts
   : S extends PagingStrategies
-  ? Omit<Opts, 'pagingStrategy'> & { pagingStrategy: S }
-  : Opts
+    ? Omit<Opts, 'pagingStrategy'> & { pagingStrategy: S }
+    : Opts

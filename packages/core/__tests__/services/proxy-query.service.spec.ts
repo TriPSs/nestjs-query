@@ -71,21 +71,21 @@ describe('ProxyQueryService', () => {
   it('should proxy to the underlying service when calling query', () => {
     const query = {}
     const result = [{ foo: 'bar' }]
-    when(mockQueryService.query(query)).thenResolve(result)
+    when(mockQueryService.query(query, undefined)).thenResolve(result)
     return expect(queryService.query(query)).resolves.toBe(result)
   })
 
   it('should proxy to the underlying service when calling aggregate', () => {
     const filter = {}
-    const aggregate: AggregateQuery<TestType> = { count: ['foo'] }
+    const aggregate: AggregateQuery<TestType> = { count: [{ field: 'foo', args: {} }] }
     const result = [{ count: { foo: 1 } }]
-    when(mockQueryService.aggregate(filter, aggregate)).thenResolve(result)
+    when(mockQueryService.aggregate(filter, aggregate, undefined)).thenResolve(result)
     return expect(queryService.aggregate(filter, aggregate)).resolves.toBe(result)
   })
   it('should proxy to the underlying service when calling count', () => {
     const query = {}
     const result = 1
-    when(mockQueryService.count(query)).thenResolve(result)
+    when(mockQueryService.count(query, undefined)).thenResolve(result)
     return expect(queryService.count(query)).resolves.toBe(result)
   })
   it('should proxy to the underlying service when calling queryRelations with one dto', () => {
@@ -110,7 +110,7 @@ describe('ProxyQueryService', () => {
     const relationName = 'test'
     const dto = new TestType()
     const filter = {}
-    const aggQuery: AggregateQuery<TestType> = { count: ['foo'] }
+    const aggQuery: AggregateQuery<TestType> = { count: [{ field: 'foo', args: {} }] }
     const result = [{ count: { foo: 1 } }]
     when(mockQueryService.aggregateRelations(TestType, relationName, dto, filter, aggQuery)).thenResolve(result)
     return expect(queryService.aggregateRelations(TestType, relationName, dto, filter, aggQuery)).resolves.toBe(result)
@@ -120,7 +120,7 @@ describe('ProxyQueryService', () => {
     const relationName = 'test'
     const dtos = [new TestType()]
     const filter = {}
-    const aggQuery: AggregateQuery<TestType> = { count: ['foo'] }
+    const aggQuery: AggregateQuery<TestType> = { count: [{ field: 'foo', args: {} }] }
     const result = new Map([[{ foo: 'bar' }, [{ count: { foo: 1 } }]]])
     when(mockQueryService.aggregateRelations(TestType, relationName, dtos, filter, aggQuery)).thenResolve(result)
     return expect(queryService.aggregateRelations(TestType, relationName, dtos, filter, aggQuery)).resolves.toBe(result)

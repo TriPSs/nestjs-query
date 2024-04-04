@@ -4,7 +4,7 @@ import omit from 'lodash.omit'
 
 import { OperationGroup } from '../auth'
 import { getDTONames } from '../common'
-import { AuthorizerFilter, HookArgs, ResolverQuery } from '../decorators'
+import { AuthorizerFilter, GraphQLResolveInfoResult, GraphQLResultInfo, HookArgs, ResolverQuery } from '../decorators'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import {
@@ -34,10 +34,15 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
   extends ServiceResolver<DTO, QS> {
   queryMany(
     query: QueryType<DTO, PagingStrategies>,
-    authorizeFilter?: Filter<DTO>
+    authorizeFilter?: Filter<DTO>,
+    resolveInfo?: GraphQLResolveInfoResult<DTO, DTO>
   ): Promise<InferConnectionTypeFromStrategy<DTO, PS>>
 
-  findById(id: FindOneArgsType, authorizeFilter?: Filter<DTO>): Promise<DTO | undefined>
+  findById(
+    id: FindOneArgsType,
+    authorizeFilter?: Filter<DTO>,
+    resolveInfo?: GraphQLResolveInfoResult<DTO>
+  ): Promise<DTO | undefined>
 }
 
 /**
@@ -53,7 +58,8 @@ export const Readable =
     const { baseNameLower, pluralBaseNameLower, baseName } = getDTONames(DTOClass, opts)
     const readOneQueryName = opts.one?.name ?? baseNameLower
     const readManyQueryName = opts.many?.name ?? pluralBaseNameLower
-    const { QueryArgs = QueryArgsType(DTOClass, { ...opts, connectionName: `${baseName}Connection` }) } = opts
+    // TODO:: Remove "connectionName" here in next major version
+    const { QueryArgs = QueryArgsType(DTOClass, { connectionName: `${baseName}Connection`, ...opts }) } = opts
     const { ConnectionType } = QueryArgs
 
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection', 'withDeleted')
@@ -68,7 +74,11 @@ export const Readable =
     class ReadResolverBase extends BaseClass {
       @ResolverQuery(
         () => DTOClass,
-        { name: readOneQueryName, description: opts?.one?.description },
+        {
+          name: readOneQueryName,
+          description: opts?.one?.description,
+          complexity: opts?.one?.complexity
+        },
         commonResolverOpts,
         { interceptors: [HookInterceptor(HookTypes.BEFORE_FIND_ONE, DTOClass), AuthorizerInterceptor(DTOClass)] },
         opts.one ?? {}
@@ -79,14 +89,21 @@ export const Readable =
           operationGroup: OperationGroup.READ,
           many: false
         })
-        authorizeFilter?: Filter<DTO>
+        authorizeFilter?: Filter<DTO>,
+        @GraphQLResultInfo(DTOClass)
+        resolveInfo?: GraphQLResolveInfoResult<DTO>
       ): Promise<DTO> {
-        return this.service.getById(input.id, { filter: authorizeFilter, withDeleted: opts?.one?.withDeleted })
+        return this.service.getById(input.id, {
+          filter: authorizeFilter,
+          withDeleted: opts?.one?.withDeleted,
+          relations: resolveInfo?.relations,
+          resolveInfo: resolveInfo?.info
+        })
       }
 
       @ResolverQuery(
         () => QueryArgs.ConnectionType.resolveType,
-        { name: readManyQueryName, description: opts?.many?.description },
+        { name: readManyQueryName, description: opts?.many?.description, complexity: opts?.many?.complexity },
         commonResolverOpts,
         { interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)] },
         opts.many ?? {}
@@ -97,12 +114,21 @@ export const Readable =
           operationGroup: OperationGroup.READ,
           many: true
         })
-        authorizeFilter?: Filter<DTO>
+        authorizeFilter?: Filter<DTO>,
+        @GraphQLResultInfo(DTOClass)
+        resolveInfo?: GraphQLResolveInfoResult<DTO, DTO>
       ): Promise<InstanceType<typeof ConnectionType>> {
         return ConnectionType.createFromPromise(
-          (q) => this.service.query(q),
-          mergeQuery(query, { filter: authorizeFilter }),
-          (filter) => this.service.count(filter)
+          (q) =>
+            this.service.query(q, {
+              withDeleted: opts?.many?.withDeleted,
+              resolveInfo: resolveInfo?.info
+            }),
+          mergeQuery(query, { filter: authorizeFilter, relations: resolveInfo?.relations }),
+          (filter) =>
+            this.service.count(filter, {
+              withDeleted: opts?.many?.withDeleted
+            })
         )
       }
     }

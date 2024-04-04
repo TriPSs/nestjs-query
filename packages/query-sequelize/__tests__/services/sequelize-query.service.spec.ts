@@ -111,11 +111,24 @@ describe('SequelizeQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         {},
         {
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            { field: 'numberType', args: {} },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            {
+              field: 'numberType',
+              args: {}
+            },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -150,12 +163,22 @@ describe('SequelizeQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         {},
         {
-          groupBy: ['boolType'],
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          groupBy: [{ field: 'boolType', args: {} }],
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            { field: 'numberType', args: {} },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            { field: 'numberType', args: {} },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -219,11 +242,21 @@ describe('SequelizeQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         { stringType: { in: ['foo1', 'foo2', 'foo3'] } },
         {
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            { field: 'numberType', args: {} },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            { field: 'numberType', args: {} },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -258,12 +291,22 @@ describe('SequelizeQueryService', (): void => {
       const queryResult = await queryService.aggregate(
         { stringType: { in: ['foo1', 'foo2', 'foo3'] } },
         {
-          groupBy: ['boolType'],
-          count: ['testEntityPk'],
-          avg: ['numberType'],
-          sum: ['numberType'],
-          max: ['testEntityPk', 'dateType', 'numberType', 'stringType'],
-          min: ['testEntityPk', 'dateType', 'numberType', 'stringType']
+          groupBy: [{ field: 'boolType', args: {} }],
+          count: [{ field: 'testEntityPk', args: {} }],
+          avg: [{ field: 'numberType', args: {} }],
+          sum: [{ field: 'numberType', args: {} }],
+          max: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            { field: 'numberType', args: {} },
+            { field: 'stringType', args: {} }
+          ],
+          min: [
+            { field: 'testEntityPk', args: {} },
+            { field: 'dateType', args: {} },
+            { field: 'numberType', args: {} },
+            { field: 'stringType', args: {} }
+          ]
         }
       )
       return expect(queryResult).toEqual([
@@ -432,7 +475,9 @@ describe('SequelizeQueryService', (): void => {
           'testRelations',
           TestEntity.build(PLAIN_TEST_ENTITIES[0]),
           { relationName: { isNot: null } },
-          { count: ['testRelationPk'] }
+          {
+            count: [{ field: 'testRelationPk', args: {} }]
+          }
         )
         return expect(aggResult).toEqual([
           {
@@ -454,9 +499,21 @@ describe('SequelizeQueryService', (): void => {
           entities,
           { relationName: { isNot: null } },
           {
-            count: ['testRelationPk', 'relationName', 'testEntityId'],
-            min: ['testRelationPk', 'relationName', 'testEntityId'],
-            max: ['testRelationPk', 'relationName', 'testEntityId']
+            count: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              { field: 'testEntityId', args: {} }
+            ],
+            min: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              { field: 'testEntityId', args: {} }
+            ],
+            max: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              { field: 'testEntityId', args: {} }
+            ]
           }
         )
 
@@ -542,10 +599,22 @@ describe('SequelizeQueryService', (): void => {
           entities,
           {},
           {
-            groupBy: ['testEntityId'],
-            count: ['testRelationPk', 'relationName', 'testEntityId'],
-            min: ['testRelationPk', 'relationName', 'testEntityId'],
-            max: ['testRelationPk', 'relationName', 'testEntityId']
+            groupBy: [{ field: 'testEntityId', args: {} }],
+            count: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              { field: 'testEntityId', args: {} }
+            ],
+            min: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              { field: 'testEntityId', args: {} }
+            ],
+            max: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              { field: 'testEntityId', args: {} }
+            ]
           }
         )
 
@@ -640,9 +709,21 @@ describe('SequelizeQueryService', (): void => {
           entities,
           { relationName: { isNot: null } },
           {
-            count: ['testRelationPk', 'relationName', 'testEntityId'],
-            min: ['testRelationPk', 'relationName', 'testEntityId'],
-            max: ['testRelationPk', 'relationName', 'testEntityId']
+            count: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              { field: 'testEntityId', args: {} }
+            ],
+            min: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              { field: 'testEntityId', args: {} }
+            ],
+            max: [
+              { field: 'testRelationPk', args: {} },
+              { field: 'relationName', args: {} },
+              { field: 'testEntityId', args: {} }
+            ]
           }
         )
 

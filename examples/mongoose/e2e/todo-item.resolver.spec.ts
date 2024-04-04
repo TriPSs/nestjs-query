@@ -13,7 +13,8 @@ import { AppModule } from '../src/app.module'
 // import { TagDTO } from '../src/tag/dto/tag.dto'
 // import { TodoItemDTO } from '../src/todo-item/dto/todo-item.dto'
 // import { TodoItemEntity } from '../src/todo-item/todo-item.entity'
-import { refresh, TODO_ITEMS } from './fixtures'
+import { refresh } from './fixtures'
+// import { refresh, TODO_ITEMS } from './fixtures'
 // import {
 //   edgeNodes,
 //   pageInfoField,

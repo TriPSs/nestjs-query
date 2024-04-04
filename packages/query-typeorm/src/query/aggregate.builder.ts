@@ -1,7 +1,14 @@
 import { BadRequestException } from '@nestjs/common'
-import { AggregateQuery, AggregateResponse } from '@ptc-org/nestjs-query-core'
+import {
+  AggregateQuery,
+  AggregateQueryField,
+  AggregateQueryGroupByField,
+  AggregateResponse,
+  GroupBy
+} from '@ptc-org/nestjs-query-core'
 import { camelCase } from 'camel-case'
 import { Repository, SelectQueryBuilder } from 'typeorm'
+import { DriverUtils } from 'typeorm/driver/DriverUtils'
 
 enum AggregateFuncs {
   AVG = 'AVG',
@@ -18,7 +25,11 @@ const AGG_REGEXP = /(AVG|SUM|COUNT|MAX|MIN|GROUP_BY)_(.*)/
  * Builds a WHERE clause from a Filter.
  */
 export class AggregateBuilder<Entity> {
-  constructor(readonly repo: Repository<Entity>) {}
+  private readonly isPostgres: boolean
+
+  constructor(readonly repo: Repository<Entity>) {
+    this.isPostgres = DriverUtils.isPostgresFamily(repo.manager.connection.driver)
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   public static async asyncConvertToAggregateResponse<Entity>(
@@ -35,20 +46,21 @@ export class AggregateBuilder<Entity> {
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   private static getAggregateGroupBySelects<Entity>(query: AggregateQuery<Entity>): string[] {
-    return (query.groupBy ?? []).map((f) => this.getGroupByAlias(f))
+    return (query.groupBy ?? []).map(({ field }) => this.getGroupByAlias(field))
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   private static getAggregateFuncSelects<Entity>(query: AggregateQuery<Entity>): string[] {
-    const aggs: [AggregateFuncs, (keyof Entity)[] | undefined][] = [
+    const aggs: [AggregateFuncs, AggregateQueryField<Entity>[] | undefined][] = [
       [AggregateFuncs.COUNT, query.count],
       [AggregateFuncs.SUM, query.sum],
       [AggregateFuncs.AVG, query.avg],
       [AggregateFuncs.MAX, query.max],
       [AggregateFuncs.MIN, query.min]
     ]
+
     return aggs.reduce((cols, [func, fields]) => {
-      const aliases = (fields ?? []).map((f) => this.getAggregateAlias(func, f))
+      const aliases = (fields ?? []).map(({ field }) => this.getAggregateAlias(func, field))
       return [...cols, ...aliases]
     }, [] as string[])
   }
@@ -85,20 +97,6 @@ export class AggregateBuilder<Entity> {
   }
 
   /**
-   * Returns the corrected fields for orderBy and groupBy
-   */
-  public getCorrectedField(alias: string, field: string) {
-    const col = alias ? `${alias}.${field}` : `${field}`
-    const meta = this.repo.metadata.findColumnWithPropertyName(`${field}`)
-
-    if (meta && this.repo.manager.connection.driver.normalizeType(meta) === 'datetime') {
-      return `DATE(${col})`
-    }
-
-    return col
-  }
-
-  /**
    * Builds a aggregate SELECT clause from a aggregate.
    * @param qb - the `typeorm` SelectQueryBuilder
    * @param aggregate - the aggregates to select.
@@ -120,31 +118,57 @@ export class AggregateBuilder<Entity> {
     return tail.reduce((acc: Qb, [select, selectAlias]) => acc.addSelect(select, selectAlias), qb.select(head[0], head[1]))
   }
 
-  private createAggSelect(func: AggregateFuncs, fields?: (keyof Entity)[], alias?: string): [string, string][] {
+  private createAggSelect(func: AggregateFuncs, fields?: AggregateQueryField<Entity>[], alias?: string): [string, string][] {
     if (!fields) {
       return []
     }
-    return fields.map((field) => {
+    return fields.map(({ field }) => {
       const col = alias ? `${alias}.${field as string}` : (field as string)
       return [`${func}(${col})`, AggregateBuilder.getAggregateAlias(func, field)]
     })
   }
 
-  private createGroupBySelect(fields?: (keyof Entity)[], alias?: string): [string, string][] {
-    if (!fields) {
+  private createGroupBySelect(aggregatedFields?: AggregateQueryField<Entity>[], alias?: string): [string, string][] {
+    if (!aggregatedFields) {
       return []
     }
 
-    return fields.map((field) => {
-      const col = alias ? `${alias}.${field as string}` : (field as string)
-      const groupByAlias = AggregateBuilder.getGroupByAlias(field)
+    return aggregatedFields.map((aggregatedField) => {
+      const col = alias ? `${alias}.${aggregatedField.field as string}` : (aggregatedField.field as string)
+      const groupByAlias = AggregateBuilder.getGroupByAlias(aggregatedField.field as string)
 
-      const meta = this.repo.metadata.findColumnWithPropertyName(`${field as string}`)
-      if (meta && this.repo.manager.connection.driver.normalizeType(meta) === 'datetime') {
-        return [`DATE(${col})`, groupByAlias]
+      if (this.isAggregateQueryGroupByField(aggregatedField)) {
+        let query = `DATE(${col})`
+
+        if (this.isPostgres) {
+          if (aggregatedField.args.by === GroupBy.YEAR) {
+            query = `DATE(TO_CHAR(${col}, 'YYYY-01-01'))`
+          } else if (aggregatedField.args.by === GroupBy.MONTH) {
+            query = `DATE(TO_CHAR(${col}, 'YYYY-mm-01'))`
+          } else if (aggregatedField.args.by === GroupBy.WEEK) {
+            query = `TO_DATE(TO_CHAR(${col}, 'YYYY-WW-01'), 'YYYY-WW-01')`
+          }
+        } else {
+          if (aggregatedField.args.by === GroupBy.YEAR) {
+            query = `DATE(DATE_FORMAT(${col}, '%Y-01-01'))`
+          } else if (aggregatedField.args.by === GroupBy.MONTH) {
+            query = `DATE(DATE_FORMAT(${col}, '%Y-%m-01'))`
+          } else if (aggregatedField.args.by === GroupBy.WEEK) {
+            query = `STR_TO_DATE(DATE_FORMAT(${col}, '%X-%V-01'), '%X-%V-%w')`
+          }
+        }
+
+        return [query, groupByAlias]
       }
 
       return [`${col}`, groupByAlias]
     })
+  }
+
+  private isAggregateQueryGroupByField(
+    field: AggregateQueryField<Entity> | AggregateQueryGroupByField<Entity>
+  ): field is AggregateQueryGroupByField<Entity> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return Boolean(field && field.args && (field as AggregateQueryGroupByField<Entity>).args?.by)
   }
 }

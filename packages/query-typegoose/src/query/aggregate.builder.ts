@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common'
-import { AggregateQuery, AggregateResponse } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, AggregateQueryField, AggregateResponse } from '@ptc-org/nestjs-query-core'
 import { DocumentType } from '@typegoose/typegoose'
 import { camelCase } from 'camel-case'
 
@@ -25,7 +25,7 @@ const AGG_REGEXP = /(avg|sum|count|max|min|group_by)_(.*)/
  */
 export class AggregateBuilder<Entity> {
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  static convertToAggregateResponse<Entity>(aggregates: Record<string, unknown>[]): AggregateResponse<Entity>[] {
+  public static convertToAggregateResponse<Entity>(aggregates: Record<string, unknown>[]): AggregateResponse<Entity>[] {
     return aggregates.map(({ _id, ...response }) => {
       return { ...this.extractResponse(_id as Record<string, unknown>), ...this.extractResponse(response) }
     })
@@ -57,7 +57,7 @@ export class AggregateBuilder<Entity> {
    * Builds a aggregate SELECT clause from a aggregate.
    * @param aggregate - the aggregates to select.
    */
-  build(aggregate: AggregateQuery<DocumentType<Entity>>): TypegooseGroupAndAggregate {
+  public build(aggregate: AggregateQuery<DocumentType<Entity>>): TypegooseGroupAndAggregate {
     const aggSelect: Aggregate = {
       ...this.createAggSelect(AggregateFuncs.COUNT, aggregate.count),
       ...this.createAggSelect(AggregateFuncs.SUM, aggregate.sum),
@@ -71,14 +71,14 @@ export class AggregateBuilder<Entity> {
     return { ...aggSelect, _id: this.createGroupBySelect(aggregate.groupBy) } as TypegooseGroupAndAggregate
   }
 
-  private createAggSelect(func: AggregateFuncs, fields?: (keyof DocumentType<Entity>)[]): Aggregate {
-    if (!fields) {
+  private createAggSelect(func: AggregateFuncs, aggregatedFields?: AggregateQueryField<DocumentType<Entity>>[]): Aggregate {
+    if (!aggregatedFields) {
       return {}
     }
-    return fields.reduce((agg: Aggregate, field) => {
+    return aggregatedFields.reduce((agg: Aggregate, { field }) => {
       const aggAlias = `${func}_${field as string}`
       const fieldAlias = `$${getSchemaKey(String(field))}`
-      if (func === 'count') {
+      if (func === AggregateFuncs.COUNT) {
         return {
           ...agg,
           [aggAlias]: {
@@ -96,26 +96,26 @@ export class AggregateBuilder<Entity> {
     }, {})
   }
 
-  private createGroupBySelect(fields?: (keyof DocumentType<Entity>)[]): Record<string, string> | null {
-    if (!fields) {
+  private createGroupBySelect(aggregatedFields?: AggregateQueryField<DocumentType<Entity>>[]): Record<string, string> | null {
+    if (!aggregatedFields) {
       return null
     }
-    return fields.reduce((id: Record<string, string>, field) => {
-      const aggAlias = this.getGroupByAlias(field)
-      const fieldAlias = `$${getSchemaKey(String(field))}`
+    return aggregatedFields.reduce((id: Record<string, string>, aggregatedField) => {
+      const aggAlias = this.getGroupByAlias(aggregatedField)
+      const fieldAlias = `$${getSchemaKey(String(aggregatedField.field))}`
       return { ...id, [aggAlias]: fieldAlias }
     }, {})
   }
 
-  getGroupBySelects(fields?: (keyof DocumentType<Entity>)[]): string[] | undefined {
-    if (!fields) {
+  public getGroupBySelects(aggregatedFields?: AggregateQueryField<DocumentType<Entity>>[]): string[] | undefined {
+    if (!aggregatedFields) {
       return undefined
     }
     // append _id so it pulls the sort from the _id field
-    return (fields ?? []).map((f) => `_id.${this.getGroupByAlias(f)}`)
+    return (aggregatedFields ?? []).map((aggregatedField) => `_id.${this.getGroupByAlias(aggregatedField)}`)
   }
 
-  private getGroupByAlias(field: keyof DocumentType<Entity>): string {
+  private getGroupByAlias({ field }: AggregateQueryField<DocumentType<Entity>>): string {
     return `group_by_${field as string}`
   }
 }

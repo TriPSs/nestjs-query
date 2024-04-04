@@ -1,24 +1,40 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FilterQueryBuilder #delete with filter should call whereBuilder#build if there is a filter 1`] = `
-DELETE FROM
-  "test_entity"
+"DELETE FROM "test_entity"
 WHERE
-  "string_type" = 'foo'
+  "string_type" = 'foo'"
 `;
 
-exports[`FilterQueryBuilder #delete with paging should ignore paging args 1`] = `
-DELETE FROM
-  "test_entity"
-`;
+exports[`FilterQueryBuilder #delete with paging should ignore paging args 1`] = `"DELETE FROM "test_entity""`;
 
-exports[`FilterQueryBuilder #delete with sorting should ignore sorting 1`] = `
-DELETE FROM
-  "test_entity"
+exports[`FilterQueryBuilder #delete with sorting should ignore sorting 1`] = `"DELETE FROM "test_entity""`;
+
+exports[`FilterQueryBuilder #select with filter should apply filtering from relations query filter 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
+  "oneTestRelation"."test_relation_pk" AS "oneTestRelation_test_relation_pk",
+  "oneTestRelation"."relation_name" AS "oneTestRelation_relation_name",
+  "oneTestRelation"."test_entity_id" AS "oneTestRelation_test_entity_id",
+  "oneTestRelation"."uni_directional_test_entity_id" AS "oneTestRelation_uni_directional_test_entity_id",
+  "oneTestRelation"."uni_directional_relation_test_entity_id" AS "oneTestRelation_uni_directional_relation_test_entity_id"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
+WHERE
+  (oneTestRelation.numberType = 123)
+  AND ("TestEntity"."string_type" = test)"
 `;
 
 exports[`FilterQueryBuilder #select with filter should call whereBuilder#build if there is a filter 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -30,11 +46,11 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 WHERE
-  "TestEntity"."string_type" = 'foo'
+  "TestEntity"."string_type" = 'foo'"
 `;
 
 exports[`FilterQueryBuilder #select with filter should not call whereBuilder#build 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -44,11 +60,11 @@ SELECT
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
 FROM
-  "test_entity" "TestEntity"
+  "test_entity" "TestEntity""
 `;
 
 exports[`FilterQueryBuilder #select with paging should apply empty paging args 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -58,11 +74,11 @@ SELECT
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
 FROM
-  "test_entity" "TestEntity"
+  "test_entity" "TestEntity""
 `;
 
 exports[`FilterQueryBuilder #select with paging should apply paging args going backward 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -74,11 +90,13 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 LIMIT
-  10 OFFSET 10
+  10
+OFFSET
+  10"
 `;
 
 exports[`FilterQueryBuilder #select with paging should apply paging args going forward 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -90,11 +108,131 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 LIMIT
-  10 OFFSET 11
+  10
+OFFSET
+  11"
+`;
+
+exports[`FilterQueryBuilder #select with paging should use limit/offset when filtering on many to one relation 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "manyToOneRelation" ON "manyToOneRelation"."test_relation_pk" = "TestEntity"."many_to_one_relation_id"
+LIMIT
+  10
+OFFSET
+  3"
+`;
+
+exports[`FilterQueryBuilder #select with paging should use limit/offset when filtering on one to one relation 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
+LIMIT
+  10
+OFFSET
+  3"
+`;
+
+exports[`FilterQueryBuilder #select with paging should use skip/take when filtering on one to many relation 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "testRelations" ON "testRelations"."test_entity_id" = "TestEntity"."test_entity_pk""
+`;
+
+exports[`FilterQueryBuilder #select with paging skip/take - limit/offset should use skip/take when filtering on many to many relation 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_entity_many_test_relations_test_relation" "TestEntity_manyTestRelations" ON "TestEntity_manyTestRelations"."testEntityTestEntityPk" = "TestEntity"."test_entity_pk"
+  LEFT JOIN "test_relation" "manyTestRelations" ON "manyTestRelations"."test_relation_pk" = "TestEntity_manyTestRelations"."testRelationTestRelationPk""
+`;
+
+exports[`FilterQueryBuilder #select with relation should select and map relation 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
+  "oneTestRelation"."test_relation_pk" AS "oneTestRelation_test_relation_pk",
+  "oneTestRelation"."relation_name" AS "oneTestRelation_relation_name",
+  "oneTestRelation"."test_entity_id" AS "oneTestRelation_test_entity_id",
+  "oneTestRelation"."uni_directional_test_entity_id" AS "oneTestRelation_uni_directional_test_entity_id",
+  "oneTestRelation"."uni_directional_relation_test_entity_id" AS "oneTestRelation_uni_directional_relation_test_entity_id"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk""
+`;
+
+exports[`FilterQueryBuilder #select with relation should select and sub relations 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
+  "oneTestRelation"."test_relation_pk" AS "oneTestRelation_test_relation_pk",
+  "oneTestRelation"."relation_name" AS "oneTestRelation_relation_name",
+  "oneTestRelation"."test_entity_id" AS "oneTestRelation_test_entity_id",
+  "oneTestRelation"."uni_directional_test_entity_id" AS "oneTestRelation_uni_directional_test_entity_id",
+  "oneTestRelation"."uni_directional_relation_test_entity_id" AS "oneTestRelation_uni_directional_relation_test_entity_id",
+  "testEntityUniDirectional"."test_entity_pk" AS "testEntityUniDirectional_test_entity_pk",
+  "testEntityUniDirectional"."string_type" AS "testEntityUniDirectional_string_type",
+  "testEntityUniDirectional"."bool_type" AS "testEntityUniDirectional_bool_type",
+  "testEntityUniDirectional"."number_type" AS "testEntityUniDirectional_number_type",
+  "testEntityUniDirectional"."date_type" AS "testEntityUniDirectional_date_type",
+  "testEntityUniDirectional"."many_to_one_relation_id" AS "testEntityUniDirectional_many_to_one_relation_id",
+  "testEntityUniDirectional"."many_to_one_soft_delete_relation_id" AS "testEntityUniDirectional_many_to_one_soft_delete_relation_id",
+  "testEntityUniDirectional"."oneTestRelationTestRelationPk" AS "testEntityUniDirectional_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
+  LEFT JOIN "test_entity" "testEntityUniDirectional" ON "testEntityUniDirectional"."test_entity_pk" = "oneTestRelation"."uni_directional_test_entity_id""
 `;
 
 exports[`FilterQueryBuilder #select with sorting should apply ASC NULLS_FIRST sorting 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -106,11 +244,11 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 ORDER BY
-  "TestEntity"."number_type" ASC NULLS FIRST
+  "TestEntity"."number_type" ASC NULLS FIRST"
 `;
 
 exports[`FilterQueryBuilder #select with sorting should apply ASC NULLS_LAST sorting 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -122,11 +260,11 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 ORDER BY
-  "TestEntity"."number_type" ASC NULLS LAST
+  "TestEntity"."number_type" ASC NULLS LAST"
 `;
 
 exports[`FilterQueryBuilder #select with sorting should apply ASC sorting 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -138,11 +276,11 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 ORDER BY
-  "TestEntity"."number_type" ASC
+  "TestEntity"."number_type" ASC"
 `;
 
 exports[`FilterQueryBuilder #select with sorting should apply DESC NULLS_FIRST sorting 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -154,11 +292,11 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 ORDER BY
-  "TestEntity"."number_type" DESC NULLS FIRST
+  "TestEntity"."number_type" DESC NULLS FIRST"
 `;
 
 exports[`FilterQueryBuilder #select with sorting should apply DESC NULLS_LAST sorting 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -170,11 +308,11 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 ORDER BY
-  "TestEntity"."number_type" DESC NULLS LAST
+  "TestEntity"."number_type" DESC NULLS LAST"
 `;
 
 exports[`FilterQueryBuilder #select with sorting should apply DESC sorting 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -186,11 +324,11 @@ SELECT
 FROM
   "test_entity" "TestEntity"
 ORDER BY
-  "TestEntity"."number_type" DESC
+  "TestEntity"."number_type" DESC"
 `;
 
 exports[`FilterQueryBuilder #select with sorting should apply multiple sorts 1`] = `
-SELECT
+"SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
@@ -205,110 +343,98 @@ ORDER BY
   "TestEntity"."number_type" ASC,
   "TestEntity"."bool_type" DESC,
   "TestEntity"."string_type" ASC NULLS FIRST,
-  "TestEntity"."date_type" DESC NULLS LAST
+  "TestEntity"."date_type" DESC NULLS LAST"
 `;
 
 exports[`FilterQueryBuilder #softDelete with filter should call whereBuilder#build if there is a filter 1`] = `
-UPDATE
-  "test_soft_delete_entity"
+"UPDATE "test_soft_delete_entity"
 SET
   "deleted_at" = CURRENT_TIMESTAMP
 WHERE
-  "string_type" = 'foo'
+  "string_type" = 'foo'"
 `;
 
 exports[`FilterQueryBuilder #softDelete with paging should ignore paging args 1`] = `
-UPDATE
-  "test_soft_delete_entity"
+"UPDATE "test_soft_delete_entity"
 SET
-  "deleted_at" = CURRENT_TIMESTAMP
+  "deleted_at" = CURRENT_TIMESTAMP"
 `;
 
 exports[`FilterQueryBuilder #softDelete with sorting should ignore sorting 1`] = `
-UPDATE
-  "test_soft_delete_entity"
+"UPDATE "test_soft_delete_entity"
 SET
-  "deleted_at" = CURRENT_TIMESTAMP
+  "deleted_at" = CURRENT_TIMESTAMP"
 `;
 
 exports[`FilterQueryBuilder #update with filter should call whereBuilder#build if there is a filter 1`] = `
-UPDATE
-  "test_entity"
+"UPDATE "test_entity"
 SET
   "string_type" = baz
 WHERE
-  "string_type" = 'foo'
+  "string_type" = 'foo'"
 `;
 
 exports[`FilterQueryBuilder #update with paging should ignore paging args 1`] = `
-UPDATE
-  "test_entity"
+"UPDATE "test_entity"
 SET
-  "string_type" = baz
+  "string_type" = baz"
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply ASC NULLS_FIRST sorting 1`] = `
-UPDATE
-  "test_entity"
+"UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
-  "number_type" ASC NULLS FIRST
+  "number_type" ASC NULLS FIRST"
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply ASC NULLS_LAST sorting 1`] = `
-UPDATE
-  "test_entity"
+"UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
-  "number_type" ASC NULLS LAST
+  "number_type" ASC NULLS LAST"
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply ASC sorting 1`] = `
-UPDATE
-  "test_entity"
+"UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
-  "number_type" ASC
+  "number_type" ASC"
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply DESC NULLS_FIRST sorting 1`] = `
-UPDATE
-  "test_entity"
+"UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
-  "number_type" DESC NULLS FIRST
+  "number_type" DESC NULLS FIRST"
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply DESC NULLS_LAST sorting 1`] = `
-UPDATE
-  "test_entity"
+"UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
-  "number_type" DESC NULLS LAST
+  "number_type" DESC NULLS LAST"
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply DESC sorting 1`] = `
-UPDATE
-  "test_entity"
+"UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
-  "number_type" DESC
+  "number_type" DESC"
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply multiple sorts 1`] = `
-UPDATE
-  "test_entity"
+"UPDATE "test_entity"
 SET
   "string_type" = baz
 ORDER BY
   "number_type" ASC,
   "bool_type" DESC,
   "string_type" ASC NULLS FIRST,
-  "date_type" DESC NULLS LAST
+  "date_type" DESC NULLS LAST"
 `;

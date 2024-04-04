@@ -1,6 +1,7 @@
 export interface AuthConfig {
   header: string
 }
+
 export interface Config {
   auth: AuthConfig
 }

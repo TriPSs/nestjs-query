@@ -1,25 +1,167 @@
 import { Class, Filter, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { anything, deepEqual, instance, mock, verify, when } from 'ts-mockito'
-import { QueryBuilder, WhereExpression } from 'typeorm'
+import { DataSource, QueryBuilder, WhereExpressionBuilder } from 'typeorm'
 
 import { FilterQueryBuilder, WhereBuilder } from '../../src/query'
-import { closeTestConnection, createTestConnection, getTestConnection } from '../__fixtures__/connection.fixture'
+import { createTestConnection } from '../__fixtures__/connection.fixture'
 import { TestEntity } from '../__fixtures__/test.entity'
 import { TestSoftDeleteEntity } from '../__fixtures__/test-soft-delete.entity'
 
 describe('FilterQueryBuilder', (): void => {
-  beforeEach(createTestConnection)
-  afterEach(closeTestConnection)
+  let connection: DataSource
+  beforeEach(async () => {
+    connection = await createTestConnection()
+  })
+  afterEach(() => connection.destroy())
 
   const getEntityQueryBuilder = <Entity>(entity: Class<Entity>, whereBuilder: WhereBuilder<Entity>): FilterQueryBuilder<Entity> =>
-    new FilterQueryBuilder(getTestConnection().getRepository(entity), whereBuilder)
+    new FilterQueryBuilder(connection.getRepository(entity), whereBuilder)
 
   const expectSQLSnapshot = <Entity>(query: QueryBuilder<Entity>): void => {
     const [sql, params] = query.getQueryAndParameters()
 
     expect(formatSql(sql, { params })).toMatchSnapshot()
   }
+
+  describe('#getReferencedRelationsWithAliasRecursive', () => {
+    it('with deeply nested and / or', () => {
+      const complexQuery: Filter<TestEntity> = {
+        and: [
+          {
+            oneTestRelation: {
+              manyTestEntities: {
+                oneTestRelation: {
+                  manyTestEntities: {
+                    stringType: { eq: '123' }
+                  }
+                }
+              }
+            }
+          },
+
+          {
+            or: [
+              { and: [{ stringType: { eq: '123' } }] },
+              {
+                and: [{ stringType: { eq: '123' } }, { testEntityPk: { eq: '123' } }]
+              }
+            ]
+          },
+
+          {
+            stringType: { eq: '345' },
+            or: [
+              { oneTestRelation: { relationName: { eq: '123' } } },
+              { oneTestRelation: { relationOfTestRelation: { testRelationId: { eq: 'e1' } } } }
+            ]
+          }
+        ]
+      }
+
+      const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+      const qb = getEntityQueryBuilder(TestEntity, instance(mockWhereBuilder))
+
+      expect(qb.getReferencedRelationsWithAliasRecursive(qb.repo.metadata, complexQuery)).toEqual({
+        oneTestRelation: {
+          alias: 'oneTestRelation',
+          relations: {
+            manyTestEntities: {
+              alias: 'manyTestEntities',
+              relations: {
+                oneTestRelation: {
+                  alias: 'oneTestRelation_1',
+                  relations: {
+                    manyTestEntities: {
+                      alias: 'manyTestEntities_1',
+                      relations: {}
+                    }
+                  }
+                }
+              }
+            },
+
+            relationOfTestRelation: {
+              alias: 'relationOfTestRelation',
+              relations: {}
+            }
+          }
+        }
+      })
+    })
+
+    it('with nested and / or', () => {
+      const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+      const qb = getEntityQueryBuilder(TestEntity, instance(mockWhereBuilder))
+
+      const query: Filter<TestEntity> = {
+        stringType: { eq: '123' },
+
+        and: [
+          {
+            boolType: { is: true }
+          },
+          {
+            testRelations: {
+              relationName: { eq: '123' }
+            }
+          }
+        ],
+
+        or: [
+          {
+            boolType: { is: true }
+          },
+          {
+            oneTestRelation: {
+              testRelationPk: { eq: '123' },
+              testEntity: {
+                testRelations: {
+                  relationName: { eq: '123' }
+                }
+              }
+            }
+          },
+          {
+            oneTestRelation: {
+              relationsOfTestRelation: {
+                testRelationId: {
+                  eq: '123'
+                }
+              }
+            }
+          }
+        ]
+      }
+
+      expect(qb.getReferencedRelationsWithAliasRecursive(qb.repo.metadata, query)).toEqual({
+        testRelations: {
+          alias: 'testRelations',
+          relations: {}
+        },
+
+        oneTestRelation: {
+          alias: 'oneTestRelation',
+          relations: {
+            relationsOfTestRelation: {
+              alias: 'relationsOfTestRelation',
+              relations: {}
+            },
+
+            testEntity: {
+              alias: 'testEntity',
+              relations: {
+                testRelations: {
+                  alias: 'testRelations_1',
+                  relations: {}
+                }
+              }
+            }
+          }
+        }
+      })
+    })
+  })
 
   describe('#getReferencedRelationsRecursive', () => {
     it('with deeply nested and / or', () => {
@@ -105,10 +247,36 @@ describe('FilterQueryBuilder', (): void => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
         const query = { filter: { stringType: { eq: 'foo' } } }
         when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), 'TestEntity')).thenCall(
-          (where: WhereExpression, field: Filter<TestEntity>, relationNames: string[], alias: string) =>
+          (where: WhereExpressionBuilder, field: Filter<TestEntity>, relationNames: string[], alias: string) =>
             where.andWhere(`${alias}.stringType = 'foo'`)
         )
         expectSelectSQLSnapshot(query, instance(mockWhereBuilder))
+      })
+
+      it('should apply filtering from relations query filter', () => {
+        const expectSQLSnapshotUsingQuery = <Entity>(EntityClass: Class<Entity>, query: Query<Entity>): void => {
+          const geFilterQueryBuilder = (e: Class<Entity>): FilterQueryBuilder<Entity> =>
+            new FilterQueryBuilder(connection.getRepository(e))
+
+          const selectQueryBuilder = geFilterQueryBuilder(EntityClass).select(query)
+          const [sql, params] = selectQueryBuilder.getQueryAndParameters()
+          expect(formatSql(sql, { params })).toMatchSnapshot()
+        }
+
+        expectSQLSnapshotUsingQuery(TestEntity, {
+          filter: { stringType: { eq: 'test' } }, // note that this is the 'normal' filter.
+          relations: [
+            {
+              name: 'oneTestRelation',
+              query: {
+                // and this filter gets applied to the query as well.
+                filter: {
+                  numberType: { eq: 123 }
+                }
+              }
+            }
+          ]
+        } as any)
       })
     })
 
@@ -129,6 +297,62 @@ describe('FilterQueryBuilder', (): void => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
         expectSelectSQLSnapshot({ paging: { limit: 10, offset: 10 } }, instance(mockWhereBuilder))
         verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never()
+      })
+
+      describe('skip/take - limit/offset', () => {
+        it('should use skip/take when filtering on many to many relation', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          when(mockWhereBuilder.build(anything(), anything(), anything(), anything())).thenCall(
+            (qb: WhereExpressionBuilder) => qb
+          )
+
+          expectSelectSQLSnapshot(
+            {
+              paging: { limit: 10, offset: 3 },
+              filter: { manyTestRelations: { testRelationPk: { eq: 'test' } } }
+            },
+            instance(mockWhereBuilder)
+          )
+        })
+      })
+
+      it('should use skip/take when filtering on one to many relation', () => {
+        const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+        when(mockWhereBuilder.build(anything(), anything(), anything(), anything())).thenCall((qb: WhereExpressionBuilder) => qb)
+
+        expectSelectSQLSnapshot(
+          {
+            paging: { limit: 10, offset: 3 },
+            filter: { testRelations: { testRelationPk: { eq: 'test' } } }
+          },
+          instance(mockWhereBuilder)
+        )
+      })
+
+      it('should use limit/offset when filtering on one to one relation', () => {
+        const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+        when(mockWhereBuilder.build(anything(), anything(), anything(), anything())).thenCall((qb: WhereExpressionBuilder) => qb)
+
+        expectSelectSQLSnapshot(
+          {
+            paging: { limit: 10, offset: 3 },
+            filter: { oneTestRelation: { testRelationPk: { eq: 'test' } } }
+          },
+          instance(mockWhereBuilder)
+        )
+      })
+
+      it('should use limit/offset when filtering on many to one relation', () => {
+        const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+        when(mockWhereBuilder.build(anything(), anything(), anything(), anything())).thenCall((qb: WhereExpressionBuilder) => qb)
+
+        expectSelectSQLSnapshot(
+          {
+            paging: { limit: 10, offset: 3 },
+            filter: { manyToOneRelation: { testRelationPk: { eq: 'test' } } }
+          },
+          instance(mockWhereBuilder)
+        )
       })
     })
 
@@ -196,6 +420,35 @@ describe('FilterQueryBuilder', (): void => {
         verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never()
       })
     })
+
+    describe('with relation', () => {
+      it('should select and map relation', () => {
+        const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+        expectSelectSQLSnapshot(
+          {
+            relations: [{ name: 'oneTestRelation', query: {} }]
+          },
+          instance(mockWhereBuilder)
+        )
+      })
+
+      it('should select and sub relations', () => {
+        const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+        expectSelectSQLSnapshot(
+          {
+            relations: [
+              {
+                name: 'oneTestRelation',
+                query: {
+                  relations: [{ name: 'testEntityUniDirectional', query: {} }]
+                }
+              }
+            ]
+          },
+          instance(mockWhereBuilder)
+        )
+      })
+    })
   })
 
   describe('#update', () => {
@@ -208,8 +461,8 @@ describe('FilterQueryBuilder', (): void => {
       it('should call whereBuilder#build if there is a filter', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
         const query = { filter: { stringType: { eq: 'foo' } } }
-        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), undefined)).thenCall((where: WhereExpression) =>
-          where.andWhere(`stringType = 'foo'`)
+        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), undefined)).thenCall(
+          (where: WhereExpressionBuilder) => where.andWhere(`stringType = 'foo'`)
         )
         expectUpdateSQLSnapshot(query, instance(mockWhereBuilder))
       })
@@ -299,8 +552,8 @@ describe('FilterQueryBuilder', (): void => {
       it('should call whereBuilder#build if there is a filter', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
         const query = { filter: { stringType: { eq: 'foo' } } }
-        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), undefined)).thenCall((where: WhereExpression) =>
-          where.andWhere(`stringType = 'foo'`)
+        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), undefined)).thenCall(
+          (where: WhereExpressionBuilder) => where.andWhere(`stringType = 'foo'`)
         )
         expectDeleteSQLSnapshot(query, instance(mockWhereBuilder))
       })
@@ -345,8 +598,8 @@ describe('FilterQueryBuilder', (): void => {
       it('should call whereBuilder#build if there is a filter', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestSoftDeleteEntity>>(WhereBuilder)
         const query = { filter: { stringType: { eq: 'foo' } } }
-        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), undefined)).thenCall((where: WhereExpression) =>
-          where.andWhere(`stringType = 'foo'`)
+        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), undefined)).thenCall(
+          (where: WhereExpressionBuilder) => where.andWhere(`stringType = 'foo'`)
         )
         expectSoftDeleteSQLSnapshot(query, instance(mockWhereBuilder))
       })

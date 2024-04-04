@@ -11,7 +11,7 @@ import { TodoItemModule } from './todo-item/todo-item.module'
     TypeOrmModule.forRoot(typeormOrmConfig('custom_service')),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/custom-service/schema.gql',
       formatError: formatGraphqlError
     }),
     TodoItemModule

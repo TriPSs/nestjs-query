@@ -1,0 +1,107 @@
+---
+title: Filtering
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Filtering in `query-graphql` has has an object based syntax
+
+For a full reference of filter operations [see filter reference](../../concepts/queries.mdx#filter-reference)
+
+The following example filters for all todoItems that are marked completed.
+
+<Tabs
+  defaultValue="graphql"
+  values={[
+    { label: 'GraphQL', value: 'graphql', },
+    { label: 'Response', value: 'response', },
+  ]
+}>
+<TabItem value="graphql">
+
+```graphql
+{
+  todoItems(filter: {completed: {is: true}}){
+    pageInfo{
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges{
+      node{
+        id
+        title
+        completed
+        created
+        updated
+      }
+      cursor
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="response">
+
+```json
+{
+  "data": {
+    "todoItems": {
+      "pageInfo": {
+        "hasNextPage": false,
+        "hasPreviousPage": false,
+        "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
+        "endCursor": "YXJyYXljb25uZWN0aW9uOjE="
+      },
+      "edges": [
+        {
+          "node": {
+            "id": "3",
+            "title": "Create Many Todo Items - 2",
+            "completed": true,
+            "created": "2020-01-14T07:00:34.111Z",
+            "updated": "2020-01-14T07:00:34.111Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjA="
+        },
+        {
+          "node": {
+            "id": "5",
+            "title": "Create Many Todo Items - 4",
+            "completed": true,
+            "created": "2020-01-14T07:01:27.805Z",
+            "updated": "2020-01-14T07:01:27.805Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjE="
+        }
+      ]
+    }
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Setting the generated filter-type depth
+
+When querying the default filter is one level deep. You can specify the generated filter-type depth by using the QueryOptions decorator on your DTO.
+
+You can find the documentation and an example in the [QueryOptions reference](../dtos.mdx#filter-depth).
+
+
+## Setting a default filter
+
+When querying the default filter is empty. You can specify a default filter by using the QueryOptions decorator on your DTO.
+
+You can find the documentation and an example in the [QueryOptions reference](../dtos.mdx#setting-a-default-filter).
+
+
+## Setting allowed boolean expressions
+
+When filtering you can provide and and or expressions to provide advanced filtering. You can turn off either by using the QueryOptions decorator on your DTO.
+
+You can find the documentation and an example in the [QueryOptions reference](../dtos.mdx#allowed-boolean-expressions).

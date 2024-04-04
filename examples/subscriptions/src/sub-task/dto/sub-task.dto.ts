@@ -4,7 +4,9 @@ import { FilterableField, Relation } from '@ptc-org/nestjs-query-graphql'
 import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 
 @ObjectType('SubTask')
-@Relation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@Relation('todoItem', () => TodoItemDTO, {
+  update: { enabled: true }
+})
 export class SubTaskDTO {
   @FilterableField(() => ID)
   id!: number

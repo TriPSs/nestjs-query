@@ -12,7 +12,7 @@ import {
   ModifyRelationOptions,
   Query
 } from '@ptc-org/nestjs-query-core'
-import { DocumentType, getClass, getModelWithString, mongoose, ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, getClass, getModelWithString, mongoose } from '@typegoose/typegoose'
 import { Base } from '@typegoose/typegoose/lib/defaultClasses'
 import { PipelineStage } from 'mongoose'
 
@@ -21,6 +21,7 @@ import {
   isEmbeddedSchemaTypeOptions,
   isSchemaTypeWithReferenceOptions,
   isVirtualTypeWithReferenceOptions,
+  ReturnModelType,
   VirtualTypeWithOptions
 } from '../typegoose-types.helper'
 

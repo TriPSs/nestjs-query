@@ -1,0 +1,35 @@
+---
+title: Dataloaders
+sidebar_label: Dataloaders
+---
+
+Nestjs-query integrates a standard implementation of [dataloaders](https://www.npmjs.com/package/dataloader/v/2.1.0). Dataloaders are there to solve the `n+1`. Sometimes the default implementation can fail, for example when asynchronous [custom authorizers](./authorization.mdx#custom-authorizer) are used and the `n+1` problem occurs again despite using dataloaders. Then it may be useful to configure the default implementation of the dataloader, for example to pass a custom batch scheduler.
+
+The following example demonstrates how to configure the generated dataloaders. For more information about the dataloader configuration, see the [dataloader documentation](https://www.npmjs.com/package/dataloader/v/2.1.0).
+
+```ts title="app.module.ts"
+import { Module } from '@nestjs/common';
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
+
+@Module({
+  imports: [
+    // ... other imports
+
+    NestjsQueryGraphQLModule.forRoot({
+      dataLoader: {
+        batchScheduleFn(callback) {
+          // Here is an example of a batch scheduler that collects
+          // all requests in a time window of 250ms:
+          setTimeout(callback, 250);
+        },
+      },
+    }),
+
+    // ... other imports
+  ],
+
+  controllers: [],
+  providers: [],
+})
+export class AppModule {}
+```

@@ -70,7 +70,7 @@ export abstract class RelationQueryService<Entity> {
     const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
     const relationQueryBuilder = this.getRelationQueryBuilder(relationName)
 
-    return assembler.convertAsyncToDTOs(relationQueryBuilder.select(dto, assembler.convertQuery(query)).getMany())
+    return assembler.convertToDTOs(await relationQueryBuilder.select(dto, assembler.convertQuery(query)).getMany())
   }
 
   public async aggregateRelations<Relation>(
@@ -178,16 +178,20 @@ export abstract class RelationQueryService<Entity> {
     }
 
     const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
-    const relationQueryBuilder = this.getRelationQueryBuilder(relationName).select(dto, {
-      filter: opts?.filter,
-      paging: { limit: 1 }
-    })
+    let relationEntity = opts?.lookedAhead ? dto[relationName] : undefined
 
-    if (opts?.withDeleted) {
-      relationQueryBuilder.withDeleted()
+    if (!relationEntity) {
+      const relationQueryBuilder = this.getRelationQueryBuilder(relationName).select(dto, {
+        filter: opts?.filter,
+        paging: { limit: 1 }
+      })
+
+      if (opts?.withDeleted) {
+        relationQueryBuilder.withDeleted()
+      }
+
+      relationEntity = await relationQueryBuilder.getOne()
     }
-
-    const relationEntity = await relationQueryBuilder.getOne()
 
     return relationEntity ? assembler.convertToDTO(relationEntity) : undefined
   }
@@ -250,7 +254,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationId - The id of the relation to set on the entity.
    * @param opts - Additional options
    */
-  async setRelation<Relation>(
+  public async setRelation<Relation>(
     relationName: string,
     id: string | number,
     relationId: string | number,
@@ -272,7 +276,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationIds - The ids of the relations to add.
    * @param opts - Additional options
    */
-  async removeRelations<Relation>(
+  public async removeRelations<Relation>(
     relationName: string,
     id: string | number,
     relationIds: (string | number)[],
@@ -294,7 +298,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationName - The name of the relation to query for.
    * @param relationId - The id of the relation to set on the entity.
    */
-  async removeRelation<Relation>(
+  public async removeRelation<Relation>(
     relationName: string,
     id: string | number,
     relationId: string | number,
@@ -325,6 +329,7 @@ export abstract class RelationQueryService<Entity> {
    * @param entities - The entities to query relations for.
    * @param relationName - The name of relation to query for.
    * @param query - A query to filter, page or sort relations.
+   * @param withDeleted - Also query the soft deleted records
    */
   private async batchQueryRelations<Relation>(
     RelationClass: Class<Relation>,
@@ -339,11 +344,14 @@ export abstract class RelationQueryService<Entity> {
     const relationQueryBuilder = this.getRelationQueryBuilder(relationName)
     const entityRelations = await relationQueryBuilder.batchSelect(entities, convertedQuery, withDeleted).getRawAndEntities()
 
-    return entities.reduce((results, entity) => {
+    const results = new Map<Entity, Relation[]>()
+    for (const entity of entities) {
       const relations = relationQueryBuilder.relationMeta.mapRelations(entity, entityRelations.entities, entityRelations.raw)
 
-      return results.set(entity, assembler.convertToDTOs(relations))
-    }, new Map<Entity, Relation[]>())
+      results.set(entity, await assembler.convertToDTOs(relations))
+    }
+
+    return results
   }
 
   /**
@@ -421,6 +429,26 @@ export abstract class RelationQueryService<Entity> {
     dtos: Entity[],
     opts?: FindRelationOptions<Relation>
   ): Promise<Map<Entity, Relation | undefined>> {
+    // If the relation is looked ahead and all the entities have it
+    if (opts?.lookedAhead) {
+      const isNullable = this.getRelationMeta(relationName).isNullable
+
+      // Make sure the data is there
+      if (
+        (isNullable && dtos.some((entity) => entity[relationName])) ||
+        (!isNullable && dtos.some((entity) => entity[relationName]))
+      ) {
+        const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
+
+        const results = new Map<Entity, Relation>()
+        for (const entity of dtos) {
+          results.set(entity, entity[relationName] ? await assembler.convertToDTO(entity[relationName]) : undefined)
+        }
+
+        return results
+      }
+    }
+
     const batchResults = await this.batchQueryRelations(
       RelationClass,
       relationName,

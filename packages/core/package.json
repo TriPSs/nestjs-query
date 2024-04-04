@@ -1,6 +1,6 @@
 {
   "name": "@ptc-org/nestjs-query-core",
-  "version": "2.0.1",
+  "version": "6.0.0",
   "description": "Base query package",
   "author": "doug-martin <doug@dougamartin.com>",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
@@ -26,11 +26,11 @@
   },
   "dependencies": {
     "lodash.merge": "^4.6.2",
-    "reflect-metadata": "^0.1.13",
-    "tslib": "^2.4.0"
+    "reflect-metadata": "^0.2.1",
+    "tslib": "^2.6.2"
   },
   "peerDependencies": {
-    "@nestjs/common": "^8.0.0 || ^9.0.0",
-    "class-transformer": "^0.2.3 || 0.3.1 || ^0.5"
+    "@nestjs/common": "^9.0.0 || ^10.0.0",
+    "class-transformer": "^0.5"
   }
 }

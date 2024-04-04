@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`None paging strategy QueryArgsType with manual options create a query for string fields 1`] = `
-type Query {
+"type Query {
   test(
     """Specify to filter the records returned."""
-    filter: TestQueryFilter = {}
+    filter: TestQueryFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestQuerySort!] = []
+    sorting: [TestQuerySort!]! = []
   ): String!
 }
 
@@ -216,17 +216,17 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;
 
 exports[`None paging strategy QueryArgsType with manual options options allow apply the options to the generated SDL 1`] = `
-type Query {
+"type Query {
   test(
     """Specify to filter the records returned."""
-    filter: NoPagingQueryOptionsDTOFilter = {booleanField: {is: true}}
+    filter: NoPagingQueryOptionsDTOFilter! = {booleanField: {is: true}}
 
     """Specify to sort results."""
-    sorting: [NoPagingQueryOptionsDTOSort!] = [{field: booleanField, direction: DESC}]
+    sorting: [NoPagingQueryOptionsDTOSort!]! = [{field: booleanField, direction: DESC}]
   ): String!
 }
 
@@ -435,17 +435,17 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;
 
 exports[`None paging strategy QueryArgsType with manual options should make the filter required if there is a filterRequired field 1`] = `
-type Query {
+"type Query {
   test(
     """Specify to filter the records returned."""
     filter: TestFilterRequiredDtoFilter!
 
     """Specify to sort results."""
-    sorting: [TestFilterRequiredDtoSort!] = []
+    sorting: [TestFilterRequiredDtoSort!]! = []
   ): String!
 }
 
@@ -492,5 +492,5 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;

@@ -12,7 +12,7 @@ export const TEST_ENTITIES: DocumentType<TestEntity>[] = [1, 2, 3, 4, 5, 6, 7, 8
       dateType: new Date(`2020-02-${i} 12:00`),
       numberType: i,
       stringType: `foo${i}`
-    } as DocumentType<TestEntity>)
+    }) as DocumentType<TestEntity>
 )
 
 export const TEST_DISCRIMINATED_ENTITIES: DocumentType<TestDiscriminatedEntity>[] = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(
@@ -23,7 +23,7 @@ export const TEST_DISCRIMINATED_ENTITIES: DocumentType<TestDiscriminatedEntity>[
       numberType: i,
       stringType: `foo${i}-descrim`,
       stringType2: `bar${i}-descrim`
-    } as DocumentType<TestDiscriminatedEntity>)
+    }) as DocumentType<TestDiscriminatedEntity>
 )
 
 export const TEST_REFERENCES: DocumentType<TestReference>[] = TEST_ENTITIES.reduce(
@@ -88,7 +88,7 @@ export const seed = async (connection: mongoose.Connection): Promise<void> => {
       await Promise.all(
         references.map((r) => {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          TEST_REFERENCES.find((tr) => tr._id.toString() === r._id.toString())!.testEntity = te._id
+          TEST_REFERENCES.find((tr) => tr._id.toString() === r._id.toString()).testEntity = te._id
           return r.updateOne({ $set: { testEntity: te._id } })
         })
       )
@@ -106,7 +106,7 @@ export const seed = async (connection: mongoose.Connection): Promise<void> => {
       await Promise.all(
         references.map((r) => {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          TEST_REFERENCES_FOR_DISCRIMINATES.find((tr) => tr._id.toString() === r._id.toString())!.testEntity = tde._id
+          TEST_REFERENCES_FOR_DISCRIMINATES.find((tr) => tr._id.toString() === r._id.toString()).testEntity = tde._id
           return r.updateOne({ $set: { testEntity: tde._id } })
         })
       )

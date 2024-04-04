@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AggregateRelationsResolver - 2 aggregate should use the dtoName if provided 1`] = `
+"type TestResolverDTO {
+  id: ID!
+  stringField: String!
+  testAggregate(
+    """Filter to find records to aggregate on"""
+    filter: TestRelationDTOAggregateFilter
+  ): [TestResolverDTOTestAggregateResponse!]!
+}
+
+input TestRelationDTOAggregateFilter {
+  and: [TestRelationDTOAggregateFilter!]
+  or: [TestRelationDTOAggregateFilter!]
+  id: IDFilterComparison
+  testResolverId: StringFieldComparison
+}
+
+input IDFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: ID
+  neq: ID
+  gt: ID
+  gte: ID
+  lt: ID
+  lte: ID
+  like: ID
+  notLike: ID
+  iLike: ID
+  notILike: ID
+  in: [ID!]
+  notIn: [ID!]
+}
+
+input StringFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
+}
+
+type TestResolverDTOTestAggregateGroupBy {
+  id: ID
+  testResolverId: String
+}
+
+type TestResolverDTOTestCountAggregate {
+  id: Int
+  testResolverId: Int
+}
+
+type TestResolverDTOTestMinAggregate {
+  id: ID
+  testResolverId: String
+}
+
+type TestResolverDTOTestMaxAggregate {
+  id: ID
+  testResolverId: String
+}
+
+type TestResolverDTOTestAggregateResponse {
+  groupBy: TestResolverDTOTestAggregateGroupBy
+  count: TestResolverDTOTestCountAggregate
+  min: TestResolverDTOTestMinAggregate
+  max: TestResolverDTOTestMaxAggregate
+}
+
+type Query {
+  test: TestResolverDTO!
+}"
+`;

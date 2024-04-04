@@ -1,5 +1,5 @@
 import { NotImplementedException } from '@nestjs/common'
-import { Field, Int, ObjectType } from '@nestjs/graphql'
+import { Directive, Field, Int, ObjectType } from '@nestjs/graphql'
 import { Class, MapReflector, Query } from '@ptc-org/nestjs-query-core'
 
 import { getGraphqlObjectName } from '../../../common'
@@ -39,6 +39,7 @@ export function getOrCreateOffsetConnectionType<DTO>(
     const pager = createPager<DTO>(opts.enableFetchAllWithNegative)
     const PIT = getOrCreateOffsetPageInfoType()
 
+    @Directive('@shareable')
     @ObjectType(connectionName)
     class AbstractConnection implements OffsetConnectionType<DTO> {
       static get resolveType() {
@@ -67,13 +68,22 @@ export function getOrCreateOffsetConnectionType<DTO>(
         this.totalCountFn = totalCountFn ?? DEFAULT_COUNT
       }
 
-      @Field(() => PIT, { description: 'Paging information' })
+      @Field(() => PIT, {
+        description: 'Paging information'
+      })
       pageInfo!: OffsetPageInfoType
 
-      @Field(() => [TItemClass], { description: 'Array of nodes.' })
+      @Field(() => [TItemClass], {
+        description: 'Array of nodes.'
+      })
       nodes!: DTO[]
 
-      @SkipIf(() => !opts.enableTotalCount, Field(() => Int, { description: 'Fetch total count of records' }))
+      @SkipIf(
+        () => !opts.enableTotalCount,
+        Field(() => Int, {
+          description: 'Fetch total count of records'
+        })
+      )
       get totalCount(): Promise<number> {
         return this.totalCountFn()
       }

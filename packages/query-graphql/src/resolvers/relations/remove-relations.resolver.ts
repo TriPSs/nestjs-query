@@ -3,8 +3,9 @@ import { Args, ArgsType, InputType, Resolver } from '@nestjs/graphql'
 import { Class, ModifyRelationOptions, QueryService } from '@ptc-org/nestjs-query-core'
 
 import { OperationGroup } from '../../auth'
-import { getDTONames } from '../../common'
-import { ModifyRelationAuthorizerFilter, ResolverMutation } from '../../decorators'
+import { getDTONames, mergeBaseResolverOpts } from '../../common'
+import { ModifyRelationAuthorizerFilter } from '../../decorators'
+import { ResolverRelationMutation } from '../../decorators/resolver-relation-mutation.decorator'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { MutationArgsType, RelationInputType, RelationsInputType } from '../../types'
 import { transformAndValidate } from '../helpers'
@@ -15,9 +16,10 @@ import { RelationsOpts, ResolverRelation } from './relations.interface'
 const RemoveOneRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    if (relation.disableRemove) {
+    if (!relation.remove?.enabled) {
       return Base
     }
+
     const commonResolverOpts = removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
@@ -32,7 +34,17 @@ const RemoveOneRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class RemoveOneMixin extends Base {
-      @ResolverMutation(() => DTOClass, {}, commonResolverOpts, { interceptors: [AuthorizerInterceptor(DTOClass)] })
+      @ResolverRelationMutation(
+        () => DTOClass,
+        {
+          description: relation.remove?.description,
+          complexity: relation.remove?.complexity
+        },
+        mergeBaseResolverOpts(relation.remove, commonResolverOpts),
+        {
+          interceptors: [AuthorizerInterceptor(DTOClass)]
+        }
+      )
       async [`remove${baseName}From${dtoNames.baseName}`](
         @Args() setArgs: SetArgs,
         @ModifyRelationAuthorizerFilter(baseNameLower, {
@@ -52,9 +64,10 @@ const RemoveOneRelationMixin =
 const RemoveManyRelationsMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    if (relation.disableRemove) {
+    if (!relation.remove?.enabled) {
       return Base
     }
+
     const commonResolverOpts = removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
@@ -69,7 +82,17 @@ const RemoveManyRelationsMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class Mixin extends Base {
-      @ResolverMutation(() => DTOClass, {}, commonResolverOpts, { interceptors: [AuthorizerInterceptor(DTOClass)] })
+      @ResolverRelationMutation(
+        () => DTOClass,
+        {
+          description: relation.remove?.description,
+          complexity: relation.remove?.complexity
+        },
+        mergeBaseResolverOpts(relation.remove, commonResolverOpts),
+        {
+          interceptors: [AuthorizerInterceptor(DTOClass)]
+        }
+      )
       async [`remove${pluralBaseName}From${dtoNames.baseName}`](
         @Args() addArgs: AddArgs,
         @ModifyRelationAuthorizerFilter(pluralBaseNameLower, {

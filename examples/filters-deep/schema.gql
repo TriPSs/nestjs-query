@@ -1,0 +1,225 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  posts(
+    """Specify to filter the records returned."""
+    filter: PostFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [PostSort!]! = []
+  ): [Post!]!
+}
+
+input PostFilter {
+  and: [PostFilter!]
+  or: [PostFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  authors: PostFilterUserFilter
+  categories: PostFilterCategoryFilter
+}
+
+input IDFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: ID
+  neq: ID
+  gt: ID
+  gte: ID
+  lt: ID
+  lte: ID
+  like: ID
+  notLike: ID
+  iLike: ID
+  notILike: ID
+  in: [ID!]
+  notIn: [ID!]
+}
+
+input StringFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
+}
+
+input PostFilterUserFilter {
+  and: [PostFilterUserFilter!]
+  or: [PostFilterUserFilter!]
+  id: IDFilterComparison
+  firstName: StringFieldComparison
+  lastName: StringFieldComparison
+  posts: PostFilterUserFilterPostFilter
+}
+
+input PostFilterUserFilterPostFilter {
+  and: [PostFilterUserFilterPostFilter!]
+  or: [PostFilterUserFilterPostFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input PostFilterCategoryFilter {
+  and: [PostFilterCategoryFilter!]
+  or: [PostFilterCategoryFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  posts: PostFilterCategoryFilterPostFilter
+}
+
+input PostFilterCategoryFilterPostFilter {
+  and: [PostFilterCategoryFilterPostFilter!]
+  or: [PostFilterCategoryFilterPostFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input PostSort {
+  field: PostSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum PostSortFields {
+  id
+  title
+  description
+}
+
+"""Sort Directions"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+"""Sort Nulls Options"""
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+type Post {
+  id: ID!
+  title: String!
+  description: String
+  categories(
+    """Specify to filter the records returned."""
+    filter: CategoryFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [CategorySort!]! = []
+  ): [Category!]!
+  authors(
+    """Specify to filter the records returned."""
+    filter: UserDeepFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [UserSort!]! = []
+  ): [User!]!
+}
+
+input CategoryFilter {
+  and: [CategoryFilter!]
+  or: [CategoryFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  posts: CategoryFilterPostFilter
+}
+
+input CategoryFilterPostFilter {
+  and: [CategoryFilterPostFilter!]
+  or: [CategoryFilterPostFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+}
+
+input CategorySort {
+  field: CategorySortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum CategorySortFields {
+  id
+  name
+}
+
+input UserDeepFilter {
+  and: [UserDeepFilter!]
+  or: [UserDeepFilter!]
+  id: IDFilterComparison
+  firstName: StringFieldComparison
+  lastName: StringFieldComparison
+  posts: PostDeepFilter
+}
+
+input PostDeepFilter {
+  and: [PostDeepFilter!]
+  or: [PostDeepFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  authors: UserDeepFilter
+  categories: CategoryDeepFilter
+}
+
+input CategoryDeepFilter {
+  and: [CategoryDeepFilter!]
+  or: [CategoryDeepFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  posts: PostDeepFilter
+}
+
+input UserSort {
+  field: UserSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum UserSortFields {
+  id
+  firstName
+  lastName
+}
+
+type Category {
+  id: ID!
+  name: String!
+}
+
+type Query {
+  users(
+    """Specify to filter the records returned."""
+    filter: UserDeepFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [UserSort!]! = []
+  ): [User!]!
+  posts(
+    """Specify to filter the records returned."""
+    filter: PostFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [PostSort!]! = []
+  ): [Post!]!
+}

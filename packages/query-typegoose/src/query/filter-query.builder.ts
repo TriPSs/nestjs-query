@@ -1,6 +1,7 @@
 import { AggregateQuery, Filter, Query, SortDirection, SortField } from '@ptc-org/nestjs-query-core'
-import { DocumentType, mongoose, ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, mongoose } from '@typegoose/typegoose'
 
+import { ReturnModelType } from '../typegoose-types.helper'
 import { AggregateBuilder, TypegooseGroupAndAggregate } from './aggregate.builder'
 import { getSchemaKey } from './helpers'
 import { WhereBuilder } from './where.builder'
@@ -51,7 +52,7 @@ export class FilterQueryBuilder<Entity> {
   }
 
   public buildIdAggregateQuery(
-    id: unknown | unknown[],
+    id: unknown,
     filter: Filter<Entity>,
     aggregate: AggregateQuery<Entity>
   ): TypegooseAggregateQuery<Entity> {
@@ -62,7 +63,7 @@ export class FilterQueryBuilder<Entity> {
     }
   }
 
-  public buildIdFilterQuery(id: unknown | unknown[], filter?: Filter<Entity>): mongoose.FilterQuery<new () => Entity> {
+  public buildIdFilterQuery(id: unknown, filter?: Filter<Entity>): mongoose.FilterQuery<new () => Entity> {
     return {
       ...this.buildFilterQuery(filter),
       _id: Array.isArray(id) ? { $in: id } : id

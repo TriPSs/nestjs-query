@@ -5,34 +5,37 @@
   "projectType": "library",
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["packages/query-mongoose/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/packages/query-mongoose"],
       "options": {
-        "jestConfig": "packages/query-mongoose/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "packages/query-mongoose/jest.config.ts"
       }
     },
     "build": {
-      "executor": "@nrwl/js:tsc",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/query-mongoose",
         "tsConfig": "packages/query-mongoose/tsconfig.lib.json",
         "packageJson": "packages/query-mongoose/package.json",
         "main": "packages/query-mongoose/src/index.ts",
-        "assets": ["packages/query-mongoose/*.md"]
+        "assets": ["packages/query-mongoose/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {}
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm publish ./dist/packages/query-mongoose --access public"
+      }
     }
   },
   "tags": [],

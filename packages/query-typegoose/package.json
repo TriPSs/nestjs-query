@@ -1,6 +1,6 @@
 {
   "name": "@ptc-org/nestjs-query-typegoose",
-  "version": "2.0.1",
+  "version": "6.0.0",
   "description": "Typegoose adapter for @ptc-org/nestjs-query-core",
   "author": "john mcinall<johnmcinall@gmail.com>",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
@@ -22,13 +22,13 @@
     "is-class": "0.0.9",
     "lodash.escaperegexp": "^4.1.2",
     "lodash.merge": "^4.6.2",
-    "tslib": "^2.4.0"
+    "tslib": "^2.6.2"
   },
   "peerDependencies": {
-    "@m8a/nestjs-typegoose": "^8.0.5",
-    "@nestjs/common": "^8.0.0 || ^9.0.0",
-    "@typegoose/typegoose": "^8.0.0 || ^9.0.0",
-    "mongoose": "^6.5.0"
+    "@m8a/nestjs-typegoose": "^9.0.0 || ^10.0.0 || ^11.0.0",
+    "@nestjs/common": "^9.0.0 || ^10.0.0",
+    "@typegoose/typegoose": "^9.0.0 || ^10.0.0 || ^11.0.0",
+    "mongoose": "^6.5.0 || ^7.0.3 || ^8.0.0"
   },
   "repository": {
     "type": "git",

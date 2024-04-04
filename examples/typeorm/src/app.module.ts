@@ -14,7 +14,7 @@ import { TodoItemModule } from './todo-item/todo-item.module'
     TypeOrmModule.forRoot(typeormOrmConfig('typeorm')),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/typeorm/schema.gql',
       context: ({ req }: { req: { headers: Record<string, string> } }): GqlContext => ({ request: req }),
       formatError: formatGraphqlError
     }),

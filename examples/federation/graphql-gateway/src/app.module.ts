@@ -6,7 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql'
   imports: [
     GraphQLModule.forRoot({
       driver: ApolloFederationDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/federation/graphql-gateway/schema.gql',
       server: {
         // ... Apollo server options
         cors: true

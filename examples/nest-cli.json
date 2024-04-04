@@ -2,6 +2,15 @@
   "collection": "@nestjs/schematics",
   "monorepo": true,
   "projects": {
+    "all-paging": {
+      "type": "application",
+      "root": "all-paging",
+      "entryFile": "main",
+      "sourceRoot": "all-paging/src",
+      "compilerOptions": {
+        "tsConfigPath": "./tsconfig.json"
+      }
+    },
     "auth": {
       "type": "application",
       "root": "auth",

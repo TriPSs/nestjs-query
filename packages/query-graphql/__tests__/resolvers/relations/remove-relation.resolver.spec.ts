@@ -7,8 +7,14 @@ import { createResolverFromNest, generateSchema, TestRelationDTO, TestResolverDT
 
 @Resolver(() => TestResolverDTO)
 class TestResolver extends RemoveRelationsResolver(TestResolverDTO, {
-  one: { relation: { DTO: TestRelationDTO }, custom: { DTO: TestRelationDTO, relationName: 'other' } },
-  many: { relations: { DTO: TestRelationDTO }, customs: { DTO: TestRelationDTO, relationName: 'others' } }
+  one: {
+    relation: { DTO: TestRelationDTO, remove: { enabled: true } },
+    custom: { DTO: TestRelationDTO, relationName: 'other', remove: { enabled: true } }
+  },
+  many: {
+    relations: { DTO: TestRelationDTO, remove: { enabled: true } },
+    customs: { DTO: TestRelationDTO, relationName: 'others', remove: { enabled: true } }
+  }
 }) {
   constructor(service: TestService) {
     super(service)
@@ -31,13 +37,31 @@ describe('RemoveRelationsResolver', () => {
   it('should not add remove methods if one and many are empty', () => expectResolverSDL())
 
   describe('one', () => {
-    it('should use the object type name', () => expectResolverSDL({ one: { relation: { DTO: TestRelationDTO } } }))
+    it('should use the object type name', () =>
+      expectResolverSDL({
+        one: {
+          relation: {
+            DTO: TestRelationDTO,
+            remove: { enabled: true },
+            update: { enabled: true }
+          }
+        }
+      }))
 
     it('should use the dtoName if provided', () =>
-      expectResolverSDL({ one: { relation: { DTO: TestRelationDTO, dtoName: 'Test' } } }))
+      expectResolverSDL({
+        one: {
+          relation: {
+            DTO: TestRelationDTO,
+            dtoName: 'Test',
+            remove: { enabled: true },
+            update: { enabled: true }
+          }
+        }
+      }))
 
     it('should not add remove methods if disableRemove is true', () =>
-      expectResolverSDL({ one: { relation: { DTO: TestRelationDTO, disableRemove: true } } }))
+      expectResolverSDL({ one: { relation: { DTO: TestRelationDTO, update: { enabled: true } } } }))
 
     it('should call the service findRelation with the provided dto and correct relation name', async () => {
       const { resolver, mockService } = await createResolverFromNest(TestResolver)
@@ -75,13 +99,33 @@ describe('RemoveRelationsResolver', () => {
   })
 
   describe('many', () => {
-    it('should use the object type name', () => expectResolverSDL({ many: { relations: { DTO: TestRelationDTO } } }))
+    it('should use the object type name', () =>
+      expectResolverSDL({
+        many: {
+          relations: {
+            DTO: TestRelationDTO,
+            remove: {
+              enabled: true
+            }
+          }
+        }
+      }))
 
     it('should use the dtoName if provided', () =>
-      expectResolverSDL({ many: { relations: { DTO: TestRelationDTO, dtoName: 'Test' } } }))
+      expectResolverSDL({
+        many: {
+          relations: {
+            DTO: TestRelationDTO,
+            dtoName: 'Test',
+            remove: {
+              enabled: true
+            }
+          }
+        }
+      }))
 
     it('should not add remove many methods if disableRemove is true', () =>
-      expectResolverSDL({ many: { relations: { DTO: TestRelationDTO, disableRemove: true } } }))
+      expectResolverSDL({ many: { relations: { DTO: TestRelationDTO, update: { enabled: false } } } }))
 
     it('should call the service findRelation with the provided dto and correct relation name', async () => {
       const { resolver, mockService } = await createResolverFromNest(TestResolver)

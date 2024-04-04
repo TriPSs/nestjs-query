@@ -22,7 +22,10 @@ import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 @ObjectType('Tag')
 @KeySet(['id'])
 @QueryOptions({ enableTotalCount: true })
-@FilterableCursorConnection('todoItems', () => TodoItemDTO)
+@FilterableCursorConnection('todoItems', () => TodoItemDTO, {
+  update: { enabled: true },
+  remove: { enabled: true }
+})
 @BeforeCreateOne((input: CreateOneInputType<TagDTO>, context: GqlContext) => {
   input.input.createdBy = getUserName(context)
   return input
@@ -52,6 +55,9 @@ export class TagDTO {
 
   @FilterableField(() => GraphQLISODateTime)
   updated!: Date
+
+  @FilterableField(() => GraphQLISODateTime)
+  fakeDate!: Date
 
   @FilterableField({ nullable: true })
   createdBy?: string

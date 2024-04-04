@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AggregateResponseType should create an aggregate type with a custom name 1`] = `
-type FakeTypeAggregateGroupBy {
+"type FakeTypeAggregateGroupBy {
   stringField: String
   numberField: Float
   boolField: Boolean
@@ -84,12 +84,12 @@ type CustomPrefixAggregateResponse {
 }
 
 type Query {
-  aggregate: CustomPrefixAggregateResponse!
-}
+  aggregate: [CustomPrefixAggregateResponse!]!
+}"
 `;
 
 exports[`AggregateResponseType should create an aggregate type with the correct fields for each type 1`] = `
-type FakeTypeAggregateGroupBy {
+"type FakeTypeAggregateGroupBy {
   stringField: String
   numberField: Float
   boolField: Boolean
@@ -138,12 +138,12 @@ type FakeTypeAggregateResponse {
 }
 
 type Query {
-  aggregate: FakeTypeAggregateResponse!
-}
+  aggregate: [FakeTypeAggregateResponse!]!
+}"
 `;
 
 exports[`AggregateResponseType should return the same class if called multiple times 1`] = `
-type FakeTypeAggregateGroupBy {
+"type FakeTypeAggregateGroupBy {
   stringField: String
   numberField: Float
   boolField: Boolean
@@ -192,6 +192,6 @@ type FakeTypeAggregateResponse {
 }
 
 type Query {
-  aggregate: FakeTypeAggregateResponse!
-}
+  aggregate: [FakeTypeAggregateResponse!]!
+}"
 `;

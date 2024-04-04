@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common'
-import { AggregateQuery, AggregateResponse } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, AggregateQueryField, AggregateResponse } from '@ptc-org/nestjs-query-core'
 import { camelCase } from 'camel-case'
 import { Document } from 'mongoose'
 
@@ -57,7 +57,7 @@ export class AggregateBuilder<Entity extends Document> {
    * Builds a aggregate SELECT clause from a aggregate.
    * @param aggregate - the aggregates to select.
    */
-  build(aggregate: AggregateQuery<Entity>): MongooseGroupAndAggregate {
+  public build(aggregate: AggregateQuery<Entity>): MongooseGroupAndAggregate {
     const aggSelect: Aggregate = {
       ...this.createAggSelect(AggregateFuncs.COUNT, aggregate.count),
       ...this.createAggSelect(AggregateFuncs.SUM, aggregate.sum),
@@ -68,17 +68,22 @@ export class AggregateBuilder<Entity extends Document> {
     if (!Object.keys(aggSelect).length) {
       throw new BadRequestException('No aggregate fields found.')
     }
-    return { ...aggSelect, _id: this.createGroupBySelect(aggregate.groupBy) } as MongooseGroupAndAggregate
+
+    return {
+      ...aggSelect,
+      _id: this.createGroupBySelect(aggregate.groupBy)
+    }
   }
 
-  private createAggSelect(func: AggregateFuncs, fields?: (keyof Entity)[]): Aggregate {
+  private createAggSelect(func: AggregateFuncs, fields?: AggregateQueryField<Entity>[]): Aggregate {
     if (!fields) {
       return {}
     }
-    return fields.reduce((agg: Aggregate, field) => {
+
+    return fields.reduce((agg: Aggregate, { field }) => {
       const aggAlias = `${func}_${field as string}`
       const fieldAlias = `$${getSchemaKey(String(field))}`
-      if (func === 'count') {
+      if (func === AggregateFuncs.COUNT) {
         return {
           ...agg,
           [aggAlias]: {
@@ -96,26 +101,27 @@ export class AggregateBuilder<Entity extends Document> {
     }, {})
   }
 
-  private createGroupBySelect(fields?: (keyof Entity)[]): Record<string, string> | null {
-    if (!fields) {
+  private createGroupBySelect(aggregatedFields?: AggregateQueryField<Entity>[]): Record<string, string> | null {
+    if (!aggregatedFields) {
       return null
     }
-    return fields.reduce((id: Record<string, string>, field) => {
-      const aggAlias = this.getGroupByAlias(field)
-      const fieldAlias = `$${getSchemaKey(String(field))}`
+
+    return aggregatedFields.reduce((id: Record<string, string>, aggregatedField) => {
+      const aggAlias = this.getGroupByAlias(aggregatedField)
+      const fieldAlias = `$${getSchemaKey(String(aggregatedField.field))}`
       return { ...id, [aggAlias]: fieldAlias }
     }, {})
   }
 
-  getGroupBySelects(fields?: (keyof Entity)[]): string[] | undefined {
-    if (!fields) {
+  public getGroupBySelects(aggregatedFields?: AggregateQueryField<Entity>[]): string[] | undefined {
+    if (!aggregatedFields) {
       return undefined
     }
     // append _id so it pulls the sort from the _id field
-    return (fields ?? []).map((f) => `_id.${this.getGroupByAlias(f)}`)
+    return (aggregatedFields ?? []).map((aggregatedField) => `_id.${this.getGroupByAlias(aggregatedField)}`)
   }
 
-  private getGroupByAlias(field: keyof Entity): string {
+  private getGroupByAlias({ field }: AggregateQueryField<Entity>): string {
     return `group_by_${field as string}`
   }
 }

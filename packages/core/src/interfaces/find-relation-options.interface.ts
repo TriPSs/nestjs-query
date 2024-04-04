@@ -1,8 +1,10 @@
 import { Filterable } from './filterable.interface'
+import { WithDeleted } from './with-deleted.interface'
+import { WithResolveInfo } from './with-resolve-info.interface'
 
-export interface FindRelationOptions<Relation> extends Filterable<Relation> {
+export interface FindRelationOptions<Relation> extends Filterable<Relation>, WithResolveInfo<Relation>, WithDeleted {
   /**
-   * Allow also deleted records to be retrieved
+   * Relation is looked ahead
    */
-  withDeleted?: boolean
+  lookedAhead?: boolean
 }

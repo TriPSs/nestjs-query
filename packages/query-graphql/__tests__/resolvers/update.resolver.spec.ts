@@ -32,7 +32,10 @@ describe('UpdateResolver', () => {
   const createTestResolver = (opts?: UpdateResolverOpts<TestResolverDTO>) => {
     @Resolver(() => TestResolverDTO)
     class TestResolver extends UpdateResolver(TestResolverDTO, opts) {
-      constructor(service: TestService, @InjectPubSub() readonly pubSub: PubSub) {
+      constructor(
+        service: TestService,
+        @InjectPubSub() readonly pubSub: PubSub
+      ) {
         super(service)
       }
     }

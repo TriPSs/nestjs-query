@@ -5,7 +5,9 @@ import { CustomIDScalar } from '../../common/custom-id.scalar'
 import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 
 @ObjectType('SubTask')
-@Relation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@Relation('todoItem', () => TodoItemDTO, {
+  update: { enabled: true }
+})
 export class SubTaskDTO {
   @IDField(() => CustomIDScalar)
   id!: number

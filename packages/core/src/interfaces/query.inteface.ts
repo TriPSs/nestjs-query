@@ -1,5 +1,6 @@
 import { Filterable } from './filterable.interface'
 import { Paging } from './paging.interface'
+import { SelectRelations } from './select-relation.interface'
 import { SortField } from './sort-field.interface'
 
 /**
@@ -26,7 +27,7 @@ import { SortField } from './sort-field.interface'
  *
  * @typeparam T - the type of the object to query for.
  */
-export interface Query<T> extends Filterable<T> {
+export interface Query<DTO> extends Filterable<DTO>, SelectRelations<DTO> {
   /**
    * Option to page through the collection.
    */
@@ -34,5 +35,5 @@ export interface Query<T> extends Filterable<T> {
   /**
    * Option to sort the collection.
    */
-  sorting?: SortField<T>[]
+  sorting?: SortField<DTO>[]
 }

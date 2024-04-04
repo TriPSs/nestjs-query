@@ -15,13 +15,15 @@ describe('QueryRelationsLoader', () => {
 
     it('should return a function that accepts queryargs', () => {
       const service = mock<QueryService<DTO>>()
-      const queryRelationsLoader = new QueryRelationsLoader(RelationDTO, 'relation')
+      const queryRelationsLoader = new QueryRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation')
       expect(queryRelationsLoader.createLoader(instance(service))).toBeInstanceOf(Function)
     })
 
     it('should try to load the relations with the query args', () => {
       const service = mock<QueryService<DTO>>()
-      const queryRelationsLoader = new QueryRelationsLoader(RelationDTO, 'relation').createLoader(instance(service))
+      const queryRelationsLoader = new QueryRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation').createLoader(
+        instance(service)
+      )
       const dtos = [{ id: 'dto-1' }, { id: 'dto-2' }]
       const dto1Relations = [{ id: 'relation-1' }, { id: 'relation-2' }]
       const dto2Relations = [{ id: 'relation-3' }, { id: 'relation-4' }]
@@ -41,7 +43,9 @@ describe('QueryRelationsLoader', () => {
 
     it('should try return an empty array for each dto is no results are found', () => {
       const service = mock<QueryService<DTO>>()
-      const queryRelationsLoader = new QueryRelationsLoader(RelationDTO, 'relation').createLoader(instance(service))
+      const queryRelationsLoader = new QueryRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation').createLoader(
+        instance(service)
+      )
       const dtos = [{ id: 'dto-1' }, { id: 'dto-2' }]
       const dto1Relations = [{ id: 'relation-1' }, { id: 'relation-2' }]
       when(service.queryRelations(RelationDTO, 'relation', deepEqual(dtos), deepEqual({}))).thenResolve(
@@ -57,7 +61,9 @@ describe('QueryRelationsLoader', () => {
 
     it('should group queryRelations calls by query and return in the correct order', () => {
       const service = mock<QueryService<DTO>>()
-      const queryRelationsLoader = new QueryRelationsLoader(RelationDTO, 'relation').createLoader(instance(service))
+      const queryRelationsLoader = new QueryRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation').createLoader(
+        instance(service)
+      )
       const dtos = [{ id: 'dto-1' }, { id: 'dto-2' }, { id: 'dto-3' }, { id: 'dto-4' }]
       const dto1Relations = [{ id: 'relation-1' }, { id: 'relation-2' }]
       const dto2Relations = [{ id: 'relation-3' }, { id: 'relation-4' }]

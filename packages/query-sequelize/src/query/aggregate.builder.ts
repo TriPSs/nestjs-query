@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common'
-import { AggregateQuery, AggregateResponse } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, AggregateQueryField, AggregateResponse } from '@ptc-org/nestjs-query-core'
 import { camelCase } from 'camel-case'
 import sequelize, { Projectable } from 'sequelize'
 import { Model, ModelCtor } from 'sequelize-typescript'
@@ -20,7 +20,7 @@ const AGG_REGEXP = /(AVG|SUM|COUNT|MAX|MIN|GROUP_BY)_(.*)/
  */
 export class AggregateBuilder<Entity extends Model<Entity, Partial<Entity>>> {
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  static convertToAggregateResponse<Entity>(rawAggregates: Record<string, unknown>[]): AggregateResponse<Entity>[] {
+  public static convertToAggregateResponse<Entity>(rawAggregates: Record<string, unknown>[]): AggregateResponse<Entity>[] {
     return rawAggregates.map((aggregate) => {
       return Object.keys(aggregate).reduce((agg, resultField: string) => {
         const matchResult = AGG_REGEXP.exec(resultField)
@@ -46,7 +46,7 @@ export class AggregateBuilder<Entity extends Model<Entity, Partial<Entity>>> {
    * Builds a aggregate SELECT clause from a aggregate.
    * @param aggregate - the aggregates to select.
    */
-  build(aggregate: AggregateQuery<Entity>): Projectable {
+  public build(aggregate: AggregateQuery<Entity>): Projectable {
     const selects = [
       ...this.createGroupBySelect(aggregate.groupBy),
       ...this.createAggSelect(AggregateFuncs.COUNT, aggregate.count),
@@ -63,11 +63,14 @@ export class AggregateBuilder<Entity extends Model<Entity, Partial<Entity>>> {
     }
   }
 
-  private createAggSelect(func: AggregateFuncs, fields?: (keyof Entity)[]): [sequelize.Utils.Fn, string][] {
-    if (!fields) {
+  private createAggSelect(
+    func: AggregateFuncs,
+    aggregatedFields?: AggregateQueryField<Entity>[]
+  ): [sequelize.Utils.Fn, string][] {
+    if (!aggregatedFields) {
       return []
     }
-    return fields.map((field) => {
+    return aggregatedFields.map(({ field }) => {
       const aggAlias = `${func}_${field as string}`
       const colName = this.model.rawAttributes[field as string].field
       const fn = sequelize.fn(func, sequelize.col(colName || (field as string)))
@@ -75,11 +78,11 @@ export class AggregateBuilder<Entity extends Model<Entity, Partial<Entity>>> {
     })
   }
 
-  private createGroupBySelect(fields?: (keyof Entity)[]): [sequelize.Utils.Col, string][] {
-    if (!fields) {
+  private createGroupBySelect(aggregatedFields?: AggregateQueryField<Entity>[]): [sequelize.Utils.Col, string][] {
+    if (!aggregatedFields) {
       return []
     }
-    return fields.map((field) => {
+    return aggregatedFields.map(({ field }) => {
       const colName = this.model.rawAttributes[field as string].field
       return [sequelize.col(colName || (field as string)), `GROUP_BY_${field as string}`]
     })

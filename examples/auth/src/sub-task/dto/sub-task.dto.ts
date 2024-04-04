@@ -8,8 +8,8 @@ import { SubTaskAuthorizer } from '../sub-task.authorizer'
 @ObjectType('SubTask')
 @QueryOptions({ enableTotalCount: true })
 @Authorize(SubTaskAuthorizer)
-@Relation('owner', () => UserDTO, { disableRemove: true, disableUpdate: true })
-@FilterableRelation('todoItem', () => TodoItemDTO, { disableRemove: true })
+@Relation('owner', () => UserDTO)
+@FilterableRelation('todoItem', () => TodoItemDTO, { update: { enabled: true } })
 export class SubTaskDTO {
   @FilterableField(() => ID)
   id!: number

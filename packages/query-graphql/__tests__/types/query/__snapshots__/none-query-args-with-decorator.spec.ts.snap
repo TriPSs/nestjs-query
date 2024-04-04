@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`QueryArgsType with decorator options no paging query args options allow apply the options to the generated SDL 1`] = `
-type Query {
+"type Query {
   test(
     """Specify to filter the records returned."""
-    filter: NoPagingQueryOptionsDTOFilter = {booleanField: {is: true}}
+    filter: NoPagingQueryOptionsDTOFilter! = {booleanField: {is: true}}
 
     """Specify to sort results."""
-    sorting: [NoPagingQueryOptionsDTOSort!] = [{field: booleanField, direction: DESC}]
+    sorting: [NoPagingQueryOptionsDTOSort!]! = [{field: booleanField, direction: DESC}]
   ): String!
 }
 
@@ -216,5 +216,5 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;

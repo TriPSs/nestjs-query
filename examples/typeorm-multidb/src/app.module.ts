@@ -13,7 +13,7 @@ import { UserModule } from './user/user.module'
     TypeOrmModule.forRoot(typeormOrmConfig('typeorm_multidb_2', 'typeorm_multidb_2', { name: 'user-connection' })),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/typeorm-multidb/schema.gql',
       formatError: formatGraphqlError
     }),
     TodoItemModule,

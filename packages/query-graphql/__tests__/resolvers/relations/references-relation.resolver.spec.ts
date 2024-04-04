@@ -1,23 +1,46 @@
-import { Query, Resolver } from '@nestjs/graphql'
+import { ID, ObjectType, Query, Resolver, TypeMetadataStorage } from '@nestjs/graphql'
+import { FilterableField } from '@ptc-org/nestjs-query-graphql'
 
 import { ReferencesOpts, ReferencesRelationsResolver } from '../../../src/resolvers/relations'
-import { createResolverFromNest, generateSchema, TestRelationDTO, TestResolverDTO, TestService } from '../../__fixtures__'
+import { createResolverFromNest, generateSchema, TestService } from '../../__fixtures__'
 
-@Resolver(() => TestResolverDTO)
-class TestResolver extends ReferencesRelationsResolver(TestResolverDTO, {
-  reference: { DTO: TestRelationDTO, keys: { id: 'stringField' } }
-}) {
-  constructor(service: TestService) {
-    super(service)
+function createTestResolverDTO() {
+  @ObjectType()
+  class TestResolverDTO {
+    @FilterableField(() => ID)
+    id!: string
+
+    @FilterableField()
+    stringField!: string
   }
+
+  return TestResolverDTO
+}
+
+function getTestRelationDTO() {
+  @ObjectType()
+  class TestRelationDTO {
+    @FilterableField(() => ID)
+    id!: string
+
+    @FilterableField()
+    testResolverId!: string
+  }
+
+  return TestRelationDTO
 }
 
 describe('ReferencesRelationMixin', () => {
-  const expectResolverSDL = async (opts?: ReferencesOpts<TestResolverDTO>) => {
+  afterEach(() => {
+    TypeMetadataStorage.clear()
+  })
+  const expectResolverSDL = async (opts?: ReferencesOpts<{ id: string; stringField: string }>) => {
+    const TestResolverDTO = createTestResolverDTO()
+
     @Resolver(() => TestResolverDTO)
     class TestSDLResolver extends ReferencesRelationsResolver(TestResolverDTO, opts ?? {}) {
       @Query(() => TestResolverDTO)
-      test(): TestResolverDTO {
+      test() {
         return { id: '1', stringField: 'foo' }
       }
     }
@@ -28,14 +51,25 @@ describe('ReferencesRelationMixin', () => {
   it('should not add reference methods if references empty', () => expectResolverSDL())
 
   it('should use the add the reference if provided', () =>
-    expectResolverSDL({ reference: { DTO: TestRelationDTO, keys: { id: 'stringField' }, dtoName: 'Test' } }))
+    expectResolverSDL({ reference: { DTO: getTestRelationDTO(), keys: { id: 'stringField' }, dtoName: 'Test' } }))
 
   it('should set the field to nullable if set to true', () =>
-    expectResolverSDL({ reference: { DTO: TestRelationDTO, keys: { id: 'stringField' }, nullable: true } }))
+    expectResolverSDL({ reference: { DTO: getTestRelationDTO(), keys: { id: 'stringField' }, nullable: true } }))
 
   it('should return a references type from the passed in dto', async () => {
+    const TestResolverDTO = createTestResolverDTO()
+
+    @Resolver(() => TestResolverDTO)
+    class TestResolver extends ReferencesRelationsResolver(TestResolverDTO, {
+      reference: { DTO: getTestRelationDTO(), keys: { id: 'stringField' } }
+    }) {
+      constructor(service: TestService) {
+        super(service)
+      }
+    }
+
     const { resolver } = await createResolverFromNest(TestResolver)
-    const dto: TestResolverDTO = {
+    const dto = {
       id: 'id-1',
       stringField: 'reference-id-1'
     }

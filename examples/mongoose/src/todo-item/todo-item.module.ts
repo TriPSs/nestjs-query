@@ -11,6 +11,7 @@ import { TodoItemEntity, TodoItemEntitySchema } from './todo-item.entity'
 import { TodoItemResolver } from './todo-item.resolver'
 
 const guards = [AuthGuard]
+
 @Module({
   providers: [TodoItemResolver],
   imports: [

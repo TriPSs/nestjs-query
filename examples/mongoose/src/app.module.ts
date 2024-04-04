@@ -10,13 +10,14 @@ import { TagModule } from './tag/tag.module'
 import { TodoItemModule } from './todo-item/todo-item.module'
 
 const { uri, ...options } = mongooseConfig('mongoose')
+
 @Module({
   imports: [
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     MongooseModule.forRoot(uri, options),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/mongoose/schema.gql',
       context: ({ req }: { req: { headers: Record<string, string> } }): GqlContext => ({ request: req }),
       formatError: formatGraphqlError
     }),

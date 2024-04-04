@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
-import { Args, ArgsType, Field, Query, Resolver } from '@nestjs/graphql'
+import { ArgsType, Field, Query, Resolver } from '@nestjs/graphql'
 import { Filter } from '@ptc-org/nestjs-query-core'
-import { anything, deepEqual, objectContaining, when } from 'ts-mockito'
+import { deepEqual, objectContaining, when } from 'ts-mockito'
 
 import {
   CursorQueryArgsType,
@@ -94,7 +94,12 @@ describe('ReadResolver', () => {
             stringField: 'foo'
           }
         ]
-        when(mockService.query(objectContaining({ ...input, paging: { limit: 2, offset: 0 } }))).thenResolve(output)
+        when(
+          mockService.query(
+            objectContaining({ ...input, paging: { limit: 2, offset: 0 } }),
+            deepEqual({ withDeleted: undefined, resolveInfo: undefined })
+          )
+        ).thenResolve(output)
         const result = await resolver.queryMany(input)
         return expect(result).toEqual({
           edges: [
@@ -136,7 +141,8 @@ describe('ReadResolver', () => {
 
         when(
           mockService.query(
-            objectContaining({ filter: { and: [input.filter, authorizeFilter] }, paging: { limit: 2, offset: 0 } })
+            objectContaining({ filter: { and: [input.filter, authorizeFilter] }, paging: { limit: 2, offset: 0 } }),
+            deepEqual({ withDeleted: undefined, resolveInfo: undefined })
           )
         ).thenResolve(output)
 
@@ -175,9 +181,17 @@ describe('ReadResolver', () => {
             stringField: 'foo'
           }
         ]
-        when(mockService.query(objectContaining({ ...input, paging: { limit: 2, offset: 0 } }))).thenResolve(output)
+        when(
+          mockService.query(
+            objectContaining({
+              ...input,
+              paging: { limit: 2, offset: 0 }
+            }),
+            deepEqual({ withDeleted: undefined, resolveInfo: undefined })
+          )
+        ).thenResolve(output)
         const result = await resolver.queryMany(input)
-        when(mockService.count(objectContaining(input.filter))).thenResolve(10)
+        when(mockService.count(objectContaining(input.filter), objectContaining({ withDeleted: undefined }))).thenResolve(10)
         return expect(result.totalCount).resolves.toBe(10)
       })
 
@@ -197,15 +211,19 @@ describe('ReadResolver', () => {
           }
         ]
         const authorizeFilter = { id: { eq: '1' } }
+        const query = { filter: { and: [input.filter, authorizeFilter] }, paging: { limit: 2, offset: 0 } }
 
         when(
-          mockService.query(
-            objectContaining({ filter: { and: [input.filter, authorizeFilter] }, paging: { limit: 2, offset: 0 } })
-          )
+          mockService.query(objectContaining(query), deepEqual({ withDeleted: undefined, resolveInfo: undefined }))
         ).thenResolve(output)
 
         const result = await resolver.queryMany(input, authorizeFilter)
-        when(mockService.count(objectContaining({ and: [input.filter, authorizeFilter] }))).thenResolve(10)
+        when(
+          mockService.count(
+            objectContaining({ and: [input.filter, authorizeFilter] }),
+            objectContaining({ withDeleted: undefined })
+          )
+        ).thenResolve(10)
         return expect(result.totalCount).resolves.toBe(10)
       })
     })
@@ -232,7 +250,15 @@ describe('ReadResolver', () => {
             stringField: 'foo'
           }
         ]
-        when(mockService.query(objectContaining({ ...input, paging: { limit: 2 } }))).thenResolve(output)
+        when(
+          mockService.query(
+            objectContaining({ ...input, paging: { limit: 2 } }),
+            deepEqual({
+              withDeleted: undefined,
+              resolveInfo: undefined
+            })
+          )
+        ).thenResolve(output)
         const result = await resolver.queryMany(input)
         return expect(result).toEqual({
           nodes: output,
@@ -263,7 +289,9 @@ describe('ReadResolver', () => {
             stringField: 'foo'
           }
         ]
-        when(mockService.query(objectContaining(input))).thenResolve(output)
+        when(
+          mockService.query(objectContaining(input), deepEqual({ withDeleted: undefined, resolveInfo: undefined }))
+        ).thenResolve(output)
         const result = await resolver.queryMany(input)
         return expect(result).toEqual(output)
       })

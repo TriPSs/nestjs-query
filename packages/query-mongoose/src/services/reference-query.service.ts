@@ -22,11 +22,11 @@ import {
 import { AggregateBuilder, FilterQueryBuilder } from '../query'
 
 export abstract class ReferenceQueryService<Entity extends Document> {
-  abstract readonly Model: MongooseModel<Entity>
+  public abstract readonly Model: MongooseModel<Entity>
 
-  abstract getById(id: string | number, opts?: GetByIdOptions<Entity>): Promise<Entity>
+  public abstract getById(id: string | number, opts?: GetByIdOptions<Entity>): Promise<Entity>
 
-  aggregateRelations<Relation extends Document>(
+  public aggregateRelations<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -34,7 +34,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     aggregate: AggregateQuery<Relation>
   ): Promise<Map<Entity, AggregateResponse<Relation>[]>>
 
-  aggregateRelations<Relation extends Document>(
+  public aggregateRelations<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
@@ -42,7 +42,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     aggregate: AggregateQuery<Relation>
   ): Promise<AggregateResponse<Relation>[]>
 
-  async aggregateRelations<Relation extends Document>(
+  public async aggregateRelations<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -76,14 +76,14 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return AggregateBuilder.convertToAggregateResponse(aggResult)
   }
 
-  countRelations<Relation extends Document>(
+  public countRelations<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
     filter: Filter<Relation>
   ): Promise<Map<Entity, number>>
 
-  countRelations<Relation extends Document>(
+  public countRelations<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
@@ -111,24 +111,24 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     if (!refFilter) {
       return 0
     }
-    return relationModel.count(referenceQueryBuilder.buildFilterQuery(refFilter)).exec()
+    return relationModel.countDocuments(referenceQueryBuilder.buildFilterQuery(refFilter)).exec()
   }
 
-  findRelation<Relation>(
+  public findRelation<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: Entity[],
     opts?: FindRelationOptions<Relation>
   ): Promise<Map<Entity, Relation | undefined>>
 
-  findRelation<Relation>(
+  public findRelation<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
     opts?: FindRelationOptions<Relation>
   ): Promise<Relation | undefined>
 
-  async findRelation<Relation>(
+  public async findRelation<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -158,21 +158,21 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return populatedRef ? assembler.convertToDTO(populatedRef as Document) : undefined
   }
 
-  queryRelations<Relation>(
+  public queryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
     query: Query<Relation>
   ): Promise<Map<Entity, Relation[]>>
 
-  queryRelations<Relation>(
+  public queryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
     query: Query<Relation>
   ): Promise<Relation[]>
 
-  async queryRelations<Relation>(
+  public async queryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -199,7 +199,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return assembler.convertToDTOs(populated.get(relationName) as Document[])
   }
 
-  async addRelations<Relation extends Document>(
+  public async addRelations<Relation extends Document>(
     relationName: string,
     id: string,
     relationIds: (string | number)[],
@@ -216,7 +216,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return this.getById(id)
   }
 
-  async setRelations<Relation extends Document>(
+  public async setRelations<Relation extends Document>(
     relationName: string,
     id: string,
     relationIds: (string | number)[],
@@ -233,7 +233,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return this.getById(id)
   }
 
-  async setRelation<Relation extends Document>(
+  public async setRelation<Relation extends Document>(
     relationName: string,
     id: string | number,
     relationId: string | number,
@@ -250,7 +250,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return this.getById(id)
   }
 
-  async removeRelation<Relation extends Document>(
+  public async removeRelation<Relation extends Document>(
     relationName: string,
     id: string | number,
     relationId: string | number,
@@ -271,7 +271,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return this.getById(id)
   }
 
-  async removeRelations<Relation extends Document>(
+  public async removeRelations<Relation extends Document>(
     relationName: string,
     id: string | number,
     relationIds: string[] | number[],
@@ -386,6 +386,6 @@ export abstract class ReferenceQueryService<Entity extends Document> {
   ): Promise<number> {
     const referenceModel = this.getReferenceModel<Relation>(relationName)
     const referenceQueryBuilder = this.getReferenceQueryBuilder<Relation>(relationName)
-    return referenceModel.count(referenceQueryBuilder.buildIdFilterQuery(relationIds, filter)).exec()
+    return referenceModel.countDocuments(referenceQueryBuilder.buildIdFilterQuery(relationIds, filter)).exec()
   }
 }

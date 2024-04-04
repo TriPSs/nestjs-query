@@ -8,8 +8,11 @@ export class TodoItemEntity {
   @Column()
   title!: string
 
-  @Column({ nullable: true })
-  description?: string
+  @Column({
+    nullable: true,
+    name: 'description'
+  })
+  'todo item description'?: string
 
   @Column()
   completed!: boolean

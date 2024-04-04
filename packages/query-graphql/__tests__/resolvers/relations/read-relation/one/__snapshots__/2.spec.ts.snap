@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReadRelationsResolver - one - 2 should set the field to nullable if set to true 1`] = `
+"type TestResolverDTO {
+  id: ID!
+  stringField: String!
+  relation: TestRelationDTO
+}
+
+type TestRelationDTO {
+  id: ID!
+  testResolverId: String!
+}
+
+type Query {
+  test: TestResolverDTO!
+}"
+`;

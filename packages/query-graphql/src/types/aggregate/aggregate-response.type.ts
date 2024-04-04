@@ -12,13 +12,11 @@ function NumberAggregatedType<DTO>(
   fields: FilterableFieldDescriptor[],
   NumberType: GraphQLScalarType
 ): Class<NumberAggregate<DTO>> {
-  const fieldNames = fields.map((f) => f.propertyName)
-
   @ObjectType(name)
   class Aggregated {}
 
-  fieldNames.forEach((propertyName) => {
-    Field(() => NumberType, { nullable: true })(Aggregated.prototype, propertyName)
+  fields.forEach(({ propertyName, schemaName }) => {
+    Field(() => NumberType, { name: schemaName, nullable: true })(Aggregated.prototype, propertyName)
   })
 
   return Aggregated
@@ -28,9 +26,9 @@ function AggregateGroupByType<DTO>(name: string, fields: FilterableFieldDescript
   @ObjectType(name)
   class Aggregated {}
 
-  fields.forEach(({ propertyName, target, returnTypeFunc }) => {
+  fields.forEach(({ propertyName, schemaName, target, returnTypeFunc }) => {
     const rt = returnTypeFunc ? returnTypeFunc() : target
-    Field(() => rt, { nullable: true })(Aggregated.prototype, propertyName)
+    Field(() => rt, { name: schemaName, nullable: true })(Aggregated.prototype, propertyName)
   })
 
   return Aggregated
@@ -40,9 +38,9 @@ function AggregatedType<DTO>(name: string, fields: FilterableFieldDescriptor[]):
   @ObjectType(name)
   class Aggregated {}
 
-  fields.forEach(({ propertyName, target, returnTypeFunc }) => {
+  fields.forEach(({ propertyName, schemaName, target, returnTypeFunc }) => {
     const rt = returnTypeFunc ? returnTypeFunc() : target
-    Field(() => rt, { nullable: true })(Aggregated.prototype, propertyName)
+    Field(() => rt, { name: schemaName, nullable: true })(Aggregated.prototype, propertyName)
   })
 
   return Aggregated
@@ -50,7 +48,10 @@ function AggregatedType<DTO>(name: string, fields: FilterableFieldDescriptor[]):
 
 export type AggregateResponseOpts = { prefix: string }
 
-export function AggregateResponseType<DTO>(DTOClass: Class<DTO>, opts?: AggregateResponseOpts): Class<AggregateResponse<DTO>> {
+export function AggregateResponseType<DTO>(
+  DTOClass: Class<DTO>,
+  opts?: AggregateResponseOpts
+): [Class<AggregateResponse<DTO>>, Class<TypeAggregate<DTO>>] {
   const objName = getGraphqlObjectName(DTOClass, 'Unable to make AggregationResponseType.')
   const prefix = opts?.prefix ?? objName
   const aggName = `${prefix}AggregateResponse`
@@ -91,6 +92,6 @@ export function AggregateResponseType<DTO>(DTOClass: Class<DTO>, opts?: Aggregat
       max?: TypeAggregate<DTO>
     }
 
-    return AggResponse
+    return [AggResponse, GroupType]
   })
 }

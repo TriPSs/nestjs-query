@@ -5,6 +5,7 @@
 [![Test](https://github.com/TriPSs/nestjs-query/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/TriPSs/nestjs-query/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/TriPSs/nestjs-query/branch/master/graph/badge.svg?token=29EX71ID2P)](https://codecov.io/gh/TriPSs/nestjs-query)
 [![Known Vulnerabilities](https://snyk.io/test/github/tripss/nestjs-query/badge.svg?targetFile=package.json)](https://snyk.io/test/github/tripss/nestjs-query?targetFile=package.json)
+[![slack](https://img.shields.io/badge/slack-nestjsquery-brightgreen.svg?logo=slack)](https://join.slack.com/t/nestjsquery/shared_invite/zt-27dvu0tye-tOcAmeQ0PRSCEInW6P3h9g)
 
 # nestjs-query
 
@@ -53,7 +54,7 @@ $ yarn nx run-many --target=build --all
 $ yarn nx run-many --target=test --all
 
 # To run the E2E tests
-$ docker-compose -f examples/docker-compose.yml up -d
+$ yarn docker up -d
 $ yarn nx e2e examples
 
 # To build one package

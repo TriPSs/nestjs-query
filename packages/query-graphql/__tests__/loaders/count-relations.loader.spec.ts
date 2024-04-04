@@ -15,13 +15,15 @@ describe('CountRelationsLoader', () => {
 
     it('should return a function that accepts a filter', () => {
       const service = mock<QueryService<DTO>>()
-      const countRelationsLoader = new CountRelationsLoader(RelationDTO, 'relation')
+      const countRelationsLoader = new CountRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation')
       expect(countRelationsLoader.createLoader(instance(service))).toBeInstanceOf(Function)
     })
 
     it('should try to load the relations with the filter', () => {
       const service = mock<QueryService<DTO>>()
-      const countRelationsLoader = new CountRelationsLoader(RelationDTO, 'relation').createLoader(instance(service))
+      const countRelationsLoader = new CountRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation').createLoader(
+        instance(service)
+      )
       const dtos = [{ id: 'dto-1' }, { id: 'dto-2' }]
       when(service.countRelations(RelationDTO, 'relation', deepEqual(dtos), deepEqual({}))).thenResolve(
         new Map([
@@ -39,7 +41,9 @@ describe('CountRelationsLoader', () => {
 
     it('should try return an empty array for each dto is no results are found', () => {
       const service = mock<QueryService<DTO>>()
-      const countRelationsLoader = new CountRelationsLoader(RelationDTO, 'relation').createLoader(instance(service))
+      const countRelationsLoader = new CountRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation').createLoader(
+        instance(service)
+      )
       const dtos = [{ id: 'dto-1' }, { id: 'dto-2' }]
       when(service.countRelations(RelationDTO, 'relation', deepEqual(dtos), deepEqual({}))).thenResolve(new Map([[dtos[0], 1]]))
       return expect(
@@ -52,7 +56,9 @@ describe('CountRelationsLoader', () => {
 
     it('should group queryRelations calls by query and return in the correct order', () => {
       const service = mock<QueryService<DTO>>()
-      const countRelationsLoader = new CountRelationsLoader(RelationDTO, 'relation').createLoader(instance(service))
+      const countRelationsLoader = new CountRelationsLoader<DTO, RelationDTO>(RelationDTO, 'relation').createLoader(
+        instance(service)
+      )
       const dtos: DTO[] = [{ id: 'dto-1' }, { id: 'dto-2' }, { id: 'dto-3' }, { id: 'dto-4' }]
       when(
         service.countRelations(RelationDTO, 'relation', deepEqual([dtos[0], dtos[2]]), deepEqual({ id: { isNot: null } }))

@@ -5,34 +5,37 @@
   "projectType": "library",
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["packages/query-sequelize/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/packages/query-sequelize"],
       "options": {
-        "jestConfig": "packages/query-sequelize/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "packages/query-sequelize/jest.config.ts"
       }
     },
     "build": {
-      "executor": "@nrwl/js:tsc",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/query-sequelize",
         "tsConfig": "packages/query-sequelize/tsconfig.lib.json",
         "packageJson": "packages/query-sequelize/package.json",
         "main": "packages/query-sequelize/src/index.ts",
-        "assets": ["packages/query-sequelize/*.md"]
+        "assets": ["packages/query-sequelize/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {}
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm publish ./dist/packages/query-sequelize --access public"
+      }
     }
   },
   "tags": [],

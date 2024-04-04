@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Cursor paging strategy QueryArgsType with manual options create a query for string fields 1`] = `
-type TestQuery {
+"type TestQuery {
   idField: ID!
   idFieldOption: ID
   stringField: String!
@@ -58,13 +58,13 @@ type PageInfo {
 type Query {
   test(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: CursorPaging! = {first: 10}
 
     """Specify to filter the records returned."""
-    filter: TestQueryFilter = {}
+    filter: TestQueryFilter! = {}
 
     """Specify to sort results."""
-    sorting: [TestQuerySort!] = []
+    sorting: [TestQuerySort!]! = []
   ): String!
 }
 
@@ -277,11 +277,11 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;
 
 exports[`Cursor paging strategy QueryArgsType with manual options options allow apply the options to the generated SDL 1`] = `
-type TestQuery {
+"type TestQuery {
   idField: ID!
   idFieldOption: ID
   stringField: String!
@@ -350,13 +350,13 @@ type TestFilterRequiredDtoEdge {
 type Query {
   test(
     """Limit or page results."""
-    paging: CursorPaging = {first: 2}
+    paging: CursorPaging! = {first: 2}
 
     """Specify to filter the records returned."""
-    filter: TestQueryFilter = {booleanField: {is: true}}
+    filter: TestQueryFilter! = {booleanField: {is: true}}
 
     """Specify to sort results."""
-    sorting: [TestQuerySort!] = [{field: booleanField, direction: DESC}]
+    sorting: [TestQuerySort!]! = [{field: booleanField, direction: DESC}]
   ): String!
 }
 
@@ -569,11 +569,11 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;
 
 exports[`Cursor paging strategy QueryArgsType with manual options should make the filter required if there is a filterRequired field 1`] = `
-type TestQuery {
+"type TestQuery {
   idField: ID!
   idFieldOption: ID
   stringField: String!
@@ -642,13 +642,13 @@ type TestFilterRequiredDtoEdge {
 type Query {
   test(
     """Limit or page results."""
-    paging: CursorPaging = {first: 10}
+    paging: CursorPaging! = {first: 10}
 
     """Specify to filter the records returned."""
     filter: TestFilterRequiredDtoFilter!
 
     """Specify to sort results."""
-    sorting: [TestFilterRequiredDtoSort!] = []
+    sorting: [TestFilterRequiredDtoSort!]! = []
   ): String!
 }
 
@@ -709,5 +709,5 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;

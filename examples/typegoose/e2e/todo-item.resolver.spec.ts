@@ -2,28 +2,28 @@
 import { getConnectionToken } from '@m8a/nestjs-typegoose'
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
-import { AggregateResponse, getQueryServiceToken, QueryService } from '@ptc-org/nestjs-query-core'
+// import { AggregateResponse, getQueryServiceToken, QueryService } from '@ptc-org/nestjs-query-core'
 import { CursorConnectionType } from '@ptc-org/nestjs-query-graphql'
-import { Types } from 'mongoose'
+// import { Types } from 'mongoose'
 import request from 'supertest'
 
 import { AppModule } from '../src/app.module'
-import { config } from '../src/config'
-import { AUTH_HEADER_NAME, USER_HEADER_NAME } from '../src/constants'
+// import { config } from '../src/config'
+// import { AUTH_HEADER_NAME, USER_HEADER_NAME } from '../src/constants'
 import { SubTaskDTO } from '../src/sub-task/dto/sub-task.dto'
-import { TagDTO } from '../src/tag/dto/tag.dto'
-import { TodoItemDTO } from '../src/todo-item/dto/todo-item.dto'
-import { TodoItemEntity } from '../src/todo-item/todo-item.entity'
+// import { TagDTO } from '../src/tag/dto/tag.dto'
+// import { TodoItemDTO } from '../src/todo-item/dto/todo-item.dto'
+// import { TodoItemEntity } from '../src/todo-item/todo-item.entity'
 import { refresh, TODO_ITEMS } from './fixtures'
 import {
   edgeNodes,
   pageInfoField,
-  subTaskAggregateFields,
-  subTaskFields,
-  tagAggregateFields,
-  tagFields,
-  todoItemAggregateFields,
-  todoItemFields
+  // subTaskAggregateFields,
+  subTaskFields
+  // tagAggregateFields,
+  // tagFields,
+  // todoItemAggregateFields,
+  // todoItemFields
 } from './graphql-fragments'
 
 describe('TodoItemResolver (typegoose - e2e)', () => {

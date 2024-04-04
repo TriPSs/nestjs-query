@@ -1,9 +1,26 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+        required: true
+        default: prod
+        type: choice
+        options:
+          - prod
+          - alpha
+
+      releaseAs:
+        description: Release as (Required if env = alpha)
+        required: false
+        type: choice
+        options:
+          - premajor
+          - preminor
+          - prepatch
+          - prerelease
 
 env:
   NX_BRANCH: ${{ github.event.number }}
@@ -52,23 +69,27 @@ jobs:
             **/node_modules
           key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('yarn.lock') }}
 
-      - name: GIT config
+      - name: GIT/NPM config
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-
-      - name: nx workspace:version
-        run: yarn nx run workspace:version
-
-      - name: nx affected:build
-        run: node ./tools/scripts/run-many.js build origin/${{ needs.prepare-env.outputs.GITHUB_HEAD_REF }} ${{ needs.prepare-env.outputs.GITHUB_BASE_REF }}
-
-      - name: nx affected:publish
-        run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-          node ./tools/scripts/run-many.js publish origin/${{ needs.prepare-env.outputs.GITHUB_HEAD_REF }} ${{ needs.prepare-env.outputs.GITHUB_BASE_REF }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Version
+        if: ${{ inputs.environment == 'prod' }}
+        run: yarn nx run workspace:version
+
+      - name: Version (Alpha)
+        if: ${{ inputs.environment == 'alpha' }}
+        run: yarn nx run workspace:version --releaseAs=${{inputs.releaseAs}} --preid=alpha
+
+      - name: Build
+        run: yarn nx run-many --target=build --all
+
+      - name: Publish
+        run: yarn nx run-many --target=publish --all
 
       - name: Push GIT
         run: git push --follow-tags origin ${{ needs.prepare-env.outputs.GITHUB_HEAD_REF }}

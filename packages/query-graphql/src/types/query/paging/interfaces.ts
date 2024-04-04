@@ -13,11 +13,12 @@ export interface CursorPagingType extends Paging {
 export type NonePagingType = Paging
 export type OffsetPagingType = Paging
 
+// eslint-disable-next-line @typescript-eslint/no-duplicate-type-constituents
 export type PagingTypes = OffsetPagingType | CursorPagingType | NonePagingType
 export type InferPagingTypeFromStrategy<PS extends PagingStrategies> = PS extends PagingStrategies.CURSOR
   ? CursorPagingType
   : PS extends PagingStrategies.OFFSET
-  ? OffsetPagingType
-  : PS extends PagingStrategies.NONE
-  ? NonePagingType
-  : never
+    ? OffsetPagingType
+    : PS extends PagingStrategies.NONE
+      ? NonePagingType
+      : never

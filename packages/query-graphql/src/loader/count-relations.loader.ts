@@ -8,7 +8,10 @@ type CountRelationsMap<DTO, Relation> = Map<string, (CountRelationsArgs<DTO, Rel
 export class CountRelationsLoader<DTO, Relation>
   implements NestjsQueryDataloader<DTO, CountRelationsArgs<DTO, Relation>, number | Error>
 {
-  constructor(readonly RelationDTO: Class<Relation>, readonly relationName: string) {}
+  constructor(
+    readonly RelationDTO: Class<Relation>,
+    readonly relationName: string
+  ) {}
 
   createLoader(service: QueryService<DTO, unknown, unknown>) {
     return async (queryArgs: ReadonlyArray<CountRelationsArgs<DTO, Relation>>): Promise<(number | Error)[]> => {

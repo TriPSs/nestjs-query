@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReadRelationsResolver - many - 1 should not add filter argument if disableFilter is true 1`] = `
+"type TestResolverDTO {
+  id: ID!
+  stringField: String!
+  relation(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to sort results."""
+    sorting: [TestRelationDTOSort!]! = []
+  ): TestResolverDTORelationConnection!
+}
+
+input CursorPaging {
+  """Paginate before opaque cursor"""
+  before: ConnectionCursor
+
+  """Paginate after opaque cursor"""
+  after: ConnectionCursor
+
+  """Paginate first"""
+  first: Int
+
+  """Paginate last"""
+  last: Int
+}
+
+"""Cursor for paging through collections"""
+scalar ConnectionCursor
+
+input TestRelationDTOSort {
+  field: TestRelationDTOSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum TestRelationDTOSortFields {
+  id
+  testResolverId
+}
+
+"""Sort Directions"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+"""Sort Nulls Options"""
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+type TestRelationDTO {
+  id: ID!
+  testResolverId: String!
+}
+
+type TestRelationDTOEdge {
+  """The node containing the TestRelationDTO"""
+  node: TestRelationDTO!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type PageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
+
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
+}
+
+type TestResolverDTORelationConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TestRelationDTOEdge!]!
+}
+
+type Query {
+  test: TestResolverDTO!
+}"
+`;
+
+exports[`ReadRelationsResolver - many - 1 should not add read methods if disableRead is true 1`] = `
+"type TestResolverDTO {
+  id: ID!
+  stringField: String!
+}
+
+type Query {
+  test: TestResolverDTO!
+}"
+`;

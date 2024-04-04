@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { formatGraphqlError, typeormOrmConfig } from '../../../examples/helpers'
+import { SubTaskModule } from './sub-task/sub-task.module'
 import { TodoItemModule } from './todo-item/todo-item.module'
 
 @Module({
@@ -11,9 +12,11 @@ import { TodoItemModule } from './todo-item/todo-item.module'
     TypeOrmModule.forRoot(typeormOrmConfig('typeorm_soft_delete')),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'examples/typeorm-soft-delete/schema.gql',
       formatError: formatGraphqlError
     }),
+
+    SubTaskModule,
     TodoItemModule
   ]
 })

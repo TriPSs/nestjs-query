@@ -49,9 +49,16 @@ module.exports = {
       'graphql/getting-started',
       'graphql/dtos',
       'graphql/resolvers',
-      'graphql/queries',
+      'graphql/dataloaders',
+      {
+        'Queries': [
+          'graphql/queries/endpoints',
+          'graphql/queries/filtering',
+          'graphql/queries/paging',
+          'graphql/queries/sorting'
+        ],
+      },
       'graphql/mutations',
-      'graphql/paging',
       'graphql/hooks',
       'graphql/authorization',
       'graphql/aggregations',
@@ -62,6 +69,7 @@ module.exports = {
     ],
     Utilities: ['utilities/query-helpers'],
     'Migration Guides': [
+      'migration-guides/v2.x.x-to-v3.x.x',
       'migration-guides/v0.24.x-to-v0.25.x',
       'migration-guides/v0.23.x-to-v0.24.x',
       'migration-guides/v0.22.x-to-v0.23.x',
