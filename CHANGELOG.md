@@ -1,4 +1,18 @@
  
+# [6.0.0](https://github.com/TriPSs/nestjs-query/compare/v5.0.1...v6.0.0) (2024-04-04)
+
+
+### Bug Fixes
+
+* Explicitly mark types in the assemblers files ([58b94a9](https://github.com/TriPSs/nestjs-query/commit/58b94a9498a54275bc01146550dcd03583d2d753))
+
+
+### BREAKING CHANGES
+
+* The methods convertToDTO, convertToEntity, convertToCreateEntity, and convertToUpdateEntity now require casting the return value.
+
+
+
 ## [5.0.1](https://github.com/TriPSs/nestjs-query/compare/v5.1.0-alpha.2...v5.0.1) (2024-03-29)
 
 
