@@ -20,6 +20,7 @@ import {
   UpdateOneOptions
 } from '@ptc-org/nestjs-query-core'
 import { DeleteResult, FindOptionsWhere, Repository } from 'typeorm'
+import { DriverUtils } from 'typeorm/driver/DriverUtils'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 import { UpdateResult } from 'typeorm/query-builder/result/UpdateResult'
 
@@ -55,6 +56,8 @@ export class TypeOrmQueryService<Entity>
 
   readonly useSoftDelete: boolean
 
+  private readonly isMySQL: boolean
+
   constructor(
     readonly repo: Repository<Entity>,
     opts?: TypeOrmQueryServiceOpts<Entity>
@@ -63,6 +66,8 @@ export class TypeOrmQueryService<Entity>
 
     this.filterQueryBuilder = opts?.filterQueryBuilder ?? new FilterQueryBuilder<Entity>(this.repo)
     this.useSoftDelete = opts?.useSoftDelete ?? false
+
+    this.isMySQL = DriverUtils.isMySQLFamily(repo.manager.connection.driver)
   }
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -84,6 +89,9 @@ export class TypeOrmQueryService<Entity>
    * @param query - The Query used to filter, page, and sort rows.
    */
   public async query(query: Query<Entity>, opts?: QueryOptions<Entity>): Promise<Entity[]> {
+    if (this.isMySQL && query.paging.offset && !query.paging?.limit) {
+      query = { ...query, paging: { ...query.paging, limit: Number.MAX_SAFE_INTEGER } }
+    }
     const qb = this.filterQueryBuilder.select(query)
 
     if (opts?.withDeleted) {
