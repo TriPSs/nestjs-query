@@ -89,7 +89,7 @@ export class TypeOrmQueryService<Entity>
    * @param query - The Query used to filter, page, and sort rows.
    */
   public async query(query: Query<Entity>, opts?: QueryOptions<Entity>): Promise<Entity[]> {
-    if (this.isMySQL && query.paging.offset && !query.paging?.limit) {
+    if (this.isMySQL && query.paging?.offset && !query.paging?.limit) {
       query = { ...query, paging: { ...query.paging, limit: Number.MAX_SAFE_INTEGER } }
     }
     const qb = this.filterQueryBuilder.select(query)

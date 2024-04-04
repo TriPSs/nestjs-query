@@ -17,7 +17,10 @@ const DEFAULT_PAGING_META = <DTO>(query: Query<DTO>): PagingMeta<DTO, OffsetPagi
 })
 
 export class CursorPager<DTO> implements Pager<DTO, CursorPagerResult<DTO>> {
-  constructor(readonly strategy: PagerStrategy<DTO>, private readonly enableFetchAllWithNegative?: boolean) {}
+  constructor(
+    readonly strategy: PagerStrategy<DTO>,
+    private readonly enableFetchAllWithNegative?: boolean
+  ) {}
 
   async page<Q extends CursorQueryArgsType<DTO>>(
     queryMany: QueryMany<DTO, Q>,
