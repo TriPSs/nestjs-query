@@ -9,7 +9,8 @@ import { KeySetCursorPayload, KeySetPagingOpts, PagerStrategy } from './pager-st
 export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
   constructor(
     readonly DTOClass: Class<DTO>,
-    readonly pageFields: (keyof DTO)[]
+    readonly pageFields: (keyof DTO)[],
+    private readonly enableFetchAllWithNegative?: boolean
   ) {}
 
   fromCursorArgs(cursor: CursorPagingType): KeySetPagingOpts<DTO> {
@@ -41,7 +42,7 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
 
   createQuery<Q extends Query<DTO>>(query: Q, opts: KeySetPagingOpts<DTO>, includeExtraNode: boolean): Q {
     const paging = { limit: opts.limit }
-    if (includeExtraNode) {
+    if (includeExtraNode && (!this.enableFetchAllWithNegative || opts.limit !== -1)) {
       // Add 1 to the limit so we will fetch an additional node
       paging.limit += 1
     }
@@ -49,11 +50,13 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     // Add 1 to the limit so we will fetch an additional node with the current node
     const sorting = this.getSortFields(query, opts)
     const filter = mergeFilter(query.filter ?? {}, this.createFieldsFilter(sorting, payload))
-    return { ...query, filter, paging, sorting }
+    const createdQuery = { ...query, filter, sorting, paging }
+    if (this.enableFetchAllWithNegative && opts.limit === -1) delete createdQuery.paging
+    return createdQuery
   }
 
   checkForExtraNode(nodes: DTO[], opts: KeySetPagingOpts<DTO>): DTO[] {
-    const hasExtraNode = nodes.length > opts.limit
+    const hasExtraNode = nodes.length > opts.limit && !(this.enableFetchAllWithNegative && opts.limit === -1)
     const returnNodes = [...nodes]
     if (hasExtraNode) {
       returnNodes.pop()

@@ -38,7 +38,10 @@ export function createOffsetQueryArgs<DTO>(
       description: 'Limit or page results.'
     })
     @ValidateNested()
-    @Validate(PropertyMax, ['limit', opts.maxResultsSize ?? DEFAULT_QUERY_OPTS.maxResultsSize])
+    @SkipIf(
+      () => opts.maxResultsSize === -1,
+      Validate(PropertyMax, ['limit', opts.maxResultsSize ?? DEFAULT_QUERY_OPTS.maxResultsSize])
+    )
     @Type(() => P)
     paging?: OffsetPagingType
 

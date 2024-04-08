@@ -28,7 +28,7 @@ describe('CursorConnectionType', (): void => {
     stringField!: string
   }
 
-  const createPage = (paging: CursorPagingType): CursorPagingType => plainToClass(getOrCreateCursorPagingType(), paging)
+  const createPage = (paging: CursorPagingType): CursorPagingType => plainToClass(getOrCreateCursorPagingType({}), paging)
 
   const createTestDTO = (index: number): TestDto => ({
     stringField: `foo${index}`,

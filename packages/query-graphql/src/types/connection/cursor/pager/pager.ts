@@ -17,7 +17,10 @@ const DEFAULT_PAGING_META = <DTO>(query: Query<DTO>): PagingMeta<DTO, OffsetPagi
 })
 
 export class CursorPager<DTO> implements Pager<DTO, CursorPagerResult<DTO>> {
-  constructor(readonly strategy: PagerStrategy<DTO>) {}
+  constructor(
+    readonly strategy: PagerStrategy<DTO>,
+    private readonly enableFetchAllWithNegative?: boolean
+  ) {}
 
   async page<Q extends CursorQueryArgsType<DTO>>(
     queryMany: QueryMany<DTO, Q>,
@@ -36,10 +39,17 @@ export class CursorPager<DTO> implements Pager<DTO, CursorPagerResult<DTO>> {
   }
 
   private isValidPaging(pagingMeta: PagingMeta<DTO, CursorPagingOpts<DTO>>): boolean {
-    if ('offset' in pagingMeta.opts) {
-      return pagingMeta.opts.offset > 0 || pagingMeta.opts.limit > 0
+    const minimumLimit = this.enableFetchAllWithNegative ? -1 : 1
+    const hasLimit = 'limit' in pagingMeta.opts && pagingMeta.opts.limit !== null
+    const isValidLimit = pagingMeta.opts.limit >= minimumLimit
+    if (hasLimit && !isValidLimit) {
+      return false
     }
-    return pagingMeta.opts.limit > 0
+
+    if ('offset' in pagingMeta.opts) {
+      return pagingMeta.opts.offset > 0 || hasLimit
+    }
+    return hasLimit
   }
 
   private async runQuery<Q extends Query<DTO>>(
