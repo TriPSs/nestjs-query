@@ -1,4 +1,23 @@
  
+# [6.1.0](https://github.com/TriPSs/nestjs-query/compare/v6.0.0...v6.1.0) (2024-04-08)
+
+
+### Bug Fixes
+
+* Fix isValidPaging ([7f8913f](https://github.com/TriPSs/nestjs-query/commit/7f8913f525d56a86c374b0a4aa787e568051974b))
+
+
+### Features
+
+* **query-graphql:** Adds enableFetchAllWithNegative option ([6bfc92f](https://github.com/TriPSs/nestjs-query/commit/6bfc92f6ea3781f5619247023fef419c6d1b4299))
+
+
+### Reverts
+
+* Revert "test: Fix the typeorm tests with negative fetch and my sql" ([066732f](https://github.com/TriPSs/nestjs-query/commit/066732fb048f97d951e55e13e900269cb62f9421))
+
+
+
 # [6.0.0](https://github.com/TriPSs/nestjs-query/compare/v5.0.1...v6.0.0) (2024-04-04)
 
 
