@@ -87,7 +87,6 @@ const AggregateRelationMixin =
       }
     }
 
-    // TODO:: Add also support for the "by" in dates
     return AggregateMixin
   }
 

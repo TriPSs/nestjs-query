@@ -426,7 +426,7 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
 
   private ensureIsEntity(entity: Entity): Entity {
     if (!(entity instanceof this.model)) {
-      return this.model.build(entity as never)
+      return this.model.build(entity)
     }
     return entity
   }
