@@ -1,6 +1,6 @@
 {
   "name": "@rezonate/nestjs-query-graphql",
-  "version": "5.0.8",
+  "version": "6.0.2",
   "description": "Nestjs graphql query adapter",
   "author": "doug-martin <doug@dougamartin.com>",
   "homepage": "https://github.com/Rezonate-io/nestjs-query#readme",
@@ -32,14 +32,14 @@
     "url": "https://github.com/Rezonate-io/nestjs-query/issues"
   },
   "dependencies": {
-    "@json2csv/plainjs": "^6.1.2",
-    "@types/json2csv": "^5.0.3",
+    "@json2csv/plainjs": "^7.0.6",
+    "@types/json2csv": "^5.0.7",
     "graphql-fields": "^2.0.3",
     "lodash.omit": "^4.5.0",
     "lower-case-first": "^2.0.2",
     "papaparse": "^5.4.1",
     "pluralize": "^8.0.0",
-    "tslib": "^2.4.0",
+    "tslib": "^2.6.2",
     "upper-case-first": "^2.0.2"
   },
   "peerDependencies": {
@@ -48,10 +48,10 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/graphql": "^12.0.0",
     "class-transformer": "^0.2.3 || 0.3.1 || ^0.5",
-    "class-validator": "^0.13.0",
+    "class-validator": "^0.14.1",
     "dataloader": "^2.0.0",
     "graphql": "^16.0.0",
     "graphql-subscriptions": "^2.0.0",
-    "ts-morph": "^20.0.0"
+    "ts-morph": "^21.0.0 || ^22.0.0"
   }
 }

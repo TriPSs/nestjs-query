@@ -95,7 +95,7 @@ function createFederatedResolver<DTO, Service>(resolverOpts: FederatedAutoResolv
   return AutoResolver
 }
 
-function createEntityAutoResolver<DTO extends object, Entity, C, U, R, PS extends PagingStrategies>(
+function createEntityAutoResolver<DTO extends object, Entity extends object, C, U, R, PS extends PagingStrategies>(
   resolverOpts: EntityCRUDAutoResolverOpts<DTO, Entity, C, U, R, PS>
 ): Provider {
   const { DTOClass, EntityClass } = resolverOpts
@@ -157,7 +157,7 @@ function createServiceAutoResolver<DTO, Service, C, U, R, PS extends PagingStrat
   return AutoResolver
 }
 
-function createResolver<DTO extends object, EntityServiceOrAssembler, C, U, R, PS extends PagingStrategies>(
+function createResolver<DTO extends object, EntityServiceOrAssembler extends object, C, U, R, PS extends PagingStrategies>(
   resolverOpts: AutoResolverOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>
 ): Provider {
   if (isFederatedResolverOpts(resolverOpts)) {
@@ -173,5 +173,5 @@ function createResolver<DTO extends object, EntityServiceOrAssembler, C, U, R, P
 }
 
 export const createResolvers = (
-  opts: AutoResolverOpts<object, unknown, unknown, unknown, unknown, PagingStrategies>[]
+  opts: AutoResolverOpts<object, object, unknown, unknown, unknown, PagingStrategies>[]
 ): Provider[] => opts.map((opt) => createResolver(opt))

@@ -316,7 +316,7 @@ export abstract class RelationQueryService<Entity> {
     return entity
   }
 
-  public getRelationQueryBuilder<Relation>(name: string): RelationQueryBuilder<Entity, Relation> {
+  public getRelationQueryBuilder<Relation = object>(name: string): RelationQueryBuilder<Entity, Relation> {
     return new RelationQueryBuilder(this.repo, name)
   }
 
@@ -457,18 +457,18 @@ export abstract class RelationQueryService<Entity> {
     return relationMeta
   }
 
-  private getRelationEntity(relationName: string): Class<unknown> {
+  private getRelationEntity(relationName: string): Class<object> {
     const relationMeta = this.getRelationMeta(relationName)
 
     if (typeof relationMeta.type === 'string') {
       const relationMetaData = this.repo.manager.connection.entityMetadatas.find((em) => em.targetName == relationMeta.type)
 
       if (relationMetaData) {
-        return relationMetaData.target as Class<unknown>
+        return relationMetaData.target as Class<object>
       }
     }
 
-    return relationMeta.type as Class<unknown>
+    return relationMeta.type as Class<object>
   }
 
   private getRelationsFromPrimaryKeys<Relation>(

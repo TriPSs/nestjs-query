@@ -8,7 +8,7 @@ import { getAssemblerDeserializer } from './assembler.deserializer';
 /**
  * Base assembler that uses class-transformer to transform to and from the DTO/Entity.
  */
-export abstract class ClassTransformerAssembler<DTO extends object, Entity> extends AbstractAssembler<
+export abstract class ClassTransformerAssembler<DTO extends object, Entity extends object> extends AbstractAssembler<
   DTO,
   Entity,
   DeepPartial<DTO>,

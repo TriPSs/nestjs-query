@@ -1,6 +1,6 @@
 {
   "name": "@rezonate/nestjs-query-core",
-  "version": "5.0.1",
+  "version": "6.0.1",
   "description": "Base query package",
   "author": "doug-martin <doug@dougamartin.com>",
   "homepage": "https://github.com/Rezonate-io/nestjs-query#readme",
@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "lodash.merge": "^4.6.2",
-    "reflect-metadata": "^0.1.13",
-    "tslib": "^2.4.0"
+    "reflect-metadata": "^0.2.1",
+    "tslib": "^2.6.2"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.0.0",
