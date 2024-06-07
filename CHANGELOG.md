@@ -1,4 +1,13 @@
  
+## [6.1.1](https://github.com/TriPSs/nestjs-query/compare/v6.1.0...v6.1.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* **query-graphql:** Fixed hard `isDate` validator for custom between filters ([7437e53](https://github.com/TriPSs/nestjs-query/commit/7437e53f521e43fd943ded7b13e7dc5abae3e537))
+
+
+
 # [6.1.0](https://github.com/TriPSs/nestjs-query/compare/v6.0.0...v6.1.0) (2024-04-08)
 
 
