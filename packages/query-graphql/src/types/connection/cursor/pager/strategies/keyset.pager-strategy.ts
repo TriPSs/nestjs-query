@@ -110,7 +110,7 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
       const subFilter = {
         and: [...equalities, { [keySetField.field]: { [isAsc ? 'gt' : 'lt']: keySetField.value } }]
       } as Filter<DTO>
-      equalities.push({ [keySetField.field]: { eq: keySetField.value } } as Filter<DTO>)
+      equalities.push({ [keySetField.field]: { [keySetField.value === null ? 'is' : 'eq']: keySetField.value } } as Filter<DTO>)
       return [...dtoFilters, subFilter]
     }, [] as Filter<DTO>[])
     return { or: oredFilter } as Filter<DTO>
