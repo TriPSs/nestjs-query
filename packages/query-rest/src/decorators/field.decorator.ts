@@ -106,14 +106,12 @@ export function Field(
   }
 
   if (type) {
-    decorators.push(Type(() => type))
+    decorators.push(Type(() => type as never))
 
     if (typeof type === 'function') {
       decorators.push(ValidateNested())
 
-      if (isArray) {
-        decorators.push(IsArray())
-      } else {
+      if (!isArray) {
         decorators.push(IsObject())
       }
     }
