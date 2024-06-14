@@ -69,6 +69,10 @@ export function Field(
     ...advancedOptions
   }
 
+  // Remove non-valid options
+  delete options.forceArray
+  delete options.skipIsEnum
+
   const decorators = [
     Expose(),
     ApiProperty({
