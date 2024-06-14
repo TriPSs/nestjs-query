@@ -2,15 +2,17 @@ import { Field, InputType, Int } from '@nestjs/graphql'
 import { Class } from '@ptc-org/nestjs-query-core'
 import { IsPositive, Min, Validate } from 'class-validator'
 
+import { SkipIf } from '../../../decorators'
 import { ConnectionCursorScalar, ConnectionCursorType } from '../../cursor.scalar'
 import { CannotUseWith, CannotUseWithout, IsUndefined } from '../../validators'
+import { CursorQueryArgsTypeOpts } from '..'
 import { PagingStrategies } from './constants'
 import { CursorPagingType } from './interfaces'
 
 /** @internal */
 let graphQLCursorPaging: Class<CursorPagingType> | null = null
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export const getOrCreateCursorPagingType = (): Class<CursorPagingType> => {
+export const getOrCreateCursorPagingType = <DTO>(opts: CursorQueryArgsTypeOpts<DTO>): Class<CursorPagingType> => {
   if (graphQLCursorPaging) {
     return graphQLCursorPaging
   }
@@ -40,8 +42,8 @@ export const getOrCreateCursorPagingType = (): Class<CursorPagingType> => {
 
     @Field(() => Int, { nullable: true, description: 'Paginate first' })
     @IsUndefined()
-    @IsPositive()
-    @Min(1)
+    @SkipIf(() => opts.enableFetchAllWithNegative, IsPositive())
+    @Min(opts.enableFetchAllWithNegative ? -1 : 1)
     @Validate(CannotUseWith, ['before', 'last'])
     first?: number
 
@@ -52,8 +54,8 @@ export const getOrCreateCursorPagingType = (): Class<CursorPagingType> => {
     // We'll just ignore it for now.
     @Validate(CannotUseWithout, ['before'])
     @Validate(CannotUseWith, ['after', 'first'])
-    @Min(1)
-    @IsPositive()
+    @SkipIf(() => opts.enableFetchAllWithNegative, IsPositive())
+    @Min(opts.enableFetchAllWithNegative ? -1 : 1)
     last?: number
   }
 

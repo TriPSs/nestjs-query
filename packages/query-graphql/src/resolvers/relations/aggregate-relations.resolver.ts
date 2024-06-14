@@ -33,22 +33,22 @@ const AggregateRelationMixin =
     const commonResolverOpts = relation.aggregate || removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoName = getDTONames(DTOClass).baseName
-    const { baseNameLower, pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, {
+    const { baseName, baseNameLower } = getDTONames(relationDTO, {
       dtoName: relation.dtoName
     })
-    const relationName = relation.relationName ?? pluralBaseNameLower
-    const aggregateRelationLoaderName = `aggregate${pluralBaseName}For${dtoName}`
+    const relationName = relation.relationName ?? baseNameLower
+    const aggregateRelationLoaderName = `aggregate${baseName}For${dtoName}`
     const aggregateLoader = new AggregateRelationsLoader<DTO, Relation>(relationDTO, relationName)
 
     @ArgsType()
     class RelationQA extends AggregateArgsType(relationDTO) {}
 
-    const [AR] = AggregateResponseType(relationDTO, { prefix: `${dtoName}${pluralBaseName}` })
+    const [AR] = AggregateResponseType(relationDTO, { prefix: `${dtoName}${baseName}` })
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class AggregateMixin extends Base {
       @ResolverField(
-        `${pluralBaseNameLower}Aggregate`,
+        `${baseNameLower}Aggregate`,
         () => [AR],
         {
           description: relation.aggregate?.description
@@ -58,7 +58,7 @@ const AggregateRelationMixin =
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }
       )
-      async [`aggregate${pluralBaseName}`](
+      async [`aggregate${baseName}`](
         @Parent() dto: DTO,
         @Args() q: RelationQA,
         @AggregateQueryParam() aggregateQuery: AggregateQuery<Relation>,
@@ -87,7 +87,6 @@ const AggregateRelationMixin =
       }
     }
 
-    // TODO:: Add also support for the "by" in dates
     return AggregateMixin
   }
 

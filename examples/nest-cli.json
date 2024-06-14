@@ -101,6 +101,15 @@
         "tsConfigPath": "./tsconfig.json"
       }
     },
+    "fetch-all-with-negative": {
+      "type": "application",
+      "root": "fetch-all-with-negative",
+      "entryFile": "main",
+      "sourceRoot": "fetch-all-with-negative/src",
+      "compilerOptions": {
+        "tsConfigPath": "./tsconfig.json"
+      }
+    },
     "hooks": {
       "type": "application",
       "root": "hooks",

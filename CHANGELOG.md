@@ -1,4 +1,72 @@
  
+## [6.1.1](https://github.com/TriPSs/nestjs-query/compare/v6.1.0...v6.1.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* **query-graphql:** Fixed hard `isDate` validator for custom between filters ([7437e53](https://github.com/TriPSs/nestjs-query/commit/7437e53f521e43fd943ded7b13e7dc5abae3e537))
+
+
+
+# [6.1.0](https://github.com/TriPSs/nestjs-query/compare/v6.0.0...v6.1.0) (2024-04-08)
+
+
+### Bug Fixes
+
+* Fix isValidPaging ([7f8913f](https://github.com/TriPSs/nestjs-query/commit/7f8913f525d56a86c374b0a4aa787e568051974b))
+
+
+### Features
+
+* **query-graphql:** Adds enableFetchAllWithNegative option ([6bfc92f](https://github.com/TriPSs/nestjs-query/commit/6bfc92f6ea3781f5619247023fef419c6d1b4299))
+
+
+### Reverts
+
+* Revert "test: Fix the typeorm tests with negative fetch and my sql" ([066732f](https://github.com/TriPSs/nestjs-query/commit/066732fb048f97d951e55e13e900269cb62f9421))
+
+
+
+# [6.0.0](https://github.com/TriPSs/nestjs-query/compare/v5.0.1...v6.0.0) (2024-04-04)
+
+
+### Bug Fixes
+
+* Explicitly mark types in the assemblers files ([58b94a9](https://github.com/TriPSs/nestjs-query/commit/58b94a9498a54275bc01146550dcd03583d2d753))
+
+
+### BREAKING CHANGES
+
+* The methods convertToDTO, convertToEntity, convertToCreateEntity, and convertToUpdateEntity now require casting the return value.
+
+
+
+## [5.0.1](https://github.com/TriPSs/nestjs-query/compare/v5.1.0-alpha.2...v5.0.1) (2024-03-29)
+
+
+
+# [5.1.0-alpha.2](https://github.com/TriPSs/nestjs-query/compare/v5.1.0-alpha.1...v5.1.0-alpha.2) (2024-03-26)
+
+
+### Bug Fixes
+
+* **query-graphql:** Fixed relations update/aggregate not respecting the given name ([c252b2a](https://github.com/TriPSs/nestjs-query/commit/c252b2af48eafa9be67665f9f61c1eb9c9ab6778)), closes [#239](https://github.com/TriPSs/nestjs-query/issues/239)
+
+
+
+# [5.1.0-alpha.1](https://github.com/TriPSs/nestjs-query/compare/v5.1.0-alpha.0...v5.1.0-alpha.1) (2024-02-12)
+
+
+
+# [5.1.0-alpha.0](https://github.com/TriPSs/nestjs-query/compare/v5.0.0...v5.1.0-alpha.0) (2024-02-12)
+
+
+### Performance Improvements
+
+* **query-typeorm:** Custom count implementation for better performance ([eb89f32](https://github.com/TriPSs/nestjs-query/commit/eb89f32475875850062a635731ddfc0fd96d2455))
+
+
+
 # [5.0.0](https://github.com/TriPSs/nestjs-query/compare/v4.4.0...v5.0.0) (2024-01-19)
 
 

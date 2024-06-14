@@ -22,11 +22,11 @@ type Query {
 }
 
 type Mutation {
-  addTestsToTestResolverDTO(input: AddTestsToTestResolverDTOInput!): TestResolverDTO!
-  setTestsOnTestResolverDTO(input: SetTestsOnTestResolverDTOInput!): TestResolverDTO!
+  addTestToTestResolverDTO(input: AddTestToTestResolverDTOInput!): TestResolverDTO!
+  setTestOnTestResolverDTO(input: SetTestOnTestResolverDTOInput!): TestResolverDTO!
 }
 
-input AddTestsToTestResolverDTOInput {
+input AddTestToTestResolverDTOInput {
   """The id of the record."""
   id: ID!
 
@@ -34,7 +34,7 @@ input AddTestsToTestResolverDTOInput {
   relationIds: [ID!]!
 }
 
-input SetTestsOnTestResolverDTOInput {
+input SetTestOnTestResolverDTOInput {
   """The id of the record."""
   id: ID!
 

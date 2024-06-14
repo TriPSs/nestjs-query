@@ -4,10 +4,10 @@ exports[`AggregateRelationsResolver - 2 aggregate should use the dtoName if prov
 "type TestResolverDTO {
   id: ID!
   stringField: String!
-  testsAggregate(
+  testAggregate(
     """Filter to find records to aggregate on"""
     filter: TestRelationDTOAggregateFilter
-  ): [TestResolverDTOTestsAggregateResponse!]!
+  ): [TestResolverDTOTestAggregateResponse!]!
 }
 
 input TestRelationDTOAggregateFilter {
@@ -51,31 +51,31 @@ input StringFieldComparison {
   notIn: [String!]
 }
 
-type TestResolverDTOTestsAggregateGroupBy {
+type TestResolverDTOTestAggregateGroupBy {
   id: ID
   testResolverId: String
 }
 
-type TestResolverDTOTestsCountAggregate {
+type TestResolverDTOTestCountAggregate {
   id: Int
   testResolverId: Int
 }
 
-type TestResolverDTOTestsMinAggregate {
+type TestResolverDTOTestMinAggregate {
   id: ID
   testResolverId: String
 }
 
-type TestResolverDTOTestsMaxAggregate {
+type TestResolverDTOTestMaxAggregate {
   id: ID
   testResolverId: String
 }
 
-type TestResolverDTOTestsAggregateResponse {
-  groupBy: TestResolverDTOTestsAggregateGroupBy
-  count: TestResolverDTOTestsCountAggregate
-  min: TestResolverDTOTestsMinAggregate
-  max: TestResolverDTOTestsMaxAggregate
+type TestResolverDTOTestAggregateResponse {
+  groupBy: TestResolverDTOTestAggregateGroupBy
+  count: TestResolverDTOTestCountAggregate
+  min: TestResolverDTOTestMinAggregate
+  max: TestResolverDTOTestMaxAggregate
 }
 
 type Query {

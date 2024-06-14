@@ -71,16 +71,16 @@ const UpdateManyRelationMixin =
     const commonResolverOpts = removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
-    const { pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
-    const relationName = relation.relationName ?? pluralBaseNameLower
+    const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
+    const relationName = relation.relationName ?? baseNameLower
 
-    @InputType(`Add${pluralBaseName}To${dtoNames.baseName}Input`)
+    @InputType(`Add${baseName}To${dtoNames.baseName}Input`)
     class AddRelationInput extends RelationsInputType(DTOClass, relationDTO) {}
 
     @ArgsType()
     class AddArgs extends MutationArgsType(AddRelationInput) {}
 
-    @InputType(`Set${pluralBaseName}On${dtoNames.baseName}Input`)
+    @InputType(`Set${baseName}On${dtoNames.baseName}Input`)
     class SetRelationInput extends RelationsInputType(DTOClass, relationDTO) {}
 
     @ArgsType()
@@ -99,9 +99,9 @@ const UpdateManyRelationMixin =
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }
       )
-      async [`add${pluralBaseName}To${dtoNames.baseName}`](
+      async [`add${baseName}To${dtoNames.baseName}`](
         @Args() addArgs: AddArgs,
-        @ModifyRelationAuthorizerFilter(pluralBaseNameLower, {
+        @ModifyRelationAuthorizerFilter(baseNameLower, {
           operationGroup: OperationGroup.UPDATE,
           many: true
         })
@@ -121,9 +121,9 @@ const UpdateManyRelationMixin =
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }
       )
-      async [`set${pluralBaseName}On${dtoNames.baseName}`](
+      async [`set${baseName}On${dtoNames.baseName}`](
         @Args() addArgs: SetArgs,
-        @ModifyRelationAuthorizerFilter(pluralBaseNameLower, {
+        @ModifyRelationAuthorizerFilter(baseNameLower, {
           operationGroup: OperationGroup.UPDATE,
           many: true
         })

@@ -5,6 +5,8 @@ import { decodeBase64, encodeBase64, hasBeforeCursor, isBackwardPaging, isForwar
 import { OffsetPagingOpts, PagerStrategy } from './pager-strategy'
 
 export class LimitOffsetPagerStrategy<DTO> implements PagerStrategy<DTO> {
+  constructor(private readonly enableFetchAllWithNegative?: boolean) {}
+
   private static CURSOR_PREFIX = 'arrayconnection:'
 
   toCursor(dto: DTO, index: number, pagingOpts: OffsetPagingOpts): string {
@@ -25,7 +27,7 @@ export class LimitOffsetPagerStrategy<DTO> implements PagerStrategy<DTO> {
   createQuery<Q extends Query<DTO>>(query: Q, opts: OffsetPagingOpts, includeExtraNode: boolean): Q {
     const { isBackward } = opts
     const paging = { limit: opts.limit, offset: opts.offset }
-    if (includeExtraNode) {
+    if (includeExtraNode && (!this.enableFetchAllWithNegative || opts.limit !== -1)) {
       // Add 1 to the limit so we will fetch an additional node
       paging.limit += 1
       // if paging backwards remove one from the offset to check for a previous page.
@@ -38,10 +40,15 @@ export class LimitOffsetPagerStrategy<DTO> implements PagerStrategy<DTO> {
         paging.limit = opts.limit
       }
     }
+    if (this.enableFetchAllWithNegative && paging.limit === -1) delete paging.limit
     return { ...query, paging }
   }
 
   checkForExtraNode(nodes: DTO[], opts: OffsetPagingOpts): DTO[] {
+    if (opts.limit === -1) {
+      // If we are fetching all the nodes we don't need to check for an extra node.
+      return nodes
+    }
     const returnNodes = [...nodes]
     // check if we have an additional node
     // if paging forward that indicates we have a next page
@@ -58,10 +65,11 @@ export class LimitOffsetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     return returnNodes
   }
 
-  private getLimit(cursor: CursorPagingType): number {
+  private getLimit(cursor: CursorPagingType): number | null {
     if (isBackwardPaging(cursor)) {
       const { last = 0, before } = cursor
       const offsetFromCursor = before ? LimitOffsetPagerStrategy.cursorToOffset(before) : 0
+      if (this.enableFetchAllWithNegative && last === -1) return offsetFromCursor
       const offset = offsetFromCursor - last
       // Check to see if our before-page is underflowing past the 0th item
       if (offset < 0) {
@@ -70,11 +78,12 @@ export class LimitOffsetPagerStrategy<DTO> implements PagerStrategy<DTO> {
       }
       return last
     }
-    return cursor.first || 0
+    return cursor.first ?? 0
   }
 
   private getOffset(cursor: CursorPagingType): number {
     if (isBackwardPaging(cursor)) {
+      if (this.enableFetchAllWithNegative && cursor.last === -1) return 0
       const { last, before } = cursor
       const beforeOffset = before ? LimitOffsetPagerStrategy.cursorToOffset(before) : 0
       const offset = last ? beforeOffset - last : 0

@@ -24,9 +24,6 @@
       }
     ]
   },
-  "affected": {
-    "defaultBase": "master"
-  },
   "defaultProject": "examples",
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
@@ -36,10 +33,6 @@
     },
     "prepare": {
       "dependsOn": ["^prepare"],
-      "cache": true
-    },
-    "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
       "cache": true
     },
     "@nx/jest:jest": {
@@ -54,7 +47,13 @@
           "codeCoverage": true
         }
       }
+    },
+    "@nx/eslint:lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "cache": true
     }
   },
-  "nxCloudAccessToken": "YWExNTY0MWYtYWMzNy00ZWZkLWIzMWEtMGYzYWY4YWRmMDE1fHJlYWQtd3JpdGU="
+  "nxCloudAccessToken": "YWExNTY0MWYtYWMzNy00ZWZkLWIzMWEtMGYzYWY4YWRmMDE1fHJlYWQtd3JpdGU=",
+  "useInferencePlugins": false,
+  "defaultBase": "master"
 }

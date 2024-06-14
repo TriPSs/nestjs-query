@@ -11,7 +11,7 @@ describe('AssemblerDeserializer decorator', () => {
       foo!: string
     }
 
-    expect(getAssemblerDeserializer(TestSerializer)!({ bar: 'bar' })).toEqual({ foo: 'bar' })
+    expect(getAssemblerDeserializer(TestSerializer)({ bar: 'bar' })).toEqual({ foo: 'bar' })
   })
 
   it('should throw an error if the serializer is registered twice', () => {
