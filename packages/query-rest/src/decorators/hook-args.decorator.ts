@@ -46,9 +46,9 @@ class HooksTransformer<T> implements PipeTransform {
 
   private async runQueryHooks(data: BuildableQueryType<T>): Promise<Query<T>> {
     const hooks = (this.request as HookContext<Hook<unknown>>).hooks
+    let hookedArgs = data.buildQuery()
 
     if (hooks && hooks.length > 0) {
-      let hookedArgs = data.buildQuery()
       for (const hook of hooks) {
         hookedArgs = (await hook.run(hookedArgs, this.request)) as Query<T>
       }
@@ -56,7 +56,7 @@ class HooksTransformer<T> implements PipeTransform {
       return hookedArgs
     }
 
-    return data as Query<T>
+    return hookedArgs
   }
 }
 
