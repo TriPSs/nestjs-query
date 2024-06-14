@@ -1,23 +1,14 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
-import { Expose, Type } from 'class-transformer'
-import {
-  ArrayMaxSize,
-  IsArray,
-  IsEnum,
-  IsNotEmpty,
-  IsObject,
-  IsOptional,
-  MaxLength,
-  MinLength,
-  ValidateNested
-} from 'class-validator'
+import { Expose, Transform, Type } from 'class-transformer'
+import { ArrayMaxSize, IsEnum, IsNotEmpty, IsObject, IsOptional, MaxLength, MinLength, ValidateNested } from 'class-validator'
 
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
 
 export type FieldOptions = ApiPropertyOptions & {
   // prevents the IsEnum decorator from being added
   skipIsEnum?: boolean
+  forceArray?: boolean
 }
 
 /**
@@ -89,6 +80,10 @@ export function Field(
 
   if (isArray && options.maxItems !== undefined) {
     decorators.push(ArrayMaxSize(options.maxItems))
+  }
+
+  if (isArray && options.forceArray) {
+    decorators.push(Transform(({ value }) => (Array.isArray(value) ? value : [value])))
   }
 
   if (options.minLength) {
