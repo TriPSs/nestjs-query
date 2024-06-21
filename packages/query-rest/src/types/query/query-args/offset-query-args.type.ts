@@ -1,9 +1,10 @@
 import { Class } from '@ptc-org/nestjs-query-core'
+import { RestQuery } from '@ptc-org/nestjs-query-rest'
 
 import { getOrCreateOffsetConnectionType } from '../../../connection/offset/offset-connection.type'
 import { Field, SkipIf } from '../../../decorators'
-import { RestQuery } from '../../rest-query.type'
 import { BuildableQueryType } from '../buildable-query.type'
+import { FilterType } from '../filter.type'
 import { OffsetPaging } from '../offset-paging.type'
 import { PagingStrategies } from '../paging'
 import { DEFAULT_QUERY_OPTS } from './constants'
@@ -13,22 +14,18 @@ export function createOffsetQueryArgs<DTO>(
   DTOClass: Class<DTO>,
   opts: OffsetQueryArgsTypeOpts<DTO> = { ...DEFAULT_QUERY_OPTS, pagingStrategy: PagingStrategies.OFFSET }
 ): StaticQueryType<DTO, PagingStrategies.OFFSET> {
-  // const F = FilterType(DTOClass)
   // const S = getOrCreateSortType(DTOClass)
+
   const ConnectionType = getOrCreateOffsetConnectionType(DTOClass, opts)
 
   class QueryArgs extends OffsetPaging implements BuildableQueryType<DTO> {
-    static SortType = null
-
-    static FilterType = null
-
     static ConnectionType = ConnectionType
-
-    static PageType = OffsetPaging
 
     public sorting = opts.defaultSort
 
-    public filter = opts.defaultFilter
+    public get filter() {
+      return opts.defaultFilter
+    }
 
     @SkipIf(
       () => !opts.enableSearch,
@@ -53,5 +50,5 @@ export function createOffsetQueryArgs<DTO>(
     }
   }
 
-  return QueryArgs
+  return FilterType<DTO>(DTOClass, QueryArgs) as never as StaticQueryType<DTO, PagingStrategies.OFFSET>
 }

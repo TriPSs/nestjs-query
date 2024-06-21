@@ -4,7 +4,7 @@ import { ArrayReflector, Class, getPrototypeChain } from '@ptc-org/nestjs-query-
 
 import { ReturnTypeFunc, ReturnTypeFuncValue } from '../interfaces/return-type-func'
 import { FILTERABLE_FIELD_KEY } from './constants'
-import { Field } from './field.decorator'
+import { Field, FieldOptions } from './field.decorator'
 
 const reflector = new ArrayReflector(FILTERABLE_FIELD_KEY)
 export type FilterableFieldOptions = {
@@ -20,6 +20,13 @@ export interface FilterableFieldDescriptor {
   target: Class<unknown>
   returnTypeFunc?: ReturnTypeFunc<ReturnTypeFuncValue>
   advancedOptions?: FilterableFieldOptions
+}
+
+export function filterableFieldOptionsToField(advancedOptions: FilterableFieldOptions): FieldOptions {
+  // Remove fields that are not needed in the Field decorator
+  const { filterRequired, filterDecorators, filterOnly, ...fieldOptions } = advancedOptions
+
+  return fieldOptions
 }
 
 /**
@@ -91,7 +98,7 @@ export function FilterableField(
       return undefined
     }
 
-    applyDecorators(Field(() => returnTypeFunc, advancedOptions))(target, propertyName, descriptor)
+    applyDecorators(Field(() => returnTypeFunc, filterableFieldOptionsToField(advancedOptions)))(target, propertyName, descriptor)
   }
 }
 
