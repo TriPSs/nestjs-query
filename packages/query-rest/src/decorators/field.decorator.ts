@@ -86,7 +86,7 @@ export function Field(
     decorators.push(ArrayMaxSize(options.maxItems))
   }
 
-  if (isArray && options.forceArray) {
+  if (isArray && advancedOptions?.forceArray) {
     decorators.push(Transform(({ value }) => (Array.isArray(value) ? value : [value])))
   }
 
@@ -116,7 +116,7 @@ export function Field(
     }
   }
 
-  if (options.enum && !options.skipIsEnum) {
+  if (options.enum && !advancedOptions?.skipIsEnum) {
     decorators.push(IsEnum(options.enum))
   }
 
