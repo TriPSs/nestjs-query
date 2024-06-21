@@ -1,7 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 import { Args, GqlExecutionContext } from '@nestjs/graphql'
 import { Class } from '@ptc-org/nestjs-query-core'
-import { plainToClass } from 'class-transformer'
+import { plainToInstance } from 'class-transformer'
 
 import { Hook } from '../hooks'
 import { HookContext } from '../interceptors'
@@ -10,7 +10,7 @@ import { composeDecorators } from './decorator.utils'
 
 function transformValue<T>(value: T, type?: Class<T>): T {
   if (type && !(value instanceof type)) {
-    return plainToClass<T, unknown>(type, value)
+    return plainToInstance<T, unknown>(type, value)
   }
   return value
 }
