@@ -67,7 +67,9 @@ function getOrCreateFilterType<T>(
             ...advancedOptions,
             nullable:
               typeof advancedOptions.filterRequired !== 'undefined' ? !advancedOptions.filterRequired : advancedOptions.nullable,
-            required: advancedOptions.filterRequired
+            required: Boolean(
+              typeof advancedOptions.filterRequired !== 'undefined' ? advancedOptions.filterRequired : advancedOptions.required
+            )
           })
         ),
         ...(advancedOptions.filterDecorators || [])
