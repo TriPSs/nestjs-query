@@ -466,7 +466,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
 
   private getReferenceIds(localField: string, entity: Entity | Entity[]) {
     const entities = Array.isArray(entity) ? entity : [entity]
-    return entities.flatMap((e) => e[localField as keyof Entity])
+    return entities.flatMap((e) => e[localField as keyof Entity]).filter((id) => !!id)
   }
 
   private getReferenceFieldMap(refName: string): Omit<VirtualReferenceOptions, 'ref'> | undefined {
