@@ -182,7 +182,9 @@ export abstract class ReferenceQueryService<Entity extends Document> {
       const referenceIds = this.getReferenceIds(refFieldMap.localField, dto)
       const refs = entityRelations.filter((er) => {
         return referenceIds.some((rid) => {
-          return (rid as Types.ObjectId).equals(er[refFieldMap.foreignField as keyof Relation] as Types.ObjectId)
+          const oneOrManyIds = er[refFieldMap.foreignField as keyof Relation]
+          const ids = (Array.isArray(oneOrManyIds) ? oneOrManyIds : [oneOrManyIds]) as Types.ObjectId[]
+          return ids.some((id) => id.equals(rid as Types.ObjectId))
         })
       })
       results.set(dto, await assembler.convertToDTOs(refs))
