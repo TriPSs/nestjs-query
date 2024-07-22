@@ -162,7 +162,20 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     withDeleted?: boolean
   ): Promise<Map<Entity, Relation[]>> {
     const assembler = AssemblerFactory.getAssembler(RelationClass, Document)
-    const refFilter = this.getReferenceFilter(relationName, dtos, assembler.convertQuery({ filter: opts?.filter }).filter)
+    const referenceQueryBuilder = this.getReferenceQueryBuilder(relationName)
+    const query = assembler.convertQuery(opts)
+
+    // If paging is enabled, we need to query each entity individually
+    if (query.paging) {
+      const entityRelations = await Promise.all(dtos.map((d) => this.queryRelations(RelationClass, relationName, d, opts)))
+      return entityRelations.reduce((results, relations, index) => {
+        const e = dtos[index]
+        results.set(e, relations)
+        return results
+      }, new Map<Entity, Relation[]>())
+    }
+
+    const refFilter = this.getReferenceFilter(relationName, dtos, query.filter)
 
     const results = new Map<Entity, Relation[]>()
     if (!refFilter) {
@@ -174,9 +187,9 @@ export abstract class ReferenceQueryService<Entity extends Document> {
       return results
     }
 
+    const { filterQuery, options } = referenceQueryBuilder.buildQuery({ ...query, filter: refFilter })
     const referenceModel = this.getReferenceModel<Relation>(relationName)
-    const referenceQueryBuilder = this.getReferenceQueryBuilder(relationName)
-    const entityRelations = await referenceModel.find(referenceQueryBuilder.buildFilterQuery(refFilter)).exec()
+    const entityRelations = await referenceModel.find(filterQuery).sort(options.sort).exec()
 
     for (const dto of dtos) {
       const referenceIds = this.getReferenceIds(refFieldMap.localField, dto)
@@ -258,7 +271,6 @@ export abstract class ReferenceQueryService<Entity extends Document> {
       relationName,
       dtos,
       {
-        paging: { limit: dtos.length },
         filter: opts?.filter
       },
       opts?.withDeleted
