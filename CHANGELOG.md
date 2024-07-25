@@ -1,4 +1,8 @@
  
+## [6.1.3](https://github.com/TriPSs/nestjs-query/compare/v6.1.2...v6.1.3) (2024-07-25)
+
+
+
 ## [6.1.2](https://github.com/TriPSs/nestjs-query/compare/v6.1.1...v6.1.2) (2024-07-24)
 
 
