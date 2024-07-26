@@ -11,12 +11,13 @@ import {
   ModifyRelationOptions,
   Query
 } from '@ptc-org/nestjs-query-core'
-import { Document, Model as MongooseModel, PipelineStage, UpdateQuery } from 'mongoose'
+import { Document, Model as MongooseModel, PipelineStage, Types, UpdateQuery } from 'mongoose'
 
 import {
   isEmbeddedSchemaTypeOptions,
   isSchemaTypeWithReferenceOptions,
   isVirtualTypeWithReferenceOptions,
+  VirtualReferenceOptions,
   VirtualTypeWithOptions
 } from '../mongoose-types.helper'
 import { AggregateBuilder, FilterQueryBuilder } from '../query'
@@ -50,16 +51,12 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     aggregateQuery: AggregateQuery<Relation>
   ): Promise<AggregateResponse<Relation>[] | Map<Entity, AggregateResponse<Relation>[]>> {
     this.checkForReference('AggregateRelations', relationName)
-    const relationModel = this.getReferenceModel(relationName)
-    const referenceQueryBuilder = this.getReferenceQueryBuilder(relationName)
     if (Array.isArray(dto)) {
-      return dto.reduce(async (mapPromise, entity) => {
-        const map = await mapPromise
-        const refs = await this.aggregateRelations(RelationClass, relationName, entity, filter, aggregateQuery)
-        return map.set(entity, refs)
-      }, Promise.resolve(new Map<Entity, AggregateResponse<Relation>[]>()))
+      return this.batchAggregateRelations(RelationClass, relationName, dto, filter, aggregateQuery)
     }
     const assembler = AssemblerFactory.getAssembler(RelationClass, Document)
+    const relationModel = this.getReferenceModel(relationName)
+    const referenceQueryBuilder = this.getReferenceQueryBuilder(relationName)
     const refFilter = this.getReferenceFilter(relationName, dto, assembler.convertQuery({ filter }).filter)
     if (!refFilter) {
       return []
@@ -98,11 +95,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
   ): Promise<number | Map<Entity, number>> {
     this.checkForReference('CountRelations', relationName)
     if (Array.isArray(dto)) {
-      return dto.reduce(async (mapPromise, entity) => {
-        const map = await mapPromise
-        const refs = await this.countRelations(RelationClass, relationName, entity, filter)
-        return map.set(entity, refs)
-      }, Promise.resolve(new Map<Entity, number>()))
+      return this.batchCountRelations(RelationClass, relationName, dto, filter)
     }
     const assembler = AssemblerFactory.getAssembler(RelationClass, Document)
     const relationModel = this.getReferenceModel(relationName)
@@ -114,35 +107,29 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return relationModel.countDocuments(referenceQueryBuilder.buildFilterQuery(refFilter)).exec()
   }
 
-  public findRelation<Relation>(
+  public findRelation<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: Entity[],
     opts?: FindRelationOptions<Relation>
   ): Promise<Map<Entity, Relation | undefined>>
 
-  public findRelation<Relation>(
+  public findRelation<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
     opts?: FindRelationOptions<Relation>
   ): Promise<Relation | undefined>
 
-  public async findRelation<Relation>(
+  public async findRelation<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
     opts?: FindRelationOptions<Relation>
   ): Promise<(Relation | undefined) | Map<Entity, Relation | undefined>> {
     this.checkForReference('FindRelation', relationName)
-    const referenceQueryBuilder = this.getReferenceQueryBuilder(relationName)
-
     if (Array.isArray(dto)) {
-      return dto.reduce(async (prev, curr) => {
-        const map = await prev
-        const ref = await this.findRelation(RelationClass, relationName, curr, opts)
-        return map.set(curr, ref)
-      }, Promise.resolve(new Map<Entity, Relation | undefined>()))
+      return this.batchFindRelations(RelationClass, relationName, dto, opts)
     }
 
     const foundEntity = await this.Model.findById(dto._id ?? dto.id)
@@ -151,6 +138,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     }
 
     const assembler = AssemblerFactory.getAssembler(RelationClass, Document)
+    const referenceQueryBuilder = this.getReferenceQueryBuilder(relationName)
     const filterQuery = referenceQueryBuilder.buildFilterQuery(assembler.convertQuery({ filter: opts?.filter }).filter)
     const populated = await foundEntity.populate({ path: relationName, match: filterQuery })
     const populatedRef: unknown = populated.get(relationName)
@@ -158,42 +146,175 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return populatedRef ? assembler.convertToDTO(populatedRef as Document) : undefined
   }
 
-  public queryRelations<Relation>(
+  /**
+   * Query for an array of relations for multiple dtos.
+   * @param RelationClass - The class to serialize the relations into.
+   * @param dtos - The entities to query relations for.
+   * @param relationName - The name of relation to query for.
+   * @param opts - A query to filter, page or sort relations.
+   * @param withDeleted - Also query the soft deleted records
+   */
+  private async batchQueryRelations<Relation extends Document>(
+    RelationClass: Class<Relation>,
+    relationName: string,
+    dtos: Entity[],
+    opts: Query<Relation>,
+    withDeleted?: boolean
+  ): Promise<Map<Entity, Relation[]>> {
+    const assembler = AssemblerFactory.getAssembler(RelationClass, Document)
+    const referenceQueryBuilder = this.getReferenceQueryBuilder(relationName)
+    const query = assembler.convertQuery(opts)
+
+    // If paging is enabled, we need to query each entity individually
+    if (query.paging) {
+      const entityRelations = await Promise.all(dtos.map((d) => this.queryRelations(RelationClass, relationName, d, opts)))
+      return entityRelations.reduce((results, relations, index) => {
+        const e = dtos[index]
+        results.set(e, relations)
+        return results
+      }, new Map<Entity, Relation[]>())
+    }
+
+    const refFilter = this.getReferenceFilter(relationName, dtos, query.filter)
+
+    const results = new Map<Entity, Relation[]>()
+    if (!refFilter) {
+      return results
+    }
+
+    const refFieldMap = this.getReferenceFieldMap(relationName)
+    if (!refFieldMap) {
+      return results
+    }
+
+    const { filterQuery, options } = referenceQueryBuilder.buildQuery({ ...query, filter: refFilter })
+    const referenceModel = this.getReferenceModel<Relation>(relationName)
+    const entityRelations = await referenceModel.find(filterQuery).sort(options.sort).exec()
+
+    for (const dto of dtos) {
+      const referenceIds = this.getReferenceIds(refFieldMap.localField, dto)
+      const refs = entityRelations.filter((er) => {
+        return referenceIds.some((rid) => {
+          const oneOrManyIds = er[refFieldMap.foreignField as keyof Relation]
+          const ids = (Array.isArray(oneOrManyIds) ? oneOrManyIds : [oneOrManyIds]) as Types.ObjectId[]
+          return ids.some((id) => id.equals(rid as Types.ObjectId))
+        })
+      })
+      results.set(dto, await assembler.convertToDTOs(refs))
+    }
+
+    return results
+  }
+
+  /**
+   * Query for an array of relations for multiple dtos.
+   * @param RelationClass - The class to serialize the relations into.
+   * @param entities - The entities to query relations for.
+   * @param relationName - The name of relation to query for.
+   * @param filter - Filter.
+   * @param query - A query to filter, page or sort relations.
+   */
+  private async batchAggregateRelations<Relation extends Document>(
+    RelationClass: Class<Relation>,
+    relationName: string,
+    entities: Entity[],
+    filter: Filter<Relation>,
+    query: AggregateQuery<Relation>
+  ): Promise<Map<Entity, AggregateResponse<Relation>[]>> {
+    const entityRelations = await Promise.all(
+      entities.map((e) => this.aggregateRelations(RelationClass, relationName, e, filter, query))
+    )
+
+    return entityRelations.reduce((results, relationAggregate, index) => {
+      const e = entities[index]
+      results.set(e, relationAggregate)
+      return results
+    }, new Map<Entity, AggregateResponse<Relation>[]>())
+  }
+
+  /**
+   * Count the number of relations for multiple dtos.
+   * @param RelationClass - The class to serialize the relations into.
+   * @param entities - The entities to query relations for.
+   * @param relationName - The name of relation to query for.
+   * @param filter - The filter to apply to the relation query.
+   */
+  private async batchCountRelations<Relation extends Document>(
+    RelationClass: Class<Relation>,
+    relationName: string,
+    entities: Entity[],
+    filter: Filter<Relation>
+  ): Promise<Map<Entity, number>> {
+    const entityRelations = await Promise.all(entities.map((e) => this.countRelations(RelationClass, relationName, e, filter)))
+    return entityRelations.reduce((results, relationCount, index) => {
+      const e = entities[index]
+      results.set(e, relationCount)
+      return results
+    }, new Map<Entity, number>())
+  }
+
+  /**
+   * Query for a relation for multiple dtos.
+   * @param RelationClass - The class to serialize the relations into.
+   * @param dtos - The dto to query relations for.
+   * @param relationName - The name of relation to query for.
+   * @param opts - A query to filter, page or sort relations.
+   */
+  private async batchFindRelations<Relation extends Document>(
+    RelationClass: Class<Relation>,
+    relationName: string,
+    dtos: Entity[],
+    opts?: FindRelationOptions<Relation>
+  ): Promise<Map<Entity, Relation | undefined>> {
+    const batchResults = await this.batchQueryRelations(
+      RelationClass,
+      relationName,
+      dtos,
+      {
+        filter: opts?.filter
+      },
+      opts?.withDeleted
+    )
+
+    const results = new Map<Entity, Relation>()
+    batchResults.forEach((relation, dto) => {
+      // get just the first one.
+      results.set(dto, relation[0])
+    })
+
+    return results
+  }
+
+  public queryRelations<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
     query: Query<Relation>
   ): Promise<Map<Entity, Relation[]>>
 
-  public queryRelations<Relation>(
+  public queryRelations<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
     query: Query<Relation>
   ): Promise<Relation[]>
 
-  public async queryRelations<Relation>(
+  public async queryRelations<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
     query: Query<Relation>
   ): Promise<Relation[] | Map<Entity, Relation[]>> {
     this.checkForReference('QueryRelations', relationName)
-    const referenceQueryBuilder = this.getReferenceQueryBuilder(relationName)
     if (Array.isArray(dto)) {
-      return dto.reduce(async (mapPromise, entity) => {
-        const map = await mapPromise
-        const refs = await this.queryRelations(RelationClass, relationName, entity, query)
-        return map.set(entity, refs)
-      }, Promise.resolve(new Map<Entity, Relation[]>()))
+      return this.batchQueryRelations(RelationClass, relationName, dto, query)
     }
-
     const foundEntity = await this.Model.findById(dto._id ?? dto.id)
     if (!foundEntity) {
       return []
     }
-
     const assembler = AssemblerFactory.getAssembler(RelationClass, Document)
+    const referenceQueryBuilder = this.getReferenceQueryBuilder(relationName)
     const { filterQuery, options } = referenceQueryBuilder.buildQuery(assembler.convertQuery(query))
     const populated = await foundEntity.populate({ path: relationName, match: filterQuery, options })
     return assembler.convertToDTOs(populated.get(relationName) as Document[])
@@ -341,42 +462,45 @@ export abstract class ReferenceQueryService<Entity extends Document> {
 
   private getReferenceFilter<Relation extends Document>(
     refName: string,
-    entity: Entity,
+    entity: Entity | Entity[],
     filter?: Filter<Relation>
   ): Filter<Relation> | undefined {
+    const refFieldMap = this.getReferenceFieldMap(refName)
+    if (!refFieldMap) {
+      return undefined
+    }
+    const referenceIds = this.getReferenceIds(refFieldMap.localField, entity)
+
+    const refFilter = {
+      [refFieldMap.foreignField as keyof Relation]: { in: referenceIds }
+    } as unknown as Filter<Relation>
+
+    return mergeFilter(filter ?? ({} as Filter<Relation>), refFilter)
+  }
+
+  private getReferenceIds(localField: string, entity: Entity | Entity[]) {
+    const entities = Array.isArray(entity) ? entity : [entity]
+    return entities.flatMap((e) => e[localField as keyof Entity]).filter((id) => !!id)
+  }
+
+  private getReferenceFieldMap(refName: string): Omit<VirtualReferenceOptions, 'ref'> | undefined {
     if (this.isReferencePath(refName)) {
-      return this.getObjectIdReferenceFilter(refName, entity, filter)
+      return {
+        foreignField: '_id',
+        localField: refName
+      }
     }
     if (this.isVirtualPath(refName)) {
       const virtualType = this.Model.schema.virtualpath(refName)
-      if (isVirtualTypeWithReferenceOptions(virtualType)) {
-        return this.getVirtualReferenceFilter(virtualType, entity, filter)
+      if (!isVirtualTypeWithReferenceOptions(virtualType)) {
+        throw new Error(`Unable to lookup reference type for ${refName}`)
       }
-      throw new Error(`Unable to lookup reference type for ${refName}`)
+      return {
+        foreignField: virtualType.options.foreignField,
+        localField: virtualType.options.localField
+      }
     }
     return undefined
-  }
-
-  private getObjectIdReferenceFilter<Ref extends Document>(refName: string, entity: Entity, filter?: Filter<Ref>): Filter<Ref> {
-    const referenceIds = entity[refName as keyof Entity]
-    const refFilter = {
-      _id: { [Array.isArray(referenceIds) ? 'in' : 'eq']: referenceIds }
-    } as unknown as Filter<Ref>
-    return mergeFilter(filter ?? ({} as Filter<Ref>), refFilter)
-  }
-
-  private getVirtualReferenceFilter<Ref extends Document>(
-    virtualType: VirtualTypeWithOptions,
-    entity: Entity,
-    filter?: Filter<Ref>
-  ): Filter<Ref> {
-    const { foreignField, localField } = virtualType.options
-    const refVal = entity[localField as keyof Entity]
-    const isArray = Array.isArray(refVal)
-    const lookupFilter = {
-      [foreignField as keyof Ref]: { [isArray ? 'in' : 'eq']: refVal }
-    } as unknown as Filter<Ref>
-    return mergeFilter(filter ?? ({} as Filter<Ref>), lookupFilter)
   }
 
   private getRefCount<Relation extends Document>(

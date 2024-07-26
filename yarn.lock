@@ -6215,7 +6215,7 @@ __metadata:
   peerDependencies:
     "@nestjs/common": ^9.0.0 || ^10.0.0
     "@nestjs/mongoose": ^9.0.0 || ^10.0.0
-    mongoose: ^6.5.0 || ^7.0.0 || ^8.0.0
+    mongoose: ^8.0.0
   languageName: unknown
   linkType: soft
 
