@@ -1,6 +1,6 @@
 {
   "name": "nestjs-query",
-  "version": "6.1.3",
+  "version": "7.0.0",
   "private": true,
   "workspaces": [
     "packages/**"
