@@ -5,13 +5,13 @@
   "sourceRoot": "/documentation/src",
   "targets": {
     "build": {
-      "executor": "@nx-plus/docusaurus:browser",
+      "executor": "@nx-extend/docusaurus:browser",
       "options": {
-        "outputPath": "dist//documentation"
+        "outputPath": "dist/documentation"
       }
     },
     "serve": {
-      "executor": "@nx-plus/docusaurus:dev-server",
+      "executor": "@nx-extend/docusaurus:dev-server",
       "options": {
         "port": 3001
       }
