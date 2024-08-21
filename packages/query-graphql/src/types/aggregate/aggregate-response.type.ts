@@ -6,6 +6,18 @@ import { getGraphqlObjectName } from '../../common'
 import { FilterableFieldDescriptor, getFilterableFields, SkipIf } from '../../decorators'
 import { FilterableRelationFields, getFilterableRelationFields } from '../../decorators/filterable-field.decorator'
 
+function memoize<Res, Fn extends (...args:unknown[]) => Res>(fn: Fn) {
+  const memoMap = new Map<string, Res>();
+  return function (...args:unknown[]) {
+    const key = String(args[0])
+    if (memoMap.has(key)) return memoMap.get(key)!;
+
+    const result = fn.call({}, ...args);
+    memoMap.set(key, result);
+    return result;
+  };
+}
+
 const reflector = new MapReflector('nestjs-query:aggregate-response-type')
 
 const capitalize = (key: string) => key.slice(0, 1).toUpperCase() + key.slice(1)
@@ -27,12 +39,15 @@ function NumberAggregatedType<DTO>(
   })
 
   relationFields.forEach((related, key) => {
-    const rt = NumberAggregatedType(capitalize(key) + name, related, NumberType)
+    const rt = memoizedNumberAggregatedType(capitalize(key)+ 'Relation' + name, related, NumberType)
     Field(() => rt, { nullable: true })(Aggregated.prototype, key)
   })
 
   return Aggregated
 }
+
+const memoizedNumberAggregatedType = memoize(<DTO>(name: string,fields: FilterableFieldDescriptor[], NumberType: GraphQLScalarType,) => NumberAggregatedType<DTO>(name, fields, NumberType));
+
 
 function AggregateGroupByType<DTO>(
   name: string,
@@ -49,12 +64,14 @@ function AggregateGroupByType<DTO>(
   })
 
   relationFields.forEach((related, key) => {
-    const rt = AggregateGroupByType(capitalize(key) + name, related)
+    const rt = memoizedAggregateGroupByType(capitalize(key) + 'Relation' + name, related)
     Field(() => rt, { nullable: true })(Aggregated.prototype, key)
   })
 
   return Aggregated
 }
+
+const memoizedAggregateGroupByType = memoize(<DTO>(name: string,fields: FilterableFieldDescriptor[]) => AggregateGroupByType<DTO>(name, fields));
 
 function AggregatedType<DTO>(
   name: string,
@@ -71,12 +88,14 @@ function AggregatedType<DTO>(
   })
 
   relationFields.forEach((related, key) => {
-    const rt = AggregateGroupByType(capitalize(key) + name, related)
+    const rt = memoizedAggregatedType(capitalize(key)+ 'Relation' + name, related)
     Field(() => rt, { nullable: true })(Aggregated.prototype, key)
   })
 
   return Aggregated
 }
+
+const memoizedAggregatedType = memoize(<DTO>(name: string,fields: FilterableFieldDescriptor[]) => AggregatedType<DTO>(name, fields));
 
 export type AggregateResponseOpts = { prefix: string }
 
