@@ -1,7 +1,18 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
 import { Expose, Transform, Type } from 'class-transformer'
-import { ArrayMaxSize, IsEnum, IsNotEmpty, IsObject, IsOptional, MaxLength, MinLength, ValidateNested } from 'class-validator'
+import {
+  ArrayMaxSize,
+  IsEnum,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
+  ValidateNested
+} from 'class-validator'
 
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
 
@@ -96,6 +107,14 @@ export function Field(
 
   if (options.maxLength) {
     decorators.push(MaxLength(options.maxLength))
+  }
+
+  if (options.minimum !== undefined) {
+    decorators.push(Min(options.minimum))
+  }
+
+  if (options.maximum !== undefined) {
+    decorators.push(Max(options.maximum))
   }
 
   if (options.required) {
