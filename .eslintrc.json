@@ -78,13 +78,18 @@
             ]
           }
         ],
-        "simple-import-sort/exports": "warn"
+        "simple-import-sort/exports": "warn",
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
       }
     },
     {
       "files": ["*.js", "*.jsx"],
       "extends": ["plugin:@nx/javascript"],
-      "rules": {}
+      "rules": {
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
+      }
     },
     {
       "files": ["*.spec.ts", "*/__fixtures__/*.ts"],
@@ -99,7 +104,9 @@
         "@typescript-eslint/no-explicit-any": "off",
         "import/no-extraneous-dependencies": "off",
         "jest/expect-expect": "off",
-        "@nx/enforce-module-boundaries": ["off"]
+        "@nx/enforce-module-boundaries": ["off"],
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
       }
     }
   ]
