@@ -49,7 +49,7 @@
     "@nestjs/cli": "10.4.4",
     "@nestjs/schematics": "10.1.4",
     "@nestjs/testing": "^10.4.1",
-    "@nx-extend/docusaurus": "^2.0.0",
+    "@nx-extend/docusaurus": "^2.0.1",
     "@nx/eslint": "18.3.4",
     "@nx/eslint-plugin": "18.3.4",
     "@nx/jest": "18.3.4",
