@@ -751,7 +751,7 @@ describe('MongooseQueryService', () => {
       })
 
       it('should return undefined select if no results are found.', async () => {
-        const entities: TestEntity[] = [TEST_ENTITIES[0], { _id: new Types.ObjectId() } as TestEntity]
+        const entities: TestEntity[] = [TEST_ENTITIES[0], { _id: new Types.ObjectId() as never as string } as TestEntity]
         const queryService = moduleRef.get(TestEntityService)
         const queryResult = await queryService.findRelation(TestReference, 'testReference', entities)
 
@@ -1139,7 +1139,7 @@ describe('MongooseQueryService', () => {
       })
 
       it('should return an empty array if no results are found.', async () => {
-        const entities: TestEntity[] = [TEST_ENTITIES[0], { _id: new Types.ObjectId() } as TestEntity]
+        const entities: TestEntity[] = [TEST_ENTITIES[0], { _id: new Types.ObjectId() as never as string } as TestEntity]
         const queryService = moduleRef.get(TestEntityService)
         const queryResult = await queryService.aggregateRelations(
           TestReference,

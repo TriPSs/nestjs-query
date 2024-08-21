@@ -17,8 +17,7 @@ import {
   isEmbeddedSchemaTypeOptions,
   isSchemaTypeWithReferenceOptions,
   isVirtualTypeWithReferenceOptions,
-  VirtualReferenceOptions,
-  VirtualTypeWithOptions
+  VirtualReferenceOptions
 } from '../mongoose-types.helper'
 import { AggregateBuilder, FilterQueryBuilder } from '../query'
 
