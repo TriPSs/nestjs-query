@@ -8,7 +8,7 @@ This package is built using [mongoose](https://mongoosejs.com/) and [@nestjs/mon
 
 ## Installation
 
-[Installation Docs](../../introduction/install.md#nestjs-queryquery-mongoose)
+[Installation Docs](../../introduction/install.md#ptc-orgnestjs-query-mongoose)
 
 ## Docs
 

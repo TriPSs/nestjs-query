@@ -6,7 +6,7 @@ The `@ptc-org/nestjs-query-graphql` package provided base `Resolvers` and graphq
 
 ## Installation
 
-[Installation Docs](../introduction/install.md#nestjs-queryquery-graphql)
+[Installation Docs](../introduction/install.md#ptc-orgnestjs-query-graphql)
 
 ### Docs
 
