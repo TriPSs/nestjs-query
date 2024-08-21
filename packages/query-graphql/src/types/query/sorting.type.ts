@@ -32,7 +32,7 @@ export function getOrCreateSortType<T>(TClass: Class<T>): Class<SortField<T>> {
 
     const fieldNames = fields.map((field) => field.propertyName);
 
-    const relationFieldNames = getFilterableRelationFieldsNames(TClass, fieldNames);
+    const relationFieldNames = getFilterableRelationFieldsNames(TClass, fieldNames, ['one']);
 
     const fieldNameMap = {
         ...fieldNames.reduce((acc, field) => ({ ...acc, [field]: field }), {}),

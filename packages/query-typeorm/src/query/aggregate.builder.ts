@@ -1,7 +1,8 @@
 import { BadRequestException } from '@nestjs/common'
-import { AggregateQuery, AggregateResponse } from '@rezonate/nestjs-query-core'
+import { AggregateFields, AggregateQuery, AggregateResponse } from '@rezonate/nestjs-query-core'
 import { camelCase } from 'camel-case'
-import { Repository, SelectQueryBuilder } from 'typeorm'
+import { EntityMetadata, Repository, SelectQueryBuilder } from 'typeorm'
+import { Entries } from '@rezonate/nestjs-query-graphql/src/decorators'
 
 enum AggregateFuncs {
   AVG = 'AVG',
@@ -19,7 +20,8 @@ const AGG_REGEXP = /(AVG|SUM|COUNT|DISTINCT_COUNT|MAX|MIN|GROUP_BY)_(.*)/
  * Builds a WHERE clause from a Filter.
  */
 export class AggregateBuilder<Entity> {
-  constructor(readonly repo: Repository<Entity>) {}
+  constructor(readonly repo: Repository<Entity>) {
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   public static async asyncConvertToAggregateResponse<Entity>(
@@ -36,12 +38,19 @@ export class AggregateBuilder<Entity> {
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   private static getAggregateGroupBySelects<Entity>(query: AggregateQuery<Entity>): string[] {
-    return (query.groupBy ?? []).map((f) => this.getGroupByAlias(f))
+    return (query.groupBy ?? []).flatMap((f) => {
+      if (typeof f !== 'object') return this.getGroupByAlias(f as string)
+
+      const entries = Object.entries(f) as [keyof Entity, string[]][]
+      return entries.flatMap(([key, fields]) => {
+        return fields.map((field) => this.getGroupByAlias(`${key as string}_${field}`))
+      })
+    })
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   private static getAggregateFuncSelects<Entity>(query: AggregateQuery<Entity>): string[] {
-    const aggs: [AggregateFuncs, (keyof Entity)[] | undefined][] = [
+    const aggs: [AggregateFuncs, AggregateFields<Entity>][] = [
       [AggregateFuncs.COUNT, query.count],
       [AggregateFuncs.DISTINCT_COUNT, query.distinctCount],
       [AggregateFuncs.SUM, query.sum],
@@ -50,19 +59,24 @@ export class AggregateBuilder<Entity> {
       [AggregateFuncs.MIN, query.min]
     ]
     return aggs.reduce((cols, [func, fields]) => {
-      const aliases = (fields ?? []).map((f) => this.getAggregateAlias(func, f))
+      const aliases = (fields ?? []).flatMap((f) => {
+        if (typeof f !== 'object') return this.getAggregateAlias(func, f as string)
+
+        const entries = Object.entries(f) as [keyof Entity, string[]][]
+        return entries.flatMap(([key, relationFields]) => {
+          return relationFields.map((field) => this.getAggregateAlias(func, `${key as string}_${field}`))
+        })
+      })
       return [...cols, ...aliases]
     }, [] as string[])
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  public static getAggregateAlias<Entity>(func: AggregateFuncs, field: keyof Entity): string {
-    return `${func}_${field as string}`
+  public static getAggregateAlias(func: AggregateFuncs, field: string): string {
+    return `${func}_${field}`
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  public static getGroupByAlias<Entity>(field: keyof Entity): string {
-    return `GROUP_BY_${field as string}`
+  public static getGroupByAlias(field: string): string {
+    return `GROUP_BY_${field}`
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -75,12 +89,15 @@ export class AggregateBuilder<Entity> {
         }
         const [matchedFunc, matchedFieldName] = matchResult.slice(1)
         const aggFunc = camelCase(matchedFunc.toLowerCase()) as keyof AggregateResponse<Entity>
-        const fieldName = matchedFieldName as keyof Entity
+        const foo = matchedFieldName.split('.').reduceRight((obj, key) => {
+          if (!obj) return { [key as keyof Entity]: response[resultField] }
+          return { [key as keyof Entity]: obj }
+        }, null as any)
         const aggResult = agg[aggFunc] || {}
         return {
           ...agg,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          [aggFunc]: { ...aggResult, [fieldName]: response[resultField] }
+          [aggFunc]: { ...aggResult, ...foo }
         }
       }, {})
     })
@@ -89,15 +106,17 @@ export class AggregateBuilder<Entity> {
   /**
    * Returns the corrected fields for orderBy and groupBy
    */
-  public getCorrectedField(alias: string, field: string) {
-    const col = alias ? `${alias}.${field}` : `${field}`
-    const meta = this.repo.metadata.findColumnWithPropertyName(`${field}`)
+  public getCorrectedField(alias: string, f: AggregateFields<Entity>[0]) {
+    return this.getFieldWithRelations(f).map(({ field, metadata, relationField }) => {
+      const col = alias || relationField ? `${relationField ? relationField : alias}.${field}` : (field)
+      const meta = metadata.findColumnWithPropertyName(`${field}`)
 
-    if (meta && this.repo.manager.connection.driver.normalizeType(meta) === 'datetime') {
-      return `DATE(${col})`
-    }
+      if (meta && metadata.connection.driver.normalizeType(meta) === 'datetime') {
+        return `DATE(${col})`
+      }
 
-    return col
+      return col
+    })
   }
 
   /**
@@ -123,41 +142,60 @@ export class AggregateBuilder<Entity> {
     return tail.reduce((acc: Qb, [select, selectAlias]) => acc.addSelect(select, selectAlias), qb.select(head[0], head[1]))
   }
 
-  private createAggSelect(func: AggregateFuncs, fields?: (keyof Entity)[], alias?: string): [string, string][] {
+  private createAggSelect(func: AggregateFuncs, fields?: AggregateFields<Entity>, alias?: string): [string, string][] {
     if (!fields) {
       return []
     }
-    return fields.map((field) => {
-      const col = alias ? `${alias}.${field as string}` : (field as string)
-      return [`${func}(${col})`, AggregateBuilder.getAggregateAlias(func, field)]
+    return this.getFieldsWithRelations(fields).map(({ field, relationField }) => {
+      const col = alias || relationField ? `${relationField ? relationField : alias}.${field as string}` : (field as string)
+      return [`${func}(${col})`, AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)]
     })
   }
 
-  private createAggDistinctSelect(func: AggregateFuncs, fields?: (keyof Entity)[], alias?: string): [string, string][] {
+  private createAggDistinctSelect(func: AggregateFuncs, fields?: AggregateFields<Entity>, alias?: string): [string, string][] {
     if (!fields) {
       return []
     }
-    return fields.map((field) => {
-      const col = alias ? `${alias}.${field as string}` : (field as string)
-      return [`COUNT (DISTINCT ${col})`, AggregateBuilder.getAggregateAlias(func, field)]
+    return this.getFieldsWithRelations(fields).map(({ field, relationField }) => {
+      const col = alias || relationField ? `${relationField ? relationField : alias}.${field as string}` : (field as string)
+      return [`COUNT (DISTINCT ${col})`, AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)]
     })
   }
 
-  private createGroupBySelect(fields?: (keyof Entity)[], alias?: string): [string, string][] {
+  private createGroupBySelect(fields?: AggregateFields<Entity>, alias?: string): (readonly [string, string])[] {
     if (!fields) {
       return []
     }
 
-    return fields.map((field) => {
-      const col = alias ? `${alias}.${field as string}` : (field as string)
-      const groupByAlias = AggregateBuilder.getGroupByAlias(field)
+    return this.getFieldsWithRelations(fields).map(({ field, metadata, relationField }) => {
+      const col = `${relationField ? relationField : metadata.targetName}.${field}`
+      const groupByAlias = AggregateBuilder.getGroupByAlias(relationField ? `${relationField}.${field}` : `${field}`)
 
-      const meta = this.repo.metadata.findColumnWithPropertyName(`${field as string}`)
-      if (meta && this.repo.manager.connection.driver.normalizeType(meta) === 'datetime') {
-        return [`DATE(${col})`, groupByAlias]
+      const meta = metadata.findColumnWithPropertyName(field)
+      if (meta && metadata.connection.driver.normalizeType(meta) === 'datetime') {
+        return [`DATE(${col})`, groupByAlias] as const
       }
+      return [`${col}`, groupByAlias] as const
+    })
+  }
 
-      return [`${col}`, groupByAlias]
+  private getFieldsWithRelations(fields: AggregateFields<Entity>) {
+    return fields.flatMap(field => this.getFieldWithRelations(field))
+  }
+
+  private getFieldWithRelations(field: AggregateFields<Entity>[0]) {
+    if (typeof field !== 'object') return [{
+      field: field as string,
+      metadata: this.repo.metadata,
+      relationField: null
+    }]
+
+    const entries: [string, string[]][] = Object.entries(field)
+    return entries.flatMap(([key, relationField]) => {
+      return relationField.map((r) => {
+        const meta = this.repo.metadata.findRelationWithPropertyPath(`${key}`)
+        return { field: r, metadata: meta.inverseEntityMetadata, relationField: key }
+      })
     })
   }
 }

@@ -1,4 +1,5 @@
 import {
+  AggregateFields,
   AggregateQuery,
   Filter,
   getFilterFields,
@@ -71,7 +72,8 @@ export class FilterQueryBuilder<Entity> {
     public repo: Repository<Entity>,
     readonly whereBuilder: WhereBuilder<Entity> = new WhereBuilder<Entity>(),
     readonly aggregateBuilder: AggregateBuilder<Entity> = new AggregateBuilder<Entity>(repo)
-  ) {}
+  ) {
+  }
 
   /**
    * Create a `typeorm` SelectQueryBuilder with `WHERE`, `ORDER BY` and `LIMIT/OFFSET` clauses.
@@ -86,9 +88,9 @@ export class FilterQueryBuilder<Entity> {
     let qb = this.createQueryBuilder()
     qb = hasRelations
       ? this.applyRelationJoinsRecursive(
-          qb,
-          this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.sorting)
-        )
+        qb,
+        this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.sorting)
+      )
       : qb
     qb = this.applyFilter(qb, tableColumns, query.filter, query.sorting, qb.alias)
     qb = this.applySorting(qb, query.sorting, qb.alias)
@@ -112,11 +114,13 @@ export class FilterQueryBuilder<Entity> {
 
   public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>): SelectQueryBuilder<Entity> {
     const hasRelations = this.filterHasRelations(query.filter)
+    const hasAggregatedRelations = this.aggregateHasRelations(aggregate)
     const tableColumns = this.repo.metadata.columns
+    const relationsMap = { ...(hasRelations ? this.getReferencedRelationsRecursive(this.repo.metadata, query.filter) : {}), ...(hasAggregatedRelations ? this.getAggregatedRelations(aggregate) : {}) }
 
     let qb = this.createQueryBuilder()
-    qb = hasRelations
-      ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsRecursive(this.repo.metadata, query.filter))
+    qb = hasRelations || hasAggregatedRelations
+      ? this.applyRelationJoinsRecursive(qb, relationsMap)
       : qb
     qb = this.applyAggregate(qb, aggregate, qb.alias)
     qb = this.applyFilter(qb, tableColumns, query.filter, [], qb.alias)
@@ -236,21 +240,25 @@ export class FilterQueryBuilder<Entity> {
     }, qb)
   }
 
-  public applyAggregateGroupBy<T extends Groupable<Entity>>(qb: T, groupBy?: (keyof Entity)[], alias?: string): T {
+  public applyAggregateGroupBy<T extends Groupable<Entity>>(qb: T, groupBy?: AggregateFields<Entity>, alias?: string): T {
     if (!groupBy) {
       return qb
     }
-    return groupBy.reduce((prevQb, field) => {
-      return prevQb.addGroupBy(this.aggregateBuilder.getCorrectedField(alias, field as string))
+    return groupBy.reduce<T>((prevQb, field) => {
+      return this.aggregateBuilder
+        .getCorrectedField(alias, field)
+        .reduce<T>((prevQbInner, fieldInner) => prevQbInner.addGroupBy(fieldInner), prevQb)
     }, qb)
   }
 
-  public applyAggregateSorting<T extends Sortable<Entity>>(qb: T, groupBy?: (keyof Entity)[], alias?: string): T {
+  public applyAggregateSorting<T extends Sortable<Entity>>(qb: T, groupBy?: AggregateFields<Entity>, alias?: string): T {
     if (!groupBy) {
       return qb
     }
-    return groupBy.reduce((prevQb, field) => {
-      return prevQb.addOrderBy(this.aggregateBuilder.getCorrectedField(alias, field as string), 'ASC')
+    return groupBy.reduce<T>((prevQb, field) => {
+      return this.aggregateBuilder
+        .getCorrectedField(alias, field)
+        .reduce<T>((prevQbInner, fieldInner) => prevQbInner.addOrderBy(fieldInner, 'ASC'), prevQb)
     }, qb)
   }
 
@@ -301,11 +309,33 @@ export class FilterQueryBuilder<Entity> {
     return this.getReferencedRelations(filter, sort).length > 0
   }
 
+  public aggregateHasRelations(aggregate?: AggregateQuery<Entity>): boolean {
+    if (!aggregate) {
+      return false
+    }
+    return Boolean(Object.values(aggregate).find((v) => typeof v !== 'string'))
+  }
+
   private getReferencedRelations(filter: Filter<Entity>, sort: SortField<Entity>[] = []): string[] {
     const { relationNames } = this
     const referencedFields = getFilterFields(filter)
     const referencedSortFields = [...new Set(sort.map((f) => f.field.toString().split('_')[0]))]
     return [...referencedFields, ...referencedSortFields].filter((f) => relationNames.includes(f))
+  }
+
+  getAggregatedRelations(aggregate: AggregateQuery<Entity>): NestedRecord {
+    return Object.values(aggregate).reduce((obj, relationsObj) => {
+      return {
+        ...obj,
+        ...relationsObj.reduce((objInner, item) => {
+          const newField =
+            typeof item === 'string'
+              ? {}
+              : Object.keys(item).reduce((objInner1, key) => ({ ...objInner1, [key]: {} }), {} as NestedRecord)
+          return { ...objInner, ...newField } as NestedRecord
+        }, {} as NestedRecord)
+      } as NestedRecord
+    }, {} as NestedRecord)
   }
 
   getReferencedRelationsRecursive(
