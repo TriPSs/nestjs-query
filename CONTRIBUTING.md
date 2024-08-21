@@ -133,7 +133,7 @@ The first time you run the `e2e` tests you will need to start all backing servic
 
 ```
 cd ./examples
-docker-compose up -d
+docker compose up -d
 ```  
 
 To run the tests you can issue the following from the root 
