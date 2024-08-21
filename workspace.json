@@ -1,4 +1,5 @@
 {
+  "name": "nestjs-query",
   "version": 2,
   "projects": {
     "core": "packages/core",

@@ -1,20 +1,28 @@
-import { AggregateQuery, AggregateResponse, NumberAggregate } from '../interfaces'
+import { AggregateFields, AggregateQuery, AggregateResponse, NumberAggregate } from '../interfaces'
 import { QueryFieldMap } from './query.helpers'
 
 const convertAggregateQueryFields = <From, To>(
   fieldMap: QueryFieldMap<From, To>,
-  fields?: (keyof From)[]
-): (keyof To)[] | undefined => {
+  fields?: AggregateFields<From>
+): AggregateFields<To> | undefined => {
   if (!fields) {
     return undefined
   }
 
   return fields.map((fromField) => {
-    const otherKey = fieldMap[fromField]
-    if (!otherKey) {
-      throw new Error(`No corresponding field found for '${fromField as string}' when transforming aggregateQuery`)
+    if (typeof fromField === 'string') {
+      const otherKey = fieldMap[fromField]
+      if (!otherKey) {
+        throw new Error(`No corresponding field found for '${fromField}' when transforming aggregateQuery`)
+      }
+      return otherKey as keyof To
+    } else {
+      const notFound = Object.keys(fromField).filter((key) => !fieldMap[key as keyof From])
+      if (notFound.length)
+        throw new Error(`No corresponding field found for '${notFound.join()}' when transforming aggregateQuery`)
+
+      return fromField as { [key in keyof To]: string[] }
     }
-    return otherKey as keyof To
   })
 }
 
@@ -25,13 +33,16 @@ const convertAggregateNumberFields = <From, To>(
   if (!response) {
     return undefined
   }
-  return Object.keys(response).reduce((toResponse, fromField) => {
-    const otherKey = fieldMap[fromField as keyof From] as keyof To
-    if (!otherKey) {
-      throw new Error(`No corresponding field found for '${fromField}' when transforming aggregateQuery`)
-    }
-    return { ...toResponse, [otherKey]: response[fromField as keyof From] }
-  }, {} as Record<keyof To, number>)
+  return Object.keys(response).reduce(
+    (toResponse, fromField) => {
+      const otherKey = fieldMap[fromField as keyof From] as keyof To
+      if (!otherKey) {
+        throw new Error(`No corresponding field found for '${fromField}' when transforming aggregateQuery`)
+      }
+      return { ...toResponse, [otherKey]: response[fromField as keyof From] }
+    },
+    {} as Record<keyof To, number>
+  )
 }
 
 const convertAggregateFields = <From, To>(
