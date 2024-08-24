@@ -10,12 +10,12 @@ import {
   Filter,
   Filterable,
   FindByIdOptions,
-  GetByIdOptions,
+  GetByIdOptions, HavingFilter,
   Query,
   QueryService,
   UpdateManyResponse,
   UpdateOneOptions
-} from '@rezonate/nestjs-query-core'
+} from "@rezonate/nestjs-query-core";
 import { DeleteResult, FindOptionsWhere, Repository } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 import { UpdateResult } from 'typeorm/query-builder/result/UpdateResult'
@@ -81,9 +81,13 @@ export class TypeOrmQueryService<Entity>
     return this.filterQueryBuilder.select(query, repo).getMany()
   }
 
-  async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
+  async aggregate(
+    filter: Filter<Entity>,
+    aggregate: AggregateQuery<Entity>,
+    having?: HavingFilter<Entity>
+  ): Promise<AggregateResponse<Entity>[]> {
     return AggregateBuilder.asyncConvertToAggregateResponse(
-      this.filterQueryBuilder.aggregate({ filter }, aggregate).getRawMany<Record<string, unknown>>()
+      this.filterQueryBuilder.aggregate({ filter }, aggregate, having).getRawMany<Record<string, unknown>>()
     )
   }
 

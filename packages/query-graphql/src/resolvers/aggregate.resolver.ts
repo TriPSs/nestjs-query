@@ -60,7 +60,7 @@ export const Aggregateable =
         authFilter?: Filter<DTO>
       ): Promise<AggregateResponse<DTO>[]> {
         const qa = await transformAndValidate(AA, args)
-        return this.service.aggregate(mergeFilter(qa.filter || {}, authFilter ?? {}), query)
+        return this.service.aggregate(mergeFilter(qa.filter || {}, authFilter ?? {}), query, qa.having)
       }
     }
 

@@ -11,6 +11,7 @@ import {
   FindByIdOptions,
   FindRelationOptions,
   GetByIdOptions,
+  HavingFilter,
   ModifyRelationOptions,
   Query,
   UpdateManyResponse,
@@ -34,8 +35,9 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    * Perform an aggregate query
    * @param filter
    * @param aggregate
+   * @param having
    */
-  aggregate(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>): Promise<AggregateResponse<DTO>[]>
+  aggregate(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>, having?: HavingFilter<DTO>): Promise<AggregateResponse<DTO>[]>
 
   /**
    * Count the number of records that match the filter.

@@ -3,6 +3,7 @@ import {
   AggregateQuery,
   Filter,
   getFilterFields,
+  HavingFilter,
   Paging,
   Query,
   SortDirection,
@@ -24,6 +25,7 @@ import { SoftDeleteQueryBuilder } from 'typeorm/query-builder/SoftDeleteQueryBui
 import { AggregateBuilder } from './aggregate.builder'
 import { WhereBuilder } from './where.builder'
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata'
+import { ObjectLiteral } from 'typeorm/common/ObjectLiteral'
 
 /**
  * @internal
@@ -36,6 +38,10 @@ interface Sortable<Entity> extends QueryBuilder<Entity> {
 
 interface Groupable<Entity> extends QueryBuilder<Entity> {
   addGroupBy(groupBy: string): this
+}
+
+interface Havingable<Entity> extends QueryBuilder<Entity> {
+  andHaving(having: string, parameters?: ObjectLiteral): this
 }
 
 /**
@@ -112,20 +118,26 @@ export class FilterQueryBuilder<Entity> {
     return qb
   }
 
-  public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>): SelectQueryBuilder<Entity> {
+  public aggregate(
+    query: Query<Entity>,
+    aggregate: AggregateQuery<Entity>,
+    having?: HavingFilter<Entity>
+  ): SelectQueryBuilder<Entity> {
     const hasRelations = this.filterHasRelations(query.filter)
     const hasAggregatedRelations = this.aggregateHasRelations(aggregate)
     const tableColumns = this.repo.metadata.columns
-    const relationsMap = { ...(hasRelations ? this.getReferencedRelationsRecursive(this.repo.metadata, query.filter) : {}), ...(hasAggregatedRelations ? this.getAggregatedRelations(aggregate) : {}) }
+    const relationsMap = {
+      ...(hasRelations ? this.getReferencedRelationsRecursive(this.repo.metadata, query.filter) : {}),
+      ...(hasAggregatedRelations ? this.getAggregatedRelations(aggregate) : {})
+    }
 
     let qb = this.createQueryBuilder()
-    qb = hasRelations || hasAggregatedRelations
-      ? this.applyRelationJoinsRecursive(qb, relationsMap)
-      : qb
+    qb = hasRelations || hasAggregatedRelations ? this.applyRelationJoinsRecursive(qb, relationsMap) : qb
     qb = this.applyAggregate(qb, aggregate, qb.alias)
     qb = this.applyFilter(qb, tableColumns, query.filter, [], qb.alias)
     qb = this.applyAggregateSorting(qb, aggregate.groupBy, qb.alias)
     qb = this.applyAggregateGroupBy(qb, aggregate.groupBy, qb.alias)
+    qb = this.applyAggregateHaving(qb, having, qb.alias)
     return qb
   }
 
@@ -249,6 +261,13 @@ export class FilterQueryBuilder<Entity> {
         .getCorrectedField(alias, field)
         .reduce<T>((prevQbInner, fieldInner) => prevQbInner.addGroupBy(fieldInner), prevQb)
     }, qb)
+  }
+
+  public applyAggregateHaving<Qb extends SelectQueryBuilder<Entity>>(qb: Qb, having?: HavingFilter<Entity>, alias?: string): Qb {
+    if (!having) {
+      return qb
+    }
+    return this.aggregateBuilder.buildHavingFilter(qb, having, alias)
   }
 
   public applyAggregateSorting<T extends Sortable<Entity>>(qb: T, groupBy?: AggregateFields<Entity>, alias?: string): T {

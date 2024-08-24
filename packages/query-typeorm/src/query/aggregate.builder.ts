@@ -1,8 +1,14 @@
 import { BadRequestException } from '@nestjs/common'
-import { AggregateFields, AggregateQuery, AggregateResponse } from '@rezonate/nestjs-query-core'
+import {
+  AggregateFields,
+  AggregateQuery,
+  AggregateResponse,
+  FilterFieldComparison,
+  HavingFilter
+} from '@rezonate/nestjs-query-core'
 import { camelCase } from 'camel-case'
-import { EntityMetadata, Repository, SelectQueryBuilder } from 'typeorm'
-import { Entries } from '@rezonate/nestjs-query-graphql/src/decorators'
+import { Repository, SelectQueryBuilder } from 'typeorm'
+import { EntityComparisonField, SQLComparisonBuilder } from './sql-comparison.builder'
 
 enum AggregateFuncs {
   AVG = 'AVG',
@@ -20,8 +26,10 @@ const AGG_REGEXP = /(AVG|SUM|COUNT|DISTINCT_COUNT|MAX|MIN|GROUP_BY)_(.*)/
  * Builds a WHERE clause from a Filter.
  */
 export class AggregateBuilder<Entity> {
-  constructor(readonly repo: Repository<Entity>) {
-  }
+  constructor(
+    readonly repo: Repository<Entity>,
+    readonly sqlComparisonBuilder: SQLComparisonBuilder<Entity> = new SQLComparisonBuilder<Entity>()
+  ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   public static async asyncConvertToAggregateResponse<Entity>(
@@ -108,7 +116,7 @@ export class AggregateBuilder<Entity> {
    */
   public getCorrectedField(alias: string, f: AggregateFields<Entity>[0]) {
     return this.getFieldWithRelations(f).map(({ field, metadata, relationField }) => {
-      const col = alias || relationField ? `${relationField ? relationField : alias}.${field}` : (field)
+      const col = alias || relationField ? `${relationField ? relationField : alias}.${field}` : field
       const meta = metadata.findColumnWithPropertyName(`${field}`)
 
       if (meta && metadata.connection.driver.normalizeType(meta) === 'datetime') {
@@ -147,8 +155,11 @@ export class AggregateBuilder<Entity> {
       return []
     }
     return this.getFieldsWithRelations(fields).map(({ field, relationField }) => {
-      const col = alias || relationField ? `${relationField ? relationField : alias}.${field as string}` : (field as string)
-      return [`${func}(${col})`, AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)]
+      const col = alias || relationField ? `${relationField ? relationField : alias}.${field}` : field
+      return [
+        `${func}(${col})`,
+        AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)
+      ]
     })
   }
 
@@ -157,8 +168,11 @@ export class AggregateBuilder<Entity> {
       return []
     }
     return this.getFieldsWithRelations(fields).map(({ field, relationField }) => {
-      const col = alias || relationField ? `${relationField ? relationField : alias}.${field as string}` : (field as string)
-      return [`COUNT (DISTINCT ${col})`, AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)]
+      const col = alias || relationField ? `${relationField ? relationField : alias}.${field}` : field
+      return [
+        `COUNT (DISTINCT ${col})`,
+        AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)
+      ]
     })
   }
 
@@ -180,15 +194,18 @@ export class AggregateBuilder<Entity> {
   }
 
   private getFieldsWithRelations(fields: AggregateFields<Entity>) {
-    return fields.flatMap(field => this.getFieldWithRelations(field))
+    return fields.flatMap((field) => this.getFieldWithRelations(field))
   }
 
   private getFieldWithRelations(field: AggregateFields<Entity>[0]) {
-    if (typeof field !== 'object') return [{
-      field: field as string,
-      metadata: this.repo.metadata,
-      relationField: null
-    }]
+    if (typeof field !== 'object')
+      return [
+        {
+          field: field as string,
+          metadata: this.repo.metadata,
+          relationField: null
+        }
+      ]
 
     const entries: [string, string[]][] = Object.entries(field)
     return entries.flatMap(([key, relationField]) => {
@@ -197,5 +214,46 @@ export class AggregateBuilder<Entity> {
         return { field: r, metadata: meta.inverseEntityMetadata, relationField: key }
       })
     })
+  }
+
+  public buildHavingFilter<Qb extends SelectQueryBuilder<Entity>>(qb: Qb, having: HavingFilter<Entity>, alias?: string): Qb {
+    const aggFuncMapper = new Map<keyof HavingFilter<Entity>, AggregateFuncs>([
+      ['avg', AggregateFuncs.AVG],
+      ['min', AggregateFuncs.MIN],
+      ['max', AggregateFuncs.MAX],
+      ['sum', AggregateFuncs.SUM],
+      ['count', AggregateFuncs.COUNT],
+      ['distinctCount', AggregateFuncs.DISTINCT_COUNT]
+    ])
+
+    Object.entries(having).forEach(([aggFunc, filter]) => {
+      Object.keys(filter).forEach((field) => {
+        const cmp = filter[field] as FilterFieldComparison<Entity[keyof Entity]>
+        const opts = Object.keys(cmp) as (keyof FilterFieldComparison<Entity[keyof Entity]>)[]
+
+        let column: string
+
+        if (!alias) {
+          column = `${aggFuncMapper.get(aggFunc as keyof HavingFilter<Entity>)}(${field})`
+        } else {
+          column = `${aggFuncMapper.get(aggFunc as keyof HavingFilter<Entity>)}(${alias}.${field})`
+        }
+
+        const sqlComparisons = opts.map((cmpType) =>
+          this.sqlComparisonBuilder.build(
+            column as keyof Entity,
+            cmpType,
+            cmp[cmpType] as EntityComparisonField<Entity, keyof Entity>,
+            alias,
+            true
+          )
+        )
+        sqlComparisons.map(({ sql, params }) => {
+          qb.andHaving(sql, params)
+        })
+      })
+    })
+
+    return qb
   }
 }

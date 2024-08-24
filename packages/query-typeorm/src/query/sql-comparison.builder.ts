@@ -50,14 +50,21 @@ export class SQLComparisonBuilder<Entity> {
    * @param cmp - the FilterComparisonOperator (eq, neq, gt, etc...)
    * @param val - the value to compare to
    * @param alias - alias for the field.
+   * @param customField
    */
   build<F extends keyof Entity>(
     field: F,
     cmp: FilterComparisonOperators<Entity[F]>,
     val: EntityComparisonField<Entity, F>,
-    alias?: string
+    alias?: string,
+    customField = false
   ): CmpSQLType {
-    const col = alias ? `${alias}.${field as string}` : `${field as string}`
+    let col: string
+    if (!customField) {
+      col = alias ? `${alias}.${field as string}` : `${field as string}`
+    } else {
+      col = `${field as string}`
+    }
     const normalizedCmp = (cmp as string).toLowerCase()
     if (this.comparisonMap[normalizedCmp]) {
       // comparison operator (e.b. =, !=, >, <)
