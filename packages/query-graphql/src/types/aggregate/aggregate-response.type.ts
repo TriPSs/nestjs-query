@@ -1,4 +1,4 @@
-import { Field, Float, Int, ObjectType } from '@nestjs/graphql'
+import { Directive, Field, Float, Int, ObjectType } from '@nestjs/graphql'
 import { AggregateResponse, Class, MapReflector, NumberAggregate, TypeAggregate } from '@rezonate/nestjs-query-core'
 import { GraphQLScalarType } from 'graphql'
 
@@ -27,6 +27,7 @@ const NumberAggregatedType = <DTO>(
 
   const Aggregated = getAggregatedType(name, () => {
     @ObjectType(name)
+    @Directive('@shareable')
     class AggregatedClass {}
 
     return AggregatedClass
@@ -53,6 +54,7 @@ const AggregateGroupByType = (
 ) => {
   const Aggregated = getAggregatedType(name, () => {
     @ObjectType(name)
+    @Directive('@shareable')
     class AggregatedClass {}
 
     return AggregatedClass
@@ -80,6 +82,7 @@ const AggregatedType = <DTO>(
 ): Class<TypeAggregate<DTO>> => {
   const Aggregated = getAggregatedType(name, () => {
     @ObjectType(name)
+    @Directive('@shareable')
     class AggregatedClass {}
 
     return AggregatedClass
