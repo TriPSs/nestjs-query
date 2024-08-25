@@ -19,9 +19,10 @@ export interface FilterableFieldDescriptor<T = any> {
   advancedOptions?: FilterableFieldOptions<T>
 }
 
-export interface FilterableRelationFields<T = any> extends FilterableFieldDescriptor<T>{
+export interface FilterableRelationFields<T = any> extends FilterableFieldDescriptor<T> {
   propertyName: string
   relationPropertyName: string;
+  DTO: Class<unknown>
 }
 
 /**
@@ -111,17 +112,27 @@ export function getFilterableFields<DTO>(DTOClass: Class<DTO>): FilterableFieldD
   }, [] as FilterableFieldDescriptor[])
 }
 
-export function getFilterableRelationFields<DTO>(DTOClass: Class<DTO>, realtionTypes:('one' | 'many')[]): FilterableRelationFields[] {
+export function getRelatedDTOsMap<DTO>(DTOClass: Class<DTO>) {
+  const relationOpts = getRelations(DTOClass)
+
+  return new Map(
+    Object.values(relationOpts ?? {}).flatMap((map) =>
+      Object.entries(map).map(([relationPropertyName, relation]) => [relationPropertyName, relation])
+    )
+  )
+}
+
+export function getFilterableRelationFields<DTO>(DTOClass: Class<DTO>, realtionTypes: ('one' | 'many')[]): FilterableRelationFields[] {
   const relationOpts = getRelations(DTOClass)
   return realtionTypes.flatMap(type => Object.entries(relationOpts[type] ?? {}).flatMap(([relationPropertyName, relation]) => {
-    const fields = getFilterableFields(relation.DTO);
-    return fields.map(f => ({...f, relationPropertyName}))
+    const fields = getFilterableFields(relation.DTO)
+    return fields.map(f => ({ ...f, relationPropertyName, DTO: relation.DTO }))
   }))
 }
 
-export function getFilterableRelationFieldsNames<DTO>(DTOClass: Class<DTO>, DTOFieldsNames: string[], realtionTypes:('one' | 'many')[]) {
-  const fields = getFilterableRelationFields(DTOClass, realtionTypes);
-  const parentFields = new Set(DTOFieldsNames.map(f => f.toLowerCase()));
-  const nonConflictingFields = fields.filter(field => !parentFields.has(`${field.relationPropertyName}${field.propertyName}`.toLowerCase()));
-  return nonConflictingFields.map((field) => `${field.relationPropertyName}_${field.propertyName}`);
+export function getFilterableRelationFieldsNames<DTO>(DTOClass: Class<DTO>, DTOFieldsNames: string[], realtionTypes: ('one' | 'many')[]) {
+  const fields = getFilterableRelationFields(DTOClass, realtionTypes)
+  const parentFields = new Set(DTOFieldsNames.map(f => f.toLowerCase()))
+  const nonConflictingFields = fields.filter(field => !parentFields.has(`${field.relationPropertyName}${field.propertyName}`.toLowerCase()))
+  return nonConflictingFields.map((field) => `${field.relationPropertyName}_${field.propertyName}`)
 }

@@ -130,7 +130,5 @@ export function SubscriptionFilterType<T>(TClass: Class<T>): FilterConstructor<T
 }
 
 export function AggregateFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  const { one = {}, many = {} } = getRelations(TClass)
-  const filterableRelations: FilterableRelations = { ...getFilterableRelations(one), ...getFilterableRelations(many) }
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}AggregateFilter`, filterableRelations)
+  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}AggregateFilter`)
 }
