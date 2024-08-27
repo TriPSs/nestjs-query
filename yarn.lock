@@ -374,6 +374,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@apollo/federation-internals@npm:2.9.0":
+  version: 2.9.0
+  resolution: "@apollo/federation-internals@npm:2.9.0"
+  dependencies:
+    "@types/uuid": "npm:^9.0.0"
+    chalk: "npm:^4.1.0"
+    js-levenshtein: "npm:^1.1.6"
+    uuid: "npm:^9.0.0"
+  peerDependencies:
+    graphql: ^16.5.0
+  checksum: 10/02ddcc7b5539d26e4fc12185c11df291716e1f6de20b0a3f3a4e3edc0506d3546f07bea9cf64172ecf0577d41a2f68d0d30dc65ee0c34e4850bbffe898710925
+  languageName: node
+  linkType: hard
+
 "@apollo/federation@npm:0.38.1":
   version: 0.38.1
   resolution: "@apollo/federation@npm:0.38.1"
@@ -476,19 +490,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/query-planner@npm:^2.2.3":
-  version: 2.6.2
-  resolution: "@apollo/query-planner@npm:2.6.2"
+"@apollo/query-graphs@npm:2.9.0":
+  version: 2.9.0
+  resolution: "@apollo/query-graphs@npm:2.9.0"
   dependencies:
-    "@apollo/federation-internals": "npm:2.6.2"
-    "@apollo/query-graphs": "npm:2.6.2"
+    "@apollo/federation-internals": "npm:2.9.0"
+    deep-equal: "npm:^2.0.5"
+    ts-graphviz: "npm:^1.5.4"
+    uuid: "npm:^9.0.0"
+  peerDependencies:
+    graphql: ^16.5.0
+  checksum: 10/db160e870e15273b33cd05dec317b705746b042a4f6eae8f166182266f58abf967ea1ff2f0ca5d97b0898273fb2cd6d2df2704f2b8d1f699a57203f67462d4d6
+  languageName: node
+  linkType: hard
+
+"@apollo/query-planner@npm:^2.2.3":
+  version: 2.9.0
+  resolution: "@apollo/query-planner@npm:2.9.0"
+  dependencies:
+    "@apollo/federation-internals": "npm:2.9.0"
+    "@apollo/query-graphs": "npm:2.9.0"
     "@apollo/utils.keyvaluecache": "npm:^2.1.0"
     chalk: "npm:^4.1.0"
     deep-equal: "npm:^2.0.5"
     pretty-format: "npm:^29.0.0"
   peerDependencies:
     graphql: ^16.5.0
-  checksum: 10/95b530ff2c2d3332fa133cffa83b7c19cf53e1a26890aeffc11aaf67ec238ba51e1b956909220a5770334166ce8c6bb5f0aa122e1a44232cb3fe3c856d275e50
+  checksum: 10/b5c01ea33a55e6163fe9bbe3e0c0a97ca9dc435c88ef7a3e496bb2a7a098d92f0ff28d1d83f60d08b4b39061d75518e117d8db1098e917c33967c4fc3f8c3d52
   languageName: node
   linkType: hard
 
