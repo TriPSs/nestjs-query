@@ -28,7 +28,8 @@ const NumberAggregatedType = <DTO>(
   const Aggregated = getAggregatedType(name, () => {
     @ObjectType(name)
     @Directive('@shareable')
-    class AggregatedClass {}
+    class AggregatedClass {
+    }
 
     return AggregatedClass
   })
@@ -55,13 +56,15 @@ const AggregateGroupByType = (
   const Aggregated = getAggregatedType(name, () => {
     @ObjectType(name)
     @Directive('@shareable')
-    class AggregatedClass {}
+    class AggregatedClass {
+    }
 
     return AggregatedClass
   })
 
   fields.forEach(({ propertyName, target, returnTypeFunc }) => {
-    const rt = returnTypeFunc ? returnTypeFunc() : target
+    let rt = returnTypeFunc ? returnTypeFunc() : target
+    if (Array.isArray(rt)) rt = rt[0]
     Field(() => rt, { nullable: true })(Aggregated.prototype, propertyName)
   })
 
@@ -83,7 +86,8 @@ const AggregatedType = <DTO>(
   const Aggregated = getAggregatedType(name, () => {
     @ObjectType(name)
     @Directive('@shareable')
-    class AggregatedClass {}
+    class AggregatedClass {
+    }
 
     return AggregatedClass
   })

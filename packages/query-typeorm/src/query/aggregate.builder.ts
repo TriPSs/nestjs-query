@@ -89,7 +89,7 @@ export class AggregateBuilder<Entity> {
         }
         const [matchedFunc, matchedFieldName] = matchResult.slice(1)
         const aggFunc = camelCase(matchedFunc.toLowerCase()) as keyof AggregateResponse<Entity>
-        const foo = matchedFieldName.split('.').reduceRight((obj, key) => {
+        const currentResult = matchedFieldName.split('.').reduceRight((obj, key) => {
           if (!obj) return { [key as keyof Entity]: response[resultField] }
           return { [key as keyof Entity]: obj }
         }, null as any)
@@ -97,7 +97,7 @@ export class AggregateBuilder<Entity> {
         return {
           ...agg,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          [aggFunc]: { ...aggResult, ...foo }
+          [aggFunc]: { ...aggResult, ...currentResult }
         }
       }, {})
     })
@@ -113,6 +113,10 @@ export class AggregateBuilder<Entity> {
 
       if (meta && metadata.connection.driver.normalizeType(meta) === 'datetime') {
         return `DATE(${col})`
+      }
+
+      if (meta.isArray) {
+        return `unnest(${col})`
       }
 
       return col
@@ -175,6 +179,8 @@ export class AggregateBuilder<Entity> {
       if (meta && metadata.connection.driver.normalizeType(meta) === 'datetime') {
         return [`DATE(${col})`, groupByAlias] as const
       }
+      if (meta.isArray)
+        return [`unnest(${col})`, groupByAlias] as const
       return [`${col}`, groupByAlias] as const
     })
   }
