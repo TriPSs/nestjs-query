@@ -81,9 +81,14 @@ export class TypeOrmQueryService<Entity>
     return this.filterQueryBuilder.select(query, repo).getMany()
   }
 
-  async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
+  async aggregate(
+    filter: Filter<Entity>,
+    aggregate: AggregateQuery<Entity>,
+    groupByLimit = 10
+  ): Promise<AggregateResponse<Entity>[]> {
     return AggregateBuilder.asyncConvertToAggregateResponse(
-      this.filterQueryBuilder.aggregate({ filter }, aggregate).getRawMany<Record<string, unknown>>()
+      this.filterQueryBuilder.aggregate({ filter }, aggregate).getRawMany<Record<string, unknown>>(),
+      groupByLimit
     )
   }
 

@@ -106,7 +106,7 @@ export abstract class RelationQueryService<Entity> {
     const aggResponse = await AggregateBuilder.asyncConvertToAggregateResponse(
       relationQueryBuilder
         .aggregate(dto, assembler.convertQuery({ filter }), assembler.convertAggregateQuery(aggregate))
-        .getRawMany<Record<string, unknown>>()
+        .getRawMany<Record<string, unknown>>(),
     )
     return aggResponse.map((agg) => assembler.convertAggregateResponse(agg))
   }

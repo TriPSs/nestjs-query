@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common'
-import { AggregateFields, AggregateQuery, AggregateResponse } from '@rezonate/nestjs-query-core'
+import { AggregateFields, AggregateQuery, AggregateResponse, isNamed } from '@rezonate/nestjs-query-core'
 import { camelCase } from 'camel-case'
 import { EntityMetadata, Repository, SelectQueryBuilder } from 'typeorm'
 import { Entries } from '@rezonate/nestjs-query-graphql/src/decorators'
@@ -15,6 +15,12 @@ enum AggregateFuncs {
 
 const AGG_REGEXP = /(AVG|SUM|COUNT|DISTINCT_COUNT|MAX|MIN|GROUP_BY)_(.*)/
 
+const safelyParseInt = (maybeNumber: unknown, defaultValue = 0) => {
+  const number = Number(maybeNumber)
+  if (isNaN(number)) return defaultValue
+  return number
+}
+
 /**
  * @internal
  * Builds a WHERE clause from a Filter.
@@ -25,10 +31,19 @@ export class AggregateBuilder<Entity> {
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   public static async asyncConvertToAggregateResponse<Entity>(
-    responsePromise: Promise<Record<string, unknown>[]>
+    responsePromise: Promise<Record<string, unknown>[]>,
+    groupByLimit = 10
   ): Promise<AggregateResponse<Entity>[]> {
     const aggResponse = await responsePromise
-    return this.convertToAggregateResponse(aggResponse)
+    const sorted = this.sortByCountDescIfExists(aggResponse)
+    return this.convertToAggregateResponse(sorted.slice(0, groupByLimit))
+  }
+
+  private static sortByCountDescIfExists(response: Record<string, unknown>[]) {
+    if (!response.length) return response
+    const countField = Object.keys(response[0]).find(key => key.startsWith(AggregateFuncs.COUNT))
+    if (!countField) return response
+    return response.sort((a, b) => safelyParseInt(b[countField]) - safelyParseInt(a[countField]))
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
