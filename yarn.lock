@@ -375,8 +375,8 @@ __metadata:
   linkType: hard
 
 "@apollo/federation-internals@npm:^2.2.3":
-  version: 2.6.2
-  resolution: "@apollo/federation-internals@npm:2.6.2"
+  version: 2.9.0
+  resolution: "@apollo/federation-internals@npm:2.9.0"
   dependencies:
     "@types/uuid": "npm:^9.0.0"
     chalk: "npm:^4.1.0"
@@ -384,7 +384,7 @@ __metadata:
     uuid: "npm:^9.0.0"
   peerDependencies:
     graphql: ^16.5.0
-  checksum: 10/f71a4fc81ed522b66c5dd6dcf88dd3cae3dda46b796854f8b5c8eda1a89caf9fe547c459e6b99054e0191f029b13ad955dc3fa60c5b97c373f3ab6ead00e23f2
+  checksum: 10/02ddcc7b5539d26e4fc12185c11df291716e1f6de20b0a3f3a4e3edc0506d3546f07bea9cf64172ecf0577d41a2f68d0d30dc65ee0c34e4850bbffe898710925
   languageName: node
   linkType: hard
 

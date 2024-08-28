@@ -48,7 +48,7 @@ export function createOffsetQueryArgs<DTO>(
     @SkipIf(
       () => opts.disableFilter,
       Field(() => F, {
-        defaultValue: !F.hasRequiredFilters ? opts.defaultFilter ?? DEFAULT_QUERY_OPTS.defaultFilter : undefined,
+        defaultValue: !F.hasRequiredFilters ? (opts.defaultFilter ?? DEFAULT_QUERY_OPTS.defaultFilter) : undefined,
         description: 'Specify to filter the records returned.',
         nullable: false
       }),
