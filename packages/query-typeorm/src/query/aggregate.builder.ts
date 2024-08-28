@@ -1,8 +1,10 @@
-import { BadRequestException } from '@nestjs/common'
-import { AggregateFields, AggregateQuery, AggregateResponse, isNamed } from '@rezonate/nestjs-query-core'
+import { BadRequestException, HttpException } from '@nestjs/common'
+import { AggregateFields, AggregateQuery, AggregateResponse, Class, isNamed } from '@rezonate/nestjs-query-core'
 import { camelCase } from 'camel-case'
 import { EntityMetadata, Repository, SelectQueryBuilder } from 'typeorm'
 import { Entries } from '@rezonate/nestjs-query-graphql/src/decorators'
+import { indexFieldReflector } from '../decorators/field.index.decorator'
+import { GraphQLError } from 'graphql'
 
 enum AggregateFuncs {
   AVG = 'AVG',
@@ -14,6 +16,23 @@ enum AggregateFuncs {
 }
 
 const AGG_REGEXP = /(AVG|SUM|COUNT|DISTINCT_COUNT|MAX|MIN|GROUP_BY)_(.*)/
+
+const throwAggregationInvalidError = (field: string) => {
+  throw new GraphQLError(
+    `Can't run aggregation on field ${field}, since this is a large table and the field has not index!`,
+    {
+      extensions: {
+        code: 400
+      }
+    }
+  )
+}
+
+const validateAggregatableField = (DTO:any, field:string, shouldRun:boolean) => {
+  const hasIndex = indexFieldReflector.has(DTO as Class<unknown>, field);
+  if(shouldRun && !hasIndex)
+    throwAggregationInvalidError(field)
+}
 
 const safelyParseInt = (maybeNumber: unknown, defaultValue = 0) => {
   const number = Number(maybeNumber)
@@ -144,15 +163,15 @@ export class AggregateBuilder<Entity> {
    * @param aggregate - the aggregates to select.
    * @param alias - optional alias to use to qualify an identifier
    */
-  public build<Qb extends SelectQueryBuilder<Entity>>(qb: Qb, aggregate: AggregateQuery<Entity>, alias?: string): Qb {
+  public build<Qb extends SelectQueryBuilder<Entity>>(qb: Qb, aggregate: AggregateQuery<Entity>, alias?: string, failOnMissingIndex = false): Qb {
     const selects = [
-      ...this.createGroupBySelect(aggregate.groupBy, alias),
-      ...this.createAggSelect(AggregateFuncs.COUNT, aggregate.count, alias),
-      ...this.createAggDistinctSelect(AggregateFuncs.DISTINCT_COUNT, aggregate.distinctCount, alias),
-      ...this.createAggSelect(AggregateFuncs.SUM, aggregate.sum, alias),
-      ...this.createAggSelect(AggregateFuncs.AVG, aggregate.avg, alias),
-      ...this.createAggSelect(AggregateFuncs.MAX, aggregate.max, alias),
-      ...this.createAggSelect(AggregateFuncs.MIN, aggregate.min, alias)
+      ...this.createGroupBySelect(aggregate.groupBy, alias, failOnMissingIndex),
+      ...this.createAggSelect(AggregateFuncs.COUNT, aggregate.count, alias, failOnMissingIndex),
+      ...this.createAggDistinctSelect(AggregateFuncs.DISTINCT_COUNT, aggregate.distinctCount, alias, failOnMissingIndex),
+      ...this.createAggSelect(AggregateFuncs.SUM, aggregate.sum, alias, failOnMissingIndex),
+      ...this.createAggSelect(AggregateFuncs.AVG, aggregate.avg, alias, failOnMissingIndex),
+      ...this.createAggSelect(AggregateFuncs.MAX, aggregate.max, alias, failOnMissingIndex),
+      ...this.createAggSelect(AggregateFuncs.MIN, aggregate.min, alias, failOnMissingIndex)
     ]
     if (!selects.length) {
       throw new BadRequestException('No aggregate fields found.')
@@ -161,27 +180,30 @@ export class AggregateBuilder<Entity> {
     return tail.reduce((acc: Qb, [select, selectAlias]) => acc.addSelect(select, selectAlias), qb.select(head[0], head[1]))
   }
 
-  private createAggSelect(func: AggregateFuncs, fields?: AggregateFields<Entity>, alias?: string): [string, string][] {
+  private createAggSelect(func: AggregateFuncs, fields?: AggregateFields<Entity>, alias?: string, failOnMissingIndex = false): [string, string][] {
     if (!fields) {
       return []
     }
-    return this.getFieldsWithRelations(fields).map(({ field, relationField }) => {
+    return this.getFieldsWithRelations(fields).map(({ field, relationField, metadata }) => {
+      validateAggregatableField(metadata.target, field, failOnMissingIndex)
       const col = alias || relationField ? `${relationField ? relationField : alias}.${field as string}` : (field as string)
       return [`${func}(${col})`, AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)]
     })
   }
 
-  private createAggDistinctSelect(func: AggregateFuncs, fields?: AggregateFields<Entity>, alias?: string): [string, string][] {
+  private createAggDistinctSelect(func: AggregateFuncs, fields?: AggregateFields<Entity>, alias?: string, failOnMissingIndex = false): [string, string][] {
     if (!fields) {
       return []
     }
-    return this.getFieldsWithRelations(fields).map(({ field, relationField }) => {
+    return this.getFieldsWithRelations(fields).map(({ field, relationField, metadata }) => {
+      validateAggregatableField(metadata.target, field, failOnMissingIndex)
+
       const col = alias || relationField ? `${relationField ? relationField : alias}.${field as string}` : (field as string)
       return [`COUNT (DISTINCT ${col})`, AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)]
     })
   }
 
-  private createGroupBySelect(fields?: AggregateFields<Entity>, alias?: string): (readonly [string, string])[] {
+  private createGroupBySelect(fields?: AggregateFields<Entity>, alias?: string, failOnMissingIndex = false): (readonly [string, string])[] {
     if (!fields) {
       return []
     }
@@ -191,6 +213,7 @@ export class AggregateBuilder<Entity> {
       const groupByAlias = AggregateBuilder.getGroupByAlias(relationField ? `${relationField}.${field}` : `${field}`)
 
       const meta = metadata.findColumnWithPropertyName(field)
+      validateAggregatableField(metadata.target, field, failOnMissingIndex)
       if (meta && metadata.connection.driver.normalizeType(meta) === 'datetime') {
         return [`DATE(${col})`, groupByAlias] as const
       }
