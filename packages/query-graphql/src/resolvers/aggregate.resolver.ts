@@ -14,6 +14,7 @@ export type AggregateResolverOpts = {
   enabled?: boolean
   maxRowsForAggregate?: number
   maxRowsForAggregateWithIndex?: number
+  limitAggregateByTableSize?: boolean
 } & ResolverMethodOpts
 
 export interface AggregateResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceResolver<DTO, QS> {

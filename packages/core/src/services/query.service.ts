@@ -43,7 +43,8 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
     aggregate: AggregateQuery<DTO>,
     groupByLimit?: number,
     maxRowsAggregationLimit?: number,
-    maxRowsAggregationWithIndexLimit?: number
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<AggregateResponse<DTO>[]>
 
   /**

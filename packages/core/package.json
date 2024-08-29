@@ -1,6 +1,6 @@
 {
   "name": "@rezonate/nestjs-query-core",
-  "version": "7.1.8",
+  "version": "7.1.10",
   "description": "Base query package",
   "author": "doug-martin <doug@dougamartin.com>",
   "homepage": "https://github.com/Rezonate-io/nestjs-query#readme",

@@ -38,6 +38,7 @@ export interface CRUDResolverOpts<
   delete?: DeleteResolverOpts<DTO>
   referenceBy?: ReferenceResolverOpts
   aggregate?: AggregateResolverOpts
+  limitAggregateByTableSize?: boolean
 }
 
 export interface CRUDResolver<
