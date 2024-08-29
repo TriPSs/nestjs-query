@@ -104,13 +104,15 @@ export class TypeOrmQueryService<Entity>
     limitAggregateByTableSize = true
   ): Promise<AggregateResponse<Entity>[]> {
     const totalRows = await this.quicklyCount()
-    if (limitAggregateByTableSize && totalRows > maxRowsAggregationLimit)
+    // If the table size is bigger than the limit with index, it doesn't matter if we aggregate on limit, we need to fail
+    if (limitAggregateByTableSize && totalRows > maxRowsAggregationWithIndexLimit)
       throw new GraphQLError("Can't perform aggregation, this table is too large!", {
         extensions: {
           code: 400
         }
       })
-    const failOnMissingIndex = limitAggregateByTableSize && totalRows > maxRowsAggregationWithIndexLimit
+    // If table size is bigger than the limit without index, fail only when aggregating fields without index
+    const failOnMissingIndex = limitAggregateByTableSize && totalRows > maxRowsAggregationLimit
 
     return AggregateBuilder.asyncConvertToAggregateResponse(
       this.filterQueryBuilder.aggregate({ filter }, aggregate, failOnMissingIndex).getRawMany<Record<string, unknown>>(),
