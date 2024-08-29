@@ -12,6 +12,9 @@ import { BaseServiceResolver, ResolverClass, ServiceResolver } from './resolver.
 
 export type AggregateResolverOpts = {
   enabled?: boolean
+  maxRowsForAggregate?: number
+  maxRowsForAggregateWithIndex?: number
+  limitAggregateByTableSize?: boolean
 } & ResolverMethodOpts
 
 export interface AggregateResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceResolver<DTO, QS> {
@@ -60,7 +63,9 @@ export const Aggregateable =
         authFilter?: Filter<DTO>
       ): Promise<AggregateResponse<DTO>[]> {
         const qa = await transformAndValidate(AA, args)
-        return this.service.aggregate(mergeFilter(qa.filter || {}, authFilter ?? {}), query)
+        const filter = mergeFilter(qa.filter || {}, authFilter ?? {})
+
+        return this.service.aggregate(filter, query, qa.groupByLimit, opts.maxRowsForAggregate, opts.maxRowsForAggregateWithIndex)
       }
     }
 

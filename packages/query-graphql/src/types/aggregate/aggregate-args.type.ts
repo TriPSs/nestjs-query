@@ -7,6 +7,7 @@ import { AggregateFilterType } from '../query'
 
 export interface AggregateArgsType<DTO> {
   filter?: Filter<DTO>
+  groupByLimit?: number
 }
 
 /**
@@ -23,6 +24,9 @@ export function AggregateArgsType<DTO>(DTOClass: Class<DTO>): Class<AggregateArg
     @ValidateNested()
     @Field(() => F, { nullable: true, description: 'Filter to find records to aggregate on' })
     filter?: Filter<DTO>
+
+    @Field(() => Number, { nullable: true, description: 'Limit the number of results group by aggregation can return' })
+    groupByLimit?: number
   }
 
   return AggregateArgs

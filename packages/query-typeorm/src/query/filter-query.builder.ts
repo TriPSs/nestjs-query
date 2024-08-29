@@ -112,7 +112,7 @@ export class FilterQueryBuilder<Entity> {
     return qb
   }
 
-  public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>): SelectQueryBuilder<Entity> {
+  public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>, failOnMissingIndex = false): SelectQueryBuilder<Entity> {
     const hasRelations = this.filterHasRelations(query.filter)
     const hasAggregatedRelations = this.aggregateHasRelations(aggregate)
     const tableColumns = this.repo.metadata.columns
@@ -122,7 +122,7 @@ export class FilterQueryBuilder<Entity> {
     qb = hasRelations || hasAggregatedRelations
       ? this.applyRelationJoinsRecursive(qb, relationsMap)
       : qb
-    qb = this.applyAggregate(qb, aggregate, qb.alias)
+    qb = this.applyAggregate(qb, aggregate, qb.alias, failOnMissingIndex)
     qb = this.applyFilter(qb, tableColumns, query.filter, [], qb.alias)
     qb = this.applyAggregateSorting(qb, aggregate.groupBy, qb.alias)
     qb = this.applyAggregateGroupBy(qb, aggregate.groupBy, qb.alias)
@@ -189,8 +189,8 @@ export class FilterQueryBuilder<Entity> {
    * @param aggregate - the aggregates to select.
    * @param alias - optional alias to use to qualify an identifier
    */
-  public applyAggregate<Qb extends SelectQueryBuilder<Entity>>(qb: Qb, aggregate: AggregateQuery<Entity>, alias?: string): Qb {
-    return this.aggregateBuilder.build(qb, aggregate, alias)
+  public applyAggregate<Qb extends SelectQueryBuilder<Entity>>(qb: Qb, aggregate: AggregateQuery<Entity>, alias?: string, failOnMissingIndex = false): Qb {
+    return this.aggregateBuilder.build(qb, aggregate, alias, failOnMissingIndex)
   }
 
   /**

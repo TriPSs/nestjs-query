@@ -34,8 +34,18 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    * Perform an aggregate query
    * @param filter
    * @param aggregate
+   * @param groupByLimit
+   * @param maxRowsAggregationLimit
+   * @param maxRowsAggregationWithIndexLimit
    */
-  aggregate(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>): Promise<AggregateResponse<DTO>[]>
+  aggregate(
+    filter: Filter<DTO>,
+    aggregate: AggregateQuery<DTO>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
+  ): Promise<AggregateResponse<DTO>[]>
 
   /**
    * Count the number of records that match the filter.

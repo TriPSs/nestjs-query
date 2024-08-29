@@ -1,4 +1,4 @@
-import { MethodNotAllowedException, NotFoundException } from '@nestjs/common'
+import { HttpException, MethodNotAllowedException, NotFoundException } from '@nestjs/common'
 import {
   AggregateQuery,
   AggregateResponse,
@@ -16,6 +16,7 @@ import {
   UpdateManyResponse,
   UpdateOneOptions
 } from '@rezonate/nestjs-query-core'
+import { GraphQLError } from 'graphql'
 import { DeleteResult, FindOptionsWhere, Repository } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 import { UpdateResult } from 'typeorm/query-builder/result/UpdateResult'
@@ -52,7 +53,10 @@ export class TypeOrmQueryService<Entity>
 
   readonly useSoftDelete: boolean
 
-  constructor(readonly repo: Repository<Entity>, opts?: TypeOrmQueryServiceOpts<Entity>) {
+  constructor(
+    readonly repo: Repository<Entity>,
+    opts?: TypeOrmQueryServiceOpts<Entity>
+  ) {
     super()
 
     this.filterQueryBuilder = opts?.filterQueryBuilder ?? new FilterQueryBuilder<Entity>(this.repo)
@@ -81,9 +85,36 @@ export class TypeOrmQueryService<Entity>
     return this.filterQueryBuilder.select(query, repo).getMany()
   }
 
-  async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
+  async quicklyCount() {
+    const result = (await this.repo.query('SELECT reltuples AS estimate FROM pg_class where relname = $1', [
+      this.repo.metadata.tableName
+    ])) as { estimate: number }[]
+
+    if (result[0]) return result[0].estimate
+
+    throw new Error('Could not estimate table size for ' + this.repo.metadata.tableName)
+  }
+
+  async aggregate(
+    filter: Filter<Entity>,
+    aggregate: AggregateQuery<Entity>,
+    groupByLimit = 10,
+    maxRowsAggregationLimit = 100000,
+    maxRowsAggregationWithIndexLimit = 10000,
+    limitAggregateByTableSize = true
+  ): Promise<AggregateResponse<Entity>[]> {
+    const totalRows = await this.quicklyCount()
+    if (limitAggregateByTableSize && totalRows > maxRowsAggregationLimit)
+      throw new GraphQLError("Can't perform aggregation, this table is too large!", {
+        extensions: {
+          code: 400
+        }
+      })
+    const failOnMissingIndex = limitAggregateByTableSize && totalRows > maxRowsAggregationWithIndexLimit
+
     return AggregateBuilder.asyncConvertToAggregateResponse(
-      this.filterQueryBuilder.aggregate({ filter }, aggregate).getRawMany<Record<string, unknown>>()
+      this.filterQueryBuilder.aggregate({ filter }, aggregate, failOnMissingIndex).getRawMany<Record<string, unknown>>(),
+      groupByLimit
     )
   }
 
