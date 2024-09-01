@@ -79,7 +79,11 @@ export abstract class RelationQueryService<Entity> {
     relationName: string,
     entities: Entity[],
     filter: Filter<Relation>,
-    aggregate: AggregateQuery<Relation>
+    aggregate: AggregateQuery<Relation>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<Map<Entity, AggregateResponse<Relation>[]>>
 
   public async aggregateRelations<Relation>(
@@ -87,7 +91,11 @@ export abstract class RelationQueryService<Entity> {
     relationName: string,
     dto: Entity,
     filter: Filter<Relation>,
-    aggregate: AggregateQuery<Relation>
+    aggregate: AggregateQuery<Relation>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<AggregateResponse<Relation>[]>
 
   public async aggregateRelations<Relation extends object>(
@@ -95,7 +103,11 @@ export abstract class RelationQueryService<Entity> {
     relationName: string,
     dto: Entity | Entity[],
     filter: Filter<Relation>,
-    aggregate: AggregateQuery<Relation>
+    aggregate: AggregateQuery<Relation>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<AggregateResponse<Relation>[] | Map<Entity, AggregateResponse<Relation>[]>> {
     if (Array.isArray(dto)) {
       return this.batchAggregateRelations(RelationClass, relationName, dto, filter, aggregate)
@@ -363,7 +375,11 @@ export abstract class RelationQueryService<Entity> {
     relationName: string,
     entities: Entity[],
     filter: Filter<Relation>,
-    query: AggregateQuery<Relation>
+    query: AggregateQuery<Relation>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<Map<Entity, AggregateResponse<Relation>[]>> {
     const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
     const relationQueryBuilder = this.getRelationQueryBuilder<Relation>(relationName)

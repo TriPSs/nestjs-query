@@ -13,6 +13,9 @@ import { UpdateRelationsMixin } from './update-relations.resolver'
 export interface RelatableOpts extends BaseResolverOptions {
   enableTotalCount?: boolean
   enableAggregate?: boolean
+  maxRowsForAggregate?: number
+  maxRowsForAggregateWithIndex?: number
+  limitAggregateByTableSize?: boolean
 }
 
 export const Relatable =
@@ -26,7 +29,7 @@ export const Relatable =
     const references = getReferences(DTOClass, opts)
 
     const referencesMixin = ReferencesRelationMixin(DTOClass, references)
-    const aggregateRelationsMixin = AggregateRelationsMixin(DTOClass, { ...relations, enableAggregate })
+    const aggregateRelationsMixin = AggregateRelationsMixin(DTOClass, { ...relations, enableAggregate, limitAggregateByTableSize: opts.limitAggregateByTableSize, maxRowsForAggregate: opts.maxRowsForAggregate, maxRowsForAggregateWithIndex: opts.maxRowsForAggregateWithIndex })
     const readRelationsMixin = ReadRelationsMixin(DTOClass, { ...relations, enableTotalCount })
     const updateRelationsMixin = UpdateRelationsMixin(DTOClass, relations)
 

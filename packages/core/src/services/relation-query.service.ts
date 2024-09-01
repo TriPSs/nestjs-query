@@ -91,7 +91,11 @@ export class RelationQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO
     relationName: string,
     dto: DTO,
     filter: Filter<Relation>,
-    aggregate: AggregateQuery<Relation>
+    aggregate: AggregateQuery<Relation>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<AggregateResponse<Relation>[]>
 
   async aggregateRelations<Relation>(
@@ -99,7 +103,11 @@ export class RelationQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO
     relationName: string,
     dtos: DTO[],
     filter: Filter<Relation>,
-    aggregate: AggregateQuery<Relation>
+    aggregate: AggregateQuery<Relation>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<Map<DTO, AggregateResponse<Relation>[]>>
 
   async aggregateRelations<Relation>(
@@ -107,27 +115,63 @@ export class RelationQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO
     relationName: string,
     dto: DTO | DTO[],
     filter: Filter<Relation>,
-    aggregate: AggregateQuery<Relation>
+    aggregate: AggregateQuery<Relation>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<AggregateResponse<Relation>[] | Map<DTO, AggregateResponse<Relation>[]>> {
     const serviceRelation = this.getRelation<Relation>(relationName)
     if (!serviceRelation) {
       if (Array.isArray(dto)) {
-        return super.aggregateRelations(RelationClass, relationName, dto, filter, aggregate)
+        return super.aggregateRelations(
+          RelationClass,
+          relationName,
+          dto,
+          filter,
+          aggregate,
+          groupByLimit,
+          maxRowsAggregationLimit,
+          maxRowsAggregationWithIndexLimit,
+          limitAggregateByTableSize
+        )
       }
-      return super.aggregateRelations(RelationClass, relationName, dto, filter, aggregate)
+      return super.aggregateRelations(
+        RelationClass,
+        relationName,
+        dto,
+        filter,
+        aggregate,
+        groupByLimit,
+        maxRowsAggregationLimit,
+        maxRowsAggregationWithIndexLimit,
+        limitAggregateByTableSize
+      )
     }
     const { query: qf, service } = serviceRelation
     if (Array.isArray(dto)) {
       const map = new Map<DTO, AggregateResponse<Relation>[]>()
       await Promise.all(
         dto.map(async (d) => {
-          const relations = await service.aggregate(mergeQuery({ filter }, qf(d)).filter ?? {}, aggregate)
+          const relations = await service.aggregate(
+            mergeQuery({ filter }, qf(d)).filter ?? {},
+            aggregate,
+            groupByLimit,
+            maxRowsAggregationLimit,
+            maxRowsAggregationWithIndexLimit,
+            limitAggregateByTableSize)
           map.set(d, relations)
         })
       )
       return map
     }
-    return service.aggregate(mergeQuery({ filter }, qf(dto)).filter ?? {}, aggregate)
+    return service.aggregate(
+      mergeQuery({ filter }, qf(dto)).filter ?? {},
+      aggregate,
+      groupByLimit,
+      maxRowsAggregationLimit,
+      maxRowsAggregationWithIndexLimit,
+      limitAggregateByTableSize)
   }
 
   countRelations<Relation>(
