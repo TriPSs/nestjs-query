@@ -59,7 +59,7 @@ export class TypeOrmQueryService<Entity>
 
   constructor(
     readonly repo: Repository<Entity>,
-    private opts?: TypeOrmQueryServiceOpts<Entity>
+    private opts: TypeOrmQueryServiceOpts<Entity> = {}
   ) {
     super()
 
