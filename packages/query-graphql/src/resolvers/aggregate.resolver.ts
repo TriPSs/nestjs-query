@@ -65,7 +65,14 @@ export const Aggregateable =
         const qa = await transformAndValidate(AA, args)
         const filter = mergeFilter(qa.filter || {}, authFilter ?? {})
 
-        return this.service.aggregate(filter, query, qa.groupByLimit, opts.maxRowsForAggregate, opts.maxRowsForAggregateWithIndex)
+        return this.service.aggregate(
+          filter,
+          query,
+          qa.groupByLimit,
+          opts.maxRowsForAggregate,
+          opts.maxRowsForAggregateWithIndex,
+          opts.limitAggregateByTableSize
+        )
       }
     }
 

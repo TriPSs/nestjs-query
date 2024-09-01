@@ -14,26 +14,51 @@ export class AggregateRelationsLoader<DTO, Relation>
 {
   constructor(readonly RelationDTO: Class<Relation>, readonly relationName: string) {}
 
-  createLoader(service: QueryService<DTO, unknown, unknown>) {
+  createLoader(
+    service: QueryService<DTO, unknown, unknown>,
+               groupByLimit?: number,
+               maxRowsAggregationLimit?: number,
+               maxRowsAggregationWithIndexLimit?: number,
+               limitAggregateByTableSize?: boolean) {
     return async (
       queryArgs: ReadonlyArray<AggregateRelationsArgs<DTO, Relation>>
     ): Promise<(AggregateResponse<Relation> | Error)[]> => {
       // group
       const queryMap = this.groupQueries(queryArgs)
-      return this.loadResults(service, queryMap)
+      return this.loadResults(
+        service,
+        queryMap,
+        groupByLimit,
+        maxRowsAggregationLimit,
+        maxRowsAggregationWithIndexLimit,
+        limitAggregateByTableSize)
     }
   }
 
   private async loadResults(
     service: QueryService<DTO, unknown, unknown>,
-    queryRelationsMap: AggregateRelationsMap<DTO, Relation>
+    queryRelationsMap: AggregateRelationsMap<DTO, Relation>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<AggregateResponse<Relation>[]> {
     const results: AggregateResponse<Relation>[] = []
     await Promise.all(
       [...queryRelationsMap.values()].map(async (args) => {
         const { filter, aggregate } = args[0]
         const dtos = args.map((a) => a.dto)
-        const aggregationResults = await service.aggregateRelations(this.RelationDTO, this.relationName, dtos, filter, aggregate)
+        const aggregationResults = await service.aggregateRelations(
+          this.RelationDTO,
+          this.relationName,
+          dtos,
+          filter,
+          aggregate,
+          groupByLimit,
+          maxRowsAggregationLimit,
+          maxRowsAggregationWithIndexLimit,
+          limitAggregateByTableSize
+        )
         const dtoRelationAggregates = dtos.map((dto) => aggregationResults.get(dto) ?? {})
         dtoRelationAggregates.forEach((relationAggregate, index) => {
           results[args[index].index] = relationAggregate

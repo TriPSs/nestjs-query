@@ -18,10 +18,16 @@ export interface AggregateRelationsResolverOpts extends RelationsOpts {
    * Enable relation aggregation queries on relation
    */
   enableAggregate?: boolean
+  maxRowsForAggregate?: number
+  maxRowsForAggregateWithIndex?: number
+  limitAggregateByTableSize?: boolean
 }
 
 type AggregateRelationOpts<Relation> = {
   enableAggregate?: boolean
+  maxRowsForAggregate?: number
+  maxRowsForAggregateWithIndex?: number
+  limitAggregateByTableSize?: boolean
 } & ResolverRelation<Relation>
 
 const AggregateRelationMixin =
@@ -65,7 +71,12 @@ const AggregateRelationMixin =
         const loader = DataLoaderFactory.getOrCreateLoader(
           context,
           aggregateRelationLoaderName,
-          aggregateLoader.createLoader(this.service)
+          aggregateLoader.createLoader(
+            this.service,
+            qa.groupByLimit,
+            relation.maxRowsForAggregate,
+            relation.maxRowsForAggregateWithIndex,
+            relation.limitAggregateByTableSize)
         )
         return loader.load({
           dto,

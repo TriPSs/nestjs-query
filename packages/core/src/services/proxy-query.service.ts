@@ -218,25 +218,57 @@ export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> 
     relationName: string,
     dto: DTO,
     filter: Filter<Relation>,
-    aggregate: AggregateQuery<Relation>
+    aggregate: AggregateQuery<Relation>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<AggregateResponse<Relation>[]>
   aggregateRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: DTO[],
     filter: Filter<Relation>,
-    aggregate: AggregateQuery<Relation>
+    aggregate: AggregateQuery<Relation>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<Map<DTO, AggregateResponse<Relation>[]>>
   async aggregateRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO | DTO[],
     filter: Filter<Relation>,
-    aggregate: AggregateQuery<Relation>
+    aggregate: AggregateQuery<Relation>,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
   ): Promise<AggregateResponse<Relation>[] | Map<DTO, AggregateResponse<Relation>[]>> {
     if (Array.isArray(dto)) {
-      return this.proxied.aggregateRelations(RelationClass, relationName, dto, filter, aggregate)
+      return this.proxied.aggregateRelations(
+        RelationClass,
+        relationName,
+        dto,
+        filter,
+        aggregate,
+        groupByLimit,
+        maxRowsAggregationLimit,
+        maxRowsAggregationWithIndexLimit,
+        limitAggregateByTableSize
+      )
     }
-    return this.proxied.aggregateRelations(RelationClass, relationName, dto, filter, aggregate)
+    return this.proxied.aggregateRelations(
+      RelationClass,
+      relationName,
+      dto,
+      filter,
+      aggregate,
+      groupByLimit,
+      maxRowsAggregationLimit,
+      maxRowsAggregationWithIndexLimit,
+      limitAggregateByTableSize
+    )
   }
 }

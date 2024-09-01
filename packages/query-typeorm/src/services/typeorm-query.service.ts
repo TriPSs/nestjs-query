@@ -27,6 +27,10 @@ import { RelationQueryService } from './relation-query.service'
 export interface TypeOrmQueryServiceOpts<Entity> {
   useSoftDelete?: boolean
   filterQueryBuilder?: FilterQueryBuilder<Entity>
+  aggregateGroupByLimit?: number
+  maxRowsForAggregate?: number
+  maxRowsForAggregateWithIndex?: number
+  limitAggregateByTableSize?: boolean
 }
 
 /**
@@ -55,7 +59,7 @@ export class TypeOrmQueryService<Entity>
 
   constructor(
     readonly repo: Repository<Entity>,
-    opts?: TypeOrmQueryServiceOpts<Entity>
+    private opts?: TypeOrmQueryServiceOpts<Entity>
   ) {
     super()
 
@@ -98,19 +102,21 @@ export class TypeOrmQueryService<Entity>
   async aggregate(
     filter: Filter<Entity>,
     aggregate: AggregateQuery<Entity>,
-    groupByLimit = 10,
-    maxRowsAggregationLimit = 100000,
-    maxRowsAggregationWithIndexLimit = 10000,
-    limitAggregateByTableSize = true
+    groupByLimit = this.opts.aggregateGroupByLimit ?? 10,
+    maxRowsAggregationLimit = this.opts.maxRowsForAggregate ?? 100000,
+    maxRowsAggregationWithIndexLimit = this.opts.maxRowsForAggregateWithIndex ?? 10000,
+    limitAggregateByTableSize = this.opts.limitAggregateByTableSize ?? true
   ): Promise<AggregateResponse<Entity>[]> {
     const totalRows = await this.quicklyCount()
-    if (limitAggregateByTableSize && totalRows > maxRowsAggregationLimit)
+    // If the table size is bigger than the limit with index, it doesn't matter if we aggregate on limit, we need to fail
+    if (limitAggregateByTableSize && totalRows > maxRowsAggregationWithIndexLimit)
       throw new GraphQLError("Can't perform aggregation, this table is too large!", {
         extensions: {
           code: 400
         }
       })
-    const failOnMissingIndex = limitAggregateByTableSize && totalRows > maxRowsAggregationWithIndexLimit
+    // If table size is bigger than the limit without index, fail only when aggregating fields without index
+    const failOnMissingIndex = limitAggregateByTableSize && totalRows > maxRowsAggregationLimit
 
     return AggregateBuilder.asyncConvertToAggregateResponse(
       this.filterQueryBuilder.aggregate({ filter }, aggregate, failOnMissingIndex).getRawMany<Record<string, unknown>>(),

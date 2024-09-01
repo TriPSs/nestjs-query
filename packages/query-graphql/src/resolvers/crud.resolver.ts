@@ -56,8 +56,8 @@ export interface CRUDResolver<
 function extractRelatableOpts<DTO>(
   opts: CRUDResolverOpts<DTO, unknown, unknown, ReadResolverOpts<DTO>, PagingStrategies>
 ): RelatableOpts {
-  const { enableTotalCount, enableAggregate } = opts
-  return mergeBaseResolverOpts<RelatableOpts>({ enableAggregate, enableTotalCount }, opts)
+  const { enableTotalCount, enableAggregate, aggregate } = opts
+  return mergeBaseResolverOpts<RelatableOpts>({ enableAggregate, enableTotalCount, ...aggregate }, opts)
 }
 
 function extractAggregateResolverOpts<DTO>(
