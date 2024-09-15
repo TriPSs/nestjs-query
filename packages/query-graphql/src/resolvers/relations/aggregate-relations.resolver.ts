@@ -66,7 +66,7 @@ const AggregateRelationMixin =
           many: true
         })
         relationFilter?: Filter<Relation>
-      ): Promise<AggregateResponse<Relation>> {
+      ): Promise<(AggregateResponse<Relation> | Error)[]> {
         const qa = await transformAndValidate(RelationQA, q)
         const loader = DataLoaderFactory.getOrCreateLoader(
           context,
@@ -76,7 +76,8 @@ const AggregateRelationMixin =
             qa.groupByLimit,
             relation.maxRowsForAggregate,
             relation.maxRowsForAggregateWithIndex,
-            relation.limitAggregateByTableSize)
+            relation.limitAggregateByTableSize
+          )
         )
         return loader.load({
           dto,

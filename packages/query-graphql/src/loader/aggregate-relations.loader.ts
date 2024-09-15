@@ -10,19 +10,23 @@ type AggregateRelationsArgs<DTO, Relation> = {
 type AggregateRelationsMap<DTO, Relation> = Map<string, (AggregateRelationsArgs<DTO, Relation> & { index: number })[]>
 
 export class AggregateRelationsLoader<DTO, Relation>
-  implements NestjsQueryDataloader<DTO, AggregateRelationsArgs<DTO, Relation>, AggregateResponse<Relation> | Error>
+  implements NestjsQueryDataloader<DTO, AggregateRelationsArgs<DTO, Relation>, (AggregateResponse<Relation> | Error)[]>
 {
-  constructor(readonly RelationDTO: Class<Relation>, readonly relationName: string) {}
+  constructor(
+    readonly RelationDTO: Class<Relation>,
+    readonly relationName: string
+  ) {}
 
   createLoader(
     service: QueryService<DTO, unknown, unknown>,
-               groupByLimit?: number,
-               maxRowsAggregationLimit?: number,
-               maxRowsAggregationWithIndexLimit?: number,
-               limitAggregateByTableSize?: boolean) {
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
+  ) {
     return async (
       queryArgs: ReadonlyArray<AggregateRelationsArgs<DTO, Relation>>
-    ): Promise<(AggregateResponse<Relation> | Error)[]> => {
+    ): Promise<(AggregateResponse<Relation> | Error)[][]> => {
       // group
       const queryMap = this.groupQueries(queryArgs)
       return this.loadResults(
@@ -31,7 +35,8 @@ export class AggregateRelationsLoader<DTO, Relation>
         groupByLimit,
         maxRowsAggregationLimit,
         maxRowsAggregationWithIndexLimit,
-        limitAggregateByTableSize)
+        limitAggregateByTableSize
+      )
     }
   }
 
@@ -42,8 +47,8 @@ export class AggregateRelationsLoader<DTO, Relation>
     maxRowsAggregationLimit?: number,
     maxRowsAggregationWithIndexLimit?: number,
     limitAggregateByTableSize?: boolean
-  ): Promise<AggregateResponse<Relation>[]> {
-    const results: AggregateResponse<Relation>[] = []
+  ): Promise<AggregateResponse<Relation>[][]> {
+    const results: AggregateResponse<Relation>[][] = []
     await Promise.all(
       [...queryRelationsMap.values()].map(async (args) => {
         const { filter, aggregate } = args[0]
@@ -59,7 +64,7 @@ export class AggregateRelationsLoader<DTO, Relation>
           maxRowsAggregationWithIndexLimit,
           limitAggregateByTableSize
         )
-        const dtoRelationAggregates = dtos.map((dto) => aggregationResults.get(dto) ?? {})
+        const dtoRelationAggregates = dtos.map((dto) => aggregationResults.get(dto) ?? [])
         dtoRelationAggregates.forEach((relationAggregate, index) => {
           results[args[index].index] = relationAggregate
         })
@@ -76,7 +81,7 @@ export class AggregateRelationsLoader<DTO, Relation>
         map.set(queryJson, [])
       }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      map.get(queryJson)!.push({ ...args, index })
+      map.get(queryJson).push({ ...args, index })
       return map
     }, new Map<string, (AggregateRelationsArgs<DTO, Relation> & { index: number })[]>())
   }

@@ -8,7 +8,10 @@ type QueryRelationsMap<DTO, Relation> = Map<string, (QueryRelationsArgs<DTO, Rel
 export class QueryRelationsLoader<DTO, Relation>
   implements NestjsQueryDataloader<DTO, QueryRelationsArgs<DTO, Relation>, Relation[] | Error>
 {
-  constructor(readonly RelationDTO: Class<Relation>, readonly relationName: string) {}
+  constructor(
+    readonly RelationDTO: Class<Relation>,
+    readonly relationName: string
+  ) {}
 
   public createLoader(service: QueryService<DTO, unknown, unknown>) {
     return async (queryArgs: ReadonlyArray<QueryRelationsArgs<DTO, Relation>>): Promise<(Relation[] | Error)[]> => {
@@ -21,7 +24,7 @@ export class QueryRelationsLoader<DTO, Relation>
   private async loadResults(
     service: QueryService<DTO, unknown, unknown>,
     queryRelationsMap: QueryRelationsMap<DTO, Relation>
-  ): Promise<Relation[][]> {
+  ): Promise<(Relation[] | Error)[]> {
     const results: Relation[][] = []
     await Promise.all(
       [...queryRelationsMap.values()].map(async (args) => {

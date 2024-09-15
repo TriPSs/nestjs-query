@@ -209,7 +209,7 @@ export class AggregateBuilder<Entity> {
     }
 
     return this.getFieldsWithRelations(fields).map(({ field, metadata, relationField }) => {
-      const col = `${relationField ? relationField : metadata.targetName}.${field}`
+      const col = `${relationField ? relationField : alias}.${field}`
       const groupByAlias = AggregateBuilder.getGroupByAlias(relationField ? `${relationField}.${field}` : `${field}`)
 
       const meta = metadata.findColumnWithPropertyName(field)
