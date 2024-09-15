@@ -51,7 +51,7 @@ export class AggregateBuilder<Entity> {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   public static async asyncConvertToAggregateResponse<Entity>(
     responsePromise: Promise<Record<string, unknown>[]>,
-    groupByLimit = 10
+    groupByLimit = 100
   ): Promise<AggregateResponse<Entity>[]> {
     const aggResponse = await responsePromise
     const sorted = this.sortByCountDescIfExists(aggResponse)
