@@ -5,7 +5,7 @@ import { ValidateNested } from 'class-validator'
 import { upperCaseFirst } from 'upper-case-first'
 
 import { getDTONames, getGraphqlObjectName } from '../../common'
-import { getFilterableFields, getQueryOptions, getRelations, SkipIf } from '../../decorators'
+import { FilterableFieldDescriptor, getFilterableFields, getQueryOptions, getRelations, SkipIf } from '../../decorators'
 import { HasRequiredFilter } from '../../decorators/has-required.filter'
 import { ResolverRelation } from '../../resolvers'
 import { createFilterComparisonType } from './field-comparison'
@@ -18,7 +18,7 @@ export type FilterTypeOptions = {
   /**
    * Disable the free text query
    */
-  disableFreeTextQuery?:boolean;
+  disableFreeTextQuery?: boolean
 }
 
 export type FilterableRelations = Record<string, Class<unknown>>
@@ -33,73 +33,6 @@ function getObjectTypeName<DTO>(DTOClass: Class<DTO>): string {
   return getGraphqlObjectName(DTOClass, 'No fields found to create FilterType.')
 }
 
-function getOrCreateFilterType<T>(
-  TClass: Class<T>,
-  name: string,
-  filterableRelations: FilterableRelations = {}
-): FilterConstructor<T> {
-  return reflector.memoize(TClass, name, () => {
-    const { allowedBooleanExpressions, disableFreeTextQuery }: FilterTypeOptions = getQueryOptions(TClass) ?? {}
-    const fields = getFilterableFields(TClass)
-
-    if (!fields.length) {
-      throw new Error(`No fields found to create GraphQLFilter for ${TClass.name}`)
-    }
-
-    const hasRequiredFilters = fields.some((f) => f.advancedOptions?.filterRequired === true)
-    const isNotAllowedComparison = (val: 'and' | 'or') => !isInAllowedList(allowedBooleanExpressions, val)
-
-    @InputType(name)
-    class GraphQLFilter {
-      static hasRequiredFilters: boolean = hasRequiredFilters
-
-      @SkipIf(() => disableFreeTextQuery, Field(() => String, { nullable: true }))
-      @Type(() => String)
-      freeTextQuery?:string;
-
-      @ValidateNested()
-      @SkipIf(() => isNotAllowedComparison('and'), Field(() => [GraphQLFilter], { nullable: true }))
-      @Type(() => GraphQLFilter)
-      and?: Filter<T>[]
-
-      @ValidateNested()
-      @SkipIf(() => isNotAllowedComparison('or'), Field(() => [GraphQLFilter], { nullable: true }))
-      @Type(() => GraphQLFilter)
-      or?: Filter<T>[]
-    }
-
-    const { baseName } = getDTONames(TClass)
-    fields.forEach(({ propertyName, target, advancedOptions, returnTypeFunc }) => {
-      const FC = createFilterComparisonType({
-        FieldType: target,
-        fieldName: `${baseName}${upperCaseFirst(propertyName)}`,
-        allowedComparisons: advancedOptions?.allowedComparisons,
-        isJSON: advancedOptions?.isJSON,
-        returnTypeFunc
-      })
-      const nullable = advancedOptions?.filterRequired !== true
-      ValidateNested()(GraphQLFilter.prototype, propertyName)
-      if (advancedOptions?.filterRequired) {
-        HasRequiredFilter()(GraphQLFilter.prototype, propertyName)
-      }
-      Field(() => FC, { nullable })(GraphQLFilter.prototype, propertyName)
-      Type(() => FC)(GraphQLFilter.prototype, propertyName)
-    })
-
-    Object.keys(filterableRelations).forEach((field) => {
-      const FieldType = filterableRelations[field]
-      if (FieldType) {
-        const FC = getOrCreateFilterType(FieldType, `${name}${getObjectTypeName(FieldType)}Filter`)
-        ValidateNested()(GraphQLFilter.prototype, field)
-        Field(() => FC, { nullable: true })(GraphQLFilter.prototype, field)
-        Type(() => FC)(GraphQLFilter.prototype, field)
-      }
-    })
-
-    return GraphQLFilter as FilterConstructor<T>
-  })
-}
-
 function getFilterableRelations(relations: Record<string, ResolverRelation<unknown>>): FilterableRelations {
   const filterableRelations: FilterableRelations = {}
   Object.keys(relations).forEach((r) => {
@@ -111,26 +44,101 @@ function getFilterableRelations(relations: Record<string, ResolverRelation<unkno
   return filterableRelations
 }
 
-export function FilterType<T>(TClass: Class<T>): FilterConstructor<T> {
+const filterObjCache = new Map<string, FilterConstructor<unknown>>()
+
+function handleFilterFields<T>(TClass: Class<T>, name: string, fields: FilterableFieldDescriptor[]) {
+  const GraphQLFilter = filterObjCache.get(name)
+  if (!GraphQLFilter) {
+    throw new Error(`No filter type created for ${TClass.name}`)
+  }
+
+  if (!fields.length) {
+    throw new Error(`No fields found to create GraphQLFilter for ${TClass.name}`)
+  }
+
   const { one = {}, many = {} } = getRelations(TClass)
   const filterableRelations: FilterableRelations = { ...getFilterableRelations(one), ...getFilterableRelations(many) }
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}Filter`, filterableRelations)
+  const proto = GraphQLFilter.prototype as object
+
+  const { baseName } = getDTONames(TClass)
+  fields.forEach(({ propertyName, target, advancedOptions, returnTypeFunc }) => {
+    const FC = createFilterComparisonType({
+      FieldType: target,
+      fieldName: `${baseName}${upperCaseFirst(propertyName)}`,
+      allowedComparisons: advancedOptions?.allowedComparisons,
+      isJSON: advancedOptions?.isJSON,
+      returnTypeFunc
+    })
+    const nullable = advancedOptions?.filterRequired !== true
+    ValidateNested()(proto, propertyName)
+    if (advancedOptions?.filterRequired) {
+      HasRequiredFilter()(proto, propertyName)
+    }
+    Field(() => FC, { nullable })(proto, propertyName)
+    Type(() => FC)(proto, propertyName)
+  })
+
+  Object.entries(filterableRelations).forEach(([field, FieldType]) => {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    const FC = getOrCreateFilterType(FieldType)
+    ValidateNested()(proto, field)
+    Field(() => FC, { nullable: true })(proto, field)
+    Type(() => FC)(proto, field)
+  })
+}
+
+function getOrCreateFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
+  const name = `${getObjectTypeName(TClass)}Filter`
+  const cache = filterObjCache.get(name)
+
+  if (cache) return cache
+
+  const fields = getFilterableFields(TClass)
+  const hasRequiredFilters = fields.some((f) => f.advancedOptions?.filterRequired === true)
+  const { allowedBooleanExpressions, disableFreeTextQuery }: FilterTypeOptions = getQueryOptions(TClass) ?? {}
+  const isNotAllowedComparison = (val: 'and' | 'or') => !isInAllowedList(allowedBooleanExpressions, val)
+
+  @InputType(name)
+  class GraphQLFilter {
+    static hasRequiredFilters: boolean = hasRequiredFilters
+
+    @SkipIf(() => disableFreeTextQuery, Field(() => String, { nullable: true }))
+    @Type(() => String)
+    freeTextQuery?: string
+
+    @ValidateNested()
+    @SkipIf(() => isNotAllowedComparison('and'), Field(() => [GraphQLFilter], { nullable: true }))
+    @Type(() => GraphQLFilter)
+    and?: Filter<T>[]
+
+    @ValidateNested()
+    @SkipIf(() => isNotAllowedComparison('or'), Field(() => [GraphQLFilter], { nullable: true }))
+    @Type(() => GraphQLFilter)
+    or?: Filter<T>[]
+  }
+
+  filterObjCache.set(name, GraphQLFilter)
+  handleFilterFields(TClass, name, fields)
+
+  return GraphQLFilter as FilterConstructor<T>
+}
+
+export function FilterType<T>(TClass: Class<T>): FilterConstructor<T> {
+  return getOrCreateFilterType(TClass)
 }
 
 export function DeleteFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}DeleteFilter`)
+  return getOrCreateFilterType(TClass)
 }
 
 export function UpdateFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}UpdateFilter`)
+  return getOrCreateFilterType(TClass)
 }
 
 export function SubscriptionFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}SubscriptionFilter`)
+  return getOrCreateFilterType(TClass)
 }
 
 export function AggregateFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
-  const { one = {}, many = {} } = getRelations(TClass)
-  const filterableRelations: FilterableRelations = { ...getFilterableRelations(one), ...getFilterableRelations(many) }
-  return getOrCreateFilterType(TClass, `${getObjectTypeName(TClass)}AggregateFilter`, filterableRelations)
+  return getOrCreateFilterType(TClass)
 }
