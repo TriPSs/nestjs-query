@@ -1,4 +1,26 @@
  
+# [7.0.0](https://github.com/TriPSs/nestjs-query/compare/v6.1.3...v7.0.0) (2024-07-26)
+
+
+### Features
+
+* **query-mongoose:** Dropped support of older versions ([7267967](https://github.com/TriPSs/nestjs-query/commit/72679678dbe9aa39f1e40bee1ed2c314b8c599c3))
+
+
+### BREAKING CHANGES
+
+* **query-mongoose:** Versions 6 and 7 of mongoose are no longer supported
+
+
+
+## [6.1.3](https://github.com/TriPSs/nestjs-query/compare/v6.1.2...v6.1.3) (2024-07-25)
+
+
+
+## [6.1.2](https://github.com/TriPSs/nestjs-query/compare/v6.1.1...v6.1.2) (2024-07-24)
+
+
+
 ## [6.1.1](https://github.com/TriPSs/nestjs-query/compare/v6.1.0...v6.1.1) (2024-06-07)
 
 
