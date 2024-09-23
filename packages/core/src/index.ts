@@ -30,11 +30,4 @@ export {
 } from './helpers'
 export * from './interfaces'
 export { NestjsQueryCoreModule, NestjsQueryCoreModuleOpts } from './module'
-export {
-  AssemblerQueryService,
-  NoOpQueryService,
-  ProxyQueryService,
-  QueryService,
-  QueryServiceRelation,
-  RelationQueryService
-} from './services'
+export * from './services'

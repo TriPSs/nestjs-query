@@ -1,10 +1,28 @@
 import { BadRequestException, HttpException } from '@nestjs/common'
-import { AggregateFields, AggregateQuery, AggregateResponse, Class, isNamed } from '@rezonate/nestjs-query-core'
-import { camelCase } from 'camel-case'
-import { EntityMetadata, Repository, SelectQueryBuilder } from 'typeorm'
+import {
+  AggregateByTimeIntervalSpan,
+  AggregateByTimeResponse,
+  AggregateFields,
+  AggregateQuery,
+  AggregateResponse,
+  Class,
+  isNamed
+} from '@rezonate/nestjs-query-core'
 import { Entries } from '@rezonate/nestjs-query-graphql/src/decorators'
-import { indexFieldReflector } from '../decorators/field.index.decorator'
+import { camelCase } from 'camel-case'
 import { GraphQLError } from 'graphql'
+import { EntityMetadata, Repository, SelectQueryBuilder } from 'typeorm'
+
+import { indexFieldReflector } from '../decorators/field.index.decorator'
+
+const MS_IN_TIMESPAN: { [key in AggregateByTimeIntervalSpan]: number } = {
+  [AggregateByTimeIntervalSpan.minute]: 60 * 1000,
+  [AggregateByTimeIntervalSpan.hour]: 60 * 60 * 1000,
+  [AggregateByTimeIntervalSpan.day]: 24 * 60 * 60 * 1000,
+  [AggregateByTimeIntervalSpan.week]: 7 * 24 * 60 * 60 * 1000,
+  [AggregateByTimeIntervalSpan.month]: 4 * 7 * 24 * 60 * 60 * 1000,
+  [AggregateByTimeIntervalSpan.year]: 12 * 4 * 7 * 24 * 60 * 60 * 1000
+}
 
 enum AggregateFuncs {
   AVG = 'AVG',
@@ -18,20 +36,16 @@ enum AggregateFuncs {
 const AGG_REGEXP = /(AVG|SUM|COUNT|DISTINCT_COUNT|MAX|MIN|GROUP_BY)_(.*)/
 
 const throwAggregationInvalidError = (field: string) => {
-  throw new GraphQLError(
-    `Can't run aggregation on field ${field}, since this is a large table and the field has not index!`,
-    {
-      extensions: {
-        code: 400
-      }
+  throw new GraphQLError(`Can't run aggregation on field ${field}, since this is a large table and the field has not index!`, {
+    extensions: {
+      code: 400
     }
-  )
+  })
 }
 
-const validateAggregatableField = (DTO:any, field:string, shouldRun:boolean) => {
-  const hasIndex = indexFieldReflector.has(DTO as Class<unknown>, field);
-  if(shouldRun && !hasIndex)
-    throwAggregationInvalidError(field)
+const validateAggregatableField = (DTO: any, field: string, shouldRun: boolean) => {
+  const hasIndex = indexFieldReflector.has(DTO as Class<unknown>, field)
+  if (shouldRun && !hasIndex) throwAggregationInvalidError(field)
 }
 
 const safelyParseInt = (maybeNumber: unknown, defaultValue = 0) => {
@@ -45,22 +59,52 @@ const safelyParseInt = (maybeNumber: unknown, defaultValue = 0) => {
  * Builds a WHERE clause from a Filter.
  */
 export class AggregateBuilder<Entity> {
-  constructor(readonly repo: Repository<Entity>) {
-  }
+  constructor(readonly repo: Repository<Entity>) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   public static async asyncConvertToAggregateResponse<Entity>(
     responsePromise: Promise<Record<string, unknown>[]>,
     groupByLimit = 10
   ): Promise<AggregateResponse<Entity>[]> {
     const aggResponse = await responsePromise
     const sorted = this.sortByCountDescIfExists(aggResponse)
-    return this.convertToAggregateResponse(sorted.slice(0, groupByLimit))
+    return this.convertToAggregateResponse<Entity>(sorted.slice(0, groupByLimit))
+  }
+
+  public static async asyncConvertToAggregateByTimeResponse<Entity>(
+    responsePromise: Promise<(Record<string, unknown> & { timeInterval: Date })[]>,
+    groupByLimit = 10
+  ): Promise<AggregateByTimeResponse<Entity>> {
+    const aggResponse = await responsePromise
+    const grouped = aggResponse.reduce<{ time: Date; items: (Record<string, unknown> & { timeInterval: Date })[] }[]>(
+      (acc, item, i) => {
+        const time = item.timeInterval
+        const curr = acc.at(-1)
+        if (curr && curr.time === time) {
+          curr.items.push(item)
+        } else {
+          acc.push({
+            time,
+            items: [item]
+          })
+        }
+
+        return acc
+      },
+      []
+    )
+
+    return grouped.map((item) => {
+      const sorted = this.sortByCountDescIfExists(item.items)
+      return {
+        time: item.time,
+        aggregate: this.convertToAggregateResponse<Entity>(sorted.slice(0, groupByLimit))
+      }
+    })
   }
 
   private static sortByCountDescIfExists(response: Record<string, unknown>[]) {
     if (!response.length) return response
-    const countField = Object.keys(response[0]).find(key => key.startsWith(AggregateFuncs.COUNT))
+    const countField = Object.keys(response[0]).find((key) => key.startsWith(AggregateFuncs.COUNT))
     if (!countField) return response
     return response.sort((a, b) => safelyParseInt(b[countField]) - safelyParseInt(a[countField]))
   }
@@ -117,6 +161,7 @@ export class AggregateBuilder<Entity> {
   public static convertToAggregateResponse<Entity>(rawAggregates: Record<string, unknown>[]): AggregateResponse<Entity>[] {
     return rawAggregates.map((response) => {
       return Object.keys(response).reduce((agg: AggregateResponse<Entity>, resultField: string) => {
+        if (resultField === 'timeInterval') return agg
         const matchResult = AGG_REGEXP.exec(resultField)
         if (!matchResult) {
           throw new Error('Unknown aggregate column encountered.')
@@ -142,7 +187,7 @@ export class AggregateBuilder<Entity> {
    */
   public getCorrectedField(alias: string, f: AggregateFields<Entity>[0]) {
     return this.getFieldWithRelations(f).map(({ field, metadata, relationField }) => {
-      const col = alias || relationField ? `${relationField ? relationField : alias}.${field}` : (field)
+      const col = alias || relationField ? `${relationField ? relationField : alias}.${field}` : field
       const meta = metadata.findColumnWithPropertyName(`${field}`)
 
       if (meta && metadata.connection.driver.normalizeType(meta) === 'datetime') {
@@ -163,7 +208,13 @@ export class AggregateBuilder<Entity> {
    * @param aggregate - the aggregates to select.
    * @param alias - optional alias to use to qualify an identifier
    */
-  public build<Qb extends SelectQueryBuilder<Entity>>(qb: Qb, aggregate: AggregateQuery<Entity>, alias?: string, failOnMissingIndex = false): Qb {
+  public build<Qb extends SelectQueryBuilder<Entity>>(
+    qb: Qb,
+    aggregate: AggregateQuery<Entity>,
+    alias?: string,
+    failOnMissingIndex = false,
+    allowEmptySelect = false
+  ): Qb {
     const selects = [
       ...this.createGroupBySelect(aggregate.groupBy, alias, failOnMissingIndex),
       ...this.createAggSelect(AggregateFuncs.COUNT, aggregate.count, alias, failOnMissingIndex),
@@ -174,36 +225,57 @@ export class AggregateBuilder<Entity> {
       ...this.createAggSelect(AggregateFuncs.MIN, aggregate.min, alias, failOnMissingIndex)
     ]
     if (!selects.length) {
+      if (allowEmptySelect) return qb
       throw new BadRequestException('No aggregate fields found.')
     }
     const [head, ...tail] = selects
     return tail.reduce((acc: Qb, [select, selectAlias]) => acc.addSelect(select, selectAlias), qb.select(head[0], head[1]))
   }
 
-  private createAggSelect(func: AggregateFuncs, fields?: AggregateFields<Entity>, alias?: string, failOnMissingIndex = false): [string, string][] {
+  private createAggSelect(
+    func: AggregateFuncs,
+    fields?: AggregateFields<Entity>,
+    alias?: string,
+    failOnMissingIndex = false
+  ): [string, string][] {
     if (!fields) {
       return []
     }
     return this.getFieldsWithRelations(fields).map(({ field, relationField, metadata }) => {
       validateAggregatableField(metadata.target, field, failOnMissingIndex)
-      const col = alias || relationField ? `${relationField ? relationField : alias}.${field as string}` : (field as string)
-      return [`${func}(${col})`, AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)]
+      const col = alias || relationField ? `${relationField ? relationField : alias}.${field}` : field
+      return [
+        `${func}(${col})`,
+        AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)
+      ]
     })
   }
 
-  private createAggDistinctSelect(func: AggregateFuncs, fields?: AggregateFields<Entity>, alias?: string, failOnMissingIndex = false): [string, string][] {
+  private createAggDistinctSelect(
+    func: AggregateFuncs,
+    fields?: AggregateFields<Entity>,
+    alias?: string,
+    failOnMissingIndex = false
+  ): [string, string][] {
     if (!fields) {
       return []
     }
     return this.getFieldsWithRelations(fields).map(({ field, relationField, metadata }) => {
       validateAggregatableField(metadata.target, field, failOnMissingIndex)
 
-      const col = alias || relationField ? `${relationField ? relationField : alias}.${field as string}` : (field as string)
-      return [`COUNT (DISTINCT ${col})`, AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)]
+      const col = alias || relationField ? `${relationField ? relationField : alias}.${field}` : field
+      return [
+        `COUNT (DISTINCT ${col})`,
+        AggregateBuilder.getAggregateAlias(func, relationField ? `${relationField}.${field}` : `${field}`)
+      ]
     })
   }
 
-  private createGroupBySelect(fields?: AggregateFields<Entity>, alias?: string, failOnMissingIndex = false): (readonly [string, string])[] {
+  private createGroupBySelect(
+    fields?: AggregateFields<Entity>,
+    alias?: string,
+    failOnMissingIndex = false
+  ): (readonly [string, string])[] {
     if (!fields) {
       return []
     }
@@ -217,22 +289,24 @@ export class AggregateBuilder<Entity> {
       if (meta && metadata.connection.driver.normalizeType(meta) === 'datetime') {
         return [`DATE(${col})`, groupByAlias] as const
       }
-      if (meta.isArray)
-        return [`unnest(${col})`, groupByAlias] as const
+      if (meta.isArray) return [`unnest(${col})`, groupByAlias] as const
       return [`${col}`, groupByAlias] as const
     })
   }
 
   private getFieldsWithRelations(fields: AggregateFields<Entity>) {
-    return fields.flatMap(field => this.getFieldWithRelations(field))
+    return fields.flatMap((field) => this.getFieldWithRelations(field))
   }
 
   private getFieldWithRelations(field: AggregateFields<Entity>[0]) {
-    if (typeof field !== 'object') return [{
-      field: field as string,
-      metadata: this.repo.metadata,
-      relationField: null
-    }]
+    if (typeof field !== 'object')
+      return [
+        {
+          field: field as string,
+          metadata: this.repo.metadata,
+          relationField: null
+        }
+      ]
 
     const entries: [string, string[]][] = Object.entries(field)
     return entries.flatMap(([key, relationField]) => {

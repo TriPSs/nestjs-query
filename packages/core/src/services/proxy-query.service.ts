@@ -1,5 +1,6 @@
 import { Class, DeepPartial } from '../common'
 import {
+  AggregateByTimeResponse,
   AggregateQuery,
   AggregateResponse,
   DeleteManyResponse,
@@ -13,7 +14,7 @@ import {
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
-import { QueryService } from './query.service'
+import { AggregateByTimeIntervalSpan, QueryService } from './query.service'
 
 export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> implements QueryService<DTO, C, U> {
   constructor(readonly proxied: QueryService<DTO, C, U>) {}
@@ -199,6 +200,10 @@ export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> 
 
   aggregate(filter: Filter<DTO>, query: AggregateQuery<DTO>): Promise<AggregateResponse<DTO>[]> {
     return this.proxied.aggregate(filter, query)
+  }
+
+  aggregateByTime(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>, timeField: string, from: Date, to: Date, interval: number, span: AggregateByTimeIntervalSpan, groupByLimit?: number, maxRowsAggregationLimit?: number, maxRowsAggregationWithIndexLimit?: number, limitAggregateByTableSize?: boolean): Promise<AggregateByTimeResponse<DTO>> {
+    return Promise.resolve([]);
   }
 
   count(filter: Filter<DTO>): Promise<number> {

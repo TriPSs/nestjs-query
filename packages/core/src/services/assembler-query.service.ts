@@ -1,6 +1,7 @@
 import { Assembler } from '../assemblers'
 import { Class, DeepPartial } from '../common'
 import {
+  AggregateByTimeResponse,
   AggregateQuery,
   AggregateResponse,
   DeleteManyResponse,
@@ -15,12 +16,15 @@ import {
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
-import { QueryService } from './query.service'
+import { AggregateByTimeIntervalSpan, QueryService } from './query.service'
 
 export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepPartial<Entity>, U = C, UE = CE>
   implements QueryService<DTO, C, U>
 {
-  constructor(readonly assembler: Assembler<DTO, Entity, C, CE, U, UE>, readonly queryService: QueryService<Entity, CE, UE>) {}
+  constructor(
+    readonly assembler: Assembler<DTO, Entity, C, CE, U, UE>,
+    readonly queryService: QueryService<Entity, CE, UE>
+  ) {}
 
   addRelations<Relation>(
     relationName: string,
@@ -75,6 +79,22 @@ export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepP
       this.assembler.convertAggregateQuery(aggregate)
     )
     return aggregateResponse.map((agg) => this.assembler.convertAggregateResponse(agg))
+  }
+
+  async aggregateByTime(
+    filter: Filter<DTO>,
+    aggregate: AggregateQuery<DTO>,
+    timeField: string,
+    from: Date,
+    to: Date,
+    interval: number,
+    span: AggregateByTimeIntervalSpan,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
+  ): Promise<AggregateByTimeResponse<DTO>> {
+    return []
   }
 
   count(filter: Filter<DTO>): Promise<number> {

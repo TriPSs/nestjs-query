@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 
 import { Class, DeepPartial } from '../common'
 import {
+  AggregateByTimeResponse,
   AggregateQuery,
   AggregateResponse,
   DeleteManyOptions,
@@ -17,6 +18,16 @@ import {
   UpdateOneOptions
 } from '../interfaces'
 
+export enum AggregateByTimeIntervalSpan {
+  minute = 'minute',
+  hour = 'hour',
+  day = 'day',
+  week = 'week',
+  month = 'month',
+  year = 'year'
+}
+
+
 /**
  * Base interface for all QueryServices.
  *
@@ -30,14 +41,7 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    */
   query(query: Query<DTO>): Promise<DTO[]>
 
-  /**
-   * Perform an aggregate query
-   * @param filter
-   * @param aggregate
-   * @param groupByLimit
-   * @param maxRowsAggregationLimit
-   * @param maxRowsAggregationWithIndexLimit
-   */
+
   aggregate(
     filter: Filter<DTO>,
     aggregate: AggregateQuery<DTO>,
@@ -46,6 +50,21 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
     maxRowsAggregationWithIndexLimit?: number,
     limitAggregateByTableSize?: boolean
   ): Promise<AggregateResponse<DTO>[]>
+
+
+  aggregateByTime(
+    filter: Filter<DTO>,
+    aggregate: AggregateQuery<DTO>,
+    timeField: string,
+    from: Date,
+    to: Date,
+    interval: number,
+    span: AggregateByTimeIntervalSpan,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
+  ): Promise<AggregateByTimeResponse<DTO>>
 
   /**
    * Count the number of records that match the filter.

@@ -15,6 +15,7 @@
     "publish:core": "cd dist/packages/nestjs-query-core && npm publish",
     "publish:gql": "cd dist/packages/nestjs-query-graphql && npm publish",
     "publish:typeorm": "cd dist/packages/nestjs-query-typeorm && npm publish",
+    "copy": "node copy",
     "publish": "npm run publish:core && npm run publish:gql && npm run publish:typeorm"
   },
   "dependencies": {
@@ -44,6 +45,7 @@
     "passport-local": "1.0.0",
     "pg": "8.11.3",
     "prism-react-renderer": "2.3.1",
+    "prompts": "^2.4.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "reflect-metadata": "0.2.1",

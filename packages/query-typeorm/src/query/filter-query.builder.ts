@@ -1,4 +1,5 @@
 import {
+  AggregateByTimeIntervalSpan,
   AggregateFields,
   AggregateQuery,
   Filter,
@@ -19,11 +20,11 @@ import {
   UpdateQueryBuilder,
   WhereExpressionBuilder
 } from 'typeorm'
+import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata'
 import { SoftDeleteQueryBuilder } from 'typeorm/query-builder/SoftDeleteQueryBuilder'
 
 import { AggregateBuilder } from './aggregate.builder'
 import { WhereBuilder } from './where.builder'
-import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata'
 
 /**
  * @internal
@@ -72,8 +73,7 @@ export class FilterQueryBuilder<Entity> {
     public repo: Repository<Entity>,
     readonly whereBuilder: WhereBuilder<Entity> = new WhereBuilder<Entity>(),
     readonly aggregateBuilder: AggregateBuilder<Entity> = new AggregateBuilder<Entity>(repo)
-  ) {
-  }
+  ) {}
 
   /**
    * Create a `typeorm` SelectQueryBuilder with `WHERE`, `ORDER BY` and `LIMIT/OFFSET` clauses.
@@ -88,9 +88,9 @@ export class FilterQueryBuilder<Entity> {
     let qb = this.createQueryBuilder()
     qb = hasRelations
       ? this.applyRelationJoinsRecursive(
-        qb,
-        this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.sorting)
-      )
+          qb,
+          this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.sorting)
+        )
       : qb
     qb = this.applyFilter(qb, tableColumns, query.filter, query.sorting, qb.alias)
     qb = this.applySorting(qb, query.sorting, qb.alias)
@@ -112,21 +112,45 @@ export class FilterQueryBuilder<Entity> {
     return qb
   }
 
-  public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>, failOnMissingIndex = false): SelectQueryBuilder<Entity> {
+  public aggregate(
+    query: Query<Entity>,
+    aggregate: AggregateQuery<Entity>,
+    failOnMissingIndex = false,
+    allowEmptySelect = false
+  ): SelectQueryBuilder<Entity> {
     const hasRelations = this.filterHasRelations(query.filter)
     const hasAggregatedRelations = this.aggregateHasRelations(aggregate)
     const tableColumns = this.repo.metadata.columns
-    const relationsMap = { ...(hasRelations ? this.getReferencedRelationsRecursive(this.repo.metadata, query.filter) : {}), ...(hasAggregatedRelations ? this.getAggregatedRelations(aggregate) : {}) }
+    const relationsMap = {
+      ...(hasRelations ? this.getReferencedRelationsRecursive(this.repo.metadata, query.filter) : {}),
+      ...(hasAggregatedRelations ? this.getAggregatedRelations(aggregate) : {})
+    }
 
     let qb = this.createQueryBuilder()
-    qb = hasRelations || hasAggregatedRelations
-      ? this.applyRelationJoinsRecursive(qb, relationsMap)
-      : qb
-    qb = this.applyAggregate(qb, aggregate, qb.alias, failOnMissingIndex)
+    qb = hasRelations || hasAggregatedRelations ? this.applyRelationJoinsRecursive(qb, relationsMap) : qb
+    qb = this.applyAggregate(qb, aggregate, qb.alias, failOnMissingIndex, allowEmptySelect)
     qb = this.applyFilter(qb, tableColumns, query.filter, [], qb.alias)
     qb = this.applyAggregateSorting(qb, aggregate.groupBy, qb.alias)
     qb = this.applyAggregateGroupBy(qb, aggregate.groupBy, qb.alias)
     return qb
+  }
+
+  public aggregateByTime(
+    query: Query<Entity>,
+    aggregate: AggregateQuery<Entity>,
+    timeField: string,
+    from: Date,
+    to: Date,
+    interval: number,
+    span: AggregateByTimeIntervalSpan,
+    failOnMissingIndex = false
+  ): Promise<(Entity & { timeInterval: Date })[]> {
+    const qb = this.aggregate(query, aggregate, failOnMissingIndex, true)
+    return this.applyAggregateByTimeJoinSeries(qb, timeField, from, to, interval, span) as Promise<
+      (Entity & {
+        timeInterval: Date
+      })[]
+    >
   }
 
   /**
@@ -189,8 +213,47 @@ export class FilterQueryBuilder<Entity> {
    * @param aggregate - the aggregates to select.
    * @param alias - optional alias to use to qualify an identifier
    */
-  public applyAggregate<Qb extends SelectQueryBuilder<Entity>>(qb: Qb, aggregate: AggregateQuery<Entity>, alias?: string, failOnMissingIndex = false): Qb {
-    return this.aggregateBuilder.build(qb, aggregate, alias, failOnMissingIndex)
+  public applyAggregate<Qb extends SelectQueryBuilder<Entity>>(
+    qb: Qb,
+    aggregate: AggregateQuery<Entity>,
+    alias?: string,
+    failOnMissingIndex = false,
+    allowEmptySelect = false
+  ): Qb {
+    return this.aggregateBuilder.build(qb, aggregate, alias, failOnMissingIndex, allowEmptySelect)
+  }
+
+  public applyAggregateByTimeJoinSeries<Qb extends SelectQueryBuilder<Entity>>(
+    qb: Qb,
+    timeField: string,
+    from: Date,
+    to: Date,
+    interval: number,
+    span: AggregateByTimeIntervalSpan,
+    alias?: string
+  ) {
+    const column = this.repo.metadata.columns.find((c) => c.propertyName === timeField)
+    if (!column) throw new Error('Could not find column')
+    const fullColumnName = alias ? `"${alias}"."${column.databaseName}"` : `"${column.databaseName}"`
+    const intervalColumnName = `timeInterval`
+    const timeSeries = `
+    generate_series( 
+    '${from.toISOString()}'::timestamp, 
+    '${to.toISOString()}'::timestamp, 
+    '${interval} ${span}'::interval)
+    `
+    qb.innerJoinAndSelect(
+      'TIME_SERIES_PLACEHOLDER',
+      intervalColumnName,
+      `${fullColumnName} > "${intervalColumnName}" AND ${fullColumnName} <= "${intervalColumnName}" + '${interval} ${span}'::interval`
+    )
+
+    qb.addOrderBy('"timeInterval"', 'ASC')
+    qb.addGroupBy('"timeInterval"')
+
+    const query = qb.getQuery().replace('INNER JOIN "TIME_SERIES_PLACEHOLDER"', `RIGHT JOIN ${timeSeries}`)
+
+    return this.repo.query(query)
   }
 
   /**

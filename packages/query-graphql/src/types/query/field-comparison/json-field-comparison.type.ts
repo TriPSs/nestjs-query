@@ -31,6 +31,5 @@ export function getOrCreateJSONFieldComparison(): Class<FilterFieldComparison<Re
   }
 
   jsonFieldComparison = JsonFieldComparison
-  console.log('jsonFieldComparison', jsonFieldComparison)
   return jsonFieldComparison
 }

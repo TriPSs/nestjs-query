@@ -1,5 +1,6 @@
 import { HttpException, MethodNotAllowedException, NotFoundException } from '@nestjs/common'
 import {
+  AggregateByTimeIntervalSpan, AggregateByTimeResponse,
   AggregateQuery,
   AggregateResponse,
   Class,
@@ -51,8 +52,7 @@ export interface TypeOrmQueryServiceOpts<Entity> {
  */
 export class TypeOrmQueryService<Entity>
   extends RelationQueryService<Entity>
-  implements QueryService<Entity, DeepPartial<Entity>, DeepPartial<Entity>>
-{
+  implements QueryService<Entity, DeepPartial<Entity>, DeepPartial<Entity>> {
   readonly filterQueryBuilder: FilterQueryBuilder<Entity>
 
   readonly useSoftDelete: boolean
@@ -99,6 +99,23 @@ export class TypeOrmQueryService<Entity>
     throw new Error('Could not estimate table size for ' + this.repo.metadata.tableName)
   }
 
+  private async shouldValidateAggregationLimit(
+    maxRowsAggregationLimit = this.opts.maxRowsForAggregate ?? 100000,
+    maxRowsAggregationWithIndexLimit = this.opts.maxRowsForAggregateWithIndex ?? 10000,
+    limitAggregateByTableSize = this.opts.limitAggregateByTableSize ?? true
+  ) {
+    const totalRows = await this.quicklyCount()
+    // If the table size is bigger than the limit with index, it doesn't matter if we aggregate on limit, we need to fail
+    if (limitAggregateByTableSize && totalRows > maxRowsAggregationWithIndexLimit)
+      throw new GraphQLError('Can\'t perform aggregation, this table is too large!', {
+        extensions: {
+          code: 400
+        }
+      })
+    // If table size is bigger than the limit without index, fail only when aggregating fields without index
+    return limitAggregateByTableSize && totalRows > maxRowsAggregationLimit
+  }
+
   async aggregate(
     filter: Filter<Entity>,
     aggregate: AggregateQuery<Entity>,
@@ -107,21 +124,39 @@ export class TypeOrmQueryService<Entity>
     maxRowsAggregationWithIndexLimit = this.opts.maxRowsForAggregateWithIndex ?? 10000,
     limitAggregateByTableSize = this.opts.limitAggregateByTableSize ?? true
   ): Promise<AggregateResponse<Entity>[]> {
-    const totalRows = await this.quicklyCount()
-    // If the table size is bigger than the limit with index, it doesn't matter if we aggregate on limit, we need to fail
-    if (limitAggregateByTableSize && totalRows > maxRowsAggregationWithIndexLimit)
-      throw new GraphQLError("Can't perform aggregation, this table is too large!", {
-        extensions: {
-          code: 400
-        }
-      })
-    // If table size is bigger than the limit without index, fail only when aggregating fields without index
-    const failOnMissingIndex = limitAggregateByTableSize && totalRows > maxRowsAggregationLimit
+    const failOnMissingIndex = await this.shouldValidateAggregationLimit(
+      maxRowsAggregationLimit,
+      maxRowsAggregationWithIndexLimit,
+      limitAggregateByTableSize
+    )
 
     return AggregateBuilder.asyncConvertToAggregateResponse(
       this.filterQueryBuilder.aggregate({ filter }, aggregate, failOnMissingIndex).getRawMany<Record<string, unknown>>(),
       groupByLimit
     )
+  }
+
+  async aggregateByTime(
+    filter: Filter<Entity>,
+    aggregate: AggregateQuery<Entity>,
+    timeField: string,
+    from: Date,
+    to: Date,
+    interval: number,
+    span: AggregateByTimeIntervalSpan,
+    groupByLimit?: number,
+    maxRowsAggregationLimit?: number,
+    maxRowsAggregationWithIndexLimit?: number,
+    limitAggregateByTableSize?: boolean
+  ): Promise<AggregateByTimeResponse<Entity>> {
+    const failOnMissingIndex = await this.shouldValidateAggregationLimit(
+      maxRowsAggregationLimit,
+      maxRowsAggregationWithIndexLimit,
+      limitAggregateByTableSize
+    )
+
+    const promise = this.filterQueryBuilder.aggregateByTime({ filter }, aggregate, timeField, from, to, interval, span, failOnMissingIndex)
+    return AggregateBuilder.asyncConvertToAggregateByTimeResponse(promise, groupByLimit)
   }
 
   async count(filter: Filter<Entity>): Promise<number> {

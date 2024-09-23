@@ -15,3 +15,8 @@ export type AggregateResponse<DTO> = {
   min?: TypeAggregate<DTO>
   groupBy?: Partial<DTO>
 }
+
+export type AggregateByTimeResponse<DTO> = {
+  time: Date
+  aggregate: AggregateResponse<DTO>[]
+}[]

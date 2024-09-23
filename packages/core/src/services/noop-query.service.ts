@@ -3,6 +3,7 @@ import { NotImplementedException } from '@nestjs/common'
 
 import { Class, DeepPartial } from '../common'
 import {
+  AggregateByTimeResponse,
   AggregateQuery,
   AggregateResponse,
   DeleteManyOptions,
@@ -17,7 +18,7 @@ import {
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
-import { QueryService } from './query.service'
+import { AggregateByTimeIntervalSpan, QueryService } from './query.service'
 
 export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> implements QueryService<DTO, C, U> {
   private static instance: QueryService<unknown, unknown, unknown> = new NoOpQueryService()
@@ -92,6 +93,10 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
 
   aggregate(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>): Promise<AggregateResponse<DTO>[]> {
     return Promise.reject(new NotImplementedException('aggregate is not implemented'))
+  }
+
+  aggregateByTime(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>, timeField: string, from: Date, to: Date, interval: number, span: AggregateByTimeIntervalSpan, groupByLimit?: number, maxRowsAggregationLimit?: number, maxRowsAggregationWithIndexLimit?: number, limitAggregateByTableSize?: boolean): Promise<AggregateByTimeResponse<DTO>> {
+    return Promise.reject(new NotImplementedException('aggregateByTime is not implemented'))
   }
 
   count(filter: Filter<DTO>): Promise<number> {

@@ -9,3 +9,7 @@ export type AggregateQuery<DTO> = {
   min?: AggregateFields<DTO>
   groupBy?: AggregateFields<DTO>
 }
+
+export type AggregateByTimeQuery<DTO> = {
+  aggregate: AggregateQuery<DTO>
+}

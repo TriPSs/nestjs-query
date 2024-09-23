@@ -10,13 +10,11 @@ export type Entries<T> = {
 
 const EXCLUDED_FIELDS = ['__typename']
 const QUERY_OPERATORS: (keyof AggregateQuery<unknown>)[] = ['groupBy', 'count', 'distinctCount', 'avg', 'sum', 'min', 'max']
-export const AggregateQueryParam = createParamDecorator(<DTO>(data: unknown, ctx: ExecutionContext) => {
-  const info = GqlExecutionContext.create(ctx).getInfo<GraphQLResolveInfo>()
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-argument
-  const fields = graphqlFields(info as any, {}, { excludedFields: EXCLUDED_FIELDS }) as Record<
-    keyof AggregateQuery<DTO>,
-    Record<keyof DTO, unknown>
-  >
+
+export function getAggregatedFields<DTO>(fields: Record<
+  keyof AggregateQuery<DTO>,
+  Record<keyof DTO, unknown>
+>) {
   return QUERY_OPERATORS.filter((operator) => !!fields[operator]).reduce((query, operator) => {
     const queryFields = Object.entries(fields[operator]) as Entries<DTO>
     const queryFieldsWithRelations: AggregateFields<DTO> = queryFields.map(([key, value]) => {
@@ -32,4 +30,15 @@ export const AggregateQueryParam = createParamDecorator(<DTO>(data: unknown, ctx
     }
     return query
   }, {} as AggregateQuery<DTO>)
+}
+
+export const AggregateQueryParam = createParamDecorator(<DTO>(data: unknown, ctx: ExecutionContext) => {
+  const info = GqlExecutionContext.create(ctx).getInfo<GraphQLResolveInfo>()
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-argument
+  const fields = graphqlFields(info as any, {}, { excludedFields: EXCLUDED_FIELDS }) as Record<
+    keyof AggregateQuery<DTO>,
+    Record<keyof DTO, unknown>
+  >
+
+  return getAggregatedFields(fields);
 })
