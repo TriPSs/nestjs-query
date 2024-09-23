@@ -119,7 +119,7 @@ export class TypeOrmQueryService<Entity>
   async aggregate(
     filter: Filter<Entity>,
     aggregate: AggregateQuery<Entity>,
-    groupByLimit = this.opts.aggregateGroupByLimit ?? 10,
+    groupByLimit = this.opts.aggregateGroupByLimit ?? 100,
     maxRowsAggregationLimit = this.opts.maxRowsForAggregate ?? 100000,
     maxRowsAggregationWithIndexLimit = this.opts.maxRowsForAggregateWithIndex ?? 10000,
     limitAggregateByTableSize = this.opts.limitAggregateByTableSize ?? true
