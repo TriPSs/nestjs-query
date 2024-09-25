@@ -1,4 +1,14 @@
  
+## [7.0.1](https://github.com/TriPSs/nestjs-query/compare/v7.0.0...v7.0.1) (2024-09-25)
+
+
+### Bug Fixes
+
+* null condition building for cursor filter ([4eb6e6b](https://github.com/TriPSs/nestjs-query/commit/4eb6e6bf50f48810e8bb5f513e67fb10f004f4a4))
+* **query-graphql:** Fix null condition building for cursor filter ([423f320](https://github.com/TriPSs/nestjs-query/commit/423f320647dd205d9c1c2633100e2f7ae0cf1ca2))
+
+
+
 # [7.0.0](https://github.com/TriPSs/nestjs-query/compare/v6.1.3...v7.0.0) (2024-07-26)
 
 
