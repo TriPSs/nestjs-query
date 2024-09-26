@@ -15,6 +15,7 @@ export interface AggregateByTimeArgsType<DTO> {
   field: string
   from: Date
   to?: Date
+  accumulate?: boolean
   interval: AggregateByTimeInterval
 }
 
@@ -74,6 +75,9 @@ export function AggregateByTimeArgsType<DTO>(DTOClass: Class<DTO>): Class<Aggreg
     })
     @IsIn(dateFieldNames)
     field: string
+
+    @Field(() => Boolean, { nullable: true, description: 'Should accumulate data' })
+    accumulate: boolean
 
     @Field(() => Date, { nullable: false, description: 'Start date for aggregation by time' })
     from: Date

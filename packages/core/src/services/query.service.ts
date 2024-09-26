@@ -60,6 +60,7 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
     to: Date,
     interval: number,
     span: AggregateByTimeIntervalSpan,
+    accumulate?: boolean,
     groupByLimit?: number,
     maxRowsAggregationLimit?: number,
     maxRowsAggregationWithIndexLimit?: number,

@@ -77,6 +77,7 @@ export const AggregateableByTime =
           args.to ?? new Date(),
           args.interval.count,
           args.interval.span,
+          args.accumulate,
           qa.groupByLimit,
           opts.maxRowsForAggregate,
           opts.maxRowsForAggregateWithIndex,

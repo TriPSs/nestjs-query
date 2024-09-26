@@ -144,6 +144,7 @@ export class TypeOrmQueryService<Entity>
     to: Date,
     interval: number,
     span: AggregateByTimeIntervalSpan,
+    accumulate?: boolean,
     groupByLimit?: number,
     maxRowsAggregationLimit?: number,
     maxRowsAggregationWithIndexLimit?: number,
@@ -155,7 +156,7 @@ export class TypeOrmQueryService<Entity>
       limitAggregateByTableSize
     )
 
-    const promise = this.filterQueryBuilder.aggregateByTime({ filter }, aggregate, timeField, from, to, interval, span, failOnMissingIndex)
+    const promise = this.filterQueryBuilder.aggregateByTime({ filter }, aggregate, accumulate, timeField, from, to, interval, span, failOnMissingIndex)
     return AggregateBuilder.asyncConvertToAggregateByTimeResponse(promise, groupByLimit)
   }
 

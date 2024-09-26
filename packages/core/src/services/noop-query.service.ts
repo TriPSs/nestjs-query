@@ -95,7 +95,7 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     return Promise.reject(new NotImplementedException('aggregate is not implemented'))
   }
 
-  aggregateByTime(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>, timeField: string, from: Date, to: Date, interval: number, span: AggregateByTimeIntervalSpan, groupByLimit?: number, maxRowsAggregationLimit?: number, maxRowsAggregationWithIndexLimit?: number, limitAggregateByTableSize?: boolean): Promise<AggregateByTimeResponse<DTO>> {
+  aggregateByTime(): Promise<AggregateByTimeResponse<DTO>> {
     return Promise.reject(new NotImplementedException('aggregateByTime is not implemented'))
   }
 

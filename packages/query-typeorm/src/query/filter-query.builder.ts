@@ -73,7 +73,8 @@ export class FilterQueryBuilder<Entity> {
     public repo: Repository<Entity>,
     readonly whereBuilder: WhereBuilder<Entity> = new WhereBuilder<Entity>(),
     readonly aggregateBuilder: AggregateBuilder<Entity> = new AggregateBuilder<Entity>(repo)
-  ) {}
+  ) {
+  }
 
   /**
    * Create a `typeorm` SelectQueryBuilder with `WHERE`, `ORDER BY` and `LIMIT/OFFSET` clauses.
@@ -88,9 +89,9 @@ export class FilterQueryBuilder<Entity> {
     let qb = this.createQueryBuilder()
     qb = hasRelations
       ? this.applyRelationJoinsRecursive(
-          qb,
-          this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.sorting)
-        )
+        qb,
+        this.getReferencedRelationsRecursive(this.repo.metadata, query.filter, query.sorting)
+      )
       : qb
     qb = this.applyFilter(qb, tableColumns, query.filter, query.sorting, qb.alias)
     qb = this.applySorting(qb, query.sorting, qb.alias)
@@ -138,6 +139,7 @@ export class FilterQueryBuilder<Entity> {
   public aggregateByTime(
     query: Query<Entity>,
     aggregate: AggregateQuery<Entity>,
+    accumulate: boolean,
     timeField: string,
     from: Date,
     to: Date,
@@ -146,7 +148,7 @@ export class FilterQueryBuilder<Entity> {
     failOnMissingIndex = false
   ): Promise<(Entity & { timeInterval: Date })[]> {
     const qb = this.aggregate(query, aggregate, failOnMissingIndex, true)
-    return this.applyAggregateByTimeJoinSeries(qb, timeField, from, to, interval, span) as Promise<
+    return this.applyAggregateByTimeJoinSeries(qb, timeField, accumulate, from, to, interval, span) as Promise<
       (Entity & {
         timeInterval: Date
       })[]
@@ -226,6 +228,7 @@ export class FilterQueryBuilder<Entity> {
   public applyAggregateByTimeJoinSeries<Qb extends SelectQueryBuilder<Entity>>(
     qb: Qb,
     timeField: string,
+    accumulate: boolean,
     from: Date,
     to: Date,
     interval: number,
@@ -242,10 +245,13 @@ export class FilterQueryBuilder<Entity> {
     '${to.toISOString()}'::timestamp, 
     '${interval} ${span}'::interval)
     `
+    let joinCondition = `${fullColumnName} <= "${intervalColumnName}" + '${interval} ${span}'::interval`
+    if (!accumulate) joinCondition = `${fullColumnName} > "${intervalColumnName}" AND ${joinCondition}`
+
     qb.innerJoinAndSelect(
       'TIME_SERIES_PLACEHOLDER',
       intervalColumnName,
-      `${fullColumnName} > "${intervalColumnName}" AND ${fullColumnName} <= "${intervalColumnName}" + '${interval} ${span}'::interval`
+      joinCondition
     )
 
     qb.addOrderBy('"timeInterval"', 'ASC')

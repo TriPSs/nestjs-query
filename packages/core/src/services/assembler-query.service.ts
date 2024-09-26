@@ -81,20 +81,8 @@ export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepP
     return aggregateResponse.map((agg) => this.assembler.convertAggregateResponse(agg))
   }
 
-  async aggregateByTime(
-    filter: Filter<DTO>,
-    aggregate: AggregateQuery<DTO>,
-    timeField: string,
-    from: Date,
-    to: Date,
-    interval: number,
-    span: AggregateByTimeIntervalSpan,
-    groupByLimit?: number,
-    maxRowsAggregationLimit?: number,
-    maxRowsAggregationWithIndexLimit?: number,
-    limitAggregateByTableSize?: boolean
-  ): Promise<AggregateByTimeResponse<DTO>> {
-    return []
+  aggregateByTime(): Promise<AggregateByTimeResponse<DTO>> {
+    return Promise.resolve([] as AggregateByTimeResponse<DTO>)
   }
 
   count(filter: Filter<DTO>): Promise<number> {
