@@ -2,9 +2,16 @@
   "name": "@ptc-org/nestjs-query-core",
   "version": "7.0.1",
   "description": "Base query package",
-  "author": "doug-martin <doug@dougamartin.com>",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
+  "bugs": {
+    "url": "https://github.com/tripss/nestjs-query/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tripss/nestjs-query.git"
+  },
   "license": "MIT",
+  "author": "doug-martin <doug@dougamartin.com>",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "directories": {
@@ -14,16 +21,6 @@
   "files": [
     "src/**"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tripss/nestjs-query.git"
-  },
-  "bugs": {
-    "url": "https://github.com/tripss/nestjs-query/issues"
-  },
   "dependencies": {
     "lodash.merge": "^4.6.2",
     "reflect-metadata": "^0.2.2",
@@ -32,5 +29,8 @@
   "peerDependencies": {
     "@nestjs/common": "^9.0.0 || ^10.0.0",
     "class-transformer": "^0.5"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
