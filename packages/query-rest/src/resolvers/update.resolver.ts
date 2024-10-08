@@ -10,6 +10,7 @@ import { AuthorizerFilter, BodyHookArgs, Put } from '../decorators'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import { MutationArgsType, UpdateOneInputType } from '../types'
+import { FindOneArgsType } from '../types/find-one-args.type'
 import { BaseServiceResolver, MutationOpts, ResolverClass, ServiceResolver } from './resolver.interface'
 
 export interface UpdateResolverOpts<DTO, U = DeepPartial<DTO>> extends MutationOpts {
@@ -18,7 +19,7 @@ export interface UpdateResolverOpts<DTO, U = DeepPartial<DTO>> extends MutationO
 }
 
 export interface UpdateResolver<DTO, U, QS extends QueryService<DTO, unknown, U>> extends ServiceResolver<DTO, QS> {
-  updateOne(id: string, input: MutationArgsType<UpdateOneInputType<U>>, authFilter?: Filter<DTO>): Promise<DTO>
+  updateOne(id: FindOneArgsType, input: MutationArgsType<UpdateOneInputType<U>>, authFilter?: Filter<DTO>): Promise<DTO>
 }
 
 /** @internal */
@@ -57,6 +58,14 @@ export const Updateable =
 
     class UOI extends MutationArgsType(UpdateOneInput) {}
 
+    class UOP extends FindOneArgsType(DTOClass) {}
+
+    Object.defineProperty(UOP, 'name', {
+      writable: false,
+      // set a unique name otherwise DI does not inject a unique one for each request
+      value: `${DTOClass.name}UpdateParams`
+    })
+
     class UpdateResolverBase extends BaseClass {
       @Put(
         () => DTOClass,
@@ -79,7 +88,7 @@ export const Updateable =
         opts?.one ?? {}
       )
       public updateOne(
-        @Param('id') id: string,
+        @Param() params: UOP,
         @BodyHookArgs() { input }: UOI,
         @AuthorizerFilter({
           operationGroup: OperationGroup.UPDATE,
@@ -87,7 +96,7 @@ export const Updateable =
         })
         authorizeFilter?: Filter<DTO>
       ): Promise<DTO> {
-        return this.service.updateOne(id, input.update, { filter: authorizeFilter ?? {} })
+        return this.service.updateOne(params.id, input.update, { filter: authorizeFilter ?? {} })
       }
     }
 

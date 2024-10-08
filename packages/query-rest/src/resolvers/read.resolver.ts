@@ -1,4 +1,4 @@
-import { BadRequestException, Param } from '@nestjs/common'
+import { Param } from '@nestjs/common'
 import { Class, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
 import omit from 'lodash.omit'
 
@@ -9,6 +9,7 @@ import { AuthorizerFilter, Get, QueryHookArgs } from '../decorators'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import { QueryArgsType } from '../types'
+import { FindOneArgsType } from '../types/find-one-args.type'
 import { OffsetQueryArgsTypeOpts, PagingStrategies, QueryArgsTypeOpts, QueryType, StaticQueryType } from '../types/query'
 import { BaseServiceResolver, ExtractPagingStrategy, ResolverClass, ResolverOpts, ServiceResolver } from './resolver.interface'
 
@@ -36,7 +37,7 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
     authorizeFilter?: Filter<DTO>
   ): Promise<InferConnectionTypeFromStrategy<DTO, PS>>
 
-  findById(id: string, authorizeFilter?: Filter<DTO>): Promise<DTO | undefined>
+  findById(id: FindOneArgsType, authorizeFilter?: Filter<DTO>): Promise<DTO | undefined>
 }
 
 /**
@@ -59,10 +60,18 @@ export const Readable =
 
     class QA extends QueryArgs {}
 
+    class FOP extends FindOneArgsType(DTOClass) {}
+
     Object.defineProperty(QA, 'name', {
       writable: false,
       // set a unique name otherwise DI does not inject a unique one for each request
       value: `${DTOClass.name}QueryArgs`
+    })
+
+    Object.defineProperty(FOP, 'name', {
+      writable: false,
+      // set a unique name otherwise DI does not inject a unique one for each request
+      value: `${DTOClass.name}Params`
     })
 
     class ReadResolverBase extends BaseClass {
@@ -82,18 +91,14 @@ export const Readable =
         opts.one ?? {}
       )
       public async findById(
-        @Param('id') id: string,
+        @Param() params: FOP,
         @AuthorizerFilter({
           operationGroup: OperationGroup.READ,
           many: false
         })
         authorizeFilter?: Filter<DTO>
       ): Promise<DTO> {
-        if (!id) {
-          throw new BadRequestException('id is missing from the request!')
-        }
-
-        return this.service.getById(id, {
+        return this.service.getById(params.id, {
           filter: authorizeFilter,
           withDeleted: opts?.one?.withDeleted
         })

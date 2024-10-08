@@ -7,6 +7,7 @@ import { OperationGroup } from '../auth'
 import { getDTONames } from '../common'
 import { AuthorizerFilter, Delete } from '../decorators'
 import { AuthorizerInterceptor } from '../interceptors'
+import { FindOneArgsType } from '../types/find-one-args.type'
 import { BaseServiceResolver, MutationOpts, ResolverClass, ServiceResolver } from './resolver.interface'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,7 +19,7 @@ export interface DeleteResolverOpts<DTO> extends MutationOpts {
 }
 
 export interface DeleteResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceResolver<DTO, QS> {
-  deleteOne(id: string, authorizeFilter?: Filter<DTO>): Promise<Partial<DTO>>
+  deleteOne(id: FindOneArgsType, authorizeFilter?: Filter<DTO>): Promise<Partial<DTO>>
 }
 
 /**
@@ -31,6 +32,14 @@ export const Deletable =
     const dtoNames = getDTONames(DTOClass, opts)
 
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'DeleteOneInput', 'DeleteManyInput', 'useSoftDelete')
+
+    class DOP extends FindOneArgsType(DTOClass) {}
+
+    Object.defineProperty(DOP, 'name', {
+      writable: false,
+      // set a unique name otherwise DI does not inject a unique one for each request
+      value: `${DTOClass.name}Params`
+    })
 
     class DeleteResolverBase extends BaseClass {
       @Delete(
@@ -49,14 +58,14 @@ export const Deletable =
         opts.one ?? {}
       )
       async deleteOne(
-        @Param('id') id: string,
+        @Param() params: DOP,
         @AuthorizerFilter({
           operationGroup: OperationGroup.DELETE,
           many: false
         })
         authorizeFilter?: Filter<DTO>
       ): Promise<Partial<DTO>> {
-        return this.service.deleteOne(id, {
+        return this.service.deleteOne(params.id, {
           filter: authorizeFilter ?? {},
           useSoftDelete: opts?.useSoftDelete ?? false
         })
