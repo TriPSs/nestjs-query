@@ -129,14 +129,14 @@ const ReadManyRelationMixin =
         const relationLoader = DataLoaderFactory.getOrCreateLoader(
           context,
           relationLoaderName,
-          () => queryLoader.createLoader(this.service),
+          () => queryLoader.createLoader(this.service, { withDeleted: relation.withDeleted }),
           dataLoaderConfig
         )
 
         const relationCountLoader = DataLoaderFactory.getOrCreateLoader(
           context,
           countRelationLoaderName,
-          () => countLoader.createLoader(this.service),
+          () => countLoader.createLoader(this.service, { withDeleted: relation.withDeleted }),
           dataLoaderConfig
         )
 
