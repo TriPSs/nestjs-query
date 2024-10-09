@@ -7,7 +7,8 @@ import {
   FindRelationOptions,
   GetByIdOptions,
   ModifyRelationOptions,
-  Query
+  Query,
+  QueryRelationsOptions
 } from '@ptc-org/nestjs-query-core'
 import lodashOmit from 'lodash.omit'
 import { RelationQueryBuilder as TypeOrmRelationQueryBuilder, Repository } from 'typeorm'
@@ -40,7 +41,8 @@ export abstract class RelationQueryService<Entity> {
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<Entity, Relation[]>>
 
   /**
@@ -54,23 +56,27 @@ export abstract class RelationQueryService<Entity> {
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Relation[]>
 
   public async queryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Relation[] | Map<Entity, Relation[]>> {
     if (Array.isArray(dto)) {
-      return this.batchQueryRelations(RelationClass, relationName, dto, query)
+      return this.batchQueryRelations(RelationClass, relationName, dto, query, opts?.withDeleted)
     }
 
     const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
     const relationQueryBuilder = this.getRelationQueryBuilder(relationName)
 
-    return assembler.convertToDTOs(await relationQueryBuilder.select(dto, assembler.convertQuery(query)).getMany())
+    return assembler.convertToDTOs(
+      await relationQueryBuilder.select(dto, assembler.convertQuery(query), opts?.withDeleted).getMany()
+    )
   }
 
   public async aggregateRelations<Relation>(
@@ -114,28 +120,31 @@ export abstract class RelationQueryService<Entity> {
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<Entity, number>>
 
   public async countRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<number>
 
   public async countRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<number | Map<Entity, number>> {
     if (Array.isArray(dto)) {
-      return this.batchCountRelations(RelationClass, relationName, dto, filter)
+      return this.batchCountRelations(RelationClass, relationName, dto, filter, opts)
     }
     const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
     const relationQueryBuilder = this.getRelationQueryBuilder(relationName)
-    return relationQueryBuilder.select(dto, assembler.convertQuery({ filter })).getCount()
+    return relationQueryBuilder.select(dto, assembler.convertQuery({ filter }), opts?.withDeleted).getCount()
   }
 
   /**
@@ -401,13 +410,16 @@ export abstract class RelationQueryService<Entity> {
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<Entity, number>> {
     const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
     const relationQueryBuilder = this.getRelationQueryBuilder(relationName)
     const convertedQuery = assembler.convertQuery({ filter })
 
-    const entityRelations = await Promise.all(entities.map((e) => relationQueryBuilder.select(e, convertedQuery).getCount()))
+    const entityRelations = await Promise.all(
+      entities.map((e) => relationQueryBuilder.select(e, convertedQuery, opts?.withDeleted).getCount())
+    )
 
     return entityRelations.reduce((results, relationCount, index) => {
       const e = entities[index]

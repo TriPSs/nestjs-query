@@ -17,6 +17,7 @@ import {
   ModifyRelationOptions,
   Query,
   QueryOptions,
+  QueryRelationsOptions,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -109,21 +110,24 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO,
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Relation[]>
 
   public queryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: DTO[],
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<DTO, Relation[]>>
 
   public queryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO | DTO[],
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Relation[] | Map<DTO, Relation[]>> {
     return Promise.reject(new NotImplementedException('queryRelations is not implemented'))
   }
@@ -132,21 +136,24 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO,
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<number>
 
   public countRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: DTO[],
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<DTO, number>>
 
   public countRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO | DTO[],
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<number | Map<DTO, number>> {
     return Promise.reject(new NotImplementedException('countRelations is not implemented'))
   }

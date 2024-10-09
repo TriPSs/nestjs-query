@@ -1,10 +1,12 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
+import { getDataSourceToken } from '@nestjs/typeorm'
 import { CursorConnectionType } from '@ptc-org/nestjs-query-graphql'
 import request from 'supertest'
-import { Connection } from 'typeorm'
+import { DataSource } from 'typeorm'
 
 import { AppModule } from '../src/app.module'
+import { SubTaskEntity } from '../src/sub-task/sub-task.entity'
 import { TodoItemDTO } from '../src/todo-item/dto/todo-item.dto'
 import { refresh } from './fixtures'
 import { edgeNodes, pageInfoField, todoItemFields } from './graphql-fragments'
@@ -29,10 +31,10 @@ describe('SoftDelete - TodoItemResolver (e2e)', () => {
     )
 
     await app.init()
-    await refresh(app.get(Connection))
+    await refresh(app.get(DataSource))
   })
 
-  afterAll(() => refresh(app.get(Connection)))
+  afterAll(() => refresh(app.get(DataSource)))
 
   describe('find one', () => {
     it(`should find a todo item by id`, () =>
@@ -202,6 +204,31 @@ describe('SoftDelete - TodoItemResolver (e2e)', () => {
           operationName: null,
           variables: {},
           query: `
+            mutation {
+              deleteManySubTasks(
+                input: {
+                  filter: {todoItemId: { in: ["1"]} },
+                }
+              ) {
+                deletedCount
+              }
+            }
+          `
+        })
+        .expect(200, {
+          data: {
+            deleteManySubTasks: {
+              deletedCount: 3
+            }
+          }
+        })
+
+      await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: {},
+          query: `
             {
               todoItemsWithDeleted {
                 ${pageInfoField}
@@ -286,6 +313,9 @@ describe('SoftDelete - TodoItemResolver (e2e)', () => {
             ])
           )
         })
+
+      const ds = app.get(getDataSourceToken())
+      await ds.getRepository(SubTaskEntity).restore({ todoItemId: '1' })
 
       await request(app.getHttpServer())
         .post('/graphql')

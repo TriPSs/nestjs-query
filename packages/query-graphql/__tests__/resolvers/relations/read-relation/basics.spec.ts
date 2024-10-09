@@ -192,7 +192,8 @@ describe('ReadRelationsResolver - basics', () => {
                 }
               ],
               relations: undefined
-            })
+            }),
+            deepEqual({ withDeleted: undefined })
           )
         ).thenResolve(new Map([[dto, output]]))
         // @ts-ignore
@@ -251,7 +252,8 @@ describe('ReadRelationsResolver - basics', () => {
             TestRelationDTO,
             'relations',
             deepEqual([dto]),
-            objectContaining({ ...query, paging: { limit: 2, offset: 0 } })
+            objectContaining({ ...query, paging: { limit: 2, offset: 0 } }),
+            deepEqual({ withDeleted: undefined })
           )
         ).thenResolve(new Map([[dto, output]]))
         // @ts-ignore
@@ -298,7 +300,8 @@ describe('ReadRelationsResolver - basics', () => {
             TestRelationDTO,
             'relations',
             deepEqual([dto]),
-            objectContaining({ ...query, paging: { limit: 2, offset: 0 } })
+            objectContaining({ ...query, paging: { limit: 2, offset: 0 } }),
+            deepEqual({ withDeleted: undefined })
           )
         ).thenResolve(new Map([[dto, output]]))
         const partialResolveInfoWithTotalCount = {
@@ -309,7 +312,13 @@ describe('ReadRelationsResolver - basics', () => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const result = await resolver.queryRelations(dto, query, {}, {}, { info: partialResolveInfoWithTotalCount })
         when(
-          mockService.countRelations(TestRelationDTO, 'relations', deepEqual([dto]), objectContaining(query.filter))
+          mockService.countRelations(
+            TestRelationDTO,
+            'relations',
+            deepEqual([dto]),
+            objectContaining(query.filter),
+            deepEqual({ withDeleted: undefined })
+          )
         ).thenResolve(new Map([[dto, 10]]))
 
         return expect(result.totalCount).resolves.toBe(10)
@@ -336,7 +345,8 @@ describe('ReadRelationsResolver - basics', () => {
             TestRelationDTO,
             'others',
             deepEqual([dto]),
-            objectContaining({ ...query, paging: { limit: 2, offset: 0 } })
+            objectContaining({ ...query, paging: { limit: 2, offset: 0 } }),
+            deepEqual({ withDeleted: undefined })
           )
         ).thenResolve(new Map([[dto, output]]))
         // @ts-ignore
@@ -398,7 +408,8 @@ describe('ReadRelationsResolver - basics', () => {
             TestRelationDTO,
             'relations',
             deepEqual([dto]),
-            objectContaining({ ...query, paging: { limit: 2 } })
+            objectContaining({ ...query, paging: { limit: 2 } }),
+            deepEqual({ withDeleted: undefined })
           )
         ).thenResolve(new Map([[dto, output]]))
         // @ts-ignore
@@ -435,7 +446,8 @@ describe('ReadRelationsResolver - basics', () => {
             TestRelationDTO,
             'others',
             deepEqual([dto]),
-            objectContaining({ ...query, paging: { limit: 2 } })
+            objectContaining({ ...query, paging: { limit: 2 } }),
+            deepEqual({ withDeleted: undefined })
           )
         ).thenResolve(new Map([[dto, output]]))
         // @ts-ignore
@@ -482,7 +494,13 @@ describe('ReadRelationsResolver - basics', () => {
           }
         ]
         when(
-          mockService.queryRelations(TestRelationDTO, 'relations', deepEqual([dto]), objectContaining({ ...query }))
+          mockService.queryRelations(
+            TestRelationDTO,
+            'relations',
+            deepEqual([dto]),
+            objectContaining({ ...query }),
+            deepEqual({ withDeleted: undefined })
+          )
         ).thenResolve(new Map([[dto, output]]))
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -505,9 +523,15 @@ describe('ReadRelationsResolver - basics', () => {
             testResolverId: dto.id
           }
         ]
-        when(mockService.queryRelations(TestRelationDTO, 'others', deepEqual([dto]), objectContaining(query))).thenResolve(
-          new Map([[dto, output]])
-        )
+        when(
+          mockService.queryRelations(
+            TestRelationDTO,
+            'others',
+            deepEqual([dto]),
+            objectContaining(query),
+            deepEqual({ withDeleted: undefined })
+          )
+        ).thenResolve(new Map([[dto, output]]))
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const result = await resolver.queryCustoms(dto, query, {})

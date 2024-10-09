@@ -137,7 +137,8 @@ describe('FederationResolver', () => {
             TestRelationDTO,
             'relationCursorConnection',
             deepEqual([dto]),
-            objectContaining({ ...query, paging: { limit: 2, offset: 0 } })
+            objectContaining({ ...query, paging: { limit: 2, offset: 0 } }),
+            deepEqual({ withDeleted: undefined })
           )
         ).thenResolve(new Map([[dto, output]]))
         // @ts-ignore
@@ -187,7 +188,8 @@ describe('FederationResolver', () => {
           TestRelationDTO,
           'relationOffsetConnection',
           deepEqual([dto]),
-          objectContaining({ ...query, paging: { limit: 2 } })
+          objectContaining({ ...query, paging: { limit: 2 } }),
+          deepEqual({ withDeleted: undefined })
         )
       ).thenResolve(new Map([[dto, output]]))
       // @ts-ignore
@@ -223,7 +225,8 @@ describe('FederationResolver', () => {
           TestRelationDTO,
           'unPagedRelations',
           deepEqual([dto]),
-          objectContaining({ filter: query.filter })
+          objectContaining({ filter: query.filter }),
+          deepEqual({ withDeleted: undefined })
         )
       ).thenResolve(new Map([[dto, output]]))
       // @ts-ignore

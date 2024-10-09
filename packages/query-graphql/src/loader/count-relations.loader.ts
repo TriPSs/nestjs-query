@@ -1,4 +1,4 @@
-import { Class, Filter, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, QueryRelationsOptions, QueryService } from '@ptc-org/nestjs-query-core'
 
 import { NestjsQueryDataloader } from './relations.loader'
 
@@ -13,24 +13,25 @@ export class CountRelationsLoader<DTO, Relation>
     readonly relationName: string
   ) {}
 
-  createLoader(service: QueryService<DTO, unknown, unknown>) {
+  createLoader(service: QueryService<DTO, unknown, unknown>, opts?: QueryRelationsOptions) {
     return async (queryArgs: ReadonlyArray<CountRelationsArgs<DTO, Relation>>): Promise<(number | Error)[]> => {
       // group
       const queryMap = this.groupQueries(queryArgs)
-      return this.loadResults(service, queryMap)
+      return this.loadResults(service, queryMap, opts)
     }
   }
 
   private async loadResults(
     service: QueryService<DTO, unknown, unknown>,
-    countRelationsMap: CountRelationsMap<DTO, Relation>
+    countRelationsMap: CountRelationsMap<DTO, Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<number[]> {
     const results: number[] = []
     await Promise.all(
       [...countRelationsMap.values()].map(async (args) => {
         const { filter } = args[0]
         const dtos = args.map((a) => a.dto)
-        const relationCountResults = await service.countRelations(this.RelationDTO, this.relationName, dtos, filter)
+        const relationCountResults = await service.countRelations(this.RelationDTO, this.relationName, dtos, filter, opts)
         const dtoRelations = dtos.map((dto) => relationCountResults.get(dto) ?? 0)
         dtoRelations.forEach((relationCount, index) => {
           results[args[index].index] = relationCount

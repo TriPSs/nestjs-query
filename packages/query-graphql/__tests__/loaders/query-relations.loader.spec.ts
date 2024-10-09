@@ -27,7 +27,7 @@ describe('QueryRelationsLoader', () => {
       const dtos = [{ id: 'dto-1' }, { id: 'dto-2' }]
       const dto1Relations = [{ id: 'relation-1' }, { id: 'relation-2' }]
       const dto2Relations = [{ id: 'relation-3' }, { id: 'relation-4' }]
-      when(service.queryRelations(RelationDTO, 'relation', deepEqual(dtos), deepEqual({}))).thenResolve(
+      when(service.queryRelations(RelationDTO, 'relation', deepEqual(dtos), deepEqual({}), undefined)).thenResolve(
         new Map([
           [dtos[0], dto1Relations],
           [dtos[1], dto2Relations]
@@ -48,7 +48,7 @@ describe('QueryRelationsLoader', () => {
       )
       const dtos = [{ id: 'dto-1' }, { id: 'dto-2' }]
       const dto1Relations = [{ id: 'relation-1' }, { id: 'relation-2' }]
-      when(service.queryRelations(RelationDTO, 'relation', deepEqual(dtos), deepEqual({}))).thenResolve(
+      when(service.queryRelations(RelationDTO, 'relation', deepEqual(dtos), deepEqual({}), undefined)).thenResolve(
         new Map([[dtos[0], dto1Relations]])
       )
       return expect(
@@ -70,14 +70,20 @@ describe('QueryRelationsLoader', () => {
       const dto3Relations = [{ id: 'relation-5' }, { id: 'relation-6' }]
       const dto4Relations = [{ id: 'relation-7' }, { id: 'relation-8' }]
       when(
-        service.queryRelations(RelationDTO, 'relation', deepEqual([dtos[0], dtos[2]]), deepEqual({ paging: { limit: 10 } }))
+        service.queryRelations(
+          RelationDTO,
+          'relation',
+          deepEqual([dtos[0], dtos[2]]),
+          deepEqual({ paging: { limit: 10 } }),
+          undefined
+        )
       ).thenResolve(
         new Map([
           [dtos[0], dto1Relations],
           [dtos[2], dto3Relations]
         ])
       )
-      when(service.queryRelations(RelationDTO, 'relation', deepEqual([dtos[1], dtos[3]]), deepEqual({}))).thenResolve(
+      when(service.queryRelations(RelationDTO, 'relation', deepEqual([dtos[1], dtos[3]]), deepEqual({}), undefined)).thenResolve(
         new Map([
           [dtos[1], dto2Relations],
           [dtos[3], dto4Relations]

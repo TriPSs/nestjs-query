@@ -6,7 +6,8 @@ import { SubTaskEntity } from '../../sub-task/sub-task.entity'
 
 @ObjectType('TodoItem')
 @FilterableUnPagedRelation('subTasks', () => SubTaskDTO, {
-  update: { enabled: true }
+  update: { enabled: true },
+  withDeleted: true
 })
 export class TodoItemDTO {
   @FilterableField(() => ID)
