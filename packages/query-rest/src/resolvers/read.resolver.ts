@@ -50,6 +50,10 @@ export const Readable =
     opts: ReadOpts
   ) =>
   <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<ReadResolverFromOpts<DTO, ReadOpts, QS>> & B => {
+    if (opts.disabled) {
+      return BaseClass as never
+    }
+
     const dtoNames = getDTONames(DTOClass, opts)
     const {
       QueryArgs = QueryArgsType(DTOClass, { ...opts, connectionName: `${dtoNames.baseName}Connection` }),
