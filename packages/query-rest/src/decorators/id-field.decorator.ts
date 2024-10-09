@@ -4,7 +4,10 @@ import { Field, FieldOptions } from '../index'
 import { ID_FIELD_KEY } from './constants'
 
 const reflector = new ValueReflector(ID_FIELD_KEY)
-export type IDFieldOptions = FieldOptions
+
+export interface IDFieldOptions extends FieldOptions {
+  idOnly?: boolean
+}
 
 export interface IDFieldDescriptor {
   propertyName: string
@@ -35,6 +38,10 @@ export function IDField(options?: IDFieldOptions): PropertyDecorator & MethodDec
     reflector.set(target.constructor as Class<unknown>, {
       propertyName: propertyName.toString()
     })
+
+    if (options?.idOnly) {
+      return
+    }
 
     if (descriptor) {
       return Field(options)(target, propertyName, descriptor)
