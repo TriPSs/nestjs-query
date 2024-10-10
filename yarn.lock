@@ -5313,6 +5313,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@microsoft/tsdoc@npm:^0.15.0":
+  version: 0.15.0
+  resolution: "@microsoft/tsdoc@npm:0.15.0"
+  checksum: 10/fd025e5e3966248cd5477b9ddad4e9aa0dd69291f372a207f18a686b3097dcf5ecf38325caf0f4ad2697f1f39fd45b536e4ada6756008b8bcc5eccbc3201313d
+  languageName: node
+  linkType: hard
+
 "@mongodb-js/saslprep@npm:^1.1.0":
   version: 1.1.0
   resolution: "@mongodb-js/saslprep@npm:1.1.0"
@@ -5595,6 +5602,34 @@ __metadata:
     sequelize: ^6.3.5
     sequelize-typescript: ^2.0.0
   checksum: 10/d04a463fb40be5a5b2ba89311b3a6bac1ad85b7725b96433abde022f51d267493e8543da212a4477f223d2208b20fc0a41c0a9edd30cd21ed8c658133839b1f3
+  languageName: node
+  linkType: hard
+
+"@nestjs/swagger@npm:^7.1.15":
+  version: 7.4.2
+  resolution: "@nestjs/swagger@npm:7.4.2"
+  dependencies:
+    "@microsoft/tsdoc": "npm:^0.15.0"
+    "@nestjs/mapped-types": "npm:2.0.5"
+    js-yaml: "npm:4.1.0"
+    lodash: "npm:4.17.21"
+    path-to-regexp: "npm:3.3.0"
+    swagger-ui-dist: "npm:5.17.14"
+  peerDependencies:
+    "@fastify/static": ^6.0.0 || ^7.0.0
+    "@nestjs/common": ^9.0.0 || ^10.0.0
+    "@nestjs/core": ^9.0.0 || ^10.0.0
+    class-transformer: "*"
+    class-validator: "*"
+    reflect-metadata: ^0.1.12 || ^0.2.0
+  peerDependenciesMeta:
+    "@fastify/static":
+      optional: true
+    class-transformer:
+      optional: true
+    class-validator:
+      optional: true
+  checksum: 10/e3f9cac6a092442461fe7e4edd45b8af3377a02c626bb2b9f7da2e0ffe4999c3c20f32240aa1a67e9999a919946e6ed6c0da01c703e7d83d49823f1d7b9caf09
   languageName: node
   linkType: hard
 
@@ -6211,6 +6246,26 @@ __metadata:
     "@nestjs/common": ^9.0.0 || ^10.0.0
     "@nestjs/mongoose": ^9.0.0 || ^10.0.0
     mongoose: ^8.0.0
+  languageName: unknown
+  linkType: soft
+
+"@ptc-org/nestjs-query-rest@workspace:packages/query-rest":
+  version: 0.0.0-use.local
+  resolution: "@ptc-org/nestjs-query-rest@workspace:packages/query-rest"
+  dependencies:
+    lodash.omit: "npm:^4.5.0"
+    lower-case-first: "npm:^2.0.2"
+    pluralize: "npm:^8.0.0"
+    tslib: "npm:^2.6.2"
+    upper-case-first: "npm:^2.0.2"
+  peerDependencies:
+    "@nestjs/common": ^9.0.0 || ^10.0.0
+    "@nestjs/core": ^9.0.0 || ^10.0.0
+    "@nestjs/graphql": ^11.0.0 || ^12.0.0
+    "@nestjs/swagger": ^7.0.0
+    class-transformer: ^0.5
+    class-validator: ^0.14.0
+    ts-morph: ^19.0.0
   languageName: unknown
   linkType: soft
 
@@ -18055,6 +18110,7 @@ __metadata:
     "@nestjs/platform-express": "npm:10.4.1"
     "@nestjs/schematics": "npm:10.1.4"
     "@nestjs/sequelize": "npm:10.0.1"
+    "@nestjs/swagger": "npm:^7.1.15"
     "@nestjs/testing": "npm:^10.4.1"
     "@nestjs/typeorm": "npm:^10.0.2"
     "@nx-extend/docusaurus": "npm:^2.0.1"
@@ -19093,6 +19149,13 @@ __metadata:
   version: 3.2.0
   resolution: "path-to-regexp@npm:3.2.0"
   checksum: 10/3c86811e0d69719e20908ed6457b6f51d0d66ffc526e04d259cddea5fd777c7b967adb60907658b7e1a98cb7bf1bbbbad3523337a676c98513fd76a7b513075e
+  languageName: node
+  linkType: hard
+
+"path-to-regexp@npm:3.3.0":
+  version: 3.3.0
+  resolution: "path-to-regexp@npm:3.3.0"
+  checksum: 10/8d256383af8db66233ee9027cfcbf8f5a68155efbb4f55e784279d3ab206dcaee554ddb72ff0dae97dd2882af9f7fa802634bb7cffa2e796927977e31b829259
   languageName: node
   linkType: hard
 
@@ -22183,6 +22246,13 @@ __metadata:
   bin:
     svgo: ./bin/svgo
   checksum: 10/2fdf3f2090e17b3c309e60f69c78a2afd5a9771247adb540bae3fce467243f7a601a2a5497ef40998292da41ad828b3eabf3c18b75bf449c2d2cbf6d7f6e96d9
+  languageName: node
+  linkType: hard
+
+"swagger-ui-dist@npm:5.17.14":
+  version: 5.17.14
+  resolution: "swagger-ui-dist@npm:5.17.14"
+  checksum: 10/b9e62d7ecb64e837849252c9f82af654b26cae60ebd551cff96495d826166d3ed866ebae40f22a2c61d307330151945d79d995e50659ae17eea6cf4ece788f9d
   languageName: node
   linkType: hard
 

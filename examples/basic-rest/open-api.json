@@ -1,0 +1,769 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/sub-task-dtos/{id}": {
+      "get": {
+        "operationId": "subTaskDTOS.findById",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubTaskDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "subTaskDTOS.deleteOne",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubTaskDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "subTaskDTOS.updateOne",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubTaskUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubTaskDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sub-task-dtos": {
+      "get": {
+        "operationId": "subTaskDTOS.queryMany",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubTaskDTOConnection"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "subTaskDTOS.createOne",
+        "summary": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubTaskDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubTaskDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/todo-item-dtos/{id}": {
+      "get": {
+        "operationId": "todoItemDTOS.findById",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoItemDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "todoItemDTOS.deleteOne",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoItemDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "todoItemDTOS.updateOne",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoItemUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoItemDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/todo-item-dtos": {
+      "get": {
+        "operationId": "todoItemDTOS.queryMany",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoItemDTOConnection"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "todoItemDTOS.createOne",
+        "summary": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTodoItemDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoItemDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tag-dtos/{id}": {
+      "get": {
+        "operationId": "tagDTOS.findById",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "tagDTOS.deleteOne",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "tagDTOS.updateOne",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTagDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tag-dtos": {
+      "get": {
+        "operationId": "tagDTOS.queryMany",
+        "summary": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagDTOConnection"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "tagDTOS.createOne",
+        "summary": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTagDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "",
+    "description": "",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "SubTaskDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "created": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updated": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "todoItemId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "completed",
+          "created",
+          "updated",
+          "todoItemId"
+        ]
+      },
+      "PageInfoType": {
+        "type": "object",
+        "properties": {
+          "hasNextPage": {
+            "type": "boolean",
+            "description": "true if paging forward and there are more records.",
+            "nullable": true
+          },
+          "hasPreviousPage": {
+            "type": "boolean",
+            "description": "true if paging backwards and there are more records.",
+            "nullable": true
+          }
+        }
+      },
+      "SubTaskDTOConnection": {
+        "type": "object",
+        "properties": {
+          "pageInfo": {
+            "description": "Paging information",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageInfoType"
+              }
+            ]
+          },
+          "totalCount": {
+            "type": "number",
+            "description": "Total amount of records."
+          },
+          "nodes": {
+            "description": "Array of nodes.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubTaskDTO"
+            }
+          }
+        },
+        "required": [
+          "pageInfo",
+          "totalCount",
+          "nodes"
+        ]
+      },
+      "SubTaskUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "completed": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "todoItemId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "CreateSubTaskDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "todoItemId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "completed",
+          "todoItemId"
+        ]
+      },
+      "TodoItemDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "isCompleted": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "isCompleted"
+        ]
+      },
+      "TodoItemDTOConnection": {
+        "type": "object",
+        "properties": {
+          "pageInfo": {
+            "description": "Paging information",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageInfoType"
+              }
+            ]
+          },
+          "totalCount": {
+            "type": "number",
+            "description": "Total amount of records."
+          },
+          "nodes": {
+            "description": "Array of nodes.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TodoItemDTO"
+            }
+          }
+        },
+        "required": [
+          "pageInfo",
+          "totalCount",
+          "nodes"
+        ]
+      },
+      "TodoItemUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "completed": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "CreateTodoItemDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "title",
+          "completed"
+        ]
+      },
+      "TagDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "created": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updated": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "created",
+          "updated"
+        ]
+      },
+      "TagDTOConnection": {
+        "type": "object",
+        "properties": {
+          "pageInfo": {
+            "description": "Paging information",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageInfoType"
+              }
+            ]
+          },
+          "totalCount": {
+            "type": "number",
+            "description": "Total amount of records."
+          },
+          "nodes": {
+            "description": "Array of nodes.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TagDTO"
+            }
+          }
+        },
+        "required": [
+          "pageInfo",
+          "totalCount",
+          "nodes"
+        ]
+      },
+      "CreateTagDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    }
+  }
+}
