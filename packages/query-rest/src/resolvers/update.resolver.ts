@@ -5,8 +5,8 @@ import { Class, DeepPartial, Filter, QueryService } from '@ptc-org/nestjs-query-
 import omit from 'lodash.omit'
 
 import { OperationGroup } from '../auth'
-import { getDTONames } from '../common'
-import { AuthorizerFilter, BodyHookArgs, Put } from '../decorators'
+import { DTONames, getDTONames } from '../common'
+import { ApiSchema, AuthorizerFilter, BodyHookArgs, Put } from '../decorators'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import { MutationArgsType, UpdateOneInputType } from '../types'
@@ -23,20 +23,17 @@ export interface UpdateResolver<DTO, U, QS extends QueryService<DTO, unknown, U>
 }
 
 /** @internal */
-const defaultUpdateDTO = <DTO, U>(DTOClass: Class<DTO>): Class<U> => {
-  const DefaultUpdateDTO = PartialType(DTOClass) as Class<U>
+const defaultUpdateDTO = <DTO, U>(dtoNames: DTONames, DTOClass: Class<DTO>): Class<U> => {
+  @ApiSchema({ name: `Update${dtoNames.baseName}` })
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  class DefaultUpdateDTO extends PartialType(DTOClass) {}
 
-  Object.defineProperty(DefaultUpdateDTO, 'name', {
-    writable: false,
-    // set a unique name otherwise DI does not inject a unique one for each request
-    value: `Update${DTOClass.name}`
-  })
-
-  return DefaultUpdateDTO
+  return DefaultUpdateDTO as Class<U>
 }
 
-const defaultUpdateOneInput = <DTO, U>(DTOClass: Class<DTO>, UpdateDTO: Class<U>): Class<UpdateOneInputType<U>> => {
-  return UpdateOneInputType(DTOClass, UpdateDTO)
+const defaultUpdateOneInput = <U>(dtoNames: DTONames, UpdateDTO: Class<U>): Class<UpdateOneInputType<U>> => {
+  return UpdateOneInputType(UpdateDTO)
 }
 
 /**
@@ -52,19 +49,17 @@ export const Updateable =
 
     const dtoNames = getDTONames(DTOClass, opts)
 
-    const { UpdateDTOClass = defaultUpdateDTO(DTOClass), UpdateOneInput = defaultUpdateOneInput(DTOClass, UpdateDTOClass) } = opts
+    const {
+      UpdateDTOClass = defaultUpdateDTO(dtoNames, DTOClass),
+      UpdateOneInput = defaultUpdateOneInput(dtoNames, UpdateDTOClass)
+    } = opts
 
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'UpdateDTOClass', 'UpdateOneInput', 'UpdateManyInput')
 
     class UOI extends MutationArgsType(UpdateOneInput) {}
 
+    @ApiSchema({ name: `FindUpdate${DTOClass.name}Args` })
     class UOP extends FindOneArgsType(DTOClass) {}
-
-    Object.defineProperty(UOP, 'name', {
-      writable: false,
-      // set a unique name otherwise DI does not inject a unique one for each request
-      value: `FindUpdate${DTOClass.name}Args`
-    })
 
     class UpdateResolverBase extends BaseClass {
       @Put(

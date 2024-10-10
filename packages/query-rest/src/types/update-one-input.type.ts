@@ -11,7 +11,7 @@ export interface UpdateOneInputType<U> {
  * @param UpdateClass - The InputType to be used.
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export function UpdateOneInputType<DTO, U>(DTOClass: Class<DTO>, UpdateClass: Class<U>): Class<UpdateOneInputType<U>> {
+export function UpdateOneInputType<U>(UpdateClass: Class<U>): Class<UpdateOneInputType<U>> {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   class UpdateOneInput extends UpdateClass implements UpdateOneInputType<U> {
@@ -19,12 +19,6 @@ export function UpdateOneInputType<DTO, U>(DTOClass: Class<DTO>, UpdateClass: Cl
       return this as never as U
     }
   }
-
-  Object.defineProperty(UpdateOneInput, 'name', {
-    writable: false,
-    // set a unique name otherwise DI does not inject a unique one for each request
-    value: `Update${DTOClass.name}Args`
-  })
 
   return UpdateOneInput
 }

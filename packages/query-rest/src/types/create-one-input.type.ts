@@ -11,7 +11,7 @@ export interface CreateOneInputType<C> {
  * @param InputClass - The InputType to be used.
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export function CreateOneInputType<DTO, C>(DTOClass: Class<DTO>, InputClass: Class<C>): Class<CreateOneInputType<C>> {
+export function CreateOneInputType<C>(InputClass: Class<C>): Class<CreateOneInputType<C>> {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   class CreateOneInput extends InputClass implements CreateOneInputType<C> {
@@ -19,12 +19,6 @@ export function CreateOneInputType<DTO, C>(DTOClass: Class<DTO>, InputClass: Cla
       return this as never as C
     }
   }
-
-  Object.defineProperty(InputClass, 'name', {
-    writable: false,
-    // set a unique name otherwise DI does not inject a unique one for each request
-    value: `Create${DTOClass.name}Args`
-  })
 
   return CreateOneInput
 }

@@ -4,7 +4,7 @@ import { Class, DeepPartial, Filter, QueryService } from '@ptc-org/nestjs-query-
 import omit from 'lodash.omit'
 
 import { DTONames, getDTONames } from '../common'
-import { BodyHookArgs, Post } from '../decorators'
+import { ApiSchema, BodyHookArgs, Post } from '../decorators'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import { CreateOneInputType, MutationArgsType } from '../types'
@@ -27,20 +27,19 @@ export interface CreateResolver<DTO, C, QS extends QueryService<DTO, C, unknown>
 
 /** @internal */
 const defaultCreateDTO = <DTO, C>(dtoNames: DTONames, DTOClass: Class<DTO>): Class<C> => {
-  const DefaultCreateDTO = OmitType(DTOClass, [])
-
-  Object.defineProperty(DefaultCreateDTO, 'name', {
-    writable: false,
-    // set a unique name otherwise DI does not inject a unique one for each request
-    value: `Create${DTOClass.name}Args`
-  })
+  @ApiSchema({ name: `Create${dtoNames.baseName}` })
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  class DefaultCreateDTO extends OmitType(DTOClass, []) {}
 
   return DefaultCreateDTO as Class<C>
 }
 
 /** @internal */
-const defaultCreateOneInput = <DTO, C>(DTOClass: Class<DTO>, InputDTO: Class<C>): Class<CreateOneInputType<C>> => {
-  return CreateOneInputType(DTOClass, InputDTO)
+const defaultCreateOneInput = <C>(dtoNames: DTONames, InputDTO: Class<C>): Class<CreateOneInputType<C>> => {
+  class CO extends CreateOneInputType(InputDTO) {}
+
+  return CO
 }
 
 /**
@@ -58,7 +57,7 @@ export const Creatable =
 
     const {
       CreateDTOClass = defaultCreateDTO(dtoNames, DTOClass),
-      CreateOneInput = defaultCreateOneInput(DTOClass, CreateDTOClass)
+      CreateOneInput = defaultCreateOneInput(dtoNames, CreateDTOClass)
     } = opts
 
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'CreateDTOClass', 'CreateOneInput', 'CreateManyInput')

@@ -1,3 +1,4 @@
+export * from './api-schema.decorator'
 export * from './authorize-filter.decorator'
 export * from './authorizer.decorator'
 export * from './controller-methods.decorator'
