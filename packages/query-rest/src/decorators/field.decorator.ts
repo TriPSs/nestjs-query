@@ -85,7 +85,7 @@ export function Field(
   delete options.skipIsEnum
 
   const decorators = [
-    Expose(),
+    Expose({ name: advancedOptions?.name }),
     ApiProperty({
       type,
       isArray,
