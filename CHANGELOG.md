@@ -1,4 +1,36 @@
  
+## [7.0.1](https://github.com/TriPSs/nestjs-query/compare/v7.0.0...v7.0.1) (2024-09-25)
+
+
+### Bug Fixes
+
+* null condition building for cursor filter ([4eb6e6b](https://github.com/TriPSs/nestjs-query/commit/4eb6e6bf50f48810e8bb5f513e67fb10f004f4a4))
+* **query-graphql:** Fix null condition building for cursor filter ([423f320](https://github.com/TriPSs/nestjs-query/commit/423f320647dd205d9c1c2633100e2f7ae0cf1ca2))
+
+
+
+# [7.0.0](https://github.com/TriPSs/nestjs-query/compare/v6.1.3...v7.0.0) (2024-07-26)
+
+
+### Features
+
+* **query-mongoose:** Dropped support of older versions ([7267967](https://github.com/TriPSs/nestjs-query/commit/72679678dbe9aa39f1e40bee1ed2c314b8c599c3))
+
+
+### BREAKING CHANGES
+
+* **query-mongoose:** Versions 6 and 7 of mongoose are no longer supported
+
+
+
+## [6.1.3](https://github.com/TriPSs/nestjs-query/compare/v6.1.2...v6.1.3) (2024-07-25)
+
+
+
+## [6.1.2](https://github.com/TriPSs/nestjs-query/compare/v6.1.1...v6.1.2) (2024-07-24)
+
+
+
 ## [6.1.1](https://github.com/TriPSs/nestjs-query/compare/v6.1.0...v6.1.1) (2024-06-07)
 
 

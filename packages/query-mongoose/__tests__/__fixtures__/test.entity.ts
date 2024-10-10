@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, SchemaTypes, Types } from 'mongoose'
 
 @Schema()
-export class TestEntity extends Document {
+export class TestEntity extends Document<string> {
   @Prop({ required: true })
   stringType!: string
 
@@ -19,7 +19,7 @@ export class TestEntity extends Document {
   testReference?: Types.ObjectId | string
 
   @Prop([{ type: SchemaTypes.ObjectId, ref: 'TestReference' }])
-  testReferences?: Types.ObjectId[]
+  testReferences?: Types.ObjectId[] | string[]
 }
 
 export const TestEntitySchema = SchemaFactory.createForClass(TestEntity)

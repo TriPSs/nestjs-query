@@ -38,7 +38,7 @@ Yes! You can specify a `pagingStrategy` option to customize how paging is handle
 
 For more information and examples check out the following docs
 * [DTO Paging Strategy](./graphql/dtos.mdx#paging-strategy)
-* [Relations](./graphql/relations.mdx#many-relation)
+* [Relations](./graphql/relations.mdx)
 
 ## Can I use turn off paging?
 
@@ -46,17 +46,17 @@ Yes! You can specify a `pagingStrategy` option to customize how paging is handle
 
 For more information and examples check out the following docs
 * [DTO Paging Strategy](./graphql/dtos.mdx#paging-strategy)
-* [Relations](./graphql/relations.mdx#many-relation)
+* [Relations](./graphql/relations.mdx)
 
 
 ## How can I filter on relations?
 
 You can filter based on relations if you use the `@FilterableRelation` or `@FilterableConnection` decorators when defining your relations.
 
-To read more and see examples read the following docs.
+To read more and see examples, read the following docs.
 
-* [`@FilterableRelation`](./graphql/relations.mdx#filterablerelation-decorator)
-* [`@FilterableConnection`](./graphql/relations.mdx#filterableconnection-decorator)
+* [`@FilterableRelation`](./graphql/relations.mdx#filterablerelation)
+* [`@FilterableConnection`](./graphql/relations.mdx#filterableoffsetconnection)
 
 
 ## Does nestjs-query support specifying complexity.

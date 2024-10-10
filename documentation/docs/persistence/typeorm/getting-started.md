@@ -8,7 +8,7 @@ This package is built using [typeorm](https://typeorm.io/#/) and [@nestjs/typeor
 
 ## Installation
 
-[Installation Docs](../../introduction/install.md#nestjs-queryquery-typeorm)
+[Installation Docs](../../introduction/install.md#ptc-orgnestjs-query-typeorm)
 
 ## Docs
 
