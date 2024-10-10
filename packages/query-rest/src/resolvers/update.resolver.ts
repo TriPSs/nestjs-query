@@ -63,7 +63,7 @@ export const Updateable =
     Object.defineProperty(UOP, 'name', {
       writable: false,
       // set a unique name otherwise DI does not inject a unique one for each request
-      value: `${DTOClass.name}UpdateParams`
+      value: `FindUpdate${DTOClass.name}Args`
     })
 
     class UpdateResolverBase extends BaseClass {

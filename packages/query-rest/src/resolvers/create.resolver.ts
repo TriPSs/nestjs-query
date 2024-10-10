@@ -32,7 +32,7 @@ const defaultCreateDTO = <DTO, C>(dtoNames: DTONames, DTOClass: Class<DTO>): Cla
   Object.defineProperty(DefaultCreateDTO, 'name', {
     writable: false,
     // set a unique name otherwise DI does not inject a unique one for each request
-    value: `Create${DTOClass.name}`
+    value: `Create${DTOClass.name}Args`
   })
 
   return DefaultCreateDTO as Class<C>

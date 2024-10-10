@@ -38,7 +38,7 @@ export const Deletable =
     Object.defineProperty(DOP, 'name', {
       writable: false,
       // set a unique name otherwise DI does not inject a unique one for each request
-      value: `${DTOClass.name}Params`
+      value: `FindDelete${DTOClass.name}Args`
     })
 
     class DeleteResolverBase extends BaseClass {

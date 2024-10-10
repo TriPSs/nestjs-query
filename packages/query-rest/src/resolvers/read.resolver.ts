@@ -69,13 +69,13 @@ export const Readable =
     Object.defineProperty(QA, 'name', {
       writable: false,
       // set a unique name otherwise DI does not inject a unique one for each request
-      value: `${DTOClass.name}QueryArgs`
+      value: `Query${DTOClass.name}Args`
     })
 
     Object.defineProperty(FOP, 'name', {
       writable: false,
       // set a unique name otherwise DI does not inject a unique one for each request
-      value: `${DTOClass.name}Params`
+      value: `Find${DTOClass.name}Args`
     })
 
     class ReadResolverBase extends BaseClass {

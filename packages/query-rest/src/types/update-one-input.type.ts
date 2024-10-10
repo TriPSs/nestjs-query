@@ -23,7 +23,7 @@ export function UpdateOneInputType<DTO, U>(DTOClass: Class<DTO>, UpdateClass: Cl
   Object.defineProperty(UpdateOneInput, 'name', {
     writable: false,
     // set a unique name otherwise DI does not inject a unique one for each request
-    value: `Update${DTOClass.name}`
+    value: `Update${DTOClass.name}Args`
   })
 
   return UpdateOneInput

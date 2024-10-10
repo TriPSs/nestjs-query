@@ -23,7 +23,7 @@ export function CreateOneInputType<DTO, C>(DTOClass: Class<DTO>, InputClass: Cla
   Object.defineProperty(InputClass, 'name', {
     writable: false,
     // set a unique name otherwise DI does not inject a unique one for each request
-    value: `Create${DTOClass.name}`
+    value: `Create${DTOClass.name}Args`
   })
 
   return CreateOneInput
