@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -40,6 +41,9 @@ export class SubTaskEntity {
 
   @UpdateDateColumn()
   updated!: Date
+
+  @DeleteDateColumn()
+  deleted?: Date
 
   @Column({ nullable: true })
   createdBy?: string

@@ -1,4 +1,4 @@
-import { Query } from './query.inteface'
+import { Query } from './query.interface'
 
 export type QueryResolveFields<DTO> = {
   [key in keyof DTO]: QueryResolveTree<

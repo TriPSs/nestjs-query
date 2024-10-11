@@ -1,4 +1,4 @@
-import { Query } from './query.inteface'
+import { Query } from './query.interface'
 
 export interface SelectRelation<DTO> {
   name: string

@@ -1,6 +1,6 @@
 {
   "name": "@ptc-org/nestjs-query-mongoose",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Mongoose adapter for @ptc-org/nestjs-query-core",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
   "bugs": {
