@@ -25,7 +25,7 @@ describe('CountRelationsLoader', () => {
         instance(service)
       )
       const dtos = [{ id: 'dto-1' }, { id: 'dto-2' }]
-      when(service.countRelations(RelationDTO, 'relation', deepEqual(dtos), deepEqual({}))).thenResolve(
+      when(service.countRelations(RelationDTO, 'relation', deepEqual(dtos), deepEqual({}), undefined)).thenResolve(
         new Map([
           [dtos[0], 1],
           [dtos[1], 2]
@@ -45,7 +45,9 @@ describe('CountRelationsLoader', () => {
         instance(service)
       )
       const dtos = [{ id: 'dto-1' }, { id: 'dto-2' }]
-      when(service.countRelations(RelationDTO, 'relation', deepEqual(dtos), deepEqual({}))).thenResolve(new Map([[dtos[0], 1]]))
+      when(service.countRelations(RelationDTO, 'relation', deepEqual(dtos), deepEqual({}), undefined)).thenResolve(
+        new Map([[dtos[0], 1]])
+      )
       return expect(
         countRelationsLoader([
           { dto: dtos[0], filter: {} },
@@ -61,14 +63,20 @@ describe('CountRelationsLoader', () => {
       )
       const dtos: DTO[] = [{ id: 'dto-1' }, { id: 'dto-2' }, { id: 'dto-3' }, { id: 'dto-4' }]
       when(
-        service.countRelations(RelationDTO, 'relation', deepEqual([dtos[0], dtos[2]]), deepEqual({ id: { isNot: null } }))
+        service.countRelations(
+          RelationDTO,
+          'relation',
+          deepEqual([dtos[0], dtos[2]]),
+          deepEqual({ id: { isNot: null } }),
+          undefined
+        )
       ).thenResolve(
         new Map([
           [dtos[0], 1],
           [dtos[2], 2]
         ])
       )
-      when(service.countRelations(RelationDTO, 'relation', deepEqual([dtos[1], dtos[3]]), deepEqual({}))).thenResolve(
+      when(service.countRelations(RelationDTO, 'relation', deepEqual([dtos[1], dtos[3]]), deepEqual({}), undefined)).thenResolve(
         new Map([
           [dtos[1], 3],
           [dtos[3], 4]

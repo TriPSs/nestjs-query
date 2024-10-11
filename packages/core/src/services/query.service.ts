@@ -17,6 +17,7 @@ import {
   ModifyRelationOptions,
   Query,
   QueryOptions,
+  QueryRelationsOptions,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -68,14 +69,16 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO,
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Relation[]>
 
   queryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: DTO[],
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<DTO, Relation[]>>
 
   /**
@@ -110,14 +113,16 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO,
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<number>
 
   countRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO[],
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<DTO, number>>
 
   /**

@@ -91,7 +91,7 @@ export class RelationQueryBuilder<Entity, Relation> {
     this.paramCount = 0
   }
 
-  public select(entity: Entity, query: Query<Relation>): SelectQueryBuilder<Relation> {
+  public select(entity: Entity, query: Query<Relation>, withDeleted?: boolean): SelectQueryBuilder<Relation> {
     const hasRelations = this.filterQueryBuilder.filterHasRelations(query.filter)
 
     let relationBuilder = this.createRelationQueryBuilder(entity)
@@ -104,6 +104,7 @@ export class RelationQueryBuilder<Entity, Relation> {
 
     relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, query.filter, relationBuilder.alias)
     relationBuilder = this.filterQueryBuilder.applyPaging(relationBuilder, query.paging)
+    if (withDeleted) relationBuilder = relationBuilder.withDeleted()
 
     return this.filterQueryBuilder.applySorting(relationBuilder, query.sorting, relationBuilder.alias)
   }
@@ -124,7 +125,6 @@ export class RelationQueryBuilder<Entity, Relation> {
     if (this.relationRepo.metadata.deleteDateColumn?.propertyName && !withDeleted) {
       qb = qb.andWhere(`${qb.alias}.${this.relationRepo.metadata.deleteDateColumn.propertyName} IS NULL`)
     }
-
     return this.relationMeta.batchSelect(qb, entities)
   }
 
