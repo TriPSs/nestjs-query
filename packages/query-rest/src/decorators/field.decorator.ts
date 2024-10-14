@@ -3,6 +3,7 @@ import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
 import { Expose, Transform, Type } from 'class-transformer'
 import {
   ArrayMaxSize,
+  IsDate,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -137,6 +138,8 @@ export function Field(
         decorators.push(IsString())
       } else if (type === Number) {
         decorators.push(IsNumber())
+      } else if (type === Date) {
+        decorators.push(IsDate())
       }
 
       if (returnTypeFunc && typeof type === 'function') {
