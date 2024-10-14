@@ -5,8 +5,10 @@ import {
   ArrayMaxSize,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsObject,
   IsOptional,
+  IsString,
   Max,
   MaxLength,
   Min,
@@ -70,74 +72,86 @@ export function Field(
     advancedOptions = maybeOptions
   }
 
-  const returnedType = returnTypeFunc?.()
-  const isArray = returnedType && Array.isArray(returnedType)
-  const type = isArray ? returnedType[0] : returnedType
+  return <D>(target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<D>) => {
+    const returnedType = !returnTypeFunc
+      ? (target?.constructor?.[METADATA_FACTORY_NAME]?.()[propertyKey]?.type ??
+        Reflect.getMetadata('design:type', target, propertyKey))
+      : returnTypeFunc()
 
-  const options = {
-    required: !advancedOptions?.nullable && advancedOptions?.default === undefined,
-    example: advancedOptions?.default,
-    ...advancedOptions
-  }
+    const isArray = returnedType && Array.isArray(returnedType)
+    const type = isArray ? returnedType[0] : returnedType
 
-  // Remove non-valid options
-  delete options.forceArray
-  delete options.skipIsEnum
+    const options = {
+      required: !advancedOptions?.nullable && advancedOptions?.default === undefined,
+      example: advancedOptions?.default,
+      ...advancedOptions
+    }
 
-  const decorators = [
-    Expose({ name: advancedOptions?.name }),
-    ApiProperty({
-      type,
-      isArray,
-      ...options
-    })
-  ]
+    // Remove non-valid options
+    delete options.forceArray
+    delete options.skipIsEnum
 
-  if (isArray && options.maxItems !== undefined) {
-    decorators.push(ArrayMaxSize(options.maxItems))
-  }
+    const decorators = [
+      Expose({ name: advancedOptions?.name }),
+      ApiProperty({
+        type,
+        isArray,
+        ...options
+      })
+    ]
 
-  if (isArray && advancedOptions?.forceArray) {
-    decorators.push(Transform(({ value }) => (Array.isArray(value) ? value : [value])))
-  }
+    if (isArray && options.maxItems !== undefined) {
+      decorators.push(ArrayMaxSize(options.maxItems))
+    }
 
-  if (options.minLength) {
-    decorators.push(MinLength(options.minLength))
-  }
+    if (isArray && advancedOptions?.forceArray) {
+      decorators.push(Transform(({ value }) => (Array.isArray(value) ? value : [value])))
+    }
 
-  if (options.maxLength) {
-    decorators.push(MaxLength(options.maxLength))
-  }
+    if (options.minLength) {
+      decorators.push(MinLength(options.minLength))
+    }
 
-  if (options.minimum !== undefined) {
-    decorators.push(Min(options.minimum))
-  }
+    if (options.maxLength) {
+      decorators.push(MaxLength(options.maxLength))
+    }
 
-  if (options.maximum !== undefined) {
-    decorators.push(Max(options.maximum))
-  }
+    if (options.minimum !== undefined) {
+      decorators.push(Min(options.minimum))
+    }
 
-  if (options.required) {
-    decorators.push(IsNotEmpty())
-  } else {
-    decorators.push(IsOptional())
-  }
+    if (options.maximum !== undefined) {
+      decorators.push(Max(options.maximum))
+    }
 
-  if (type) {
-    decorators.push(Type(() => type as never))
+    if (options.required) {
+      decorators.push(IsNotEmpty())
+    } else {
+      decorators.push(IsOptional())
+    }
 
-    if (typeof type === 'function') {
-      decorators.push(ValidateNested())
+    if (type) {
+      decorators.push(Type(() => type as never))
 
-      if (!isArray) {
-        decorators.push(IsObject())
+      if (type === String) {
+        decorators.push(IsString())
+      } else if (type === Number) {
+        decorators.push(IsNumber())
+      }
+
+      if (returnTypeFunc && typeof type === 'function') {
+        decorators.push(ValidateNested())
+
+        if (!isArray) {
+          decorators.push(IsObject())
+        }
       }
     }
-  }
 
-  if (options.enum && !advancedOptions?.skipIsEnum) {
-    decorators.push(IsEnum(options.enum))
-  }
+    if (options.enum && !advancedOptions?.skipIsEnum) {
+      decorators.push(IsEnum(options.enum))
+    }
 
-  return applyDecorators(...decorators)
+    return applyDecorators(...decorators)(target, propertyKey, descriptor)
+  }
 }

@@ -64,7 +64,7 @@ export const Readable =
 
     class QA extends QueryArgs {}
 
-    class FOP extends FindOneArgsType(DTOClass) {}
+    class FOP extends FindOneArgsType(FindDTOClass) {}
 
     Object.defineProperty(QA, 'name', {
       writable: false,
