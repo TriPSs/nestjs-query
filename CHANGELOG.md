@@ -1,4 +1,18 @@
  
+# [7.1.0](https://github.com/TriPSs/nestjs-query/compare/v7.0.1...v7.1.0) (2024-10-16)
+
+
+### Bug Fixes
+
+* Adjust package.json configurations and correct filter defaultValue syntax ([cc19f4c](https://github.com/TriPSs/nestjs-query/commit/cc19f4c4f24f5ae872d966f2719b5ca11edbc99a))
+
+
+### Features
+
+* support querying soft deleted relations ([00296c0](https://github.com/TriPSs/nestjs-query/commit/00296c0e656f7865bcf5bb54848a07d53be8d7d7))
+
+
+
 ## [7.0.1](https://github.com/TriPSs/nestjs-query/compare/v7.0.0...v7.0.1) (2024-09-25)
 
 
