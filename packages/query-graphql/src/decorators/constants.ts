@@ -7,5 +7,6 @@ export const AUTHORIZER_KEY = 'nestjs-query:authorizer'
 export const CUSTOM_AUTHORIZER_KEY = 'nestjs-query:custom-authorizer'
 
 export const KEY_SET_KEY = 'nestjs-query:key-set'
+export const SHAREABLE_KEY = 'nestjs-query:shareable'
 
 export const QUERY_OPTIONS_KEY = 'nestjs-query:query-options'

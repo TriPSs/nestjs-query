@@ -3,7 +3,7 @@ import { AggregateResponse, Class, MapReflector, NumberAggregate, TypeAggregate 
 import { GraphQLScalarType } from 'graphql'
 
 import { getGraphqlObjectName } from '../../common'
-import { FilterableFieldDescriptor, getFilterableFields, SkipIf } from '../../decorators'
+import { FilterableFieldDescriptor, getFilterableFields, getShareableDTO, setShareable, SkipIf } from '../../decorators'
 import { getRelatedDTOsMap } from '../../decorators/filterable-field.decorator'
 
 const memoMap = new Map<string, unknown>()
@@ -112,6 +112,8 @@ export type AggregateResponseOpts = { prefix: string }
 export function AggregateResponseType<DTO>(DTOClass: Class<DTO>, opts?: AggregateResponseOpts): Class<AggregateResponse<DTO>> {
   const objName = getGraphqlObjectName(DTOClass, 'Unable to make AggregationResponseType.')
   const prefix = opts?.prefix ?? objName
+  const isShareable = getShareableDTO(DTOClass)
+
   const aggName = `${prefix}AggregateResponse`
   return reflector.memoize(DTOClass, aggName, () => {
     const fields = getFilterableFields(DTOClass)
@@ -151,6 +153,14 @@ export function AggregateResponseType<DTO>(DTOClass: Class<DTO>, opts?: Aggregat
 
       @SkipIf(() => minMaxFields.length === 0, Field(() => MinMaxType, { nullable: true }))
       max?: TypeAggregate<DTO>
+    }
+
+    if(isShareable) {
+      setShareable(AggResponse)
+      setShareable(GroupType)
+      setShareable(CountType)
+      setShareable(FloatType)
+      setShareable(MinMaxType)
     }
 
     return AggResponse

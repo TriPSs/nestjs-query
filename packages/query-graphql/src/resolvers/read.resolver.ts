@@ -31,6 +31,7 @@ export type ReadResolverFromOpts<
 
 export type ReadResolverOpts<DTO> = {
   QueryArgs?: StaticQueryType<DTO, PagingStrategies>
+  idField?: keyof DTO
 } & ResolverOpts &
   QueryArgsTypeOpts<DTO> &
   Pick<ConnectionOptions, 'enableTotalCount'>
@@ -43,6 +44,8 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
   ): Promise<InferConnectionTypeFromStrategy<DTO, PS>>
 
   queryManyToCSV(query: QueryType<DTO, PagingStrategies>, authorizeFilter?: Filter<DTO>): Promise<string>
+
+  queryManyIds(query: QueryType<DTO, PagingStrategies>, authorizeFilter?: Filter<DTO>): Promise<string[]>
 
   findById(id: FindOneArgsType, authorizeFilter?: Filter<DTO>): Promise<DTO | undefined>
 }
@@ -150,6 +153,27 @@ export const Readable =
         const limitValue = getQueryOptions(DTOClass).CSVPageLimit || DEFAULT_QUERY_OPTS.CSVPageLimit
         const res = await this.service.query({ ...query, paging: { ...query.paging, limit: limitValue } })
         return Papa.unparse(res.map((r) => serializeNestedObjects(r)))
+      }
+
+      @ResolverQuery(
+        () => [String],
+        { name: `${readOneQueryName}Ids`, description: opts?.many?.description },
+        commonResolverOpts,
+        {
+          interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)],
+          disabled: !opts.idField
+        },
+        opts.many ?? {}
+      )
+      queryManyIds(
+        @HookArgs() query: QA,
+        @AuthorizerFilter({
+          operationGroup: OperationGroup.READ,
+          many: true
+        })
+        authorizeFilter?: Filter<DTO>
+      ) {
+        return this.service.queryIds(mergeQuery(query, { filter: authorizeFilter }), opts.idField)
       }
     }
 

@@ -1,5 +1,6 @@
 import { ExecutionContext } from '@nestjs/common'
 import Dataloader from 'dataloader'
+import { AsyncResource } from 'node:async_hooks'
 
 const cacheKeyFn = <K>(key: K): string =>
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -26,7 +27,7 @@ export class DataLoaderFactory {
     const nestjsQueryLoaders = this.initializeContext(context)
     if (!nestjsQueryLoaders[name]) {
       // eslint-disable-next-line no-param-reassign
-      nestjsQueryLoaders[name] = new Dataloader(handler, { cacheKeyFn })
+      nestjsQueryLoaders[name] = new Dataloader(AsyncResource.bind(handler), { cacheKeyFn })
     }
     return nestjsQueryLoaders[name] as Dataloader<K, V>
   }

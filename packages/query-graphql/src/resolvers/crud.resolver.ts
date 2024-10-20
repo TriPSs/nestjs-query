@@ -1,18 +1,19 @@
+import { Resolver } from '@nestjs/graphql'
 import { Class, DeepPartial, QueryService } from '@rezonate/nestjs-query-core'
 
 import { mergeBaseResolverOpts } from '../common'
 import { BaseResolverOptions } from '../decorators/resolver-method.decorator'
 import { ConnectionOptions, PagingStrategies } from '../types'
+import { AggregateableByTime, AggregateByTimeResolver } from './aggregate.by.time.resolver'
 import { Aggregateable, AggregateResolver, AggregateResolverOpts } from './aggregate.resolver'
 import { Creatable, CreateResolver, CreateResolverOpts } from './create.resolver'
-import { DeleteResolver, DeleteResolverOpts } from './delete.resolver'
+import { Deletable, DeleteResolver, DeleteResolverOpts } from './delete.resolver'
 import { Readable, ReadResolverFromOpts, ReadResolverOpts } from './read.resolver'
 import { Referenceable, ReferenceResolverOpts } from './reference.resolver'
 import { Relatable } from './relations'
 import { RelatableOpts } from './relations/relations.resolver'
-import { MergePagingStrategyOpts, ResolverClass } from './resolver.interface'
+import { BaseServiceResolver, MergePagingStrategyOpts, ResolverClass, ServiceResolver } from './resolver.interface'
 import { Updateable, UpdateResolver, UpdateResolverOpts } from './update.resolver'
-import { AggregateableByTime, AggregateByTimeResolver } from './aggregate.by.time.resolver'
 
 export interface CRUDResolverOpts<
   DTO,
@@ -126,15 +127,23 @@ export const CRUDResolver = <
 >(
   DTOClass: Class<DTO>,
   opts: CRUDResolverOpts<DTO, C, U, R, PS> = {}
-): ResolverClass<DTO, QueryService<DTO, C, U>, CRUDResolver<DTO, C, U, MergePagingStrategyOpts<DTO, R, PS>>> => {
+) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  @Resolver(() => DTOClass, { isAbstract: true })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  class BaseResolver extends BaseServiceResolver<DTO, any> {}
+
   const referencable = Referenceable(DTOClass, opts.referenceBy ?? {})
   const relatable = Relatable(DTOClass, extractRelatableOpts(opts))
-  const aggregateable = Aggregateable(DTOClass, extractAggregateResolverOpts(opts))
-  const aggregateableByTime = AggregateableByTime(DTOClass, extractAggregateResolverOpts(opts))
-  const creatable = Creatable(DTOClass, extractCreateResolverOpts(opts))
-  const readable = Readable(DTOClass, extractReadResolverOpts(opts))
-  const updatable = Updateable(DTOClass, extractUpdateResolverOpts(opts))
-  const deleteResolver = DeleteResolver(DTOClass, extractDeleteResolverOpts(opts))
+  const aggregateable = opts.aggregate?.disabled ? null : Aggregateable(DTOClass, extractAggregateResolverOpts(opts))
+  const aggregateableByTime = opts.aggregate?.disabled ? null : AggregateableByTime(DTOClass, extractAggregateResolverOpts(opts))
+  const creatable = opts.create?.disabled ? null : Creatable(DTOClass, extractCreateResolverOpts(opts))
+  const readable = opts.read?.disabled ? null : Readable(DTOClass, extractReadResolverOpts(opts))
+  const updatable = opts.update?.disabled ? null : Updateable(DTOClass, extractUpdateResolverOpts(opts))
+  const deleteable = opts.delete?.disabled ? null : Deletable(DTOClass, extractDeleteResolverOpts(opts))
 
-  return referencable(relatable(aggregateable(aggregateableByTime(creatable(readable(updatable(deleteResolver)))))))
+  return [deleteable, updatable, readable, creatable, aggregateableByTime, aggregateable, relatable, referencable].reduce(
+    (CurrResolver, action) => (action ? action(CurrResolver) : CurrResolver),
+    BaseResolver
+  )
 }

@@ -89,6 +89,14 @@ export class TypeOrmQueryService<Entity>
     return this.filterQueryBuilder.select(query, repo).getMany()
   }
 
+  async queryIds(query: Query<Entity>, idField: keyof Entity): Promise<string[]> {
+    const result = (await this.filterQueryBuilder.select(query).limit(10000).select(idField.toString()).getRawMany()) as Record<
+      keyof Entity,
+      string
+    >[]
+    return result.map((item) => item[idField] as string)
+  }
+
   async quicklyCount() {
     const result = (await this.repo.query('SELECT reltuples AS estimate FROM pg_class where relname = $1', [
       this.repo.metadata.tableName

@@ -3,7 +3,7 @@ import { Class, SortDirection, SortField, SortNulls, ValueReflector } from '@rez
 import { IsEnum, IsIn } from 'class-validator'
 
 import { getGraphqlObjectName } from '../../common'
-import { getFilterableFields } from '../../decorators'
+import { getFilterableFields, getShareableDTO, setShareable } from '../../decorators'
 import { IsUndefined } from '../validators'
 import {
   getFilterableRelationFieldsNames
@@ -25,6 +25,7 @@ export function getOrCreateSortType<T>(TClass: Class<T>): Class<SortField<T>> {
   return reflector.memoize(TClass, () => {
     const prefix = getGraphqlObjectName(TClass, 'Unable to make SortType.')
     const fields = getFilterableFields(TClass)
+    const isShareable = getShareableDTO(TClass)
 
     if (!fields.length) {
       throw new Error(`No fields found to create SortType for ${TClass.name}. Ensure fields are annotated with @FilterableField`)
@@ -56,6 +57,8 @@ export function getOrCreateSortType<T>(TClass: Class<T>): Class<SortField<T>> {
       @IsEnum(SortNulls)
       nulls?: SortNulls
     }
+
+    if (isShareable) setShareable(Sort)
 
     return Sort
   })

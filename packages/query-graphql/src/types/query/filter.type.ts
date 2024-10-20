@@ -5,13 +5,18 @@ import { ValidateNested } from 'class-validator'
 import { upperCaseFirst } from 'upper-case-first'
 
 import { getDTONames, getGraphqlObjectName } from '../../common'
-import { FilterableFieldDescriptor, getFilterableFields, getQueryOptions, getRelations, SkipIf } from '../../decorators'
+import {
+  FilterableFieldDescriptor,
+  getFilterableFields,
+  getQueryOptions,
+  getRelations,
+  getShareableDTO, setShareable,
+  SkipIf
+} from '../../decorators'
 import { HasRequiredFilter } from '../../decorators/has-required.filter'
 import { ResolverRelation } from '../../resolvers'
 import { createFilterComparisonType } from './field-comparison'
 import { isInAllowedList } from './helpers'
-
-const reflector = new MapReflector('nestjs-query:filter-type')
 
 export type FilterTypeOptions = {
   allowedBooleanExpressions?: ('and' | 'or')[]
@@ -94,6 +99,7 @@ function getOrCreateFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
   if (cache) return cache
 
   const fields = getFilterableFields(TClass)
+  const isShareable = getShareableDTO(TClass)
   const hasRequiredFilters = fields.some((f) => f.advancedOptions?.filterRequired === true)
   const { allowedBooleanExpressions, disableFreeTextQuery }: FilterTypeOptions = getQueryOptions(TClass) ?? {}
   const isNotAllowedComparison = (val: 'and' | 'or') => !isInAllowedList(allowedBooleanExpressions, val)
@@ -116,6 +122,8 @@ function getOrCreateFilterType<T>(TClass: Class<T>): FilterConstructor<T> {
     @Type(() => GraphQLFilter)
     or?: Filter<T>[]
   }
+
+  if (isShareable) setShareable(GraphQLFilter)
 
   filterObjCache.set(name, GraphQLFilter)
   handleFilterFields(TClass, name, fields)

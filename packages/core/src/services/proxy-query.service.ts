@@ -198,6 +198,10 @@ export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> 
     return this.proxied.query(query)
   }
 
+  queryIds(query: Query<DTO>, idField: keyof DTO): Promise<string[]> {
+    return this.proxied.queryIds(query, idField)
+  }
+
   aggregate(filter: Filter<DTO>, query: AggregateQuery<DTO>): Promise<AggregateResponse<DTO>[]> {
     return this.proxied.aggregate(filter, query)
   }
