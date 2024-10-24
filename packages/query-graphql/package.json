@@ -1,16 +1,24 @@
 {
   "name": "@ptc-org/nestjs-query-graphql",
-  "version": "7.0.1",
+  "version": "7.1.0",
   "description": "Nestjs graphql query adapter",
-  "author": "doug-martin <doug@dougamartin.com>",
-  "homepage": "https://github.com/tripss/nestjs-query#readme",
   "keywords": [
     "graphql",
     "crud",
     "nestjs",
     "dataloader"
   ],
+  "homepage": "https://github.com/tripss/nestjs-query#readme",
+  "bugs": {
+    "url": "https://github.com/tripss/nestjs-query/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tripss/nestjs-query.git",
+    "directory": "packages/query-graphql"
+  },
   "license": "MIT",
+  "author": "doug-martin <doug@dougamartin.com>",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "directories": {
@@ -20,17 +28,6 @@
   "files": [
     "src/**"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tripss/nestjs-query.git",
-    "directory": "packages/query-graphql"
-  },
-  "bugs": {
-    "url": "https://github.com/tripss/nestjs-query/issues"
-  },
   "dependencies": {
     "dataloader": "^2.2.2",
     "graphql-fields": "^2.0.3",
@@ -50,5 +47,8 @@
     "graphql": "^16.0.0",
     "graphql-subscriptions": "^2.0.0",
     "ts-morph": "^19.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

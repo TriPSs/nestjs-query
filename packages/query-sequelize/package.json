@@ -1,10 +1,18 @@
 {
   "name": "@ptc-org/nestjs-query-sequelize",
-  "version": "7.0.1",
+  "version": "7.1.0",
   "description": "Sequelize adapter for @ptc-org/nestjs-query-core",
-  "author": "doug-martin <doug@dougamartin.com>",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
+  "bugs": {
+    "url": "https://github.com/tripss/nestjs-query/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tripss/nestjs-query.git",
+    "directory": "packages/query-sequelize"
+  },
   "license": "MIT",
+  "author": "doug-martin <doug@dougamartin.com>",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "directories": {
@@ -14,9 +22,6 @@
   "files": [
     "src/**"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
     "camel-case": "^4.1.2",
     "lodash.pick": "4.4.0",
@@ -28,12 +33,7 @@
     "sequelize": "^6.5.0",
     "sequelize-typescript": "^1.1.0 || ^2.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tripss/nestjs-query.git",
-    "directory": "packages/query-sequelize"
-  },
-  "bugs": {
-    "url": "https://github.com/tripss/nestjs-query/issues"
+  "publishConfig": {
+    "access": "public"
   }
 }
