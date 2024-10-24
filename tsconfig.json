@@ -13,7 +13,7 @@
     "module": "esnext",
     "target": "ES2021",
     "typeRoots": ["node_modules/@types", "tools/@types"],
-    "lib": ["ES2021", "dom"],
+    "lib": ["ES2021"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",

@@ -6,7 +6,7 @@ import {
   AggregateResponse,
   GroupBy
 } from '@ptc-org/nestjs-query-core'
-import { camelCase } from 'camel-case'
+import { camelCase } from 'change-case'
 import { Repository, SelectQueryBuilder } from 'typeorm'
 import { DriverUtils } from 'typeorm/driver/DriverUtils'
 

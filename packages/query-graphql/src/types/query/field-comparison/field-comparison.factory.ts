@@ -9,10 +9,9 @@ import {
   ReturnTypeFunc,
   ReturnTypeFuncValue
 } from '@nestjs/graphql'
-import { Class, FilterComparisonOperators, FilterFieldComparison, isNamed } from '@ptc-org/nestjs-query-core'
+import { upperCaseFirst, Class, FilterComparisonOperators, FilterFieldComparison, isNamed } from '@ptc-org/nestjs-query-core'
 import { Type } from 'class-transformer'
 import { IsBoolean, IsDate, IsInt, IsNumber, IsOptional, ValidateNested } from 'class-validator'
-import { upperCaseFirst } from 'upper-case-first'
 
 import { getGraphqlEnumMetadata } from '../../../common'
 import { composeDecorators, SkipIf } from '../../../decorators'
