@@ -14,6 +14,7 @@ export const refresh = async (connection: Connection): Promise<void> => {
   const todoRepo = connection.getRepository(TodoItemEntity)
   const subTaskRepo = connection.getRepository(SubTaskEntity)
   const tagsRepo = connection.getRepository(TagEntity)
+  const jsonTaskRepo = connection.getRepository('json_task')
 
   const yesterdayOrTomorrow = new Date()
   if (yesterdayOrTomorrow.getDate() === 1) {
@@ -40,6 +41,8 @@ export const refresh = async (connection: Connection): Promise<void> => {
       tags: [questionTag, blockedTag]
     }
   ])
+
+  await jsonTaskRepo.save(todoItems.map((todo, i) => ({ title: todo.title, display: { name: `JsonTask-${i}` } })))
 
   const subTasksEntities = todoItems.reduce(
     (subTasks, todo) => [

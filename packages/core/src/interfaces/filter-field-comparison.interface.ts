@@ -181,7 +181,55 @@ export interface StringFieldComparisons extends CommonFieldComparisonType<string
   notILike?: string
 }
 
-type BuiltInTypes = boolean | string | number | Date | RegExp | bigint | symbol | null | undefined
+export interface JSONbFieldComparisons extends CommonFieldComparisonType<object> {
+  /**
+   * Check if JSONb field contains a value.
+   *
+   * ```ts
+   * // field @> '{"key": "value"}'
+   * { field: { contains: { key: 'value' } } }
+   * ```
+   */
+  contains?: object
+  /**
+   * Check if JSONb field is contained by a value.
+   *
+   * ```ts
+   * // field <@ '{"key": "value"}'
+   * { field: { containedBy: { key: 'value' } } }
+   * ```
+   */
+  containedBy?: object
+  /**
+   * Check if JSONb field has a key.
+   *
+   * ```ts
+   * // field ? 'key'
+   * { field: { hasKey: 'key' } }
+   * ```
+   */
+  hasKey?: string
+  /**
+   * Check if JSONb field has any of the keys.
+   *
+   * ```ts
+   * // field ?| ['key1', 'key2']
+   * { field: { hasAnyKeys: ['key1', 'key2'] } }
+   * ```
+   */
+  hasAnyKeys?: string[]
+  /**
+   * Check if JSONb field has all of the keys.
+   *
+   * ```ts
+   * // field ?& ['key1', 'key2']
+   * { field: { hasAllKeys: ['key1', 'key2'] } }
+   * ```
+   */
+  hasAllKeys?: string[]
+}
+
+type BuiltInTypes = boolean | string | number | Date | RegExp | bigint | symbol | object | null | undefined
 
 /**
  * Type for field comparisons.
@@ -191,8 +239,11 @@ type BuiltInTypes = boolean | string | number | Date | RegExp | bigint | symbol 
  * * all other types use [[CommonFieldComparisonType]]
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-type FilterFieldComparisonType<FieldType, IsKeys extends true | false> = FieldType extends string | String
-  ? StringFieldComparisons // eslint-disable-next-line @typescript-eslint/ban-types
+type FilterFieldComparisonType<FieldType, IsKeys extends true | false> = 
+FieldType extends string | String
+  ? StringFieldComparisons 
+  : FieldType extends object
+  ? JSONbFieldComparisons // eslint-disable-next-line @typescript-eslint/ban-types
   : FieldType extends boolean | Boolean
     ? BooleanFieldComparisons
     : FieldType extends number | Date | RegExp | bigint | BuiltInTypes[] | symbol

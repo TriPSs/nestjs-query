@@ -5,7 +5,7 @@ import { SubTaskEntity } from '../src/sub-task/sub-task.entity'
 import { TagEntity } from '../src/tag/tag.entity'
 import { TodoItemEntity } from '../src/todo-item/todo-item.entity'
 
-const tables = ['todo_item', 'sub_task', 'tag']
+const tables = ['todo_item', 'sub_task', 'tag', 'json_task']
 export const truncate = async (connection: Connection): Promise<void> => executeTruncate(connection, tables)
 
 export const refresh = async (connection: Connection): Promise<void> => {
@@ -14,6 +14,7 @@ export const refresh = async (connection: Connection): Promise<void> => {
   const todoRepo = connection.getRepository(TodoItemEntity)
   const subTaskRepo = connection.getRepository(SubTaskEntity)
   const tagsRepo = connection.getRepository(TagEntity)
+  const jsonTaskRepo = connection.getRepository('json_task')
 
   const urgentTag = await tagsRepo.save({ name: 'Urgent' })
   const homeTag = await tagsRepo.save({ name: 'Home' })
@@ -32,6 +33,8 @@ export const refresh = async (connection: Connection): Promise<void> => {
       tags: [questionTag, blockedTag]
     }
   ])
+
+  await jsonTaskRepo.save(todoItems.map((todo, i) => ({ title: todo.title, display: { name: `JsonTask-${i}` } })))
 
   await subTaskRepo.save(
     todoItems.reduce(
