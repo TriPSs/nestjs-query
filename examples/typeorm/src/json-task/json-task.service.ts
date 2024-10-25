@@ -14,7 +14,7 @@ export class JsonTaskService extends NoOpQueryService<JsonTaskDto, JsonTaskEntit
     const response = await this.queryService.query({
       filter: {
         display: {
-          contains: { name: 'JsonTask-1' }
+          contains: { name: 'JsonTask-4' }
         }
       }
     })

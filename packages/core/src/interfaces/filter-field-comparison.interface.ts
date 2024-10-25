@@ -239,20 +239,19 @@ type BuiltInTypes = boolean | string | number | Date | RegExp | bigint | symbol 
  * * all other types use [[CommonFieldComparisonType]]
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-type FilterFieldComparisonType<FieldType, IsKeys extends true | false> = 
-FieldType extends string | String
-  ? StringFieldComparisons 
+type FilterFieldComparisonType<FieldType, IsKeys extends true | false> = FieldType extends string
+  ? StringFieldComparisons
   : FieldType extends object
-  ? JSONbFieldComparisons // eslint-disable-next-line @typescript-eslint/ban-types
-  : FieldType extends boolean | Boolean
-    ? BooleanFieldComparisons
-    : FieldType extends number | Date | RegExp | bigint | BuiltInTypes[] | symbol
-      ? CommonFieldComparisonType<FieldType>
-      : FieldType extends Array<infer U>
-        ? CommonFieldComparisonType<U> | Filter<U> // eslint-disable-next-line @typescript-eslint/ban-types
-        : IsKeys extends true
-          ? CommonFieldComparisonType<FieldType> & StringFieldComparisons & Filter<FieldType>
-          : CommonFieldComparisonType<FieldType> | Filter<FieldType>
+    ? JSONbFieldComparisons // eslint-disable-next-line @typescript-eslint/ban-types
+    : FieldType extends boolean | Boolean
+      ? BooleanFieldComparisons
+      : FieldType extends number | Date | RegExp | bigint | BuiltInTypes[] | symbol
+        ? CommonFieldComparisonType<FieldType>
+        : FieldType extends Array<infer U>
+          ? CommonFieldComparisonType<U> | Filter<U> // eslint-disable-next-line @typescript-eslint/ban-types
+          : IsKeys extends true
+            ? CommonFieldComparisonType<FieldType> & StringFieldComparisons & Filter<FieldType>
+            : CommonFieldComparisonType<FieldType> | Filter<FieldType>
 
 /**
  * Type for field comparisons.

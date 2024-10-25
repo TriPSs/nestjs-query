@@ -5,7 +5,7 @@ import { Connection } from 'typeorm'
 
 import { AppModule } from '../src/app.module'
 import { refresh } from './fixtures'
-import { edgeNodes, jsonTaskFields, pageInfoField } from './graphql-fragments'
+import { edgeNodes, jsonTaskFields } from './graphql-fragments'
 
 describe('JsonTask (typeorm - e2e)', () => {
   let app: INestApplication
@@ -44,11 +44,12 @@ describe('JsonTask (typeorm - e2e)', () => {
           }
       }`
       })
+      .expect(200)
       .then((response) => {
-        console.log(response.body.data.jsonTasks.edges[0])
-      })
-      .catch((error) => {
-        console.error(error)
+        expect(response.body.data.jsonTasks.edges[0].node).toEqual({
+          title: 'How to create item With Sub Tasks',
+          display: { name: 'JsonTask-4' }
+        })
       }))
 
   afterAll(async () => {
