@@ -15,12 +15,13 @@ const guards = [AuthGuard]
   imports: [
     NestjsQueryGraphQLModule.forFeature({
       imports: [NestjsQueryTypeOrmModule.forFeature([JsonTaskEntity])],
+      services: [JsonTaskService],
       resolvers: [
         {
           // ServiceClass: JsonTaskService,
           DTOClass: JsonTaskDto,
           EntityClass: JsonTaskEntity,
-          // ServiceClass: JsonTaskService,
+          ServiceClass: JsonTaskService,
           // CreateDTOClass: JsonTaskCreateDTO,
           // UpdateDTOClass: JsonTaskUpdateDTO,
           enableAggregate: true,

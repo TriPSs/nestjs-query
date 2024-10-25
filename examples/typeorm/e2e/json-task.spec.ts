@@ -32,7 +32,7 @@ describe('JsonTask (typeorm - e2e)', () => {
 
   afterAll(() => refresh(app.get(Connection)))
 
-  it(`should allow querying on tags`, () =>
+  it(`should allow querying`, () =>
     request(app.getHttpServer())
       .post('/graphql')
       .send({
@@ -45,7 +45,7 @@ describe('JsonTask (typeorm - e2e)', () => {
       }`
       })
       .then((response) => {
-        console.log(response.body)
+        console.log(response.body.data.jsonTasks.edges[0])
       })
       .catch((error) => {
         console.error(error)
