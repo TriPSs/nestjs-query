@@ -109,7 +109,7 @@
     "ts-jest": "29.1.5",
     "ts-loader": "9.5.1",
     "ts-mockito": "2.6.1",
-    "ts-morph": "^22.0.0",
+    "ts-morph": "21",
     "ts-node": "10.9.2",
     "tsconfig-extends": "1.0.1",
     "tsconfig-paths": "4.2.0",

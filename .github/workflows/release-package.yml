@@ -19,33 +19,45 @@ jobs:
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
-      - name: publish core
-        working-directory: ./packages/core
-        run: npm publish
+      # - name: alter version
+      #   run: |
+      #     npm version patch
+      #     git push --follow-tags
+      - name: install dependencies
+        run: yarn install
+      - name: build packages
+        run: yarn nx run-many --target=build --all
+      - name: publish packages
+        run: yarn nx run-many --target=publish --all
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - name: publish query-graphql
-        working-directory: ./packages/query-graphql
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - name: publish query-mongoose
-        working-directory: ./packages/query-mongoose
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - name: publish query-sequelize
-        working-directory: ./packages/query-sequelize
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - name: publish query-typegoose
-        working-directory: ./packages/query-typegoose
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - name: publish query-typeorm
-        working-directory: ./packages/query-typeorm
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: publish core
+      #   working-directory: ./packages/core
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: publish query-graphql
+      #   working-directory: ./packages/query-graphql
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: publish query-mongoose
+      #   working-directory: ./packages/query-mongoose
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: publish query-sequelize
+      #   working-directory: ./packages/query-sequelize
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: publish query-typegoose
+      #   working-directory: ./packages/query-typegoose
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: publish query-typeorm
+      #   working-directory: ./packages/query-typeorm
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
