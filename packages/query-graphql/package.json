@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-query-graphql",
+  "name": "@souagrosolucoes/nestjs-query-graphql",
   "version": "7.1.0",
   "description": "Nestjs graphql query adapter",
   "keywords": [

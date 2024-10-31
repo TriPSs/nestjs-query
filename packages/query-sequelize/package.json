@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-query-sequelize",
+  "name": "@souagrosolucoes/nestjs-query-sequelize",
   "version": "7.1.0",
   "description": "Sequelize adapter for @ptc-org/nestjs-query-core",
   "homepage": "https://github.com/tripss/nestjs-query#readme",

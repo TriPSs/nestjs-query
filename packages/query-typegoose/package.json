@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-query-typegoose",
+  "name": "@souagrosolucoes/nestjs-query-typegoose",
   "version": "7.1.0",
   "description": "Typegoose adapter for @ptc-org/nestjs-query-core",
   "homepage": "https://github.com/tripss/nestjs-query#readme",

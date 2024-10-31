@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-query-core",
+  "name": "@souagrosolucoes/nestjs-query-core",
   "version": "7.1.0",
   "description": "Base query package",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
