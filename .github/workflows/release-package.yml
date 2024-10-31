@@ -1,8 +1,11 @@
 name: Node.js Package
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - master
+      - releases/*
+  pull_request:
 
 jobs:
   publish-gpr:
