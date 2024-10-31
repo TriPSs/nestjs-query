@@ -90,6 +90,8 @@ jobs:
 
       - name: Publish
         run: yarn nx run-many --target=publish --all
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push GIT
         run: git push --follow-tags origin ${{ needs.prepare-env.outputs.GITHUB_HEAD_REF }}
