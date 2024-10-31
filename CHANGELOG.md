@@ -1,4 +1,8 @@
  
+## [7.1.10](https://github.com/souagrosolucoes/nestjs-query/compare/v7.1.0...v7.1.10) (2024-10-31)
+
+
+
 # [7.1.0](https://github.com/TriPSs/nestjs-query/compare/v7.0.1...v7.1.0) (2024-10-16)
 
 
