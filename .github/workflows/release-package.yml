@@ -34,8 +34,13 @@ jobs:
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - name: publish query-typeorm
-        working-directory: ./packages/query-typeorm
+      - name: publish query-sequelize
+        working-directory: ./packages/query-sequelize
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: publish query-typegoose
+        working-directory: ./packages/query-typegoose
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

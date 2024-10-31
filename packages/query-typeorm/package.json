@@ -1,6 +1,6 @@
 {
   "name": "@souagrosolucoes/nestjs-query-typeorm",
-  "version": "7.1.1",
+  "version": "7.1.0",
   "description": "Typeorm adapter for @ptc-org/nestjs-query-core",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
   "bugs": {
