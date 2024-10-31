@@ -1,5 +1,5 @@
 {
-  "name": "@ptc-org/nestjs-query-typeorm",
+  "name": "nestjs-query-typeorm",
   "version": "7.1.0",
   "description": "Typeorm adapter for @ptc-org/nestjs-query-core",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
@@ -37,6 +37,7 @@
     "typeorm": "^0.3.15"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   }
 }

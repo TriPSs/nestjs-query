@@ -1,5 +1,5 @@
 {
-  "name": "@ptc-org/nestjs-query-core",
+  "name": "nestjs-query-core",
   "version": "7.1.0",
   "description": "Base query package",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
@@ -31,6 +31,7 @@
     "class-transformer": "^0.5"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   }
 }

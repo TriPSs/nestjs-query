@@ -1,5 +1,5 @@
 {
-  "name": "@ptc-org/nestjs-query-graphql",
+  "name": "nestjs-query-graphql",
   "version": "7.1.0",
   "description": "Nestjs graphql query adapter",
   "keywords": [
@@ -49,6 +49,7 @@
     "ts-morph": "^19.0.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   }
 }

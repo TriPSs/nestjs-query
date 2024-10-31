@@ -1,5 +1,5 @@
 {
-  "name": "@ptc-org/nestjs-query-sequelize",
+  "name": "nestjs-query-sequelize",
   "version": "7.1.0",
   "description": "Sequelize adapter for @ptc-org/nestjs-query-core",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
@@ -34,6 +34,7 @@
     "sequelize-typescript": "^1.1.0 || ^2.0.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   }
 }

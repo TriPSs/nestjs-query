@@ -1,5 +1,5 @@
 {
-  "name": "@ptc-org/nestjs-query-typegoose",
+  "name": "nestjs-query-typegoose",
   "version": "7.1.0",
   "description": "Typegoose adapter for @ptc-org/nestjs-query-core",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
@@ -36,6 +36,7 @@
     "mongoose": "^6.5.0 || ^7.0.3 || ^8.0.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   }
 }
