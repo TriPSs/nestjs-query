@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { Assembler, AssemblerDeserializer, AssemblerSerializer, ClassTransformerAssembler } from '@ptc-org/nestjs-query-core'
+import { Assembler, AssemblerDeserializer, AssemblerSerializer, ClassTransformerAssembler } from '@souagrosolucoes/nestjs-query-core'
 import * as classTransformer from 'class-transformer'
 
 describe('ClassTransformerAssembler', () => {

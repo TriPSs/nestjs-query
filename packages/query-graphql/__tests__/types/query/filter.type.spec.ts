@@ -11,7 +11,7 @@ import {
   registerEnumType,
   Resolver
 } from '@nestjs/graphql'
-import { Class, Filter } from '@ptc-org/nestjs-query-core'
+import { Class, Filter } from '@souagrosolucoes/nestjs-query-core'
 import {
   CursorConnection,
   DeleteFilterType,
@@ -27,7 +27,7 @@ import {
   SubscriptionFilterType,
   UnPagedRelation,
   UpdateFilterType
-} from '@ptc-org/nestjs-query-graphql'
+} from '@souagrosolucoes/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
 
 import { generateSchema } from '../../__fixtures__'

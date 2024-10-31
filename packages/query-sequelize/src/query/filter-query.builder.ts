@@ -6,7 +6,7 @@ import {
   Paging,
   Query,
   SortField
-} from '@ptc-org/nestjs-query-core'
+} from '@souagrosolucoes/nestjs-query-core'
 import sequelize, {
   Association,
   CountOptions,

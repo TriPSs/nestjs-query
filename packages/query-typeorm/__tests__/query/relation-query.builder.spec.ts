@@ -1,4 +1,4 @@
-import { Class, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
+import { Class, Query, SortDirection, SortNulls } from '@souagrosolucoes/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { DataSource } from 'typeorm'
 

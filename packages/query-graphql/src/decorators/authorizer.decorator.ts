@@ -1,4 +1,4 @@
-import { Class, MetaValue, ValueReflector } from '@ptc-org/nestjs-query-core'
+import { Class, MetaValue, ValueReflector } from '@souagrosolucoes/nestjs-query-core'
 
 import { Authorizer, AuthorizerOptions, createDefaultAuthorizer, CustomAuthorizer } from '../auth'
 import { AUTHORIZER_KEY, CUSTOM_AUTHORIZER_KEY } from './constants'

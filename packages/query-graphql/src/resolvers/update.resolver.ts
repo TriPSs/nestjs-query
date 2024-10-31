@@ -8,7 +8,7 @@ import {
   mergeFilter,
   QueryService,
   UpdateManyResponse
-} from '@ptc-org/nestjs-query-core'
+} from '@souagrosolucoes/nestjs-query-core'
 import omit from 'lodash.omit'
 
 import { OperationGroup } from '../auth'

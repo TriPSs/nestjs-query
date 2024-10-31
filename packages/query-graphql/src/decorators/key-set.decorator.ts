@@ -1,4 +1,4 @@
-import { Class, MetaValue, ValueReflector } from '@ptc-org/nestjs-query-core'
+import { Class, MetaValue, ValueReflector } from '@souagrosolucoes/nestjs-query-core'
 
 import { KEY_SET_KEY } from './constants'
 

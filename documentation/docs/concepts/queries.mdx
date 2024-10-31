@@ -5,8 +5,8 @@ title: Queries
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-The core of `nestjs-query` is the `Query`, it is used by `@ptc-org/nestjs-query-graphql`, `@ptc-org/nestjs-query-typeorm`
-`@ptc-org/nestjs-query-sequelize`, `@ptc-org/nestjs-query-mongoose` and `@ptc-org/nestjs-query-typegoose`.
+The core of `nestjs-query` is the `Query`, it is used by `@souagrosolucoes/nestjs-query-graphql`, `@souagrosolucoes/nestjs-query-typeorm`
+`@souagrosolucoes/nestjs-query-sequelize`, `@souagrosolucoes/nestjs-query-mongoose` and `@souagrosolucoes/nestjs-query-typegoose`.
 
 The query interface contains three optional fields.
 
@@ -39,7 +39,7 @@ Lets create a simple filter that would allow us to filter for titles equal to `'
 ### Simple
 
 ```ts
-import { Query } from '@ptc-org/nestjs-query-core';
+import { Query } from '@souagrosolucoes/nestjs-query-core';
 
 const q: Query<MyClass> = {
   filter: {
@@ -53,7 +53,7 @@ const q: Query<MyClass> = {
 You can also filter on multiple fields.
 
 ```ts
-import { Query } from '@ptc-org/nestjs-query-core';
+import { Query } from '@souagrosolucoes/nestjs-query-core';
 
 const q: Query<MyClass> = {
   filter: {
@@ -70,7 +70,7 @@ const q: Query<MyClass> = {
 If you include multiple comparisons for a single field they will be ORed together.
 
 ```ts
-import { Query } from '@ptc-org/nestjs-query-core';
+import { Query } from '@souagrosolucoes/nestjs-query-core';
 
 const q: Query<MyClass> = {
   filter: {
@@ -201,7 +201,7 @@ The `sorting` field is an array of object containing:
 <TabItem value="single">
 
 ```ts
-// import { SortDirection } from '@ptc-org/nestjs-query-core';
+// import { SortDirection } from '@souagrosolucoes/nestjs-query-core';
 
 const q: Query<MyClass> = {
   sorting: [{ field: 'title', direction: SortDirection.DESC }],
@@ -212,7 +212,7 @@ const q: Query<MyClass> = {
 <TabItem value="multi">
 
 ```ts
-// import { SortDirection } from '@ptc-org/nestjs-query-core';
+// import { SortDirection } from '@souagrosolucoes/nestjs-query-core';
 
 const q: Query<MyClass> = {
   sorting: [

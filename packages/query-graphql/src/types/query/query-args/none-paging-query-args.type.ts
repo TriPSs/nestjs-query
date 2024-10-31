@@ -1,5 +1,5 @@
 import { ArgsType, Field } from '@nestjs/graphql'
-import { Class, Filter, Query, SortField } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, Query, SortField } from '@souagrosolucoes/nestjs-query-core'
 import { Type } from 'class-transformer'
 import { ValidateNested } from 'class-validator'
 

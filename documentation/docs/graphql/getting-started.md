@@ -2,7 +2,7 @@
 title: Getting Started
 ---
 
-The `@ptc-org/nestjs-query-graphql` package provided base `Resolvers` and graphql type classes to make creating code-first graphql CRUD applications easy.
+The `@souagrosolucoes/nestjs-query-graphql` package provided base `Resolvers` and graphql type classes to make creating code-first graphql CRUD applications easy.
 
 ## Installation
 

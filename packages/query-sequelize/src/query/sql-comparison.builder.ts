@@ -1,4 +1,4 @@
-import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
+import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@souagrosolucoes/nestjs-query-core'
 import { Op, Rangable, WhereOptions } from 'sequelize'
 
 /**

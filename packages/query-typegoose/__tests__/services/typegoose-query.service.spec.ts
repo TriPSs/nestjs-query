@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle,@typescript-eslint/no-unsafe-return */
 import { InjectModel, TypegooseModule } from '@m8a/nestjs-typegoose'
 import { Test, TestingModule } from '@nestjs/testing'
-import { FindRelationOptions, SortDirection } from '@ptc-org/nestjs-query-core'
+import { FindRelationOptions, SortDirection } from '@souagrosolucoes/nestjs-query-core'
 import { DocumentType, getModelForClass, mongoose } from '@typegoose/typegoose'
 
 import { NestjsQueryTypegooseModule } from '../../src'

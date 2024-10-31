@@ -1,4 +1,4 @@
-import { Class, FindRelationOptions, QueryService, SelectRelations } from '@ptc-org/nestjs-query-core'
+import { Class, FindRelationOptions, QueryService, SelectRelations } from '@souagrosolucoes/nestjs-query-core'
 
 import { NestjsQueryDataloader } from './relations.loader'
 

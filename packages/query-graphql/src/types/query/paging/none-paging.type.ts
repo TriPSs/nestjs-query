@@ -1,4 +1,4 @@
-import { Class } from '@ptc-org/nestjs-query-core'
+import { Class } from '@souagrosolucoes/nestjs-query-core'
 
 import { PagingStrategies } from './constants'
 import { NonePagingType } from './interfaces'

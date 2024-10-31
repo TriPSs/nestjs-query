@@ -1,5 +1,5 @@
 import { Field, InputType, Int } from '@nestjs/graphql'
-import { Class } from '@ptc-org/nestjs-query-core'
+import { Class } from '@souagrosolucoes/nestjs-query-core'
 import { IsPositive, Min, Validate } from 'class-validator'
 
 import { SkipIf } from '../../../decorators'

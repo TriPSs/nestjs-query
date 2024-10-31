@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
-import { NestjsQueryTypegooseModule } from '@ptc-org/nestjs-query-typegoose'
+import { NestjsQueryGraphQLModule } from '@souagrosolucoes/nestjs-query-graphql'
+import { NestjsQueryTypegooseModule } from '@souagrosolucoes/nestjs-query-typegoose'
 
 import { TagDTO } from './dto/tag.dto'
 import { TagInputDTO } from './dto/tag-input.dto'

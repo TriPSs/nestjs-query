@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common'
 import { Resolver, ResolveReference } from '@nestjs/graphql'
-import { Class, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, QueryService } from '@souagrosolucoes/nestjs-query-core'
 
 import { getDTONames } from '../common'
 import { RepresentationType } from '../federation'

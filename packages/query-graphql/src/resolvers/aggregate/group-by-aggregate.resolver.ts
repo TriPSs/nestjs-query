@@ -1,5 +1,5 @@
 import { Args, Parent, registerEnumType, Resolver } from '@nestjs/graphql'
-import { AggregateResponse, Class, GroupBy, MapReflector, QueryService } from '@ptc-org/nestjs-query-core'
+import { AggregateResponse, Class, GroupBy, MapReflector, QueryService } from '@souagrosolucoes/nestjs-query-core'
 
 import { getGraphqlObjectName } from '../../common'
 import { getFilterableFields, ResolverField } from '../../decorators'

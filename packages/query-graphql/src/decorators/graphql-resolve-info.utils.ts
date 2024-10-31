@@ -11,7 +11,7 @@ import {
 
 import type { CursorConnectionType, OffsetConnectionType } from '../types'
 import type { RelationDescriptor } from './relation.decorator'
-import type { QueryResolveFields, QueryResolveTree, SelectRelation } from '@ptc-org/nestjs-query-core'
+import type { QueryResolveFields, QueryResolveTree, SelectRelation } from '@souagrosolucoes/nestjs-query-core'
 import type { GraphQLCompositeType, GraphQLResolveInfo as ResolveInfo, SelectionNode } from 'graphql'
 
 /**

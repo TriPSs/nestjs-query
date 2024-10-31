@@ -1,4 +1,4 @@
-import { Class, Filter, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, Query, SortDirection, SortNulls } from '@souagrosolucoes/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { anything, deepEqual, instance, mock, verify, when } from 'ts-mockito'
 import { DataSource, QueryBuilder, WhereExpressionBuilder } from 'typeorm'

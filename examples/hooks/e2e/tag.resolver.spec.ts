@@ -1,7 +1,7 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
-import { getQueryServiceToken, QueryService } from '@ptc-org/nestjs-query-core'
-import { CursorConnectionType } from '@ptc-org/nestjs-query-graphql'
+import { getQueryServiceToken, QueryService } from '@souagrosolucoes/nestjs-query-core'
+import { CursorConnectionType } from '@souagrosolucoes/nestjs-query-graphql'
 import request from 'supertest'
 import { Connection } from 'typeorm'
 

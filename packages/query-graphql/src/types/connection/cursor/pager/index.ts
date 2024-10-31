@@ -1,4 +1,4 @@
-import { Class } from '@ptc-org/nestjs-query-core'
+import { Class } from '@souagrosolucoes/nestjs-query-core'
 
 import { getKeySet } from '../../../../decorators'
 import { Pager } from '../../interfaces'

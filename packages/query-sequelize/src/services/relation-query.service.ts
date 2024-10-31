@@ -8,7 +8,7 @@ import {
   GetByIdOptions,
   ModifyRelationOptions,
   Query
-} from '@ptc-org/nestjs-query-core'
+} from '@souagrosolucoes/nestjs-query-core'
 import { ModelStatic as SequelizeModelCtor } from 'sequelize'
 import { Model, ModelCtor } from 'sequelize-typescript'
 

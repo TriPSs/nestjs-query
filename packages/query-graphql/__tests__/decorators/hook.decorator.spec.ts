@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 // eslint-disable-next-line max-classes-per-file
-import { Class } from '@ptc-org/nestjs-query-core'
+import { Class } from '@souagrosolucoes/nestjs-query-core'
 import {
   BeforeCreateMany,
   BeforeCreateOne,
@@ -11,7 +11,7 @@ import {
   BeforeUpdateMany,
   BeforeUpdateOne,
   Hook
-} from '@ptc-org/nestjs-query-graphql'
+} from '@souagrosolucoes/nestjs-query-graphql'
 
 import { getHooksForType } from '../../src/decorators'
 import { createDefaultHook, HookTypes } from '../../src/hooks'

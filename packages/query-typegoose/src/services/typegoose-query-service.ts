@@ -12,7 +12,7 @@ import {
   QueryService,
   UpdateManyResponse,
   UpdateOneOptions
-} from '@ptc-org/nestjs-query-core'
+} from '@souagrosolucoes/nestjs-query-core'
 import { DocumentType, mongoose } from '@typegoose/typegoose'
 import { Base } from '@typegoose/typegoose/lib/defaultClasses'
 import { PipelineStage } from 'mongoose'
@@ -34,7 +34,7 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
   }
 
   /**
-   * Query for multiple entities, using a Query from `@ptc-org/nestjs-query-core`.
+   * Query for multiple entities, using a Query from `@souagrosolucoes/nestjs-query-core`.
    *
    * @example
    * ```ts
@@ -165,7 +165,7 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
   }
 
   /**
-   * Update multiple entities with a `@ptc-org/nestjs-query-core` Filter.
+   * Update multiple entities with a `@souagrosolucoes/nestjs-query-core` Filter.
    *
    * @example
    * ```ts
@@ -206,7 +206,7 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
   }
 
   /**
-   * Delete multiple records with a `@ptc-org/nestjs-query-core` `Filter`.
+   * Delete multiple records with a `@souagrosolucoes/nestjs-query-core` `Filter`.
    *
    * @example
    *

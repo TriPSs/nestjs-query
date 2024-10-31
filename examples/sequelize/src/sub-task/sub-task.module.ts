@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
-import { NestjsQuerySequelizeModule } from '@ptc-org/nestjs-query-sequelize'
+import { NestjsQueryGraphQLModule } from '@souagrosolucoes/nestjs-query-graphql'
+import { NestjsQuerySequelizeModule } from '@souagrosolucoes/nestjs-query-sequelize'
 
 import { SubTaskDTO } from './dto/sub-task.dto'
 import { CreateSubTaskDTO } from './dto/subtask-input.dto'

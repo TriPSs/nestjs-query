@@ -1,5 +1,5 @@
 import { Directive, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql'
-import { FilterableField } from '@ptc-org/nestjs-query-graphql'
+import { FilterableField } from '@souagrosolucoes/nestjs-query-graphql'
 
 @ObjectType('User')
 @Directive('@key(fields: "id")')

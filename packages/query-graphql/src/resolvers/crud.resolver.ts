@@ -1,4 +1,4 @@
-import { Class, DeepPartial, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, DeepPartial, QueryService } from '@souagrosolucoes/nestjs-query-core'
 
 import { mergeBaseResolverOpts } from '../common'
 import { BaseResolverOptions } from '../decorators/resolver-method.decorator'
@@ -103,7 +103,7 @@ function extractDeleteResolverOpts<DTO>(
  * [[UpdateResolver]], and [[DeleteResolver]].
  *
  * ```ts
- * import { CRUDResolver } from '@ptc-org/nestjs-query-graphql';
+ * import { CRUDResolver } from '@souagrosolucoes/nestjs-query-graphql';
  * import { Resolver } from '@nestjs/graphql';
  * import { TodoItemDTO } from './dto/todo-item.dto';
  * import { TodoItemService } from './todo-item.service';

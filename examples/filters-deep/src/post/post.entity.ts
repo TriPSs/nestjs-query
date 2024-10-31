@@ -1,5 +1,5 @@
 import { ID, ObjectType } from '@nestjs/graphql'
-import { FilterableField, FilterableUnPagedRelation, PagingStrategies, QueryOptions } from '@ptc-org/nestjs-query-graphql'
+import { FilterableField, FilterableUnPagedRelation, PagingStrategies, QueryOptions } from '@souagrosolucoes/nestjs-query-graphql'
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
 
 import { CategoryEntity } from '../category/category.entity'

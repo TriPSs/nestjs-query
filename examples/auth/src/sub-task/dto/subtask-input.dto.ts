@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql'
-import { BeforeCreateMany, BeforeCreateOne, CreateManyInputType, CreateOneInputType } from '@ptc-org/nestjs-query-graphql'
+import { BeforeCreateMany, BeforeCreateOne, CreateManyInputType, CreateOneInputType } from '@souagrosolucoes/nestjs-query-graphql'
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 import { UserContext } from '../../auth/auth.interfaces'

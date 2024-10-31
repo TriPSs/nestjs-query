@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import { Args, InputType, Int, ObjectType, Query, Resolver } from '@nestjs/graphql'
-import { DeleteOneInputType, FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
+import { DeleteOneInputType, FilterableField, IDField } from '@souagrosolucoes/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
 import { validateSync } from 'class-validator'
 

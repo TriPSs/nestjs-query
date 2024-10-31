@@ -514,7 +514,7 @@
 
 ### Bug Fixes
 
-* align @apollo/gateway peer dependencies between @nestjs/graphql & @ptc-org/nestjs-query-graphql ([eb3f9a9](https://github.com/TriPSs/nestjs-query/commit/eb3f9a9157fe06f352eab9988cc535927ed55a58))
+* align @apollo/gateway peer dependencies between @nestjs/graphql & @souagrosolucoes/nestjs-query-graphql ([eb3f9a9](https://github.com/TriPSs/nestjs-query/commit/eb3f9a9157fe06f352eab9988cc535927ed55a58))
 * **query-typeorm:** Align fetching of entity metadata with `@nestjs/typeorm` ([545074f](https://github.com/TriPSs/nestjs-query/commit/545074fa6511dea47d64ecbea84bf586a1c9ca0f))
 * Remove incompatible class-transformer version from peer ([00f193d](https://github.com/TriPSs/nestjs-query/commit/00f193d0000c13e46b9a5868a7b213162f025ac3))
 

@@ -1,5 +1,5 @@
 import { ID, ReturnTypeFuncValue } from '@nestjs/graphql'
-import { Class } from '@ptc-org/nestjs-query-core'
+import { Class } from '@souagrosolucoes/nestjs-query-core'
 import { lowerCaseFirst } from 'lower-case-first'
 import { plural } from 'pluralize'
 import { upperCaseFirst } from 'upper-case-first'

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { ObjectId } from '@ptc-org/nestjs-query-graphql'
+import { ObjectId } from '@souagrosolucoes/nestjs-query-graphql'
 import mongoose, { Document } from 'mongoose'
 
 @Schema({ timestamps: true })

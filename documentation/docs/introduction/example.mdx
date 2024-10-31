@@ -157,7 +157,7 @@ export const TodoItemEntitySchema = SchemaFactory.createForClass(TodoItemEntity)
 <TabItem value="typegoose">
 
 ```ts title="todo-item/todo-item.entity.ts"
-import { ObjectId } from '@ptc-org/nestjs-query-graphql'
+import { ObjectId } from '@souagrosolucoes/nestjs-query-graphql'
 import { Base } from '@typegoose/typegoose/lib/defaultClasses';
 import { Prop, modelOptions, Ref } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
@@ -218,7 +218,7 @@ npx nest g cl todo-item.dto todo-item --flat
 Now lets fill out the DTO. Add the following to `src/todo-item/todo-item.dto.ts`.
 
 ```ts title="todo-item/todo-item.dto.ts"
-import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql';
+import { FilterableField, IDField } from '@souagrosolucoes/nestjs-query-graphql';
 import { ObjectType, GraphQLISODateTime, Field, ID } from '@nestjs/graphql';
 
 @ObjectType('TodoItem')
@@ -242,12 +242,12 @@ export class TodoItemDTO {
 
 ```
 
-Notice the use of `@FilterableField` this will let `@ptc-org/nestjs-query-graphql` know to allow filtering on the
+Notice the use of `@FilterableField` this will let `@souagrosolucoes/nestjs-query-graphql` know to allow filtering on the
 corresponding field. If you just use `@Field` then you will not be able to filter on the corresponding field.
 
 ## Create the create DTO class.
 
-From the previously created DTO, `@ptc-org/nestjs-query-graphql` will automatically create a `CreateTodoItem` graphql type:
+From the previously created DTO, `@souagrosolucoes/nestjs-query-graphql` will automatically create a `CreateTodoItem` graphql type:
 
 ```graphql
 input CreateTodoItem {
@@ -318,8 +318,8 @@ The `NestjsQueryGraphQLModule` will automatically create a Resolver that will ex
 <TabItem value="typeorm">
 
 ```ts {10-22}
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
+import { NestjsQueryGraphQLModule } from '@souagrosolucoes/nestjs-query-graphql';
+import { NestjsQueryTypeOrmModule } from '@souagrosolucoes/nestjs-query-typeorm';
 import { Module } from '@nestjs/common';
 import { TodoItemCreateDTO } from './todo-item.create.dto';
 import { TodoItemDTO } from './todo-item.dto';
@@ -349,8 +349,8 @@ export class TodoItemModule {}
 <TabItem value="sequelize">
 
 ```ts {9-15}
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQuerySequelizeModule } from '@ptc-org/nestjs-query-sequelize';
+import { NestjsQueryGraphQLModule } from '@souagrosolucoes/nestjs-query-graphql';
+import { NestjsQuerySequelizeModule } from '@souagrosolucoes/nestjs-query-sequelize';
 import { Module } from '@nestjs/common';
 import { TodoItemDTO } from './todo-item.dto';
 import { TodoItemEntity } from './todo-item.entity';
@@ -373,8 +373,8 @@ export class TodoItemModule {}
 <TabItem value="mongoose">
 
 ```ts {9-19}
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryMongooseModule } from '@ptc-org/nestjs-query-mongoose';
+import { NestjsQueryGraphQLModule } from '@souagrosolucoes/nestjs-query-graphql';
+import { NestjsQueryMongooseModule } from '@souagrosolucoes/nestjs-query-mongoose';
 import { Module } from '@nestjs/common';
 import { TodoItemDTO } from './todo-item.dto';
 import { TodoItemEntity, TodoItemEntitySchema } from './todo-item.entity';
@@ -401,9 +401,9 @@ export class TodoItemModule {}
 <TabItem value="typegoose">
 
 ```ts {9-19}
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
+import { NestjsQueryGraphQLModule } from '@souagrosolucoes/nestjs-query-graphql';
 import { Module } from '@nestjs/common';
-import { NestjsQueryTypegooseModule } from '@ptc-org/nestjs-query-typegoose';
+import { NestjsQueryTypegooseModule } from '@souagrosolucoes/nestjs-query-typegoose';
 import { TodoItemDTO } from './dto/todo-item.dto';
 import { TodoItemEntity } from './todo-item.entity';
 

@@ -13,7 +13,7 @@ The following ORMs are supported out of the box.
 * [Mongoose](./mongoose/getting-started.md)
 * [Typegoose](./typegoose/getting-started.md)
 
-`@ptc-org/nestjs-query-core` also provides a number of base `QueryService`s that can be used to create custom query services.
+`@souagrosolucoes/nestjs-query-core` also provides a number of base `QueryService`s that can be used to create custom query services.
  [See the Services docs](../concepts/services.md#service-helpers)
 
 All examples assume the following entity.
@@ -124,7 +124,7 @@ export const TodoItemEntitySchema = SchemaFactory.createForClass(TodoItemEntity)
 <TabItem value="typegoose">
 
 ```ts title="todo-item.entity.ts"
-import { ObjectId } from '@ptc-org/nestjs-query-graphql'
+import { ObjectId } from '@souagrosolucoes/nestjs-query-graphql'
 import { Base } from '@typegoose/typegoose/lib/defaultClasses';
 import { Prop, modelOptions, Ref } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
@@ -188,7 +188,7 @@ In order to use the decorator you will need to use the module that comes with th
 <TabItem value="typeorm">
 
 ```ts title="todo-item.module.ts" {8}
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
+import { NestjsQueryTypeOrmModule } from '@souagrosolucoes/nestjs-query-typeorm';
 import { Module } from '@nestjs/common';
 import { TodoItemEntity } from './todo-item.entity';
 import { TodoItemResolver } from './todo-item.resolver';
@@ -205,7 +205,7 @@ export class TodoItemModule {}
 <TabItem value="sequelize">
 
 ```ts title="todo-item.module.ts" {8}
-import { NestjsQuerySequelizeModule } from '@ptc-org/nestjs-query-sequelize';
+import { NestjsQuerySequelizeModule } from '@souagrosolucoes/nestjs-query-sequelize';
 import { Module } from '@nestjs/common';
 import { TodoItemEntity } from './todo-item.entity';
 import { TodoItemResolver } from './todo-item.resolver';
@@ -221,7 +221,7 @@ export class TodoItemModule {}
 <TabItem value="mongoose">
 
 ```ts title="todo-item.module.ts" {9-11}
-import { NestjsQueryMongooseModule } from '@ptc-org/nestjs-query-mongoose';
+import { NestjsQueryMongooseModule } from '@souagrosolucoes/nestjs-query-mongoose';
 import { Module } from '@nestjs/common';
 import { TodoItemEntity } from './todo-item.entity';
 import { TodoItemResolver } from './todo-item.resolver';
@@ -241,7 +241,7 @@ export class TodoItemModule {}
 <TabItem value="typegoose">
 
 ```ts title="todo-item.module.ts" {8}
-import { NestjsQueryTypegooseModule } from '@ptc-org/nestjs-query-typegoose';
+import { NestjsQueryTypegooseModule } from '@souagrosolucoes/nestjs-query-typegoose';
 import { Module } from '@nestjs/common';
 import { TodoItemEntity } from './todo-item.entity';
 import { TodoItemResolver } from './todo-item.resolver';
@@ -261,8 +261,8 @@ export class TodoItemModule {}
 Once you have imported the correct module, use `@InjectQueryService` decorator to inject a `QueryService` into your class or resolver.
 
 ```ts title="todo-item.resolver.ts" {10}
-import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core';
-import { CRUDResolver } from '@ptc-org/nestjs-query-graphql';
+import { QueryService, InjectQueryService } from '@souagrosolucoes/nestjs-query-core';
+import { CRUDResolver } from '@souagrosolucoes/nestjs-query-graphql';
 import { Resolver } from '@nestjs/graphql';
 import { TodoItemDTO } from './todo-item.dto';
 import { TodoItemEntity } from './todo-item.entity';
@@ -635,7 +635,7 @@ export class SubTaskEntity extends Model<SubTaskEntity, Partial<SubTaskEntity>> 
 Then we could add the `todoItemId` to the SubTaskDTO.
 
 ```ts title="sub-task.dto.ts" {24-26}
-import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql';
+import { FilterableField, IDField } from '@souagrosolucoes/nestjs-query-graphql';
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 
 @ObjectType('SubTask')
@@ -698,7 +698,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ObjectType, ID } from '@nestjs/graphql';
-import { FilterableField, IDField, Relation } from '@ptc-org/nestjs-query-graphql';
+import { FilterableField, IDField, Relation } from '@souagrosolucoes/nestjs-query-graphql';
 import { TodoItem } from '../todo-item/todo-item';
 
 @ObjectType()
@@ -759,7 +759,7 @@ import {
   AutoIncrement,
   PrimaryKey,
 } from 'sequelize-typescript';
-import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql';
+import { FilterableField, IDField } from '@souagrosolucoes/nestjs-query-graphql';
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { TodoItem } from '../todo-item/entity/todo-item';
 

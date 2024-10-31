@@ -1,4 +1,4 @@
-import { InjectQueryService, QueryService, RelationQueryService } from '@ptc-org/nestjs-query-core'
+import { InjectQueryService, QueryService, RelationQueryService } from '@souagrosolucoes/nestjs-query-core'
 
 import { TodoItemReferenceDTO } from './dto/todo-item-reference.dto'
 import { TagTodoItemEntity } from './tag-todo-item.entity'

@@ -1,5 +1,5 @@
 import { GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql'
-import { FilterableField, OffsetConnection, PagingStrategies, QueryOptions } from '@ptc-org/nestjs-query-graphql'
+import { FilterableField, OffsetConnection, PagingStrategies, QueryOptions } from '@souagrosolucoes/nestjs-query-graphql'
 
 import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 

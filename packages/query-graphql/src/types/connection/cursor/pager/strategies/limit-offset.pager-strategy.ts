@@ -1,4 +1,4 @@
-import { Query } from '@ptc-org/nestjs-query-core'
+import { Query } from '@souagrosolucoes/nestjs-query-core'
 
 import { CursorPagingType } from '../../../../query'
 import { decodeBase64, encodeBase64, hasBeforeCursor, isBackwardPaging, isForwardPaging } from './helpers'

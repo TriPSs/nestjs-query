@@ -1,4 +1,4 @@
-import { ArrayReflector, Class, getPrototypeChain } from '@ptc-org/nestjs-query-core'
+import { ArrayReflector, Class, getPrototypeChain } from '@souagrosolucoes/nestjs-query-core'
 
 import { mergeBaseResolverOpts } from '../common'
 import { ReferencesOpts, ResolverRelationReference } from '../resolvers/relations'

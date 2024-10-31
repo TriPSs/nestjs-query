@@ -1,5 +1,5 @@
 import { ReturnTypeFuncValue } from '@nestjs/graphql'
-import { Class, Filter, Query } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, Query } from '@souagrosolucoes/nestjs-query-core'
 
 import { ConnectionCursorType } from '../cursor.scalar'
 import { PagingStrategies } from '../query'

@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import { Args, ArgsType, InputType, Resolver } from '@nestjs/graphql'
-import { Class, ModifyRelationOptions, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, ModifyRelationOptions, QueryService } from '@souagrosolucoes/nestjs-query-core'
 
 import { OperationGroup } from '../../auth'
 import { getDTONames, mergeBaseResolverOpts } from '../../common'

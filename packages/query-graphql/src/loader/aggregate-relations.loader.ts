@@ -1,4 +1,4 @@
-import { AggregateQuery, AggregateResponse, Class, Filter, QueryService } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, AggregateResponse, Class, Filter, QueryService } from '@souagrosolucoes/nestjs-query-core'
 
 import { NestjsQueryDataloader } from './relations.loader'
 

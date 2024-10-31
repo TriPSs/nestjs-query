@@ -1,5 +1,5 @@
 import { Args, ArgsType, Resolver } from '@nestjs/graphql'
-import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@souagrosolucoes/nestjs-query-core'
 import omit from 'lodash.omit'
 
 import { OperationGroup } from '../auth'

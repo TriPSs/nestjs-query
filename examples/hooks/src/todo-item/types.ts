@@ -1,5 +1,5 @@
 import { ArgsType, InputType, OmitType } from '@nestjs/graphql'
-import { MutationArgsType, UpdateManyInputType } from '@ptc-org/nestjs-query-graphql'
+import { MutationArgsType, UpdateManyInputType } from '@souagrosolucoes/nestjs-query-graphql'
 
 import { TodoItemDTO } from './dto/todo-item.dto'
 import { TodoItemUpdateDTO } from './dto/todo-item-update.dto'

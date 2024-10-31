@@ -9,7 +9,7 @@ import {
   ModifyRelationOptions,
   Query,
   QueryRelationsOptions
-} from '@ptc-org/nestjs-query-core'
+} from '@souagrosolucoes/nestjs-query-core'
 import lodashOmit from 'lodash.omit'
 import { RelationQueryBuilder as TypeOrmRelationQueryBuilder, Repository } from 'typeorm'
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata'

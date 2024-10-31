@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql'
-import { Filter } from '@ptc-org/nestjs-query-core'
-import { FilterableField, FilterType } from '@ptc-org/nestjs-query-graphql'
+import { Filter } from '@souagrosolucoes/nestjs-query-core'
+import { FilterableField, FilterType } from '@souagrosolucoes/nestjs-query-graphql'
 import { getModelForClass, mongoose, Prop } from '@typegoose/typegoose'
 import { plainToClass } from 'class-transformer'
 

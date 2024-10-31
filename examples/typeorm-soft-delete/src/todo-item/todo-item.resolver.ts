@@ -1,6 +1,6 @@
 import { Args, ArgsType, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
-import { Filter, UpdateManyResponse } from '@ptc-org/nestjs-query-core'
-import { ConnectionType, FilterType, QueryArgsType, UpdateManyResponseType } from '@ptc-org/nestjs-query-graphql'
+import { Filter, UpdateManyResponse } from '@souagrosolucoes/nestjs-query-core'
+import { ConnectionType, FilterType, QueryArgsType, UpdateManyResponseType } from '@souagrosolucoes/nestjs-query-graphql'
 
 import { TodoItemDTO } from './dto/todo-item.dto'
 import { TodoItemService } from './todo-item.service'

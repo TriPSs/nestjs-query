@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { Class, ValueReflector } from '@ptc-org/nestjs-query-core'
+import { Class, ValueReflector } from '@souagrosolucoes/nestjs-query-core'
 
 import { getGraphqlObjectName } from '../../../common'
 import { ConnectionCursorScalar, ConnectionCursorType } from '../../cursor.scalar'

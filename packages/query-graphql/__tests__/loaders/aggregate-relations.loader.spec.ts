@@ -1,4 +1,4 @@
-import { AggregateQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, QueryService } from '@souagrosolucoes/nestjs-query-core'
 import { deepEqual, instance, mock, when } from 'ts-mockito'
 
 import { AggregateRelationsLoader } from '../../src/loader'

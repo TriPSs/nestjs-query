@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
-import { FilterableField, Reference } from '@ptc-org/nestjs-query-graphql'
+import { FilterableField, Reference } from '@souagrosolucoes/nestjs-query-graphql'
 
 import { getReferences } from '../../src/decorators/reference.decorator'
 

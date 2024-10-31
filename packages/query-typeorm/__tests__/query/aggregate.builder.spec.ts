@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { AggregateQuery, GroupBy } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, GroupBy } from '@souagrosolucoes/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { DataSource } from 'typeorm'
 

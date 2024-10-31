@@ -1,5 +1,5 @@
 import { Field, InputType, Query, Resolver } from '@nestjs/graphql'
-import { DeleteManyResponse, Filter } from '@ptc-org/nestjs-query-core'
+import { DeleteManyResponse, Filter } from '@souagrosolucoes/nestjs-query-core'
 import { PubSub } from 'graphql-subscriptions'
 import { anything, deepEqual, instance, mock, objectContaining, verify, when } from 'ts-mockito'
 

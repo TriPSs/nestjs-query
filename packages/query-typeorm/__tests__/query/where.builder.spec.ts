@@ -1,4 +1,4 @@
-import { Filter } from '@ptc-org/nestjs-query-core'
+import { Filter } from '@souagrosolucoes/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { DataSource } from 'typeorm'
 

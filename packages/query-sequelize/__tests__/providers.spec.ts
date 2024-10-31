@@ -1,5 +1,5 @@
 import { getModelToken } from '@nestjs/sequelize'
-import { getQueryServiceToken } from '@ptc-org/nestjs-query-core'
+import { getQueryServiceToken } from '@souagrosolucoes/nestjs-query-core'
 import { Column, Model, Sequelize, Table } from 'sequelize-typescript'
 
 import { createSequelizeQueryServiceProviders } from '../src/providers'

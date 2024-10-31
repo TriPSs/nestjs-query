@@ -12,7 +12,7 @@ import {
   QueryService,
   UpdateManyResponse,
   UpdateOneOptions
-} from '@ptc-org/nestjs-query-core'
+} from '@souagrosolucoes/nestjs-query-core'
 import lodashPick from 'lodash.pick'
 import { WhereOptions } from 'sequelize'
 import { MakeNullishOptional } from 'sequelize/types/utils'
@@ -49,7 +49,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
   }
 
   /**
-   * Query for multiple entities, using a Query from `@ptc-org/nestjs-query-core`.
+   * Query for multiple entities, using a Query from `@souagrosolucoes/nestjs-query-core`.
    *
    * @example
    * ```ts
@@ -175,7 +175,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
   }
 
   /**
-   * Update multiple entities with a `@ptc-org/nestjs-query-core` Filter.
+   * Update multiple entities with a `@souagrosolucoes/nestjs-query-core` Filter.
    *
    * @example
    * ```ts
@@ -215,7 +215,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
   }
 
   /**
-   * Delete multiple records with a `@ptc-org/nestjs-query-core` `Filter`.
+   * Delete multiple records with a `@souagrosolucoes/nestjs-query-core` `Filter`.
    *
    * @example
    *
