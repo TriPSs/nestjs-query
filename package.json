@@ -1,7 +1,7 @@
 {
   "name": "nestjs-query",
   "version": "7.1.10",
-  "private": true,
+  "private": false,
   "workspaces": [
     "packages/**"
   ],
@@ -115,5 +115,8 @@
     "tsconfig-paths": "4.2.0",
     "typescript": "5.5.4"
   },
-  "packageManager": "yarn@4.4.0"
+  "packageManager": "yarn@4.4.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
 }

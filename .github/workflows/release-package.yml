@@ -1,12 +1,26 @@
 name: Node.js Package
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+        required: true
+        default: prod
+        type: choice
+        options:
+          - prod
+          - alpha
+
+      releaseAs:
+        description: Release as (Required if env = alpha)
+        required: false
+        type: choice
+        options:
+          - premajor
+          - preminor
+          - prepatch
+          - prerelease
 
 jobs:
   publish-gpr:
