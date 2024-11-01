@@ -69,11 +69,10 @@ jobs:
             **/node_modules
           key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('yarn.lock') }}
 
-      # - name: GIT/NPM config
-      #   run: |
-      #     echo -e "@souagrosolucoes:registry=https://npm.pkg.github.com \n@souagrosolucoes:always-auth=true" > .npmrc
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: GIT/NPM config
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
       - name: Version
         if: ${{ inputs.environment == 'prod' }}
