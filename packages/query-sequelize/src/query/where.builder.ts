@@ -8,7 +8,7 @@ import { EntityComparisonField, SQLComparisonBuilder } from './sql-comparison.bu
  * Builds a WHERE clause from a Filter.
  */
 export class WhereBuilder<Entity> {
-  constructor(readonly sqlComparisonBuilder: SQLComparisonBuilder<Entity> = new SQLComparisonBuilder<Entity>()) {}
+  constructor(readonly sqlComparisonBuilder: SQLComparisonBuilder<Entity> = new SQLComparisonBuilder<Entity>()) { }
 
   /**
    * Builds a WHERE clause from a Filter.

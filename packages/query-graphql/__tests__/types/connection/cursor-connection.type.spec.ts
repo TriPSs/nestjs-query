@@ -1,7 +1,12 @@
 // eslint-disable-next-line max-classes-per-file
 import { Field, ObjectType, Query, Resolver } from '@nestjs/graphql'
 import { SortDirection } from '@souagrosolucoes/nestjs-query-core'
-import { CursorConnectionType, CursorPagingType, PagingStrategies, StaticConnectionType } from '@souagrosolucoes/nestjs-query-graphql'
+import {
+  CursorConnectionType,
+  CursorPagingType,
+  PagingStrategies,
+  StaticConnectionType
+} from '@souagrosolucoes/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
 
 import { KeySet } from '../../../src/decorators'
@@ -245,7 +250,7 @@ describe('CursorConnectionType', (): void => {
   describe('keyset connection', () => {
     @ObjectType()
     @KeySet(['stringField'])
-    class TestKeySetDTO extends TestDto {}
+    class TestKeySetDTO extends TestDto { }
 
     function getConnectionType(): StaticConnectionType<TestKeySetDTO, PagingStrategies.CURSOR> {
       return getOrCreateCursorConnectionType(TestKeySetDTO, { pagingStrategy: PagingStrategies.CURSOR })

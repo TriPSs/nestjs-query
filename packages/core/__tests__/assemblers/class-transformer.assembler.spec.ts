@@ -1,5 +1,10 @@
 // eslint-disable-next-line max-classes-per-file
-import { Assembler, AssemblerDeserializer, AssemblerSerializer, ClassTransformerAssembler } from '@souagrosolucoes/nestjs-query-core'
+import {
+  Assembler,
+  AssemblerDeserializer,
+  AssemblerSerializer,
+  ClassTransformerAssembler
+} from '@souagrosolucoes/nestjs-query-core'
 import * as classTransformer from 'class-transformer'
 
 describe('ClassTransformerAssembler', () => {
@@ -18,7 +23,7 @@ describe('ClassTransformerAssembler', () => {
   }
 
   @Assembler(TestDTO, TestEntity)
-  class TestClassAssembler extends ClassTransformerAssembler<TestDTO, TestEntity> {}
+  class TestClassAssembler extends ClassTransformerAssembler<TestDTO, TestEntity> { }
 
   beforeEach(() => jest.clearAllMocks())
 
@@ -76,7 +81,7 @@ describe('ClassTransformerAssembler', () => {
     }
 
     @Assembler(TestSerializeDTO, TestSerializeEntity)
-    class TestSerializeClassAssembler extends ClassTransformerAssembler<TestSerializeDTO, TestSerializeEntity> {}
+    class TestSerializeClassAssembler extends ClassTransformerAssembler<TestSerializeDTO, TestSerializeEntity> { }
 
     it('should use a serializer to convert to the DTO plain object', () => {
       const input = new TestSerializeEntity()
@@ -139,7 +144,7 @@ describe('ClassTransformerAssembler', () => {
     }
 
     @Assembler(TestDeserializeDTO, TestDeserializeEntity)
-    class TestDesrializeClassAssembler extends ClassTransformerAssembler<TestDeserializeDTO, TestDeserializeEntity> {}
+    class TestDesrializeClassAssembler extends ClassTransformerAssembler<TestDeserializeDTO, TestDeserializeEntity> { }
 
     it('should use a serializer to convert to the DTO plain object', () => {
       const input = new TestDeserializeEntity()
