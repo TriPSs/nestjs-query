@@ -250,7 +250,7 @@ describe('CursorConnectionType', (): void => {
   describe('keyset connection', () => {
     @ObjectType()
     @KeySet(['stringField'])
-    class TestKeySetDTO extends TestDto { }
+    class TestKeySetDTO extends TestDto {}
 
     function getConnectionType(): StaticConnectionType<TestKeySetDTO, PagingStrategies.CURSOR> {
       return getOrCreateCursorConnectionType(TestKeySetDTO, { pagingStrategy: PagingStrategies.CURSOR })
