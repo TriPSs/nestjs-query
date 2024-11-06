@@ -1,4 +1,13 @@
  
+# [7.3.0](https://github.com/souagrosolucoes/nestjs-query/compare/v7.2.0...v7.3.0) (2024-11-06)
+
+
+### Features
+
+* v7.2.0 ([a81214d](https://github.com/souagrosolucoes/nestjs-query/commit/a81214dfa7ffc3db69baa85986bb0ac6cabab0e1))
+
+
+
 # [7.2.0-alpha.0](https://github.com/souagrosolucoes/nestjs-query/compare/v7.1.0...v7.2.0-alpha.0) (2024-11-01)
 
 
