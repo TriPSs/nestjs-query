@@ -11,8 +11,8 @@ import {
   Query,
   Resolver
 } from '@nestjs/graphql'
-import { SortDirection } from '@ptc-org/nestjs-query-core'
-import { FilterableField, PagingStrategies, QueryArgsType, QueryOptions } from '@ptc-org/nestjs-query-graphql'
+import { SortDirection } from '@souagrosolucoes/nestjs-query-core'
+import { FilterableField, PagingStrategies, QueryArgsType, QueryOptions } from '@souagrosolucoes/nestjs-query-graphql'
 
 import { generateSchema } from '../../__fixtures__'
 

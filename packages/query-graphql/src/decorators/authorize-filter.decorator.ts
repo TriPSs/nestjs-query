@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
-import { ModifyRelationOptions } from '@ptc-org/nestjs-query-core'
+import { ModifyRelationOptions } from '@souagrosolucoes/nestjs-query-core'
 
 import { AuthorizationContext, OperationGroup } from '../auth'
 import { AuthorizerContext } from '../interceptors'

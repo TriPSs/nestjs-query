@@ -9,7 +9,7 @@
 
 # `@nestjs-query/query-mongoose`
 
-The `query-mongoose` package that provides an implementation of `@ptc-org/nestjs-query-core` `QueryService`, built on
+The `query-mongoose` package that provides an implementation of `@souagrosolucoes/nestjs-query-core` `QueryService`, built on
 top of of [nestjs](https://nestjs.com/) and [mongoose](https://mongoosejs.com/).
 
 ## Installation

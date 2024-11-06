@@ -7,7 +7,7 @@ import {
   Reference,
   Relatable,
   Relation
-} from '@ptc-org/nestjs-query-graphql'
+} from '@souagrosolucoes/nestjs-query-graphql'
 
 import * as readRelations from '../../../src/resolvers/relations/read-relations.resolver'
 import * as referenceRelation from '../../../src/resolvers/relations/references-relation.resolver'

@@ -8,7 +8,7 @@ import {
   OperationGroup,
   QueryOptions,
   Relation
-} from '@ptc-org/nestjs-query-graphql'
+} from '@souagrosolucoes/nestjs-query-graphql'
 
 import { UserContext } from '../../auth/auth.interfaces'
 import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'

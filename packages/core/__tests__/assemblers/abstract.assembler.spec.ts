@@ -8,7 +8,7 @@ import {
   transformAggregateQuery,
   transformAggregateResponse,
   transformQuery
-} from '@ptc-org/nestjs-query-core'
+} from '@souagrosolucoes/nestjs-query-core'
 
 describe('ClassTransformerAssembler', () => {
   class TestDTO {

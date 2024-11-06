@@ -14,7 +14,7 @@ import {
   QueryOptions,
   UpdateManyInputType,
   UpdateOneInputType
-} from '@ptc-org/nestjs-query-graphql'
+} from '@souagrosolucoes/nestjs-query-graphql'
 import mongoose from 'mongoose'
 
 import { GqlContext } from '../../auth.guard'

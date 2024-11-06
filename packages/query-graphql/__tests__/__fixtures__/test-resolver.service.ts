@@ -1,4 +1,4 @@
-import { NoOpQueryService, QueryService } from '@ptc-org/nestjs-query-core'
+import { NoOpQueryService, QueryService } from '@souagrosolucoes/nestjs-query-core'
 
 import { TestResolverDTO } from './test-resolver.dto'
 

@@ -11,7 +11,7 @@ import {
   mergeFilter,
   ModifyRelationOptions,
   Query
-} from '@ptc-org/nestjs-query-core'
+} from '@souagrosolucoes/nestjs-query-core'
 import { DocumentType, getClass, getModelWithString, mongoose } from '@typegoose/typegoose'
 import { Base } from '@typegoose/typegoose/lib/defaultClasses'
 import { PipelineStage } from 'mongoose'

@@ -8,7 +8,7 @@ import {
   FilterableCursorConnection,
   FilterableField,
   KeySet
-} from '@ptc-org/nestjs-query-graphql'
+} from '@souagrosolucoes/nestjs-query-graphql'
 
 import { CreatedByHook, UpdatedByHook } from '../../hooks'
 import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'

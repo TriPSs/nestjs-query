@@ -1,4 +1,4 @@
-import { FilterFieldComparison } from '@ptc-org/nestjs-query-core'
+import { FilterFieldComparison } from '@souagrosolucoes/nestjs-query-core'
 import { registerDecorator } from 'class-validator'
 
 /**

@@ -1,5 +1,5 @@
 import { ArgsType } from '@nestjs/graphql'
-import { QueryArgsType } from '@ptc-org/nestjs-query-graphql'
+import { QueryArgsType } from '@souagrosolucoes/nestjs-query-graphql'
 
 import { TodoItemDTO } from './dto/todo-item.dto'
 

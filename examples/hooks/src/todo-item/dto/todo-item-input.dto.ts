@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql'
-import { BeforeCreateMany, BeforeCreateOne } from '@ptc-org/nestjs-query-graphql'
+import { BeforeCreateMany, BeforeCreateOne } from '@souagrosolucoes/nestjs-query-graphql'
 import { IsBoolean, IsString, MaxLength } from 'class-validator'
 
 import { CreatedByHook } from '../../hooks'

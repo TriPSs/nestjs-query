@@ -1,4 +1,4 @@
-import { QueryService } from '@ptc-org/nestjs-query-core'
+import { QueryService } from '@souagrosolucoes/nestjs-query-core'
 
 import { DTONamesOpts } from '../common'
 import { QueryResolverMethodOpts, SubscriptionResolverMethodOpts } from '../decorators'

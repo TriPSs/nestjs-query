@@ -2,7 +2,7 @@ import { ApolloDriver } from '@nestjs/apollo'
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
+import { NestjsQueryGraphQLModule } from '@souagrosolucoes/nestjs-query-graphql'
 
 import { formatGraphqlError, typeormOrmConfig } from '../../helpers'
 import { SubTaskModule } from '../src/sub-task/sub-task.module'

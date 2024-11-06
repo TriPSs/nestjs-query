@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 import { Args, GqlExecutionContext } from '@nestjs/graphql'
-import { Class } from '@ptc-org/nestjs-query-core'
+import { Class } from '@souagrosolucoes/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
 
 import { Hook } from '../hooks'

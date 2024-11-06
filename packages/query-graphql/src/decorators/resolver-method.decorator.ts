@@ -11,7 +11,7 @@ import {
   UsePipes
 } from '@nestjs/common'
 import { Complexity } from '@nestjs/graphql'
-import { Class } from '@ptc-org/nestjs-query-core'
+import { Class } from '@souagrosolucoes/nestjs-query-core'
 
 export interface BaseResolverOptions {
   /** An array of `nestjs` guards to apply to a graphql endpoint */

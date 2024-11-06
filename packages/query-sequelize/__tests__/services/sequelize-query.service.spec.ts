@@ -1,6 +1,6 @@
 import { InjectModel, SequelizeModule } from '@nestjs/sequelize'
 import { Test, TestingModule } from '@nestjs/testing'
-import { DeepPartial } from '@ptc-org/nestjs-query-core'
+import { DeepPartial } from '@souagrosolucoes/nestjs-query-core'
 import { ModelCtor, Sequelize } from 'sequelize-typescript'
 
 import { SequelizeQueryService } from '../../src'

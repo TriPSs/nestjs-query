@@ -1,7 +1,7 @@
 {
-  "name": "@ptc-org/nestjs-query-typeorm",
-  "version": "7.1.0",
-  "description": "Typeorm adapter for @ptc-org/nestjs-query-core",
+  "name": "@souagrosolucoes/nestjs-query-typeorm",
+  "version": "7.2.0-alpha.0",
+  "description": "Typeorm adapter for @souagrosolucoes/nestjs-query-core",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
   "bugs": {
     "url": "https://github.com/tripss/nestjs-query/issues"
@@ -37,6 +37,6 @@
     "typeorm": "^0.3.15"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "https://npm.pkg.github.com"
   }
 }

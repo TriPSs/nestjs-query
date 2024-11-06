@@ -1,5 +1,5 @@
 import { Query, Resolver } from '@nestjs/graphql'
-import { ReferenceResolver, ReferenceResolverOpts } from '@ptc-org/nestjs-query-graphql'
+import { ReferenceResolver, ReferenceResolverOpts } from '@souagrosolucoes/nestjs-query-graphql'
 import { when } from 'ts-mockito'
 
 import { createResolverFromNest, generateSchema, TestResolverDTO, TestService } from '../__fixtures__'

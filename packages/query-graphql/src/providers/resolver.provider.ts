@@ -9,7 +9,7 @@ import {
   InjectAssemblerQueryService,
   InjectQueryService,
   QueryService
-} from '@ptc-org/nestjs-query-core'
+} from '@souagrosolucoes/nestjs-query-core'
 import { PubSub } from 'graphql-subscriptions'
 
 import { InjectPubSub } from '../decorators'

@@ -14,12 +14,12 @@ module.exports = {
     '!**/jest.e2e.ts'
   ],
   moduleNameMapper: {
-    '@ptc-org/nestjs-query-core': process.cwd() + '/packages/core/src',
-    '@ptc-org/nestjs-query-graphql': process.cwd() + '/packages/query-graphql/src',
-    '@ptc-org/nestjs-query-typeorm': process.cwd() + '/packages/query-typeorm/src',
-    '@ptc-org/nestjs-query-sequelize': process.cwd() + '/packages/query-sequelize/src',
-    '@ptc-org/nestjs-query-typegoose': process.cwd() + '/packages/query-typegoose/src',
-    '@ptc-org/nestjs-query-mongoose': process.cwd() + '/packages/query-mongoose/src'
+    '@souagrosolucoes/nestjs-query-core': process.cwd() + '/packages/core/src',
+    '@souagrosolucoes/nestjs-query-graphql': process.cwd() + '/packages/query-graphql/src',
+    '@souagrosolucoes/nestjs-query-typeorm': process.cwd() + '/packages/query-typeorm/src',
+    '@souagrosolucoes/nestjs-query-sequelize': process.cwd() + '/packages/query-sequelize/src',
+    '@souagrosolucoes/nestjs-query-typegoose': process.cwd() + '/packages/query-typegoose/src',
+    '@souagrosolucoes/nestjs-query-mongoose': process.cwd() + '/packages/query-mongoose/src'
   },
   testEnvironment: 'node',
   setupFilesAfterEnv: ['jest-extended'],

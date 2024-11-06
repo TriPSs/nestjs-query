@@ -1,5 +1,5 @@
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql'
-import { CursorConnection, FilterableField, KeySet, ObjectId, QueryOptions } from '@ptc-org/nestjs-query-graphql'
+import { CursorConnection, FilterableField, KeySet, ObjectId, QueryOptions } from '@souagrosolucoes/nestjs-query-graphql'
 import mongoose from 'mongoose'
 
 import { AuthGuard } from '../../auth.guard'

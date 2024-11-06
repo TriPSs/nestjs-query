@@ -1,8 +1,8 @@
 import { getConnectionToken } from '@m8a/nestjs-typegoose'
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
-import { AggregateResponse, getQueryServiceToken, QueryService } from '@ptc-org/nestjs-query-core'
-import { CursorConnectionType } from '@ptc-org/nestjs-query-graphql'
+import { AggregateResponse, getQueryServiceToken, QueryService } from '@souagrosolucoes/nestjs-query-core'
+import { CursorConnectionType } from '@souagrosolucoes/nestjs-query-graphql'
 import { Types } from 'mongoose'
 import request from 'supertest'
 

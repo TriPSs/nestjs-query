@@ -1,5 +1,5 @@
 import { Directive, Field, ObjectType } from '@nestjs/graphql'
-import { Class } from '@ptc-org/nestjs-query-core'
+import { Class } from '@souagrosolucoes/nestjs-query-core'
 
 import { OffsetPageInfoType } from '../interfaces'
 

@@ -1,4 +1,4 @@
-import { Filter, FilterComparisons, FilterFieldComparison } from '@ptc-org/nestjs-query-core'
+import { Filter, FilterComparisons, FilterFieldComparison } from '@souagrosolucoes/nestjs-query-core'
 import { Brackets } from 'typeorm'
 
 import type { WhereExpressionBuilder } from 'typeorm'

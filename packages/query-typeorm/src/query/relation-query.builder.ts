@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { AggregateQuery, Class, Query } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, Class, Query } from '@souagrosolucoes/nestjs-query-core'
 import lodashFilter from 'lodash.filter'
 import { Brackets, ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm'
 import { DriverUtils } from 'typeorm/driver/DriverUtils'

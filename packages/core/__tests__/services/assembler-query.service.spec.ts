@@ -9,7 +9,7 @@ import {
   transformAggregateQuery,
   transformAggregateResponse,
   transformQuery
-} from '@ptc-org/nestjs-query-core'
+} from '@souagrosolucoes/nestjs-query-core'
 import { deepEqual, instance, mock, objectContaining, when } from 'ts-mockito'
 
 describe('AssemblerQueryService', () => {

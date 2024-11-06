@@ -1,4 +1,4 @@
-import { Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
+import { Query, SortDirection, SortNulls } from '@souagrosolucoes/nestjs-query-core'
 import { DestroyOptions, FindOptions, Op, UpdateOptions } from 'sequelize'
 import { anything, deepEqual, instance, mock, verify, when } from 'ts-mockito'
 

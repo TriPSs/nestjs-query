@@ -10,7 +10,7 @@ import {
   mergeFilter,
   ModifyRelationOptions,
   Query
-} from '@ptc-org/nestjs-query-core'
+} from '@souagrosolucoes/nestjs-query-core'
 import { Document, Model as MongooseModel, PipelineStage, Types, UpdateQuery } from 'mongoose'
 
 import {

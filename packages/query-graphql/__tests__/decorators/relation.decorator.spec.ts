@@ -7,7 +7,7 @@ import {
   PagingStrategies,
   Relation,
   UnPagedRelation
-} from '@ptc-org/nestjs-query-graphql'
+} from '@souagrosolucoes/nestjs-query-graphql'
 
 import { CursorConnection, FilterableCursorConnection, FilterableOffsetConnection, getRelations } from '../../src/decorators'
 

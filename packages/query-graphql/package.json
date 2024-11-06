@@ -1,6 +1,6 @@
 {
-  "name": "@ptc-org/nestjs-query-graphql",
-  "version": "7.1.0",
+  "name": "@souagrosolucoes/nestjs-query-graphql",
+  "version": "7.2.0-alpha.0",
   "description": "Nestjs graphql query adapter",
   "keywords": [
     "graphql",
@@ -49,6 +49,7 @@
     "ts-morph": "^19.0.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   }
 }

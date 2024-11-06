@@ -1,5 +1,5 @@
 import { Query, Resolver } from '@nestjs/graphql'
-import { PagingStrategies } from '@ptc-org/nestjs-query-graphql'
+import { PagingStrategies } from '@souagrosolucoes/nestjs-query-graphql'
 
 import { ReadRelationsResolver, RelationsOpts } from '../../../../../src/resolvers/relations'
 import { generateSchema, TestRelationDTO, TestResolverDTO } from '../../../../__fixtures__'

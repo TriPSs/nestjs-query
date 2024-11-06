@@ -1,5 +1,5 @@
 import { Directive, Field, ID, ObjectType } from '@nestjs/graphql'
-import { CursorConnection } from '@ptc-org/nestjs-query-graphql'
+import { CursorConnection } from '@souagrosolucoes/nestjs-query-graphql'
 
 import { SubTaskDTO } from './sub-task.dto'
 

@@ -1,4 +1,4 @@
-import { Class, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, QueryService } from '@souagrosolucoes/nestjs-query-core'
 
 import { getRelations } from '../../decorators'
 import { getReferences } from '../../decorators/reference.decorator'

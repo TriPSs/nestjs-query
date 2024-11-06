@@ -1,5 +1,5 @@
 import { ObjectType } from '@nestjs/graphql'
-import { FilterableField, PagingStrategies, QueryOptions } from '@ptc-org/nestjs-query-graphql'
+import { FilterableField, PagingStrategies, QueryOptions } from '@souagrosolucoes/nestjs-query-graphql'
 
 @ObjectType('TodoItemOffsetFetchWithNegativeEnable')
 @QueryOptions({ enableTotalCount: true, enableFetchAllWithNegative: true, pagingStrategy: PagingStrategies.OFFSET })

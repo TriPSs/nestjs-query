@@ -1,5 +1,5 @@
 import { ID, ObjectType, Query, Resolver, TypeMetadataStorage } from '@nestjs/graphql'
-import { FilterableField } from '@ptc-org/nestjs-query-graphql'
+import { FilterableField } from '@souagrosolucoes/nestjs-query-graphql'
 
 import { ReferencesOpts, ReferencesRelationsResolver } from '../../../src/resolvers/relations'
 import { createResolverFromNest, generateSchema, TestService } from '../../__fixtures__'

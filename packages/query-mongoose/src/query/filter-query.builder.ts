@@ -1,4 +1,4 @@
-import { AggregateQuery, Filter, Query, SortDirection, SortField } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, Filter, Query, SortDirection, SortField } from '@souagrosolucoes/nestjs-query-core'
 import { Document, FilterQuery, Model as MongooseModel } from 'mongoose'
 
 import { AggregateBuilder, MongooseGroupAndAggregate } from './aggregate.builder'

@@ -1,6 +1,6 @@
 import { FactoryProvider } from '@nestjs/common'
 import { getModelToken } from '@nestjs/sequelize'
-import { AssemblerDeserializer, AssemblerSerializer, getQueryServiceToken } from '@ptc-org/nestjs-query-core'
+import { AssemblerDeserializer, AssemblerSerializer, getQueryServiceToken } from '@souagrosolucoes/nestjs-query-core'
 import { MakeNullishOptional } from 'sequelize/types/utils'
 import { Model, ModelCtor, SequelizeOptions } from 'sequelize-typescript'
 

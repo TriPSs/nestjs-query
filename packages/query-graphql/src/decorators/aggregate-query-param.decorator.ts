@@ -2,7 +2,7 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { GraphQLResolveInfo } from 'graphql'
 
-import type { AggregateQuery, QueryResolveTree } from '@ptc-org/nestjs-query-core'
+import type { AggregateQuery, QueryResolveTree } from '@souagrosolucoes/nestjs-query-core'
 
 import { removePagingFromSimplifiedInfo, simplifyResolveInfo } from './graphql-resolve-info.utils'
 

@@ -1,4 +1,4 @@
-import { AssemblerSerializer } from '@ptc-org/nestjs-query-core'
+import { AssemblerSerializer } from '@souagrosolucoes/nestjs-query-core'
 
 import { getAssemblerSerializer } from '../../src/assemblers/assembler.serializer'
 

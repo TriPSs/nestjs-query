@@ -1,5 +1,5 @@
 import { GraphQLISODateTime, ObjectType } from '@nestjs/graphql'
-import { FilterableField, IDField, Relation } from '@ptc-org/nestjs-query-graphql'
+import { FilterableField, IDField, Relation } from '@souagrosolucoes/nestjs-query-graphql'
 
 import { CustomIDScalar } from '../../common/custom-id.scalar'
 import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'

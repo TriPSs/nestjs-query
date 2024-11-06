@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common'
-import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
+import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@souagrosolucoes/nestjs-query-core'
 import { mongoose } from '@typegoose/typegoose'
 import escapeRegExp from 'lodash.escaperegexp'
 

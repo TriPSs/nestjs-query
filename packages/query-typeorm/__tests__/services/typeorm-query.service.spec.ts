@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { getDataSourceToken, InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
-import { Filter, SortDirection } from '@ptc-org/nestjs-query-core'
+import { Filter, SortDirection } from '@souagrosolucoes/nestjs-query-core'
 import { plainToClass } from 'class-transformer'
 import { Repository } from 'typeorm'
 

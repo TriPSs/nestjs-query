@@ -1,7 +1,7 @@
 {
-  "name": "@ptc-org/nestjs-query-sequelize",
-  "version": "7.1.0",
-  "description": "Sequelize adapter for @ptc-org/nestjs-query-core",
+  "name": "@souagrosolucoes/nestjs-query-sequelize",
+  "version": "7.2.0-alpha.0",
+  "description": "Sequelize adapter for @souagrosolucoes/nestjs-query-core",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
   "bugs": {
     "url": "https://github.com/tripss/nestjs-query/issues"
@@ -34,6 +34,7 @@
     "sequelize-typescript": "^1.1.0 || ^2.0.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   }
 }

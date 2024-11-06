@@ -1,7 +1,7 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
-import { AggregateResponse } from '@ptc-org/nestjs-query-core'
-import { CursorConnectionType } from '@ptc-org/nestjs-query-graphql'
+import { AggregateResponse } from '@souagrosolucoes/nestjs-query-core'
+import { CursorConnectionType } from '@souagrosolucoes/nestjs-query-graphql'
 import { Sequelize } from 'sequelize-typescript'
 import request from 'supertest'
 

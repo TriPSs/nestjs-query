@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { SequelizeModule } from '@nestjs/sequelize'
 import { Test, TestingModule } from '@nestjs/testing'
-import { AggregateQuery } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery } from '@souagrosolucoes/nestjs-query-core'
 import sequelize, { Projectable } from 'sequelize'
 import { Sequelize } from 'sequelize-typescript'
 

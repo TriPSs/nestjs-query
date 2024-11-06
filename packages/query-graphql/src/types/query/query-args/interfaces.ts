@@ -1,4 +1,4 @@
-import { Class, Filter, Query, SortField } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, Query, SortField } from '@souagrosolucoes/nestjs-query-core'
 
 import { ArrayConnectionOptions, CursorConnectionOptions, OffsetConnectionOptions, StaticConnectionType } from '../../connection'
 import { FilterTypeOptions } from '../filter.type'

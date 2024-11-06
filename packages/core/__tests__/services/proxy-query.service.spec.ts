@@ -1,4 +1,4 @@
-import { AggregateQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, QueryService } from '@souagrosolucoes/nestjs-query-core'
 import { instance, mock, reset, when } from 'ts-mockito'
 
 import { ProxyQueryService } from '../../src/services/proxy-query.service'

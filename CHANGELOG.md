@@ -1,4 +1,38 @@
  
+# [7.2.0-alpha.0](https://github.com/souagrosolucoes/nestjs-query/compare/v7.1.0...v7.2.0-alpha.0) (2024-11-01)
+
+
+### Bug Fixes
+
+* add .npmrc ([5d233fc](https://github.com/souagrosolucoes/nestjs-query/commit/5d233fc180254c01ce505142adf84cc8a7fdd746))
+* downgrade ([75d3866](https://github.com/souagrosolucoes/nestjs-query/commit/75d38668e2c61d33aad918a59fbb77f246889b68))
+* remove config npm ([54efbc5](https://github.com/souagrosolucoes/nestjs-query/commit/54efbc5bebf5d35df91a2773c20fa00d4fc7087d))
+* update node version ([d1a93d7](https://github.com/souagrosolucoes/nestjs-query/commit/d1a93d701356aa999dc4155632508b2106c4fe6e))
+
+
+### Features
+
+* add config git ([b2b0468](https://github.com/souagrosolucoes/nestjs-query/commit/b2b046802c97be141517493a4b256014123bb3ba))
+* add env ([78d4c42](https://github.com/souagrosolucoes/nestjs-query/commit/78d4c42f8ac1a884f545ae48b3b2df1a5f0c23de))
+* add souagrosolucoes ([7f03881](https://github.com/souagrosolucoes/nestjs-query/commit/7f038818ee944e413cc2e76098429c03a50fc811))
+* add token ([2ef8f37](https://github.com/souagrosolucoes/nestjs-query/commit/2ef8f376a468996c55d8e73655ac7575083c1c57))
+* add ts-morph ([a17f863](https://github.com/souagrosolucoes/nestjs-query/commit/a17f86338e4164f369cce0d93b631c5ad31851b1))
+* add yarn.lock ([31d17ff](https://github.com/souagrosolucoes/nestjs-query/commit/31d17ff7ba2d3942bbe886353cf4cce6365657ca))
+* config npm github ([5d84225](https://github.com/souagrosolucoes/nestjs-query/commit/5d84225044bbffa0d9917405456d21ac679e1d9f))
+* config packages ([b5ef347](https://github.com/souagrosolucoes/nestjs-query/commit/b5ef347e7ec9a1285dd76812459a1a7af8ac44ca))
+* renew name ([6a784d5](https://github.com/souagrosolucoes/nestjs-query/commit/6a784d56f30b87501378bf0a193e87e1bf0a129e))
+* test ([07d41e7](https://github.com/souagrosolucoes/nestjs-query/commit/07d41e74302bcd8a1726a895e474c316e8c90fe6))
+* test ([5f0b4da](https://github.com/souagrosolucoes/nestjs-query/commit/5f0b4da643cbc7d90a8002fcad1077ffe47820c4))
+* test actions ([6cff6b2](https://github.com/souagrosolucoes/nestjs-query/commit/6cff6b2e9992fe07b5c19855bf04704719a544fb))
+* update release ([de169dc](https://github.com/souagrosolucoes/nestjs-query/commit/de169dcb88f253de2f226b59f034dc06513e4119))
+* update version ([e6a2855](https://github.com/souagrosolucoes/nestjs-query/commit/e6a28555e77e50262377cd563d4d0cfd638af778))
+
+
+
+## [7.1.10](https://github.com/souagrosolucoes/nestjs-query/compare/v7.1.0...v7.1.10) (2024-10-31)
+
+
+
 # [7.1.0](https://github.com/TriPSs/nestjs-query/compare/v7.0.1...v7.1.0) (2024-10-16)
 
 
@@ -510,7 +544,7 @@
 
 ### Bug Fixes
 
-* align @apollo/gateway peer dependencies between @nestjs/graphql & @ptc-org/nestjs-query-graphql ([eb3f9a9](https://github.com/TriPSs/nestjs-query/commit/eb3f9a9157fe06f352eab9988cc535927ed55a58))
+* align @apollo/gateway peer dependencies between @nestjs/graphql & @souagrosolucoes/nestjs-query-graphql ([eb3f9a9](https://github.com/TriPSs/nestjs-query/commit/eb3f9a9157fe06f352eab9988cc535927ed55a58))
 * **query-typeorm:** Align fetching of entity metadata with `@nestjs/typeorm` ([545074f](https://github.com/TriPSs/nestjs-query/commit/545074fa6511dea47d64ecbea84bf586a1c9ca0f))
 * Remove incompatible class-transformer version from peer ([00f193d](https://github.com/TriPSs/nestjs-query/commit/00f193d0000c13e46b9a5868a7b213162f025ac3))
 

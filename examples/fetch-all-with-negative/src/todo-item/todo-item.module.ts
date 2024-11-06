@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
+import { NestjsQueryGraphQLModule } from '@souagrosolucoes/nestjs-query-graphql'
+import { NestjsQueryTypeOrmModule } from '@souagrosolucoes/nestjs-query-typeorm'
 
 import { TodoItemCursorFetchWithNegativeDisableDTO } from './dto/todo-item-cursor-fetch-all-disable.dto'
 import { TodoItemCursorFetchWithNegativeEnableDTO } from './dto/todo-item-cursor-fetch-all-enable.dto'

@@ -34,13 +34,13 @@ jobs:
       GITHUB_HEAD_REF: ${{ steps.script.outputs.headRef }}
       GITHUB_BASE_REF: ${{ steps.script.outputs.tagHash }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Cache node modules
         id: cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             **/node_modules
@@ -58,12 +58,12 @@ jobs:
     needs: [ prepare-env ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             **/node_modules
@@ -73,9 +73,10 @@ jobs:
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${GIT_TOKEN}" > .npmrc
+
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GIT_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Version
         if: ${{ inputs.environment == 'prod' }}
@@ -89,7 +90,7 @@ jobs:
         run: yarn nx run-many --target=build --all
 
       - name: Publish
-        run: yarn nx run-many --target=publish --all
+        run: yarn nx run-many --target=publish --all  
 
       - name: Push GIT
         run: git push --follow-tags origin ${{ needs.prepare-env.outputs.GITHUB_HEAD_REF }}

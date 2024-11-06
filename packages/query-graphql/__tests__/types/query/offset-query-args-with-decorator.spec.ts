@@ -11,14 +11,14 @@ import {
   Query,
   Resolver
 } from '@nestjs/graphql'
-import { SortDirection } from '@ptc-org/nestjs-query-core'
+import { SortDirection } from '@souagrosolucoes/nestjs-query-core'
 import {
   CursorQueryArgsType,
   FilterableField,
   PagingStrategies,
   QueryArgsType,
   QueryOptions
-} from '@ptc-org/nestjs-query-graphql'
+} from '@souagrosolucoes/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
 import { validateSync } from 'class-validator'
 
