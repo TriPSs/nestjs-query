@@ -27,7 +27,6 @@ env:
   NX_RUN_GROUP: ${{ github.run_id }}
 
 jobs:
-
   prepare-env:
     runs-on: ubuntu-latest
     outputs:
@@ -55,7 +54,7 @@ jobs:
         uses: ./tools/actions/set-master-vars
 
   release:
-    needs: [ prepare-env ]
+    needs: [prepare-env]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -73,10 +72,10 @@ jobs:
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          echo "//npm.pkg.github.com/:_authToken=${GIT_TOKEN}" > .npmrc
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
 
         env:
-          GIT_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GIT_TOKEN: ${{secrets.NPM_TOKEN}}
 
       - name: Version
         if: ${{ inputs.environment == 'prod' }}
@@ -90,7 +89,7 @@ jobs:
         run: yarn nx run-many --target=build --all
 
       - name: Publish
-        run: yarn nx run-many --target=publish --all  
+        run: yarn nx run-many --target=publish --all
 
       - name: Push GIT
         run: git push --follow-tags origin ${{ needs.prepare-env.outputs.GITHUB_HEAD_REF }}

@@ -36,7 +36,6 @@
     "mongoose": "^6.5.0 || ^7.0.3 || ^8.0.0"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   }
 }
