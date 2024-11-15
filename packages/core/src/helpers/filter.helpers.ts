@@ -7,6 +7,7 @@ export type InComparisonOperators = 'in' | 'notIn'
 export type BetweenComparisonOperators = 'between' | 'notBetween'
 export type RangeComparisonOperators = 'gt' | 'gte' | 'lt' | 'lte'
 export type BooleanComparisonOperators = 'eq' | 'neq' | 'is' | 'isNot'
+export type JsonComparisonOperators = 'contains'
 
 export const isLikeComparisonOperator = (op: unknown): op is LikeComparisonOperators =>
   op === 'like' || op === 'notLike' || op === 'iLike' || op === 'notILike'
@@ -21,6 +22,8 @@ export const isRangeComparisonOperators = (op: unknown): op is RangeComparisonOp
 
 export const isBooleanComparisonOperators = (op: unknown): op is BooleanComparisonOperators =>
   op === 'eq' || op === 'neq' || op === 'is' || op === 'isNot'
+
+export const isJsonComparisonOperators = (op: unknown): op is JsonComparisonOperators => op === 'contains'
 
 export const isComparison = <DTO, K extends keyof DTO>(
   maybeComparison?: FilterFieldComparison<DTO[K]> | Filter<DTO[K]>

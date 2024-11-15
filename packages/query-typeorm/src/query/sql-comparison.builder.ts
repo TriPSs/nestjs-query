@@ -7,6 +7,11 @@ import { randomString } from '../common'
  * @internal
  */
 type CmpSQLType = { sql: string; params: ObjectLiteral }
+type TypeDb = {
+  mysql: CmpSQLType
+  postgres: CmpSQLType
+  sqlite: CmpSQLType
+}
 
 /**
  * @internal
@@ -89,6 +94,21 @@ export class SQLComparisonBuilder<Entity> {
     if (normalizedCmp === 'notbetween') {
       // notBetween comparison (field NOT BETWEEN x AND y)
       return this.notBetweenComparisonSQL(col, val)
+    }
+    if (normalizedCmp === 'contains') {
+      return this.JsonContainsComparisonSQL(col, val)
+    }
+    if (normalizedCmp === 'containedBy') {
+      return this.JsonContainedByComparisonSQL(col, val)
+    }
+    if (normalizedCmp === 'haskey') {
+      return this.JsonHasKeyComparisonSQL(col, val)
+    }
+    if (normalizedCmp === 'hasAnyKeys') {
+      return this.JsonHasAnyKeysComparisonSQL(col, val)
+    }
+    if (normalizedCmp === 'hasAllKeys') {
+      return this.JsonHasAllKeysComparisonSQL(col, val)
     }
     throw new Error(`unknown operator ${JSON.stringify(cmp)}`)
   }
@@ -202,5 +222,59 @@ export class SQLComparisonBuilder<Entity> {
     }
 
     return alias ? `${alias}.${field}` : `${field}`
+  }
+
+  private operationForTypeDb = (filter: TypeDb): CmpSQLType => {
+    const driverType = this.repo?.manager.connection.options.type
+    const { sql, params } = filter[driverType]
+
+    return {
+      sql,
+      params
+    }
+  }
+
+  private JsonContainsComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {
+    const { paramName: jsonContains } = this
+
+    const filter: TypeDb = {
+      mysql: { sql: ` JSON_CONTAINS(${col}, :${jsonContains}`, params: { [jsonContains]: `%${JSON.stringify(val)}%` } },
+      postgres: { sql: `${col} @> :${jsonContains}`, params: { [jsonContains]: val } },
+      sqlite: { sql: `${col} LIKE :${jsonContains}`, params: { [jsonContains]: `%${JSON.stringify(val).slice(1, -1)}%` } }
+    }
+
+    return this.operationForTypeDb(filter)
+  }
+
+  private JsonContainedByComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {
+    const { paramName: jsonContainedBy } = this
+    return {
+      sql: `${col} <@ :${jsonContainedBy}`,
+      params: { [jsonContainedBy]: val }
+    }
+  }
+
+  private JsonHasKeyComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {
+    const { paramName: jsonHasKey } = this
+    return {
+      sql: `${col} ? :${jsonHasKey}`,
+      params: { [jsonHasKey]: val }
+    }
+  }
+
+  private JsonHasAnyKeysComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {
+    const { paramName: jsonHasAny } = this
+    return {
+      sql: `${col} ?| :${jsonHasAny}`,
+      params: { [jsonHasAny]: val }
+    }
+  }
+
+  private JsonHasAllKeysComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {
+    const { paramName: jsonHasAll } = this
+    return {
+      sql: `${col} ?& :${jsonHasAll}`,
+      params: { [jsonHasAll]: val }
+    }
   }
 }

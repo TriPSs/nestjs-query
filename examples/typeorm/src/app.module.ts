@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { formatGraphqlError, typeormOrmConfig } from '../../../examples/helpers'
 import { GqlContext } from './auth.guard'
+import { JsonTaskModule } from './json-task/json-task.module'
 import { SubTaskModule } from './sub-task/sub-task.module'
 import { TagModule } from './tag/tag.module'
 import { TodoItemModule } from './todo-item/todo-item.module'
@@ -20,7 +21,8 @@ import { TodoItemModule } from './todo-item/todo-item.module'
     }),
     SubTaskModule,
     TodoItemModule,
-    TagModule
+    TagModule,
+    JsonTaskModule
   ]
 })
 export class AppModule {}

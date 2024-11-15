@@ -2,6 +2,122 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type JsonTask {
+  id: ID!
+  title: String!
+  display: JSONObject
+  createdBy: String
+  updatedBy: String
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+type DeleteManyResponse {
+  """The number of records deleted."""
+  deletedCount: Int!
+}
+
+type JsonTaskDeleteResponse {
+  id: ID
+  title: String
+  display: JSONObject
+  createdBy: String
+  updatedBy: String
+}
+
+type UpdateManyResponse {
+  """The number of records updated."""
+  updatedCount: Int!
+}
+
+type JsonTaskEdge {
+  """The node containing the JsonTask"""
+  node: JsonTask!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+"""Cursor for paging through collections"""
+scalar ConnectionCursor
+
+type PageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
+
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
+}
+
+type JsonTaskConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [JsonTaskEdge!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type JsonTaskAggregateGroupBy {
+  id: ID
+  title: String
+  display: JSONObject
+  createdBy: String
+  updatedBy: String
+}
+
+type JsonTaskCountAggregate {
+  id: Int
+  title: Int
+  display: Int
+  createdBy: Int
+  updatedBy: Int
+}
+
+type JsonTaskSumAggregate {
+  id: Float
+}
+
+type JsonTaskAvgAggregate {
+  id: Float
+}
+
+type JsonTaskMinAggregate {
+  id: ID
+  title: String
+  display: JSONObject
+  createdBy: String
+  updatedBy: String
+}
+
+type JsonTaskMaxAggregate {
+  id: ID
+  title: String
+  display: JSONObject
+  createdBy: String
+  updatedBy: String
+}
+
+type JsonTaskAggregateResponse {
+  groupBy: JsonTaskAggregateGroupBy
+  count: JsonTaskCountAggregate
+  sum: JsonTaskSumAggregate
+  avg: JsonTaskAvgAggregate
+  min: JsonTaskMinAggregate
+  max: JsonTaskMaxAggregate
+}
+
 type Tag {
   id: ID!
   name: String!
@@ -59,6 +175,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]
@@ -166,9 +283,6 @@ input CursorPaging {
   """Paginate last"""
   last: Int
 }
-
-"""Cursor for paging through collections"""
-scalar ConnectionCursor
 
 input TodoItemFilter {
   and: [TodoItemFilter!]
@@ -449,11 +563,6 @@ type SubTask {
   todoItem: TodoItem!
 }
 
-type DeleteManyResponse {
-  """The number of records deleted."""
-  deletedCount: Int!
-}
-
 type SubTaskDeleteResponse {
   id: ID
   title: String
@@ -466,31 +575,12 @@ type SubTaskDeleteResponse {
   updatedBy: String
 }
 
-type UpdateManyResponse {
-  """The number of records updated."""
-  updatedCount: Int!
-}
-
 type SubTaskEdge {
   """The node containing the SubTask"""
   node: SubTask!
 
   """Cursor for this node."""
   cursor: ConnectionCursor!
-}
-
-type PageInfo {
-  """true if paging forward and there are more records."""
-  hasNextPage: Boolean
-
-  """true if paging backwards and there are more records."""
-  hasPreviousPage: Boolean
-
-  """The cursor of the first returned record."""
-  startCursor: ConnectionCursor
-
-  """The cursor of the last returned record."""
-  endCursor: ConnectionCursor
 }
 
 type SubTaskConnection {
@@ -1064,6 +1154,76 @@ type Query {
     """Specify to sort results."""
     sorting: [TagSort!]! = []
   ): TagConnection!
+  jsonTaskAggregate(
+    """Filter to find records to aggregate on"""
+    filter: JsonTaskAggregateFilter
+  ): [JsonTaskAggregateResponse!]!
+  jsonTask(
+    """The id of the record to find."""
+    id: ID!
+  ): JsonTask!
+  jsonTasks(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: JsonTaskFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [JsonTaskSort!]! = []
+  ): JsonTaskConnection!
+}
+
+input JsonTaskAggregateFilter {
+  and: [JsonTaskAggregateFilter!]
+  or: [JsonTaskAggregateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  display: JSONObjectFilterComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+}
+
+input JSONObjectFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: JSONObject
+  neq: JSONObject
+  gt: JSONObject
+  gte: JSONObject
+  lt: JSONObject
+  lte: JSONObject
+  like: JSONObject
+  notLike: JSONObject
+  contains: JSONObject
+  iLike: JSONObject
+  notILike: JSONObject
+  in: [JSONObject!]
+  notIn: [JSONObject!]
+}
+
+input JsonTaskFilter {
+  and: [JsonTaskFilter!]
+  or: [JsonTaskFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  display: JSONObjectFilterComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+}
+
+input JsonTaskSort {
+  field: JsonTaskSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum JsonTaskSortFields {
+  id
+  title
+  display
+  createdBy
+  updatedBy
 }
 
 type Mutation {
@@ -1094,6 +1254,12 @@ type Mutation {
   updateManyTags(input: UpdateManyTagsInput!): UpdateManyResponse!
   deleteOneTag(input: DeleteOneTagInput!): TagDeleteResponse!
   deleteManyTags(input: DeleteManyTagsInput!): DeleteManyResponse!
+  createOneJsonTask(input: CreateOneJsonTaskInput!): JsonTask!
+  createManyJsonTasks(input: CreateManyJsonTasksInput!): [JsonTask!]!
+  updateOneJsonTask(input: UpdateOneJsonTaskInput!): JsonTask!
+  updateManyJsonTasks(input: UpdateManyJsonTasksInput!): UpdateManyResponse!
+  deleteOneJsonTask(input: DeleteOneJsonTaskInput!): JsonTaskDeleteResponse!
+  deleteManyJsonTasks(input: DeleteManyJsonTasksInput!): DeleteManyResponse!
 }
 
 input SetTodoItemOnSubTaskInput {
@@ -1383,6 +1549,78 @@ input TagDeleteFilter {
   created: DateFieldComparison
   updated: DateFieldComparison
   fakeDate: DateFieldComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+}
+
+input CreateOneJsonTaskInput {
+  """The record to create"""
+  jsonTask: CreateJsonTask!
+}
+
+input CreateJsonTask {
+  id: ID!
+  title: String!
+  display: JSONObject
+  createdBy: String
+  updatedBy: String
+}
+
+input CreateManyJsonTasksInput {
+  """Array of records to create"""
+  jsonTasks: [CreateJsonTask!]!
+}
+
+input UpdateOneJsonTaskInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateJsonTask!
+}
+
+input UpdateJsonTask {
+  id: ID
+  title: String
+  display: JSONObject
+  createdBy: String
+  updatedBy: String
+}
+
+input UpdateManyJsonTasksInput {
+  """Filter used to find fields to update"""
+  filter: JsonTaskUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateJsonTask!
+}
+
+input JsonTaskUpdateFilter {
+  and: [JsonTaskUpdateFilter!]
+  or: [JsonTaskUpdateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  display: JSONObjectFilterComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+}
+
+input DeleteOneJsonTaskInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteManyJsonTasksInput {
+  """Filter to find records to delete"""
+  filter: JsonTaskDeleteFilter!
+}
+
+input JsonTaskDeleteFilter {
+  and: [JsonTaskDeleteFilter!]
+  or: [JsonTaskDeleteFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  display: JSONObjectFilterComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
 }

@@ -190,6 +190,12 @@ export function createFilterComparisonType<T>(options: FilterComparisonOptions<T
     @CustomDecorator()
     notLike?: T
 
+    @SkipIf(isNotAllowed('contains'), Field(() => fieldType, { nullable: true }))
+    @IsUndefined()
+    @Type(() => FieldType)
+    @CustomDecorator()
+    contains?: T
+
     @SkipIf(isNotAllowed('iLike'), Field(() => fieldType, { nullable: true }))
     @IsUndefined()
     @Type(() => FieldType)

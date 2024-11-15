@@ -66,6 +66,60 @@ describe('TypeOrmQueryService', (): void => {
   })
 
   describe('#query', () => {
+    it('JsonQuery - SQqlite and', async () => {
+      const entity = TEST_ENTITIES[2]
+      const queryService = moduleRef.get(TestEntityService)
+      const queryResult = await queryService.query({
+        filter: {
+          and: [
+            {
+              jsonType: {
+                contains: {
+                  testEntityPk: entity.testEntityPk
+                }
+              }
+            },
+            {
+              jsonType: {
+                contains: {
+                  dateType: entity.dateType
+                }
+              }
+            }
+          ]
+        }
+      })
+      expect(queryResult).toEqual([entity])
+    })
+
+    it('JsonQuery - SQqlite or', async () => {
+      const entity = TEST_ENTITIES[2]
+      const entity3 = TEST_ENTITIES[3]
+
+      const queryService = moduleRef.get(TestEntityService)
+      const queryResult = await queryService.query({
+        filter: {
+          or: [
+            {
+              jsonType: {
+                contains: {
+                  testEntityPk: entity.testEntityPk
+                }
+              }
+            },
+            {
+              jsonType: {
+                contains: {
+                  testEntityPk: entity3.testEntityPk
+                }
+              }
+            }
+          ]
+        }
+      })
+      expect(queryResult).toEqual([entity, entity3])
+    })
+
     it('call select and return the result', async () => {
       const queryService = moduleRef.get(TestEntityService)
       const queryResult = await queryService.query({ filter: { stringType: { eq: 'foo1' } } })
@@ -93,6 +147,7 @@ describe('TypeOrmQueryService', (): void => {
           const queryService = moduleRef.get(TestEntityService)
           const queryResult = await queryService.query({
             filter: {
+              //@ts-ignore
               oneTestRelation: {
                 relationsOfTestRelation: {
                   testRelationId: {
@@ -230,6 +285,7 @@ describe('TypeOrmQueryService', (): void => {
           const queryResult = await queryService.query({
             filter: {
               testRelations: {
+                //@ts-ignore
                 relationName: {
                   in: [TEST_RELATIONS[0].relationName, TEST_RELATIONS[1].relationName]
                 }
@@ -247,6 +303,7 @@ describe('TypeOrmQueryService', (): void => {
                 { testEntityPk: { eq: TEST_ENTITIES[1].testEntityPk } },
                 {
                   testRelations: {
+                    //@ts-ignore
                     testRelationPk: {
                       in: [`test-relations-${entity.testEntityPk}-1`, `test-relations-${entity.testEntityPk}-3`]
                     }
@@ -267,6 +324,7 @@ describe('TypeOrmQueryService', (): void => {
           const queryResult = await queryService.query({
             filter: {
               manyTestRelations: {
+                //@ts-ignore
                 relationName: {
                   in: [TEST_RELATIONS[1].relationName, TEST_RELATIONS[4].relationName]
                 }
@@ -281,6 +339,7 @@ describe('TypeOrmQueryService', (): void => {
           const queryResult = await queryService.query({
             filter: {
               manyToManyUniDirectional: {
+                //@ts-ignore
                 relationName: {
                   in: [TEST_RELATIONS[2].relationName, TEST_RELATIONS[5].relationName]
                 }
@@ -298,6 +357,7 @@ describe('TypeOrmQueryService', (): void => {
                 { testEntityPk: { eq: TEST_ENTITIES[2].testEntityPk } },
                 {
                   manyTestRelations: {
+                    //@ts-ignore
                     relationName: {
                       in: [TEST_RELATIONS[1].relationName, TEST_RELATIONS[4].relationName]
                     }
@@ -716,6 +776,7 @@ describe('TypeOrmQueryService', (): void => {
           const queryService = moduleRef.get(TestEntityService)
           const count = await queryService.count({
             testRelations: {
+              //@ts-ignore
               testEntityId: {
                 in: [relation.testEntityId]
               }

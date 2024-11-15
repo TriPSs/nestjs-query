@@ -1,0 +1,644 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type TodoItemCursorFetchWithNegativeDisable {
+  id: Float!
+  title: String!
+  completed: Boolean!
+}
+
+type TodoItemCursorFetchWithNegativeEnable {
+  id: Float!
+  title: String!
+  completed: Boolean!
+}
+
+type TodoItemOffsetFetchWithNegativeDisable {
+  id: Float!
+  title: String!
+  completed: Boolean!
+}
+
+type TodoItemOffsetFetchWithNegativeEnable {
+  id: Float!
+  title: String!
+  completed: Boolean!
+}
+
+type DeleteManyResponse {
+  """The number of records deleted."""
+  deletedCount: Int!
+}
+
+type TodoItemCursorFetchWithNegativeEnableDeleteResponse {
+  id: Float
+  title: String
+  completed: Boolean
+}
+
+type UpdateManyResponse {
+  """The number of records updated."""
+  updatedCount: Int!
+}
+
+type TodoItemCursorFetchWithNegativeEnableEdge {
+  """The node containing the TodoItemCursorFetchWithNegativeEnable"""
+  node: TodoItemCursorFetchWithNegativeEnable!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+"""Cursor for paging through collections"""
+scalar ConnectionCursor
+
+type PageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
+
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
+}
+
+type TodoItemCursorFetchWithNegativeEnableConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TodoItemCursorFetchWithNegativeEnableEdge!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type TodoItemCursorFetchWithNegativeDisableDeleteResponse {
+  id: Float
+  title: String
+  completed: Boolean
+}
+
+type TodoItemCursorFetchWithNegativeDisableEdge {
+  """The node containing the TodoItemCursorFetchWithNegativeDisable"""
+  node: TodoItemCursorFetchWithNegativeDisable!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type TodoItemCursorFetchWithNegativeDisableConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TodoItemCursorFetchWithNegativeDisableEdge!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type TodoItemOffsetFetchWithNegativeEnableDeleteResponse {
+  id: Float
+  title: String
+  completed: Boolean
+}
+
+type OffsetPageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+}
+
+type TodoItemOffsetFetchWithNegativeEnableConnection {
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Array of nodes."""
+  nodes: [TodoItemOffsetFetchWithNegativeEnable!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type TodoItemOffsetFetchWithNegativeDisableDeleteResponse {
+  id: Float
+  title: String
+  completed: Boolean
+}
+
+type TodoItemOffsetFetchWithNegativeDisableConnection {
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Array of nodes."""
+  nodes: [TodoItemOffsetFetchWithNegativeDisable!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type Query {
+  todoItemCursorFetchWithNegativeEnable(
+    """The id of the record to find."""
+    id: ID!
+  ): TodoItemCursorFetchWithNegativeEnable!
+  todoItemCursorFetchWithNegativeEnables(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: TodoItemCursorFetchWithNegativeEnableFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoItemCursorFetchWithNegativeEnableSort!]! = []
+  ): TodoItemCursorFetchWithNegativeEnableConnection!
+  todoItemCursorFetchWithNegativeDisable(
+    """The id of the record to find."""
+    id: ID!
+  ): TodoItemCursorFetchWithNegativeDisable!
+  todoItemCursorFetchWithNegativeDisables(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: TodoItemCursorFetchWithNegativeDisableFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoItemCursorFetchWithNegativeDisableSort!]! = []
+  ): TodoItemCursorFetchWithNegativeDisableConnection!
+  todoItemOffsetFetchWithNegativeEnable(
+    """The id of the record to find."""
+    id: ID!
+  ): TodoItemOffsetFetchWithNegativeEnable!
+  todoItemOffsetFetchWithNegativeEnables(
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: TodoItemOffsetFetchWithNegativeEnableFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoItemOffsetFetchWithNegativeEnableSort!]! = []
+  ): TodoItemOffsetFetchWithNegativeEnableConnection!
+  todoItemOffsetFetchWithNegativeDisable(
+    """The id of the record to find."""
+    id: ID!
+  ): TodoItemOffsetFetchWithNegativeDisable!
+  todoItemOffsetFetchWithNegativeDisables(
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to filter the records returned."""
+    filter: TodoItemOffsetFetchWithNegativeDisableFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoItemOffsetFetchWithNegativeDisableSort!]! = []
+  ): TodoItemOffsetFetchWithNegativeDisableConnection!
+}
+
+input CursorPaging {
+  """Paginate before opaque cursor"""
+  before: ConnectionCursor
+
+  """Paginate after opaque cursor"""
+  after: ConnectionCursor
+
+  """Paginate first"""
+  first: Int
+
+  """Paginate last"""
+  last: Int
+}
+
+input TodoItemCursorFetchWithNegativeEnableFilter {
+  and: [TodoItemCursorFetchWithNegativeEnableFilter!]
+  or: [TodoItemCursorFetchWithNegativeEnableFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}
+
+input NumberFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: Float
+  neq: Float
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  in: [Float!]
+  notIn: [Float!]
+  between: NumberFieldComparisonBetween
+  notBetween: NumberFieldComparisonBetween
+}
+
+input NumberFieldComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
+input StringFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
+}
+
+input BooleanFieldComparison {
+  is: Boolean
+  isNot: Boolean
+}
+
+input TodoItemCursorFetchWithNegativeEnableSort {
+  field: TodoItemCursorFetchWithNegativeEnableSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum TodoItemCursorFetchWithNegativeEnableSortFields {
+  id
+  title
+  completed
+}
+
+"""Sort Directions"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+"""Sort Nulls Options"""
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+input TodoItemCursorFetchWithNegativeDisableFilter {
+  and: [TodoItemCursorFetchWithNegativeDisableFilter!]
+  or: [TodoItemCursorFetchWithNegativeDisableFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}
+
+input TodoItemCursorFetchWithNegativeDisableSort {
+  field: TodoItemCursorFetchWithNegativeDisableSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum TodoItemCursorFetchWithNegativeDisableSortFields {
+  id
+  title
+  completed
+}
+
+input OffsetPaging {
+  """Limit the number of records returned"""
+  limit: Int
+
+  """Offset to start returning records from"""
+  offset: Int
+}
+
+input TodoItemOffsetFetchWithNegativeEnableFilter {
+  and: [TodoItemOffsetFetchWithNegativeEnableFilter!]
+  or: [TodoItemOffsetFetchWithNegativeEnableFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}
+
+input TodoItemOffsetFetchWithNegativeEnableSort {
+  field: TodoItemOffsetFetchWithNegativeEnableSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum TodoItemOffsetFetchWithNegativeEnableSortFields {
+  id
+  title
+  completed
+}
+
+input TodoItemOffsetFetchWithNegativeDisableFilter {
+  and: [TodoItemOffsetFetchWithNegativeDisableFilter!]
+  or: [TodoItemOffsetFetchWithNegativeDisableFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}
+
+input TodoItemOffsetFetchWithNegativeDisableSort {
+  field: TodoItemOffsetFetchWithNegativeDisableSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum TodoItemOffsetFetchWithNegativeDisableSortFields {
+  id
+  title
+  completed
+}
+
+type Mutation {
+  createOneTodoItemCursorFetchWithNegativeEnable(input: CreateOneTodoItemCursorFetchWithNegativeEnableInput!): TodoItemCursorFetchWithNegativeEnable!
+  createManyTodoItemCursorFetchWithNegativeEnables(input: CreateManyTodoItemCursorFetchWithNegativeEnablesInput!): [TodoItemCursorFetchWithNegativeEnable!]!
+  updateOneTodoItemCursorFetchWithNegativeEnable(input: UpdateOneTodoItemCursorFetchWithNegativeEnableInput!): TodoItemCursorFetchWithNegativeEnable!
+  updateManyTodoItemCursorFetchWithNegativeEnables(input: UpdateManyTodoItemCursorFetchWithNegativeEnablesInput!): UpdateManyResponse!
+  deleteOneTodoItemCursorFetchWithNegativeEnable(input: DeleteOneTodoItemCursorFetchWithNegativeEnableInput!): TodoItemCursorFetchWithNegativeEnableDeleteResponse!
+  deleteManyTodoItemCursorFetchWithNegativeEnables(input: DeleteManyTodoItemCursorFetchWithNegativeEnablesInput!): DeleteManyResponse!
+  createOneTodoItemCursorFetchWithNegativeDisable(input: CreateOneTodoItemCursorFetchWithNegativeDisableInput!): TodoItemCursorFetchWithNegativeDisable!
+  createManyTodoItemCursorFetchWithNegativeDisables(input: CreateManyTodoItemCursorFetchWithNegativeDisablesInput!): [TodoItemCursorFetchWithNegativeDisable!]!
+  updateOneTodoItemCursorFetchWithNegativeDisable(input: UpdateOneTodoItemCursorFetchWithNegativeDisableInput!): TodoItemCursorFetchWithNegativeDisable!
+  updateManyTodoItemCursorFetchWithNegativeDisables(input: UpdateManyTodoItemCursorFetchWithNegativeDisablesInput!): UpdateManyResponse!
+  deleteOneTodoItemCursorFetchWithNegativeDisable(input: DeleteOneTodoItemCursorFetchWithNegativeDisableInput!): TodoItemCursorFetchWithNegativeDisableDeleteResponse!
+  deleteManyTodoItemCursorFetchWithNegativeDisables(input: DeleteManyTodoItemCursorFetchWithNegativeDisablesInput!): DeleteManyResponse!
+  createOneTodoItemOffsetFetchWithNegativeEnable(input: CreateOneTodoItemOffsetFetchWithNegativeEnableInput!): TodoItemOffsetFetchWithNegativeEnable!
+  createManyTodoItemOffsetFetchWithNegativeEnables(input: CreateManyTodoItemOffsetFetchWithNegativeEnablesInput!): [TodoItemOffsetFetchWithNegativeEnable!]!
+  updateOneTodoItemOffsetFetchWithNegativeEnable(input: UpdateOneTodoItemOffsetFetchWithNegativeEnableInput!): TodoItemOffsetFetchWithNegativeEnable!
+  updateManyTodoItemOffsetFetchWithNegativeEnables(input: UpdateManyTodoItemOffsetFetchWithNegativeEnablesInput!): UpdateManyResponse!
+  deleteOneTodoItemOffsetFetchWithNegativeEnable(input: DeleteOneTodoItemOffsetFetchWithNegativeEnableInput!): TodoItemOffsetFetchWithNegativeEnableDeleteResponse!
+  deleteManyTodoItemOffsetFetchWithNegativeEnables(input: DeleteManyTodoItemOffsetFetchWithNegativeEnablesInput!): DeleteManyResponse!
+  createOneTodoItemOffsetFetchWithNegativeDisable(input: CreateOneTodoItemOffsetFetchWithNegativeDisableInput!): TodoItemOffsetFetchWithNegativeDisable!
+  createManyTodoItemOffsetFetchWithNegativeDisables(input: CreateManyTodoItemOffsetFetchWithNegativeDisablesInput!): [TodoItemOffsetFetchWithNegativeDisable!]!
+  updateOneTodoItemOffsetFetchWithNegativeDisable(input: UpdateOneTodoItemOffsetFetchWithNegativeDisableInput!): TodoItemOffsetFetchWithNegativeDisable!
+  updateManyTodoItemOffsetFetchWithNegativeDisables(input: UpdateManyTodoItemOffsetFetchWithNegativeDisablesInput!): UpdateManyResponse!
+  deleteOneTodoItemOffsetFetchWithNegativeDisable(input: DeleteOneTodoItemOffsetFetchWithNegativeDisableInput!): TodoItemOffsetFetchWithNegativeDisableDeleteResponse!
+  deleteManyTodoItemOffsetFetchWithNegativeDisables(input: DeleteManyTodoItemOffsetFetchWithNegativeDisablesInput!): DeleteManyResponse!
+}
+
+input CreateOneTodoItemCursorFetchWithNegativeEnableInput {
+  """The record to create"""
+  todoItemCursorFetchWithNegativeEnable: CreateTodoItemCursorFetchWithNegativeEnable!
+}
+
+input CreateTodoItemCursorFetchWithNegativeEnable {
+  id: Float!
+  title: String!
+  completed: Boolean!
+}
+
+input CreateManyTodoItemCursorFetchWithNegativeEnablesInput {
+  """Array of records to create"""
+  todoItemCursorFetchWithNegativeEnables: [CreateTodoItemCursorFetchWithNegativeEnable!]!
+}
+
+input UpdateOneTodoItemCursorFetchWithNegativeEnableInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateTodoItemCursorFetchWithNegativeEnable!
+}
+
+input UpdateTodoItemCursorFetchWithNegativeEnable {
+  id: Float
+  title: String
+  completed: Boolean
+}
+
+input UpdateManyTodoItemCursorFetchWithNegativeEnablesInput {
+  """Filter used to find fields to update"""
+  filter: TodoItemCursorFetchWithNegativeEnableUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateTodoItemCursorFetchWithNegativeEnable!
+}
+
+input TodoItemCursorFetchWithNegativeEnableUpdateFilter {
+  and: [TodoItemCursorFetchWithNegativeEnableUpdateFilter!]
+  or: [TodoItemCursorFetchWithNegativeEnableUpdateFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}
+
+input DeleteOneTodoItemCursorFetchWithNegativeEnableInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteManyTodoItemCursorFetchWithNegativeEnablesInput {
+  """Filter to find records to delete"""
+  filter: TodoItemCursorFetchWithNegativeEnableDeleteFilter!
+}
+
+input TodoItemCursorFetchWithNegativeEnableDeleteFilter {
+  and: [TodoItemCursorFetchWithNegativeEnableDeleteFilter!]
+  or: [TodoItemCursorFetchWithNegativeEnableDeleteFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}
+
+input CreateOneTodoItemCursorFetchWithNegativeDisableInput {
+  """The record to create"""
+  todoItemCursorFetchWithNegativeDisable: CreateTodoItemCursorFetchWithNegativeDisable!
+}
+
+input CreateTodoItemCursorFetchWithNegativeDisable {
+  id: Float!
+  title: String!
+  completed: Boolean!
+}
+
+input CreateManyTodoItemCursorFetchWithNegativeDisablesInput {
+  """Array of records to create"""
+  todoItemCursorFetchWithNegativeDisables: [CreateTodoItemCursorFetchWithNegativeDisable!]!
+}
+
+input UpdateOneTodoItemCursorFetchWithNegativeDisableInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateTodoItemCursorFetchWithNegativeDisable!
+}
+
+input UpdateTodoItemCursorFetchWithNegativeDisable {
+  id: Float
+  title: String
+  completed: Boolean
+}
+
+input UpdateManyTodoItemCursorFetchWithNegativeDisablesInput {
+  """Filter used to find fields to update"""
+  filter: TodoItemCursorFetchWithNegativeDisableUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateTodoItemCursorFetchWithNegativeDisable!
+}
+
+input TodoItemCursorFetchWithNegativeDisableUpdateFilter {
+  and: [TodoItemCursorFetchWithNegativeDisableUpdateFilter!]
+  or: [TodoItemCursorFetchWithNegativeDisableUpdateFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}
+
+input DeleteOneTodoItemCursorFetchWithNegativeDisableInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteManyTodoItemCursorFetchWithNegativeDisablesInput {
+  """Filter to find records to delete"""
+  filter: TodoItemCursorFetchWithNegativeDisableDeleteFilter!
+}
+
+input TodoItemCursorFetchWithNegativeDisableDeleteFilter {
+  and: [TodoItemCursorFetchWithNegativeDisableDeleteFilter!]
+  or: [TodoItemCursorFetchWithNegativeDisableDeleteFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}
+
+input CreateOneTodoItemOffsetFetchWithNegativeEnableInput {
+  """The record to create"""
+  todoItemOffsetFetchWithNegativeEnable: CreateTodoItemOffsetFetchWithNegativeEnable!
+}
+
+input CreateTodoItemOffsetFetchWithNegativeEnable {
+  id: Float!
+  title: String!
+  completed: Boolean!
+}
+
+input CreateManyTodoItemOffsetFetchWithNegativeEnablesInput {
+  """Array of records to create"""
+  todoItemOffsetFetchWithNegativeEnables: [CreateTodoItemOffsetFetchWithNegativeEnable!]!
+}
+
+input UpdateOneTodoItemOffsetFetchWithNegativeEnableInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateTodoItemOffsetFetchWithNegativeEnable!
+}
+
+input UpdateTodoItemOffsetFetchWithNegativeEnable {
+  id: Float
+  title: String
+  completed: Boolean
+}
+
+input UpdateManyTodoItemOffsetFetchWithNegativeEnablesInput {
+  """Filter used to find fields to update"""
+  filter: TodoItemOffsetFetchWithNegativeEnableUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateTodoItemOffsetFetchWithNegativeEnable!
+}
+
+input TodoItemOffsetFetchWithNegativeEnableUpdateFilter {
+  and: [TodoItemOffsetFetchWithNegativeEnableUpdateFilter!]
+  or: [TodoItemOffsetFetchWithNegativeEnableUpdateFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}
+
+input DeleteOneTodoItemOffsetFetchWithNegativeEnableInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteManyTodoItemOffsetFetchWithNegativeEnablesInput {
+  """Filter to find records to delete"""
+  filter: TodoItemOffsetFetchWithNegativeEnableDeleteFilter!
+}
+
+input TodoItemOffsetFetchWithNegativeEnableDeleteFilter {
+  and: [TodoItemOffsetFetchWithNegativeEnableDeleteFilter!]
+  or: [TodoItemOffsetFetchWithNegativeEnableDeleteFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}
+
+input CreateOneTodoItemOffsetFetchWithNegativeDisableInput {
+  """The record to create"""
+  todoItemOffsetFetchWithNegativeDisable: CreateTodoItemOffsetFetchWithNegativeDisable!
+}
+
+input CreateTodoItemOffsetFetchWithNegativeDisable {
+  id: Float!
+  title: String!
+  completed: Boolean!
+}
+
+input CreateManyTodoItemOffsetFetchWithNegativeDisablesInput {
+  """Array of records to create"""
+  todoItemOffsetFetchWithNegativeDisables: [CreateTodoItemOffsetFetchWithNegativeDisable!]!
+}
+
+input UpdateOneTodoItemOffsetFetchWithNegativeDisableInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateTodoItemOffsetFetchWithNegativeDisable!
+}
+
+input UpdateTodoItemOffsetFetchWithNegativeDisable {
+  id: Float
+  title: String
+  completed: Boolean
+}
+
+input UpdateManyTodoItemOffsetFetchWithNegativeDisablesInput {
+  """Filter used to find fields to update"""
+  filter: TodoItemOffsetFetchWithNegativeDisableUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateTodoItemOffsetFetchWithNegativeDisable!
+}
+
+input TodoItemOffsetFetchWithNegativeDisableUpdateFilter {
+  and: [TodoItemOffsetFetchWithNegativeDisableUpdateFilter!]
+  or: [TodoItemOffsetFetchWithNegativeDisableUpdateFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}
+
+input DeleteOneTodoItemOffsetFetchWithNegativeDisableInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteManyTodoItemOffsetFetchWithNegativeDisablesInput {
+  """Filter to find records to delete"""
+  filter: TodoItemOffsetFetchWithNegativeDisableDeleteFilter!
+}
+
+input TodoItemOffsetFetchWithNegativeDisableDeleteFilter {
+  and: [TodoItemOffsetFetchWithNegativeDisableDeleteFilter!]
+  or: [TodoItemOffsetFetchWithNegativeDisableDeleteFilter!]
+  id: NumberFieldComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+}

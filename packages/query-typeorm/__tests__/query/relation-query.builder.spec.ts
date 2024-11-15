@@ -50,7 +50,8 @@ describe('RelationQueryBuilder', (): void => {
       dateType: new Date(),
       boolType: true,
       numberType: 1,
-      stringType: 'str'
+      stringType: 'str',
+      jsonType: {}
     }
 
     const testRelation: TestRelation = {
@@ -189,7 +190,15 @@ describe('RelationQueryBuilder', (): void => {
         boolType: true,
         numberType: 1,
         stringType: 'str',
-        manyToOneRelation: 'test-relation-id-1' as any
+        manyToOneRelation: 'test-relation-id-1' as any,
+        jsonType: {
+          testEntityPk: 'test-entity-id-1',
+          dateType: new Date().toISOString(),
+          boolType: true,
+          numberType: 1,
+          stringType: 'str',
+          manyToOneRelation: 'test-relation-id-1'
+        }
       },
       {
         testEntityPk: 'test-entity-id-2',
@@ -197,7 +206,15 @@ describe('RelationQueryBuilder', (): void => {
         boolType: false,
         numberType: 2,
         stringType: 'str',
-        manyToOneRelation: 'test-relation-id-2' as any
+        manyToOneRelation: 'test-relation-id-2' as any,
+        jsonType: {
+          testEntityPk: 'test-entity-id-2',
+          dateType: new Date().toISOString(),
+          boolType: false,
+          numberType: 2,
+          stringType: 'str',
+          manyToOneRelation: 'test-relation-id-2'
+        }
       }
     ]
 

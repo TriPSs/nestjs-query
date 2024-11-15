@@ -93,6 +93,7 @@ describe('SequelizeQueryService', (): void => {
           const queryResult = await queryService.query({
             filter: {
               testRelations: {
+                // @ts-ignore
                 relationName: {
                   in: [PLAIN_TEST_RELATIONS[0].relationName, PLAIN_TEST_RELATIONS[1].relationName]
                 }
@@ -409,6 +410,7 @@ describe('SequelizeQueryService', (): void => {
           const queryService = moduleRef.get(TestEntityService)
           const count = await queryService.count({
             testRelations: {
+              // @ts-ignore
               testEntityId: {
                 in: [relation.testEntityId]
               }

@@ -93,6 +93,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]
@@ -239,6 +240,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]
@@ -425,6 +427,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]
@@ -569,6 +572,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]
@@ -707,6 +711,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]
@@ -851,6 +856,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]
@@ -995,6 +1001,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]
@@ -1133,6 +1140,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]
@@ -1317,6 +1325,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]
@@ -1461,6 +1470,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]
@@ -1605,6 +1615,7 @@ input IDFilterComparison {
   lte: ID
   like: ID
   notLike: ID
+  contains: ID
   iLike: ID
   notILike: ID
   in: [ID!]

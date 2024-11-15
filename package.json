@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "docker": "docker compose -f ./examples/docker-compose.yml",
-    "prepare": "husky install",
+    "prepare": "husky",
     "test:e2e": "nx e2e examples"
   },
   "resolutions": {
@@ -26,6 +26,7 @@
     "@nestjs/sequelize": "10.0.1",
     "@nestjs/typeorm": "^10.0.2",
     "class-validator": "0.14.1",
+    "graphql-type-json": "^0.3.2",
     "mongoose": "^8.5.3",
     "reflect-metadata": "^0.2.2",
     "sequelize": "6.37.3",

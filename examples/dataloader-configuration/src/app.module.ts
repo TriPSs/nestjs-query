@@ -29,6 +29,7 @@ import { batchScheduleFn } from './batch-schedule-fn'
     SubTaskModule,
     TodoItemModule,
     TagModule
+    // JsonTaskModule
   ]
 })
 export class AppModule {}

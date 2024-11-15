@@ -79,7 +79,7 @@ export class WhereBuilder<Entity> {
     if (alias && associations.has(alias)) {
       colName = (associations.get(alias)?.target.rawAttributes[colName as string]?.field ?? colName) as T
     }
-    const opts = Object.keys(cmp) as (keyof FilterFieldComparison<Entity[T]>)[]
+    const opts = Object.keys(cmp).map((k) => k as keyof FilterFieldComparison<Entity[T]>)
     if (opts.length === 1) {
       const cmpType = opts[0]
       return this.sqlComparisonBuilder.build(colName, cmpType, cmp[cmpType] as EntityComparisonField<Entity, T>, alias)

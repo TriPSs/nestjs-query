@@ -17,6 +17,7 @@ exports[`FilterQueryBuilder #select with filter should apply filtering from rela
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
@@ -40,6 +41,7 @@ exports[`FilterQueryBuilder #select with filter should call whereBuilder#build i
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -56,6 +58,7 @@ exports[`FilterQueryBuilder #select with filter should not call whereBuilder#bui
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -70,6 +73,7 @@ exports[`FilterQueryBuilder #select with paging should apply empty paging args 1
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -84,6 +88,7 @@ exports[`FilterQueryBuilder #select with paging should apply paging args going b
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -102,6 +107,7 @@ exports[`FilterQueryBuilder #select with paging should apply paging args going f
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -120,6 +126,7 @@ exports[`FilterQueryBuilder #select with paging should use limit/offset when fil
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -139,6 +146,7 @@ exports[`FilterQueryBuilder #select with paging should use limit/offset when fil
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -158,6 +166,7 @@ exports[`FilterQueryBuilder #select with paging should use skip/take when filter
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -173,6 +182,7 @@ exports[`FilterQueryBuilder #select with paging skip/take - limit/offset should 
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -189,6 +199,7 @@ exports[`FilterQueryBuilder #select with relation should select and map relation
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
@@ -209,6 +220,7 @@ exports[`FilterQueryBuilder #select with relation should select and sub relation
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
@@ -222,6 +234,7 @@ exports[`FilterQueryBuilder #select with relation should select and sub relation
   "testEntityUniDirectional"."bool_type" AS "testEntityUniDirectional_bool_type",
   "testEntityUniDirectional"."number_type" AS "testEntityUniDirectional_number_type",
   "testEntityUniDirectional"."date_type" AS "testEntityUniDirectional_date_type",
+  "testEntityUniDirectional"."json_type" AS "testEntityUniDirectional_json_type",
   "testEntityUniDirectional"."many_to_one_relation_id" AS "testEntityUniDirectional_many_to_one_relation_id",
   "testEntityUniDirectional"."many_to_one_soft_delete_relation_id" AS "testEntityUniDirectional_many_to_one_soft_delete_relation_id",
   "testEntityUniDirectional"."oneTestRelationTestRelationPk" AS "testEntityUniDirectional_oneTestRelationTestRelationPk"
@@ -238,6 +251,7 @@ exports[`FilterQueryBuilder #select with sorting should apply ASC NULLS_FIRST so
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -254,6 +268,7 @@ exports[`FilterQueryBuilder #select with sorting should apply ASC NULLS_LAST sor
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -270,6 +285,7 @@ exports[`FilterQueryBuilder #select with sorting should apply ASC sorting 1`] = 
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -286,6 +302,7 @@ exports[`FilterQueryBuilder #select with sorting should apply DESC NULLS_FIRST s
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -302,6 +319,7 @@ exports[`FilterQueryBuilder #select with sorting should apply DESC NULLS_LAST so
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -318,6 +336,7 @@ exports[`FilterQueryBuilder #select with sorting should apply DESC sorting 1`] =
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -334,6 +353,7 @@ exports[`FilterQueryBuilder #select with sorting should apply multiple sorts 1`]
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"

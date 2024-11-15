@@ -31,6 +31,7 @@ describe('FilterQueryBuilder', (): void => {
           {
             oneTestRelation: {
               manyTestEntities: {
+                //@ts-ignore
                 oneTestRelation: {
                   manyTestEntities: {
                     stringType: { eq: '123' }
@@ -103,6 +104,7 @@ describe('FilterQueryBuilder', (): void => {
           },
           {
             testRelations: {
+              //@ts-ignore
               relationName: { eq: '123' }
             }
           }
@@ -117,6 +119,7 @@ describe('FilterQueryBuilder', (): void => {
               testRelationPk: { eq: '123' },
               testEntity: {
                 testRelations: {
+                  //@ts-ignore
                   relationName: { eq: '123' }
                 }
               }
@@ -309,6 +312,7 @@ describe('FilterQueryBuilder', (): void => {
           expectSelectSQLSnapshot(
             {
               paging: { limit: 10, offset: 3 },
+              //@ts-ignore
               filter: { manyTestRelations: { testRelationPk: { eq: 'test' } } }
             },
             instance(mockWhereBuilder)
@@ -323,6 +327,7 @@ describe('FilterQueryBuilder', (): void => {
         expectSelectSQLSnapshot(
           {
             paging: { limit: 10, offset: 3 },
+            //@ts-ignore
             filter: { testRelations: { testRelationPk: { eq: 'test' } } }
           },
           instance(mockWhereBuilder)

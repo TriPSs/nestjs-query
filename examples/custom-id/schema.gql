@@ -63,6 +63,7 @@ input CustomIDScalarFilterComparison {
   lte: CustomID
   like: CustomID
   notLike: CustomID
+  contains: CustomID
   iLike: CustomID
   notILike: CustomID
   in: [CustomID!]

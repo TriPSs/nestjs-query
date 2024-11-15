@@ -21,6 +21,9 @@ export class TestEntity {
   @Column({ name: 'date_type' })
   dateType!: Date
 
+  @Column({ name: 'json_type', type: 'json' })
+  jsonType!: object
+
   @OneToMany('TestRelation', 'testEntity')
   testRelations?: TestRelation[]
 

@@ -6,8 +6,10 @@ import {
   isBetweenComparisonOperators,
   isBooleanComparisonOperators,
   isInComparisonOperators,
+  isJsonComparisonOperators,
   isLikeComparisonOperator,
   isRangeComparisonOperators,
+  JsonComparisonOperators,
   LikeComparisonOperators,
   RangeComparisonOperators
 } from './filter.helpers'
@@ -35,6 +37,10 @@ export class ComparisonBuilder {
     }
     if (isLikeComparisonOperator(cmp)) {
       return this.likeComparison(cmp, field, val as unknown as string)
+    }
+
+    if (isJsonComparisonOperators(cmp)) {
+      return this.jsonComparison(cmp, field, val as DTO[F][])
     }
 
     if (isBetweenComparisonOperators(cmp)) {
@@ -97,6 +103,13 @@ export class ComparisonBuilder {
       return compare((dto) => !val.includes(dto[field]), true)
     }
     return compare((dto) => val.includes(dto[field]), false)
+  }
+
+  private static jsonComparison<DTO, F extends keyof DTO>(cmp: JsonComparisonOperators, field: F, val: DTO[F][]): FilterFn<DTO> {
+    if (cmp === 'contains') {
+      return compare((dto) => !Object.keys(dto[field] || {}).length, true)
+    }
+    return compare((dto) => !Object.keys(dto[field] || {}).length, false)
   }
 
   private static betweenComparison<DTO, F extends keyof DTO>(

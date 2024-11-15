@@ -15,6 +15,11 @@ export const subTaskFields = `
   todoItemId
 `
 
+export const jsonTaskFields = `
+  title
+  display
+`
+
 export const tagFields = `
   id
   name

@@ -186,6 +186,7 @@ input StringEnumFilterComparison {
   lte: StringEnum
   like: StringEnum
   notLike: StringEnum
+  contains: StringEnum
   iLike: StringEnum
   notILike: StringEnum
   in: [StringEnum!]
@@ -203,6 +204,7 @@ input NumberEnumFilterComparison {
   lte: NumberEnum
   like: NumberEnum
   notLike: NumberEnum
+  contains: NumberEnum
   iLike: NumberEnum
   notILike: NumberEnum
   in: [NumberEnum!]
@@ -743,6 +745,10 @@ exports[`filter types FilterType filterDecorators option should apply the decora
     "target": Fc {},
   },
   {
+    "propertyKey": "contains",
+    "target": Fc {},
+  },
+  {
     "propertyKey": "iLike",
     "target": Fc {},
   },
@@ -788,6 +794,10 @@ exports[`filter types FilterType filterDecorators option should apply the decora
   },
   {
     "propertyKey": "notLike",
+    "target": Fc {},
+  },
+  {
+    "propertyKey": "contains",
     "target": Fc {},
   },
   {
@@ -1805,6 +1815,7 @@ input StringEnumFilterComparison {
   lte: StringEnum
   like: StringEnum
   notLike: StringEnum
+  contains: StringEnum
   iLike: StringEnum
   notILike: StringEnum
   in: [StringEnum!]
@@ -1829,6 +1840,7 @@ input NumberEnumFilterComparison {
   lte: NumberEnum
   like: NumberEnum
   notLike: NumberEnum
+  contains: NumberEnum
   iLike: NumberEnum
   notILike: NumberEnum
   in: [NumberEnum!]
@@ -1971,6 +1983,7 @@ input MyDateFilterComparison {
   lte: DateTime
   like: DateTime
   notLike: DateTime
+  contains: DateTime
   iLike: DateTime
   notILike: DateTime
   in: [DateTime!]
@@ -1995,6 +2008,7 @@ input MyCustomFloatFilterComparison {
   lte: Float
   like: Float
   notLike: Float
+  contains: Float
   iLike: Float
   notILike: Float
   in: [Float!]
@@ -2195,6 +2209,7 @@ input StringEnumFilterComparison {
   lte: StringEnum
   like: StringEnum
   notLike: StringEnum
+  contains: StringEnum
   iLike: StringEnum
   notILike: StringEnum
   in: [StringEnum!]
@@ -2212,6 +2227,7 @@ input NumberEnumFilterComparison {
   lte: NumberEnum
   like: NumberEnum
   notLike: NumberEnum
+  contains: NumberEnum
   iLike: NumberEnum
   notILike: NumberEnum
   in: [NumberEnum!]
@@ -2425,6 +2441,7 @@ input StringEnumFilterComparison {
   lte: StringEnum
   like: StringEnum
   notLike: StringEnum
+  contains: StringEnum
   iLike: StringEnum
   notILike: StringEnum
   in: [StringEnum!]
@@ -2442,6 +2459,7 @@ input NumberEnumFilterComparison {
   lte: NumberEnum
   like: NumberEnum
   notLike: NumberEnum
+  contains: NumberEnum
   iLike: NumberEnum
   notILike: NumberEnum
   in: [NumberEnum!]

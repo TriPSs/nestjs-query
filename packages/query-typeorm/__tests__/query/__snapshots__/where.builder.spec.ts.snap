@@ -7,6 +7,7 @@ exports[`WhereBuilder and and multiple expressions together 1`] = `
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -28,6 +29,7 @@ exports[`WhereBuilder and and multiple filters together with multiple fields 1`]
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -53,6 +55,7 @@ exports[`WhereBuilder and multiple field comparisons together 1`] = `
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -71,6 +74,7 @@ exports[`WhereBuilder and should properly group AND with a sibling field compari
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -91,6 +95,7 @@ exports[`WhereBuilder and should support nested ors 1`] = `
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -120,6 +125,7 @@ exports[`WhereBuilder or and multiple and filters together 1`] = `
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -145,6 +151,7 @@ exports[`WhereBuilder or multiple operators for a single field together 1`] = `
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -166,6 +173,7 @@ exports[`WhereBuilder or or multiple expressions together 1`] = `
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -187,6 +195,7 @@ exports[`WhereBuilder or should properly group OR with a sibling field compariso
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -207,6 +216,7 @@ exports[`WhereBuilder or should support nested ands 1`] = `
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
@@ -236,6 +246,7 @@ exports[`WhereBuilder should accept a empty filter 1`] = `
   "TestEntity"."bool_type" AS "TestEntity_bool_type",
   "TestEntity"."number_type" AS "TestEntity_number_type",
   "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."json_type" AS "TestEntity_json_type",
   "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
   "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
   "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
