@@ -1,4 +1,14 @@
  
+# [7.4.0-alpha.0](https://github.com/souagrosolucoes/nestjs-query/compare/v7.3.0...v7.4.0-alpha.0) (2024-11-15)
+
+
+### Features
+
+* config npm ([#4](https://github.com/souagrosolucoes/nestjs-query/issues/4)) ([d49d035](https://github.com/souagrosolucoes/nestjs-query/commit/d49d035ea6f5441b47002c07e8d6624d6847f37e))
+* Filter Json ([#1](https://github.com/souagrosolucoes/nestjs-query/issues/1)) ([f71afa4](https://github.com/souagrosolucoes/nestjs-query/commit/f71afa46de3e9ca7238ea5b1a6794f4e1bbb3b5b))
+
+
+
 # [7.3.0](https://github.com/souagrosolucoes/nestjs-query/compare/v7.2.0...v7.3.0) (2024-11-06)
 
 
