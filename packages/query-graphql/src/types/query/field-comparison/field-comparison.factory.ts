@@ -27,6 +27,22 @@ import { getOrCreateNumberFieldComparison } from './number-field-comparison.type
 import { getOrCreateStringFieldComparison } from './string-field-comparison.type'
 import { getOrCreateStringListFieldComparison } from './string-list-field-comparison.type'
 import { getOrCreateTimestampFieldComparison } from './timestamp-field-comparison.type'
+import { getOrCreateDateFieldFutureComparison } from './date-field-future-comparison.type'
+
+enum TypeNames {
+  String = 'String',
+  StringList = 'StringList',
+  Number = 'Number',
+  Int = 'Int',
+  Float = 'Float',
+  Boolean = 'Boolean',
+  JSON = 'JSON',
+  Date = 'Date',
+  DateFuture = 'DateFuture',
+  DateTime = 'DateTime',
+  DateTimeFuture = 'DateTimeFuture',
+  Timestamp = 'Timestamp'
+}
 
 /** @internal */
 const filterComparisonMap = new Map<string, () => Class<FilterFieldComparison<unknown>>>()
@@ -38,7 +54,9 @@ filterComparisonMap.set('FloatFilterComparison', getOrCreateFloatFieldComparison
 filterComparisonMap.set('BooleanFilterComparison', getOrCreateBooleanFieldComparison)
 filterComparisonMap.set('JSONFilterComparison', getOrCreateJSONFieldComparison)
 filterComparisonMap.set('DateFilterComparison', getOrCreateDateFieldComparison)
+filterComparisonMap.set('DateFutureFilterComparison', getOrCreateDateFieldFutureComparison)
 filterComparisonMap.set('DateTimeFilterComparison', getOrCreateDateFieldComparison)
+filterComparisonMap.set('DateTimeFutureFilterComparison', getOrCreateDateFieldFutureComparison)
 filterComparisonMap.set('TimestampFilterComparison', getOrCreateTimestampFieldComparison)
 
 const knownTypes: Set<ReturnTypeFuncValue> = new Set([
@@ -59,25 +77,26 @@ const knownArrTypes: Set<ReturnTypeFuncValue> = new Set([String])
 const allowedBetweenTypes: Set<ReturnTypeFuncValue> = new Set([Number, Int, Float, Date, GraphQLISODateTime, GraphQLTimestamp])
 
 /** @internal */
-const getTypeName = (SomeType: ReturnTypeFuncValue, isJSON?: boolean): string => {
+const getTypeName = (SomeType: ReturnTypeFuncValue, isJSON?: boolean, futureDate?: boolean): `${TypeNames}` => {
+  const futureSuffix = futureDate ? 'Future' : ''
   if (isJSON) {
-    return 'JSON'
+    return 'JSON' as const
   }
   if (knownTypes.has(SomeType) || isNamed(SomeType)) {
     const typeName = (SomeType as { name: string }).name
-    return upperCaseFirst(typeName)
+    return (upperCaseFirst(typeName) + futureSuffix) as `${TypeNames}`
   }
   if (typeof SomeType === 'object' && Array.isArray(SomeType)) {
     if (knownArrTypes.has(SomeType?.[0] as ReturnTypeFuncValue)) {
-      const typeName = getTypeName(SomeType?.[0] as ReturnTypeFuncValue)
-      return `${typeName}List`
+      const typeName = getTypeName(SomeType?.[0] as ReturnTypeFuncValue, false, futureDate)
+      return `${typeName}List` as `${TypeNames}`
     }
     throw new Error(`Unable to create filter comparison for ${JSON.stringify(SomeType)}.`)
   }
   if (typeof SomeType === 'object') {
     const enumType = getGraphqlEnumMetadata(SomeType)
     if (enumType) {
-      return upperCaseFirst(enumType.name)
+      return upperCaseFirst(enumType.name) as `${TypeNames}`
     }
   }
   throw new Error(`Unable to create filter comparison for ${JSON.stringify(SomeType)}.`)
@@ -87,9 +106,9 @@ const isCustomFieldComparison = <T>(options: FilterComparisonOptions<T>): boolea
 
 const getComparisonTypeName = <T>(fieldType: ReturnTypeFuncValue, options: FilterComparisonOptions<T>): string => {
   if (isCustomFieldComparison(options)) {
-    return `${upperCaseFirst(options.fieldName)}FilterComparison`
+    return `${options.fieldName}FilterComparison`
   }
-  return `${getTypeName(fieldType, options.isJSON)}FilterComparison`
+  return `${getTypeName(fieldType, options.isJSON, options.futureDate)}FilterComparison`
 }
 
 type FilterComparisonOptions<T> = {
@@ -98,14 +117,15 @@ type FilterComparisonOptions<T> = {
   allowedComparisons?: FilterComparisonOperators<T>[]
   isJSON?: boolean
   returnTypeFunc?: ReturnTypeFunc
+  futureDate?: boolean
 }
 
 /** @internal */
 export function createFilterComparisonType<T>(options: FilterComparisonOptions<T>): Class<FilterFieldComparison<T>> {
   const { FieldType, returnTypeFunc } = options
-  const fieldType = returnTypeFunc ? returnTypeFunc() : FieldType
+  const fieldType: ReturnTypeFuncValue = returnTypeFunc ? returnTypeFunc() : FieldType
   const firstTypeOfArray = Array.isArray(fieldType) ? fieldType[0] : fieldType
-  const inputName = getComparisonTypeName(fieldType, options)
+  const inputName = getComparisonTypeName(fieldType as ReturnTypeFuncValue, options)
   const generator = filterComparisonMap.get(inputName)
 
   if (generator) {
@@ -193,7 +213,7 @@ export function createFilterComparisonType<T>(options: FilterComparisonOptions<T
     @SkipIf(isNotAllowed('notILike'), Field(() => fieldType, { nullable: true }))
     @IsUndefined()
     @Type(() => FieldType)
-    notILike?: T;
+    notILike?: T
 
     @SkipIf(isNotAllowed('in'), Field(() => [fieldType], { nullable: true }))
     @IsUndefined()

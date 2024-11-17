@@ -10,6 +10,7 @@ export type FilterableFieldOptions<T = any> = {
   isJSON?: boolean
   filterRequired?: boolean
   filterOnly?: boolean
+  futureDate?: boolean
 } & FieldOptions<T>
 
 export interface FilterableFieldDescriptor<T = any> {

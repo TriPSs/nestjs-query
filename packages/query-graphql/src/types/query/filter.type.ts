@@ -72,6 +72,7 @@ function handleFilterFields<T>(TClass: Class<T>, name: string, fields: Filterabl
       fieldName: `${baseName}${upperCaseFirst(propertyName)}`,
       allowedComparisons: advancedOptions?.allowedComparisons,
       isJSON: advancedOptions?.isJSON,
+      futureDate: advancedOptions?.futureDate,
       returnTypeFunc
     })
     const nullable = advancedOptions?.filterRequired !== true
