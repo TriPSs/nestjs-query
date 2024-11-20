@@ -1,4 +1,9 @@
 {
+  "pluginsConfig": {
+    "@nrwl/js": {
+      "analyzeSourceFiles": false
+    }
+  },
   "extends": "nx/presets/npm.json",
   "npmScope": "rezonapp",
   "tasksRunnerOptions": {
@@ -37,11 +42,6 @@
   "affected": {
     "defaultBase": "master"
   },
-  "pluginsConfig": {
-    "@nrwl/js": {
-      "analyzeSourceFiles": false
-    }
-  },
   "cli": {
     "defaultCollection": "@nrwl/node"
   },
@@ -49,7 +49,38 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"]
+      "executor": "@nrwl/js:tsc",
+      "dependsOn": ["^build"],
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/{projectRoot}",
+        "tsConfig": "{projectRoot}/tsconfig.lib.json",
+        "packageJson": "{projectRoot}/package.json",
+        "main": "{projectRoot}/src/index.ts",
+        "assets": ["{projectRoot}/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true,
+        "buildableProjectDepsInPackageJsonType": "dependencies"
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["{projectRoot}/**/*.ts"],
+        "fix": true
+      }
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {}
     },
     "prepare": {
       "dependsOn": ["^prepare"]
@@ -57,5 +88,6 @@
     "package": {
       "dependsOn": ["^package"]
     }
-  }
+  },
+  "useLegacyCache": true
 }

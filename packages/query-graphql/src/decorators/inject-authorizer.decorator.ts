@@ -1,6 +1,6 @@
-import { Inject } from '@nestjs/common'
-import { Class } from '@rezonate/nestjs-query-core'
+import { Inject } from '@nestjs/common';
+import { Class } from '@rezonate/nestjs-query-core';
 
-import { getAuthorizerToken } from '../auth'
+import { getAuthorizerToken } from '../auth';
 
-export const InjectAuthorizer = <DTO>(DTOClass: Class<DTO>): ParameterDecorator => Inject(getAuthorizerToken(DTOClass))
+export const InjectAuthorizer = <DTO>(DTOClass: Class<DTO>): ParameterDecorator => Inject(getAuthorizerToken(DTOClass));

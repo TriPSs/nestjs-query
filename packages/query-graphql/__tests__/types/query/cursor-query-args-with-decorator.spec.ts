@@ -9,17 +9,17 @@ import {
   Int,
   ObjectType,
   Query,
-  Resolver
-} from '@nestjs/graphql'
-import { SortDirection } from '@rezonate/nestjs-query-core'
-import { FilterableField, PagingStrategies, QueryArgsType, QueryOptions } from '@rezonate/nestjs-query-graphql'
-import { plainToClass } from 'class-transformer'
-import { validateSync } from 'class-validator'
+  Resolver,
+} from '@nestjs/graphql';
+import { SortDirection } from '@rezonate/nestjs-query-core';
+import { FilterableField, PagingStrategies, QueryArgsType, QueryOptions } from '@rezonate/nestjs-query-graphql';
+import { plainToClass } from 'class-transformer';
+import { validateSync } from 'class-validator';
 
-import { generateSchema } from '../../__fixtures__'
+import { generateSchema } from '../../__fixtures__';
 
 describe('QueryArgsType with decorator options', (): void => {
-  afterEach(() => jest.clearAllMocks())
+  afterEach(() => jest.clearAllMocks());
 
   @ObjectType('TestQuery')
   @QueryOptions({
@@ -27,56 +27,56 @@ describe('QueryArgsType with decorator options', (): void => {
     defaultResultSize: 2,
     maxResultsSize: 5,
     defaultFilter: { booleanField: { is: true } },
-    defaultSort: [{ field: 'booleanField', direction: SortDirection.DESC }]
+    defaultSort: [{ field: 'booleanField', direction: SortDirection.DESC }],
   })
   class TestDto {
     @FilterableField(() => ID)
-    idField!: number
+    idField!: number;
 
     @FilterableField(() => ID, { nullable: true })
-    idFieldOption?: number
+    idFieldOption?: number;
 
     @FilterableField()
-    stringField!: string
+    stringField!: string;
 
     @FilterableField({ nullable: true })
-    stringFieldOptional?: string
+    stringFieldOptional?: string;
 
     @FilterableField()
-    booleanField!: boolean
+    booleanField!: boolean;
 
     @FilterableField({ nullable: true })
-    booleanFieldOptional?: boolean
+    booleanFieldOptional?: boolean;
 
     @FilterableField()
-    numberField!: number
+    numberField!: number;
 
     @FilterableField({ nullable: true })
-    numberFieldOptional?: number
+    numberFieldOptional?: number;
 
     @FilterableField(() => Float)
-    floatField!: number
+    floatField!: number;
 
     @FilterableField(() => Float, { nullable: true })
-    floatFieldOptional?: number
+    floatFieldOptional?: number;
 
     @FilterableField(() => Int)
-    intField!: number
+    intField!: number;
 
     @FilterableField(() => Int, { nullable: true })
-    intFieldOptional?: number
+    intFieldOptional?: number;
 
     @FilterableField(() => GraphQLTimestamp)
-    timestampField!: Date
+    timestampField!: Date;
 
     @FilterableField(() => GraphQLTimestamp, { nullable: true })
-    timestampFieldOptional?: Date
+    timestampFieldOptional?: Date;
 
     @FilterableField(() => GraphQLISODateTime)
-    date!: Date
+    date!: Date;
 
     @FilterableField(() => GraphQLISODateTime, { nullable: true })
-    dateOptional?: Date
+    dateOptional?: Date;
   }
 
   @ArgsType()
@@ -88,49 +88,49 @@ describe('QueryArgsType with decorator options', (): void => {
       @Query(() => String)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       test(@Args() query: CursorQueryOptionsArgs): string {
-        return 'hello'
+        return 'hello';
       }
     }
 
-    const schema = await generateSchema([TestCursorQueryOptionsDecoratorResolver])
-    expect(schema).toMatchSnapshot()
-  })
+    const schema = await generateSchema([TestCursorQueryOptionsDecoratorResolver]);
+    expect(schema).toMatchSnapshot();
+  });
 
   describe('max result size', () => {
     it('should validate a maxResultsSize for paging.first', () => {
       const queryObj: CursorQueryOptionsArgs = {
-        paging: { first: 10 }
-      }
-      const queryInstance = plainToClass(CursorQueryOptionsArgs, queryObj)
+        paging: { first: 10 },
+      };
+      const queryInstance = plainToClass(CursorQueryOptionsArgs, queryObj);
       expect(validateSync(queryInstance)).toEqual([
         {
           children: [],
           constraints: {
-            PropertyMax: 'Field paging.first max allowed value is `5`.'
+            PropertyMax: 'Field paging.first max allowed value is `5`.',
           },
           property: 'paging',
           target: queryObj,
-          value: queryObj.paging
-        }
-      ])
-    })
+          value: queryObj.paging,
+        },
+      ]);
+    });
 
     it('should validate a maxResultsSize for paging.last', () => {
       const queryObj: CursorQueryOptionsArgs = {
-        paging: { last: 10, before: 'abc' }
-      }
-      const queryInstance = plainToClass(CursorQueryOptionsArgs, queryObj)
+        paging: { last: 10, before: 'abc' },
+      };
+      const queryInstance = plainToClass(CursorQueryOptionsArgs, queryObj);
       expect(validateSync(queryInstance)).toEqual([
         {
           children: [],
           constraints: {
-            PropertyMax: 'Field paging.last max allowed value is `5`.'
+            PropertyMax: 'Field paging.last max allowed value is `5`.',
           },
           property: 'paging',
           target: queryObj,
-          value: queryObj.paging
-        }
-      ])
-    })
-  })
-})
+          value: queryObj.paging,
+        },
+      ]);
+    });
+  });
+});

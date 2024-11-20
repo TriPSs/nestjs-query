@@ -1,17 +1,18 @@
-import { ExecutionContext } from '@nestjs/common'
-import { Args, ArgsType, Context, Parent, Resolver } from '@nestjs/graphql'
-import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@rezonate/nestjs-query-core'
+// eslint-disable-next-line max-classes-per-file
+import { ExecutionContext } from '@nestjs/common';
+import { Args, ArgsType, Context, Parent, Resolver } from '@nestjs/graphql';
+import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@rezonate/nestjs-query-core';
 
-import { OperationGroup } from '../../auth'
-import { getDTONames } from '../../common'
-import { AggregateQueryParam, RelationAuthorizerFilter, ResolverField } from '../../decorators'
-import { AuthorizerInterceptor } from '../../interceptors'
-import { AggregateRelationsLoader, DataLoaderFactory } from '../../loader'
-import { AggregateArgsType, AggregateResponseType } from '../../types'
-import { transformAndValidate } from '../helpers'
-import { BaseServiceResolver, ServiceResolver } from '../resolver.interface'
-import { flattenRelations, removeRelationOpts } from './helpers'
-import { RelationsOpts, ResolverRelation } from './relations.interface'
+import { OperationGroup } from '../../auth';
+import { getDTONames } from '../../common';
+import { AggregateQueryParam, RelationAuthorizerFilter, ResolverField } from '../../decorators';
+import { AuthorizerInterceptor } from '../../interceptors';
+import { AggregateRelationsLoader, DataLoaderFactory } from '../../loader';
+import { AggregateArgsType, AggregateResponseType } from '../../types';
+import { transformAndValidate } from '../helpers';
+import { BaseServiceResolver, ServiceResolver } from '../resolver.interface';
+import { flattenRelations, removeRelationOpts } from './helpers';
+import { RelationsOpts, ResolverRelation } from './relations.interface';
 
 export interface AggregateRelationsResolverOpts extends RelationsOpts {
   /**
@@ -28,33 +29,33 @@ type AggregateRelationOpts<Relation> = {
   maxRowsForAggregate?: number
   maxRowsForAggregateWithIndex?: number
   limitAggregateByTableSize?: boolean
-} & ResolverRelation<Relation>
+} & ResolverRelation<Relation>;
 
 const AggregateRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: AggregateRelationOpts<Relation>) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
     if (!relation.enableAggregate) {
-      return Base
+      return Base;
     }
-    const commonResolverOpts = removeRelationOpts(relation)
-    const relationDTO = relation.DTO
-    const dtoName = getDTONames(DTOClass).baseName
+    const commonResolverOpts = removeRelationOpts(relation);
+    const relationDTO = relation.DTO;
+    const dtoName = getDTONames(DTOClass).baseName;
     const { baseNameLower, pluralBaseNameLower, pluralBaseName } = getDTONames(relationDTO, {
-      dtoName: relation.dtoName
-    })
-    const relationName = relation.relationName ?? pluralBaseNameLower
-    const aggregateRelationLoaderName = `aggregate${pluralBaseName}For${dtoName}`
-    const aggregateLoader = new AggregateRelationsLoader<DTO, Relation>(relationDTO, relationName)
+      dtoName: relation.dtoName,
+    });
+    const relationName = relation.relationName ?? pluralBaseNameLower;
+    const aggregateRelationLoaderName = `aggregate${pluralBaseName}For${dtoName}`;
+    const aggregateLoader = new AggregateRelationsLoader<DTO, Relation>(relationDTO, relationName);
 
     @ArgsType()
     class RelationQA extends AggregateArgsType(relationDTO) {}
 
-    const AR = AggregateResponseType(relationDTO, { prefix: `${dtoName}${pluralBaseName}` })
+    const AR = AggregateResponseType(relationDTO, { prefix: `${dtoName}${pluralBaseName}` });
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class AggregateMixin extends Base {
       @ResolverField(`${pluralBaseNameLower}Aggregate`, () => [AR], {}, commonResolverOpts, {
-        interceptors: [AuthorizerInterceptor(DTOClass)]
+        interceptors: [AuthorizerInterceptor(DTOClass)],
       })
       async [`aggregate${pluralBaseName}`](
         @Parent() dto: DTO,
@@ -63,11 +64,11 @@ const AggregateRelationMixin =
         @Context() context: ExecutionContext,
         @RelationAuthorizerFilter(baseNameLower, {
           operationGroup: OperationGroup.AGGREGATE,
-          many: true
+          many: true,
         })
-        relationFilter?: Filter<Relation>
+        relationFilter?: Filter<Relation>,
       ): Promise<(AggregateResponse<Relation> | Error)[]> {
-        const qa = await transformAndValidate(RelationQA, q)
+        const qa = await transformAndValidate(RelationQA, q);
         const loader = DataLoaderFactory.getOrCreateLoader(
           context,
           aggregateRelationLoaderName,
@@ -76,30 +77,30 @@ const AggregateRelationMixin =
             qa.groupByLimit,
             relation.maxRowsForAggregate,
             relation.maxRowsForAggregateWithIndex,
-            relation.limitAggregateByTableSize
-          )
-        )
+            relation.limitAggregateByTableSize,
+          ),
+        );
         return loader.load({
           dto,
           filter: mergeFilter(qa?.filter ?? {}, relationFilter ?? {}),
-          aggregate: aggregateQuery
-        })
+          aggregate: aggregateQuery,
+        });
       }
     }
 
-    return AggregateMixin
-  }
+    return AggregateMixin;
+  };
 
 export const AggregateRelationsMixin =
   <DTO>(DTOClass: Class<DTO>, relations: AggregateRelationsResolverOpts) =>
   <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    const { many, enableAggregate } = relations
-    const manyRelations = flattenRelations(many ?? {})
-    return manyRelations.reduce((RB, a) => AggregateRelationMixin(DTOClass, { enableAggregate, ...a })(RB), Base)
-  }
+    const { many, enableAggregate } = relations;
+    const manyRelations = flattenRelations(many ?? {});
+    return manyRelations.reduce((RB, a) => AggregateRelationMixin(DTOClass, { enableAggregate, ...a })(RB), Base);
+  };
 
 export const AggregateRelationsResolver = <DTO>(
   DTOClass: Class<DTO>,
-  relations: AggregateRelationsResolverOpts
+  relations: AggregateRelationsResolverOpts,
 ): Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>> =>
-  AggregateRelationsMixin(DTOClass, relations)(BaseServiceResolver)
+  AggregateRelationsMixin(DTOClass, relations)(BaseServiceResolver);

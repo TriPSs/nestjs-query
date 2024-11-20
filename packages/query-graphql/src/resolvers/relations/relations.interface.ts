@@ -1,14 +1,14 @@
-import { Complexity } from '@nestjs/graphql'
-import { Class } from '@rezonate/nestjs-query-core'
+import { Complexity } from '@nestjs/graphql';
+import { Class } from '@rezonate/nestjs-query-core';
 
-import { AuthorizerOptions } from '../../auth'
-import { DTONamesOpts } from '../../common'
-import { ResolverMethodOpts } from '../../decorators'
-import { ConnectionOptions, QueryArgsTypeOpts } from '../../types'
+import { AuthorizerOptions } from '../../auth';
+import { DTONamesOpts } from '../../common';
+import { ResolverMethodOpts } from '../../decorators';
+import { ConnectionOptions, QueryArgsTypeOpts } from '../../types';
 
 export type ReferencesKeys<DTO, Reference> = {
   [F in keyof Reference]?: keyof DTO
-}
+};
 
 export interface ResolverRelationReference<DTO, Reference> extends DTONamesOpts, ResolverMethodOpts {
   /**
@@ -82,12 +82,12 @@ export type ResolverRelation<Relation> = {
 } & DTONamesOpts &
   ResolverMethodOpts &
   QueryArgsTypeOpts<Relation> &
-  Pick<ConnectionOptions, 'enableTotalCount'>
+  Pick<ConnectionOptions, 'enableTotalCount'>;
 
-export type RelationTypeMap<RT> = Record<string, RT>
+export type RelationTypeMap<RT> = Record<string, RT>;
 
-export type ResolverOneRelation<Relation> = Omit<ResolverRelation<Relation>, 'disableFilter' | 'disableSort'>
-export type ResolverManyRelation<Relation> = ResolverRelation<Relation>
+export type ResolverOneRelation<Relation> = Omit<ResolverRelation<Relation>, 'disableFilter' | 'disableSort'>;
+export type ResolverManyRelation<Relation> = ResolverRelation<Relation>;
 
 export type RelationsOpts<Relation = unknown> = {
   /**
@@ -98,7 +98,7 @@ export type RelationsOpts<Relation = unknown> = {
    * All relations that have multiple records
    */
   many?: RelationTypeMap<ResolverManyRelation<Relation>>
-}
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ReferencesOpts<DTO> = RelationTypeMap<ResolverRelationReference<DTO, any>>
+export type ReferencesOpts<DTO> = RelationTypeMap<ResolverRelationReference<DTO, any>>;

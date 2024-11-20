@@ -1,15 +1,15 @@
-import { Field, InputType } from '@nestjs/graphql'
-import { Class, CommonFieldComparisonType, FilterFieldComparison } from '@rezonate/nestjs-query-core'
-import { IsBoolean, IsOptional, IsString } from 'class-validator'
-import { IsUndefined } from '../../validators'
+import { Field, InputType } from '@nestjs/graphql';
+import { Class, FilterFieldComparison } from '@rezonate/nestjs-query-core';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsUndefined } from '../../validators';
 
 /** @internal */
-let jsonFieldComparison: Class<FilterFieldComparison<Record<string, unknown>>>
+let jsonFieldComparison: Class<FilterFieldComparison<Record<string, unknown>>>;
 
 /** @internal */
 export function getOrCreateJSONFieldComparison(): Class<FilterFieldComparison<Record<string, unknown>>> {
   if (jsonFieldComparison) {
-    return jsonFieldComparison
+    return jsonFieldComparison;
   }
 
   @InputType('JsonFieldComparison')
@@ -17,19 +17,19 @@ export function getOrCreateJSONFieldComparison(): Class<FilterFieldComparison<Re
     @Field({ nullable: true })
     @IsString()
     @IsUndefined()
-    containsLike?: string
+    containsLike?: string;
 
     @Field(() => Boolean, { nullable: true })
     @IsBoolean()
     @IsOptional()
-    is?: boolean | null
+    is?: boolean | null;
 
     @Field(() => Boolean, { nullable: true })
     @IsBoolean()
     @IsOptional()
-    isNot?: boolean | null
+    isNot?: boolean | null;
   }
 
-  jsonFieldComparison = JsonFieldComparison
-  return jsonFieldComparison
+  jsonFieldComparison = JsonFieldComparison;
+  return jsonFieldComparison;
 }

@@ -1,19 +1,19 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
-import { TestRelation } from './test-relation.entity'
+import { TestRelation } from './test-relation.entity';
 
 @Entity()
 export class RelationOfTestRelationEntity {
   @PrimaryColumn({ name: 'test_relation_pk' })
-  id!: string
+  id!: string;
 
   @Column({ name: 'relation_name' })
-  relationName!: string
+  relationName!: string;
 
   @Column({ name: 'test_relation_id' })
-  testRelationId!: string
+  testRelationId!: string;
 
   @ManyToOne(() => TestRelation, (tr) => tr.testEntityRelation, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'test_relation_id' })
-  testRelation!: TestRelation
+  testRelation!: TestRelation;
 }

@@ -1,9 +1,9 @@
-import { Field, InputType } from '@nestjs/graphql'
-import { Class, Filter } from '@rezonate/nestjs-query-core'
-import { Type } from 'class-transformer'
-import { ValidateNested } from 'class-validator'
+import { Field, InputType } from '@nestjs/graphql';
+import { Class, Filter } from '@rezonate/nestjs-query-core';
+import { Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
 
-import { SubscriptionFilterType } from './query'
+import { SubscriptionFilterType } from './query';
 
 export interface SubscriptionFilterInputType<DTO> {
   filter?: Filter<DTO>
@@ -15,17 +15,17 @@ export interface SubscriptionFilterInputType<DTO> {
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export function SubscriptionFilterInputType<DTO>(DTOClass: Class<DTO>): Class<SubscriptionFilterInputType<DTO>> {
-  const F = SubscriptionFilterType(DTOClass)
+  const F = SubscriptionFilterType(DTOClass);
 
   @InputType({ isAbstract: true })
   class SubscriptionFilterInput implements SubscriptionFilterInputType<DTO> {
     @Field(() => F, {
-      description: 'Specify to filter the records returned.'
+      description: 'Specify to filter the records returned.',
     })
     @ValidateNested()
     @Type(() => F)
-    filter?: Filter<DTO>
+    filter?: Filter<DTO>;
   }
 
-  return SubscriptionFilterInput
+  return SubscriptionFilterInput;
 }

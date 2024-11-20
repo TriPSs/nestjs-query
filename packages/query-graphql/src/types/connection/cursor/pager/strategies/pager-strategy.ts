@@ -1,6 +1,6 @@
-import { Query, SortField } from '@rezonate/nestjs-query-core'
+import { Query, SortField } from '@rezonate/nestjs-query-core';
 
-import { CursorPagingType } from '../../../../query'
+import { CursorPagingType } from '../../../../query';
 
 export interface OffsetPagingOpts {
   offset: number
@@ -13,12 +13,12 @@ export interface OffsetPagingOpts {
 export type KeySetField<DTO, K extends keyof DTO> = {
   field: K
   value: DTO[K]
-}
+};
 
 export type KeySetCursorPayload<DTO> = {
   type: 'keyset'
   fields: KeySetField<DTO, keyof DTO>[]
-}
+};
 
 export interface KeySetPagingOpts<DTO> {
   payload?: KeySetCursorPayload<DTO>
@@ -29,7 +29,7 @@ export interface KeySetPagingOpts<DTO> {
   hasBefore: boolean
 }
 
-export type CursorPagingOpts<DTO> = OffsetPagingOpts | KeySetPagingOpts<DTO>
+export type CursorPagingOpts<DTO> = OffsetPagingOpts | KeySetPagingOpts<DTO>;
 
 export interface PagerStrategy<DTO> {
   toCursor(dto: DTO, index: number, opts: CursorPagingOpts<DTO>, query: Query<DTO>): string

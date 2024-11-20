@@ -1,5 +1,5 @@
-export { AuthorizationContext, Authorizer, AuthorizerOptions, CustomAuthorizer, OperationGroup } from './auth'
-export { DTONamesOpts } from './common'
+export { AuthorizationContext, Authorizer, AuthorizerOptions, CustomAuthorizer, OperationGroup } from './auth';
+export { DTONamesOpts } from './common';
 export {
   Authorize,
   AuthorizerFilter,
@@ -36,9 +36,9 @@ export {
   RelationOneDecoratorOpts,
   RelationTypeFunc,
   ResolverMethodOpts,
-  UnPagedRelation
-} from './decorators'
-export * from './federation'
+  UnPagedRelation,
+} from './decorators';
+export * from './federation';
 export {
   BeforeCreateManyHook,
   BeforeCreateOneHook,
@@ -49,11 +49,11 @@ export {
   BeforeUpdateManyHook,
   BeforeUpdateOneHook,
   Hook,
-  HookTypes
-} from './hooks'
-export { AuthorizerContext, AuthorizerInterceptor, HookContext, HookInterceptor } from './interceptors'
-export { NestjsQueryGraphQLModule } from './module'
-export { AutoResolverOpts } from './providers'
-export * from './resolvers'
-export { GraphQLPubSub, pubSubToken } from './subscription'
-export * from './types'
+  HookTypes,
+} from './hooks';
+export { AuthorizerContext, AuthorizerInterceptor, HookContext, HookInterceptor } from './interceptors';
+export { NestjsQueryGraphQLModule } from './module';
+export { AutoResolverOpts } from './providers';
+export * from './resolvers';
+export { GraphQLPubSub, pubSubToken } from './subscription';
+export * from './types';

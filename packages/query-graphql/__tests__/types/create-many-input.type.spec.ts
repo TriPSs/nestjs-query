@@ -1,16 +1,16 @@
-import { Args, Field, InputType, Int, Query, Resolver } from '@nestjs/graphql'
-import { CreateManyInputType } from '@rezonate/nestjs-query-graphql'
-import { plainToClass } from 'class-transformer'
-import { MinLength, validateSync } from 'class-validator'
+import { Args, Field, InputType, Int, Query, Resolver } from '@nestjs/graphql';
+import { CreateManyInputType } from '@rezonate/nestjs-query-graphql';
+import { plainToClass } from 'class-transformer';
+import { MinLength, validateSync } from 'class-validator';
 
-import { generateSchema } from '../__fixtures__'
+import { generateSchema } from '../__fixtures__';
 
 describe('CreateManyInputType', (): void => {
   @InputType()
   class FakeType {
     @Field()
     @MinLength(5)
-    field!: string
+    field!: string;
   }
 
   @InputType()
@@ -22,33 +22,33 @@ describe('CreateManyInputType', (): void => {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       test(@Args('input', { type: () => CreateMany }) input: CreateMany): number {
-        return 1
+        return 1;
       }
     }
 
-    const schema = await generateSchema([CreateManyInputTypeSpec])
-    expect(schema).toMatchSnapshot()
-  })
+    const schema = await generateSchema([CreateManyInputTypeSpec]);
+    expect(schema).toMatchSnapshot();
+  });
 
   it('should properly assign the input field', () => {
-    const input = [{ field: 'hello' }]
-    const it = plainToClass(CreateMany, { input })
-    expect(it.input).toEqual(input)
-    it.input.forEach((i) => expect(i).toBeInstanceOf(FakeType))
-  })
+    const input = [{ field: 'hello' }];
+    const it = plainToClass(CreateMany, { input });
+    expect(it.input).toEqual(input);
+    it.input.forEach((i) => expect(i).toBeInstanceOf(FakeType));
+  });
 
   it('should assign the typeName to the input field', () => {
-    const input = [{ field: 'hello' }]
-    const it = plainToClass(CreateMany, { fakeInput: input })
-    expect(it.input).toEqual(input)
-    it.input.forEach((i) => expect(i).toBeInstanceOf(FakeType))
-  })
+    const input = [{ field: 'hello' }];
+    const it = plainToClass(CreateMany, { fakeInput: input });
+    expect(it.input).toEqual(input);
+    it.input.forEach((i) => expect(i).toBeInstanceOf(FakeType));
+  });
 
   describe('validation', () => {
     it('should validate the input property', () => {
-      const input = [{ field: 'hola' }]
-      const it = plainToClass(CreateMany, { input })
-      const errors = validateSync(it)
+      const input = [{ field: 'hola' }];
+      const it = plainToClass(CreateMany, { input });
+      const errors = validateSync(it);
       expect(errors).toEqual([
         {
           children: [
@@ -57,31 +57,31 @@ describe('CreateManyInputType', (): void => {
                 {
                   children: [],
                   constraints: {
-                    minLength: 'field must be longer than or equal to 5 characters'
+                    minLength: 'field must be longer than or equal to 5 characters',
                   },
                   property: 'field',
                   target: input[0],
-                  value: input[0].field
-                }
+                  value: input[0].field,
+                },
               ],
               property: '0',
               target: input,
-              value: input[0]
-            }
+              value: input[0],
+            },
           ],
           property: 'input',
           target: {
-            input
+            input,
           },
-          value: input
-        }
-      ])
-    })
+          value: input,
+        },
+      ]);
+    });
 
     it('should assign the typeName to the input field', () => {
-      const input = [{ field: 'hola' }]
-      const it = plainToClass(CreateMany, { fakeInput: input })
-      const errors = validateSync(it)
+      const input = [{ field: 'hola' }];
+      const it = plainToClass(CreateMany, { fakeInput: input });
+      const errors = validateSync(it);
       expect(errors).toEqual([
         {
           children: [
@@ -90,25 +90,25 @@ describe('CreateManyInputType', (): void => {
                 {
                   children: [],
                   constraints: {
-                    minLength: 'field must be longer than or equal to 5 characters'
+                    minLength: 'field must be longer than or equal to 5 characters',
                   },
                   property: 'field',
                   target: input[0],
-                  value: input[0].field
-                }
+                  value: input[0].field,
+                },
               ],
               property: '0',
               target: input,
-              value: input[0]
-            }
+              value: input[0],
+            },
           ],
           property: 'input',
           target: {
-            input
+            input,
           },
-          value: input
-        }
-      ])
-    })
-  })
-})
+          value: input,
+        },
+      ]);
+    });
+  });
+});

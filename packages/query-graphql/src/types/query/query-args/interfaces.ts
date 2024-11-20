@@ -1,8 +1,8 @@
-import { Class, Filter, Query, SortField } from '@rezonate/nestjs-query-core'
+import { Class, Filter, Query, SortField } from '@rezonate/nestjs-query-core';
 
-import { ArrayConnectionOptions, CursorConnectionOptions, OffsetConnectionOptions, StaticConnectionType } from '../../connection'
-import { FilterTypeOptions } from '../filter.type'
-import { InferPagingTypeFromStrategy, PagingStrategies } from '../paging'
+import { ArrayConnectionOptions, CursorConnectionOptions, OffsetConnectionOptions, StaticConnectionType } from '../../connection';
+import { FilterTypeOptions } from '../filter.type';
+import { InferPagingTypeFromStrategy, PagingStrategies } from '../paging';
 
 export type BaseQueryArgsTypeOpts<DTO> = {
   /**
@@ -38,7 +38,7 @@ export type BaseQueryArgsTypeOpts<DTO> = {
    * Disable the filtering
    */
   disableFilter?: boolean
-} & FilterTypeOptions
+} & FilterTypeOptions;
 
 export interface CursorQueryArgsTypeOpts<DTO> extends BaseQueryArgsTypeOpts<DTO>, CursorConnectionOptions {
   pagingStrategy?: PagingStrategies.CURSOR
@@ -55,7 +55,7 @@ export interface NonePagingQueryArgsTypeOpts<DTO> extends BaseQueryArgsTypeOpts<
 export type QueryArgsTypeOpts<DTO> =
   | CursorQueryArgsTypeOpts<DTO>
   | OffsetQueryArgsTypeOpts<DTO>
-  | NonePagingQueryArgsTypeOpts<DTO>
+  | NonePagingQueryArgsTypeOpts<DTO>;
 
 export interface StaticQueryType<DTO, PS extends PagingStrategies> extends Class<QueryType<DTO, PS>> {
   SortType: Class<SortField<DTO>>

@@ -1,4 +1,4 @@
-import { ComposableDecorator, ComposedDecorator, composeDecorators } from './decorator.utils'
+import { ComposableDecorator, ComposedDecorator, composeDecorators } from './decorator.utils';
 
 /**
  * @internal
@@ -8,7 +8,7 @@ import { ComposableDecorator, ComposedDecorator, composeDecorators } from './dec
  */
 export function SkipIf(check: () => boolean, ...decorators: ComposableDecorator[]): ComposedDecorator {
   if (check()) {
-    return (): void => {}
+    return (): void => {};
   }
-  return composeDecorators(...decorators)
+  return composeDecorators(...decorators);
 }

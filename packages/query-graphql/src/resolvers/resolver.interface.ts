@@ -1,16 +1,16 @@
-import { QueryService } from '@rezonate/nestjs-query-core'
+import { QueryService } from '@rezonate/nestjs-query-core';
 
-import { DTONamesOpts } from '../common'
-import { QueryResolverMethodOpts, SubscriptionResolverMethodOpts } from '../decorators'
-import { GraphQLPubSub } from '../subscription'
-import { PagingStrategies, QueryArgsTypeOpts } from '../types'
+import { DTONamesOpts } from '../common';
+import { QueryResolverMethodOpts, SubscriptionResolverMethodOpts } from '../decorators';
+import { GraphQLPubSub } from '../subscription';
+import { PagingStrategies, QueryArgsTypeOpts } from '../types';
 
 type NamedEndpoint = {
   /** Specify to override the name of the graphql query or mutation * */
   name?: string
   /** Specify a description for the graphql query or mutation* */
   description?: string
-}
+};
 
 export interface ResolverOpts extends QueryResolverMethodOpts, DTONamesOpts {
   /**
@@ -49,14 +49,14 @@ export class BaseServiceResolver<DTO, QS extends QueryService<DTO, unknown, unkn
 
 export type ExtractPagingStrategy<DTO, Opts extends QueryArgsTypeOpts<DTO>> = Opts['pagingStrategy'] extends PagingStrategies
   ? Opts['pagingStrategy']
-  : PagingStrategies.CURSOR
+  : PagingStrategies.CURSOR;
 
 export type MergePagingStrategyOpts<
   DTO,
   Opts extends QueryArgsTypeOpts<DTO>,
-  S extends PagingStrategies
+  S extends PagingStrategies,
 > = Opts['pagingStrategy'] extends PagingStrategies
   ? Opts
   : S extends PagingStrategies
   ? Omit<Opts, 'pagingStrategy'> & { pagingStrategy: S }
-  : Opts
+  : Opts;

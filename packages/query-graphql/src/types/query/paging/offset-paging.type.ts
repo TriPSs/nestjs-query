@@ -1,39 +1,39 @@
-import { Field, InputType, Int } from '@nestjs/graphql'
-import { Class } from '@rezonate/nestjs-query-core'
-import { IsInt } from 'class-validator'
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { Class } from '@rezonate/nestjs-query-core';
+import { IsInt } from 'class-validator';
 
-import { IsUndefined } from '../../validators'
-import { PagingStrategies } from './constants'
-import { OffsetPagingType } from './interfaces'
+import { IsUndefined } from '../../validators';
+import { PagingStrategies } from './constants';
+import { OffsetPagingType } from './interfaces';
 
-let graphQLPaging: Class<OffsetPagingType> | null = null
+let graphQLPaging: Class<OffsetPagingType> | null = null;
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const getOrCreateOffsetPagingType = (): Class<OffsetPagingType> => {
   if (graphQLPaging) {
-    return graphQLPaging
+    return graphQLPaging;
   }
 
   @InputType('OffsetPaging')
   class GraphQLPagingImpl implements OffsetPagingType {
-    static strategy: PagingStrategies.OFFSET = PagingStrategies.OFFSET
+    static strategy: PagingStrategies.OFFSET = PagingStrategies.OFFSET;
 
     @Field(() => Int, {
       nullable: true,
-      description: 'Limit the number of records returned'
+      description: 'Limit the number of records returned',
     })
     @IsUndefined()
     @IsInt()
-    limit?: number
+    limit?: number;
 
     @Field(() => Int, {
       nullable: true,
-      description: 'Offset to start returning records from'
+      description: 'Offset to start returning records from',
     })
     @IsUndefined()
     @IsInt()
-    offset?: number
+    offset?: number;
   }
 
-  graphQLPaging = GraphQLPagingImpl
-  return graphQLPaging
-}
+  graphQLPaging = GraphQLPagingImpl;
+  return graphQLPaging;
+};

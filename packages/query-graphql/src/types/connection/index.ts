@@ -1,5 +1,5 @@
-export { getOrCreateArrayConnectionType } from './array-connection.type'
-export { getOrCreateCursorConnectionType } from './cursor'
+export { getOrCreateArrayConnectionType } from './array-connection.type';
+export { getOrCreateCursorConnectionType } from './cursor';
 export {
   ArrayConnectionOptions,
   ArrayConnectionType,
@@ -13,6 +13,6 @@ export {
   OffsetConnectionType,
   OffsetPageInfoType,
   PageInfoType,
-  StaticConnectionType
-} from './interfaces'
-export { getOrCreateOffsetConnectionType } from './offset'
+  StaticConnectionType,
+} from './interfaces';
+export { getOrCreateOffsetConnectionType } from './offset';

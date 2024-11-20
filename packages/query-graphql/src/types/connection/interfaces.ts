@@ -1,8 +1,8 @@
-import { ReturnTypeFuncValue } from '@nestjs/graphql'
-import { Class, Filter, Query } from '@rezonate/nestjs-query-core'
+import { ReturnTypeFuncValue } from '@nestjs/graphql';
+import { Class, Filter, Query } from '@rezonate/nestjs-query-core';
 
-import { ConnectionCursorType } from '../cursor.scalar'
-import { PagingStrategies } from '../query'
+import { ConnectionCursorType } from '../cursor.scalar';
+import { PagingStrategies } from '../query';
 
 interface BaseConnectionOptions {
   enableTotalCount?: boolean
@@ -22,7 +22,7 @@ export interface ArrayConnectionOptions extends BaseConnectionOptions {
   pagingStrategy?: PagingStrategies.NONE
 }
 
-export type ConnectionOptions = CursorConnectionOptions | OffsetConnectionOptions | ArrayConnectionOptions
+export type ConnectionOptions = CursorConnectionOptions | OffsetConnectionOptions | ArrayConnectionOptions;
 
 export interface EdgeType<DTO> {
   node: DTO
@@ -40,7 +40,7 @@ export type CursorConnectionType<DTO> = {
   pageInfo: PageInfoType
   edges: EdgeType<DTO>[]
   totalCount?: Promise<number>
-}
+};
 
 export interface OffsetPageInfoType {
   hasNextPage: boolean
@@ -51,11 +51,11 @@ export type OffsetConnectionType<DTO> = {
   pageInfo: OffsetPageInfoType
   totalCount?: Promise<number>
   nodes: DTO[]
-}
+};
 
-export type ArrayConnectionType<DTO> = DTO[]
+export type ArrayConnectionType<DTO> = DTO[];
 
-export type ConnectionType<DTO> = OffsetConnectionType<DTO> | CursorConnectionType<DTO> | ArrayConnectionType<DTO>
+export type ConnectionType<DTO> = OffsetConnectionType<DTO> | CursorConnectionType<DTO> | ArrayConnectionType<DTO>;
 
 export type InferConnectionTypeFromStrategy<DTO, S extends PagingStrategies> = S extends PagingStrategies.NONE
   ? ArrayConnectionType<DTO>
@@ -63,16 +63,16 @@ export type InferConnectionTypeFromStrategy<DTO, S extends PagingStrategies> = S
   ? OffsetConnectionType<DTO>
   : S extends PagingStrategies.CURSOR
   ? CursorConnectionType<DTO>
-  : never
+  : never;
 
-export type QueryMany<DTO, Q extends Query<DTO>> = (query: Q) => Promise<DTO[]>
-export type Count<DTO> = (filter: Filter<DTO>) => Promise<number>
+export type QueryMany<DTO, Q extends Query<DTO>> = (query: Q) => Promise<DTO[]>;
+export type Count<DTO> = (filter: Filter<DTO>) => Promise<number>;
 
-export type CountFn = () => Promise<number>
+export type CountFn = () => Promise<number>;
 
 export type PagerResult = {
   totalCount: CountFn
-}
+};
 
 export interface Pager<DTO, R extends PagerResult> {
   page<Q extends Query<DTO>>(queryMany: QueryMany<DTO, Q>, query: Q, count: Count<DTO>): Promise<R>

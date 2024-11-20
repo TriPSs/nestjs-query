@@ -1,5 +1,5 @@
-import { FilterFieldComparison } from '@rezonate/nestjs-query-core'
-import { registerDecorator } from 'class-validator'
+import { FilterFieldComparison } from '@rezonate/nestjs-query-core';
+import { registerDecorator } from 'class-validator';
 
 /**
  * @internal
@@ -12,16 +12,16 @@ export function HasRequiredFilter<T>(): PropertyDecorator {
     registerDecorator({
       name: 'hasRequiredFilter',
       target: object.constructor,
-      propertyName: propertyName,
+      propertyName,
       // constraints: [property],
       options: {
-        message: 'There was no filter provided for "$property"!'
+        message: 'There was no filter provided for "$property"!',
       },
       validator: {
         validate(value: FilterFieldComparison<T>) {
-          return Object.keys(value).length > 0
-        }
-      }
-    })
-  }
+          return Object.keys(value).length > 0;
+        },
+      },
+    });
+  };
 }

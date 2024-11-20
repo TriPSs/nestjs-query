@@ -1,4 +1,4 @@
-import { FilterFieldComparison } from './filter-field-comparison.interface'
+import { FilterFieldComparison } from './filter-field-comparison.interface';
 
 /**
  * A comparison for fields in T.
@@ -21,7 +21,7 @@ import { FilterFieldComparison } from './filter-field-comparison.interface'
  */
 export type FilterComparisons<T> = {
   [K in keyof T]?: FilterFieldComparison<T[K]>
-}
+};
 
 /**
  * A grouping of filters that should be ANDed or ORed together.
@@ -62,11 +62,11 @@ type FilterGrouping<T> = {
    * Group an array of filters with an OR operation.
    */
   or?: Filter<T>[]
-}
+};
 
 type FreeTextFilter = {
   freeTextQuery?:string;
-}
+};
 
 /**
  * Filter for type T.
@@ -116,4 +116,4 @@ type FreeTextFilter = {
  *
  * @typeparam T - the type of object to filter on.
  */
-export type Filter<T> = FilterGrouping<T> & FilterComparisons<T> & FreeTextFilter
+export type Filter<T> = FilterGrouping<T> & FilterComparisons<T> & FreeTextFilter;

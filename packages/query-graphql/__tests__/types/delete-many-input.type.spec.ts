@@ -1,16 +1,16 @@
-import { Args, InputType, Int, ObjectType, Query, Resolver } from '@nestjs/graphql'
-import { DeleteManyInputType } from '@rezonate/nestjs-query-graphql'
-import { plainToClass } from 'class-transformer'
-import { validateSync } from 'class-validator'
+import { Args, InputType, Int, ObjectType, Query, Resolver } from '@nestjs/graphql';
+import { DeleteManyInputType } from '@rezonate/nestjs-query-graphql';
+import { plainToClass } from 'class-transformer';
+import { validateSync } from 'class-validator';
 
-import { FilterableField } from '../../src/decorators'
-import { generateSchema } from '../__fixtures__'
+import { FilterableField } from '../../src/decorators';
+import { generateSchema } from '../__fixtures__';
 
 describe('DeleteManyInputType', (): void => {
   @ObjectType()
   class DeleteManyDTO {
     @FilterableField()
-    field!: string
+    field!: string;
   }
 
   @InputType()
@@ -22,46 +22,46 @@ describe('DeleteManyInputType', (): void => {
       @Query(() => Int)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       test(@Args('input', { type: () => DeleteMany }) input: DeleteMany): number {
-        return 1
+        return 1;
       }
     }
 
-    const schema = await generateSchema([DeleteManyInputTypeSpec])
-    expect(schema).toMatchSnapshot()
-  })
+    const schema = await generateSchema([DeleteManyInputTypeSpec]);
+    expect(schema).toMatchSnapshot();
+  });
 
   describe('validation', () => {
     it('should validate the filter is defined', () => {
-      const input = {}
-      const it = plainToClass(DeleteMany, input)
-      const errors = validateSync(it)
+      const input = {};
+      const it = plainToClass(DeleteMany, input);
+      const errors = validateSync(it);
       expect(errors).toEqual([
         {
           children: [],
           constraints: {
-            isNotEmptyObject: 'filter must be a non-empty object'
-          },
-          property: 'filter',
-          target: input
-        }
-      ])
-    })
-
-    it('should validate the filter is not empty', () => {
-      const input = { filter: {} }
-      const it = plainToClass(DeleteMany, input)
-      const errors = validateSync(it)
-      expect(errors).toEqual([
-        {
-          children: [],
-          constraints: {
-            isNotEmptyObject: 'filter must be a non-empty object'
+            isNotEmptyObject: 'filter must be a non-empty object',
           },
           property: 'filter',
           target: input,
-          value: input.filter
-        }
-      ])
-    })
-  })
-})
+        },
+      ]);
+    });
+
+    it('should validate the filter is not empty', () => {
+      const input = { filter: {} };
+      const it = plainToClass(DeleteMany, input);
+      const errors = validateSync(it);
+      expect(errors).toEqual([
+        {
+          children: [],
+          constraints: {
+            isNotEmptyObject: 'filter must be a non-empty object',
+          },
+          property: 'filter',
+          target: input,
+          value: input.filter,
+        },
+      ]);
+    });
+  });
+});

@@ -1,14 +1,14 @@
-import { ArrayReflector, Class, getPrototypeChain } from '@rezonate/nestjs-query-core'
+import { ArrayReflector, Class, getPrototypeChain } from '@rezonate/nestjs-query-core';
 
-import { mergeBaseResolverOpts } from '../common'
-import { ReferencesOpts, ResolverRelationReference } from '../resolvers/relations'
-import { ReferencesKeys } from '../resolvers/relations/relations.interface'
-import { REFERENCE_KEY } from './constants'
-import { BaseResolverOptions } from './resolver-method.decorator'
+import { mergeBaseResolverOpts } from '../common';
+import { ReferencesOpts, ResolverRelationReference } from '../resolvers/relations';
+import { ReferencesKeys } from '../resolvers/relations/relations.interface';
+import { REFERENCE_KEY } from './constants';
+import { BaseResolverOptions } from './resolver-method.decorator';
 
-const reflector = new ArrayReflector(REFERENCE_KEY)
-export type ReferenceDecoratorOpts<DTO, Relation> = Omit<ResolverRelationReference<DTO, Relation>, 'DTO' | 'keys'>
-export type ReferenceTypeFunc<Relation> = () => Class<Relation>
+const reflector = new ArrayReflector(REFERENCE_KEY);
+export type ReferenceDecoratorOpts<DTO, Relation> = Omit<ResolverRelationReference<DTO, Relation>, 'DTO' | 'keys'>;
+export type ReferenceTypeFunc<Relation> = () => Class<Relation>;
 
 interface ReferenceDescriptor<DTO, Reference> {
   name: string
@@ -19,29 +19,29 @@ interface ReferenceDescriptor<DTO, Reference> {
 
 function getReferenceDescriptors<DTO>(DTOClass: Class<DTO>): ReferenceDescriptor<DTO, unknown>[] {
   return getPrototypeChain(DTOClass).reduce((references, cls) => {
-    const referenceNames = references.map((r) => r.name)
-    const metaReferences = reflector.get<DTO, ReferenceDescriptor<DTO, unknown>>(cls as Class<DTO>) ?? []
-    const inheritedReferences = metaReferences.filter((t) => !referenceNames.includes(t.name))
-    return [...inheritedReferences, ...references]
-  }, [] as ReferenceDescriptor<DTO, unknown>[])
+    const referenceNames = references.map((r) => r.name);
+    const metaReferences = reflector.get<DTO, ReferenceDescriptor<DTO, unknown>>(cls as Class<DTO>) ?? [];
+    const inheritedReferences = metaReferences.filter((t) => !referenceNames.includes(t.name));
+    return [...inheritedReferences, ...references];
+  }, [] as ReferenceDescriptor<DTO, unknown>[]);
 }
 
 function convertReferencesToOpts<DTO>(
   references: ReferenceDescriptor<DTO, unknown>[],
-  baseOpts?: BaseResolverOptions
+  baseOpts?: BaseResolverOptions,
 ): ReferencesOpts<DTO> {
   return references.reduce((referenceOpts, r) => {
     const opts = mergeBaseResolverOpts<ResolverRelationReference<DTO, unknown>>(
       { ...r.relationOpts, DTO: r.relationTypeFunc(), keys: r.keys },
-      baseOpts ?? {}
-    )
-    return { ...referenceOpts, [r.name]: opts }
-  }, {} as ReferencesOpts<DTO>)
+      baseOpts ?? {},
+    );
+    return { ...referenceOpts, [r.name]: opts };
+  }, {} as ReferencesOpts<DTO>);
 }
 
 export function getReferences<DTO>(DTOClass: Class<DTO>, opts?: BaseResolverOptions): ReferencesOpts<DTO> {
-  const referenceDescriptors = getReferenceDescriptors(DTOClass)
-  return convertReferencesToOpts(referenceDescriptors, opts)
+  const referenceDescriptors = getReferenceDescriptors(DTOClass);
+  return convertReferencesToOpts(referenceDescriptors, opts);
 }
 
 export function Reference<DTO, Reference>(
@@ -49,10 +49,10 @@ export function Reference<DTO, Reference>(
   relationTypeFunc: ReferenceTypeFunc<Reference>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   keys: ReferencesKeys<any, Reference>,
-  relationOpts?: ReferenceDecoratorOpts<DTO, Reference>
+  relationOpts?: ReferenceDecoratorOpts<DTO, Reference>,
 ) {
   return <Cls extends Class<DTO>>(DTOClass: Cls): Cls | void => {
-    reflector.append(DTOClass, { name, keys, relationOpts, relationTypeFunc })
-    return DTOClass
-  }
+    reflector.append(DTOClass, { name, keys, relationOpts, relationTypeFunc });
+    return DTOClass;
+  };
 }

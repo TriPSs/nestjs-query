@@ -1,7 +1,7 @@
-import { applyDecorators } from '@nestjs/common'
-import { ResolveField, ResolveFieldOptions, ReturnTypeFunc } from '@nestjs/graphql'
+import { applyDecorators } from '@nestjs/common';
+import { ResolveField, ResolveFieldOptions, ReturnTypeFunc } from '@nestjs/graphql';
 
-import { isDisabled, ResolverMethod, ResolverMethodOpts } from './resolver-method.decorator'
+import { isDisabled, ResolverMethod, ResolverMethodOpts } from './resolver-method.decorator';
 
 /**
  * @internal
@@ -18,7 +18,7 @@ export function ResolverField(
   ...opts: ResolverMethodOpts[]
 ): MethodDecorator {
   if (isDisabled(opts)) {
-    return (): void => {}
+    return (): void => {};
   }
-  return applyDecorators(ResolveField(name, typeFunc, options), ResolverMethod(...opts))
+  return applyDecorators(ResolveField(name, typeFunc, options), ResolverMethod(...opts));
 }

@@ -1,27 +1,27 @@
-import { AssemblerSerializer } from '@rezonate/nestjs-query-core'
+import { AssemblerSerializer } from '@rezonate/nestjs-query-core';
 
-import { getAssemblerSerializer } from '../../src/assemblers/assembler.serializer'
+import { getAssemblerSerializer } from '../../src/assemblers/assembler.serializer';
 
 describe('AssemblerSerializer decorator', () => {
   it('should register a serializer', () => {
     @AssemblerSerializer((t: TestSerializer) => ({ bar: t.foo }))
     class TestSerializer {
-      foo!: string
+      foo!: string;
     }
 
-    expect(getAssemblerSerializer(TestSerializer)!({ foo: 'bar' })).toEqual({ bar: 'bar' })
-  })
+    expect(getAssemblerSerializer(TestSerializer)({ foo: 'bar' })).toEqual({ bar: 'bar' });
+  });
 
   it('should throw an error if the serializer is registered twice', () => {
-    const serializer = (t: TestSerializer) => ({ bar: t.foo })
+    const serializer = (t: TestSerializer) => ({ bar: t.foo });
 
     @AssemblerSerializer(serializer)
     class TestSerializer {
-      foo!: string
+      foo!: string;
     }
 
     expect(() => AssemblerSerializer(serializer)(TestSerializer)).toThrow(
-      'Assembler Serializer already registered for TestSerializer'
-    )
-  })
-})
+      'Assembler Serializer already registered for TestSerializer',
+    );
+  });
+});

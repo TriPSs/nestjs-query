@@ -1,9 +1,9 @@
-import { Field, InputType } from '@nestjs/graphql'
-import { Class } from '@rezonate/nestjs-query-core'
-import { Type } from 'class-transformer'
-import { IsNotEmpty, ValidateNested } from 'class-validator'
+import { Field, InputType } from '@nestjs/graphql';
+import { Class } from '@rezonate/nestjs-query-core';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, ValidateNested } from 'class-validator';
 
-import { getDTOIdTypeOrDefault } from '../common'
+import { getDTOIdTypeOrDefault } from '../common';
 
 export interface UpdateOneInputType<U> {
   id: string | number
@@ -17,19 +17,19 @@ export interface UpdateOneInputType<U> {
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export function UpdateOneInputType<DTO, U>(DTOClass: Class<DTO>, UpdateType: Class<U>): Class<UpdateOneInputType<U>> {
-  const IDType = getDTOIdTypeOrDefault([DTOClass, UpdateType])
+  const IDType = getDTOIdTypeOrDefault([DTOClass, UpdateType]);
 
   @InputType({ isAbstract: true })
   class UpdateOneInput implements UpdateOneInputType<U> {
     @IsNotEmpty()
     @Field(() => IDType, { description: 'The id of the record to update' })
-    id!: string | number
+    id!: string | number;
 
     @Type(() => UpdateType)
     @ValidateNested()
     @Field(() => UpdateType, { description: 'The update to apply.' })
-    update!: U
+    update!: U;
   }
 
-  return UpdateOneInput
+  return UpdateOneInput;
 }

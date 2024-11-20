@@ -1,16 +1,16 @@
-import { Field, InputType } from '@nestjs/graphql'
-import { Class, FilterFieldComparison } from '@rezonate/nestjs-query-core'
-import { IsBoolean, IsOptional, IsString } from 'class-validator'
+import { Field, InputType } from '@nestjs/graphql';
+import { Class, FilterFieldComparison } from '@rezonate/nestjs-query-core';
+import { IsString } from 'class-validator';
 
-import { IsUndefined } from '../../validators'
+import { IsUndefined } from '../../validators';
 
 /** @internal */
-let stringListFieldComparison: Class<FilterFieldComparison<string>>
+let stringListFieldComparison: Class<FilterFieldComparison<string>>;
 
 /** @internal */
 export function getOrCreateStringListFieldComparison(): Class<FilterFieldComparison<string>> {
   if (stringListFieldComparison) {
-    return stringListFieldComparison
+    return stringListFieldComparison;
   }
 
   @InputType()
@@ -18,19 +18,19 @@ export function getOrCreateStringListFieldComparison(): Class<FilterFieldCompari
     @Field({ nullable: true })
     @IsString()
     @IsUndefined()
-    contains?: string
+    contains?: string;
 
     @Field({ nullable: true })
     @IsString()
     @IsUndefined()
-    notContains?: string
+    notContains?: string;
 
     @Field({ nullable: true })
     @IsString()
     @IsUndefined()
-    containsLike?: string
+    containsLike?: string;
   }
 
-  stringListFieldComparison = StringListFieldComparison
-  return stringListFieldComparison
+  stringListFieldComparison = StringListFieldComparison;
+  return stringListFieldComparison;
 }

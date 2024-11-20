@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common';
 
-import { Class, DeepPartial } from '../common'
+import { Class, DeepPartial } from '../common';
 import {
   AggregateByTimeResponse,
   AggregateQuery,
@@ -15,8 +15,8 @@ import {
   ModifyRelationOptions,
   Query,
   UpdateManyResponse,
-  UpdateOneOptions
-} from '../interfaces'
+  UpdateOneOptions,
+} from '../interfaces';
 
 export enum AggregateByTimeIntervalSpan {
   minute = 'minute',
@@ -24,7 +24,7 @@ export enum AggregateByTimeIntervalSpan {
   day = 'day',
   week = 'week',
   month = 'month',
-  year = 'year'
+  year = 'year',
 }
 
 
@@ -322,5 +322,5 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare,@typescript-eslint/no-unused-vars -- intentional
 export function QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>>(DTOClass: Class<DTO>) {
-  return <Cls extends Class<QueryService<DTO, C, U>>>(cls: Cls): Cls | void => Injectable()(cls)
+  return <Cls extends Class<QueryService<DTO, C, U>>>(cls: Cls): Cls | void => Injectable()(cls);
 }

@@ -1,7 +1,7 @@
-import { applyDecorators } from '@nestjs/common'
-import { Query, QueryOptions, ReturnTypeFunc } from '@nestjs/graphql'
+import { applyDecorators } from '@nestjs/common';
+import { Query, QueryOptions, ReturnTypeFunc } from '@nestjs/graphql';
 
-import { isDisabled, ResolverMethod, ResolverMethodOpts } from './resolver-method.decorator'
+import { isDisabled, ResolverMethod, ResolverMethodOpts } from './resolver-method.decorator';
 
 export interface QueryResolverMethodOpts extends ResolverMethodOpts {
   withDeleted?: boolean
@@ -20,7 +20,7 @@ export function ResolverQuery(
   ...opts: QueryResolverMethodOpts[]
 ): MethodDecorator {
   if (isDisabled(opts)) {
-    return (): void => {}
+    return (): void => {};
   }
-  return applyDecorators(Query(typeFunc, options), ResolverMethod(...opts))
+  return applyDecorators(Query(typeFunc, options), ResolverMethod(...opts));
 }

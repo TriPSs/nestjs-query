@@ -1,5 +1,5 @@
-import { Class } from '@rezonate/nestjs-query-core'
+import { Class } from '@rezonate/nestjs-query-core';
 
-import { HookTypes } from './types'
+import { HookTypes } from './types';
 
-export const getHookToken = <DTO>(hookType: HookTypes, DTOClass: Class<DTO>): string => `${DTOClass.name}${hookType}Hook`
+export const getHookToken = <DTO>(hookType: HookTypes, DTOClass: Class<DTO>): string => `${DTOClass.name}${hookType}Hook`;

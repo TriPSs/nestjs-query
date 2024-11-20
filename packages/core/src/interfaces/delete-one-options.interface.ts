@@ -1,4 +1,4 @@
-import { Filterable } from './filterable.interface'
+import { Filterable } from './filterable.interface';
 
 export interface DeleteOneOptions<DTO> extends Filterable<DTO> {
   /**

@@ -1,8 +1,8 @@
-import { ArgsType, Field } from '@nestjs/graphql'
-import { Class } from '@rezonate/nestjs-query-core'
-import { IsNotEmpty } from 'class-validator'
+import { ArgsType, Field } from '@nestjs/graphql';
+import { Class } from '@rezonate/nestjs-query-core';
+import { IsNotEmpty } from 'class-validator';
 
-import { getDTOIdTypeOrDefault } from '../common'
+import { getDTOIdTypeOrDefault } from '../common';
 
 export interface FindOneArgsType {
   id: string | number
@@ -13,14 +13,14 @@ export interface FindOneArgsType {
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export function FindOneArgsType(DTOClass: Class<unknown>): Class<FindOneArgsType> {
-  const IDType = getDTOIdTypeOrDefault([DTOClass])
+  const IDType = getDTOIdTypeOrDefault([DTOClass]);
 
   @ArgsType()
   class FindOneArgs implements FindOneArgsType {
     @IsNotEmpty()
     @Field(() => IDType, { description: 'The id of the record to find.' })
-    id!: string | number
+    id!: string | number;
   }
 
-  return FindOneArgs
+  return FindOneArgs;
 }

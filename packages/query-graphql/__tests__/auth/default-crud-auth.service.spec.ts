@@ -1,81 +1,81 @@
 // eslint-disable-next-line max-classes-per-file
-import { Injectable } from '@nestjs/common'
-import { Test, TestingModule } from '@nestjs/testing'
-import { Filter } from '@rezonate/nestjs-query-core'
-import { Authorize, Authorizer, Relation, UnPagedRelation } from '@rezonate/nestjs-query-graphql'
+import { Injectable } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Filter } from '@rezonate/nestjs-query-core';
+import { Authorize, Authorizer, Relation, UnPagedRelation } from '@rezonate/nestjs-query-graphql';
 import {
   AuthorizationContext,
   CustomAuthorizer,
   getAuthorizerToken,
   getCustomAuthorizerToken,
-  OperationGroup
-} from '../../src/auth'
-import { createAuthorizerProviders } from '../../src/providers'
+  OperationGroup,
+} from '../../src/auth';
+import { createAuthorizerProviders } from '../../src/providers';
 
 describe('createDefaultAuthorizer', () => {
-  let testingModule: TestingModule
+  let testingModule: TestingModule;
 
-  type UserContext = { user: { id: number } }
+  type UserContext = { user: { id: number } };
 
   class TestRelation {
-    relationOwnerId!: number
+    relationOwnerId!: number;
   }
 
   @Injectable()
   class RelationAuthorizer implements CustomAuthorizer<RelationWithAuthorizer> {
     authorize(context: UserContext): Promise<Filter<RelationWithAuthorizer>> {
-      return Promise.resolve({ authorizerOwnerId: { eq: context.user.id } })
+      return Promise.resolve({ authorizerOwnerId: { eq: context.user.id } });
     }
 
     authorizeRelation(): Promise<Filter<unknown> | undefined> {
-      return Promise.reject(new Error('should not have called'))
+      return Promise.reject(new Error('should not have called'));
     }
   }
 
   @Authorize(RelationAuthorizer)
   class RelationWithAuthorizer {
-    authorizerOwnerId!: number
+    authorizerOwnerId!: number;
   }
 
   @Authorize({
     authorize: (ctx: UserContext) => ({
-      decoratorOwnerId: { eq: ctx.user.id }
-    })
+      decoratorOwnerId: { eq: ctx.user.id },
+    }),
   })
   class TestDecoratorRelation {
-    decoratorOwnerId!: number
+    decoratorOwnerId!: number;
   }
 
   @Authorize({
     authorize: (ctx: UserContext, authorizationContext?: AuthorizationContext) =>
-      authorizationContext?.operationName === 'other' ? { ownerId: { neq: ctx.user.id } } : { ownerId: { eq: ctx.user.id } }
+      authorizationContext?.operationName === 'other' ? { ownerId: { neq: ctx.user.id } } : { ownerId: { eq: ctx.user.id } },
   })
   @Relation('relations', () => TestRelation, {
     auth: {
       authorize: (ctx: UserContext, authorizationContext?: AuthorizationContext) =>
         authorizationContext?.operationName === 'other'
           ? { relationOwnerId: { neq: ctx.user.id } }
-          : { relationOwnerId: { eq: ctx.user.id } }
-    }
+          : { relationOwnerId: { eq: ctx.user.id } },
+    },
   })
   @UnPagedRelation('unPagedDecoratorRelations', () => TestDecoratorRelation)
   @Relation('authorizerRelation', () => RelationWithAuthorizer)
   class TestDTO {
-    ownerId!: number
+    ownerId!: number;
   }
 
   class TestNoAuthDTO {
-    ownerId!: number
+    ownerId!: number;
   }
 
   @Injectable()
   class TestWithAuthorizerAuthorizer implements CustomAuthorizer<TestWithAuthorizerDTO> {
     authorize(context: UserContext): Promise<Filter<TestWithAuthorizerDTO>> {
-      return Promise.resolve({ ownerId: { eq: context.user.id } })
+      return Promise.resolve({ ownerId: { eq: context.user.id } });
     }
 
     authorizeRelation(): Promise<Filter<unknown> | undefined> {
-      return Promise.resolve<undefined>(undefined)
+      return Promise.resolve<undefined>(undefined);
     }
   }
 
@@ -85,13 +85,13 @@ describe('createDefaultAuthorizer', () => {
       authorize: (ctx: UserContext, authorizationContext?: AuthorizationContext) =>
         authorizationContext?.operationName === 'other'
           ? { relationOwnerId: { neq: ctx.user.id } }
-          : { relationOwnerId: { eq: ctx.user.id } }
-    }
+          : { relationOwnerId: { eq: ctx.user.id } },
+    },
   })
   @UnPagedRelation('unPagedDecoratorRelations', () => TestDecoratorRelation)
   @Relation('authorizerRelation', () => RelationWithAuthorizer)
   class TestWithAuthorizerDTO {
-    ownerId!: number
+    ownerId!: number;
   }
 
   beforeEach(async () => {
@@ -103,58 +103,58 @@ describe('createDefaultAuthorizer', () => {
           RelationWithAuthorizer,
           TestDTO,
           TestNoAuthDTO,
-          TestWithAuthorizerDTO
-        ])
-      ]
-    }).compile()
-  })
+          TestWithAuthorizerDTO,
+        ]),
+      ],
+    }).compile();
+  });
 
-  afterAll(() => testingModule.close())
+  afterAll(() => testingModule.close());
 
   it('should create an auth filter', async () => {
-    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO))
+    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO));
     const filter = await authorizer.authorize(
       { user: { id: 2 } },
       {
         operationName: 'queryMany',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
-    expect(filter).toEqual({ ownerId: { eq: 2 } })
-  })
+        many: true,
+      },
+    );
+    expect(filter).toEqual({ ownerId: { eq: 2 } });
+  });
 
   it('should create an auth filter that depends on the passed operation name', async () => {
-    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO))
+    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO));
     const filter = await authorizer.authorize(
       { user: { id: 2 } },
       {
         operationName: 'other',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
-    expect(filter).toEqual({ ownerId: { neq: 2 } })
-  })
+        many: true,
+      },
+    );
+    expect(filter).toEqual({ ownerId: { neq: 2 } });
+  });
 
   it('should return an empty filter if auth not found', async () => {
-    const authorizer = testingModule.get<Authorizer<TestNoAuthDTO>>(getAuthorizerToken(TestNoAuthDTO))
+    const authorizer = testingModule.get<Authorizer<TestNoAuthDTO>>(getAuthorizerToken(TestNoAuthDTO));
     const filter = await authorizer.authorize(
       { user: { id: 2 } },
       {
         operationName: 'queryMany',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
-    expect(filter).toEqual({})
-  })
+        many: true,
+      },
+    );
+    expect(filter).toEqual({});
+  });
 
   it('should create an auth filter for relations using the default auth decorator', async () => {
-    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO))
+    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO));
     const filter = await authorizer.authorizeRelation(
       'unPagedDecoratorRelations',
       { user: { id: 2 } },
@@ -162,14 +162,14 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryRelation',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
-    expect(filter).toEqual({ decoratorOwnerId: { eq: 2 } })
-  })
+        many: true,
+      },
+    );
+    expect(filter).toEqual({ decoratorOwnerId: { eq: 2 } });
+  });
 
   it('should create an auth filter for relations using the relation options', async () => {
-    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO))
+    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO));
     const filter = await authorizer.authorizeRelation(
       'relations',
       { user: { id: 2 } },
@@ -177,14 +177,14 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryRelation',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
-    expect(filter).toEqual({ relationOwnerId: { eq: 2 } })
-  })
+        many: true,
+      },
+    );
+    expect(filter).toEqual({ relationOwnerId: { eq: 2 } });
+  });
 
   it('should create an auth filter that depends on the passed operation name for relations using the relation options', async () => {
-    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO))
+    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO));
     const filter = await authorizer.authorizeRelation(
       'relations',
       { user: { id: 2 } },
@@ -192,14 +192,14 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'other',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
-    expect(filter).toEqual({ relationOwnerId: { neq: 2 } })
-  })
+        many: true,
+      },
+    );
+    expect(filter).toEqual({ relationOwnerId: { neq: 2 } });
+  });
 
   it('should create an auth filter for relations using the relation authorizer', async () => {
-    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO))
+    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO));
     const filter = await authorizer.authorizeRelation(
       'authorizerRelation',
       { user: { id: 2 } },
@@ -207,14 +207,14 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryRelation',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
-    expect(filter).toEqual({ authorizerOwnerId: { eq: 2 } })
-  })
+        many: true,
+      },
+    );
+    expect(filter).toEqual({ authorizerOwnerId: { eq: 2 } });
+  });
 
   it('should return an empty object for an unknown relation', async () => {
-    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO))
+    const authorizer = testingModule.get<Authorizer<TestDTO>>(getAuthorizerToken(TestDTO));
     const filter = await authorizer.authorizeRelation(
       'unknownRelations',
       { user: { id: 2 } },
@@ -222,20 +222,20 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryRelation',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
-    expect(filter).toEqual({})
-  })
+        many: true,
+      },
+    );
+    expect(filter).toEqual({});
+  });
 
   it('should call authorizeRelation of authorizer and fallback to authorize decorator', async () => {
-    const authorizer = testingModule.get<Authorizer<TestWithAuthorizerDTO>>(getAuthorizerToken(TestWithAuthorizerDTO))
-    jest.spyOn(authorizer, 'authorizeRelation')
+    const authorizer = testingModule.get<Authorizer<TestWithAuthorizerDTO>>(getAuthorizerToken(TestWithAuthorizerDTO));
+    jest.spyOn(authorizer, 'authorizeRelation');
     const customAuthorizer = testingModule.get<CustomAuthorizer<TestWithAuthorizerDTO>>(
-      getCustomAuthorizerToken(TestWithAuthorizerDTO)
-    )
-    jest.spyOn(customAuthorizer, 'authorizeRelation')
-    expect(customAuthorizer).toBeDefined()
+      getCustomAuthorizerToken(TestWithAuthorizerDTO),
+    );
+    jest.spyOn(customAuthorizer, 'authorizeRelation');
+    expect(customAuthorizer).toBeDefined();
     const filter = await authorizer.authorizeRelation(
       'unPagedDecoratorRelations',
       { user: { id: 2 } },
@@ -243,12 +243,12 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryMany',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
+        many: true,
+      },
+    );
     expect(filter).toEqual({
-      decoratorOwnerId: { eq: 2 }
-    })
+      decoratorOwnerId: { eq: 2 },
+    });
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(customAuthorizer.authorizeRelation).toHaveBeenCalledWith(
       'unPagedDecoratorRelations',
@@ -257,9 +257,9 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryMany',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
+        many: true,
+      },
+    );
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(authorizer.authorizeRelation).toHaveBeenCalledWith(
       'unPagedDecoratorRelations',
@@ -268,25 +268,25 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryMany',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
-  })
+        many: true,
+      },
+    );
+  });
 
   it('should call authorizeRelation of authorizer and fallback to custom authorizer of relation', async () => {
-    const authorizer = testingModule.get<Authorizer<TestWithAuthorizerDTO>>(getAuthorizerToken(TestWithAuthorizerDTO))
-    jest.spyOn(authorizer, 'authorizeRelation')
+    const authorizer = testingModule.get<Authorizer<TestWithAuthorizerDTO>>(getAuthorizerToken(TestWithAuthorizerDTO));
+    jest.spyOn(authorizer, 'authorizeRelation');
     const customAuthorizer = testingModule.get<CustomAuthorizer<TestWithAuthorizerDTO>>(
-      getCustomAuthorizerToken(TestWithAuthorizerDTO)
-    )
-    jest.spyOn(customAuthorizer, 'authorizeRelation')
-    expect(customAuthorizer).toBeDefined()
-    const relationAuthorizer = testingModule.get<Authorizer<RelationWithAuthorizer>>(getAuthorizerToken(RelationWithAuthorizer))
-    jest.spyOn(relationAuthorizer, 'authorize')
+      getCustomAuthorizerToken(TestWithAuthorizerDTO),
+    );
+    jest.spyOn(customAuthorizer, 'authorizeRelation');
+    expect(customAuthorizer).toBeDefined();
+    const relationAuthorizer = testingModule.get<Authorizer<RelationWithAuthorizer>>(getAuthorizerToken(RelationWithAuthorizer));
+    jest.spyOn(relationAuthorizer, 'authorize');
     const customRelationAuthorizer = testingModule.get<CustomAuthorizer<RelationWithAuthorizer>>(
-      getCustomAuthorizerToken(RelationWithAuthorizer)
-    )
-    jest.spyOn(customRelationAuthorizer, 'authorize')
+      getCustomAuthorizerToken(RelationWithAuthorizer),
+    );
+    jest.spyOn(customRelationAuthorizer, 'authorize');
     const filter = await authorizer.authorizeRelation(
       'authorizerRelation',
       { user: { id: 2 } },
@@ -294,12 +294,12 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryRelation',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
+        many: true,
+      },
+    );
     expect(filter).toEqual({
-      authorizerOwnerId: { eq: 2 }
-    })
+      authorizerOwnerId: { eq: 2 },
+    });
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(customAuthorizer.authorizeRelation).toHaveBeenCalledWith(
       'authorizerRelation',
@@ -308,9 +308,9 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryRelation',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
+        many: true,
+      },
+    );
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(authorizer.authorizeRelation).toHaveBeenCalledWith(
       'authorizerRelation',
@@ -319,9 +319,9 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryRelation',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
+        many: true,
+      },
+    );
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(relationAuthorizer.authorize).toHaveBeenCalledWith(
       { user: { id: 2 } },
@@ -329,9 +329,9 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryRelation',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
+        many: true,
+      },
+    );
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(customRelationAuthorizer.authorize).toHaveBeenCalledWith(
       { user: { id: 2 } },
@@ -339,8 +339,8 @@ describe('createDefaultAuthorizer', () => {
         operationName: 'queryRelation',
         operationGroup: OperationGroup.READ,
         readonly: true,
-        many: true
-      }
-    )
-  })
-})
+        many: true,
+      },
+    );
+  });
+});

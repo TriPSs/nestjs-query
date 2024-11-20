@@ -1,5 +1,5 @@
-export { transformAggregateQuery, transformAggregateResponse } from './aggregate.helpers'
-export * from './filter.helpers'
+export { transformAggregateQuery, transformAggregateResponse } from './aggregate.helpers';
+export * from './filter.helpers';
 export {
   applyPaging,
   applyQuery,
@@ -8,5 +8,5 @@ export {
   mergeQuery,
   QueryFieldMap,
   transformQuery,
-  transformSort
-} from './query.helpers'
+  transformSort,
+} from './query.helpers';

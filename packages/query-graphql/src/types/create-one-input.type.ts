@@ -1,7 +1,7 @@
-import { Field, InputType } from '@nestjs/graphql'
-import { Class } from '@rezonate/nestjs-query-core'
-import { Type } from 'class-transformer'
-import { ValidateNested } from 'class-validator'
+import { Field, InputType } from '@nestjs/graphql';
+import { Class } from '@rezonate/nestjs-query-core';
+import { Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
 
 export interface CreateOneInputType<C> {
   input: C
@@ -20,17 +20,17 @@ export function CreateOneInputType<C>(fieldName: string, InputClass: Class<C>): 
     @Type(() => InputClass)
     @ValidateNested()
     @Field(() => InputClass, { description: 'The record to create', name: fieldName })
-    input!: C
+    input!: C;
 
     @Type(() => InputClass)
     get [fieldName](): C {
-      return this.input
+      return this.input;
     }
 
     set [fieldName](input: C) {
-      this.input = input
+      this.input = input;
     }
   }
 
-  return CreateOneInput
+  return CreateOneInput;
 }

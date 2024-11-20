@@ -1,13 +1,13 @@
-import { DynamicModule, ForwardReference, Provider } from '@nestjs/common'
-import { Assembler, Class, NestjsQueryCoreModule } from '@rezonate/nestjs-query-core'
+import { DynamicModule, ForwardReference, Provider } from '@nestjs/common';
+import { Assembler, Class, NestjsQueryCoreModule } from '@rezonate/nestjs-query-core';
 
-import { AutoResolverOpts, createAuthorizerProviders, createHookProviders, createResolvers } from './providers'
-import { ReadResolverOpts } from './resolvers'
-import { defaultPubSub, GraphQLPubSub, pubSubToken } from './subscription'
-import { PagingStrategies } from './types/query/paging'
-import { ConnectionCursorScalar } from './types'
-import { RelativeDateScalar } from './types/relative-date-scalar.type'
-import { RelativeDateScalarFuture } from './types/relative-date-future-scalar.type'
+import { AutoResolverOpts, createAuthorizerProviders, createHookProviders, createResolvers } from './providers';
+import { ReadResolverOpts } from './resolvers';
+import { defaultPubSub, GraphQLPubSub, pubSubToken } from './subscription';
+import { PagingStrategies } from './types/query/paging';
+import { ConnectionCursorScalar } from './types';
+import { RelativeDateScalar } from './types/relative-date-scalar.type';
+import { RelativeDateScalarFuture } from './types/relative-date-future-scalar.type';
 
 interface DTOModuleOpts<DTO> {
   DTOClass: Class<DTO>
@@ -29,25 +29,25 @@ export interface NestjsQueryGraphqlModuleOpts {
 
 export class NestjsQueryGraphQLModule {
   static forFeature(opts: NestjsQueryGraphqlModuleOpts): DynamicModule {
-    const coreModule = this.getCoreModule(opts)
-    const providers = this.getProviders(opts)
+    const coreModule = this.getCoreModule(opts);
+    const providers = this.getProviders(opts);
     return {
       module: NestjsQueryGraphQLModule,
       imports: [...opts.imports, coreModule],
       providers: [...providers],
-      exports: [...providers, ...opts.imports, coreModule]
-    }
+      exports: [...providers, ...opts.imports, coreModule],
+    };
   }
 
   static defaultPubSubProvider(): Provider<GraphQLPubSub> {
-    return { provide: pubSubToken(), useValue: defaultPubSub() }
+    return { provide: pubSubToken(), useValue: defaultPubSub() };
   }
 
   private static getCoreModule(opts: NestjsQueryGraphqlModuleOpts): DynamicModule {
     return NestjsQueryCoreModule.forFeature({
       assemblers: opts.assemblers,
-      imports: opts.imports
-    })
+      imports: opts.imports,
+    });
   }
 
   private static getProviders(opts: NestjsQueryGraphqlModuleOpts): Provider<unknown>[] {
@@ -57,8 +57,8 @@ export class NestjsQueryGraphQLModule {
       ...this.getAuthorizerProviders(opts),
       ...this.getHookProviders(opts),
       ...this.getResolverProviders(opts),
-      ...this.getScalarsProviders()
-    ]
+      ...this.getScalarsProviders(),
+    ];
   }
 
   private static getScalarsProviders() {
@@ -66,24 +66,24 @@ export class NestjsQueryGraphQLModule {
   }
 
   private static getPubSubProviders(opts: NestjsQueryGraphqlModuleOpts): Provider<GraphQLPubSub>[] {
-    return [opts.pubSub ?? this.defaultPubSubProvider()]
+    return [opts.pubSub ?? this.defaultPubSubProvider()];
   }
 
   private static getServicesProviders(opts: NestjsQueryGraphqlModuleOpts): Provider<unknown>[] {
-    return opts.services ?? []
+    return opts.services ?? [];
   }
 
   private static getResolverProviders(opts: NestjsQueryGraphqlModuleOpts): Provider<unknown>[] {
-    return createResolvers(opts.resolvers ?? [])
+    return createResolvers(opts.resolvers ?? []);
   }
 
   private static getAuthorizerProviders(opts: NestjsQueryGraphqlModuleOpts): Provider<unknown>[] {
-    const resolverDTOs = opts.resolvers?.map((r) => r.DTOClass) ?? []
-    const dtos = opts.dtos?.map((o) => o.DTOClass) ?? []
-    return createAuthorizerProviders([...resolverDTOs, ...dtos])
+    const resolverDTOs = opts.resolvers?.map((r) => r.DTOClass) ?? [];
+    const dtos = opts.dtos?.map((o) => o.DTOClass) ?? [];
+    return createAuthorizerProviders([...resolverDTOs, ...dtos]);
   }
 
   private static getHookProviders(opts: NestjsQueryGraphqlModuleOpts): Provider<unknown>[] {
-    return createHookProviders([...(opts.resolvers ?? []), ...(opts.dtos ?? [])])
+    return createHookProviders([...(opts.resolvers ?? []), ...(opts.dtos ?? [])]);
   }
 }

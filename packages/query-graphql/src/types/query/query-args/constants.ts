@@ -3,5 +3,5 @@ export const DEFAULT_QUERY_OPTS = {
   maxResultsSize: 50,
   defaultSort: [],
   defaultFilter: {},
-  CSVPageLimit: 1000
-}
+  CSVPageLimit: 1000,
+};

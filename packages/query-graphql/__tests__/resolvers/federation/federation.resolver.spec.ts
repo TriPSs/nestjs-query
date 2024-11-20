@@ -1,18 +1,16 @@
-import { ID, ObjectType, Query, Resolver } from '@nestjs/graphql'
-import { Class } from '@rezonate/nestjs-query-core'
+import { ID, ObjectType, Query, Resolver } from '@nestjs/graphql';
+import { Class } from '@rezonate/nestjs-query-core';
 import {
   CursorConnection,
-  CursorQueryArgsType,
   FederationResolver,
   FilterableField,
   OffsetConnection,
-  OffsetQueryArgsType,
   Relation,
-  UnPagedRelation
-} from '@rezonate/nestjs-query-graphql'
-import { deepEqual, objectContaining, when } from 'ts-mockito'
+  UnPagedRelation,
+} from '@rezonate/nestjs-query-graphql';
+import { deepEqual, when } from 'ts-mockito';
 
-import { createResolverFromNest, generateSchema, TestRelationDTO, TestResolverDTO, TestService } from '../../__fixtures__'
+import { createResolverFromNest, generateSchema, TestRelationDTO, TestResolverDTO } from '../../__fixtures__';
 
 describe('FederationResolver', () => {
   const generateSDL = <DTO extends TestResolverDTO>(DTOClass: Class<DTO>): Promise<string> => {
@@ -20,12 +18,12 @@ describe('FederationResolver', () => {
     class TestSDLResolver extends FederationResolver(DTOClass) {
       @Query(() => DTOClass)
       test(): DTO {
-        return { id: '1', stringField: 'foo' } as DTO
+        return { id: '1', stringField: 'foo' } as DTO;
       }
     }
 
-    return generateSchema([TestSDLResolver])
-  }
+    return generateSchema([TestSDLResolver]);
+  };
 
   @ObjectType('TestFederated')
   @Relation('relation', () => TestRelationDTO)
@@ -35,54 +33,49 @@ describe('FederationResolver', () => {
   @CursorConnection('relationCursorConnection', () => TestRelationDTO)
   class TestFederatedDTO extends TestResolverDTO {
     @FilterableField(() => ID)
-    id!: string
+    id!: string;
 
     @FilterableField()
-    stringField!: string
+    stringField!: string;
   }
 
   @Resolver(() => TestFederatedDTO)
   class TestResolver extends FederationResolver(TestFederatedDTO) {
-    constructor(service: TestService) {
-      super(service)
-    }
   }
 
   it('should not add federation methods if one and many are empty', async () => {
-    const schema = await generateSDL(TestResolverDTO)
-    expect(schema).toMatchSnapshot()
-  })
+    const schema = await generateSDL(TestResolverDTO);
+    expect(schema).toMatchSnapshot();
+  });
 
   it('use the defined relations', async () => {
-    const schema = await generateSDL(TestFederatedDTO)
-    expect(schema).toMatchSnapshot()
-  })
+    const schema = await generateSDL(TestFederatedDTO);
+    expect(schema).toMatchSnapshot();
+  });
 
   describe('one', () => {
     describe('one relation', () => {
       it('should call the service findRelation with the provided dto', async () => {
-        const { resolver, mockService } = await createResolverFromNest(TestResolver, TestFederatedDTO)
+        const { resolver, mockService } = await createResolverFromNest(TestResolver, TestFederatedDTO);
         const dto: TestResolverDTO = {
           id: 'id-1',
-          stringField: 'foo'
-        }
+          stringField: 'foo',
+        };
         const output: TestRelationDTO = {
           id: 'id-2',
-          testResolverId: dto.id
-        }
+          testResolverId: dto.id,
+        };
         when(
           mockService.findRelation(
             TestRelationDTO,
             'relation',
             deepEqual([dto]),
-            deepEqual({ filter: undefined, withDeleted: undefined })
-          )
-        ).thenResolve(new Map([[dto, output]]))
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        const result = await resolver.findRelation(dto, {})
-        return expect(result).toEqual(output)
-      })
+            deepEqual({ filter: undefined, withDeleted: undefined }),
+          ),
+        ).thenResolve(new Map([[dto, output]]));
+        const result = await resolver.service.findRelation(TestFederatedDTO, 'relation', dto, {});
+        return expect(result).toEqual(output);
+      });
 
       it('should call the service findRelation with the provided dto and correct relation name', async () => {
         const { resolver, mockService } = await createResolverFromNest(TestResolver, TestFederatedDTO)

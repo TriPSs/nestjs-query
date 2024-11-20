@@ -1,7 +1,7 @@
-import { ArgsType, Field } from '@nestjs/graphql'
-import { Class } from '@rezonate/nestjs-query-core'
-import { Type } from 'class-transformer'
-import { ValidateNested } from 'class-validator'
+import { ArgsType, Field } from '@nestjs/graphql';
+import { Class } from '@rezonate/nestjs-query-core';
+import { Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
 
 export interface MutationArgsType<Input> {
   input: Input
@@ -14,8 +14,8 @@ export function MutationArgsType<Input>(InputClass: Class<Input>): Class<Mutatio
     @Type(() => InputClass)
     @ValidateNested()
     @Field(() => InputClass)
-    input!: Input
+    input!: Input;
   }
 
-  return MutationArgs
+  return MutationArgs;
 }

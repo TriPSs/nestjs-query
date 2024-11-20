@@ -1,7 +1,7 @@
-import { applyDecorators } from '@nestjs/common'
-import { Mutation, MutationOptions, ReturnTypeFunc } from '@nestjs/graphql'
+import { applyDecorators } from '@nestjs/common';
+import { Mutation, MutationOptions, ReturnTypeFunc } from '@nestjs/graphql';
 
-import { isDisabled, ResolverMethod, ResolverMethodOpts } from './resolver-method.decorator'
+import { isDisabled, ResolverMethod, ResolverMethodOpts } from './resolver-method.decorator';
 
 /**
  * @internal
@@ -16,7 +16,7 @@ export function ResolverMutation(
   ...opts: ResolverMethodOpts[]
 ): MethodDecorator {
   if (isDisabled(opts)) {
-    return (): void => {}
+    return (): void => {};
   }
-  return applyDecorators(Mutation(typeFunc, options), ResolverMethod(...opts))
+  return applyDecorators(Mutation(typeFunc, options), ResolverMethod(...opts));
 }

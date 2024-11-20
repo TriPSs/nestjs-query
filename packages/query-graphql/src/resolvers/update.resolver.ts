@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { Args, ArgsType, InputType, PartialType, Resolver } from '@nestjs/graphql'
+import { Args, ArgsType, InputType, PartialType, Resolver } from '@nestjs/graphql';
 import {
   Class,
   DeepPartial,
@@ -7,28 +7,28 @@ import {
   Filter,
   mergeFilter,
   QueryService,
-  UpdateManyResponse
-} from '@rezonate/nestjs-query-core'
-import omit from 'lodash.omit'
+  UpdateManyResponse,
+} from '@rezonate/nestjs-query-core';
+import omit from 'lodash.omit';
 
-import { OperationGroup } from '../auth'
-import { DTONames, getDTONames } from '../common'
-import { AuthorizerFilter, MutationHookArgs, ResolverMutation, ResolverSubscription } from '../decorators'
-import { HookTypes } from '../hooks'
-import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
-import { EventType, getDTOEventName } from '../subscription'
+import { OperationGroup } from '../auth';
+import { DTONames, getDTONames } from '../common';
+import { AuthorizerFilter, MutationHookArgs, ResolverMutation, ResolverSubscription } from '../decorators';
+import { HookTypes } from '../hooks';
+import { AuthorizerInterceptor, HookInterceptor } from '../interceptors';
+import { EventType, getDTOEventName } from '../subscription';
 import {
   MutationArgsType,
   SubscriptionArgsType,
   SubscriptionFilterInputType,
   UpdateManyInputType,
   UpdateManyResponseType,
-  UpdateOneInputType
-} from '../types'
-import { createSubscriptionFilter, getSubscriptionEventName } from './helpers'
-import { BaseServiceResolver, ResolverClass, ServiceResolver, SubscriptionResolverOpts } from './resolver.interface'
+  UpdateOneInputType,
+} from '../types';
+import { createSubscriptionFilter, getSubscriptionEventName } from './helpers';
+import { BaseServiceResolver, ResolverClass, ServiceResolver, SubscriptionResolverOpts } from './resolver.interface';
 
-export type UpdatedEvent<DTO> = { [eventName: string]: DTO }
+export type UpdatedEvent<DTO> = { [eventName: string]: DTO };
 
 export interface UpdateResolverOpts<DTO, U = DeepPartial<DTO>> extends SubscriptionResolverOpts {
   UpdateDTOClass?: Class<U>
@@ -53,36 +53,36 @@ const defaultUpdateInput = <DTO, U>(dtoNames: DTONames, DTOClass: Class<DTO>): C
   // @ts-ignore
   class UpdateType extends PartialType(DTOClass, InputType) {}
 
-  return UpdateType as Class<U>
-}
+  return UpdateType as Class<U>;
+};
 
 /** @internal */
 const defaultUpdateOneInput = <DTO, U>(
   dtoNames: DTONames,
   DTOClass: Class<DTO>,
-  UpdateDTO: Class<U>
+  UpdateDTO: Class<U>,
 ): Class<UpdateOneInputType<U>> => {
-  const { baseName } = dtoNames
+  const { baseName } = dtoNames;
 
   @InputType(`UpdateOne${baseName}Input`)
   class UM extends UpdateOneInputType(DTOClass, UpdateDTO) {}
 
-  return UM
-}
+  return UM;
+};
 
 /** @internal */
 const defaultUpdateManyInput = <DTO, U>(
   dtoNames: DTONames,
   DTOClass: Class<DTO>,
-  UpdateDTO: Class<U>
+  UpdateDTO: Class<U>,
 ): Class<UpdateManyInputType<DTO, U>> => {
-  const { pluralBaseName } = dtoNames
+  const { pluralBaseName } = dtoNames;
 
   @InputType(`UpdateMany${pluralBaseName}Input`)
   class UM extends UpdateManyInputType(DTOClass, UpdateDTO) {}
 
-  return UM
-}
+  return UM;
+};
 
 /**
  * @internal
@@ -91,23 +91,23 @@ const defaultUpdateManyInput = <DTO, U>(
 export const Updateable =
   <DTO, U, QS extends QueryService<DTO, unknown, U>>(DTOClass: Class<DTO>, opts: UpdateResolverOpts<DTO, U>) =>
   <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<UpdateResolver<DTO, U, QS>> & B => {
-    const dtoNames = getDTONames(DTOClass, opts)
-    const { baseName, pluralBaseName } = dtoNames
-    const UMR = UpdateManyResponseType()
-    const enableSubscriptions = opts.enableSubscriptions === true
-    const enableOneSubscriptions = opts.one?.enableSubscriptions ?? enableSubscriptions
-    const enableManySubscriptions = opts.many?.enableSubscriptions ?? enableSubscriptions
-    const updateOneEvent = getDTOEventName(EventType.UPDATED_ONE, DTOClass)
-    const updateManyEvent = getDTOEventName(EventType.UPDATED_MANY, DTOClass)
+    const dtoNames = getDTONames(DTOClass, opts);
+    const { baseName, pluralBaseName } = dtoNames;
+    const UMR = UpdateManyResponseType();
+    const enableSubscriptions = opts.enableSubscriptions === true;
+    const enableOneSubscriptions = opts.one?.enableSubscriptions ?? enableSubscriptions;
+    const enableManySubscriptions = opts.many?.enableSubscriptions ?? enableSubscriptions;
+    const updateOneEvent = getDTOEventName(EventType.UPDATED_ONE, DTOClass);
+    const updateManyEvent = getDTOEventName(EventType.UPDATED_MANY, DTOClass);
     const {
       UpdateDTOClass = defaultUpdateInput(dtoNames, DTOClass),
       UpdateOneInput = defaultUpdateOneInput(dtoNames, DTOClass, UpdateDTOClass),
-      UpdateManyInput = defaultUpdateManyInput(dtoNames, DTOClass, UpdateDTOClass)
-    } = opts
-    const updateOneMutationName = opts.one?.name ?? `updateOne${baseName}`
-    const updateManyMutationName = opts.many?.name ?? `updateMany${pluralBaseName}`
+      UpdateManyInput = defaultUpdateManyInput(dtoNames, DTOClass, UpdateDTOClass),
+    } = opts;
+    const updateOneMutationName = opts.one?.name ?? `updateOne${baseName}`;
+    const updateManyMutationName = opts.many?.name ?? `updateMany${pluralBaseName}`;
 
-    const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'UpdateDTOClass', 'UpdateOneInput', 'UpdateManyInput')
+    const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'UpdateDTOClass', 'UpdateOneInput', 'UpdateManyInput');
 
     @ArgsType()
     class UO extends MutationArgsType(UpdateOneInput) {}
@@ -121,7 +121,7 @@ export const Updateable =
     @ArgsType()
     class UOSA extends SubscriptionArgsType(SI) {}
 
-    const updateOneSubscriptionFilter = createSubscriptionFilter(SI, updateOneEvent)
+    const updateOneSubscriptionFilter = createSubscriptionFilter(SI, updateOneEvent);
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class UpdateResolverBase extends BaseClass {
@@ -129,108 +129,108 @@ export const Updateable =
         () => DTOClass,
         { name: updateOneMutationName, description: opts?.one?.description },
         {
-          interceptors: [HookInterceptor(HookTypes.BEFORE_UPDATE_ONE, UpdateDTOClass, DTOClass), AuthorizerInterceptor(DTOClass)]
+          interceptors: [HookInterceptor(HookTypes.BEFORE_UPDATE_ONE, UpdateDTOClass, DTOClass), AuthorizerInterceptor(DTOClass)],
         },
         commonResolverOpts,
-        opts.one ?? {}
+        opts.one ?? {},
       )
       async updateOne(
         @MutationHookArgs() input: UO,
         @AuthorizerFilter({
           operationGroup: OperationGroup.UPDATE,
-          many: false
+          many: false,
         })
-        authorizeFilter?: Filter<DTO>
+        authorizeFilter?: Filter<DTO>,
       ): Promise<DTO> {
-        const { id, update } = input.input
-        const updateResult = await this.service.updateOne(id, update, { filter: authorizeFilter ?? {} })
+        const { id, update } = input.input;
+        const updateResult = await this.service.updateOne(id, update, { filter: authorizeFilter ?? {} });
         if (enableOneSubscriptions) {
-          await this.publishUpdatedOneEvent(updateResult, authorizeFilter)
+          await this.publishUpdatedOneEvent(updateResult, authorizeFilter);
         }
-        return updateResult
+        return updateResult;
       }
 
       @ResolverMutation(
         () => UMR,
         { name: updateManyMutationName, description: opts?.many?.description },
         {
-          interceptors: [HookInterceptor(HookTypes.BEFORE_UPDATE_MANY, UpdateDTOClass, DTOClass), AuthorizerInterceptor(DTOClass)]
+          interceptors: [HookInterceptor(HookTypes.BEFORE_UPDATE_MANY, UpdateDTOClass, DTOClass), AuthorizerInterceptor(DTOClass)],
         },
         commonResolverOpts,
-        opts.many ?? {}
+        opts.many ?? {},
       )
       async updateMany(
         @MutationHookArgs() input: UM,
         @AuthorizerFilter({
           operationGroup: OperationGroup.UPDATE,
-          many: true
+          many: true,
         })
-        authorizeFilter?: Filter<DTO>
+        authorizeFilter?: Filter<DTO>,
       ): Promise<UpdateManyResponse> {
-        const { update, filter } = input.input
-        const updateManyResponse = await this.service.updateMany(update, mergeFilter(filter, authorizeFilter ?? {}))
+        const { update, filter } = input.input;
+        const updateManyResponse = await this.service.updateMany(update, mergeFilter(filter, authorizeFilter ?? {}));
         if (enableManySubscriptions) {
-          await this.publishUpdatedManyEvent(updateManyResponse, authorizeFilter)
+          await this.publishUpdatedManyEvent(updateManyResponse, authorizeFilter);
         }
-        return updateManyResponse
+        return updateManyResponse;
       }
 
       async publishUpdatedOneEvent(dto: DTO, authorizeFilter?: Filter<DTO>): Promise<void> {
         if (this.pubSub) {
-          const eventName = getSubscriptionEventName(updateOneEvent, authorizeFilter)
-          await this.pubSub.publish(eventName, { [updateOneEvent]: dto })
+          const eventName = getSubscriptionEventName(updateOneEvent, authorizeFilter);
+          await this.pubSub.publish(eventName, { [updateOneEvent]: dto });
         }
       }
 
       async publishUpdatedManyEvent(umr: UpdateManyResponse, authorizeFilter?: Filter<DTO>): Promise<void> {
         if (this.pubSub) {
-          const eventName = getSubscriptionEventName(updateManyEvent, authorizeFilter)
-          await this.pubSub.publish(eventName, { [updateManyEvent]: umr })
+          const eventName = getSubscriptionEventName(updateManyEvent, authorizeFilter);
+          await this.pubSub.publish(eventName, { [updateManyEvent]: umr });
         }
       }
 
       @ResolverSubscription(() => DTOClass, { name: updateOneEvent, filter: updateOneSubscriptionFilter }, commonResolverOpts, {
         enableSubscriptions: enableOneSubscriptions,
-        interceptors: [AuthorizerInterceptor(DTOClass)]
+        interceptors: [AuthorizerInterceptor(DTOClass)],
       })
       // input required so graphql subscription filtering will work.
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       updatedOneSubscription(
         @Args() input?: UOSA,
         @AuthorizerFilter({ operationGroup: OperationGroup.UPDATE, many: false })
-        authorizeFilter?: Filter<DTO>
+        authorizeFilter?: Filter<DTO>,
       ): AsyncIterator<UpdatedEvent<DTO>> {
         if (!enableOneSubscriptions || !this.pubSub) {
-          throw new Error(`Unable to subscribe to ${updateOneEvent}`)
+          throw new Error(`Unable to subscribe to ${updateOneEvent}`);
         }
-        const eventName = getSubscriptionEventName(updateOneEvent, authorizeFilter)
-        return this.pubSub.asyncIterator(eventName)
+        const eventName = getSubscriptionEventName(updateOneEvent, authorizeFilter);
+        return this.pubSub.asyncIterator(eventName);
       }
 
       @ResolverSubscription(() => UMR, { name: updateManyEvent }, commonResolverOpts, {
         enableSubscriptions: enableManySubscriptions,
-        interceptors: [AuthorizerInterceptor(DTOClass)]
+        interceptors: [AuthorizerInterceptor(DTOClass)],
       })
       updatedManySubscription(
         @AuthorizerFilter({ operationGroup: OperationGroup.UPDATE, many: true })
-        authorizeFilter?: Filter<DTO>
+        authorizeFilter?: Filter<DTO>,
       ): AsyncIterator<UpdatedEvent<DeleteManyResponse>> {
         if (!enableManySubscriptions || !this.pubSub) {
-          throw new Error(`Unable to subscribe to ${updateManyEvent}`)
+          throw new Error(`Unable to subscribe to ${updateManyEvent}`);
         }
-        const eventName = getSubscriptionEventName(updateManyEvent, authorizeFilter)
-        return this.pubSub.asyncIterator(eventName)
+        const eventName = getSubscriptionEventName(updateManyEvent, authorizeFilter);
+        return this.pubSub.asyncIterator(eventName);
       }
     }
 
-    return UpdateResolverBase
-  }
+    return UpdateResolverBase;
+  };
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const UpdateResolver = <
   DTO,
   U = DeepPartial<DTO>,
-  QS extends QueryService<DTO, unknown, U> = QueryService<DTO, unknown, U>
+  QS extends QueryService<DTO, unknown, U> = QueryService<DTO, unknown, U>,
 >(
   DTOClass: Class<DTO>,
-  opts: UpdateResolverOpts<DTO, U> = {}
-): ResolverClass<DTO, QS, UpdateResolver<DTO, U, QS>> => Updateable(DTOClass, opts)(BaseServiceResolver)
+  opts: UpdateResolverOpts<DTO, U> = {},
+): ResolverClass<DTO, QS, UpdateResolver<DTO, U, QS>> => Updateable(DTOClass, opts)(BaseServiceResolver);

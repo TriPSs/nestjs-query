@@ -1,7 +1,7 @@
-import { ArgsType, Field } from '@nestjs/graphql'
-import { Class } from '@rezonate/nestjs-query-core'
-import { Type } from 'class-transformer'
-import { ValidateNested } from 'class-validator'
+import { ArgsType, Field } from '@nestjs/graphql';
+import { Class } from '@rezonate/nestjs-query-core';
+import { Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
 
 export interface SubscriptionArgsType<Input> {
   input?: Input
@@ -14,8 +14,8 @@ export function SubscriptionArgsType<Input>(InputClass: Class<Input>): Class<Sub
     @Type(() => InputClass)
     @ValidateNested()
     @Field(() => InputClass, { nullable: true })
-    input?: Input
+    input?: Input;
   }
 
-  return SubscriptionArgs
+  return SubscriptionArgs;
 }

@@ -1,4 +1,4 @@
-import { Filter } from './filter.interface'
+import { Filter } from './filter.interface';
 
 /**
  * Base interface for all types that allow filtering

@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common'
-import { Test } from '@nestjs/testing'
-import { DefaultAssembler, InjectAssemblerQueryService, NoOpQueryService, QueryService } from '@rezonate/nestjs-query-core'
+import { Injectable } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { DefaultAssembler, InjectAssemblerQueryService, NoOpQueryService, QueryService } from '@rezonate/nestjs-query-core';
 
-import { getAssemblerQueryServiceToken } from '../../src/decorators/helpers'
+import { getAssemblerQueryServiceToken } from '../../src/decorators/helpers';
 
 describe('@InjectAssemblerQueryService', () => {
   class Foo {
-    str!: string
+    str!: string;
   }
 
   class Bar {
-    num!: string
+    num!: string;
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -22,18 +22,18 @@ describe('@InjectAssemblerQueryService', () => {
       constructor(@InjectAssemblerQueryService(TestAssembler) readonly service: QueryService<Foo>) {}
     }
 
-    const noopQueryService = new NoOpQueryService<Foo>()
+    const noopQueryService = new NoOpQueryService<Foo>();
     const moduleRef = await Test.createTestingModule({
       providers: [
         TestService,
         {
           provide: getAssemblerQueryServiceToken(TestAssembler),
-          useValue: noopQueryService
-        }
-      ]
-    }).compile()
-    const testService = moduleRef.get(TestService)
-    expect(testService).toBeInstanceOf(TestService)
-    return expect(testService.service).toBe(noopQueryService)
-  })
-})
+          useValue: noopQueryService,
+        },
+      ],
+    }).compile();
+    const testService = moduleRef.get(TestService);
+    expect(testService).toBeInstanceOf(TestService);
+    return expect(testService.service).toBe(noopQueryService);
+  });
+});

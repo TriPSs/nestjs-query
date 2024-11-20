@@ -1,8 +1,8 @@
-import { Paging, Query } from '@rezonate/nestjs-query-core'
+import { Paging, Query } from '@rezonate/nestjs-query-core';
 
-import { OffsetConnectionType, PagerResult } from '../../interfaces'
+import { OffsetConnectionType, PagerResult } from '../../interfaces';
 
-export type OffsetPagingOpts = Required<Paging>
+export type OffsetPagingOpts = Required<Paging>;
 
 export interface OffsetPagingMeta<DTO> {
   opts: OffsetPagingOpts
@@ -14,4 +14,4 @@ export interface QueryResults<DTO> {
   hasExtraNode: boolean
 }
 
-export type OffsetPagerResult<DTO> = PagerResult & Omit<OffsetConnectionType<DTO>, 'totalCount'>
+export type OffsetPagerResult<DTO> = PagerResult & Omit<OffsetConnectionType<DTO>, 'totalCount'>;

@@ -1,7 +1,7 @@
-import { Query } from '@rezonate/nestjs-query-core'
+import { Query } from '@rezonate/nestjs-query-core';
 
-import { CursorConnectionType, PagerResult } from '../../interfaces'
-import { CursorPagingOpts } from './strategies'
+import { CursorConnectionType, PagerResult } from '../../interfaces';
+import { CursorPagingOpts } from './strategies';
 
 export interface PagingMeta<DTO, Opts extends CursorPagingOpts<DTO>> {
   opts: Opts
@@ -13,4 +13,4 @@ export interface QueryResults<DTO> {
   hasExtraNode: boolean
 }
 
-export type CursorPagerResult<DTO> = PagerResult & Omit<CursorConnectionType<DTO>, 'totalCount'>
+export type CursorPagerResult<DTO> = PagerResult & Omit<CursorConnectionType<DTO>, 'totalCount'>;

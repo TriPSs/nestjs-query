@@ -1,11 +1,11 @@
-import { Filter } from '@rezonate/nestjs-query-core'
+import { Filter } from '@rezonate/nestjs-query-core';
 
 export enum OperationGroup {
   READ = 'read',
   AGGREGATE = 'aggregate',
   CREATE = 'create',
   UPDATE = 'update',
-  DELETE = 'delete'
+  DELETE = 'delete',
 }
 
 export interface AuthorizationContext {

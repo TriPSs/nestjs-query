@@ -1,1 +1,1 @@
-export { FieldIndex } from './field.index.decorator'
+export { FieldIndex } from './field.index.decorator';

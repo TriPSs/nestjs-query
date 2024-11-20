@@ -1,4 +1,4 @@
-import { Filterable } from './filterable.interface'
+import { Filterable } from './filterable.interface';
 
 export interface FindRelationOptions<Relation> extends Filterable<Relation> {
   /**

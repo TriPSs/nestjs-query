@@ -8,9 +8,9 @@ import {
   UseFilters,
   UseGuards,
   UseInterceptors,
-  UsePipes
-} from '@nestjs/common'
-import { Class } from '@rezonate/nestjs-query-core'
+  UsePipes,
+} from '@nestjs/common';
+import { Class } from '@rezonate/nestjs-query-core';
 
 export interface BaseResolverOptions {
   /** An array of `nestjs` guards to apply to a graphql endpoint */
@@ -40,8 +40,8 @@ export interface ResolverMethodOpts extends BaseResolverOptions {
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function createSetArray<T>(...arrs: T[][]): T[] {
-  const set: Set<T> = new Set(arrs.reduce<T[]>((acc: T[], arr: T[]): T[] => [...acc, ...arr], []))
-  return [...set]
+  const set: Set<T> = new Set(arrs.reduce<T[]>((acc: T[], arr: T[]): T[] => [...acc, ...arr], []));
+  return [...set];
 }
 
 /**
@@ -50,7 +50,7 @@ function createSetArray<T>(...arrs: T[][]): T[] {
  * @param opts - The array of [[ResolverMethodOpts]] to check.
  */
 export function isDisabled(opts: ResolverMethodOpts[]): boolean {
-  return !!opts.find((o) => o.disabled)
+  return !!opts.find((o) => o.disabled);
 }
 
 /**
@@ -65,6 +65,6 @@ export function ResolverMethod(...opts: ResolverMethodOpts[]): MethodDecorator {
     UseInterceptors(...createSetArray<Class<NestInterceptor>>(...opts.map((o) => o.interceptors ?? []))),
     UsePipes(...createSetArray<Class<PipeTransform>>(...opts.map((o) => o.pipes ?? []))),
     UseFilters(...createSetArray<Class<ExceptionFilter>>(...opts.map((o) => o.filters ?? []))),
-    ...createSetArray<PropertyDecorator | MethodDecorator>(...opts.map((o) => o.decorators ?? []))
-  )
+    ...createSetArray<PropertyDecorator | MethodDecorator>(...opts.map((o) => o.decorators ?? [])),
+  );
 }

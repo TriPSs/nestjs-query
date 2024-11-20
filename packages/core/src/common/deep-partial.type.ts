@@ -9,4 +9,4 @@ export declare type DeepPartial<T> =
         ? ReadonlyArray<DeepPartial<U>>
         : DeepPartial<T[P]> | T[P]
     }
-  | T
+  | T;

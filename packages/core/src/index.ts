@@ -6,10 +6,10 @@ export {
   AssemblerFactory,
   AssemblerSerializer,
   ClassTransformerAssembler,
-  DefaultAssembler
-} from './assemblers'
-export * from './common'
-export { getQueryServiceToken, InjectAssemblerQueryService, InjectQueryService } from './decorators'
+  DefaultAssembler,
+} from './assemblers';
+export * from './common';
+export { getQueryServiceToken, InjectAssemblerQueryService, InjectQueryService } from './decorators';
 export {
   applyFilter,
   applyPaging,
@@ -26,8 +26,8 @@ export {
   transformAggregateResponse,
   transformFilter,
   transformQuery,
-  transformSort
-} from './helpers'
-export * from './interfaces'
-export { NestjsQueryCoreModule, NestjsQueryCoreModuleOpts } from './module'
-export * from './services'
+  transformSort,
+} from './helpers';
+export * from './interfaces';
+export { NestjsQueryCoreModule, NestjsQueryCoreModuleOpts } from './module';
+export * from './services';

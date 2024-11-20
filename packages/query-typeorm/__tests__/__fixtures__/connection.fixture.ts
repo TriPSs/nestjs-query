@@ -1,13 +1,12 @@
-// this is needed to create a query builder in typeorm :(
-import { Connection, ConnectionOptions, createConnection, DataSource, DataSourceOptions, getConnection } from 'typeorm'
+import {  DataSource, DataSourceOptions } from 'typeorm';
 
-import { RelationOfTestRelationEntity } from './relation-of-test-relation.entity'
-import { seed } from './seeds'
-import { TestEntity } from './test.entity'
-import { TestEntityRelationEntity } from './test-entity-relation.entity'
-import { TestRelation } from './test-relation.entity'
-import { TestSoftDeleteEntity } from './test-soft-delete.entity'
-import { TestSoftDeleteRelation } from './test-soft-delete.relation'
+import { RelationOfTestRelationEntity } from './relation-of-test-relation.entity';
+import { seed } from './seeds';
+import { TestEntity } from './test.entity';
+import { TestEntityRelationEntity } from './test-entity-relation.entity';
+import { TestRelation } from './test-relation.entity';
+import { TestSoftDeleteEntity } from './test-soft-delete.entity';
+import { TestSoftDeleteRelation } from './test-soft-delete.relation';
 
 export const CONNECTION_OPTIONS: DataSourceOptions = {
   type: 'sqlite',
@@ -19,10 +18,10 @@ export const CONNECTION_OPTIONS: DataSourceOptions = {
     TestRelation,
     TestEntityRelationEntity,
     RelationOfTestRelationEntity,
-    TestSoftDeleteRelation
+    TestSoftDeleteRelation,
   ],
   synchronize: true,
-  logging: false
+  logging: false,
 };
 
 const defaultConnection = new DataSource(CONNECTION_OPTIONS);
@@ -50,7 +49,7 @@ const tables = [
   'test_entity_relation_entity',
   'test_soft_delete_entity',
   'test_soft_delete_relation',
-  'test_entity_many_test_relations_test_relation'
+  'test_entity_many_test_relations_test_relation',
 ];
 export const truncate = async (connection: DataSource): Promise<void> => {
   await tables.reduce(async (prev, table) => {

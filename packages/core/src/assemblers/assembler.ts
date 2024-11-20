@@ -1,6 +1,6 @@
-import { Class, DeepPartial, MapReflector, MetaValue, ValueReflector } from '../common'
-import { AggregateQuery, AggregateResponse, Query } from '../interfaces'
-import { ASSEMBLER_CLASSES_KEY, ASSEMBLER_KEY } from './constants'
+import { Class, DeepPartial, MapReflector, MetaValue, ValueReflector } from '../common';
+import { AggregateQuery, AggregateResponse, Query } from '../interfaces';
+import { ASSEMBLER_CLASSES_KEY, ASSEMBLER_KEY } from './constants';
 
 export interface Assembler<
   DTO,
@@ -8,7 +8,7 @@ export interface Assembler<
   CreateDTO = DeepPartial<DTO>,
   CreateEntity = DeepPartial<Entity>,
   UpdateDTO = CreateDTO,
-  UpdateEntity = CreateEntity
+  UpdateEntity = CreateEntity,
 > {
   /**
    * Convert an entity to a DTO
@@ -95,8 +95,8 @@ export interface Assembler<
   convertToCreateEntities(createDtos: CreateDTO[]): CreateEntity[]
 }
 
-const assemblerReflector = new ValueReflector(ASSEMBLER_CLASSES_KEY)
-const reflector = new MapReflector<Class<unknown>>(ASSEMBLER_KEY)
+const assemblerReflector = new ValueReflector(ASSEMBLER_CLASSES_KEY);
+const reflector = new MapReflector<Class<unknown>>(ASSEMBLER_KEY);
 
 export interface AssemblerClasses<DTO, Entity> {
   DTOClass: Class<DTO>
@@ -115,26 +115,26 @@ export function Assembler<
   C = DeepPartial<DTO>,
   CE = DeepPartial<Entity>,
   U = DeepPartial<DTO>,
-  UE = DeepPartial<Entity>
+  UE = DeepPartial<Entity>,
 >(DTOClass: Class<DTO>, EntityClass: Class<Entity>) {
   return <Cls extends Class<Assembler<DTO, Entity, C, CE, U, UE>>>(cls: Cls): Cls | void => {
     if (reflector.has(DTOClass, EntityClass)) {
-      throw new Error(`Assembler already registered for ${DTOClass.name} ${EntityClass.name}`)
+      throw new Error(`Assembler already registered for ${DTOClass.name} ${EntityClass.name}`);
     }
-    assemblerReflector.set(cls, { DTOClass, EntityClass })
-    reflector.set(DTOClass, EntityClass, cls)
-    return cls
-  }
+    assemblerReflector.set(cls, { DTOClass, EntityClass });
+    reflector.set(DTOClass, EntityClass, cls);
+    return cls;
+  };
 }
 
 export function getAssemblers<DTO>(
-  DTOClass: Class<DTO>
+  DTOClass: Class<DTO>,
 ): MetaValue<Map<Class<unknown>, Class<Assembler<DTO, unknown, unknown, unknown, unknown, unknown>>>> {
-  return reflector.get(DTOClass)
+  return reflector.get(DTOClass);
 }
 
 export function getAssemblerClasses<DTO, Entity, C, CE, U, UE>(
-  AssemblerClass: Class<Assembler<DTO, Entity, C, CE, U, UE>>
+  AssemblerClass: Class<Assembler<DTO, Entity, C, CE, U, UE>>,
 ): MetaValue<AssemblerClasses<DTO, Entity>> {
-  return assemblerReflector.get(AssemblerClass)
+  return assemblerReflector.get(AssemblerClass);
 }

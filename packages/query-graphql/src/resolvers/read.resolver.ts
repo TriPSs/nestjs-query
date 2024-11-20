@@ -1,13 +1,14 @@
-import { ArgsType, Resolver } from '@nestjs/graphql'
-import { Class, Filter, mergeQuery, QueryService } from '@rezonate/nestjs-query-core'
-import omit from 'lodash.omit'
-import Papa from 'papaparse'
+// eslint-disable-next-line max-classes-per-file
+import { ArgsType, Resolver } from '@nestjs/graphql';
+import { Class, Filter, mergeQuery, QueryService } from '@rezonate/nestjs-query-core';
+import omit from 'lodash.omit';
+import Papa from 'papaparse';
 
-import { OperationGroup } from '../auth'
-import { getDTONames } from '../common'
-import { AuthorizerFilter, getQueryOptions, HookArgs, ResolverQuery } from '../decorators'
-import { HookTypes } from '../hooks'
-import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
+import { OperationGroup } from '../auth';
+import { getDTONames } from '../common';
+import { AuthorizerFilter, getQueryOptions, HookArgs, ResolverQuery } from '../decorators';
+import { HookTypes } from '../hooks';
+import { AuthorizerInterceptor, HookInterceptor } from '../interceptors';
 import {
   ConnectionOptions,
   FilterType,
@@ -15,26 +16,26 @@ import {
   InferConnectionTypeFromStrategy,
   PagingStrategies,
   QueryArgsType,
-  QueryArgsTypeOpts
-} from '../types'
-import { CursorQueryArgsTypeOpts, QueryType, StaticQueryType } from '../types/query'
-import { DEFAULT_QUERY_OPTS } from '../types/query/query-args'
-import { BaseServiceResolver, ExtractPagingStrategy, ResolverClass, ResolverOpts, ServiceResolver } from './resolver.interface'
+  QueryArgsTypeOpts,
+} from '../types';
+import { CursorQueryArgsTypeOpts, QueryType, StaticQueryType } from '../types/query';
+import { DEFAULT_QUERY_OPTS } from '../types/query/query-args';
+import { BaseServiceResolver, ExtractPagingStrategy, ResolverClass, ResolverOpts, ServiceResolver } from './resolver.interface';
 
-const QUERY_ARGS_TOKEN = Symbol('QUERY_ARGS_TOKEN')
+const QUERY_ARGS_TOKEN = Symbol('QUERY_ARGS_TOKEN');
 
 export type ReadResolverFromOpts<
   DTO,
   Opts extends ReadResolverOpts<DTO>,
-  QS extends QueryService<DTO, unknown, unknown>
-> = ReadResolver<DTO, ExtractPagingStrategy<DTO, Opts>, QS>
+  QS extends QueryService<DTO, unknown, unknown>,
+> = ReadResolver<DTO, ExtractPagingStrategy<DTO, Opts>, QS>;
 
 export type ReadResolverOpts<DTO> = {
   QueryArgs?: StaticQueryType<DTO, PagingStrategies>
   idField?: keyof DTO
 } & ResolverOpts &
   QueryArgsTypeOpts<DTO> &
-  Pick<ConnectionOptions, 'enableTotalCount'>
+  Pick<ConnectionOptions, 'enableTotalCount'>;
 
 export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends QueryService<DTO, unknown, unknown>>
   extends ServiceResolver<DTO, QS> {
@@ -50,19 +51,19 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
   findById(id: FindOneArgsType, authorizeFilter?: Filter<DTO>): Promise<DTO | undefined>
 }
 
-export const getQueryArgs = <DTO>(DTOClass: Class<DTO>) => FilterType(DTOClass)
+export const getQueryArgs = <DTO>(DTOClass: Class<DTO>) => FilterType(DTOClass);
 
 const serializeNestedObjects = (obj: Record<string, any>): Record<string, any> => {
-  const result: Record<string, any> = {}
+  const result: Record<string, any> = {};
   Object.entries(obj).forEach(([key, value]) => {
     if (typeof value === 'object' && value !== null) {
-      result[key] = JSON.stringify(value)
+      result[key] = JSON.stringify(value);
     } else {
-      result[key] = value
+      result[key] = value;
     }
-  })
-  return result
-}
+  });
+  return result;
+};
 
 /**
  * @internal
@@ -71,18 +72,18 @@ const serializeNestedObjects = (obj: Record<string, any>): Record<string, any> =
 export const Readable =
   <DTO, ReadOpts extends ReadResolverOpts<DTO>, QS extends QueryService<DTO, unknown, unknown>>(
     DTOClass: Class<DTO>,
-    opts: ReadOpts
+    opts: ReadOpts,
   ) =>
   <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<ReadResolverFromOpts<DTO, ReadOpts, QS>> & B => {
-    const { baseNameLower, pluralBaseNameLower, baseName } = getDTONames(DTOClass, opts)
-    const readOneQueryName = opts.one?.name ?? baseNameLower
-    const readManyQueryName = opts.many?.name ?? pluralBaseNameLower
-    const { QueryArgs = QueryArgsType(DTOClass, { ...opts, connectionName: `${baseName}Connection` }) } = opts
-    const { ConnectionType } = QueryArgs
+    const { baseNameLower, pluralBaseNameLower, baseName } = getDTONames(DTOClass, opts);
+    const readOneQueryName = opts.one?.name ?? baseNameLower;
+    const readManyQueryName = opts.many?.name ?? pluralBaseNameLower;
+    const { QueryArgs = QueryArgsType(DTOClass, { ...opts, connectionName: `${baseName}Connection` }) } = opts;
+    const { ConnectionType } = QueryArgs;
 
-    Reflect.defineMetadata(QUERY_ARGS_TOKEN, QueryArgs, DTOClass)
+    Reflect.defineMetadata(QUERY_ARGS_TOKEN, QueryArgs, DTOClass);
 
-    const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection', 'withDeleted')
+    const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection', 'withDeleted');
 
     @ArgsType()
     class QA extends QueryArgs {}
@@ -97,20 +98,20 @@ export const Readable =
         { name: readOneQueryName, description: opts?.one?.description },
         commonResolverOpts,
         { interceptors: [HookInterceptor(HookTypes.BEFORE_FIND_ONE, DTOClass), AuthorizerInterceptor(DTOClass)] },
-        opts.one ?? {}
+        opts.one ?? {},
       )
       async findById(
         @HookArgs() input: FO,
         @AuthorizerFilter({
           operationGroup: OperationGroup.READ,
-          many: false
+          many: false,
         })
-        authorizeFilter?: Filter<DTO>
+        authorizeFilter?: Filter<DTO>,
       ): Promise<DTO> {
         return this.service.getById(input.id, {
           filter: authorizeFilter,
-          withDeleted: opts?.one?.withDeleted
-        })
+          withDeleted: opts?.one?.withDeleted,
+        });
       }
 
       @ResolverQuery(
@@ -118,21 +119,21 @@ export const Readable =
         { name: readManyQueryName, description: opts?.many?.description },
         commonResolverOpts,
         { interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)] },
-        opts.many ?? {}
+        opts.many ?? {},
       )
       async queryMany(
         @HookArgs() query: QA,
         @AuthorizerFilter({
           operationGroup: OperationGroup.READ,
-          many: true
+          many: true,
         })
-        authorizeFilter?: Filter<DTO>
+        authorizeFilter?: Filter<DTO>,
       ): Promise<InstanceType<typeof ConnectionType>> {
         return ConnectionType.createFromPromise(
           (q) => this.service.query(q),
           mergeQuery(query, { filter: authorizeFilter }),
-          (filter) => this.service.count(filter)
-        )
+          (filter) => this.service.count(filter),
+        );
       }
 
       @ResolverQuery(
@@ -140,19 +141,19 @@ export const Readable =
         { name: `${readManyQueryName}CSV`, description: opts?.many?.description },
         commonResolverOpts,
         { interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)] },
-        opts.many ?? {}
+        opts.many ?? {},
       )
       async queryManyToCSV(
         @HookArgs() query: QA,
         @AuthorizerFilter({
           operationGroup: OperationGroup.READ,
-          many: true
+          many: true,
         })
-        authorizeFilter?: Filter<DTO>
+        authorizeFilter?: Filter<DTO>,
       ) {
-        const limitValue = getQueryOptions(DTOClass).CSVPageLimit || DEFAULT_QUERY_OPTS.CSVPageLimit
-        const res = await this.service.query({ ...query, paging: { ...query.paging, limit: limitValue } })
-        return Papa.unparse(res.map((r) => serializeNestedObjects(r)))
+        const limitValue = getQueryOptions(DTOClass).CSVPageLimit || DEFAULT_QUERY_OPTS.CSVPageLimit;
+        const res = await this.service.query({ ...mergeQuery(query, { filter: authorizeFilter }), paging: { ...query.paging, limit: limitValue } });
+        return Papa.unparse(res.map((r) => serializeNestedObjects(r)));
       }
 
       @ResolverQuery(
@@ -161,30 +162,30 @@ export const Readable =
         commonResolverOpts,
         {
           interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)],
-          disabled: !opts.idField
+          disabled: !opts.idField,
         },
-        opts.many ?? {}
+        opts.many ?? {},
       )
       queryManyIds(
         @HookArgs() query: QA,
         @AuthorizerFilter({
           operationGroup: OperationGroup.READ,
-          many: true
+          many: true,
         })
-        authorizeFilter?: Filter<DTO>
+        authorizeFilter?: Filter<DTO>,
       ) {
-        return this.service.queryIds(mergeQuery(query, { filter: authorizeFilter }), opts.idField)
+        return this.service.queryIds(mergeQuery(query, { filter: authorizeFilter }), opts.idField);
       }
     }
 
-    return ReadResolverBase as Class<ReadResolverFromOpts<DTO, ReadOpts, QS>> & B
-  }
+    return ReadResolverBase as Class<ReadResolverFromOpts<DTO, ReadOpts, QS>> & B;
+  };
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const ReadResolver = <
   DTO,
   ReadOpts extends ReadResolverOpts<DTO> = CursorQueryArgsTypeOpts<DTO>,
-  QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>
+  QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>,
 >(
   DTOClass: Class<DTO>,
-  opts: ReadOpts = {} as ReadOpts
-): ResolverClass<DTO, QS, ReadResolverFromOpts<DTO, ReadOpts, QS>> => Readable(DTOClass, opts)(BaseServiceResolver)
+  opts: ReadOpts = {} as ReadOpts,
+): ResolverClass<DTO, QS, ReadResolverFromOpts<DTO, ReadOpts, QS>> => Readable(DTOClass, opts)(BaseServiceResolver);

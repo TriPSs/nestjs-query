@@ -1,10 +1,10 @@
-export { CreateResolver, CreateResolverOpts } from './create.resolver'
-export { CRUDResolver, CRUDResolverOpts } from './crud.resolver'
-export { DeleteResolver, DeleteResolverOpts } from './delete.resolver'
-export { FederationResolver } from './federation'
-export { ReadResolver, ReadResolverOpts } from './read.resolver'
-export { ReferenceResolver, ReferenceResolverOpts } from './reference.resolver'
-export { Relatable, ResolverRelation, ResolverRelationReference } from './relations'
-export { ResolverOpts } from './resolver.interface'
-export { UpdateResolver, UpdateResolverOpts } from './update.resolver'
-export { AggregateableByTime } from './aggregate.by.time.resolver'
+export { CreateResolver, CreateResolverOpts } from './create.resolver';
+export { CRUDResolver, CRUDResolverOpts } from './crud.resolver';
+export { DeleteResolver, DeleteResolverOpts } from './delete.resolver';
+export { FederationResolver } from './federation';
+export { ReadResolver, ReadResolverOpts } from './read.resolver';
+export { ReferenceResolver, ReferenceResolverOpts } from './reference.resolver';
+export { Relatable, ResolverRelation, ResolverRelationReference } from './relations';
+export { ResolverOpts } from './resolver.interface';
+export { UpdateResolver, UpdateResolverOpts } from './update.resolver';
+export { AggregateableByTime } from './aggregate.by.time.resolver';

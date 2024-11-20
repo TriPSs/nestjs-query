@@ -1,9 +1,9 @@
-import { Field, InputType } from '@nestjs/graphql'
-import { Class, Filter } from '@rezonate/nestjs-query-core'
-import { Type } from 'class-transformer'
-import { IsNotEmptyObject, ValidateNested } from 'class-validator'
+import { Field, InputType } from '@nestjs/graphql';
+import { Class, Filter } from '@rezonate/nestjs-query-core';
+import { Type } from 'class-transformer';
+import { IsNotEmptyObject, ValidateNested } from 'class-validator';
 
-import { DeleteFilterType } from './query'
+import { DeleteFilterType } from './query';
 
 export interface DeleteManyInputType<T> {
   filter: Filter<T>
@@ -15,7 +15,7 @@ export interface DeleteManyInputType<T> {
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export function DeleteManyInputType<DTO>(DTOClass: Class<DTO>): Class<DeleteManyInputType<DTO>> {
-  const F = DeleteFilterType(DTOClass)
+  const F = DeleteFilterType(DTOClass);
 
   @InputType({ isAbstract: true })
   class DeleteManyInput implements DeleteManyInputType<DTO> {
@@ -23,8 +23,8 @@ export function DeleteManyInputType<DTO>(DTOClass: Class<DTO>): Class<DeleteMany
     @Type(() => F)
     @ValidateNested()
     @Field(() => F, { description: 'Filter to find records to delete' })
-    filter!: Filter<DTO>
+    filter!: Filter<DTO>;
   }
 
-  return DeleteManyInput
+  return DeleteManyInput;
 }

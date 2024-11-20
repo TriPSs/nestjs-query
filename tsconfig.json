@@ -1,21 +1,31 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "typeRoots": [
+      "node_modules/@types",
+      "@types"
+    ],
+    "resolveJsonModule": true,
+    "strictPropertyInitialization": false,
+    "useDefineForClassFields": false,
+    "rootDir": ".",
     "sourceMap": true,
-    "declaration": true,
-    "moduleResolution": "node",
+    "declaration": false,
+    "moduleResolution": "Bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
+    "target": "esnext",
     "module": "esnext",
-    "target": "ES2021",
-    "typeRoots": ["node_modules/@types", "tools/@types"],
-    "lib": ["ES2021", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
+    "lib": [
+      "es2023"
+    ],
     "paths": {
       "@rezonate/nestjs-query-core": ["packages/core/src/index.ts"],
       "@rezonate/nestjs-query-graphql": ["packages/query-graphql/src/index.ts"],

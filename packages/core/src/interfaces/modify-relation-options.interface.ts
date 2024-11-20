@@ -1,5 +1,5 @@
-import { Filter } from './filter.interface'
-import { Filterable } from './filterable.interface'
+import { Filter } from './filter.interface';
+import { Filterable } from './filterable.interface';
 
 export interface ModifyRelationOptions<DTO, Relation> extends Filterable<DTO> {
   /**

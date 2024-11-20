@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common'
-import { Test } from '@nestjs/testing'
-import { getQueryServiceToken, InjectQueryService, NoOpQueryService, QueryService } from '@rezonate/nestjs-query-core'
+import { Injectable } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { getQueryServiceToken, InjectQueryService, NoOpQueryService, QueryService } from '@rezonate/nestjs-query-core';
 
 describe('@InjectQueryService', () => {
   class TestEntity {}
@@ -11,18 +11,18 @@ describe('@InjectQueryService', () => {
       constructor(@InjectQueryService(TestEntity) readonly service: QueryService<TestEntity>) {}
     }
 
-    const noopQueryService = new NoOpQueryService<TestEntity>()
+    const noopQueryService = new NoOpQueryService<TestEntity>();
     const moduleRef = await Test.createTestingModule({
       providers: [
         TestService,
         {
           provide: getQueryServiceToken(TestEntity),
-          useValue: noopQueryService
-        }
-      ]
-    }).compile()
-    const testService = moduleRef.get(TestService)
-    expect(testService).toBeInstanceOf(TestService)
-    expect(testService.service).toBe(noopQueryService)
-  })
-})
+          useValue: noopQueryService,
+        },
+      ],
+    }).compile();
+    const testService = moduleRef.get(TestService);
+    expect(testService).toBeInstanceOf(TestService);
+    expect(testService.service).toBe(noopQueryService);
+  });
+});
