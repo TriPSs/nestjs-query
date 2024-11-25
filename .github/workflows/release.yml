@@ -46,11 +46,16 @@ jobs:
           fetch-depth: 0
 
       - name: Cache node modules
+        id: cache
         uses: actions/cache@v2
         with:
           path: |
             **/node_modules
           key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci --ignore-scripts
 
       - name: GIT config
         run: |
