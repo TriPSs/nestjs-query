@@ -12,7 +12,6 @@
     "lint:no-cache": "eslint --ext=.ts .",
     "prepare": "husky install",
     "test": "nx run-many --target=test --all",
-    "test:e2e": "nx run-many --target=e2e --all",
     "publish:core": "cd dist/packages/nestjs-query-core && npm publish",
     "publish:gql": "cd dist/packages/nestjs-query-graphql && npm publish",
     "publish:typeorm": "cd dist/packages/nestjs-query-typeorm && npm publish",

@@ -27,11 +27,11 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('yarn.lock') }}
+          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('package-lock.json') }}
 
-      - name: yarn install
+      - name: npm install
         if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn install
+        run: npm install
 
       - name: Set correct env vars
         id: script
@@ -50,7 +50,7 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('yarn.lock') }}
+          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('package-lock.json') }}
 
       - name: GIT config
         run: |
@@ -58,15 +58,15 @@ jobs:
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
       - name: nx workspace:version
-        run: yarn nx run workspace:version
+        run: npx nx run workspace:version
 
       - name: nx affected:build
-        run: node ./tools/scripts/run-many.js build origin/${{ needs.prepare-env.outputs.GITHUB_HEAD_REF }} ${{ needs.prepare-env.outputs.GITHUB_BASE_REF }}
+        run: npx nx affected -t build
 
       - name: nx affected:publish
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-          node ./tools/scripts/run-many.js publish origin/${{ needs.prepare-env.outputs.GITHUB_HEAD_REF }} ${{ needs.prepare-env.outputs.GITHUB_BASE_REF }}
+          npx nx run-many -t publish --all
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -84,7 +84,7 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('yarn.lock') }}
+          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('package-lock.json') }}
 
       - name: GIT config
         run: |
@@ -92,6 +92,6 @@ jobs:
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
       - name: nx workspace:version
-        run: yarn nx run workspace:version --prod
+        run: npx nx run workspace:version --prod
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
