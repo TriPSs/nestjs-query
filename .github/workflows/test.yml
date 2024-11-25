@@ -31,5 +31,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
 
+      - uses: nrwl/nx-set-shas@v4
+
       - name: nx affected:test
         run: npx nx affected -t test

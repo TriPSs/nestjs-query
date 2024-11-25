@@ -62,6 +62,8 @@ jobs:
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
+      - uses: nrwl/nx-set-shas@v4
+
       - name: nx workspace:version
         run: npx nx run workspace:version
 
