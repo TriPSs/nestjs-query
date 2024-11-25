@@ -7,6 +7,8 @@ import {
   AggregateQuery,
   AggregateResponse,
   CountOptions,
+  CreateManyOptions,
+  CreateOneOptions,
   DeleteManyOptions,
   DeleteManyResponse,
   DeleteOneOptions,
@@ -43,11 +45,11 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     return Promise.reject(new NotImplementedException('addRelations is not implemented'))
   }
 
-  public createMany(items: C[]): Promise<DTO[]> {
+  public createMany(items: C[], opts?: CreateManyOptions<DTO>): Promise<DTO[]> {
     return Promise.reject(new NotImplementedException('createMany is not implemented'))
   }
 
-  public createOne(item: C): Promise<DTO> {
+  public createOne(item: C, opts?: CreateOneOptions<DTO>): Promise<DTO> {
     return Promise.reject(new NotImplementedException('createOne is not implemented'))
   }
 
