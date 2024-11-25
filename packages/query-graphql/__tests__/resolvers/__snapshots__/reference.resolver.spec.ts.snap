@@ -1,12 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ReferenceResolver should create a new resolver with a resolveReference method 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;

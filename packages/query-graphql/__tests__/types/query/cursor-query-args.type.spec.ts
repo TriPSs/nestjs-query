@@ -154,7 +154,7 @@ describe('Cursor paging strategy QueryArgsType with manual options', (): void =>
       defaultSort: [{ field: 'booleanField', direction: SortDirection.DESC }],
     }) {}
 
-    it('allow apply the options to the generated SDL', async () => {
+    it('allow apply the options to the generated SDL new test', async () => {
       @Resolver()
       class TestCursorQueryManualOptionsResolver {
         @Query(() => String)

@@ -20,12 +20,12 @@ import {
 } from '../interfaces';
 import { AggregateByTimeIntervalSpan, QueryService } from './query.service';
 
-export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> implements QueryService<DTO, C, U> {
-  private static instance: QueryService<unknown, unknown, unknown> = new NoOpQueryService();
+export class NoOpQueryService<DTO> implements QueryService<DTO> {
+  private static instance: QueryService<unknown> = new NoOpQueryService();
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  static getInstance<DTO, C, U>(): QueryService<DTO, C, U> {
-    return this.instance as QueryService<DTO, C, U>;
+  static getInstance<DTO, C, U>(): QueryService<DTO> {
+    return this.instance as QueryService<DTO>;
   }
 
   addRelations<Relation>(
@@ -37,11 +37,11 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     return Promise.reject(new NotImplementedException('addRelations is not implemented'));
   }
 
-  createMany(items: C[]): Promise<DTO[]> {
+  createMany(items: DeepPartial<DTO>[]): Promise<DTO[]> {
     return Promise.reject(new NotImplementedException('createMany is not implemented'));
   }
 
-  createOne(item: C): Promise<DTO> {
+  createOne(item: DeepPartial<DTO>): Promise<DTO> {
     return Promise.reject(new NotImplementedException('createOne is not implemented'));
   }
 
@@ -92,7 +92,11 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     return Promise.reject(new NotImplementedException('queryIds is not implemented'));
   }
 
-  aggregate(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>): Promise<AggregateResponse<DTO>[]> {
+  aggregate(filter: Filter<DTO>, aggregate: AggregateQuery<DTO>,
+            groupByLimit?: number,
+            maxRowsAggregationLimit?: number,
+            maxRowsAggregationWithIndexLimit?: number,
+            limitAggregateByTableSize?: boolean): Promise<AggregateResponse<DTO>[]> {
     return Promise.reject(new NotImplementedException('aggregate is not implemented'));
   }
 
@@ -186,11 +190,11 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     return Promise.reject(new NotImplementedException('setRelation is not implemented'));
   }
 
-  updateMany(update: U, filter: Filter<DTO>): Promise<UpdateManyResponse> {
+  updateMany(update: DeepPartial<DTO>, filter: Filter<DTO>): Promise<UpdateManyResponse> {
     return Promise.reject(new NotImplementedException('updateMany is not implemented'));
   }
 
-  updateOne(id: string | number, update: U, opts?: UpdateOneOptions<DTO>): Promise<DTO> {
+  updateOne(id: string | number, update: DeepPartial<DTO>, opts?: UpdateOneOptions<DTO>): Promise<DTO> {
     return Promise.reject(new NotImplementedException('updateOne is not implemented'));
   }
 
@@ -207,7 +211,11 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     relationName: string,
     dtos: DTO[],
     filter: Filter<Relation>,
-    aggregate: AggregateQuery<Relation>
+    aggregate: AggregateQuery<Relation>,
+	groupByLimit?: number,
+	maxRowsAggregationLimit?: number,
+	maxRowsAggregationWithIndexLimit?: number,
+	limitAggregateByTableSize?: boolean
   ): Promise<Map<DTO, AggregateResponse<Relation>[]>>;
 
   aggregateRelations<Relation>(

@@ -33,7 +33,7 @@ export enum AggregateByTimeIntervalSpan {
  *
  * @typeparam T - The record type that the query service will operate on.
  */
-export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
+export interface QueryService<DTO> {
   /**
    * Query for multiple records of type `T`.
    * @param query - the query used to filer, page or sort records.
@@ -104,14 +104,6 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
     query: Query<Relation>
   ): Promise<Map<DTO, Relation[]>>
 
-  /**
-   * Aggregate relations for a DTO.
-   * * @param RelationClass - The class to serialize the Relations into
-   * @param dto - The DTO to query relations for.
-   * @param relationName - The name of relation to query for.
-   * @param filter - A filter to apply to relations.
-   * @param aggregate - The aggregate query
-   */
   aggregateRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
@@ -136,10 +128,6 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
     limitAggregateByTableSize?: boolean
   ): Promise<Map<DTO, AggregateResponse<Relation>[]>>
 
-  /**
-   * Count the number of relations
-   * @param filter - Filter to create a where clause.
-   */
   countRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
@@ -274,7 +262,7 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    * @param item - the record to create.
    * @returns the created record.
    */
-  createOne(item: C): Promise<DTO>
+  createOne(item: DeepPartial<DTO>): Promise<DTO>
 
   /**
    * Creates a multiple record.
@@ -282,7 +270,7 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    * @param items - the records to create.
    * @returns a created records.
    */
-  createMany(items: C[]): Promise<DTO[]>
+  createMany(items: DeepPartial<DTO>[]): Promise<DTO[]>
 
   /**
    * Update one record.
@@ -291,14 +279,14 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    * @param opts - Additional opts to apply when updating one entity.
    * @returns the updated record.
    */
-  updateOne(id: string | number, update: U, opts?: UpdateOneOptions<DTO>): Promise<DTO>
+  updateOne(id: string | number, update: DeepPartial<DTO>, opts?: UpdateOneOptions<DTO>): Promise<DTO>
 
   /**
    * Updates multiple records using a filter.
    * @param update - the update to apply.
    * @param filter - the filter used to specify records to update
    */
-  updateMany(update: U, filter: Filter<DTO>): Promise<UpdateManyResponse>
+  updateMany(update: DeepPartial<DTO>, filter: Filter<DTO>): Promise<UpdateManyResponse>
 
   /**
    * Delete a single record by id.
@@ -322,5 +310,5 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare,@typescript-eslint/no-unused-vars -- intentional
 export function QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>>(DTOClass: Class<DTO>) {
-  return <Cls extends Class<QueryService<DTO, C, U>>>(cls: Cls): Cls | void => Injectable()(cls);
+  return <Cls extends Class<QueryService<DTO>>>(cls: Cls): Cls | void => Injectable()(cls);
 }

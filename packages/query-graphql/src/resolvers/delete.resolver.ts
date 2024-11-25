@@ -37,7 +37,7 @@ export interface DeleteResolverOpts<DTO> extends SubscriptionResolverOpts {
   useSoftDelete?: boolean
 }
 
-export interface DeleteResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceResolver<DTO, QS> {
+export interface DeleteResolver<DTO, QS extends QueryService<DTO>> extends ServiceResolver<DTO, QS> {
   deleteOne(input: MutationArgsType<DeleteOneInputType>, authorizeFilter?: Filter<DTO>): Promise<Partial<DTO>>
 
   deleteMany(input: MutationArgsType<DeleteManyInputType<DTO>>, authorizeFilter?: Filter<DTO>): Promise<DeleteManyResponse>
@@ -75,7 +75,7 @@ const defaultDeleteOneInput = <DTO>(dtoNames: DTONames, DTOClass: Class<DTO>): C
  * Mixin to add `delete` graphql endpoints.
  */
 export const Deletable =
-  <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts: DeleteResolverOpts<DTO>) =>
+  <DTO, QS extends QueryService<DTO>>(DTOClass: Class<DTO>, opts: DeleteResolverOpts<DTO>) =>
   <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<DeleteResolver<DTO, QS>> & B => {
     const dtoNames = getDTONames(DTOClass, opts);
     const { baseName, pluralBaseName } = dtoNames;
@@ -219,7 +219,7 @@ export const Deletable =
     return DeleteResolverBase;
   };
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export const DeleteResolver = <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(
+export const DeleteResolver = <DTO, QS extends QueryService<DTO> = QueryService<DTO>>(
   DTOClass: Class<DTO>,
   opts: DeleteResolverOpts<DTO> = {},
 ): ResolverClass<DTO, QS, DeleteResolver<DTO, QS>> => Deletable<DTO, QS>(DTOClass, opts)(BaseServiceResolver);

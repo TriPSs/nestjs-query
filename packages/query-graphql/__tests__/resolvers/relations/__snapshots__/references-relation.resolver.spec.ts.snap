@@ -1,20 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ReferencesRelationMixin should not add reference methods if references empty 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;
 
-exports[`ReferencesRelationMixin should set the field to nullable if set to true 1`] = `
-type TestResolverDTO {
+exports[`ReferencesRelationMixin should set the field to nullable if set to true new test 1`] = `
+"type TestResolverDTO {
   id: ID!
   stringField: String!
+  test: TestRelationDTO!
   reference: TestRelationDTO
 }
 
@@ -23,13 +32,21 @@ type TestRelationDTO {
   testResolverId: String!
 }
 
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;
 
 exports[`ReferencesRelationMixin should use the add the reference if provided 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
   test: TestRelationDTO!
@@ -40,7 +57,15 @@ type TestRelationDTO {
   testResolverId: String!
 }
 
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;

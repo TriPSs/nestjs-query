@@ -33,7 +33,7 @@ type AggregateRelationOpts<Relation> = {
 
 const AggregateRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: AggregateRelationOpts<Relation>) =>
-  <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
+  <B extends Class<ServiceResolver<DTO, QueryService<DTO>>>>(Base: B): B => {
     if (!relation.enableAggregate) {
       return Base;
     }
@@ -93,7 +93,7 @@ const AggregateRelationMixin =
 
 export const AggregateRelationsMixin =
   <DTO>(DTOClass: Class<DTO>, relations: AggregateRelationsResolverOpts) =>
-  <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
+  <B extends Class<ServiceResolver<DTO, QueryService<DTO>>>>(Base: B): B => {
     const { many, enableAggregate } = relations;
     const manyRelations = flattenRelations(many ?? {});
     return manyRelations.reduce((RB, a) => AggregateRelationMixin(DTOClass, { enableAggregate, ...a })(RB), Base);
@@ -102,5 +102,5 @@ export const AggregateRelationsMixin =
 export const AggregateRelationsResolver = <DTO>(
   DTOClass: Class<DTO>,
   relations: AggregateRelationsResolverOpts,
-): Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>> =>
+): Class<ServiceResolver<DTO, QueryService<DTO>>> =>
   AggregateRelationsMixin(DTOClass, relations)(BaseServiceResolver);

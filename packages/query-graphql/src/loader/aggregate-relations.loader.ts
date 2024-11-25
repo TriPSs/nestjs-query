@@ -17,7 +17,7 @@ export class AggregateRelationsLoader<DTO, Relation>
   ) {}
 
   createLoader(
-    service: QueryService<DTO, unknown, unknown>,
+    service: QueryService<DTO>,
     groupByLimit?: number,
     maxRowsAggregationLimit?: number,
     maxRowsAggregationWithIndexLimit?: number,
@@ -40,7 +40,7 @@ export class AggregateRelationsLoader<DTO, Relation>
   }
 
   private async loadResults(
-    service: QueryService<DTO, unknown, unknown>,
+    service: QueryService<DTO>,
     queryRelationsMap: AggregateRelationsMap<DTO, Relation>,
     groupByLimit?: number,
     maxRowsAggregationLimit?: number,

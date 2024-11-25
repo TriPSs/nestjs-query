@@ -80,8 +80,7 @@ describe('PagingType', (): void => {
       {
         children: [],
         constraints: {
-          CannotUseWith: 'Cannot be used with `after` , `first`.',
-          CannotUseWithout: 'Cannot be used without `before`.',
+          CannotUseWith: 'Cannot be used with `after` , `first`.'
         },
         property: 'last',
         target: {

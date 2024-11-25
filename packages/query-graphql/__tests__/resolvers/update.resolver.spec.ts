@@ -120,7 +120,7 @@ describe('UpdateResolver', () => {
 
     it('should call the service updateMany with the provided input', async () => {
       const { resolver, mockService } = await createTestResolver();
-      const input: MutationArgsType<UpdateManyInputType<TestResolverDTO, Partial<TestResolverDTO>>> = {
+      const input: MutationArgsType<UpdateManyInputType<TestResolverDTO>> = {
         input: {
           filter: { id: { eq: 'id-1' } },
           update: {
@@ -136,7 +136,7 @@ describe('UpdateResolver', () => {
 
     it('should call the service updateMany with the provided input and the auth filter', async () => {
       const { resolver, mockService } = await createTestResolver();
-      const input: MutationArgsType<UpdateManyInputType<TestResolverDTO, Partial<TestResolverDTO>>> = {
+      const input: MutationArgsType<UpdateManyInputType<TestResolverDTO>> = {
         input: {
           filter: { id: { eq: 'id-1' } },
           update: {
@@ -261,7 +261,7 @@ describe('UpdateResolver', () => {
     describe('update many events', () => {
       it('should publish events for create one when enableSubscriptions is set to true for all', async () => {
         const { resolver, mockService, mockPubSub } = await createTestResolver({ enableSubscriptions: true });
-        const input: MutationArgsType<UpdateManyInputType<TestResolverDTO, Partial<TestResolverDTO>>> = {
+        const input: MutationArgsType<UpdateManyInputType<TestResolverDTO>> = {
           input: {
             filter: { id: { eq: 'id-1' } },
             update: {
@@ -283,7 +283,7 @@ describe('UpdateResolver', () => {
 
       it('should publish events for create manhy when many.enableSubscriptions is true', async () => {
         const { resolver, mockService, mockPubSub } = await createTestResolver({ many: { enableSubscriptions: true } });
-        const input: MutationArgsType<UpdateManyInputType<TestResolverDTO, Partial<TestResolverDTO>>> = {
+        const input: MutationArgsType<UpdateManyInputType<TestResolverDTO>> = {
           input: {
             filter: { id: { eq: 'id-1' } },
             update: {
@@ -305,7 +305,7 @@ describe('UpdateResolver', () => {
 
       it('should not publish an event if enableSubscriptions is false', async () => {
         const { resolver, mockService, mockPubSub } = await createTestResolver({ enableSubscriptions: false });
-        const input: MutationArgsType<UpdateManyInputType<TestResolverDTO, Partial<TestResolverDTO>>> = {
+        const input: MutationArgsType<UpdateManyInputType<TestResolverDTO>> = {
           input: {
             filter: { id: { eq: 'id-1' } },
             update: {
@@ -327,7 +327,7 @@ describe('UpdateResolver', () => {
           enableSubscriptions: true,
           many: { enableSubscriptions: false },
         });
-        const input: MutationArgsType<UpdateManyInputType<TestResolverDTO, Partial<TestResolverDTO>>> = {
+        const input: MutationArgsType<UpdateManyInputType<TestResolverDTO>> = {
           input: {
             filter: { id: { eq: 'id-1' } },
             update: {

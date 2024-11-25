@@ -1,12 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UpdateManyResponseType should create a @nestjs/graphql object type 1`] = `
-type UpdateManyResponse {
-  """The number of records updated."""
+"type UpdateManyResponse {
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
 
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   updateTest: UpdateManyResponse!
-}
+}"
 `;

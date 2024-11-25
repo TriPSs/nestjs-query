@@ -52,7 +52,7 @@ describe('AggregateResponseType', (): void => {
     expect(schema).toMatchSnapshot();
   });
 
-  it('should create an aggregate type with a custom name', async () => {
+  it('should create an aggregate type with a custom name new test', async () => {
     const AggResponse = AggregateResponseType(FakeType, { prefix: 'CustomPrefix' });
 
     @Resolver(() => AggResponse)

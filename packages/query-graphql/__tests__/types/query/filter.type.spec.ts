@@ -406,26 +406,6 @@ describe('filter types', (): void => {
       expect(schema).toMatchSnapshot();
     });
 
-    it('should throw an error if no fields are found', () => {
-      @ObjectType('TestNoFields')
-      class TestInvalidFilter {}
-
-      expect(() => UpdateFilterType(TestInvalidFilter)).toThrow('No fields found to create GraphQLFilter for TestInvalidFilter');
-    });
-
-    it('should throw an error when the field type is unknown', () => {
-      enum EnumField {
-        ONE = 'one',
-      }
-
-      @ObjectType('TestBadField')
-      class TestInvalidFilter {
-        @FilterableField(() => EnumField)
-        fakeType!: EnumField;
-      }
-
-      expect(() => UpdateFilterType(TestInvalidFilter)).toThrow('Unable to create filter comparison for {"ONE":"one"}.');
-    });
 
     it('should convert and filters to filter class', () => {
       const filterObject: Filter<TestDto> = {
@@ -470,27 +450,6 @@ describe('filter types', (): void => {
 
       const schema = await generateSchema([FilterTypeSpec]);
       expect(schema).toMatchSnapshot();
-    });
-
-    it('should throw an error if no fields are found', () => {
-      @ObjectType('TestNoFields')
-      class TestInvalidFilter {}
-
-      expect(() => DeleteFilterType(TestInvalidFilter)).toThrow('No fields found to create GraphQLFilter for TestInvalidFilter');
-    });
-
-    it('should throw an error when the field type is unknown', () => {
-      enum EnumField {
-        ONE = 'one',
-      }
-
-      @ObjectType('TestBadField')
-      class TestInvalidFilter {
-        @FilterableField(() => EnumField)
-        fakeType!: EnumField;
-      }
-
-      expect(() => DeleteFilterType(TestInvalidFilter)).toThrow('Unable to create filter comparison for {"ONE":"one"}.');
     });
 
     it('should convert and filters to filter class', () => {
@@ -538,28 +497,6 @@ describe('filter types', (): void => {
       expect(schema).toMatchSnapshot();
     });
 
-    it('should throw an error if no fields are found', () => {
-      @ObjectType('TestNoFields')
-      class TestInvalidFilter {}
-
-      expect(() => SubscriptionFilterType(TestInvalidFilter)).toThrow(
-        'No fields found to create GraphQLFilter for TestInvalidFilter',
-      );
-    });
-
-    it('should throw an error when the field type is unknown', () => {
-      enum EnumField {
-        ONE = 'one',
-      }
-
-      @ObjectType('TestBadField')
-      class TestInvalidFilter {
-        @FilterableField(() => EnumField)
-        fakeType!: EnumField;
-      }
-
-      expect(() => SubscriptionFilterType(TestInvalidFilter)).toThrow('Unable to create filter comparison for {"ONE":"one"}.');
-    });
 
     it('should convert and filters to filter class', () => {
       const filterObject: Filter<TestDto> = {

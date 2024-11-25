@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeleteResolver #deleteMany should not create a new delete type if the DeleteManyArgs is supplied 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type DeleteManyResponse {
-  """The number of records deleted."""
+  \\"\\"\\"The number of records deleted.\\"\\"\\"
   deletedCount: Int!
 }
 
@@ -15,6 +15,14 @@ type TestResolverDTODeleteResponse {
   id: ID
   stringField: String
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -26,19 +34,20 @@ type Mutation {
 }
 
 input DeleteOneTestResolverDTOInput {
-  """The id of the record to delete."""
+  \\"\\"\\"The id of the record to delete.\\"\\"\\"
   id: ID!
 }
 
 input CustomDeleteManyInput {
-  """Filter to find records to delete"""
-  filter: TestResolverDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: TestResolverDTOFilter!
   foo: String!
 }
 
-input TestResolverDTODeleteFilter {
-  and: [TestResolverDTODeleteFilter!]
-  or: [TestResolverDTODeleteFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -58,6 +67,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -75,10 +86,11 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`DeleteResolver #deleteMany should not expose delete many method if disabled 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
@@ -87,6 +99,14 @@ type TestResolverDTODeleteResponse {
   id: ID
   stringField: String
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -97,20 +117,29 @@ type Mutation {
 }
 
 input DeleteOneTestResolverDTOInput {
-  """The id of the record to delete."""
+  \\"\\"\\"The id of the record to delete.\\"\\"\\"
   id: ID!
-}
+}"
 `;
+
 exports[`DeleteResolver #deleteOne should not expose delete one method if disabled 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type DeleteManyResponse {
-  """The number of records deleted."""
+  \\"\\"\\"The number of records deleted.\\"\\"\\"
   deletedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -121,13 +150,14 @@ type Mutation {
 }
 
 input DeleteManyTestResolverDTOSInput {
-  """Filter to find records to delete"""
-  filter: TestResolverDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: TestResolverDTOFilter!
 }
 
-input TestResolverDTODeleteFilter {
-  and: [TestResolverDTODeleteFilter!]
-  or: [TestResolverDTODeleteFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -147,6 +177,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -164,16 +196,17 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`DeleteResolver #deleteOne should use the provided DeleteOneInput type 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type DeleteManyResponse {
-  """The number of records deleted."""
+  \\"\\"\\"The number of records deleted.\\"\\"\\"
   deletedCount: Int!
 }
 
@@ -181,6 +214,14 @@ type TestResolverDTODeleteResponse {
   id: ID
   stringField: String
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -197,13 +238,14 @@ input CustomDeleteOneInput {
 }
 
 input DeleteManyTestResolverDTOSInput {
-  """Filter to find records to delete"""
-  filter: TestResolverDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: TestResolverDTOFilter!
 }
 
-input TestResolverDTODeleteFilter {
-  and: [TestResolverDTODeleteFilter!]
-  or: [TestResolverDTODeleteFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -223,6 +265,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -240,16 +284,17 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`DeleteResolver deleted subscription should add subscription types if enableSubscriptions is true 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type DeleteManyResponse {
-  """The number of records deleted."""
+  \\"\\"\\"The number of records deleted.\\"\\"\\"
   deletedCount: Int!
 }
 
@@ -257,6 +302,14 @@ type TestResolverDTODeleteResponse {
   id: ID
   stringField: String
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -268,18 +321,19 @@ type Mutation {
 }
 
 input DeleteOneTestResolverDTOInput {
-  """The id of the record to delete."""
+  \\"\\"\\"The id of the record to delete.\\"\\"\\"
   id: ID!
 }
 
 input DeleteManyTestResolverDTOSInput {
-  """Filter to find records to delete"""
-  filter: TestResolverDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: TestResolverDTOFilter!
 }
 
-input TestResolverDTODeleteFilter {
-  and: [TestResolverDTODeleteFilter!]
-  or: [TestResolverDTODeleteFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -299,6 +353,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -324,25 +380,19 @@ type Subscription {
 }
 
 input DeleteOneTestResolverDTOSubscriptionFilterInput {
-  """Specify to filter the records returned."""
-  filter: TestResolverDTOSubscriptionFilter!
-}
-
-input TestResolverDTOSubscriptionFilter {
-  and: [TestResolverDTOSubscriptionFilter!]
-  or: [TestResolverDTOSubscriptionFilter!]
-  id: IDFilterComparison
-  stringField: StringFieldComparison
-}
+  \\"\\"\\"Specify to filter the records returned.\\"\\"\\"
+  filter: TestResolverDTOFilter!
+}"
 `;
+
 exports[`DeleteResolver deleted subscription should add subscription types if many.enableSubscriptions is true 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type DeleteManyResponse {
-  """The number of records deleted."""
+  \\"\\"\\"The number of records deleted.\\"\\"\\"
   deletedCount: Int!
 }
 
@@ -350,6 +400,14 @@ type TestResolverDTODeleteResponse {
   id: ID
   stringField: String
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -361,18 +419,19 @@ type Mutation {
 }
 
 input DeleteOneTestResolverDTOInput {
-  """The id of the record to delete."""
+  \\"\\"\\"The id of the record to delete.\\"\\"\\"
   id: ID!
 }
 
 input DeleteManyTestResolverDTOSInput {
-  """Filter to find records to delete"""
-  filter: TestResolverDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: TestResolverDTOFilter!
 }
 
-input TestResolverDTODeleteFilter {
-  and: [TestResolverDTODeleteFilter!]
-  or: [TestResolverDTODeleteFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -392,6 +451,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -413,16 +474,17 @@ input StringFieldComparison {
 
 type Subscription {
   deletedManyTestResolverDTOS: DeleteManyResponse!
-}
+}"
 `;
+
 exports[`DeleteResolver deleted subscription should add subscription types if one.enableSubscriptions is true 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type DeleteManyResponse {
-  """The number of records deleted."""
+  \\"\\"\\"The number of records deleted.\\"\\"\\"
   deletedCount: Int!
 }
 
@@ -430,6 +492,14 @@ type TestResolverDTODeleteResponse {
   id: ID
   stringField: String
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -441,18 +511,19 @@ type Mutation {
 }
 
 input DeleteOneTestResolverDTOInput {
-  """The id of the record to delete."""
+  \\"\\"\\"The id of the record to delete.\\"\\"\\"
   id: ID!
 }
 
 input DeleteManyTestResolverDTOSInput {
-  """Filter to find records to delete"""
-  filter: TestResolverDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: TestResolverDTOFilter!
 }
 
-input TestResolverDTODeleteFilter {
-  and: [TestResolverDTODeleteFilter!]
-  or: [TestResolverDTODeleteFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -472,6 +543,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -496,25 +569,19 @@ type Subscription {
 }
 
 input DeleteOneTestResolverDTOSubscriptionFilterInput {
-  """Specify to filter the records returned."""
-  filter: TestResolverDTOSubscriptionFilter!
-}
-
-input TestResolverDTOSubscriptionFilter {
-  and: [TestResolverDTOSubscriptionFilter!]
-  or: [TestResolverDTOSubscriptionFilter!]
-  id: IDFilterComparison
-  stringField: StringFieldComparison
-}
+  \\"\\"\\"Specify to filter the records returned.\\"\\"\\"
+  filter: TestResolverDTOFilter!
+}"
 `;
+
 exports[`DeleteResolver deleted subscription should not expose subscriptions if enableSubscriptions is false 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type DeleteManyResponse {
-  """The number of records deleted."""
+  \\"\\"\\"The number of records deleted.\\"\\"\\"
   deletedCount: Int!
 }
 
@@ -522,6 +589,14 @@ type TestResolverDTODeleteResponse {
   id: ID
   stringField: String
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -533,18 +608,19 @@ type Mutation {
 }
 
 input DeleteOneTestResolverDTOInput {
-  """The id of the record to delete."""
+  \\"\\"\\"The id of the record to delete.\\"\\"\\"
   id: ID!
 }
 
 input DeleteManyTestResolverDTOSInput {
-  """Filter to find records to delete"""
-  filter: TestResolverDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: TestResolverDTOFilter!
 }
 
-input TestResolverDTODeleteFilter {
-  and: [TestResolverDTODeleteFilter!]
-  or: [TestResolverDTODeleteFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -564,6 +640,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -581,16 +659,17 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`DeleteResolver should create a DeleteResolver for the DTO 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type DeleteManyResponse {
-  """The number of records deleted."""
+  \\"\\"\\"The number of records deleted.\\"\\"\\"
   deletedCount: Int!
 }
 
@@ -598,6 +677,14 @@ type TestResolverDTODeleteResponse {
   id: ID
   stringField: String
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -609,18 +696,19 @@ type Mutation {
 }
 
 input DeleteOneTestResolverDTOInput {
-  """The id of the record to delete."""
+  \\"\\"\\"The id of the record to delete.\\"\\"\\"
   id: ID!
 }
 
 input DeleteManyTestResolverDTOSInput {
-  """Filter to find records to delete"""
-  filter: TestResolverDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: TestResolverDTOFilter!
 }
 
-input TestResolverDTODeleteFilter {
-  and: [TestResolverDTODeleteFilter!]
-  or: [TestResolverDTODeleteFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -640,6 +728,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -657,26 +747,36 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`DeleteResolver should not expose delete methods if disabled 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;
+
 exports[`DeleteResolver should use the dtoName if provided 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type DeleteManyResponse {
-  """The number of records deleted."""
+  \\"\\"\\"The number of records deleted.\\"\\"\\"
   deletedCount: Int!
 }
 
@@ -684,6 +784,14 @@ type TestDeleteResponse {
   id: ID
   stringField: String
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -695,18 +803,19 @@ type Mutation {
 }
 
 input DeleteOneTestInput {
-  """The id of the record to delete."""
+  \\"\\"\\"The id of the record to delete.\\"\\"\\"
   id: ID!
 }
 
 input DeleteManyTestsInput {
-  """Filter to find records to delete"""
-  filter: TestResolverDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: TestResolverDTOFilter!
 }
 
-input TestResolverDTODeleteFilter {
-  and: [TestResolverDTODeleteFilter!]
-  or: [TestResolverDTODeleteFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -726,6 +835,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -743,16 +854,17 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`DeleteResolver should use the many.name option for the deleteMany if provided 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type DeleteManyResponse {
-  """The number of records deleted."""
+  \\"\\"\\"The number of records deleted.\\"\\"\\"
   deletedCount: Int!
 }
 
@@ -760,6 +872,14 @@ type TestResolverDTODeleteResponse {
   id: ID
   stringField: String
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -771,18 +891,19 @@ type Mutation {
 }
 
 input DeleteOneTestResolverDTOInput {
-  """The id of the record to delete."""
+  \\"\\"\\"The id of the record to delete.\\"\\"\\"
   id: ID!
 }
 
 input DeleteManyTestResolverDTOSInput {
-  """Filter to find records to delete"""
-  filter: TestResolverDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: TestResolverDTOFilter!
 }
 
-input TestResolverDTODeleteFilter {
-  and: [TestResolverDTODeleteFilter!]
-  or: [TestResolverDTODeleteFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -802,6 +923,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -819,16 +942,17 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`DeleteResolver should use the one.name option for the deleteOne if provided 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type DeleteManyResponse {
-  """The number of records deleted."""
+  \\"\\"\\"The number of records deleted.\\"\\"\\"
   deletedCount: Int!
 }
 
@@ -836,6 +960,14 @@ type TestResolverDTODeleteResponse {
   id: ID
   stringField: String
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -847,18 +979,19 @@ type Mutation {
 }
 
 input DeleteOneTestResolverDTOInput {
-  """The id of the record to delete."""
+  \\"\\"\\"The id of the record to delete.\\"\\"\\"
   id: ID!
 }
 
 input DeleteManyTestResolverDTOSInput {
-  """Filter to find records to delete"""
-  filter: TestResolverDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: TestResolverDTOFilter!
 }
 
-input TestResolverDTODeleteFilter {
-  and: [TestResolverDTODeleteFilter!]
-  or: [TestResolverDTODeleteFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -878,6 +1011,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -895,5 +1030,5 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;

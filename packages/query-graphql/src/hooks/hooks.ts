@@ -23,7 +23,7 @@ export type BeforeCreateOneHook<DTO, Context = any> = Hook<CreateOneInputType<DT
 export type BeforeCreateManyHook<DTO, Context = any> = Hook<CreateManyInputType<DTO>, Context>;
 
 export type BeforeUpdateOneHook<DTO, Context = any> = Hook<UpdateOneInputType<DTO>, Context>;
-export type BeforeUpdateManyHook<DTO, U, Context = any> = Hook<UpdateManyInputType<DTO, U>, Context>;
+export type BeforeUpdateManyHook<DTO, U, Context = any> = Hook<UpdateManyInputType<DTO>, Context>;
 
 export type BeforeDeleteOneHook<Context = any> = Hook<DeleteOneInputType, Context>;
 export type BeforeDeleteManyHook<DTO, Context = any> = Hook<DeleteManyInputType<DTO>, Context>;

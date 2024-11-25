@@ -22,7 +22,7 @@ import { AggregateByTimeArgsType } from '../types/aggregate/aggregate-by-time-ar
 import { AggregateResolverOpts } from './aggregate.resolver';
 import { AggregateByTimeQueryParam } from '../decorators/aggregate-by-time-query-param.decorator';
 
-export interface AggregateByTimeResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceResolver<DTO, QS> {
+export interface AggregateByTimeResolver<DTO, QS extends QueryService<DTO>> extends ServiceResolver<DTO, QS> {
   aggregateByTime(
     filter: AggregateByTimeArgsType<DTO>,
     aggregateQuery: AggregateQuery<DTO>,
@@ -35,7 +35,7 @@ export interface AggregateByTimeResolver<DTO, QS extends QueryService<DTO, unkno
  * Mixin to add `aggregate` graphql endpoints.
  */
 export const AggregateableByTime =
-  <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts?: AggregateResolverOpts) =>
+  <DTO, QS extends QueryService<DTO>>(DTOClass: Class<DTO>, opts?: AggregateResolverOpts) =>
   <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<AggregateByTimeResolver<DTO, QS>> & B => {
     if (!opts || !opts.enabled) {
       return BaseClass as never;
@@ -92,7 +92,7 @@ export const AggregateableByTime =
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const AggregateByTimeResolver = <
   DTO,
-  QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>,
+  QS extends QueryService<DTO> = QueryService<DTO>,
 >(
   DTOClass: Class<DTO>,
   opts?: AggregateResolverOpts,

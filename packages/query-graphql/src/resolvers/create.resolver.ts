@@ -25,40 +25,40 @@ import { BaseServiceResolver, ResolverClass, ServiceResolver, SubscriptionResolv
 
 export type CreatedEvent<DTO> = { [eventName: string]: DTO };
 
-export interface CreateResolverOpts<DTO, C = DeepPartial<DTO>> extends SubscriptionResolverOpts {
+export interface CreateResolverOpts<DTO> extends SubscriptionResolverOpts {
   /**
    * The Input DTO that should be used to create records.
    */
-  CreateDTOClass?: Class<C>
+  CreateDTOClass?: Class<DeepPartial<DTO>>
   /**
    * The class to be used for `createOne` input.
    */
-  CreateOneInput?: Class<CreateOneInputType<C>>
+  CreateOneInput?: Class<CreateOneInputType<DTO>>
   /**
    * The class to be used for `createMany` input.
    */
-  CreateManyInput?: Class<CreateManyInputType<C>>
+  CreateManyInput?: Class<CreateManyInputType<DTO>>
 
   createOneMutationName?: string
   createManyMutationName?: string
 }
 
-export interface CreateResolver<DTO, C, QS extends QueryService<DTO, C, unknown>> extends ServiceResolver<DTO, QS> {
-  createOne(input: MutationArgsType<CreateOneInputType<C>>, authorizeFilter?: Filter<DTO>): Promise<DTO>
+export interface CreateResolver<DTO, QS extends QueryService<DTO>> extends ServiceResolver<DTO, QS> {
+  createOne(input: MutationArgsType<CreateOneInputType<DTO>>, authorizeFilter?: Filter<DTO>): Promise<DTO>
 
-  createMany(input: MutationArgsType<CreateManyInputType<C>>, authorizeFilter?: Filter<DTO>): Promise<DTO[]>
+  createMany(input: MutationArgsType<CreateManyInputType<DTO>>, authorizeFilter?: Filter<DTO>): Promise<DTO[]>
 
   createdSubscription(input?: SubscriptionArgsType<DTO>, authorizeFilter?: Filter<DTO>): AsyncIterator<CreatedEvent<DTO>>
 }
 
 /** @internal */
-const defaultCreateDTO = <DTO, C>(dtoNames: DTONames, DTOClass: Class<DTO>): Class<C> => {
+const defaultCreateDTO = <DTO>(dtoNames: DTONames, DTOClass: Class<DTO>): Class<DTO> => {
   @InputType(`Create${dtoNames.baseName}`)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   class PartialInput extends PartialType(DTOClass, InputType) {}
 
-  return PartialInput as Class<C>;
+  return PartialInput as Class<DTO>;
 };
 
 /** @internal */
@@ -86,8 +86,8 @@ const defaultCreateManyInput = <C>(dtoNames: DTONames, InputDTO: Class<C>): Clas
  * Mixin to add `create` graphql endpoints.
  */
 export const Creatable =
-  <DTO, C, QS extends QueryService<DTO, C, unknown>>(DTOClass: Class<DTO>, opts: CreateResolverOpts<DTO, C>) =>
-  <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<CreateResolver<DTO, C, QS>> & B => {
+  <DTO, QS extends QueryService<DTO>>(DTOClass: Class<DTO>, opts: CreateResolverOpts<DTO>) =>
+  <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<CreateResolver<DTO, QS>> & B => {
     const dtoNames = getDTONames(DTOClass, opts);
     const { baseName, pluralBaseName } = dtoNames;
     const enableSubscriptions = opts.enableSubscriptions === true;
@@ -96,8 +96,8 @@ export const Creatable =
     const createdEvent = getDTOEventName(EventType.CREATED, DTOClass);
     const {
       CreateDTOClass = defaultCreateDTO(dtoNames, DTOClass),
-      CreateOneInput = defaultCreateOneInput(dtoNames, CreateDTOClass),
-      CreateManyInput = defaultCreateManyInput(dtoNames, CreateDTOClass),
+      CreateOneInput = defaultCreateOneInput<DTO>(dtoNames, CreateDTOClass as Class<DTO>),
+      CreateManyInput = defaultCreateManyInput<DTO>(dtoNames, CreateDTOClass as Class<DTO>),
     } = opts;
     const createOneMutationName = opts.one?.name ?? `createOne${baseName}`;
     const createManyMutationName = opts.many?.name ?? `createMany${pluralBaseName}`;
@@ -221,9 +221,8 @@ export const Creatable =
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const CreateResolver = <
   DTO,
-  C = DeepPartial<DTO>,
-  QS extends QueryService<DTO, C, unknown> = QueryService<DTO, C, unknown>,
+  QS extends QueryService<DTO> = QueryService<DTO>,
 >(
   DTOClass: Class<DTO>,
-  opts: CreateResolverOpts<DTO, C> = {},
-): ResolverClass<DTO, QS, CreateResolver<DTO, C, QS>> => Creatable(DTOClass, opts)(BaseServiceResolver);
+  opts: CreateResolverOpts<DTO> = {},
+): ResolverClass<DTO, QS, CreateResolver<DTO, QS>> => Creatable(DTOClass, opts)(BaseServiceResolver);

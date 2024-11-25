@@ -14,7 +14,7 @@ describe('WhereBuilder', (): void => {
   const createWhereBuilder = () => new WhereBuilder<TestEntity>();
 
   const expectSQLSnapshot = (filter: Filter<TestEntity>): void => {
-    const selectQueryBuilder = createWhereBuilder().build(getQueryBuilder(), filter, {}, 'TestEntity');
+    const selectQueryBuilder = createWhereBuilder().build(getQueryBuilder(), filter, {}, [], 'TestEntity');
     const [sql, params] = selectQueryBuilder.getQueryAndParameters();
 
     expect(formatSql(sql, { params })).toMatchSnapshot();

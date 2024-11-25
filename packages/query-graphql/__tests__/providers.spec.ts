@@ -17,7 +17,7 @@ describe('createTypeOrmQueryServiceProviders', () => {
     it('should create a provider for the entity', () => {
       const providers = createResolvers([{ DTOClass: TestDTO, EntityClass: TestDTO }]);
       expect(providers).toHaveLength(1);
-      const Provider = providers[0] as Class<CRUDResolver<TestDTO, TestDTO, TestDTO, ReadResolverOpts<TestDTO>>>;
+      const Provider = providers[0] as Class<CRUDResolver<TestDTO, ReadResolverOpts<TestDTO>>>;
       expect(Provider.name).toBe('TestDTOAutoResolver');
       expect(new Provider(NoOpQueryService.getInstance())).toBeInstanceOf(Provider);
     });

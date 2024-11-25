@@ -16,85 +16,85 @@ import { BaseServiceResolver, MergePagingStrategyOpts } from './resolver.interfa
 import { Updateable, UpdateResolver, UpdateResolverOpts } from './update.resolver';
 
 export interface CRUDResolverOpts<
-  DTO,
-  C = DeepPartial<DTO>,
-  U = DeepPartial<DTO>,
-  R extends ReadResolverOpts<DTO> = ReadResolverOpts<DTO>,
-  PS extends PagingStrategies = PagingStrategies.CURSOR,
+	DTO,
+	R extends ReadResolverOpts<DTO> = ReadResolverOpts<DTO>,
+	PS extends PagingStrategies = PagingStrategies.CURSOR,
 > extends BaseResolverOptions,
-    Pick<ConnectionOptions, 'enableTotalCount'> {
-  /**
-   * The DTO that should be used as input for create endpoints.
-   */
-  CreateDTOClass?: Class<C>
-  /**
-   * The DTO that should be used as input for update endpoints.
-   */
-  UpdateDTOClass?: Class<U>
-  enableSubscriptions?: boolean
-  pagingStrategy?: PS
-  enableAggregate?: boolean
-  create?: CreateResolverOpts<DTO, C>
-  read?: R
-  update?: UpdateResolverOpts<DTO, U>
-  delete?: DeleteResolverOpts<DTO>
-  referenceBy?: ReferenceResolverOpts
-  aggregate?: AggregateResolverOpts
-  limitAggregateByTableSize?: boolean
+	Pick<ConnectionOptions, 'enableTotalCount'> {
+	/**
+	 * The DTO that should be used as input for create endpoints.
+	 */
+	CreateDTOClass?: Class<DeepPartial<DTO>>;
+	/**
+	 * The DTO that should be used as input for update endpoints.
+	 */
+	UpdateDTOClass?: Class<DeepPartial<DTO>>;
+	enableSubscriptions?: boolean;
+	pagingStrategy?: PS;
+	enableAggregate?: boolean;
+	create?: CreateResolverOpts<DTO>;
+	read?: R;
+	update?: UpdateResolverOpts<DTO>;
+	delete?: DeleteResolverOpts<DTO>;
+	referenceBy?: ReferenceResolverOpts;
+	aggregate?: AggregateResolverOpts;
+	limitAggregateByTableSize?: boolean;
 }
 
 export interface CRUDResolver<
-  DTO,
-  C,
-  U,
-  R extends ReadResolverOpts<DTO>,
-  QS extends QueryService<DTO, C, U> = QueryService<DTO, C, U>,
-> extends CreateResolver<DTO, C, QS>,
-    ReadResolverFromOpts<DTO, R, QS>,
-    UpdateResolver<DTO, U, QS>,
-    DeleteResolver<DTO, QS>,
-    AggregateResolver<DTO, QS> {}
+	DTO,
+	R extends ReadResolverOpts<DTO>,
+	QS extends QueryService<DTO> = QueryService<DTO>,
+> extends CreateResolver<DTO, QS>,
+	ReadResolverFromOpts<DTO, R, QS>,
+	UpdateResolver<DTO, QS>,
+	DeleteResolver<DTO, QS>,
+	AggregateResolver<DTO, QS> {
+}
 
 function extractRelatableOpts<DTO>(
-  opts: CRUDResolverOpts<DTO, unknown, unknown, ReadResolverOpts<DTO>, PagingStrategies>,
+	opts: CRUDResolverOpts<DTO, ReadResolverOpts<DTO>, PagingStrategies>,
 ): RelatableOpts {
-  const { enableTotalCount, enableAggregate, aggregate } = opts;
-  return mergeBaseResolverOpts<RelatableOpts>({ enableAggregate, enableTotalCount, ...aggregate }, opts);
+	const { enableTotalCount, enableAggregate, aggregate } = opts;
+	return mergeBaseResolverOpts<RelatableOpts>({ enableAggregate, enableTotalCount, ...aggregate }, opts);
 }
 
 function extractAggregateResolverOpts<DTO>(
-  opts: CRUDResolverOpts<DTO, unknown, unknown, ReadResolverOpts<DTO>, PagingStrategies>,
+	opts: CRUDResolverOpts<DTO, ReadResolverOpts<DTO>, PagingStrategies>,
 ): AggregateResolverOpts {
-  const { enableAggregate, aggregate } = opts;
-  return mergeBaseResolverOpts<AggregateResolverOpts>({ enabled: enableAggregate, ...aggregate }, opts);
+	const { enableAggregate, aggregate } = opts;
+	return mergeBaseResolverOpts<AggregateResolverOpts>({ enabled: enableAggregate, ...aggregate }, opts);
 }
 
-function extractCreateResolverOpts<DTO, C>(
-  opts: CRUDResolverOpts<DTO, C, unknown, ReadResolverOpts<DTO>, PagingStrategies>,
-): CreateResolverOpts<DTO, C> {
-  const { CreateDTOClass, enableSubscriptions, create } = opts;
-  return mergeBaseResolverOpts<CreateResolverOpts<DTO, C>>({ CreateDTOClass, enableSubscriptions, ...create }, opts);
+function extractCreateResolverOpts<DTO>(
+	opts: CRUDResolverOpts<DTO, ReadResolverOpts<DTO>, PagingStrategies>,
+): CreateResolverOpts<DTO> {
+	const { CreateDTOClass, enableSubscriptions, create } = opts;
+	return mergeBaseResolverOpts<CreateResolverOpts<DTO>>({ CreateDTOClass, enableSubscriptions, ...create }, opts);
 }
 
 function extractReadResolverOpts<DTO, R extends ReadResolverOpts<DTO>, PS extends PagingStrategies>(
-  opts: CRUDResolverOpts<DTO, unknown, unknown, R, PagingStrategies>,
+	opts: CRUDResolverOpts<DTO, R, PagingStrategies>,
 ): MergePagingStrategyOpts<DTO, R, PS> {
-  const { enableTotalCount, pagingStrategy, read } = opts;
-  return mergeBaseResolverOpts({ enableTotalCount, pagingStrategy, ...read } as MergePagingStrategyOpts<DTO, R, PS>, opts);
+	const { enableTotalCount, pagingStrategy, read } = opts;
+	return mergeBaseResolverOpts({
+		enableTotalCount,
+		pagingStrategy, ...read,
+	} as MergePagingStrategyOpts<DTO, R, PS>, opts);
 }
 
-function extractUpdateResolverOpts<DTO, U>(
-  opts: CRUDResolverOpts<DTO, unknown, U, ReadResolverOpts<DTO>, PagingStrategies>,
-): UpdateResolverOpts<DTO, U> {
-  const { UpdateDTOClass, enableSubscriptions, update } = opts;
-  return mergeBaseResolverOpts<UpdateResolverOpts<DTO, U>>({ UpdateDTOClass, enableSubscriptions, ...update }, opts);
+function extractUpdateResolverOpts<DTO>(
+	opts: CRUDResolverOpts<DTO, ReadResolverOpts<DTO>, PagingStrategies>,
+): UpdateResolverOpts<DTO> {
+	const { UpdateDTOClass, enableSubscriptions, update } = opts;
+	return mergeBaseResolverOpts<UpdateResolverOpts<DTO>>({ UpdateDTOClass, enableSubscriptions, ...update }, opts);
 }
 
 function extractDeleteResolverOpts<DTO>(
-  opts: CRUDResolverOpts<DTO, unknown, unknown, ReadResolverOpts<DTO>, PagingStrategies>,
+	opts: CRUDResolverOpts<DTO, ReadResolverOpts<DTO>, PagingStrategies>,
 ): DeleteResolverOpts<DTO> {
-  const { enableSubscriptions, delete: deleteArgs } = opts;
-  return mergeBaseResolverOpts<DeleteResolverOpts<DTO>>({ enableSubscriptions, ...deleteArgs }, opts);
+	const { enableSubscriptions, delete: deleteArgs } = opts;
+	return mergeBaseResolverOpts<DeleteResolverOpts<DTO>>({ enableSubscriptions, ...deleteArgs }, opts);
 }
 
 /**
@@ -119,31 +119,31 @@ function extractDeleteResolverOpts<DTO>(
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const CRUDResolver = <
-  DTO,
-  C = DeepPartial<DTO>,
-  U = DeepPartial<DTO>,
-  R extends ReadResolverOpts<DTO> = ReadResolverOpts<DTO>,
-  PS extends PagingStrategies = PagingStrategies.CURSOR,
+	DTO,
+	R extends ReadResolverOpts<DTO> = ReadResolverOpts<DTO>,
+	PS extends PagingStrategies = PagingStrategies.CURSOR,
 >(
-  DTOClass: Class<DTO>,
-  opts: CRUDResolverOpts<DTO, C, U, R, PS> = {},
-) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  @Resolver(() => DTOClass, { isAbstract: true })
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  class BaseResolver extends BaseServiceResolver<DTO, any> {}
+	DTOClass: Class<DTO>,
+	opts: CRUDResolverOpts<DTO, R, PS> = {},
+):Class<CRUDResolver<DTO, R, any>> => {
 
-  const referencable = Referenceable(DTOClass, opts.referenceBy ?? {});
-  const relatable = Relatable(DTOClass, extractRelatableOpts(opts));
-  const aggregateable = opts.aggregate?.disabled ? null : Aggregateable(DTOClass, extractAggregateResolverOpts(opts));
-  const aggregateableByTime = opts.aggregate?.disabled ? null : AggregateableByTime(DTOClass, extractAggregateResolverOpts(opts));
-  const creatable = opts.create?.disabled ? null : Creatable(DTOClass, extractCreateResolverOpts(opts));
-  const readable = opts.read?.disabled ? null : Readable(DTOClass, extractReadResolverOpts(opts));
-  const updatable = opts.update?.disabled ? null : Updateable(DTOClass, extractUpdateResolverOpts(opts));
-  const deleteable = opts.delete?.disabled ? null : Deletable(DTOClass, extractDeleteResolverOpts(opts));
+	@Resolver(() => DTOClass, { isAbstract: true })
+	class BaseResolver extends BaseServiceResolver<DTO, any> {
+	}
 
-  return [deleteable, updatable, readable, creatable, aggregateableByTime, aggregateable, relatable, referencable].reduce(
-    (CurrResolver, action) => (action ? action(CurrResolver) : CurrResolver),
-    BaseResolver,
-  );
+	const Mixins = [] as ((cls: Class<unknown>) => Class<unknown>)[];
+
+	Mixins.push(Referenceable(DTOClass, opts.referenceBy ?? {}));
+	Mixins.push(Relatable(DTOClass, extractRelatableOpts(opts)));
+	if (opts.aggregate?.disabled) Mixins.push(Aggregateable(DTOClass, extractAggregateResolverOpts(opts)));
+	if (opts.aggregate?.disabled) Mixins.push(AggregateableByTime(DTOClass, extractAggregateResolverOpts(opts)));
+	if (opts.create?.disabled) Mixins.push(Creatable(DTOClass, extractCreateResolverOpts(opts)));
+	if (opts.read?.disabled) Mixins.push(Readable(DTOClass, extractReadResolverOpts(opts)));
+	if (opts.update?.disabled) Mixins.push(Updateable(DTOClass, extractUpdateResolverOpts(opts)));
+	if (opts.delete?.disabled) Mixins.push(Deletable(DTOClass, extractDeleteResolverOpts(opts)));
+
+	return Mixins.reduce(
+		(CurrResolver, action) => action(CurrResolver),
+		BaseResolver,
+	) as Class<CRUDResolver<DTO, R, any>>;
 };

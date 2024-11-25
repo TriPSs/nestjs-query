@@ -24,7 +24,7 @@ const allFieldsAreNull = <Relation>(fields: Partial<Relation>): boolean => Objec
 
 const ReferencesMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, reference: ResolverRelationReference<DTO, Relation>) =>
-  <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
+  <B extends Class<ServiceResolver<DTO, QueryService<DTO>>>>(Base: B): B => {
     const commonResolverOpts = removeRelationOpts(reference);
     const relationDTO = reference.DTO;
     const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: reference.dtoName });
@@ -54,14 +54,14 @@ const ReferencesMixin =
 
 export const ReferencesRelationMixin =
   <DTO>(DTOClass: Class<DTO>, references: ReferencesOpts<DTO>) =>
-  <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
+  <B extends Class<ServiceResolver<DTO, QueryService<DTO>>>>(Base: B): B => {
     const flattened = flattenRelations(references);
     return flattened.reduce((RB, a) => ReferencesMixin(DTOClass, a)(RB), Base);
   };
 
 export const ReferencesRelationsResolver = <
   DTO,
-  QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>,
+  QS extends QueryService<DTO> = QueryService<DTO>,
 >(
   DTOClass: Class<DTO>,
   references: ReferencesOpts<DTO>,

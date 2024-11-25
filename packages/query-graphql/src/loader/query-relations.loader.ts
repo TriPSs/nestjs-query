@@ -12,7 +12,7 @@ export class QueryRelationsLoader<DTO, Relation>
     readonly relationName: string,
   ) {}
 
-  public createLoader(service: QueryService<DTO, unknown, unknown>) {
+  public createLoader(service: QueryService<DTO>) {
     return async (queryArgs: ReadonlyArray<QueryRelationsArgs<DTO, Relation>>): Promise<(Relation[] | Error)[]> => {
       // group
       const queryMap = this.groupQueries(queryArgs);
@@ -21,7 +21,7 @@ export class QueryRelationsLoader<DTO, Relation>
   }
 
   private async loadResults(
-    service: QueryService<DTO, unknown, unknown>,
+    service: QueryService<DTO>,
     queryRelationsMap: QueryRelationsMap<DTO, Relation>,
   ): Promise<(Relation[] | Error)[]> {
     const results: Relation[][] = [];

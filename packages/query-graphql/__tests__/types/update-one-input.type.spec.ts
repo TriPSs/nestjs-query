@@ -7,117 +7,126 @@ import { MinLength, validateSync } from 'class-validator';
 import { generateSchema } from '../__fixtures__';
 
 describe('UpdateOneInputType', (): void => {
-  @ObjectType()
-  class FakeDTO {
-    @Field(() => ID)
-    id!: string;
-  }
+	@ObjectType()
+	class FakeDTO {
+		@Field(() => ID)
+		id!: string;
 
-  @InputType()
-  class FakeUpdateOneType {
-    @Field()
-    @MinLength(5)
-    name!: string;
-  }
+		@Field()
+		name!: string;
+	}
 
-  @InputType()
-  class UpdateOne extends UpdateOneInputType(FakeDTO, FakeUpdateOneType) {}
+	@InputType()
+	class FakeUpdateOneType {
+		@Field()
+		@MinLength(5)
+		name!: string;
+	}
 
-  it('should create an input type with the id and update type as fields', async () => {
-    @Resolver()
-    class UpdateOneInputTypeSpec {
-      @Query(() => Int)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updateTest(@Args('input', { type: () => UpdateOne }) input: UpdateOne): number {
-        return 1;
-      }
-    }
+	@InputType()
+	class UpdateOne extends UpdateOneInputType(FakeDTO, FakeUpdateOneType) {
+	}
 
-    const schema = await generateSchema([UpdateOneInputTypeSpec]);
-    expect(schema).toMatchSnapshot();
-  });
+	it('should create an input type with the id and update type as fields', async () => {
+		@Resolver()
+		class UpdateOneInputTypeSpec {
+			@Query(() => Int)
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			updateTest(@Args('input', { type: () => UpdateOne }) input: UpdateOne): number {
+				return 1;
+			}
+		}
 
-  it('should create an input type with a custom id and update type as fields', async () => {
-    @ObjectType()
-    class FakeIDDTO {
-      @IDField(() => String)
-      id!: string;
-    }
+		const schema = await generateSchema([UpdateOneInputTypeSpec]);
+		expect(schema).toMatchSnapshot();
+	});
 
-    @InputType()
-    class UpdateOneCustomId extends UpdateOneInputType(FakeIDDTO, FakeUpdateOneType) {}
+	it('should create an input type with a custom id and update type as fields', async () => {
+		@ObjectType()
+		class FakeIDDTO {
+			@IDField(() => String)
+			id!: string;
 
-    @Resolver()
-    class UpdateOneCustomIdInputTypeSpec {
-      @Query(() => Int)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      updateTest(@Args('input', { type: () => UpdateOneCustomId }) input: UpdateOneCustomId): number {
-        return 1;
-      }
-    }
+			@Field()
+			name!: string;
 
-    const schema = await generateSchema([UpdateOneCustomIdInputTypeSpec]);
-    expect(schema).toMatchSnapshot();
-  });
+		}
 
-  describe('validation', () => {
-    it('should validate id is defined is not empty', () => {
-      const Type = UpdateOneInputType(FakeDTO, FakeUpdateOneType);
-      const input = { update: { name: 'hello world' } };
-      const it = plainToClass(Type, input);
-      const errors = validateSync(it);
-      expect(errors).toEqual([
-        {
-          children: [],
-          constraints: {
-            isNotEmpty: 'id should not be empty',
-          },
-          property: 'id',
-          target: input,
-        },
-      ]);
-    });
+		@InputType()
+		class UpdateOneCustomId extends UpdateOneInputType(FakeIDDTO, FakeUpdateOneType) {
+		}
 
-    it('should validate id is not empty is defined is not empty', () => {
-      const Type = UpdateOneInputType(FakeDTO, FakeUpdateOneType);
-      const input = { id: '', update: { name: 'hello world' } };
-      const it = plainToClass(Type, input);
-      const errors = validateSync(it);
-      expect(errors).toEqual([
-        {
-          children: [],
-          constraints: {
-            isNotEmpty: 'id should not be empty',
-          },
-          property: 'id',
-          target: input,
-          value: input.id,
-        },
-      ]);
-    });
+		@Resolver()
+		class UpdateOneCustomIdInputTypeSpec {
+			@Query(() => Int)
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			updateTest(@Args('input', { type: () => UpdateOneCustomId }) input: UpdateOneCustomId): number {
+				return 1;
+			}
+		}
 
-    it('should validate the update input', () => {
-      const Type = UpdateOneInputType(FakeDTO, FakeUpdateOneType);
-      const input = { id: 'id-1', update: {} };
-      const it = plainToClass(Type, input);
-      const errors = validateSync(it);
-      expect(errors).toEqual([
-        {
-          children: [
-            {
-              children: [],
-              constraints: {
-                minLength: 'name must be longer than or equal to 5 characters',
-              },
-              property: 'name',
-              target: {},
-            },
-          ],
-          property: 'update',
-          target: it,
-          value: it.update,
-        },
-      ]);
-    });
-  });
+		const schema = await generateSchema([UpdateOneCustomIdInputTypeSpec]);
+		expect(schema).toMatchSnapshot();
+	});
+
+	describe('validation', () => {
+		it('should validate id is defined is not empty', () => {
+			const Type = UpdateOneInputType(FakeDTO, FakeUpdateOneType);
+			const input = { update: { name: 'hello world' } };
+			const it = plainToClass(Type, input);
+			const errors = validateSync(it);
+			expect(errors).toEqual([
+				{
+					children: [],
+					constraints: {
+						isNotEmpty: 'id should not be empty',
+					},
+					property: 'id',
+					target: input,
+				},
+			]);
+		});
+
+		it('should validate id is not empty is defined is not empty', () => {
+			const Type = UpdateOneInputType(FakeDTO, FakeUpdateOneType);
+			const input = { id: '', update: { name: 'hello world' } };
+			const it = plainToClass(Type, input);
+			const errors = validateSync(it);
+			expect(errors).toEqual([
+				{
+					children: [],
+					constraints: {
+						isNotEmpty: 'id should not be empty',
+					},
+					property: 'id',
+					target: input,
+					value: input.id,
+				},
+			]);
+		});
+
+		it('should validate the update input', () => {
+			const Type = UpdateOneInputType(FakeDTO, FakeUpdateOneType);
+			const input = { id: 'id-1', update: {} };
+			const it = plainToClass(Type, input);
+			const errors = validateSync(it);
+			expect(errors).toEqual([
+				{
+					children: [
+						{
+							children: [],
+							constraints: {
+								minLength: 'name must be longer than or equal to 5 characters',
+							},
+							property: 'name',
+							target: {},
+						},
+					],
+					property: 'update',
+					target: it,
+					value: it.update,
+				},
+			]);
+		});
+	});
 });

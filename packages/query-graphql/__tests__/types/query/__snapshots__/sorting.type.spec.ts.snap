@@ -1,6 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SortingType should create the correct graphql schema for sorting type 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: Sorting!): Int!
 }
@@ -18,15 +26,15 @@ enum TestSortSortFields {
   boolField
 }
 
-"""Sort Directions"""
+\\"\\"\\"Sort Directions\\"\\"\\"
 enum SortDirection {
   ASC
   DESC
 }
 
-"""Sort Nulls Options"""
+\\"\\"\\"Sort Nulls Options\\"\\"\\"
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
-}
+}"
 `;

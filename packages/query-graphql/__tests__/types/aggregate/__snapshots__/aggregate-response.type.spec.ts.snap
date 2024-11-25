@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AggregateResponseType should create an aggregate type with a custom name 1`] = `
-type FakeTypeAggregateGroupBy {
+exports[`AggregateResponseType should create an aggregate type with a custom name new test 1`] = `
+"type FakeTypeAggregateGroupBy {
   stringField: String
   numberField: Float
   boolField: Boolean
   dateField: DateTime
 }
 
-"""
+\\"\\"\\"
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
+\\"\\"\\"
 scalar DateTime
 
 type FakeTypeCountAggregate {
@@ -20,21 +20,11 @@ type FakeTypeCountAggregate {
   dateField: Int
 }
 
-type FakeTypeSumAggregate {
+type FakeTypeFloatAggregate {
   numberField: Float
 }
 
-type FakeTypeAvgAggregate {
-  numberField: Float
-}
-
-type FakeTypeMinAggregate {
-  stringField: String
-  numberField: Float
-  dateField: DateTime
-}
-
-type FakeTypeMaxAggregate {
+type FakeTypeMinMaxAggregate {
   stringField: String
   numberField: Float
   dateField: DateTime
@@ -54,21 +44,11 @@ type CustomPrefixCountAggregate {
   dateField: Int
 }
 
-type CustomPrefixSumAggregate {
+type CustomPrefixFloatAggregate {
   numberField: Float
 }
 
-type CustomPrefixAvgAggregate {
-  numberField: Float
-}
-
-type CustomPrefixMinAggregate {
-  stringField: String
-  numberField: Float
-  dateField: DateTime
-}
-
-type CustomPrefixMaxAggregate {
+type CustomPrefixMinMaxAggregate {
   stringField: String
   numberField: Float
   dateField: DateTime
@@ -77,27 +57,37 @@ type CustomPrefixMaxAggregate {
 type CustomPrefixAggregateResponse {
   groupBy: CustomPrefixAggregateGroupBy
   count: CustomPrefixCountAggregate
-  sum: CustomPrefixSumAggregate
-  avg: CustomPrefixAvgAggregate
-  min: CustomPrefixMinAggregate
-  max: CustomPrefixMaxAggregate
+  distinctCount: CustomPrefixCountAggregate
+  sum: CustomPrefixFloatAggregate
+  avg: CustomPrefixFloatAggregate
+  min: CustomPrefixMinMaxAggregate
+  max: CustomPrefixMinMaxAggregate
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   aggregate: CustomPrefixAggregateResponse!
-}
+}"
 `;
+
 exports[`AggregateResponseType should create an aggregate type with the correct fields for each type 1`] = `
-type FakeTypeAggregateGroupBy {
+"type FakeTypeAggregateGroupBy {
   stringField: String
   numberField: Float
   boolField: Boolean
   dateField: DateTime
 }
 
-"""
+\\"\\"\\"
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
+\\"\\"\\"
 scalar DateTime
 
 type FakeTypeCountAggregate {
@@ -107,21 +97,11 @@ type FakeTypeCountAggregate {
   dateField: Int
 }
 
-type FakeTypeSumAggregate {
+type FakeTypeFloatAggregate {
   numberField: Float
 }
 
-type FakeTypeAvgAggregate {
-  numberField: Float
-}
-
-type FakeTypeMinAggregate {
-  stringField: String
-  numberField: Float
-  dateField: DateTime
-}
-
-type FakeTypeMaxAggregate {
+type FakeTypeMinMaxAggregate {
   stringField: String
   numberField: Float
   dateField: DateTime
@@ -130,27 +110,37 @@ type FakeTypeMaxAggregate {
 type FakeTypeAggregateResponse {
   groupBy: FakeTypeAggregateGroupBy
   count: FakeTypeCountAggregate
-  sum: FakeTypeSumAggregate
-  avg: FakeTypeAvgAggregate
-  min: FakeTypeMinAggregate
-  max: FakeTypeMaxAggregate
+  distinctCount: FakeTypeCountAggregate
+  sum: FakeTypeFloatAggregate
+  avg: FakeTypeFloatAggregate
+  min: FakeTypeMinMaxAggregate
+  max: FakeTypeMinMaxAggregate
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   aggregate: FakeTypeAggregateResponse!
-}
+}"
 `;
+
 exports[`AggregateResponseType should return the same class if called multiple times 1`] = `
-type FakeTypeAggregateGroupBy {
+"type FakeTypeAggregateGroupBy {
   stringField: String
   numberField: Float
   boolField: Boolean
   dateField: DateTime
 }
 
-"""
+\\"\\"\\"
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
+\\"\\"\\"
 scalar DateTime
 
 type FakeTypeCountAggregate {
@@ -160,21 +150,11 @@ type FakeTypeCountAggregate {
   dateField: Int
 }
 
-type FakeTypeSumAggregate {
+type FakeTypeFloatAggregate {
   numberField: Float
 }
 
-type FakeTypeAvgAggregate {
-  numberField: Float
-}
-
-type FakeTypeMinAggregate {
-  stringField: String
-  numberField: Float
-  dateField: DateTime
-}
-
-type FakeTypeMaxAggregate {
+type FakeTypeMinMaxAggregate {
   stringField: String
   numberField: Float
   dateField: DateTime
@@ -183,13 +163,22 @@ type FakeTypeMaxAggregate {
 type FakeTypeAggregateResponse {
   groupBy: FakeTypeAggregateGroupBy
   count: FakeTypeCountAggregate
-  sum: FakeTypeSumAggregate
-  avg: FakeTypeAvgAggregate
-  min: FakeTypeMinAggregate
-  max: FakeTypeMaxAggregate
+  distinctCount: FakeTypeCountAggregate
+  sum: FakeTypeFloatAggregate
+  avg: FakeTypeFloatAggregate
+  min: FakeTypeMinMaxAggregate
+  max: FakeTypeMinMaxAggregate
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   aggregate: FakeTypeAggregateResponse!
-}
+}"
 `;

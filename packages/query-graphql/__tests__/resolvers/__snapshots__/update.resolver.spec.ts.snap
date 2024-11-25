@@ -1,10 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UpdateResolver #updateMany should not expose update many method if disabled 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -15,28 +23,37 @@ type Mutation {
 }
 
 input UpdateOneTestResolverDTOInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
 input UpdateTestResolverDTO {
   id: ID
   stringField: String
-}
+}"
 `;
+
 exports[`UpdateResolver #updateMany should not update a new type if the UpdateManyArgs is supplied 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -48,10 +65,10 @@ type Mutation {
 }
 
 input UpdateOneTestResolverDTOInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
@@ -61,17 +78,18 @@ input UpdateTestResolverDTO {
 }
 
 input CustomUpdateManyInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: TestResolverInputDTO!
   other: String!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -91,6 +109,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -113,18 +133,27 @@ input StringFieldComparison {
 input TestResolverInputDTO {
   id: ID!
   stringField: String!
-}
+}"
 `;
+
 exports[`UpdateResolver #updateOne should not expose update one method if disabled 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -135,16 +164,17 @@ type Mutation {
 }
 
 input UpdateManyTestResolverDTOSInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -164,6 +194,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -186,18 +218,27 @@ input StringFieldComparison {
 input UpdateTestResolverDTO {
   id: ID
   stringField: String
-}
+}"
 `;
+
 exports[`UpdateResolver #updateOne should use the provided UpdateOneInput type 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -209,10 +250,10 @@ type Mutation {
 }
 
 input CustomUpdateOneInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: TestResolverInputDTO!
   other: String!
 }
@@ -223,16 +264,17 @@ input TestResolverInputDTO {
 }
 
 input UpdateManyTestResolverDTOSInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -252,6 +294,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -274,18 +318,27 @@ input StringFieldComparison {
 input UpdateTestResolverDTO {
   id: ID
   stringField: String
-}
+}"
 `;
+
 exports[`UpdateResolver should create a UpdateResolver for the DTO 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -297,10 +350,10 @@ type Mutation {
 }
 
 input UpdateOneTestResolverDTOInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
@@ -310,16 +363,17 @@ input UpdateTestResolverDTO {
 }
 
 input UpdateManyTestResolverDTOSInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -339,6 +393,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -356,28 +412,46 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`UpdateResolver should not expose update methods if disabled 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;
+
 exports[`UpdateResolver should use the UpdateDTOClass if provided 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -389,10 +463,10 @@ type Mutation {
 }
 
 input UpdateOneTestResolverDTOInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: TestResolverInputDTO!
 }
 
@@ -402,16 +476,17 @@ input TestResolverInputDTO {
 }
 
 input UpdateManyTestResolverDTOSInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: TestResolverInputDTO!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -431,6 +506,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -448,18 +525,27 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`UpdateResolver should use the dtoName if provided 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -471,10 +557,10 @@ type Mutation {
 }
 
 input UpdateOneTestInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: UpdateTest!
 }
 
@@ -484,16 +570,17 @@ input UpdateTest {
 }
 
 input UpdateManyTestsInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: UpdateTest!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -513,6 +600,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -530,18 +619,27 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`UpdateResolver should use the many.name option for the updateMany if provided 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -553,10 +651,10 @@ type Mutation {
 }
 
 input UpdateOneTestResolverDTOInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
@@ -566,16 +664,17 @@ input UpdateTestResolverDTO {
 }
 
 input UpdateManyTestResolverDTOSInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -595,6 +694,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -612,18 +713,27 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`UpdateResolver should use the one.name option for the updateOne if provided 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -635,10 +745,10 @@ type Mutation {
 }
 
 input UpdateOneTestResolverDTOInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
@@ -648,16 +758,17 @@ input UpdateTestResolverDTO {
 }
 
 input UpdateManyTestResolverDTOSInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -677,6 +788,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -694,18 +807,27 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;
+
 exports[`UpdateResolver updated subscription should add subscription types if enableSubscriptions is true 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -717,10 +839,10 @@ type Mutation {
 }
 
 input UpdateOneTestResolverDTOInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
@@ -730,16 +852,17 @@ input UpdateTestResolverDTO {
 }
 
 input UpdateManyTestResolverDTOSInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -759,6 +882,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -784,27 +909,29 @@ type Subscription {
 }
 
 input UpdateOneTestResolverDTOSubscriptionFilterInput {
-  """Specify to filter the records returned."""
-  filter: TestResolverDTOSubscriptionFilter!
-}
-
-input TestResolverDTOSubscriptionFilter {
-  and: [TestResolverDTOSubscriptionFilter!]
-  or: [TestResolverDTOSubscriptionFilter!]
-  id: IDFilterComparison
-  stringField: StringFieldComparison
-}
+  \\"\\"\\"Specify to filter the records returned.\\"\\"\\"
+  filter: TestResolverDTOFilter!
+}"
 `;
+
 exports[`UpdateResolver updated subscription should add subscription types if many.enableSubscriptions is true 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -816,10 +943,10 @@ type Mutation {
 }
 
 input UpdateOneTestResolverDTOInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
@@ -829,16 +956,17 @@ input UpdateTestResolverDTO {
 }
 
 input UpdateManyTestResolverDTOSInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -858,6 +986,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -879,18 +1009,27 @@ input StringFieldComparison {
 
 type Subscription {
   updatedManyTestResolverDTOS: UpdateManyResponse!
-}
+}"
 `;
+
 exports[`UpdateResolver updated subscription should add subscription types if one.enableSubscriptions is true 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -902,10 +1041,10 @@ type Mutation {
 }
 
 input UpdateOneTestResolverDTOInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
@@ -915,16 +1054,17 @@ input UpdateTestResolverDTO {
 }
 
 input UpdateManyTestResolverDTOSInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -944,6 +1084,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -968,27 +1110,29 @@ type Subscription {
 }
 
 input UpdateOneTestResolverDTOSubscriptionFilterInput {
-  """Specify to filter the records returned."""
-  filter: TestResolverDTOSubscriptionFilter!
-}
-
-input TestResolverDTOSubscriptionFilter {
-  and: [TestResolverDTOSubscriptionFilter!]
-  or: [TestResolverDTOSubscriptionFilter!]
-  id: IDFilterComparison
-  stringField: StringFieldComparison
-}
+  \\"\\"\\"Specify to filter the records returned.\\"\\"\\"
+  filter: TestResolverDTOFilter!
+}"
 `;
+
 exports[`UpdateResolver updated subscription should not expose subscriptions if enableSubscriptions is false 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
 type UpdateManyResponse {
-  """The number of records updated."""
+  \\"\\"\\"The number of records updated.\\"\\"\\"
   updatedCount: Int!
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
@@ -1000,10 +1144,10 @@ type Mutation {
 }
 
 input UpdateOneTestResolverDTOInput {
-  """The id of the record to update"""
+  \\"\\"\\"The id of the record to update\\"\\"\\"
   id: ID!
 
-  """The update to apply."""
+  \\"\\"\\"The update to apply.\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
@@ -1013,16 +1157,17 @@ input UpdateTestResolverDTO {
 }
 
 input UpdateManyTestResolverDTOSInput {
-  """Filter used to find fields to update"""
-  filter: TestResolverDTOUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: TestResolverDTOFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: UpdateTestResolverDTO!
 }
 
-input TestResolverDTOUpdateFilter {
-  and: [TestResolverDTOUpdateFilter!]
-  or: [TestResolverDTOUpdateFilter!]
+input TestResolverDTOFilter {
+  freeTextQuery: String
+  and: [TestResolverDTOFilter!]
+  or: [TestResolverDTOFilter!]
   id: IDFilterComparison
   stringField: StringFieldComparison
 }
@@ -1042,6 +1187,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -1059,5 +1206,5 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;

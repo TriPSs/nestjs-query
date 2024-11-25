@@ -6,8 +6,8 @@ import { getHookToken, HookTypes } from '../hooks';
 import { PagingStrategies } from '../types';
 import { CRUDAutoResolverOpts } from './resolver.provider';
 
-export type HookProviderOptions<DTO, C, U> = Pick<
-  CRUDAutoResolverOpts<DTO, C, U, unknown, PagingStrategies>,
+export type HookProviderOptions<DTO> = Pick<
+  CRUDAutoResolverOpts<DTO, unknown, PagingStrategies>,
   'DTOClass' | 'CreateDTOClass' | 'UpdateDTOClass'
 >;
 
@@ -24,7 +24,7 @@ function createHookProvider(hookType: HookTypes, ...DTOClass: Class<unknown>[]):
   }, undefined);
 }
 
-function getHookProviders(opts: HookProviderOptions<unknown, unknown, unknown>): Provider[] {
+function getHookProviders(opts: HookProviderOptions<unknown>): Provider[] {
   const { DTOClass, CreateDTOClass = DTOClass, UpdateDTOClass = DTOClass } = opts;
   return [
     createHookProvider(HookTypes.BEFORE_CREATE_ONE, CreateDTOClass, DTOClass),
@@ -38,5 +38,5 @@ function getHookProviders(opts: HookProviderOptions<unknown, unknown, unknown>):
   ].filter((p) => !!p);
 }
 
-export const createHookProviders = (opts: HookProviderOptions<unknown, unknown, unknown>[]): Provider[] =>
+export const createHookProviders = (opts: HookProviderOptions<unknown>[]): Provider[] =>
   opts.reduce((ps: Provider[], opt) => [...ps, ...getHookProviders(opt)], []);

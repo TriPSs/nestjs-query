@@ -1,13 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`filter types DeleteFilterType should create the correct filter graphql schema 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: TestDtoFilter!): Int!
 }
 
 input TestDtoFilter {
-  and: [TestFilterDtoDeleteFilter!]
-  or: [TestFilterDtoDeleteFilter!]
+  freeTextQuery: String
+  and: [TestFilterDtoFilter!]
+  or: [TestFilterDtoFilter!]
   id: NumberFieldComparison
   boolField: BooleanFieldComparison
   dateField: DateFieldComparison
@@ -18,11 +27,16 @@ input TestDtoFilter {
   stringEnumField: StringEnumFilterComparison
   numberEnumField: NumberEnumFilterComparison
   timestampField: TimestampFieldComparison
+  filterableRelation: TestRelationDtoFilter
+  filterableCursorConnection: TestRelationDtoFilter
+  filterableOffsetConnection: TestRelationDtoFilter
+  filterableUnPagedRelations: TestRelationDtoFilter
 }
 
-input TestFilterDtoDeleteFilter {
-  and: [TestFilterDtoDeleteFilter!]
-  or: [TestFilterDtoDeleteFilter!]
+input TestFilterDtoFilter {
+  freeTextQuery: String
+  and: [TestFilterDtoFilter!]
+  or: [TestFilterDtoFilter!]
   id: NumberFieldComparison
   boolField: BooleanFieldComparison
   dateField: DateFieldComparison
@@ -33,6 +47,10 @@ input TestFilterDtoDeleteFilter {
   stringEnumField: StringEnumFilterComparison
   numberEnumField: NumberEnumFilterComparison
   timestampField: TimestampFieldComparison
+  filterableRelation: TestRelationDtoFilter
+  filterableCursorConnection: TestRelationDtoFilter
+  filterableOffsetConnection: TestRelationDtoFilter
+  filterableUnPagedRelations: TestRelationDtoFilter
 }
 
 input NumberFieldComparison {
@@ -63,27 +81,27 @@ input BooleanFieldComparison {
 input DateFieldComparison {
   is: Boolean
   isNot: Boolean
-  eq: DateTime
-  neq: DateTime
-  gt: DateTime
-  gte: DateTime
-  lt: DateTime
-  lte: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
+  eq: RelativeDate
+  neq: RelativeDate
+  gt: RelativeDate
+  gte: RelativeDate
+  lt: RelativeDate
+  lte: RelativeDate
+  in: [RelativeDate!]
+  notIn: [RelativeDate!]
   between: DateFieldComparisonBetween
   notBetween: DateFieldComparisonBetween
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 input DateFieldComparisonBetween {
   lower: DateTime!
   upper: DateTime!
 }
+
+\\"\\"\\"
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+\\"\\"\\"
+scalar DateTime
 
 input FloatFieldComparison {
   is: Boolean
@@ -157,6 +175,8 @@ input StringEnumFilterComparison {
   notILike: StringEnum
   in: [StringEnum!]
   notIn: [StringEnum!]
+  contains: StringEnum
+  notContains: StringEnum
 }
 
 enum StringEnum {
@@ -181,6 +201,8 @@ input NumberEnumFilterComparison {
   notILike: NumberEnum
   in: [NumberEnum!]
   notIn: [NumberEnum!]
+  contains: NumberEnum
+  notContains: NumberEnum
 }
 
 enum NumberEnum {
@@ -205,22 +227,49 @@ input TimestampFieldComparison {
   notBetween: TimestampFieldComparisonBetween
 }
 
-"""
+\\"\\"\\"
 \`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
-"""
+\\"\\"\\"
 scalar Timestamp
 
 input TimestampFieldComparisonBetween {
   lower: Timestamp!
   upper: Timestamp!
 }
+
+input TestRelationDtoFilter {
+  freeTextQuery: String
+  and: [TestRelationDtoFilter!]
+  or: [TestRelationDtoFilter!]
+  id: NumberFieldComparison
+  relationName: StringFieldComparison
+  relationAge: NumberFieldComparison
+}"
 `;
+
 exports[`filter types FilterType allowedBooleanExpressions option no boolean expressions should only expose allowed comparisons 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
 input TestComparisonDtoFilter {
+  freeTextQuery: String
+  and: [TestAllowedComparisonsFilter!]
+  id: NumberFieldComparison
+  numberField: NumberFieldComparison
+}
+
+input TestAllowedComparisonsFilter {
+  freeTextQuery: String
+  and: [TestAllowedComparisonsFilter!]
   id: NumberFieldComparison
   numberField: NumberFieldComparison
 }
@@ -243,20 +292,31 @@ input NumberFieldComparison {
 input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
-}
+}"
 `;
+
 exports[`filter types FilterType allowedBooleanExpressions option only and boolean expressions should only expose allowed comparisons 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
 input TestComparisonDtoFilter {
+  freeTextQuery: String
   and: [TestAllowedComparisonsFilter!]
   id: NumberFieldComparison
   numberField: NumberFieldComparison
 }
 
 input TestAllowedComparisonsFilter {
+  freeTextQuery: String
   and: [TestAllowedComparisonsFilter!]
   id: NumberFieldComparison
   numberField: NumberFieldComparison
@@ -280,21 +340,32 @@ input NumberFieldComparison {
 input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
-}
+}"
 `;
+
 exports[`filter types FilterType allowedBooleanExpressions option only or boolean expressions should only expose allowed comparisons 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
 input TestComparisonDtoFilter {
-  or: [TestAllowedComparisonsFilter!]
+  freeTextQuery: String
+  and: [TestAllowedComparisonsFilter!]
   id: NumberFieldComparison
   numberField: NumberFieldComparison
 }
 
 input TestAllowedComparisonsFilter {
-  or: [TestAllowedComparisonsFilter!]
+  freeTextQuery: String
+  and: [TestAllowedComparisonsFilter!]
   id: NumberFieldComparison
   numberField: NumberFieldComparison
 }
@@ -317,14 +388,24 @@ input NumberFieldComparison {
 input NumberFieldComparisonBetween {
   lower: Float!
   upper: Float!
-}
+}"
 `;
+
 exports[`filter types FilterType allowedComparisons option should only expose allowed comparisons 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
 input TestComparisonDtoFilter {
+  freeTextQuery: String
   and: [TestAllowedComparisonFilter!]
   or: [TestAllowedComparisonFilter!]
   id: NumberFieldComparison
@@ -337,6 +418,7 @@ input TestComparisonDtoFilter {
 }
 
 input TestAllowedComparisonFilter {
+  freeTextQuery: String
   and: [TestAllowedComparisonFilter!]
   or: [TestAllowedComparisonFilter!]
   id: NumberFieldComparison
@@ -377,9 +459,9 @@ input TestAllowedComparisonDateFieldFilterComparison {
   neq: DateTime
 }
 
-"""
+\\"\\"\\"
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
+\\"\\"\\"
 scalar DateTime
 
 input TestAllowedComparisonFloatFieldFilterComparison {
@@ -404,14 +486,24 @@ input TestAllowedComparisonNumberFieldFilterComparison {
 input TestAllowedComparisonStringFieldFilterComparison {
   like: String
   notLike: String
-}
+}"
 `;
+
 exports[`filter types FilterType allowedComparisons option should only expose between/not between comparisons for allowed types 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: TestBetweenComparisonDtoFilter!): Int!
 }
 
 input TestBetweenComparisonDtoFilter {
+  freeTextQuery: String
   and: [TestBetweenComparisonFilter!]
   or: [TestBetweenComparisonFilter!]
   id: NumberFieldComparison
@@ -424,6 +516,7 @@ input TestBetweenComparisonDtoFilter {
 }
 
 input TestBetweenComparisonFilter {
+  freeTextQuery: String
   and: [TestBetweenComparisonFilter!]
   or: [TestBetweenComparisonFilter!]
   id: NumberFieldComparison
@@ -469,9 +562,9 @@ input TestBetweenComparisonDateFieldFilterComparisonBetween {
   upper: DateTime!
 }
 
-"""
+\\"\\"\\"
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
+\\"\\"\\"
 scalar DateTime
 
 input TestBetweenComparisonFloatFieldFilterComparison {
@@ -506,14 +599,24 @@ input TestBetweenComparisonNumberFieldFilterComparisonBetween {
 
 input TestBetweenComparisonStringFieldFilterComparison {
   eq: String
-}
+}"
 `;
+
 exports[`filter types FilterType filterRequired option should only expose allowed comparisons 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: TestComparisonDtoFilter!): Int!
 }
 
 input TestComparisonDtoFilter {
+  freeTextQuery: String
   and: [TestFilterRequiredComparisonFilter!]
   or: [TestFilterRequiredComparisonFilter!]
   id: NumberFieldComparison
@@ -523,6 +626,7 @@ input TestComparisonDtoFilter {
 }
 
 input TestFilterRequiredComparisonFilter {
+  freeTextQuery: String
   and: [TestFilterRequiredComparisonFilter!]
   or: [TestFilterRequiredComparisonFilter!]
   id: NumberFieldComparison
@@ -559,34 +663,44 @@ input BooleanFieldComparison {
 input DateFieldComparison {
   is: Boolean
   isNot: Boolean
-  eq: DateTime
-  neq: DateTime
-  gt: DateTime
-  gte: DateTime
-  lt: DateTime
-  lte: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
+  eq: RelativeDate
+  neq: RelativeDate
+  gt: RelativeDate
+  gte: RelativeDate
+  lt: RelativeDate
+  lte: RelativeDate
+  in: [RelativeDate!]
+  notIn: [RelativeDate!]
   between: DateFieldComparisonBetween
   notBetween: DateFieldComparisonBetween
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 input DateFieldComparisonBetween {
   lower: DateTime!
   upper: DateTime!
 }
+
+\\"\\"\\"
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+\\"\\"\\"
+scalar DateTime"
 `;
+
 exports[`filter types FilterType should create the correct filter graphql schema 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: TestDtoFilter!): Int!
 }
 
 input TestDtoFilter {
+  freeTextQuery: String
   and: [TestFilterDtoFilter!]
   or: [TestFilterDtoFilter!]
   id: NumberFieldComparison
@@ -599,13 +713,14 @@ input TestDtoFilter {
   stringEnumField: StringEnumFilterComparison
   numberEnumField: NumberEnumFilterComparison
   timestampField: TimestampFieldComparison
-  filterableRelation: TestFilterDtoFilterTestRelationDtoFilter
-  filterableCursorConnection: TestFilterDtoFilterTestRelationDtoFilter
-  filterableOffsetConnection: TestFilterDtoFilterTestRelationDtoFilter
-  filterableUnPagedRelations: TestFilterDtoFilterTestRelationDtoFilter
+  filterableRelation: TestRelationDtoFilter
+  filterableCursorConnection: TestRelationDtoFilter
+  filterableOffsetConnection: TestRelationDtoFilter
+  filterableUnPagedRelations: TestRelationDtoFilter
 }
 
 input TestFilterDtoFilter {
+  freeTextQuery: String
   and: [TestFilterDtoFilter!]
   or: [TestFilterDtoFilter!]
   id: NumberFieldComparison
@@ -618,10 +733,10 @@ input TestFilterDtoFilter {
   stringEnumField: StringEnumFilterComparison
   numberEnumField: NumberEnumFilterComparison
   timestampField: TimestampFieldComparison
-  filterableRelation: TestFilterDtoFilterTestRelationDtoFilter
-  filterableCursorConnection: TestFilterDtoFilterTestRelationDtoFilter
-  filterableOffsetConnection: TestFilterDtoFilterTestRelationDtoFilter
-  filterableUnPagedRelations: TestFilterDtoFilterTestRelationDtoFilter
+  filterableRelation: TestRelationDtoFilter
+  filterableCursorConnection: TestRelationDtoFilter
+  filterableOffsetConnection: TestRelationDtoFilter
+  filterableUnPagedRelations: TestRelationDtoFilter
 }
 
 input NumberFieldComparison {
@@ -652,27 +767,27 @@ input BooleanFieldComparison {
 input DateFieldComparison {
   is: Boolean
   isNot: Boolean
-  eq: DateTime
-  neq: DateTime
-  gt: DateTime
-  gte: DateTime
-  lt: DateTime
-  lte: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
+  eq: RelativeDate
+  neq: RelativeDate
+  gt: RelativeDate
+  gte: RelativeDate
+  lt: RelativeDate
+  lte: RelativeDate
+  in: [RelativeDate!]
+  notIn: [RelativeDate!]
   between: DateFieldComparisonBetween
   notBetween: DateFieldComparisonBetween
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 input DateFieldComparisonBetween {
   lower: DateTime!
   upper: DateTime!
 }
+
+\\"\\"\\"
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+\\"\\"\\"
+scalar DateTime
 
 input FloatFieldComparison {
   is: Boolean
@@ -746,6 +861,8 @@ input StringEnumFilterComparison {
   notILike: StringEnum
   in: [StringEnum!]
   notIn: [StringEnum!]
+  contains: StringEnum
+  notContains: StringEnum
 }
 
 enum StringEnum {
@@ -770,6 +887,8 @@ input NumberEnumFilterComparison {
   notILike: NumberEnum
   in: [NumberEnum!]
   notIn: [NumberEnum!]
+  contains: NumberEnum
+  notContains: NumberEnum
 }
 
 enum NumberEnum {
@@ -794,9 +913,9 @@ input TimestampFieldComparison {
   notBetween: TimestampFieldComparisonBetween
 }
 
-"""
+\\"\\"\\"
 \`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
-"""
+\\"\\"\\"
 scalar Timestamp
 
 input TimestampFieldComparisonBetween {
@@ -804,22 +923,33 @@ input TimestampFieldComparisonBetween {
   upper: Timestamp!
 }
 
-input TestFilterDtoFilterTestRelationDtoFilter {
-  and: [TestFilterDtoFilterTestRelationDtoFilter!]
-  or: [TestFilterDtoFilterTestRelationDtoFilter!]
+input TestRelationDtoFilter {
+  freeTextQuery: String
+  and: [TestRelationDtoFilter!]
+  or: [TestRelationDtoFilter!]
   id: NumberFieldComparison
   relationName: StringFieldComparison
   relationAge: NumberFieldComparison
-}
+}"
 `;
+
 exports[`filter types SubscriptionFilterType should create the correct filter graphql schema 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: TestDtoFilter!): Int!
 }
 
 input TestDtoFilter {
-  and: [TestFilterDtoSubscriptionFilter!]
-  or: [TestFilterDtoSubscriptionFilter!]
+  freeTextQuery: String
+  and: [TestFilterDtoFilter!]
+  or: [TestFilterDtoFilter!]
   id: NumberFieldComparison
   boolField: BooleanFieldComparison
   dateField: DateFieldComparison
@@ -830,11 +960,16 @@ input TestDtoFilter {
   stringEnumField: StringEnumFilterComparison
   numberEnumField: NumberEnumFilterComparison
   timestampField: TimestampFieldComparison
+  filterableRelation: TestRelationDtoFilter
+  filterableCursorConnection: TestRelationDtoFilter
+  filterableOffsetConnection: TestRelationDtoFilter
+  filterableUnPagedRelations: TestRelationDtoFilter
 }
 
-input TestFilterDtoSubscriptionFilter {
-  and: [TestFilterDtoSubscriptionFilter!]
-  or: [TestFilterDtoSubscriptionFilter!]
+input TestFilterDtoFilter {
+  freeTextQuery: String
+  and: [TestFilterDtoFilter!]
+  or: [TestFilterDtoFilter!]
   id: NumberFieldComparison
   boolField: BooleanFieldComparison
   dateField: DateFieldComparison
@@ -845,6 +980,10 @@ input TestFilterDtoSubscriptionFilter {
   stringEnumField: StringEnumFilterComparison
   numberEnumField: NumberEnumFilterComparison
   timestampField: TimestampFieldComparison
+  filterableRelation: TestRelationDtoFilter
+  filterableCursorConnection: TestRelationDtoFilter
+  filterableOffsetConnection: TestRelationDtoFilter
+  filterableUnPagedRelations: TestRelationDtoFilter
 }
 
 input NumberFieldComparison {
@@ -875,27 +1014,27 @@ input BooleanFieldComparison {
 input DateFieldComparison {
   is: Boolean
   isNot: Boolean
-  eq: DateTime
-  neq: DateTime
-  gt: DateTime
-  gte: DateTime
-  lt: DateTime
-  lte: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
+  eq: RelativeDate
+  neq: RelativeDate
+  gt: RelativeDate
+  gte: RelativeDate
+  lt: RelativeDate
+  lte: RelativeDate
+  in: [RelativeDate!]
+  notIn: [RelativeDate!]
   between: DateFieldComparisonBetween
   notBetween: DateFieldComparisonBetween
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 input DateFieldComparisonBetween {
   lower: DateTime!
   upper: DateTime!
 }
+
+\\"\\"\\"
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+\\"\\"\\"
+scalar DateTime
 
 input FloatFieldComparison {
   is: Boolean
@@ -969,6 +1108,8 @@ input StringEnumFilterComparison {
   notILike: StringEnum
   in: [StringEnum!]
   notIn: [StringEnum!]
+  contains: StringEnum
+  notContains: StringEnum
 }
 
 enum StringEnum {
@@ -993,6 +1134,8 @@ input NumberEnumFilterComparison {
   notILike: NumberEnum
   in: [NumberEnum!]
   notIn: [NumberEnum!]
+  contains: NumberEnum
+  notContains: NumberEnum
 }
 
 enum NumberEnum {
@@ -1017,24 +1160,43 @@ input TimestampFieldComparison {
   notBetween: TimestampFieldComparisonBetween
 }
 
-"""
+\\"\\"\\"
 \`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
-"""
+\\"\\"\\"
 scalar Timestamp
 
 input TimestampFieldComparisonBetween {
   lower: Timestamp!
   upper: Timestamp!
 }
+
+input TestRelationDtoFilter {
+  freeTextQuery: String
+  and: [TestRelationDtoFilter!]
+  or: [TestRelationDtoFilter!]
+  id: NumberFieldComparison
+  relationName: StringFieldComparison
+  relationAge: NumberFieldComparison
+}"
 `;
+
 exports[`filter types UpdateFilterType should create the correct filter graphql schema 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: TestDtoFilter!): Int!
 }
 
 input TestDtoFilter {
-  and: [TestFilterDtoUpdateFilter!]
-  or: [TestFilterDtoUpdateFilter!]
+  freeTextQuery: String
+  and: [TestFilterDtoFilter!]
+  or: [TestFilterDtoFilter!]
   id: NumberFieldComparison
   boolField: BooleanFieldComparison
   dateField: DateFieldComparison
@@ -1045,11 +1207,16 @@ input TestDtoFilter {
   stringEnumField: StringEnumFilterComparison
   numberEnumField: NumberEnumFilterComparison
   timestampField: TimestampFieldComparison
+  filterableRelation: TestRelationDtoFilter
+  filterableCursorConnection: TestRelationDtoFilter
+  filterableOffsetConnection: TestRelationDtoFilter
+  filterableUnPagedRelations: TestRelationDtoFilter
 }
 
-input TestFilterDtoUpdateFilter {
-  and: [TestFilterDtoUpdateFilter!]
-  or: [TestFilterDtoUpdateFilter!]
+input TestFilterDtoFilter {
+  freeTextQuery: String
+  and: [TestFilterDtoFilter!]
+  or: [TestFilterDtoFilter!]
   id: NumberFieldComparison
   boolField: BooleanFieldComparison
   dateField: DateFieldComparison
@@ -1060,6 +1227,10 @@ input TestFilterDtoUpdateFilter {
   stringEnumField: StringEnumFilterComparison
   numberEnumField: NumberEnumFilterComparison
   timestampField: TimestampFieldComparison
+  filterableRelation: TestRelationDtoFilter
+  filterableCursorConnection: TestRelationDtoFilter
+  filterableOffsetConnection: TestRelationDtoFilter
+  filterableUnPagedRelations: TestRelationDtoFilter
 }
 
 input NumberFieldComparison {
@@ -1090,27 +1261,27 @@ input BooleanFieldComparison {
 input DateFieldComparison {
   is: Boolean
   isNot: Boolean
-  eq: DateTime
-  neq: DateTime
-  gt: DateTime
-  gte: DateTime
-  lt: DateTime
-  lte: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
+  eq: RelativeDate
+  neq: RelativeDate
+  gt: RelativeDate
+  gte: RelativeDate
+  lt: RelativeDate
+  lte: RelativeDate
+  in: [RelativeDate!]
+  notIn: [RelativeDate!]
   between: DateFieldComparisonBetween
   notBetween: DateFieldComparisonBetween
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 input DateFieldComparisonBetween {
   lower: DateTime!
   upper: DateTime!
 }
+
+\\"\\"\\"
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+\\"\\"\\"
+scalar DateTime
 
 input FloatFieldComparison {
   is: Boolean
@@ -1184,6 +1355,8 @@ input StringEnumFilterComparison {
   notILike: StringEnum
   in: [StringEnum!]
   notIn: [StringEnum!]
+  contains: StringEnum
+  notContains: StringEnum
 }
 
 enum StringEnum {
@@ -1208,6 +1381,8 @@ input NumberEnumFilterComparison {
   notILike: NumberEnum
   in: [NumberEnum!]
   notIn: [NumberEnum!]
+  contains: NumberEnum
+  notContains: NumberEnum
 }
 
 enum NumberEnum {
@@ -1232,13 +1407,22 @@ input TimestampFieldComparison {
   notBetween: TimestampFieldComparisonBetween
 }
 
-"""
+\\"\\"\\"
 \`Date\` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
-"""
+\\"\\"\\"
 scalar Timestamp
 
 input TimestampFieldComparisonBetween {
   lower: Timestamp!
   upper: Timestamp!
 }
+
+input TestRelationDtoFilter {
+  freeTextQuery: String
+  and: [TestRelationDtoFilter!]
+  or: [TestRelationDtoFilter!]
+  id: NumberFieldComparison
+  relationName: StringFieldComparison
+  relationAge: NumberFieldComparison
+}"
 `;

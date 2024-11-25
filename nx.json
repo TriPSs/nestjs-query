@@ -6,38 +6,9 @@
   },
   "extends": "nx/presets/npm.json",
   "npmScope": "rezonapp",
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/nx-cloud",
-      "options": {
-        "cacheableOperations": ["build", "test", "lint", "package", "prepare"],
-        "accessToken": "YWExNTY0MWYtYWMzNy00ZWZkLWIzMWEtMGYzYWY4YWRmMDE1fHJlYWQtd3JpdGU="
-      }
-    }
-  },
   "workspaceLayout": {
     "libsDir": "packages",
     "appsDir": ""
-  },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ],
-    "prepare": [
-      {
-        "target": "prepare",
-        "projects": "dependencies"
-      }
-    ],
-    "package": [
-      {
-        "target": "package",
-        "projects": "dependencies"
-      }
-    ]
   },
   "affected": {
     "defaultBase": "master"
@@ -63,11 +34,25 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/{projectRoot}"],
+      "executor": "@nx/jest:jest",
+      "cache": true,
       "options": {
+        "passWithNoTests": true,
         "jestConfig": "{projectRoot}/jest.config.ts",
-        "passWithNoTests": true
+        "runInBand": true
+      },
+      "inputs": [
+        "default",
+        "{workspaceRoot}/jest.preset.cjs"
+      ],
+      "outputs": [
+        "{workspaceRoot}/jest-reports/jest-junit-{projectName}.xml"
+      ],
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     },
     "lint": {

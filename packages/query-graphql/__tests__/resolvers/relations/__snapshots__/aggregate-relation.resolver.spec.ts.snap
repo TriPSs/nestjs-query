@@ -1,29 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AggregateRelationsResolver aggregate should not add read methods if enableAggregate is not true 1`] = `
-type TestResolverDTO {
+exports[`AggregateRelationsResolver aggregate should not add read methods if enableAggregate is not true new test 1`] = `
+"type TestResolverDTO {
   id: ID!
   stringField: String!
-}
+  relationsAggregate(
+    \\"\\"\\"Filter to find records to aggregate on\\"\\"\\"
+    filter: TestRelationDTOFilter
 
-type Query {
-  test: TestResolverDTO!
-}
-`;
-
-exports[`AggregateRelationsResolver aggregate should use the dtoName if provided 1`] = `
-type TestResolverDTO {
-  id: ID!
-  stringField: String!
+    \\"\\"\\"Limit the number of results group by aggregation can return\\"\\"\\"
+    groupByLimit: Float
+  ): [TestResolverDTORelationsAggregateResponse!]!
   testsAggregate(
-    """Filter to find records to aggregate on"""
-    filter: TestRelationDTOAggregateFilter
+    \\"\\"\\"Filter to find records to aggregate on\\"\\"\\"
+    filter: TestRelationDTOFilter
+
+    \\"\\"\\"Limit the number of results group by aggregation can return\\"\\"\\"
+    groupByLimit: Float
   ): [TestResolverDTOTestsAggregateResponse!]!
 }
 
-input TestRelationDTOAggregateFilter {
-  and: [TestRelationDTOAggregateFilter!]
-  or: [TestRelationDTOAggregateFilter!]
+input TestRelationDTOFilter {
+  freeTextQuery: String
+  and: [TestRelationDTOFilter!]
+  or: [TestRelationDTOFilter!]
   id: IDFilterComparison
   testResolverId: StringFieldComparison
 }
@@ -43,6 +43,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -72,14 +74,17 @@ type TestResolverDTORelationsCountAggregate {
   testResolverId: Int
 }
 
-type TestResolverDTORelationsMinAggregate {
+type TestResolverDTORelationsMinMaxAggregate {
   id: ID
   testResolverId: String
 }
 
-type TestResolverDTORelationsMaxAggregate {
-  id: ID
-  testResolverId: String
+type TestResolverDTORelationsAggregateResponse {
+  groupBy: TestResolverDTORelationsAggregateGroupBy
+  count: TestResolverDTORelationsCountAggregate
+  distinctCount: TestResolverDTORelationsCountAggregate
+  min: TestResolverDTORelationsMinMaxAggregate
+  max: TestResolverDTORelationsMinMaxAggregate
 }
 
 type TestResolverDTOTestsAggregateGroupBy {
@@ -92,12 +97,7 @@ type TestResolverDTOTestsCountAggregate {
   testResolverId: Int
 }
 
-type TestResolverDTOTestsMinAggregate {
-  id: ID
-  testResolverId: String
-}
-
-type TestResolverDTOTestsMaxAggregate {
+type TestResolverDTOTestsMinMaxAggregate {
   id: ID
   testResolverId: String
 }
@@ -105,27 +105,48 @@ type TestResolverDTOTestsMaxAggregate {
 type TestResolverDTOTestsAggregateResponse {
   groupBy: TestResolverDTOTestsAggregateGroupBy
   count: TestResolverDTOTestsCountAggregate
-  min: TestResolverDTOTestsMinAggregate
-  max: TestResolverDTOTestsMaxAggregate
+  distinctCount: TestResolverDTOTestsCountAggregate
+  min: TestResolverDTOTestsMinMaxAggregate
+  max: TestResolverDTOTestsMinMaxAggregate
 }
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;
-exports[`AggregateRelationsResolver aggregate should use the object type name 1`] = `
-type TestResolverDTO {
+
+exports[`AggregateRelationsResolver aggregate should use the dtoName if provided new test 1`] = `
+"type TestResolverDTO {
   id: ID!
   stringField: String!
   relationsAggregate(
-    """Filter to find records to aggregate on"""
-    filter: TestRelationDTOAggregateFilter
+    \\"\\"\\"Filter to find records to aggregate on\\"\\"\\"
+    filter: TestRelationDTOFilter
+
+    \\"\\"\\"Limit the number of results group by aggregation can return\\"\\"\\"
+    groupByLimit: Float
   ): [TestResolverDTORelationsAggregateResponse!]!
+  testsAggregate(
+    \\"\\"\\"Filter to find records to aggregate on\\"\\"\\"
+    filter: TestRelationDTOFilter
+
+    \\"\\"\\"Limit the number of results group by aggregation can return\\"\\"\\"
+    groupByLimit: Float
+  ): [TestResolverDTOTestsAggregateResponse!]!
 }
 
-input TestRelationDTOAggregateFilter {
-  and: [TestRelationDTOAggregateFilter!]
-  or: [TestRelationDTOAggregateFilter!]
+input TestRelationDTOFilter {
+  freeTextQuery: String
+  and: [TestRelationDTOFilter!]
+  or: [TestRelationDTOFilter!]
   id: IDFilterComparison
   testResolverId: StringFieldComparison
 }
@@ -145,6 +166,8 @@ input IDFilterComparison {
   notILike: ID
   in: [ID!]
   notIn: [ID!]
+  contains: ID
+  notContains: ID
 }
 
 input StringFieldComparison {
@@ -174,12 +197,7 @@ type TestResolverDTORelationsCountAggregate {
   testResolverId: Int
 }
 
-type TestResolverDTORelationsMinAggregate {
-  id: ID
-  testResolverId: String
-}
-
-type TestResolverDTORelationsMaxAggregate {
+type TestResolverDTORelationsMinMaxAggregate {
   id: ID
   testResolverId: String
 }
@@ -187,21 +205,155 @@ type TestResolverDTORelationsMaxAggregate {
 type TestResolverDTORelationsAggregateResponse {
   groupBy: TestResolverDTORelationsAggregateGroupBy
   count: TestResolverDTORelationsCountAggregate
-  min: TestResolverDTORelationsMinAggregate
-  max: TestResolverDTORelationsMaxAggregate
+  distinctCount: TestResolverDTORelationsCountAggregate
+  min: TestResolverDTORelationsMinMaxAggregate
+  max: TestResolverDTORelationsMinMaxAggregate
 }
+
+type TestResolverDTOTestsAggregateGroupBy {
+  id: ID
+  testResolverId: String
+}
+
+type TestResolverDTOTestsCountAggregate {
+  id: Int
+  testResolverId: Int
+}
+
+type TestResolverDTOTestsMinMaxAggregate {
+  id: ID
+  testResolverId: String
+}
+
+type TestResolverDTOTestsAggregateResponse {
+  groupBy: TestResolverDTOTestsAggregateGroupBy
+  count: TestResolverDTOTestsCountAggregate
+  distinctCount: TestResolverDTOTestsCountAggregate
+  min: TestResolverDTOTestsMinMaxAggregate
+  max: TestResolverDTOTestsMinMaxAggregate
+}
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
 
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;
+
+exports[`AggregateRelationsResolver aggregate should use the object type name 1`] = `
+"type TestResolverDTO {
+  id: ID!
+  stringField: String!
+  relationsAggregate(
+    \\"\\"\\"Filter to find records to aggregate on\\"\\"\\"
+    filter: TestRelationDTOFilter
+
+    \\"\\"\\"Limit the number of results group by aggregation can return\\"\\"\\"
+    groupByLimit: Float
+  ): [TestResolverDTORelationsAggregateResponse!]!
+}
+
+input TestRelationDTOFilter {
+  freeTextQuery: String
+  and: [TestRelationDTOFilter!]
+  or: [TestRelationDTOFilter!]
+  id: IDFilterComparison
+  testResolverId: StringFieldComparison
+}
+
+input IDFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: ID
+  neq: ID
+  gt: ID
+  gte: ID
+  lt: ID
+  lte: ID
+  like: ID
+  notLike: ID
+  iLike: ID
+  notILike: ID
+  in: [ID!]
+  notIn: [ID!]
+  contains: ID
+  notContains: ID
+}
+
+input StringFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
+}
+
+type TestResolverDTORelationsAggregateGroupBy {
+  id: ID
+  testResolverId: String
+}
+
+type TestResolverDTORelationsCountAggregate {
+  id: Int
+  testResolverId: Int
+}
+
+type TestResolverDTORelationsMinMaxAggregate {
+  id: ID
+  testResolverId: String
+}
+
+type TestResolverDTORelationsAggregateResponse {
+  groupBy: TestResolverDTORelationsAggregateGroupBy
+  count: TestResolverDTORelationsCountAggregate
+  distinctCount: TestResolverDTORelationsCountAggregate
+  min: TestResolverDTORelationsMinMaxAggregate
+  max: TestResolverDTORelationsMinMaxAggregate
+}
+
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
+type Query {
+  test: TestResolverDTO!
+}"
+`;
+
 exports[`AggregateRelationsResolver should not add read methods if one and many are empty 1`] = `
-type TestResolverDTO {
+"type TestResolverDTO {
   id: ID!
   stringField: String!
 }
 
+\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test: TestResolverDTO!
-}
+}"
 `;

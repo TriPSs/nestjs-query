@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
   displayName: 'examples',
-  preset: './jest.preset.js',
+  preset: './jest.preset.cjs',
   globals: {
     'ts-jest': {
       tsconfig: process.cwd() + '/examples/tsconfig.spec.json'

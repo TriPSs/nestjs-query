@@ -25,11 +25,6 @@ const getMergedQueryOpts = <DTO>(DTOClass: Class<DTO>, opts?: QueryArgsTypeOpts<
   };
 };
 
-// tests if the object is a QueryArgs Class
-// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
-export const isStaticQueryArgsType = <DTO>(obj: any): obj is StaticQueryType<DTO, PagingStrategies> =>
-  typeof obj === 'function' && 'PageType' in obj && 'SortType' in obj && 'FilterType' in obj;
-
 export function QueryArgsType<DTO>(
   DTOClass: Class<DTO>,
   opts: OffsetQueryArgsTypeOpts<DTO>

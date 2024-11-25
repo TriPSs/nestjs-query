@@ -27,7 +27,7 @@ const QUERY_ARGS_TOKEN = Symbol('QUERY_ARGS_TOKEN');
 export type ReadResolverFromOpts<
   DTO,
   Opts extends ReadResolverOpts<DTO>,
-  QS extends QueryService<DTO, unknown, unknown>,
+  QS extends QueryService<DTO>,
 > = ReadResolver<DTO, ExtractPagingStrategy<DTO, Opts>, QS>;
 
 export type ReadResolverOpts<DTO> = {
@@ -37,7 +37,7 @@ export type ReadResolverOpts<DTO> = {
   QueryArgsTypeOpts<DTO> &
   Pick<ConnectionOptions, 'enableTotalCount'>;
 
-export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends QueryService<DTO, unknown, unknown>>
+export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends QueryService<DTO>>
   extends ServiceResolver<DTO, QS> {
   queryMany(
     query: QueryType<DTO, PagingStrategies>,
@@ -70,7 +70,7 @@ const serializeNestedObjects = (obj: Record<string, any>): Record<string, any> =
  * Mixin to add `read` graphql endpoints.
  */
 export const Readable =
-  <DTO, ReadOpts extends ReadResolverOpts<DTO>, QS extends QueryService<DTO, unknown, unknown>>(
+  <DTO, ReadOpts extends ReadResolverOpts<DTO>, QS extends QueryService<DTO>>(
     DTOClass: Class<DTO>,
     opts: ReadOpts,
   ) =>
@@ -180,11 +180,11 @@ export const Readable =
 
     return ReadResolverBase as Class<ReadResolverFromOpts<DTO, ReadOpts, QS>> & B;
   };
-// eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export const ReadResolver = <
+
+export const ReadResolverFactory = <
   DTO,
   ReadOpts extends ReadResolverOpts<DTO> = CursorQueryArgsTypeOpts<DTO>,
-  QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>,
+  QS extends QueryService<DTO> = QueryService<DTO>,
 >(
   DTOClass: Class<DTO>,
   opts: ReadOpts = {} as ReadOpts,

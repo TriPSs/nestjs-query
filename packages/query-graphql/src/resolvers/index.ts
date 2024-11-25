@@ -2,7 +2,7 @@ export { CreateResolver, CreateResolverOpts } from './create.resolver';
 export { CRUDResolver, CRUDResolverOpts } from './crud.resolver';
 export { DeleteResolver, DeleteResolverOpts } from './delete.resolver';
 export { FederationResolver } from './federation';
-export { ReadResolver, ReadResolverOpts } from './read.resolver';
+export { ReadResolverFactory, ReadResolverOpts } from './read.resolver';
 export { ReferenceResolver, ReferenceResolverOpts } from './reference.resolver';
 export { Relatable, ResolverRelation, ResolverRelationReference } from './relations';
 export { ResolverOpts } from './resolver.interface';

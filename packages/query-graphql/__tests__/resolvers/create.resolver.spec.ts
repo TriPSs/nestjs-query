@@ -66,7 +66,7 @@ describe('CreateResolver', () => {
 
     it('should call the service createOne with the provided input', async () => {
       const { resolver, mockService } = await createTestResolver();
-      const args: CreateOneInputType<DeepPartial<TestResolverDTO>> = {
+      const args: CreateOneInputType<TestResolverDTO> = {
         input: {
           stringField: 'foo',
         },
@@ -120,7 +120,7 @@ describe('CreateResolver', () => {
     describe('create one events', () => {
       it('should publish events for create one when enableSubscriptions is set to true for all', async () => {
         const { resolver, mockService, mockPubSub } = await createTestResolver({ enableSubscriptions: true });
-        const args: CreateOneInputType<DeepPartial<TestResolverDTO>> = {
+        const args: CreateOneInputType<TestResolverDTO> = {
           input: {
             stringField: 'foo',
           },
@@ -140,7 +140,7 @@ describe('CreateResolver', () => {
 
       it('should publish events for create one when enableSubscriptions is set to true for createOne', async () => {
         const { resolver, mockService, mockPubSub } = await createTestResolver({ one: { enableSubscriptions: true } });
-        const args: CreateOneInputType<DeepPartial<TestResolverDTO>> = {
+        const args: CreateOneInputType<TestResolverDTO> = {
           input: {
             stringField: 'foo',
           },
@@ -160,7 +160,7 @@ describe('CreateResolver', () => {
 
       it('should not publish an event if enableSubscriptions is false', async () => {
         const { resolver, mockService, mockPubSub } = await createTestResolver({ enableSubscriptions: false });
-        const args: CreateOneInputType<DeepPartial<TestResolverDTO>> = {
+        const args: CreateOneInputType<TestResolverDTO> = {
           input: {
             stringField: 'foo',
           },
@@ -180,7 +180,7 @@ describe('CreateResolver', () => {
           enableSubscriptions: true,
           one: { enableSubscriptions: false },
         });
-        const args: CreateOneInputType<DeepPartial<TestResolverDTO>> = {
+        const args: CreateOneInputType<TestResolverDTO> = {
           input: {
             stringField: 'foo',
           },

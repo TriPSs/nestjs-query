@@ -1,18 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeleteManyInputType should create an args type with the field as the type 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: DeleteMany!): Int!
 }
 
 input DeleteMany {
-  """Filter to find records to delete"""
-  filter: DeleteManyDTODeleteFilter!
+  \\"\\"\\"Filter to find records to delete\\"\\"\\"
+  filter: DeleteManyDTOFilter!
 }
 
-input DeleteManyDTODeleteFilter {
-  and: [DeleteManyDTODeleteFilter!]
-  or: [DeleteManyDTODeleteFilter!]
+input DeleteManyDTOFilter {
+  freeTextQuery: String
+  and: [DeleteManyDTOFilter!]
+  or: [DeleteManyDTOFilter!]
   field: StringFieldComparison
 }
 
@@ -31,5 +40,5 @@ input StringFieldComparison {
   notILike: String
   in: [String!]
   notIn: [String!]
-}
+}"
 `;

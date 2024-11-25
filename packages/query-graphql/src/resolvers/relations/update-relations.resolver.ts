@@ -14,7 +14,7 @@ import { RelationsOpts, ResolverRelation } from './relations.interface';
 
 const UpdateOneRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
-  <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
+  <B extends Class<ServiceResolver<DTO, QueryService<DTO>>>>(Base: B): B => {
     if (relation.disableUpdate) {
       return Base;
     }
@@ -53,7 +53,7 @@ const UpdateOneRelationMixin =
 
 const UpdateManyRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
-  <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
+  <B extends Class<ServiceResolver<DTO, QueryService<DTO>>>>(Base: B): B => {
     if (relation.disableUpdate) {
       return Base;
     }
@@ -113,7 +113,7 @@ const UpdateManyRelationMixin =
 
 export const UpdateRelationsMixin =
   <DTO>(DTOClass: Class<DTO>, relations: RelationsOpts) =>
-  <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
+  <B extends Class<ServiceResolver<DTO, QueryService<DTO>>>>(Base: B): B => {
     const manyRelations = flattenRelations(relations.many ?? {});
     const oneRelations = flattenRelations(relations.one ?? {});
 
@@ -123,7 +123,7 @@ export const UpdateRelationsMixin =
 
 export const UpdateRelationsResolver = <
   DTO,
-  QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>,
+  QS extends QueryService<DTO> = QueryService<DTO>,
 >(
   DTOClass: Class<DTO>,
   relations: RelationsOpts,

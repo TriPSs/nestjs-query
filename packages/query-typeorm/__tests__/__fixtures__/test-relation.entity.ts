@@ -36,7 +36,7 @@ export class TestRelation {
   testEntityRelation?: TestEntityRelationEntity;
 
   @OneToMany(() => RelationOfTestRelationEntity, (ter) => ter.testRelation)
-  relationsOfTestRelation?: RelationOfTestRelationEntity;
+  relationsOfTestRelation?: RelationOfTestRelationEntity[];
 
   @Column({ name: 'uni_directional_relation_test_entity_id', nullable: true })
   relationOfTestRelationId?: string;

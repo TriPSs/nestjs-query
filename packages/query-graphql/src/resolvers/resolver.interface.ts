@@ -29,13 +29,13 @@ export interface SubscriptionResolverOpts extends SubscriptionResolverMethodOpts
 }
 
 /** @internal */
-export interface ServiceResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> {
+export interface ServiceResolver<DTO, QS extends QueryService<DTO>> {
   service: QS
   readonly pubSub?: GraphQLPubSub
 }
 
 /** @internal */
-export interface ResolverClass<DTO, QS extends QueryService<DTO, unknown, unknown>, Resolver extends ServiceResolver<DTO, QS>> {
+export interface ResolverClass<DTO, QS extends QueryService<DTO>, Resolver extends ServiceResolver<DTO, QS>> {
   new (service: QS): Resolver
 }
 
@@ -43,7 +43,7 @@ export interface ResolverClass<DTO, QS extends QueryService<DTO, unknown, unknow
  * @internal
  * Base Resolver that takes in a service as a constructor argument.
  */
-export class BaseServiceResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> {
+export class BaseServiceResolver<DTO, QS extends QueryService<DTO>> {
   constructor(readonly service: QS) {}
 }
 

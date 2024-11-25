@@ -1,16 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CreateOneInputType should create an args type with the field as the type 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   test(input: CreateOne!): Int!
 }
 
 input CreateOne {
-  """The record to create"""
+  \\"\\"\\"The record to create\\"\\"\\"
   fakeInput: FakeType!
 }
 
 input FakeType {
   field: String!
-}
+}"
 `;

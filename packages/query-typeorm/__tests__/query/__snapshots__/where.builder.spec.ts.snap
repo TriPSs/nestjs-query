@@ -1,244 +1,244 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WhereBuilder and and multiple expressions together 1`] = `
-SELECT
-  "TestEntity"."id" AS "TestEntity_id",
-  "TestEntity"."string_type" AS "TestEntity_string_type",
-  "TestEntity"."bool_type" AS "TestEntity_bool_type",
-  "TestEntity"."number_type" AS "TestEntity_number_type",
-  "TestEntity"."date_type" AS "TestEntity_date_type",
-  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
-  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
+"SELECT
+  \\"TestEntity\\".\\"id\\" AS \\"TestEntity_id\\",
+  \\"TestEntity\\".\\"string_type\\" AS \\"TestEntity_string_type\\",
+  \\"TestEntity\\".\\"bool_type\\" AS \\"TestEntity_bool_type\\",
+  \\"TestEntity\\".\\"number_type\\" AS \\"TestEntity_number_type\\",
+  \\"TestEntity\\".\\"date_type\\" AS \\"TestEntity_date_type\\",
+  \\"TestEntity\\".\\"many_to_one_relation_id\\" AS \\"TestEntity_many_to_one_relation_id\\",
+  \\"TestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"TestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"TestEntity\\".\\"oneTestRelationId\\" AS \\"TestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "TestEntity"
+  \\"test_entity\\" \\"TestEntity\\"
 WHERE
   (
-    (("TestEntity"."number_type" > 10))
-    AND (("TestEntity"."number_type" < 20))
-    AND (("TestEntity"."number_type" >= 30))
-    AND (("TestEntity"."number_type" <= 40))
-  )
+    ((\\"TestEntity\\".\\"number_type\\" > 10))
+    AND ((\\"TestEntity\\".\\"number_type\\" < 20))
+    AND ((\\"TestEntity\\".\\"number_type\\" >= 30))
+    AND ((\\"TestEntity\\".\\"number_type\\" <= 40))
+  )"
 `;
 
 exports[`WhereBuilder and and multiple filters together with multiple fields 1`] = `
-SELECT
-  "TestEntity"."id" AS "TestEntity_id",
-  "TestEntity"."string_type" AS "TestEntity_string_type",
-  "TestEntity"."bool_type" AS "TestEntity_bool_type",
-  "TestEntity"."number_type" AS "TestEntity_number_type",
-  "TestEntity"."date_type" AS "TestEntity_date_type",
-  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
-  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
+"SELECT
+  \\"TestEntity\\".\\"id\\" AS \\"TestEntity_id\\",
+  \\"TestEntity\\".\\"string_type\\" AS \\"TestEntity_string_type\\",
+  \\"TestEntity\\".\\"bool_type\\" AS \\"TestEntity_bool_type\\",
+  \\"TestEntity\\".\\"number_type\\" AS \\"TestEntity_number_type\\",
+  \\"TestEntity\\".\\"date_type\\" AS \\"TestEntity_date_type\\",
+  \\"TestEntity\\".\\"many_to_one_relation_id\\" AS \\"TestEntity_many_to_one_relation_id\\",
+  \\"TestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"TestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"TestEntity\\".\\"oneTestRelationId\\" AS \\"TestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "TestEntity"
+  \\"test_entity\\" \\"TestEntity\\"
 WHERE
   (
     (
-      ("TestEntity"."number_type" > 10)
-      AND ("TestEntity"."string_type" LIKE foo%)
+      (\\"TestEntity\\".\\"number_type\\" > 10)
+      AND (\\"TestEntity\\".\\"string_type\\" LIKE foo%)
     )
     AND (
-      ("TestEntity"."number_type" < 20)
-      AND ("TestEntity"."string_type" LIKE %bar)
+      (\\"TestEntity\\".\\"number_type\\" < 20)
+      AND (\\"TestEntity\\".\\"string_type\\" LIKE %bar)
     )
-  )
+  )"
 `;
 
 exports[`WhereBuilder and multiple field comparisons together 1`] = `
-SELECT
-  "TestEntity"."id" AS "TestEntity_id",
-  "TestEntity"."string_type" AS "TestEntity_string_type",
-  "TestEntity"."bool_type" AS "TestEntity_bool_type",
-  "TestEntity"."number_type" AS "TestEntity_number_type",
-  "TestEntity"."date_type" AS "TestEntity_date_type",
-  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
-  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
+"SELECT
+  \\"TestEntity\\".\\"id\\" AS \\"TestEntity_id\\",
+  \\"TestEntity\\".\\"string_type\\" AS \\"TestEntity_string_type\\",
+  \\"TestEntity\\".\\"bool_type\\" AS \\"TestEntity_bool_type\\",
+  \\"TestEntity\\".\\"number_type\\" AS \\"TestEntity_number_type\\",
+  \\"TestEntity\\".\\"date_type\\" AS \\"TestEntity_date_type\\",
+  \\"TestEntity\\".\\"many_to_one_relation_id\\" AS \\"TestEntity_many_to_one_relation_id\\",
+  \\"TestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"TestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"TestEntity\\".\\"oneTestRelationId\\" AS \\"TestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "TestEntity"
+  \\"test_entity\\" \\"TestEntity\\"
 WHERE
-  ("TestEntity"."number_type" = 1)
-  AND ("TestEntity"."string_type" LIKE foo%)
-  AND ("TestEntity"."bool_type" IS TRUE)
+  (\\"TestEntity\\".\\"number_type\\" = 1)
+  AND (\\"TestEntity\\".\\"string_type\\" LIKE foo%)
+  AND (\\"TestEntity\\".\\"bool_type\\" IS TRUE)"
 `;
 
 exports[`WhereBuilder and should properly group AND with a sibling field comparison 1`] = `
-SELECT
-  "TestEntity"."id" AS "TestEntity_id",
-  "TestEntity"."string_type" AS "TestEntity_string_type",
-  "TestEntity"."bool_type" AS "TestEntity_bool_type",
-  "TestEntity"."number_type" AS "TestEntity_number_type",
-  "TestEntity"."date_type" AS "TestEntity_date_type",
-  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
-  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
+"SELECT
+  \\"TestEntity\\".\\"id\\" AS \\"TestEntity_id\\",
+  \\"TestEntity\\".\\"string_type\\" AS \\"TestEntity_string_type\\",
+  \\"TestEntity\\".\\"bool_type\\" AS \\"TestEntity_bool_type\\",
+  \\"TestEntity\\".\\"number_type\\" AS \\"TestEntity_number_type\\",
+  \\"TestEntity\\".\\"date_type\\" AS \\"TestEntity_date_type\\",
+  \\"TestEntity\\".\\"many_to_one_relation_id\\" AS \\"TestEntity_many_to_one_relation_id\\",
+  \\"TestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"TestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"TestEntity\\".\\"oneTestRelationId\\" AS \\"TestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "TestEntity"
+  \\"test_entity\\" \\"TestEntity\\"
 WHERE
   (
-    (("TestEntity"."number_type" > 2))
-    AND (("TestEntity"."number_type" < 10))
+    ((\\"TestEntity\\".\\"number_type\\" > 2))
+    AND ((\\"TestEntity\\".\\"number_type\\" < 10))
   )
-  AND ("TestEntity"."string_type" = foo)
+  AND (\\"TestEntity\\".\\"string_type\\" = foo)"
 `;
 
 exports[`WhereBuilder and should support nested ors 1`] = `
-SELECT
-  "TestEntity"."id" AS "TestEntity_id",
-  "TestEntity"."string_type" AS "TestEntity_string_type",
-  "TestEntity"."bool_type" AS "TestEntity_bool_type",
-  "TestEntity"."number_type" AS "TestEntity_number_type",
-  "TestEntity"."date_type" AS "TestEntity_date_type",
-  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
-  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
+"SELECT
+  \\"TestEntity\\".\\"id\\" AS \\"TestEntity_id\\",
+  \\"TestEntity\\".\\"string_type\\" AS \\"TestEntity_string_type\\",
+  \\"TestEntity\\".\\"bool_type\\" AS \\"TestEntity_bool_type\\",
+  \\"TestEntity\\".\\"number_type\\" AS \\"TestEntity_number_type\\",
+  \\"TestEntity\\".\\"date_type\\" AS \\"TestEntity_date_type\\",
+  \\"TestEntity\\".\\"many_to_one_relation_id\\" AS \\"TestEntity_many_to_one_relation_id\\",
+  \\"TestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"TestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"TestEntity\\".\\"oneTestRelationId\\" AS \\"TestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "TestEntity"
+  \\"test_entity\\" \\"TestEntity\\"
 WHERE
   (
     (
       (
-        (("TestEntity"."number_type" > 10))
-        OR (("TestEntity"."number_type" < 20))
+        ((\\"TestEntity\\".\\"number_type\\" > 10))
+        OR ((\\"TestEntity\\".\\"number_type\\" < 20))
       )
     )
     AND (
       (
-        (("TestEntity"."number_type" >= 30))
-        OR (("TestEntity"."number_type" <= 40))
+        ((\\"TestEntity\\".\\"number_type\\" >= 30))
+        OR ((\\"TestEntity\\".\\"number_type\\" <= 40))
       )
     )
-  )
+  )"
 `;
 
 exports[`WhereBuilder or and multiple and filters together 1`] = `
-SELECT
-  "TestEntity"."id" AS "TestEntity_id",
-  "TestEntity"."string_type" AS "TestEntity_string_type",
-  "TestEntity"."bool_type" AS "TestEntity_bool_type",
-  "TestEntity"."number_type" AS "TestEntity_number_type",
-  "TestEntity"."date_type" AS "TestEntity_date_type",
-  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
-  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
+"SELECT
+  \\"TestEntity\\".\\"id\\" AS \\"TestEntity_id\\",
+  \\"TestEntity\\".\\"string_type\\" AS \\"TestEntity_string_type\\",
+  \\"TestEntity\\".\\"bool_type\\" AS \\"TestEntity_bool_type\\",
+  \\"TestEntity\\".\\"number_type\\" AS \\"TestEntity_number_type\\",
+  \\"TestEntity\\".\\"date_type\\" AS \\"TestEntity_date_type\\",
+  \\"TestEntity\\".\\"many_to_one_relation_id\\" AS \\"TestEntity_many_to_one_relation_id\\",
+  \\"TestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"TestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"TestEntity\\".\\"oneTestRelationId\\" AS \\"TestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "TestEntity"
+  \\"test_entity\\" \\"TestEntity\\"
 WHERE
   (
     (
-      ("TestEntity"."number_type" > 10)
-      AND ("TestEntity"."string_type" LIKE foo%)
+      (\\"TestEntity\\".\\"number_type\\" > 10)
+      AND (\\"TestEntity\\".\\"string_type\\" LIKE foo%)
     )
     OR (
-      ("TestEntity"."number_type" < 20)
-      AND ("TestEntity"."string_type" LIKE %bar)
+      (\\"TestEntity\\".\\"number_type\\" < 20)
+      AND (\\"TestEntity\\".\\"string_type\\" LIKE %bar)
     )
-  )
+  )"
 `;
 
 exports[`WhereBuilder or multiple operators for a single field together 1`] = `
-SELECT
-  "TestEntity"."id" AS "TestEntity_id",
-  "TestEntity"."string_type" AS "TestEntity_string_type",
-  "TestEntity"."bool_type" AS "TestEntity_bool_type",
-  "TestEntity"."number_type" AS "TestEntity_number_type",
-  "TestEntity"."date_type" AS "TestEntity_date_type",
-  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
-  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
+"SELECT
+  \\"TestEntity\\".\\"id\\" AS \\"TestEntity_id\\",
+  \\"TestEntity\\".\\"string_type\\" AS \\"TestEntity_string_type\\",
+  \\"TestEntity\\".\\"bool_type\\" AS \\"TestEntity_bool_type\\",
+  \\"TestEntity\\".\\"number_type\\" AS \\"TestEntity_number_type\\",
+  \\"TestEntity\\".\\"date_type\\" AS \\"TestEntity_date_type\\",
+  \\"TestEntity\\".\\"many_to_one_relation_id\\" AS \\"TestEntity_many_to_one_relation_id\\",
+  \\"TestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"TestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"TestEntity\\".\\"oneTestRelationId\\" AS \\"TestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "TestEntity"
+  \\"test_entity\\" \\"TestEntity\\"
 WHERE
   (
-    "TestEntity"."number_type" > 10
-    OR "TestEntity"."number_type" < 20
-    OR "TestEntity"."number_type" >= 21
-    OR "TestEntity"."number_type" <= 31
-  )
+    \\"TestEntity\\".\\"number_type\\" > 10
+    OR \\"TestEntity\\".\\"number_type\\" < 20
+    OR \\"TestEntity\\".\\"number_type\\" >= 21
+    OR \\"TestEntity\\".\\"number_type\\" <= 31
+  )"
 `;
 
 exports[`WhereBuilder or or multiple expressions together 1`] = `
-SELECT
-  "TestEntity"."id" AS "TestEntity_id",
-  "TestEntity"."string_type" AS "TestEntity_string_type",
-  "TestEntity"."bool_type" AS "TestEntity_bool_type",
-  "TestEntity"."number_type" AS "TestEntity_number_type",
-  "TestEntity"."date_type" AS "TestEntity_date_type",
-  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
-  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
+"SELECT
+  \\"TestEntity\\".\\"id\\" AS \\"TestEntity_id\\",
+  \\"TestEntity\\".\\"string_type\\" AS \\"TestEntity_string_type\\",
+  \\"TestEntity\\".\\"bool_type\\" AS \\"TestEntity_bool_type\\",
+  \\"TestEntity\\".\\"number_type\\" AS \\"TestEntity_number_type\\",
+  \\"TestEntity\\".\\"date_type\\" AS \\"TestEntity_date_type\\",
+  \\"TestEntity\\".\\"many_to_one_relation_id\\" AS \\"TestEntity_many_to_one_relation_id\\",
+  \\"TestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"TestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"TestEntity\\".\\"oneTestRelationId\\" AS \\"TestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "TestEntity"
+  \\"test_entity\\" \\"TestEntity\\"
 WHERE
   (
-    (("TestEntity"."number_type" > 10))
-    OR (("TestEntity"."number_type" < 20))
-    OR (("TestEntity"."number_type" >= 30))
-    OR (("TestEntity"."number_type" <= 40))
-  )
+    ((\\"TestEntity\\".\\"number_type\\" > 10))
+    OR ((\\"TestEntity\\".\\"number_type\\" < 20))
+    OR ((\\"TestEntity\\".\\"number_type\\" >= 30))
+    OR ((\\"TestEntity\\".\\"number_type\\" <= 40))
+  )"
 `;
 
 exports[`WhereBuilder or should properly group OR with a sibling field comparison 1`] = `
-SELECT
-  "TestEntity"."id" AS "TestEntity_id",
-  "TestEntity"."string_type" AS "TestEntity_string_type",
-  "TestEntity"."bool_type" AS "TestEntity_bool_type",
-  "TestEntity"."number_type" AS "TestEntity_number_type",
-  "TestEntity"."date_type" AS "TestEntity_date_type",
-  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
-  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
+"SELECT
+  \\"TestEntity\\".\\"id\\" AS \\"TestEntity_id\\",
+  \\"TestEntity\\".\\"string_type\\" AS \\"TestEntity_string_type\\",
+  \\"TestEntity\\".\\"bool_type\\" AS \\"TestEntity_bool_type\\",
+  \\"TestEntity\\".\\"number_type\\" AS \\"TestEntity_number_type\\",
+  \\"TestEntity\\".\\"date_type\\" AS \\"TestEntity_date_type\\",
+  \\"TestEntity\\".\\"many_to_one_relation_id\\" AS \\"TestEntity_many_to_one_relation_id\\",
+  \\"TestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"TestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"TestEntity\\".\\"oneTestRelationId\\" AS \\"TestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "TestEntity"
+  \\"test_entity\\" \\"TestEntity\\"
 WHERE
   (
-    (("TestEntity"."number_type" = 2))
-    OR (("TestEntity"."number_type" > 10))
+    ((\\"TestEntity\\".\\"number_type\\" = 2))
+    OR ((\\"TestEntity\\".\\"number_type\\" > 10))
   )
-  AND ("TestEntity"."string_type" = foo)
+  AND (\\"TestEntity\\".\\"string_type\\" = foo)"
 `;
 
 exports[`WhereBuilder or should support nested ands 1`] = `
-SELECT
-  "TestEntity"."id" AS "TestEntity_id",
-  "TestEntity"."string_type" AS "TestEntity_string_type",
-  "TestEntity"."bool_type" AS "TestEntity_bool_type",
-  "TestEntity"."number_type" AS "TestEntity_number_type",
-  "TestEntity"."date_type" AS "TestEntity_date_type",
-  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
-  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
+"SELECT
+  \\"TestEntity\\".\\"id\\" AS \\"TestEntity_id\\",
+  \\"TestEntity\\".\\"string_type\\" AS \\"TestEntity_string_type\\",
+  \\"TestEntity\\".\\"bool_type\\" AS \\"TestEntity_bool_type\\",
+  \\"TestEntity\\".\\"number_type\\" AS \\"TestEntity_number_type\\",
+  \\"TestEntity\\".\\"date_type\\" AS \\"TestEntity_date_type\\",
+  \\"TestEntity\\".\\"many_to_one_relation_id\\" AS \\"TestEntity_many_to_one_relation_id\\",
+  \\"TestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"TestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"TestEntity\\".\\"oneTestRelationId\\" AS \\"TestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "TestEntity"
+  \\"test_entity\\" \\"TestEntity\\"
 WHERE
   (
     (
       (
-        (("TestEntity"."number_type" > 10))
-        AND (("TestEntity"."number_type" < 20))
+        ((\\"TestEntity\\".\\"number_type\\" > 10))
+        AND ((\\"TestEntity\\".\\"number_type\\" < 20))
       )
     )
     OR (
       (
-        (("TestEntity"."number_type" >= 30))
-        AND (("TestEntity"."number_type" <= 40))
+        ((\\"TestEntity\\".\\"number_type\\" >= 30))
+        AND ((\\"TestEntity\\".\\"number_type\\" <= 40))
       )
     )
-  )
+  )"
 `;
 
 exports[`WhereBuilder should accept a empty filter 1`] = `
-SELECT
-  "TestEntity"."id" AS "TestEntity_id",
-  "TestEntity"."string_type" AS "TestEntity_string_type",
-  "TestEntity"."bool_type" AS "TestEntity_bool_type",
-  "TestEntity"."number_type" AS "TestEntity_number_type",
-  "TestEntity"."date_type" AS "TestEntity_date_type",
-  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
-  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
-  "TestEntity"."oneTestRelationId" AS "TestEntity_oneTestRelationId"
+"SELECT
+  \\"TestEntity\\".\\"id\\" AS \\"TestEntity_id\\",
+  \\"TestEntity\\".\\"string_type\\" AS \\"TestEntity_string_type\\",
+  \\"TestEntity\\".\\"bool_type\\" AS \\"TestEntity_bool_type\\",
+  \\"TestEntity\\".\\"number_type\\" AS \\"TestEntity_number_type\\",
+  \\"TestEntity\\".\\"date_type\\" AS \\"TestEntity_date_type\\",
+  \\"TestEntity\\".\\"many_to_one_relation_id\\" AS \\"TestEntity_many_to_one_relation_id\\",
+  \\"TestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"TestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"TestEntity\\".\\"oneTestRelationId\\" AS \\"TestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "TestEntity"
+  \\"test_entity\\" \\"TestEntity\\""
 `;

@@ -16,8 +16,8 @@ import {
 } from '../interfaces';
 import { QueryService } from './query.service';
 
-export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> implements QueryService<DTO, C, U> {
-  constructor(readonly proxied: QueryService<DTO, C, U>) {}
+export class ProxyQueryService<DTO> implements QueryService<DTO> {
+  constructor(readonly proxied: QueryService<DTO>) {}
 
   addRelations<Relation>(
     relationName: string,
@@ -170,11 +170,11 @@ export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> 
     return this.proxied.findRelation(RelationClass, relationName, dto, opts);
   }
 
-  createMany(items: C[]): Promise<DTO[]> {
+  createMany(items: DeepPartial<DTO>[]): Promise<DTO[]> {
     return this.proxied.createMany(items);
   }
 
-  createOne(item: C): Promise<DTO> {
+  createOne(item: DeepPartial<DTO>): Promise<DTO> {
     return this.proxied.createOne(item);
   }
 
@@ -214,11 +214,11 @@ export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> 
     return this.proxied.count(filter);
   }
 
-  updateMany(update: U, filter: Filter<DTO>): Promise<UpdateManyResponse> {
+  updateMany(update: DeepPartial<DTO>, filter: Filter<DTO>): Promise<UpdateManyResponse> {
     return this.proxied.updateMany(update, filter);
   }
 
-  updateOne(id: string | number, update: U, opts?: UpdateOneOptions<DTO>): Promise<DTO> {
+  updateOne(id: string | number, update: DeepPartial<DTO>, opts?: UpdateOneOptions<DTO>): Promise<DTO> {
     return this.proxied.updateOne(id, update, opts);
   }
 

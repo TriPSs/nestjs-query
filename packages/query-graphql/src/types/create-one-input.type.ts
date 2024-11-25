@@ -1,10 +1,10 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Class } from '@rezonate/nestjs-query-core';
+import { Class, DeepPartial } from '@rezonate/nestjs-query-core';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 
 export interface CreateOneInputType<C> {
-  input: C
+  input: DeepPartial<C>
 }
 
 /**

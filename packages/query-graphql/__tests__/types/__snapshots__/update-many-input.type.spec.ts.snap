@@ -1,21 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UpdateManyInputType should create an args type with the field as the type 1`] = `
+"\\"\\"\\"Cursor for paging through collections\\"\\"\\"
+scalar ConnectionCursor
+
+\\"\\"\\"
+Relative date, an Epoch time (number), ISO Date string or a relative date value in the form of \\"last-[N]-[minutes | hours | days | weeks | months | years]\\"
+\\"\\"\\"
+scalar RelativeDate
+
 type Query {
   updateTest(input: UpdateMany!): Int!
 }
 
 input UpdateMany {
-  """Filter used to find fields to update"""
-  filter: FakeUpdateManyTypeUpdateFilter!
+  \\"\\"\\"Filter used to find fields to update\\"\\"\\"
+  filter: FakeUpdateManyTypeFilter!
 
-  """The update to apply to all records found using the filter"""
+  \\"\\"\\"The update to apply to all records found using the filter\\"\\"\\"
   update: FakeUpdateManyInput!
 }
 
-input FakeUpdateManyTypeUpdateFilter {
-  and: [FakeUpdateManyTypeUpdateFilter!]
-  or: [FakeUpdateManyTypeUpdateFilter!]
+input FakeUpdateManyTypeFilter {
+  freeTextQuery: String
+  and: [FakeUpdateManyTypeFilter!]
+  or: [FakeUpdateManyTypeFilter!]
   name: StringFieldComparison
 }
 
@@ -38,5 +47,5 @@ input StringFieldComparison {
 
 input FakeUpdateManyInput {
   name: String!
-}
+}"
 `;

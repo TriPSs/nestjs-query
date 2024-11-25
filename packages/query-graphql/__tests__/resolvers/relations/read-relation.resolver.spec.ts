@@ -9,7 +9,15 @@ import {
 import { deepEqual, objectContaining, when } from 'ts-mockito';
 
 import { ReadRelationsResolver, RelationsOpts } from '../../../src/resolvers/relations';
-import { createResolverFromNest, generateSchema, TestRelationDTO, TestResolverDTO, TestService } from '../../__fixtures__';
+import {
+	createResolverFromNest,
+	generateSchema,
+	TestRelationDTO,
+	TestResolverDTO,
+	TestService,
+} from '../../__fixtures__';
+import { Inject } from '@nestjs/common';
+
 
 describe('ReadRelationsResolver', () => {
   const expectResolverSDL = async (opts?: RelationsOpts) => {
@@ -30,27 +38,41 @@ describe('ReadRelationsResolver', () => {
     class TestResolver extends ReadRelationsResolver(TestResolverDTO, {
       one: { relation: { DTO: TestRelationDTO }, custom: { DTO: TestRelationDTO, relationName: 'other' } },
     }) {
+	    constructor(@Inject() service: TestService) {
+		    super(service);
+	    }
     }
     return TestResolver;
   };
+  
+  class TestResolverType {
+	  
+  }
+  
+  interface FinalizedTestResolverType {
+	  findRelation(dto:TestResolverDTO, filter:any):any
+	  findCustom(dto:TestResolverDTO, filter:any):any
+	  queryRelations(dto:TestResolverDTO, filter:any, aggregate:any):any
+	  queryCustoms(dto:TestResolverDTO, filter:any, aggregate:any):any
+  }
 
   it('should not add read methods if one and many are empty', () => expectResolverSDL());
 
   describe('one', () => {
     it('should use the object type name', () => expectResolverSDL({ one: { relation: { DTO: TestRelationDTO } } }));
 
-    it('should use the dtoName if provided', () =>
+    it('should use the dtoName if provided new test', () =>
       expectResolverSDL({ one: { relation: { DTO: TestRelationDTO, dtoName: 'Test' } } }));
 
-    it('should set the field to nullable if set to true', () =>
+    it('should set the field to nullable if set to true new test', () =>
       expectResolverSDL({ one: { relation: { DTO: TestRelationDTO, nullable: true } } }));
 
-    it('should not add read one methods if disableRead is true', () =>
+    it('should not add read one methods if disableRead is true new test', () =>
       expectResolverSDL({ one: { relation: { DTO: TestRelationDTO, disableRead: true } } }));
 
     it('should call the service findRelation with the provided dto', async () => {
       const TestResolver = getTestResolver();
-      const { resolver, mockService } = await createResolverFromNest(TestResolver);
+      const { resolver, mockService } = await createResolverFromNest<TestResolverType, FinalizedTestResolverType>(TestResolver);
       const dto: TestResolverDTO = {
         id: 'id-1',
         stringField: 'foo',
@@ -70,15 +92,14 @@ describe('ReadRelationsResolver', () => {
           }),
         ),
       ).thenResolve(new Map([[dto, output]]));
-	    // todo
-      // const result = await resolver.findRelation(dto, {});
-      // return expect(result).toEqual(output);
+      const result = await resolver.findRelation(dto, {});
+      return expect(result).toEqual(output);
     });
 
     it('should call the service findRelation with the provided dto and correct relation name', async () => {
       const TestResolver = getTestResolver();
 
-      const { resolver, mockService } = await createResolverFromNest(TestResolver);
+      const { resolver, mockService } = await createResolverFromNest<TestResolverType, FinalizedTestResolverType>(TestResolver);
       const dto: TestResolverDTO = {
         id: 'id-1',
         stringField: 'foo',
@@ -98,9 +119,8 @@ describe('ReadRelationsResolver', () => {
           }),
         ),
       ).thenResolve(new Map([[dto, output]]));
-	    // todo
-      // const result = await resolver.findCustom(dto, {});
-      // return expect(result).toEqual(output);
+      const result = await resolver.findCustom(dto, {});
+      return expect(result).toEqual(output);
     });
   });
 
@@ -109,10 +129,13 @@ describe('ReadRelationsResolver', () => {
     class TestDeletedResolver extends ReadRelationsResolver(TestResolverDTO, {
       one: { relation: { DTO: TestRelationDTO, withDeleted: true } },
     }) {
+	    constructor(@Inject() service: TestService) {
+		    super(service);
+	    }
     }
 
     it('should call the service findRelation with the provided dto', async () => {
-      const { resolver, mockService } = await createResolverFromNest(TestDeletedResolver);
+      const { resolver, mockService } = await createResolverFromNest<TestResolverType, FinalizedTestResolverType>(TestDeletedResolver);
       const dto: TestResolverDTO = {
         id: 'id-1',
         stringField: 'foo',
@@ -132,54 +155,58 @@ describe('ReadRelationsResolver', () => {
           }),
         ),
       ).thenResolve(new Map([[dto, output]]));
-	    // todo
-      // const result = await resolver.findRelation(dto, {});
-      // return expect(result).toEqual(output);
+      const result = await resolver.findRelation(dto, {});
+      return expect(result).toEqual(output);
     });
   });
 
   describe('many', () => {
-    it('should use the object type name', () => expectResolverSDL({ many: { relations: { DTO: TestRelationDTO } } }));
+    it('should use the object type name new test', () => expectResolverSDL({ many: { relations: { DTO: TestRelationDTO } } }));
 
-    it('should use the dtoName if provided', () =>
+    it('should use the dtoName if provided new test', () =>
       expectResolverSDL({ many: { relations: { DTO: TestRelationDTO, dtoName: 'Test' } } }));
 
-    it('should set the field to nullable if set to true', () =>
+    it('should set the field to nullable if set to true new test', () =>
       expectResolverSDL({ many: { relations: { DTO: TestRelationDTO, nullable: true } } }));
 
-    it('should use an offset connection if pagingStrategy is offset', () =>
+    it('should use an offset connection if pagingStrategy is offset new test', () =>
       expectResolverSDL({
         many: { relations: { DTO: TestRelationDTO, nullable: true, pagingStrategy: PagingStrategies.OFFSET } },
       }));
 
-    it('should not add read methods if disableRead is true', () =>
+    it('should not add read methods if disableRead is true new test', () =>
       expectResolverSDL({ many: { relations: { DTO: TestRelationDTO, disableRead: true } } }));
 
-    it('should not add filter argument if disableFilter is true', () =>
+    it('should not add filter argument if disableFilter is true new test', () =>
       expectResolverSDL({ many: { relation: { DTO: TestRelationDTO, disableFilter: true } } }));
 
-    it('should not add sorting argument if disableSorting is true', () =>
+    it('should not add sorting argument if disableSorting is true new test', () =>
       expectResolverSDL({ many: { relation: { DTO: TestRelationDTO, disableSort: true } } }));
 
     describe('disabled sorting/filtering', () => {
-      @Resolver(() => TestResolverDTO)
+	    @Resolver(() => TestResolverDTO)
       class TestDisabledResolver extends ReadRelationsResolver(TestResolverDTO, {
         many: {
           relations: {
             DTO: TestRelationDTO,
             disableFilter: true,
             disableSort: true,
+            // @ts-expect-error bad nestJS typing
             defaultSort: [{ field: 'id', direction: SortDirection.ASC }],
             defaultFilter: {
+                // @ts-expect-error bad nestJS typing
               id: { eq: 'id-2' },
             },
           },
         },
       }) {
+		    constructor(@Inject() service: TestService) {
+			    super(service);
+		    }
       }
 
       it('should still use the provided default filter', async () => {
-        const { resolver, mockService } = await createResolverFromNest(TestDisabledResolver);
+        const { resolver, mockService } = await createResolverFromNest<TestResolverType, FinalizedTestResolverType>(TestDisabledResolver);
         const dto: TestResolverDTO = {
           id: 'id-1',
           stringField: 'foo',
@@ -210,8 +237,6 @@ describe('ReadRelationsResolver', () => {
             }),
           ),
         ).thenResolve(new Map([[dto, output]]));
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const result = await resolver.queryRelations(dto, query, {});
         return expect(result).toEqual({
           edges: [
@@ -240,13 +265,13 @@ describe('ReadRelationsResolver', () => {
         one: { relation: { DTO: TestRelationDTO }, custom: { DTO: TestRelationDTO, relationName: 'other' } },
         many: { relations: { DTO: TestRelationDTO }, customs: { DTO: TestRelationDTO, relationName: 'others' } },
       }) {
-        constructor(service: TestService) {
-          super(service);
-        }
+	      constructor(@Inject() service: TestService) {
+		      super(service);
+	      }
       }
 
       it('should call the service queryRelations with the provided dto', async () => {
-        const { resolver, mockService } = await createResolverFromNest(TestResolver);
+        const { resolver, mockService } = await createResolverFromNest<TestResolverType, FinalizedTestResolverType>(TestResolver);
         const dto: TestResolverDTO = {
           id: 'id-1',
           stringField: 'foo',
@@ -269,8 +294,6 @@ describe('ReadRelationsResolver', () => {
             objectContaining({ ...query, paging: { limit: 2, offset: 0 } }),
           ),
         ).thenResolve(new Map([[dto, output]]));
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const result = await resolver.queryRelations(dto, query, {});
         return expect(result).toEqual({
           edges: [
@@ -293,7 +316,7 @@ describe('ReadRelationsResolver', () => {
       });
 
       it('should call the service countRelations with the provided dto', async () => {
-        const { resolver, mockService } = await createResolverFromNest(TestResolver);
+        const { resolver, mockService } = await createResolverFromNest<TestResolverType, FinalizedTestResolverType>(TestResolver);
         const dto: TestResolverDTO = {
           id: 'id-1',
           stringField: 'foo',
@@ -316,8 +339,6 @@ describe('ReadRelationsResolver', () => {
             objectContaining({ ...query, paging: { limit: 2, offset: 0 } }),
           ),
         ).thenResolve(new Map([[dto, output]]));
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const result = await resolver.queryRelations(dto, query, {});
         when(
           mockService.countRelations(TestRelationDTO, 'relations', deepEqual([dto]), objectContaining(query.filter)),
@@ -326,7 +347,7 @@ describe('ReadRelationsResolver', () => {
       });
 
       it('should call the service findRelation with the provided dto and correct relation name', async () => {
-        const { resolver, mockService } = await createResolverFromNest(TestResolver);
+        const { resolver, mockService } = await createResolverFromNest<TestResolverType, FinalizedTestResolverType>(TestResolver);
         const dto: TestResolverDTO = {
           id: 'id-1',
           stringField: 'foo',
@@ -349,8 +370,6 @@ describe('ReadRelationsResolver', () => {
             objectContaining({ ...query, paging: { limit: 2, offset: 0 } }),
           ),
         ).thenResolve(new Map([[dto, output]]));
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const result = await resolver.queryCustoms(dto, query, {});
         return expect(result).toEqual({
           edges: [
@@ -382,13 +401,13 @@ describe('ReadRelationsResolver', () => {
           customs: { DTO: TestRelationDTO, relationName: 'others', pagingStrategy: PagingStrategies.OFFSET },
         },
       }) {
-        constructor(service: TestService) {
-          super(service);
-        }
+	      constructor(@Inject() service: TestService) {
+		      super(service);
+	      }
       }
 
       it('should call the service queryRelations with the provided dto', async () => {
-        const { resolver, mockService } = await createResolverFromNest(TestResolver);
+        const { resolver, mockService } = await createResolverFromNest<TestResolverType, FinalizedTestResolverType>(TestResolver);
         const dto: TestResolverDTO = {
           id: 'id-1',
           stringField: 'foo',
@@ -411,8 +430,6 @@ describe('ReadRelationsResolver', () => {
             objectContaining({ ...query, paging: { limit: 2 } }),
           ),
         ).thenResolve(new Map([[dto, output]]));
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const result = await resolver.queryRelations(dto, query, {});
         return expect(result).toEqual({
           nodes: output,
@@ -425,7 +442,7 @@ describe('ReadRelationsResolver', () => {
       });
 
       it('should call the service findRelation with the provided dto and correct relation name', async () => {
-        const { resolver, mockService } = await createResolverFromNest(TestResolver);
+        const { resolver, mockService } = await createResolverFromNest<TestResolverType, FinalizedTestResolverType>(TestResolver);
         const dto: TestResolverDTO = {
           id: 'id-1',
           stringField: 'foo',
@@ -448,8 +465,6 @@ describe('ReadRelationsResolver', () => {
             objectContaining({ ...query, paging: { limit: 2 } }),
           ),
         ).thenResolve(new Map([[dto, output]]));
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const result = await resolver.queryCustoms(dto, query, {});
         return expect(result).toEqual({
           nodes: output,
@@ -471,13 +486,13 @@ describe('ReadRelationsResolver', () => {
           customs: { DTO: TestRelationDTO, pagingStrategy: PagingStrategies.NONE, relationName: 'others' },
         },
       }) {
-        constructor(service: TestService) {
-          super(service);
-        }
+	      constructor(@Inject() service: TestService) {
+		      super(service);
+	      }
       }
 
       it('should call the service queryRelations with the provided dto', async () => {
-        const { resolver, mockService } = await createResolverFromNest(TestResolver);
+        const { resolver, mockService } = await createResolverFromNest<TestResolverType, FinalizedTestResolverType>(TestResolver);
         const dto: TestResolverDTO = {
           id: 'id-1',
           stringField: 'foo',
@@ -494,14 +509,12 @@ describe('ReadRelationsResolver', () => {
         when(
           mockService.queryRelations(TestRelationDTO, 'relations', deepEqual([dto]), objectContaining({ ...query })),
         ).thenResolve(new Map([[dto, output]]));
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const result = await resolver.queryRelations(dto, query, {});
         return expect(result).toEqual(output);
       });
 
       it('should call the service findRelation with the provided dto and correct relation name', async () => {
-        const { resolver, mockService } = await createResolverFromNest(TestResolver);
+        const { resolver, mockService } = await createResolverFromNest<TestResolverType, FinalizedTestResolverType>(TestResolver);
         const dto: TestResolverDTO = {
           id: 'id-1',
           stringField: 'foo',
@@ -518,8 +531,6 @@ describe('ReadRelationsResolver', () => {
         when(mockService.queryRelations(TestRelationDTO, 'others', deepEqual([dto]), objectContaining(query))).thenResolve(
           new Map([[dto, output]]),
         );
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const result = await resolver.queryCustoms(dto, query, {});
         return expect(result).toEqual(output);
       });

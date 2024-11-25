@@ -98,14 +98,14 @@ describe('FilterQueryBuilder', (): void => {
       it('should not call whereBuilder#build', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         expectSelectSQLSnapshot({}, instance(mockWhereBuilder));
-        verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never();
+        verify(mockWhereBuilder.build(anything(), anything(), {}, [], 'TestEntity')).never();
       });
 
       it('should call whereBuilder#build if there is a filter', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         const query = { filter: { stringType: { eq: 'foo' } } };
-        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), 'TestEntity')).thenCall(
-          (where: WhereExpression, field: Filter<TestEntity>, relationNames: string[], alias: string) =>
+        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), anything(), 'TestEntity')).thenCall(
+          (where: WhereExpression, field: Filter<TestEntity>, relationNames: string[], columns:[], alias: string) =>
             where.andWhere(`${alias}.stringType = 'foo'`),
         );
         expectSelectSQLSnapshot(query, instance(mockWhereBuilder));
@@ -116,19 +116,19 @@ describe('FilterQueryBuilder', (): void => {
       it('should apply empty paging args', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         expectSelectSQLSnapshot({}, instance(mockWhereBuilder));
-        verify(mockWhereBuilder.build(anything(), anything(), deepEqual({}), 'TestEntity')).never();
+        verify(mockWhereBuilder.build(anything(), anything(), deepEqual({}), [], 'TestEntity')).never();
       });
 
       it('should apply paging args going forward', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         expectSelectSQLSnapshot({ paging: { limit: 10, offset: 11 } }, instance(mockWhereBuilder));
-        verify(mockWhereBuilder.build(anything(), anything(), deepEqual({}), 'TestEntity')).never();
+        verify(mockWhereBuilder.build(anything(), anything(), deepEqual({}), [], 'TestEntity')).never();
       });
 
       it('should apply paging args going backward', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         expectSelectSQLSnapshot({ paging: { limit: 10, offset: 10 } }, instance(mockWhereBuilder));
-        verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never();
+        verify(mockWhereBuilder.build(anything(), anything(), {}, [], 'TestEntity')).never();
       });
     });
 
@@ -136,7 +136,7 @@ describe('FilterQueryBuilder', (): void => {
       it('should apply ASC sorting', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         expectSelectSQLSnapshot({ sorting: [{ field: 'numberType', direction: SortDirection.ASC }] }, instance(mockWhereBuilder));
-        verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never();
+        verify(mockWhereBuilder.build(anything(), anything(), {}, [], 'TestEntity')).never();
       });
 
       it('should apply ASC NULLS_FIRST sorting', () => {
@@ -145,7 +145,7 @@ describe('FilterQueryBuilder', (): void => {
           { sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }] },
           instance(mockWhereBuilder),
         );
-        verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never();
+        verify(mockWhereBuilder.build(anything(), anything(), {}, [], 'TestEntity')).never();
       });
 
       it('should apply ASC NULLS_LAST sorting', () => {
@@ -154,13 +154,13 @@ describe('FilterQueryBuilder', (): void => {
           { sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_LAST }] },
           instance(mockWhereBuilder),
         );
-        verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never();
+        verify(mockWhereBuilder.build(anything(), anything(), {}, [], 'TestEntity')).never();
       });
 
       it('should apply DESC sorting', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         expectSelectSQLSnapshot({ sorting: [{ field: 'numberType', direction: SortDirection.DESC }] }, instance(mockWhereBuilder));
-        verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never();
+        verify(mockWhereBuilder.build(anything(), anything(), {}, [], 'TestEntity')).never();
       });
 
       it('should apply DESC NULLS_FIRST sorting', () => {
@@ -177,7 +177,7 @@ describe('FilterQueryBuilder', (): void => {
           { sorting: [{ field: 'numberType', direction: SortDirection.DESC, nulls: SortNulls.NULLS_LAST }] },
           instance(mockWhereBuilder),
         );
-        verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never();
+        verify(mockWhereBuilder.build(anything(), anything(), {}, [], 'TestEntity')).never();
       });
 
       it('should apply multiple sorts', () => {
@@ -193,7 +193,7 @@ describe('FilterQueryBuilder', (): void => {
           },
           instance(mockWhereBuilder),
         );
-        verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never();
+        verify(mockWhereBuilder.build(anything(), anything(), {}, [], 'TestEntity')).never();
       });
     });
   });
@@ -208,7 +208,8 @@ describe('FilterQueryBuilder', (): void => {
       it('should call whereBuilder#build if there is a filter', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         const query = { filter: { stringType: { eq: 'foo' } } };
-        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), undefined)).thenCall((where: WhereExpression) =>
+        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), anything(), undefined))
+	        .thenCall((where: WhereExpression) =>
           where.andWhere('stringType = \'foo\''),
         );
         expectUpdateSQLSnapshot(query, instance(mockWhereBuilder));
@@ -218,7 +219,7 @@ describe('FilterQueryBuilder', (): void => {
       it('should ignore paging args', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         expectUpdateSQLSnapshot({ paging: { limit: 10, offset: 11 } }, instance(mockWhereBuilder));
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
     });
 
@@ -226,7 +227,7 @@ describe('FilterQueryBuilder', (): void => {
       it('should apply ASC sorting', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         expectUpdateSQLSnapshot({ sorting: [{ field: 'numberType', direction: SortDirection.ASC }] }, instance(mockWhereBuilder));
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
 
       it('should apply ASC NULLS_FIRST sorting', () => {
@@ -235,7 +236,7 @@ describe('FilterQueryBuilder', (): void => {
           { sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }] },
           instance(mockWhereBuilder),
         );
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
 
       it('should apply ASC NULLS_LAST sorting', () => {
@@ -244,13 +245,13 @@ describe('FilterQueryBuilder', (): void => {
           { sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_LAST }] },
           instance(mockWhereBuilder),
         );
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
 
       it('should apply DESC sorting', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         expectUpdateSQLSnapshot({ sorting: [{ field: 'numberType', direction: SortDirection.DESC }] }, instance(mockWhereBuilder));
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
 
       it('should apply DESC NULLS_FIRST sorting', () => {
@@ -259,7 +260,7 @@ describe('FilterQueryBuilder', (): void => {
           { sorting: [{ field: 'numberType', direction: SortDirection.DESC, nulls: SortNulls.NULLS_FIRST }] },
           instance(mockWhereBuilder),
         );
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
 
       it('should apply DESC NULLS_LAST sorting', () => {
@@ -268,7 +269,7 @@ describe('FilterQueryBuilder', (): void => {
           { sorting: [{ field: 'numberType', direction: SortDirection.DESC, nulls: SortNulls.NULLS_LAST }] },
           instance(mockWhereBuilder),
         );
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
 
       it('should apply multiple sorts', () => {
@@ -284,7 +285,7 @@ describe('FilterQueryBuilder', (): void => {
           },
           instance(mockWhereBuilder),
         );
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
     });
   });
@@ -299,7 +300,7 @@ describe('FilterQueryBuilder', (): void => {
       it('should call whereBuilder#build if there is a filter', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         const query = { filter: { stringType: { eq: 'foo' } } };
-        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), undefined)).thenCall((where: WhereExpression) =>
+        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), anything(), undefined)).thenCall((where: WhereExpression) =>
           where.andWhere('stringType = \'foo\''),
         );
         expectDeleteSQLSnapshot(query, instance(mockWhereBuilder));
@@ -309,7 +310,7 @@ describe('FilterQueryBuilder', (): void => {
       it('should ignore paging args', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder);
         expectDeleteSQLSnapshot({ paging: { limit: 10, offset: 11 } }, instance(mockWhereBuilder));
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
     });
 
@@ -327,7 +328,7 @@ describe('FilterQueryBuilder', (): void => {
           },
           instance(mockWhereBuilder),
         );
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
     });
   });
@@ -345,7 +346,7 @@ describe('FilterQueryBuilder', (): void => {
       it('should call whereBuilder#build if there is a filter', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestSoftDeleteEntity>>(WhereBuilder);
         const query = { filter: { stringType: { eq: 'foo' } } };
-        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), undefined)).thenCall((where: WhereExpression) =>
+        when(mockWhereBuilder.build(anything(), query.filter, deepEqual({}), anything(), undefined)).thenCall((where: WhereExpression) =>
           where.andWhere('stringType = \'foo\''),
         );
         expectSoftDeleteSQLSnapshot(query, instance(mockWhereBuilder));
@@ -355,7 +356,7 @@ describe('FilterQueryBuilder', (): void => {
       it('should ignore paging args', () => {
         const mockWhereBuilder = mock<WhereBuilder<TestSoftDeleteEntity>>(WhereBuilder);
         expectSoftDeleteSQLSnapshot({ paging: { limit: 10, offset: 11 } }, instance(mockWhereBuilder));
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
     });
 
@@ -371,7 +372,7 @@ describe('FilterQueryBuilder', (): void => {
           },
           instance(mockWhereBuilder),
         );
-        verify(mockWhereBuilder.build(anything(), anything(), anything())).never();
+        verify(mockWhereBuilder.build(anything(), anything(), anything(), anything(), anything())).never();
       });
     });
   });

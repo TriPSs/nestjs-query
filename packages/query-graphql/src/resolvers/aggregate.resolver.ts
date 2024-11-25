@@ -18,7 +18,7 @@ export type AggregateResolverOpts = {
   limitAggregateByTableSize?: boolean
 } & ResolverMethodOpts;
 
-export interface AggregateResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceResolver<DTO, QS> {
+export interface AggregateResolver<DTO, QS extends QueryService<DTO>> extends ServiceResolver<DTO, QS> {
   aggregate(
     filter: AggregateArgsType<DTO>,
     aggregateQuery: AggregateQuery<DTO>,
@@ -31,7 +31,7 @@ export interface AggregateResolver<DTO, QS extends QueryService<DTO, unknown, un
  * Mixin to add `aggregate` graphql endpoints.
  */
 export const Aggregateable =
-  <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts?: AggregateResolverOpts) =>
+  <DTO, QS extends QueryService<DTO>>(DTOClass: Class<DTO>, opts?: AggregateResolverOpts) =>
   <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<AggregateResolver<DTO, QS>> & B => {
     if (!opts || !opts.enabled) {
       return BaseClass as never;
@@ -80,7 +80,7 @@ export const Aggregateable =
     return AggregateResolverBase;
   };
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export const AggregateResolver = <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(
+export const AggregateResolver = <DTO, QS extends QueryService<DTO> = QueryService<DTO>>(
   DTOClass: Class<DTO>,
   opts?: AggregateResolverOpts,
 ): ResolverClass<DTO, QS, AggregateResolver<DTO, QS>> => Aggregateable(DTOClass, opts)(BaseServiceResolver);

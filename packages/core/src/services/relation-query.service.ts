@@ -1,4 +1,4 @@
-import { Class, DeepPartial } from '../common';
+import { Class } from '../common';
 import { mergeQuery } from '../helpers';
 import { AggregateQuery, AggregateResponse, Filter, FindRelationOptions, Query } from '../interfaces';
 import { NoOpQueryService } from './noop-query.service';
@@ -6,23 +6,23 @@ import { ProxyQueryService } from './proxy-query.service';
 import { QueryService } from './query.service';
 
 export type QueryServiceRelation<DTO, Relation> = {
-  service: QueryService<Relation, unknown, unknown>
+  service: QueryService<Relation>
   query: (dto: DTO) => Query<Relation>
 };
 
-export class RelationQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> extends ProxyQueryService<DTO, C, U> {
+export class RelationQueryService<DTO> extends ProxyQueryService<DTO> {
   readonly relations: Record<string, QueryServiceRelation<DTO, unknown>>;
 
-  constructor(queryService: QueryService<DTO, C, U>, relations: Record<string, QueryServiceRelation<DTO, unknown>>);
+  constructor(queryService: QueryService<DTO>, relations: Record<string, QueryServiceRelation<DTO, unknown>>);
 
   constructor(relations: Record<string, QueryServiceRelation<DTO, unknown>>);
 
   constructor(
-    queryService: QueryService<DTO, C, U> | Record<string, QueryServiceRelation<DTO, unknown>>,
+    queryService: QueryService<DTO> | Record<string, QueryServiceRelation<DTO, unknown>>,
     relations?: Record<string, QueryServiceRelation<DTO, unknown>>,
   ) {
     if (typeof queryService.query === 'function') {
-      super(queryService as QueryService<DTO, C, U>);
+      super(queryService as QueryService<DTO>);
       this.relations = relations;
     } else {
       super(NoOpQueryService.getInstance());

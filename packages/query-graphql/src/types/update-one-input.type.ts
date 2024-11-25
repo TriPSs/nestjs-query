@@ -1,13 +1,13 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Class } from '@rezonate/nestjs-query-core';
+import { Class, DeepPartial } from '@rezonate/nestjs-query-core';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 
 import { getDTOIdTypeOrDefault } from '../common';
 
-export interface UpdateOneInputType<U> {
+export interface UpdateOneInputType<DTO> {
   id: string | number
-  update: U
+  update: DeepPartial<DTO>
 }
 
 /**
@@ -16,11 +16,11 @@ export interface UpdateOneInputType<U> {
  * @param UpdateType - The InputType to use for the update field.
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export function UpdateOneInputType<DTO, U>(DTOClass: Class<DTO>, UpdateType: Class<U>): Class<UpdateOneInputType<U>> {
+export function UpdateOneInputType<DTO>(DTOClass: Class<DTO>, UpdateType: Class<DeepPartial<DTO>>): Class<UpdateOneInputType<DTO>> {
   const IDType = getDTOIdTypeOrDefault([DTOClass, UpdateType]);
 
   @InputType({ isAbstract: true })
-  class UpdateOneInput implements UpdateOneInputType<U> {
+  class UpdateOneInput implements UpdateOneInputType<DTO> {
     @IsNotEmpty()
     @Field(() => IDType, { description: 'The id of the record to update' })
     id!: string | number;
@@ -28,7 +28,7 @@ export function UpdateOneInputType<DTO, U>(DTOClass: Class<DTO>, UpdateType: Cla
     @Type(() => UpdateType)
     @ValidateNested()
     @Field(() => UpdateType, { description: 'The update to apply.' })
-    update!: U;
+    update!: DeepPartial<DTO>;
   }
 
   return UpdateOneInput;

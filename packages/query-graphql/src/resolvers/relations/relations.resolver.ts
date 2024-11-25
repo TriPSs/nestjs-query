@@ -19,7 +19,7 @@ export interface RelatableOpts extends BaseResolverOptions {
 }
 
 export const Relatable =
-  <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(
+  <DTO, QS extends QueryService<DTO> = QueryService<DTO>>(
     DTOClass: Class<DTO>,
     opts: RelatableOpts,
   ) =>

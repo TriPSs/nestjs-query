@@ -20,10 +20,10 @@ describe('NestjsQueryGraphQLModule', () => {
         },
       ],
     });
-    expect(graphqlModule.imports).toHaveLength(1);
+    expect(graphqlModule.imports).toHaveLength(0);
     expect(graphqlModule.module).toBe(NestjsQueryGraphQLModule);
-    expect(graphqlModule.providers).toHaveLength(4);
-    expect(graphqlModule.exports).toHaveLength(5);
+    expect(graphqlModule.providers).toHaveLength(6);
+    expect(graphqlModule.exports).toHaveLength(6);
   });
 
   it('should allow a defaultFilter for read options', () => {
@@ -37,9 +37,9 @@ describe('NestjsQueryGraphQLModule', () => {
         },
       ],
     });
-    expect(graphqlModule.imports).toHaveLength(1);
+    expect(graphqlModule.imports).toHaveLength(0);
     expect(graphqlModule.module).toBe(NestjsQueryGraphQLModule);
-    expect(graphqlModule.providers).toHaveLength(4);
-    expect(graphqlModule.exports).toHaveLength(5);
+    expect(graphqlModule.providers).toHaveLength(6);
+    expect(graphqlModule.exports).toHaveLength(6);
   });
 });

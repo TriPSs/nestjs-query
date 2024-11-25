@@ -30,16 +30,16 @@ import { BaseServiceResolver, ResolverClass, ServiceResolver, SubscriptionResolv
 
 export type UpdatedEvent<DTO> = { [eventName: string]: DTO };
 
-export interface UpdateResolverOpts<DTO, U = DeepPartial<DTO>> extends SubscriptionResolverOpts {
-  UpdateDTOClass?: Class<U>
-  UpdateOneInput?: Class<UpdateOneInputType<U>>
-  UpdateManyInput?: Class<UpdateManyInputType<DTO, U>>
+export interface UpdateResolverOpts<DTO> extends SubscriptionResolverOpts {
+  UpdateDTOClass?: Class<DeepPartial<DTO>>
+  UpdateOneInput?: Class<UpdateOneInputType<DTO>>
+  UpdateManyInput?: Class<UpdateManyInputType<DTO>>
 }
 
-export interface UpdateResolver<DTO, U, QS extends QueryService<DTO, unknown, U>> extends ServiceResolver<DTO, QS> {
-  updateOne(input: MutationArgsType<UpdateOneInputType<U>>, authFilter?: Filter<DTO>): Promise<DTO>
+export interface UpdateResolver<DTO, QS extends QueryService<DTO>> extends ServiceResolver<DTO, QS> {
+  updateOne(input: MutationArgsType<UpdateOneInputType<DTO>>, authFilter?: Filter<DTO>): Promise<DTO>
 
-  updateMany(input: MutationArgsType<UpdateManyInputType<DTO, U>>, authFilter?: Filter<DTO>): Promise<UpdateManyResponse>
+  updateMany(input: MutationArgsType<UpdateManyInputType<DTO>>, authFilter?: Filter<DTO>): Promise<UpdateManyResponse>
 
   updatedOneSubscription(input?: SubscriptionArgsType<DTO>, authFilter?: Filter<DTO>): AsyncIterator<UpdatedEvent<DTO>>
 
@@ -47,21 +47,21 @@ export interface UpdateResolver<DTO, U, QS extends QueryService<DTO, unknown, U>
 }
 
 /** @internal */
-const defaultUpdateInput = <DTO, U>(dtoNames: DTONames, DTOClass: Class<DTO>): Class<U> => {
+const defaultUpdateInput = <DTO>(dtoNames: DTONames, DTOClass: Class<DTO>): Class<DeepPartial<DTO>> => {
   @InputType(`Update${dtoNames.baseName}`)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   class UpdateType extends PartialType(DTOClass, InputType) {}
 
-  return UpdateType as Class<U>;
+  return UpdateType as Class<DeepPartial<DTO>>;
 };
 
 /** @internal */
-const defaultUpdateOneInput = <DTO, U>(
+const defaultUpdateOneInput = <DTO>(
   dtoNames: DTONames,
   DTOClass: Class<DTO>,
-  UpdateDTO: Class<U>,
-): Class<UpdateOneInputType<U>> => {
+  UpdateDTO: Class<DeepPartial<DTO>>,
+): Class<UpdateOneInputType<DTO>> => {
   const { baseName } = dtoNames;
 
   @InputType(`UpdateOne${baseName}Input`)
@@ -71,11 +71,11 @@ const defaultUpdateOneInput = <DTO, U>(
 };
 
 /** @internal */
-const defaultUpdateManyInput = <DTO, U>(
+const defaultUpdateManyInput = <DTO>(
   dtoNames: DTONames,
   DTOClass: Class<DTO>,
-  UpdateDTO: Class<U>,
-): Class<UpdateManyInputType<DTO, U>> => {
+  UpdateDTO: Class<DeepPartial<DTO>>,
+): Class<UpdateManyInputType<DTO>> => {
   const { pluralBaseName } = dtoNames;
 
   @InputType(`UpdateMany${pluralBaseName}Input`)
@@ -89,8 +89,8 @@ const defaultUpdateManyInput = <DTO, U>(
  * Mixin to add `update` graphql endpoints.
  */
 export const Updateable =
-  <DTO, U, QS extends QueryService<DTO, unknown, U>>(DTOClass: Class<DTO>, opts: UpdateResolverOpts<DTO, U>) =>
-  <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<UpdateResolver<DTO, U, QS>> & B => {
+  <DTO, QS extends QueryService<DTO>>(DTOClass: Class<DTO>, opts: UpdateResolverOpts<DTO>) =>
+  <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<UpdateResolver<DTO, QS>> & B => {
     const dtoNames = getDTONames(DTOClass, opts);
     const { baseName, pluralBaseName } = dtoNames;
     const UMR = UpdateManyResponseType();
@@ -228,9 +228,8 @@ export const Updateable =
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const UpdateResolver = <
   DTO,
-  U = DeepPartial<DTO>,
-  QS extends QueryService<DTO, unknown, U> = QueryService<DTO, unknown, U>,
+  QS extends QueryService<DTO> = QueryService<DTO>,
 >(
   DTOClass: Class<DTO>,
-  opts: UpdateResolverOpts<DTO, U> = {},
-): ResolverClass<DTO, QS, UpdateResolver<DTO, U, QS>> => Updateable(DTOClass, opts)(BaseServiceResolver);
+  opts: UpdateResolverOpts<DTO> = {},
+): ResolverClass<DTO, QS, UpdateResolver<DTO, QS>> => Updateable(DTOClass, opts)(BaseServiceResolver);

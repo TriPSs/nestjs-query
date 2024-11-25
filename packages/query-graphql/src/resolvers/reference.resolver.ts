@@ -10,15 +10,19 @@ export interface ReferenceResolverOpts {
   key?: string
 }
 
+export interface ReferenceResolverType<DTO, QS extends QueryService<DTO> = QueryService<DTO>> extends ResolverClass<DTO, QS, ServiceResolver<DTO, QS>> {
+	resolveReference(representation: RepresentationType):Promise<DTO>;
+}
+
 /**
  * @internal
  * Mixin to expose `resolveReference` for a DTO on the resolver.
  */
 export const Referenceable =
-  <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts: ReferenceResolverOpts) =>
-  <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B) => {
+  <DTO, QS extends QueryService<DTO>>(DTOClass: Class<DTO>, opts: ReferenceResolverOpts) =>
+  <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): B & Class<ReferenceResolverType<DTO, QS>> => {
     if (!('key' in opts) || opts.key === undefined) {
-      return BaseClass;
+      return BaseClass as B & Class<ReferenceResolverType<DTO, QS>>;
     }
     const { key } = opts;
 
@@ -36,10 +40,10 @@ export const Referenceable =
       }
     }
 
-    return ResolveReferenceResolverBase;
+    return ResolveReferenceResolverBase as B & Class<ReferenceResolverType<DTO, QS>>;
   };
 
-export const ReferenceResolver = <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(
+export const ReferenceResolver = <DTO, QS extends QueryService<DTO> = QueryService<DTO>>(
   DTOClass: Class<DTO>,
   opts: ReferenceResolverOpts = {},
-): ResolverClass<DTO, QS, ServiceResolver<DTO, QS>> => Referenceable<DTO, QS>(DTOClass, opts)(BaseServiceResolver);
+): Class<ReferenceResolverType<DTO, QS>> => Referenceable<DTO, QS>(DTOClass, opts)(BaseServiceResolver);

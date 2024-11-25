@@ -1,367 +1,393 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`RelationQueryBuilder #batchSelect many to one should query with with multiple entities 1`] = `
-SELECT
-  "manyToOneRelation"."id" AS "manyToOneRelation_id",
-  "manyToOneRelation"."relation_name" AS "manyToOneRelation_relation_name",
-  "manyToOneRelation"."test_entity_id" AS "manyToOneRelation_test_entity_id",
-  "manyToOneRelation"."uni_directional_test_entity_id" AS "manyToOneRelation_uni_directional_test_entity_id",
-  "manyToOneRelation"."uni_directional_relation_test_entity_id" AS "manyToOneRelation_uni_directional_relation_test_entity_id",
-  "unioned"."__nestjsQuery__entityIndex__" AS "__nestjsQuery__entityIndex__"
+"SELECT
+  \\"manyToOneRelation\\".\\"id\\" AS \\"manyToOneRelation_id\\",
+  \\"manyToOneRelation\\".\\"relation_name\\" AS \\"manyToOneRelation_relation_name\\",
+  \\"manyToOneRelation\\".\\"test_entity_id\\" AS \\"manyToOneRelation_test_entity_id\\",
+  \\"manyToOneRelation\\".\\"uni_directional_test_entity_id\\" AS \\"manyToOneRelation_uni_directional_test_entity_id\\",
+  \\"manyToOneRelation\\".\\"uni_directional_relation_test_entity_id\\" AS \\"manyToOneRelation_uni_directional_relation_test_entity_id\\",
+  \\"unioned\\".\\"__nestjsQuery__entityIndex__\\" AS \\"__nestjsQuery__entityIndex__\\"
 FROM
-  "test_relation" "manyToOneRelation"
+  \\"test_relation\\" \\"manyToOneRelation\\"
   INNER JOIN (
     SELECT
       *
     FROM
       (
         SELECT
-          "manyToOneRelation"."id" AS "manyToOneRelation_id",
-          0 AS "__nestjsQuery__entityIndex__"
+          \\"manyToOneRelation\\".\\"id\\" AS \\"manyToOneRelation_id\\",
+          0 AS \\"__nestjsQuery__entityIndex__\\"
         FROM
-          "test_relation" "manyToOneRelation"
-          INNER JOIN "test_entity" "test_entity" ON "test_entity"."many_to_one_relation_id" = "manyToOneRelation"."id"
+          \\"test_relation\\" \\"manyToOneRelation\\"
+          INNER JOIN \\"test_entity\\" \\"test_entity\\" ON \\"test_entity\\".\\"many_to_one_relation_id\\" = \\"manyToOneRelation\\".\\"id\\"
         WHERE
-          ("test_entity"."id" = test-entity-id-1)
-      ) AS "manyToOneRelation"
+          (\\"test_entity\\".\\"id\\" = test-entity-id-1)
+      ) AS \\"manyToOneRelation\\"
     UNION ALL
     SELECT
       *
     FROM
       (
         SELECT
-          "manyToOneRelation"."id" AS "manyToOneRelation_id",
-          1 AS "__nestjsQuery__entityIndex__"
+          \\"manyToOneRelation\\".\\"id\\" AS \\"manyToOneRelation_id\\",
+          1 AS \\"__nestjsQuery__entityIndex__\\"
         FROM
-          "test_relation" "manyToOneRelation"
-          INNER JOIN "test_entity" "test_entity" ON "test_entity"."many_to_one_relation_id" = "manyToOneRelation"."id"
+          \\"test_relation\\" \\"manyToOneRelation\\"
+          INNER JOIN \\"test_entity\\" \\"test_entity\\" ON \\"test_entity\\".\\"many_to_one_relation_id\\" = \\"manyToOneRelation\\".\\"id\\"
         WHERE
-          ("test_entity"."id" = test-entity-id-2)
-      ) AS "manyToOneRelation"
-  ) "unioned" ON "manyToOneRelation"."id" = "unioned"."manyToOneRelation_id"
+          (\\"test_entity\\".\\"id\\" = test-entity-id-2)
+      ) AS \\"manyToOneRelation\\"
+  ) \\"unioned\\" ON \\"manyToOneRelation\\".\\"id\\" = \\"unioned\\".\\"manyToOneRelation_id\\"
 ORDER BY
-  "unioned"."__nestjsQuery__entityIndex__" ASC
+  \\"unioned\\".\\"__nestjsQuery__entityIndex__\\" ASC"
 `;
 
 exports[`RelationQueryBuilder #batchSelect should reuse existing join alias if there is one 1`] = `
-SELECT
-  "manyToOneRelation"."id" AS "manyToOneRelation_id",
-  "manyToOneRelation"."relation_name" AS "manyToOneRelation_relation_name",
-  "manyToOneRelation"."test_entity_id" AS "manyToOneRelation_test_entity_id",
-  "manyToOneRelation"."uni_directional_test_entity_id" AS "manyToOneRelation_uni_directional_test_entity_id",
-  "manyToOneRelation"."uni_directional_relation_test_entity_id" AS "manyToOneRelation_uni_directional_relation_test_entity_id",
-  "unioned"."__nestjsQuery__entityIndex__" AS "__nestjsQuery__entityIndex__"
+"SELECT
+  \\"manyToOneRelation\\".\\"id\\" AS \\"manyToOneRelation_id\\",
+  \\"manyToOneRelation\\".\\"relation_name\\" AS \\"manyToOneRelation_relation_name\\",
+  \\"manyToOneRelation\\".\\"test_entity_id\\" AS \\"manyToOneRelation_test_entity_id\\",
+  \\"manyToOneRelation\\".\\"uni_directional_test_entity_id\\" AS \\"manyToOneRelation_uni_directional_test_entity_id\\",
+  \\"manyToOneRelation\\".\\"uni_directional_relation_test_entity_id\\" AS \\"manyToOneRelation_uni_directional_relation_test_entity_id\\",
+  \\"unioned\\".\\"__nestjsQuery__entityIndex__\\" AS \\"__nestjsQuery__entityIndex__\\"
 FROM
-  "test_relation" "manyToOneRelation"
+  \\"test_relation\\" \\"manyToOneRelation\\"
   INNER JOIN (
     SELECT
       *
     FROM
       (
         SELECT
-          "manyToOneRelation"."id" AS "manyToOneRelation_id",
-          0 AS "__nestjsQuery__entityIndex__"
+          \\"manyToOneRelation\\".\\"id\\" AS \\"manyToOneRelation_id\\",
+          0 AS \\"__nestjsQuery__entityIndex__\\"
         FROM
-          "test_relation" "manyToOneRelation"
-          INNER JOIN "test_entity" "test_entity" ON "test_entity"."many_to_one_relation_id" = "manyToOneRelation"."id"
-          LEFT JOIN "test_entity" "testEntity" ON "testEntity"."id" = "manyToOneRelation"."test_entity_id"
+          \\"test_relation\\" \\"manyToOneRelation\\"
+          INNER JOIN \\"test_entity\\" \\"test_entity\\" ON \\"test_entity\\".\\"many_to_one_relation_id\\" = \\"manyToOneRelation\\".\\"id\\"
+          LEFT JOIN \\"test_entity\\" \\"testEntity\\" ON \\"testEntity\\".\\"id\\" = \\"manyToOneRelation\\".\\"test_entity_id\\"
         WHERE
-          ("test_entity"."id" = test-entity-1)
-          AND (("testEntity"."id" = test))
-      ) AS "manyToOneRelation"
-  ) "unioned" ON "manyToOneRelation"."id" = "unioned"."manyToOneRelation_id"
+          (\\"test_entity\\".\\"id\\" = test-entity-1)
+          AND ((\\"testEntity\\".\\"id\\" = test))
+      ) AS \\"manyToOneRelation\\"
+  ) \\"unioned\\" ON \\"manyToOneRelation\\".\\"id\\" = \\"unioned\\".\\"manyToOneRelation_id\\"
 ORDER BY
-  "unioned"."__nestjsQuery__entityIndex__" ASC
+  \\"unioned\\".\\"__nestjsQuery__entityIndex__\\" ASC"
 `;
 
 exports[`RelationQueryBuilder #select many to many many-to-many custom join table should work with a many-to-many through a join table 1`] = `
-SELECT
-  "testEntityRelation"."test_relation_id" AS "testEntityRelation_test_relation_id",
-  "testEntityRelation"."test_entity_id" AS "testEntityRelation_test_entity_id"
+"SELECT
+  \\"testEntityRelation\\".\\"test_relation_id\\" AS \\"testEntityRelation_test_relation_id\\",
+  \\"testEntityRelation\\".\\"test_entity_id\\" AS \\"testEntityRelation_test_entity_id\\"
 FROM
-  "test_entity_relation_entity" "testEntityRelation"
+  \\"test_entity_relation_entity\\" \\"testEntityRelation\\"
 WHERE
-  ("testEntityRelation"."test_entity_id" = test-entity-id-1)
+  (
+    \\"testEntityRelation\\".\\"test_entity_id\\" = test-entity-id-1
+  )"
 `;
 
 exports[`RelationQueryBuilder #select many to many on non owning side should work with many to many 1`] = `
-SELECT
-  "manyTestEntities"."id" AS "manyTestEntities_id",
-  "manyTestEntities"."string_type" AS "manyTestEntities_string_type",
-  "manyTestEntities"."bool_type" AS "manyTestEntities_bool_type",
-  "manyTestEntities"."number_type" AS "manyTestEntities_number_type",
-  "manyTestEntities"."date_type" AS "manyTestEntities_date_type",
-  "manyTestEntities"."many_to_one_relation_id" AS "manyTestEntities_many_to_one_relation_id",
-  "manyTestEntities"."many_to_one_soft_delete_relation_id" AS "manyTestEntities_many_to_one_soft_delete_relation_id",
-  "manyTestEntities"."oneTestRelationId" AS "manyTestEntities_oneTestRelationId"
+"SELECT
+  \\"manyTestEntities\\".\\"id\\" AS \\"manyTestEntities_id\\",
+  \\"manyTestEntities\\".\\"string_type\\" AS \\"manyTestEntities_string_type\\",
+  \\"manyTestEntities\\".\\"bool_type\\" AS \\"manyTestEntities_bool_type\\",
+  \\"manyTestEntities\\".\\"number_type\\" AS \\"manyTestEntities_number_type\\",
+  \\"manyTestEntities\\".\\"date_type\\" AS \\"manyTestEntities_date_type\\",
+  \\"manyTestEntities\\".\\"many_to_one_relation_id\\" AS \\"manyTestEntities_many_to_one_relation_id\\",
+  \\"manyTestEntities\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"manyTestEntities_many_to_one_soft_delete_relation_id\\",
+  \\"manyTestEntities\\".\\"oneTestRelationId\\" AS \\"manyTestEntities_oneTestRelationId\\"
 FROM
-  "test_entity" "manyTestEntities"
-  INNER JOIN "test_entity_many_test_relations_test_relation" "test_entity_many_test_relations_test_relation" ON "test_entity_many_test_relations_test_relation"."testEntityId" = "manyTestEntities"."id"
+  \\"test_entity\\" \\"manyTestEntities\\"
+  INNER JOIN \\"test_entity_many_test_relations_test_relation\\" \\"test_entity_many_test_relations_test_relation\\" ON \\"test_entity_many_test_relations_test_relation\\".\\"testEntityId\\" = \\"manyTestEntities\\".\\"id\\"
 WHERE
   (
-    "test_entity_many_test_relations_test_relation"."testRelationId" = test-relation-id-1
-  )
+    \\"test_entity_many_test_relations_test_relation\\".\\"testRelationId\\" = test-relation-id-1
+  )"
 `;
 
 exports[`RelationQueryBuilder #select many to many on owning side should work with one entity 1`] = `
-SELECT
-  "manyTestRelations"."id" AS "manyTestRelations_id",
-  "manyTestRelations"."relation_name" AS "manyTestRelations_relation_name",
-  "manyTestRelations"."test_entity_id" AS "manyTestRelations_test_entity_id",
-  "manyTestRelations"."uni_directional_test_entity_id" AS "manyTestRelations_uni_directional_test_entity_id",
-  "manyTestRelations"."uni_directional_relation_test_entity_id" AS "manyTestRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"manyTestRelations\\".\\"id\\" AS \\"manyTestRelations_id\\",
+  \\"manyTestRelations\\".\\"relation_name\\" AS \\"manyTestRelations_relation_name\\",
+  \\"manyTestRelations\\".\\"test_entity_id\\" AS \\"manyTestRelations_test_entity_id\\",
+  \\"manyTestRelations\\".\\"uni_directional_test_entity_id\\" AS \\"manyTestRelations_uni_directional_test_entity_id\\",
+  \\"manyTestRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"manyTestRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "manyTestRelations"
-  INNER JOIN "test_entity_many_test_relations_test_relation" "test_entity_many_test_relations_test_relation" ON "test_entity_many_test_relations_test_relation"."testRelationId" = "manyTestRelations"."id"
+  \\"test_relation\\" \\"manyTestRelations\\"
+  INNER JOIN \\"test_entity_many_test_relations_test_relation\\" \\"test_entity_many_test_relations_test_relation\\" ON \\"test_entity_many_test_relations_test_relation\\".\\"testRelationId\\" = \\"manyTestRelations\\".\\"id\\"
 WHERE
   (
-    "test_entity_many_test_relations_test_relation"."testEntityId" = test-entity-id-1
-  )
+    \\"test_entity_many_test_relations_test_relation\\".\\"testEntityId\\" = test-entity-id-1
+  )"
 `;
 
 exports[`RelationQueryBuilder #select many to many uni-directional many to many should create the correct sql 1`] = `
-SELECT
-  "manyToManyUniDirectional"."id" AS "manyToManyUniDirectional_id",
-  "manyToManyUniDirectional"."relation_name" AS "manyToManyUniDirectional_relation_name",
-  "manyToManyUniDirectional"."test_entity_id" AS "manyToManyUniDirectional_test_entity_id",
-  "manyToManyUniDirectional"."uni_directional_test_entity_id" AS "manyToManyUniDirectional_uni_directional_test_entity_id",
-  "manyToManyUniDirectional"."uni_directional_relation_test_entity_id" AS "manyToManyUniDirectional_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"manyToManyUniDirectional\\".\\"id\\" AS \\"manyToManyUniDirectional_id\\",
+  \\"manyToManyUniDirectional\\".\\"relation_name\\" AS \\"manyToManyUniDirectional_relation_name\\",
+  \\"manyToManyUniDirectional\\".\\"test_entity_id\\" AS \\"manyToManyUniDirectional_test_entity_id\\",
+  \\"manyToManyUniDirectional\\".\\"uni_directional_test_entity_id\\" AS \\"manyToManyUniDirectional_uni_directional_test_entity_id\\",
+  \\"manyToManyUniDirectional\\".\\"uni_directional_relation_test_entity_id\\" AS \\"manyToManyUniDirectional_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "manyToManyUniDirectional"
-  INNER JOIN "test_entity_many_to_many_uni_directional_test_relation" "test_entity_many_to_many_uni_directional_test_relation" ON "test_entity_many_to_many_uni_directional_test_relation"."testRelationId" = "manyToManyUniDirectional"."id"
+  \\"test_relation\\" \\"manyToManyUniDirectional\\"
+  INNER JOIN \\"test_entity_many_to_many_uni_directional_test_relation\\" \\"test_entity_many_to_many_uni_directional_test_relation\\" ON \\"test_entity_many_to_many_uni_directional_test_relation\\".\\"testRelationId\\" = \\"manyToManyUniDirectional\\".\\"id\\"
 WHERE
   (
-    "test_entity_many_to_many_uni_directional_test_relation"."testEntityId" = test-entity-id-1
-  )
+    \\"test_entity_many_to_many_uni_directional_test_relation\\".\\"testEntityId\\" = test-entity-id-1
+  )"
 `;
 
 exports[`RelationQueryBuilder #select many to one should work with a uni-directional relationship 1`] = `
-SELECT
-  "testEntityUniDirectional"."id" AS "testEntityUniDirectional_id",
-  "testEntityUniDirectional"."string_type" AS "testEntityUniDirectional_string_type",
-  "testEntityUniDirectional"."bool_type" AS "testEntityUniDirectional_bool_type",
-  "testEntityUniDirectional"."number_type" AS "testEntityUniDirectional_number_type",
-  "testEntityUniDirectional"."date_type" AS "testEntityUniDirectional_date_type",
-  "testEntityUniDirectional"."many_to_one_relation_id" AS "testEntityUniDirectional_many_to_one_relation_id",
-  "testEntityUniDirectional"."many_to_one_soft_delete_relation_id" AS "testEntityUniDirectional_many_to_one_soft_delete_relation_id",
-  "testEntityUniDirectional"."oneTestRelationId" AS "testEntityUniDirectional_oneTestRelationId"
+"SELECT
+  \\"testEntityUniDirectional\\".\\"id\\" AS \\"testEntityUniDirectional_id\\",
+  \\"testEntityUniDirectional\\".\\"string_type\\" AS \\"testEntityUniDirectional_string_type\\",
+  \\"testEntityUniDirectional\\".\\"bool_type\\" AS \\"testEntityUniDirectional_bool_type\\",
+  \\"testEntityUniDirectional\\".\\"number_type\\" AS \\"testEntityUniDirectional_number_type\\",
+  \\"testEntityUniDirectional\\".\\"date_type\\" AS \\"testEntityUniDirectional_date_type\\",
+  \\"testEntityUniDirectional\\".\\"many_to_one_relation_id\\" AS \\"testEntityUniDirectional_many_to_one_relation_id\\",
+  \\"testEntityUniDirectional\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"testEntityUniDirectional_many_to_one_soft_delete_relation_id\\",
+  \\"testEntityUniDirectional\\".\\"oneTestRelationId\\" AS \\"testEntityUniDirectional_oneTestRelationId\\"
 FROM
-  "test_entity" "testEntityUniDirectional"
-  INNER JOIN "test_relation" "test_relation" ON "test_relation"."uni_directional_test_entity_id" = "testEntityUniDirectional"."id"
+  \\"test_entity\\" \\"testEntityUniDirectional\\"
+  INNER JOIN \\"test_relation\\" \\"test_relation\\" ON \\"test_relation\\".\\"uni_directional_test_entity_id\\" = \\"testEntityUniDirectional\\".\\"id\\"
 WHERE
-  ("test_relation"."id" = test-relation-id-1)
+  (\\"test_relation\\".\\"id\\" = test-relation-id-1)"
 `;
 
 exports[`RelationQueryBuilder #select many to one should work with one entity 1`] = `
-SELECT
-  "testEntity"."id" AS "testEntity_id",
-  "testEntity"."string_type" AS "testEntity_string_type",
-  "testEntity"."bool_type" AS "testEntity_bool_type",
-  "testEntity"."number_type" AS "testEntity_number_type",
-  "testEntity"."date_type" AS "testEntity_date_type",
-  "testEntity"."many_to_one_relation_id" AS "testEntity_many_to_one_relation_id",
-  "testEntity"."many_to_one_soft_delete_relation_id" AS "testEntity_many_to_one_soft_delete_relation_id",
-  "testEntity"."oneTestRelationId" AS "testEntity_oneTestRelationId"
+"SELECT
+  \\"testEntity\\".\\"id\\" AS \\"testEntity_id\\",
+  \\"testEntity\\".\\"string_type\\" AS \\"testEntity_string_type\\",
+  \\"testEntity\\".\\"bool_type\\" AS \\"testEntity_bool_type\\",
+  \\"testEntity\\".\\"number_type\\" AS \\"testEntity_number_type\\",
+  \\"testEntity\\".\\"date_type\\" AS \\"testEntity_date_type\\",
+  \\"testEntity\\".\\"many_to_one_relation_id\\" AS \\"testEntity_many_to_one_relation_id\\",
+  \\"testEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"testEntity_many_to_one_soft_delete_relation_id\\",
+  \\"testEntity\\".\\"oneTestRelationId\\" AS \\"testEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "testEntity"
-  INNER JOIN "test_relation" "test_relation" ON "test_relation"."test_entity_id" = "testEntity"."id"
+  \\"test_entity\\" \\"testEntity\\"
+  INNER JOIN \\"test_relation\\" \\"test_relation\\" ON \\"test_relation\\".\\"test_entity_id\\" = \\"testEntity\\".\\"id\\"
 WHERE
-  ("test_relation"."id" = test-relation-id-1)
+  (\\"test_relation\\".\\"id\\" = test-relation-id-1)"
 `;
 
 exports[`RelationQueryBuilder #select one to many should query with a single entity 1`] = `
-SELECT
-  "testRelations"."id" AS "testRelations_id",
-  "testRelations"."relation_name" AS "testRelations_relation_name",
-  "testRelations"."test_entity_id" AS "testRelations_test_entity_id",
-  "testRelations"."uni_directional_test_entity_id" AS "testRelations_uni_directional_test_entity_id",
-  "testRelations"."uni_directional_relation_test_entity_id" AS "testRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"testRelations\\".\\"id\\" AS \\"testRelations_id\\",
+  \\"testRelations\\".\\"relation_name\\" AS \\"testRelations_relation_name\\",
+  \\"testRelations\\".\\"test_entity_id\\" AS \\"testRelations_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_test_entity_id\\" AS \\"testRelations_uni_directional_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"testRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "testRelations"
+  \\"test_relation\\" \\"testRelations\\"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    \\"testRelations\\".\\"test_entity_id\\" = test-entity-id-1
+  )"
 `;
 
 exports[`RelationQueryBuilder #select one to one on non owning side 1`] = `
-SELECT
-  "oneTestEntity"."id" AS "oneTestEntity_id",
-  "oneTestEntity"."string_type" AS "oneTestEntity_string_type",
-  "oneTestEntity"."bool_type" AS "oneTestEntity_bool_type",
-  "oneTestEntity"."number_type" AS "oneTestEntity_number_type",
-  "oneTestEntity"."date_type" AS "oneTestEntity_date_type",
-  "oneTestEntity"."many_to_one_relation_id" AS "oneTestEntity_many_to_one_relation_id",
-  "oneTestEntity"."many_to_one_soft_delete_relation_id" AS "oneTestEntity_many_to_one_soft_delete_relation_id",
-  "oneTestEntity"."oneTestRelationId" AS "oneTestEntity_oneTestRelationId"
+"SELECT
+  \\"oneTestEntity\\".\\"id\\" AS \\"oneTestEntity_id\\",
+  \\"oneTestEntity\\".\\"string_type\\" AS \\"oneTestEntity_string_type\\",
+  \\"oneTestEntity\\".\\"bool_type\\" AS \\"oneTestEntity_bool_type\\",
+  \\"oneTestEntity\\".\\"number_type\\" AS \\"oneTestEntity_number_type\\",
+  \\"oneTestEntity\\".\\"date_type\\" AS \\"oneTestEntity_date_type\\",
+  \\"oneTestEntity\\".\\"many_to_one_relation_id\\" AS \\"oneTestEntity_many_to_one_relation_id\\",
+  \\"oneTestEntity\\".\\"many_to_one_soft_delete_relation_id\\" AS \\"oneTestEntity_many_to_one_soft_delete_relation_id\\",
+  \\"oneTestEntity\\".\\"oneTestRelationId\\" AS \\"oneTestEntity_oneTestRelationId\\"
 FROM
-  "test_entity" "oneTestEntity"
+  \\"test_entity\\" \\"oneTestEntity\\"
 WHERE
-  ("oneTestEntity"."oneTestRelationId" = test-relation-id-1)
+  (
+    \\"oneTestEntity\\".\\"oneTestRelationId\\" = test-relation-id-1
+  )"
 `;
 
 exports[`RelationQueryBuilder #select one to one on owning side 1`] = `
-SELECT
-  "oneTestRelation"."id" AS "oneTestRelation_id",
-  "oneTestRelation"."relation_name" AS "oneTestRelation_relation_name",
-  "oneTestRelation"."test_entity_id" AS "oneTestRelation_test_entity_id",
-  "oneTestRelation"."uni_directional_test_entity_id" AS "oneTestRelation_uni_directional_test_entity_id",
-  "oneTestRelation"."uni_directional_relation_test_entity_id" AS "oneTestRelation_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"oneTestRelation\\".\\"id\\" AS \\"oneTestRelation_id\\",
+  \\"oneTestRelation\\".\\"relation_name\\" AS \\"oneTestRelation_relation_name\\",
+  \\"oneTestRelation\\".\\"test_entity_id\\" AS \\"oneTestRelation_test_entity_id\\",
+  \\"oneTestRelation\\".\\"uni_directional_test_entity_id\\" AS \\"oneTestRelation_uni_directional_test_entity_id\\",
+  \\"oneTestRelation\\".\\"uni_directional_relation_test_entity_id\\" AS \\"oneTestRelation_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "oneTestRelation"
-  INNER JOIN "test_entity" "test_entity" ON "test_entity"."oneTestRelationId" = "oneTestRelation"."id"
+  \\"test_relation\\" \\"oneTestRelation\\"
+  INNER JOIN \\"test_entity\\" \\"test_entity\\" ON \\"test_entity\\".\\"oneTestRelationId\\" = \\"oneTestRelation\\".\\"id\\"
 WHERE
-  ("test_entity"."id" = test-entity-id-1)
+  (\\"test_entity\\".\\"id\\" = test-entity-id-1)"
 `;
 
 exports[`RelationQueryBuilder #select with filter should call whereBuilder#build if there is a filter 1`] = `
-SELECT
-  "testRelations"."id" AS "testRelations_id",
-  "testRelations"."relation_name" AS "testRelations_relation_name",
-  "testRelations"."test_entity_id" AS "testRelations_test_entity_id",
-  "testRelations"."uni_directional_test_entity_id" AS "testRelations_uni_directional_test_entity_id",
-  "testRelations"."uni_directional_relation_test_entity_id" AS "testRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"testRelations\\".\\"id\\" AS \\"testRelations_id\\",
+  \\"testRelations\\".\\"relation_name\\" AS \\"testRelations_relation_name\\",
+  \\"testRelations\\".\\"test_entity_id\\" AS \\"testRelations_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_test_entity_id\\" AS \\"testRelations_uni_directional_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"testRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "testRelations"
+  \\"test_relation\\" \\"testRelations\\"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
-  AND ("testRelations"."relation_name" = foo)
+  (
+    \\"testRelations\\".\\"test_entity_id\\" = test-entity-id-1
+  )
+  AND (\\"testRelations\\".\\"relation_name\\" = foo)"
 `;
 
 exports[`RelationQueryBuilder #select with paging should apply paging args going backward 1`] = `
-SELECT
-  "testRelations"."id" AS "testRelations_id",
-  "testRelations"."relation_name" AS "testRelations_relation_name",
-  "testRelations"."test_entity_id" AS "testRelations_test_entity_id",
-  "testRelations"."uni_directional_test_entity_id" AS "testRelations_uni_directional_test_entity_id",
-  "testRelations"."uni_directional_relation_test_entity_id" AS "testRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"testRelations\\".\\"id\\" AS \\"testRelations_id\\",
+  \\"testRelations\\".\\"relation_name\\" AS \\"testRelations_relation_name\\",
+  \\"testRelations\\".\\"test_entity_id\\" AS \\"testRelations_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_test_entity_id\\" AS \\"testRelations_uni_directional_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"testRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "testRelations"
+  \\"test_relation\\" \\"testRelations\\"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    \\"testRelations\\".\\"test_entity_id\\" = test-entity-id-1
+  )
 LIMIT
   10
 OFFSET
-  10
+  10"
 `;
 
 exports[`RelationQueryBuilder #select with paging should apply paging args going forward 1`] = `
-SELECT
-  "testRelations"."id" AS "testRelations_id",
-  "testRelations"."relation_name" AS "testRelations_relation_name",
-  "testRelations"."test_entity_id" AS "testRelations_test_entity_id",
-  "testRelations"."uni_directional_test_entity_id" AS "testRelations_uni_directional_test_entity_id",
-  "testRelations"."uni_directional_relation_test_entity_id" AS "testRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"testRelations\\".\\"id\\" AS \\"testRelations_id\\",
+  \\"testRelations\\".\\"relation_name\\" AS \\"testRelations_relation_name\\",
+  \\"testRelations\\".\\"test_entity_id\\" AS \\"testRelations_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_test_entity_id\\" AS \\"testRelations_uni_directional_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"testRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "testRelations"
+  \\"test_relation\\" \\"testRelations\\"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    \\"testRelations\\".\\"test_entity_id\\" = test-entity-id-1
+  )
 LIMIT
   10
 OFFSET
-  11
+  11"
 `;
 
 exports[`RelationQueryBuilder #select with sorting should apply ASC NULLS_FIRST sorting 1`] = `
-SELECT
-  "testRelations"."id" AS "testRelations_id",
-  "testRelations"."relation_name" AS "testRelations_relation_name",
-  "testRelations"."test_entity_id" AS "testRelations_test_entity_id",
-  "testRelations"."uni_directional_test_entity_id" AS "testRelations_uni_directional_test_entity_id",
-  "testRelations"."uni_directional_relation_test_entity_id" AS "testRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"testRelations\\".\\"id\\" AS \\"testRelations_id\\",
+  \\"testRelations\\".\\"relation_name\\" AS \\"testRelations_relation_name\\",
+  \\"testRelations\\".\\"test_entity_id\\" AS \\"testRelations_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_test_entity_id\\" AS \\"testRelations_uni_directional_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"testRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "testRelations"
+  \\"test_relation\\" \\"testRelations\\"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    \\"testRelations\\".\\"test_entity_id\\" = test-entity-id-1
+  )
 ORDER BY
-  "testRelations"."relation_name" ASC NULLS FIRST
+  \\"testRelations\\".\\"relation_name\\" ASC NULLS FIRST"
 `;
 
 exports[`RelationQueryBuilder #select with sorting should apply ASC NULLS_LAST sorting 1`] = `
-SELECT
-  "testRelations"."id" AS "testRelations_id",
-  "testRelations"."relation_name" AS "testRelations_relation_name",
-  "testRelations"."test_entity_id" AS "testRelations_test_entity_id",
-  "testRelations"."uni_directional_test_entity_id" AS "testRelations_uni_directional_test_entity_id",
-  "testRelations"."uni_directional_relation_test_entity_id" AS "testRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"testRelations\\".\\"id\\" AS \\"testRelations_id\\",
+  \\"testRelations\\".\\"relation_name\\" AS \\"testRelations_relation_name\\",
+  \\"testRelations\\".\\"test_entity_id\\" AS \\"testRelations_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_test_entity_id\\" AS \\"testRelations_uni_directional_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"testRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "testRelations"
+  \\"test_relation\\" \\"testRelations\\"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    \\"testRelations\\".\\"test_entity_id\\" = test-entity-id-1
+  )
 ORDER BY
-  "testRelations"."relation_name" ASC NULLS LAST
+  \\"testRelations\\".\\"relation_name\\" ASC NULLS LAST"
 `;
 
 exports[`RelationQueryBuilder #select with sorting should apply ASC sorting 1`] = `
-SELECT
-  "testRelations"."id" AS "testRelations_id",
-  "testRelations"."relation_name" AS "testRelations_relation_name",
-  "testRelations"."test_entity_id" AS "testRelations_test_entity_id",
-  "testRelations"."uni_directional_test_entity_id" AS "testRelations_uni_directional_test_entity_id",
-  "testRelations"."uni_directional_relation_test_entity_id" AS "testRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"testRelations\\".\\"id\\" AS \\"testRelations_id\\",
+  \\"testRelations\\".\\"relation_name\\" AS \\"testRelations_relation_name\\",
+  \\"testRelations\\".\\"test_entity_id\\" AS \\"testRelations_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_test_entity_id\\" AS \\"testRelations_uni_directional_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"testRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "testRelations"
+  \\"test_relation\\" \\"testRelations\\"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    \\"testRelations\\".\\"test_entity_id\\" = test-entity-id-1
+  )
 ORDER BY
-  "testRelations"."relation_name" ASC
+  \\"testRelations\\".\\"relation_name\\" ASC NULLS FIRST"
 `;
 
 exports[`RelationQueryBuilder #select with sorting should apply DESC NULLS_FIRST sorting 1`] = `
-SELECT
-  "testRelations"."id" AS "testRelations_id",
-  "testRelations"."relation_name" AS "testRelations_relation_name",
-  "testRelations"."test_entity_id" AS "testRelations_test_entity_id",
-  "testRelations"."uni_directional_test_entity_id" AS "testRelations_uni_directional_test_entity_id",
-  "testRelations"."uni_directional_relation_test_entity_id" AS "testRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"testRelations\\".\\"id\\" AS \\"testRelations_id\\",
+  \\"testRelations\\".\\"relation_name\\" AS \\"testRelations_relation_name\\",
+  \\"testRelations\\".\\"test_entity_id\\" AS \\"testRelations_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_test_entity_id\\" AS \\"testRelations_uni_directional_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"testRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "testRelations"
+  \\"test_relation\\" \\"testRelations\\"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    \\"testRelations\\".\\"test_entity_id\\" = test-entity-id-1
+  )
 ORDER BY
-  "testRelations"."relation_name" DESC NULLS FIRST
+  \\"testRelations\\".\\"relation_name\\" DESC NULLS FIRST"
 `;
 
 exports[`RelationQueryBuilder #select with sorting should apply DESC NULLS_LAST sorting 1`] = `
-SELECT
-  "testRelations"."id" AS "testRelations_id",
-  "testRelations"."relation_name" AS "testRelations_relation_name",
-  "testRelations"."test_entity_id" AS "testRelations_test_entity_id",
-  "testRelations"."uni_directional_test_entity_id" AS "testRelations_uni_directional_test_entity_id",
-  "testRelations"."uni_directional_relation_test_entity_id" AS "testRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"testRelations\\".\\"id\\" AS \\"testRelations_id\\",
+  \\"testRelations\\".\\"relation_name\\" AS \\"testRelations_relation_name\\",
+  \\"testRelations\\".\\"test_entity_id\\" AS \\"testRelations_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_test_entity_id\\" AS \\"testRelations_uni_directional_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"testRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "testRelations"
+  \\"test_relation\\" \\"testRelations\\"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    \\"testRelations\\".\\"test_entity_id\\" = test-entity-id-1
+  )
 ORDER BY
-  "testRelations"."relation_name" DESC NULLS LAST
+  \\"testRelations\\".\\"relation_name\\" DESC NULLS LAST"
 `;
 
 exports[`RelationQueryBuilder #select with sorting should apply DESC sorting 1`] = `
-SELECT
-  "testRelations"."id" AS "testRelations_id",
-  "testRelations"."relation_name" AS "testRelations_relation_name",
-  "testRelations"."test_entity_id" AS "testRelations_test_entity_id",
-  "testRelations"."uni_directional_test_entity_id" AS "testRelations_uni_directional_test_entity_id",
-  "testRelations"."uni_directional_relation_test_entity_id" AS "testRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"testRelations\\".\\"id\\" AS \\"testRelations_id\\",
+  \\"testRelations\\".\\"relation_name\\" AS \\"testRelations_relation_name\\",
+  \\"testRelations\\".\\"test_entity_id\\" AS \\"testRelations_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_test_entity_id\\" AS \\"testRelations_uni_directional_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"testRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "testRelations"
+  \\"test_relation\\" \\"testRelations\\"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    \\"testRelations\\".\\"test_entity_id\\" = test-entity-id-1
+  )
 ORDER BY
-  "testRelations"."relation_name" DESC
+  \\"testRelations\\".\\"relation_name\\" DESC NULLS LAST"
 `;
 
 exports[`RelationQueryBuilder #select with sorting should apply multiple sorts 1`] = `
-SELECT
-  "testRelations"."id" AS "testRelations_id",
-  "testRelations"."relation_name" AS "testRelations_relation_name",
-  "testRelations"."test_entity_id" AS "testRelations_test_entity_id",
-  "testRelations"."uni_directional_test_entity_id" AS "testRelations_uni_directional_test_entity_id",
-  "testRelations"."uni_directional_relation_test_entity_id" AS "testRelations_uni_directional_relation_test_entity_id"
+"SELECT
+  \\"testRelations\\".\\"id\\" AS \\"testRelations_id\\",
+  \\"testRelations\\".\\"relation_name\\" AS \\"testRelations_relation_name\\",
+  \\"testRelations\\".\\"test_entity_id\\" AS \\"testRelations_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_test_entity_id\\" AS \\"testRelations_uni_directional_test_entity_id\\",
+  \\"testRelations\\".\\"uni_directional_relation_test_entity_id\\" AS \\"testRelations_uni_directional_relation_test_entity_id\\"
 FROM
-  "test_relation" "testRelations"
+  \\"test_relation\\" \\"testRelations\\"
 WHERE
-  ("testRelations"."test_entity_id" = test-entity-id-1)
+  (
+    \\"testRelations\\".\\"test_entity_id\\" = test-entity-id-1
+  )
 ORDER BY
-  "testRelations"."relation_name" ASC,
-  "testRelations"."id" DESC
+  \\"testRelations\\".\\"relation_name\\" ASC NULLS FIRST,
+  \\"testRelations\\".\\"id\\" DESC NULLS LAST"
 `;

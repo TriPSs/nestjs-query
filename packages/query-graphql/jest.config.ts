@@ -2,7 +2,7 @@
 // eslint-disable-next-line import/no-default-export
 export default {
   displayName: 'query-graphql',
-  preset: '../../jest.preset.js',
+  preset: '../../jest.preset.cjs',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json'

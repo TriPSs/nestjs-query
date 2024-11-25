@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { AggregateFields, AggregateQuery } from '@rezonate/nestjs-query-core';
+import { AggregateQuery } from '@rezonate/nestjs-query-core';
 import { GraphQLResolveInfo } from 'graphql';
 import graphqlFields from 'graphql-fields';
 import { getAggregatedFields } from './aggregate-query-param.decorator';

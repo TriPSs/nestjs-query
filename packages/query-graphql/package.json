@@ -34,14 +34,14 @@
   "dependencies": {
     "@json2csv/plainjs": "^7.0.6",
     "@types/json2csv": "^5.0.7",
+    "date-fns": "3.6.0",
     "graphql-fields": "^2.0.3",
     "lodash.omit": "^4.5.0",
     "lower-case-first": "^2.0.2",
     "papaparse": "^5.4.1",
     "pluralize": "^8.0.0",
     "tslib": "^2.6.2",
-    "upper-case-first": "^2.0.2",
-    "date-fns": "3.6.0"
+    "upper-case-first": "^2.0.2"
   },
   "peerDependencies": {
     "@apollo/gateway": "^0.44.1 || ^0.46.0 || ^0.48.0 || ^0.49.0 || ^0.50.0 || ^2.0.0",
@@ -52,7 +52,6 @@
     "class-validator": "^0.14.1",
     "dataloader": "^2.0.0",
     "graphql": "^16.0.0",
-    "graphql-subscriptions": "^2.0.0",
-    "ts-morph": "^21.0.0 || ^22.0.0"
+    "graphql-subscriptions": "^2.0.0"
   }
 }

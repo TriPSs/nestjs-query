@@ -20,7 +20,7 @@ export interface ReadRelationsResolverOpts extends RelationsOpts {
 
 const ReadOneRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
-  <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
+  <B extends Class<ServiceResolver<DTO, QueryService<DTO>>>>(Base: B): B => {
     if (relation.disableRead) {
       return Base;
     }
@@ -65,7 +65,7 @@ const ReadOneRelationMixin =
 
 const ReadManyRelationMixin =
   <DTO, Relation>(DTOClass: Class<DTO>, relation: ResolverRelation<Relation>) =>
-  <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
+  <B extends Class<ServiceResolver<DTO, QueryService<DTO>>>>(Base: B): B => {
     if (relation.disableRead) {
       return Base;
     }
@@ -133,7 +133,7 @@ const ReadManyRelationMixin =
 
 export const ReadRelationsMixin =
   <DTO>(DTOClass: Class<DTO>, relations: ReadRelationsResolverOpts) =>
-  <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
+  <B extends Class<ServiceResolver<DTO, QueryService<DTO>>>>(Base: B): B => {
     const { many, one, enableTotalCount } = relations;
     const manyRelations = flattenRelations(many ?? {});
     const oneRelations = flattenRelations(one ?? {});
@@ -141,7 +141,7 @@ export const ReadRelationsMixin =
     return oneRelations.reduce((RB, a) => ReadOneRelationMixin(DTOClass, a)(RB), WithMany);
   };
 
-export const ReadRelationsResolver = <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(
+export const ReadRelationsResolver = <DTO, QS extends QueryService<DTO> = QueryService<DTO>>(
   DTOClass: Class<DTO>,
   relations: ReadRelationsResolverOpts,
 ): Class<ServiceResolver<DTO, QS>> => ReadRelationsMixin(DTOClass, relations)(BaseServiceResolver);
