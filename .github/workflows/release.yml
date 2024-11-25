@@ -73,7 +73,7 @@ jobs:
       - name: nx affected:publish
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-          npx nx run-many -t publish --all
+          npx nx run-many -t publish --all --base origin/master
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 

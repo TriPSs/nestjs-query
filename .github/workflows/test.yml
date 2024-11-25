@@ -34,4 +34,4 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
 
       - name: nx affected:test
-        run: npx nx affected -t test
+        run: npx nx affected -t test --base origin/master
