@@ -97,7 +97,7 @@ describe('TypeOrmQueryService', (): void => {
 					expect(queryResult).toEqual([
 						{
 							'boolType': false,
-							'dateType': new Date('2020-02-01T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 1, 12, 0, 0, 0)),
 							'id': 'test-entity-1',
 							'numberType': 1,
 							'oneTestRelation': {
@@ -137,7 +137,7 @@ describe('TypeOrmQueryService', (): void => {
 					expect(queryResult).toEqual([
 						{
 							'boolType': false,
-							'dateType': new Date('2020-02-01T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 1, 12, 0, 0, 0)),
 							'id': 'test-entity-1',
 							'numberType': 1,
 							'oneTestRelation': {
@@ -174,7 +174,7 @@ describe('TypeOrmQueryService', (): void => {
 					expect(queryResult).toEqual([
 						{
 							'boolType': false,
-							'dateType': new Date('2020-02-01T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 1, 12, 0, 0, 0)),
 							'id': 'test-entity-1',
 							'numberType': 1,
 							'oneTestRelation': {
@@ -211,7 +211,7 @@ describe('TypeOrmQueryService', (): void => {
 					expect(queryResult).toEqual([
 						{
 							'boolType': false,
-							'dateType': new Date('2020-02-01T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 1, 12, 0, 0, 0)),
 							'id': 'test-entity-1',
 							'numberType': 1,
 							'oneTestRelation': {
@@ -225,7 +225,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-02T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 2, 12, 0, 0, 0)),
 							'id': 'test-entity-2',
 							'numberType': 2,
 							'oneTestRelation': {
@@ -317,7 +317,7 @@ describe('TypeOrmQueryService', (): void => {
 					expect(queryResult).toEqual([
 						{
 							'boolType': false,
-							'dateType': new Date('2020-02-01T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 1, 12, 0, 0, 0)),
 							'id': 'test-entity-1',
 							'numberType': 1,
 							'stringType': 'foo1',
@@ -362,7 +362,7 @@ describe('TypeOrmQueryService', (): void => {
 					expect(queryResult).toEqual([
 						{
 							'boolType': false,
-							'dateType': new Date('2020-02-01T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 1, 12, 0, 0, 0)),
 							'id': 'test-entity-1',
 							'numberType': 1,
 							'stringType': 'foo1',
@@ -385,7 +385,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-02T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 2, 12, 0, 0, 0)),
 							'id': 'test-entity-2',
 							'numberType': 2,
 							'stringType': 'foo2',
@@ -432,7 +432,7 @@ describe('TypeOrmQueryService', (): void => {
 					expect(queryResult).toEqual([
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-02T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 2, 12, 0, 0, 0)),
 							'id': 'test-entity-2',
 							'manyTestRelations': [
 								{
@@ -455,7 +455,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-04T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 4, 12, 0, 0, 0)),
 							'id': 'test-entity-4',
 							'manyTestRelations': [
 								{
@@ -478,7 +478,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-06T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 6, 12, 0, 0, 0)),
 							'id': 'test-entity-6',
 							'manyTestRelations': [
 								{
@@ -501,7 +501,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-08T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 8, 12, 0, 0, 0)),
 							'id': 'test-entity-8',
 							'manyTestRelations': [
 								{
@@ -524,7 +524,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-10T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 10, 12, 0, 0, 0)),
 							'id': 'test-entity-10',
 							'manyTestRelations': [
 								{
@@ -562,7 +562,7 @@ describe('TypeOrmQueryService', (): void => {
 					expect(queryResult).toEqual([
 						{
 							'boolType': false,
-							'dateType': new Date('2020-02-03T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 3, 12, 0, 0, 0)),
 							'id': 'test-entity-3',
 							'manyToManyUniDirectional': [
 								{
@@ -585,7 +585,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-06T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 6, 12, 0, 0, 0)),
 							'id': 'test-entity-6',
 							'manyToManyUniDirectional': [
 								{
@@ -608,7 +608,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': false,
-							'dateType': new Date('2020-02-09T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 9, 12, 0, 0, 0)),
 							'id': 'test-entity-9',
 							'manyToManyUniDirectional': [
 								{
@@ -653,7 +653,7 @@ describe('TypeOrmQueryService', (): void => {
 					expect(queryResult).toEqual([
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-02T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 2, 12, 0, 0, 0)),
 							'id': 'test-entity-2',
 							'manyTestRelations': [
 								{
@@ -676,7 +676,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': false,
-							'dateType': new Date('2020-02-03T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 3, 12, 0, 0, 0)),
 							'id': 'test-entity-3',
 							'manyTestRelations': [],
 							'numberType': 3,
@@ -684,7 +684,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-04T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 4, 12, 0, 0, 0)),
 							'id': 'test-entity-4',
 							'manyTestRelations': [
 								{
@@ -707,7 +707,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-06T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 6, 12, 0, 0, 0)),
 							'id': 'test-entity-6',
 							'manyTestRelations': [
 								{
@@ -730,7 +730,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': true,
-							'dateType':  new Date('2020-02-08T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 8, 12, 0, 0, 0)),
 							'id': 'test-entity-8',
 							'manyTestRelations': [
 								{
@@ -753,7 +753,7 @@ describe('TypeOrmQueryService', (): void => {
 						},
 						{
 							'boolType': true,
-							'dateType': new Date('2020-02-10T10:00:00.000Z'),
+							'dateType': new Date(Date.UTC(2020, 2, 10, 12, 0, 0, 0)),
 							'id': 'test-entity-10',
 							'manyTestRelations': [
 								{
@@ -802,13 +802,13 @@ describe('TypeOrmQueryService', (): void => {
 						id: 10,
 					},
 					max: {
-						dateType: expect.stringMatching('2020-02-10'),
+						dateType: expect.stringMatching('2020-03-10'),
 						numberType: 10,
 						stringType: 'foo9',
 						id: 'test-entity-9',
 					},
 					min: {
-						dateType: expect.stringMatching('2020-02-01'),
+						dateType: expect.stringMatching('2020-03-01'),
 						numberType: 1,
 						stringType: 'foo1',
 						id: 'test-entity-1',
@@ -845,13 +845,13 @@ describe('TypeOrmQueryService', (): void => {
 						id: 5,
 					},
 					max: {
-						dateType: expect.stringMatching('2020-02-09'),
+						dateType: expect.stringMatching('2020-03-09'),
 						numberType: 9,
 						stringType: 'foo9',
 						id: 'test-entity-9',
 					},
 					min: {
-						dateType: expect.stringMatching('2020-02-01'),
+						dateType: expect.stringMatching('2020-03-01'),
 						numberType: 1,
 						stringType: 'foo1',
 						id: 'test-entity-1',
@@ -871,13 +871,13 @@ describe('TypeOrmQueryService', (): void => {
 						id: 5,
 					},
 					max: {
-						dateType: expect.stringMatching('2020-02-10'),
+						dateType: expect.stringMatching('2020-03-10'),
 						numberType: 10,
 						stringType: 'foo8',
 						id: 'test-entity-8',
 					},
 					min: {
-						dateType: expect.stringMatching('2020-02-02'),
+						dateType: expect.stringMatching('2020-03-02'),
 						numberType: 2,
 						stringType: 'foo10',
 						id: 'test-entity-10',
@@ -910,13 +910,13 @@ describe('TypeOrmQueryService', (): void => {
 						id: 3,
 					},
 					max: {
-						dateType: expect.stringMatching('2020-02-03'),
+						dateType: expect.stringMatching('2020-03-03'),
 						numberType: 3,
 						stringType: 'foo3',
 						id: 'test-entity-3',
 					},
 					min: {
-						dateType: expect.stringMatching('2020-02-01'),
+						dateType: expect.stringMatching('2020-03-01'),
 						numberType: 1,
 						stringType: 'foo1',
 						id: 'test-entity-1',
@@ -953,13 +953,13 @@ describe('TypeOrmQueryService', (): void => {
 						id: 2,
 					},
 					max: {
-						dateType: expect.stringMatching('2020-02-03'),
+						dateType: expect.stringMatching('2020-03-03'),
 						numberType: 3,
 						stringType: 'foo3',
 						id: 'test-entity-3',
 					},
 					min: {
-						dateType: expect.stringMatching('2020-02-01'),
+						dateType: expect.stringMatching('2020-03-01'),
 						numberType: 1,
 						stringType: 'foo1',
 						id: 'test-entity-1',
@@ -979,13 +979,13 @@ describe('TypeOrmQueryService', (): void => {
 						id: 1,
 					},
 					max: {
-						dateType: expect.stringMatching('2020-02-02'),
+						dateType: expect.stringMatching('2020-03-02'),
 						numberType: 2,
 						stringType: 'foo2',
 						id: 'test-entity-2',
 					},
 					min: {
-						dateType: expect.stringMatching('2020-02-02'),
+						dateType: expect.stringMatching('2020-03-02'),
 						numberType: 2,
 						stringType: 'foo2',
 						id: 'test-entity-2',
