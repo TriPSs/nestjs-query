@@ -31,8 +31,10 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
 
-      - name: Install dependencies
-        run: npm install sqlite3
+      - uses: actions/setup-sqlite@v1
+        with:
+          sqlite-version: 3.40.0
+          sqlite-year: 2022
 
       - uses: nrwl/nx-set-shas@v4
 
