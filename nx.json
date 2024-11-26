@@ -65,7 +65,9 @@
     },
     "version": {
       "executor": "@jscutlery/semver:version",
-      "options": {}
+      "options": {
+        "syncVersions": true
+      }
     },
     "prepare": {
       "dependsOn": ["^prepare"]

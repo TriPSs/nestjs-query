@@ -12,6 +12,7 @@
     "lint:no-cache": "eslint --ext=.ts .",
     "prepare": "husky install",
     "test": "nx run-many --target=test --all",
+    "version": "nx run-many --target=version --all",
     "publish:core": "cd dist/packages/nestjs-query-core && npm publish",
     "publish:gql": "cd dist/packages/nestjs-query-graphql && npm publish",
     "publish:typeorm": "cd dist/packages/nestjs-query-typeorm && npm publish",
@@ -21,6 +22,7 @@
   "dependencies": {
     "@apollo/subgraph": "2.7.2",
     "@jorgebodega/typeorm-seeding": "7.0.0",
+    "@jscutlery/semver": "^5.3.1",
     "@nestjs/apollo": "^12.2.1",
     "@nestjs/common": "^10.3.5",
     "@nestjs/core": "^10.3.5",

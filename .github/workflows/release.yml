@@ -5,40 +5,8 @@ on:
     branches:
       - master
 
-env:
-  NX_BRANCH: ${{ github.event.number }}
-  NX_RUN_GROUP: ${{ github.run_id }}
-
 jobs:
-
-  prepare-env:
-    runs-on: ubuntu-latest
-    outputs:
-      GITHUB_HEAD_REF: ${{ steps.script.outputs.headRef }}
-      GITHUB_BASE_REF: ${{ steps.script.outputs.tagHash }}
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Cache node modules
-        id: cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('package-lock.json') }}
-
-      - name: npm install
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install
-
-      - name: Set correct env vars
-        id: script
-        uses: ./tools/actions/set-master-vars
-
   release:
-    needs: [ prepare-env ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -55,7 +23,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci --ignore-scripts
+        run: npm i
 
       - name: GIT config
         run: |
@@ -76,29 +44,3 @@ jobs:
           npx nx run-many -t publish --all --base origin/master
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  changelog-task:
-    runs-on: ubuntu-latest
-    needs:
-      - release
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('package-lock.json') }}
-
-      - name: GIT config
-        run: |
-          git config user.name "${GITHUB_ACTOR}"
-          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-
-      - name: nx workspace:version
-        run: npx nx run workspace:version --prod
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
