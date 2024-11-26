@@ -25,14 +25,14 @@ import { BaseServiceResolver, ResolverClass, ServiceResolver, SubscriptionResolv
 
 export type CreatedEvent<DTO> = { [eventName: string]: DTO }
 
-interface AuthValidationOps {
+interface AuthValidationOpts {
   /**
    * Determines whether the auth filter should be passed into the query service
    */
   validateWithAuthFilter?: boolean
 }
 
-export interface CreateResolverOpts<DTO, C = DeepPartial<DTO>> extends SubscriptionResolverOpts, AuthValidationOps {
+export interface CreateResolverOpts<DTO, C = DeepPartial<DTO>> extends SubscriptionResolverOpts, AuthValidationOpts {
   /**
    * The Input DTO that should be used to create records.
    */
@@ -49,8 +49,8 @@ export interface CreateResolverOpts<DTO, C = DeepPartial<DTO>> extends Subscript
   createOneMutationName?: string
   createManyMutationName?: string
 
-  one?: SubscriptionResolverOpts['one'] & AuthValidationOps
-  many?: SubscriptionResolverOpts['many'] & AuthValidationOps
+  one?: SubscriptionResolverOpts['one'] & AuthValidationOpts
+  many?: SubscriptionResolverOpts['many'] & AuthValidationOpts
 }
 
 export interface CreateResolver<DTO, C, QS extends QueryService<DTO, C, unknown>> extends ServiceResolver<DTO, QS> {
