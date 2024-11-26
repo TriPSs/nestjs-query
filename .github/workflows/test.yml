@@ -38,6 +38,6 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
 
       - name: nx affected:test
-        run:
+        run: |
           npm i sqlite 3
           npx nx affected -t test --base origin/master
