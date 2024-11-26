@@ -1,4 +1,13 @@
  
+# [7.4.0](https://github.com/souagrosolucoes/nestjs-query/compare/v7.3.1...v7.4.0) (2024-11-26)
+
+
+### Features
+
+* filter contains ([#5](https://github.com/souagrosolucoes/nestjs-query/issues/5)) ([544163c](https://github.com/souagrosolucoes/nestjs-query/commit/544163c840b5d649488ff812859cac118ba34c49))
+
+
+
 # [7.5.0-alpha.0](https://github.com/souagrosolucoes/nestjs-query/compare/v7.3.1...v7.5.0-alpha.0) (2024-11-26)
 
 
