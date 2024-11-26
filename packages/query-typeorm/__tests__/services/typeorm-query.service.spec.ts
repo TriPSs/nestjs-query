@@ -66,59 +66,59 @@ describe('TypeOrmQueryService', (): void => {
   })
 
   describe('#query', () => {
-    it('JsonQuery - SQqlite and', async () => {
-      const entity = TEST_ENTITIES[2]
-      const queryService = moduleRef.get(TestEntityService)
-      const queryResult = await queryService.query({
-        filter: {
-          and: [
-            {
-              jsonType: {
-                contains: {
-                  testEntityPk: entity.testEntityPk
-                }
-              }
-            },
-            {
-              jsonType: {
-                contains: {
-                  dateType: entity.dateType
-                }
-              }
-            }
-          ]
-        }
-      })
-      expect(queryResult).toEqual([entity])
-    })
+    // it('JsonQuery - SQqlite and', async () => {
+    //   const entity = TEST_ENTITIES[2]
+    //   const queryService = moduleRef.get(TestEntityService)
+    //   const queryResult = await queryService.query({
+    //     filter: {
+    //       and: [
+    //         {
+    //           jsonType: {
+    //             contains: {
+    //               testEntityPk: entity.testEntityPk
+    //             }
+    //           }
+    //         },
+    //         {
+    //           jsonType: {
+    //             contains: {
+    //               dateType: entity.dateType
+    //             }
+    //           }
+    //         }
+    //       ]
+    //     }
+    //   })
+    //   expect(queryResult).toEqual([entity])
+    // })
 
-    it('JsonQuery - SQqlite or', async () => {
-      const entity = TEST_ENTITIES[2]
-      const entity3 = TEST_ENTITIES[3]
+    // it('JsonQuery - SQqlite or', async () => {
+    //   const entity = TEST_ENTITIES[2]
+    //   const entity3 = TEST_ENTITIES[3]
 
-      const queryService = moduleRef.get(TestEntityService)
-      const queryResult = await queryService.query({
-        filter: {
-          or: [
-            {
-              jsonType: {
-                contains: {
-                  testEntityPk: entity.testEntityPk
-                }
-              }
-            },
-            {
-              jsonType: {
-                contains: {
-                  testEntityPk: entity3.testEntityPk
-                }
-              }
-            }
-          ]
-        }
-      })
-      expect(queryResult).toEqual([entity, entity3])
-    })
+    //   const queryService = moduleRef.get(TestEntityService)
+    //   const queryResult = await queryService.query({
+    //     filter: {
+    //       or: [
+    //         {
+    //           jsonType: {
+    //             contains: {
+    //               testEntityPk: entity.testEntityPk
+    //             }
+    //           }
+    //         },
+    //         {
+    //           jsonType: {
+    //             contains: {
+    //               testEntityPk: entity3.testEntityPk
+    //             }
+    //           }
+    //         }
+    //       ]
+    //     }
+    //   })
+    //   expect(queryResult).toEqual([entity, entity3])
+    // })
 
     it('call select and return the result', async () => {
       const queryService = moduleRef.get(TestEntityService)

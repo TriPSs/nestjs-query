@@ -1,4 +1,18 @@
  
+# [7.5.0-alpha.0](https://github.com/souagrosolucoes/nestjs-query/compare/v7.3.1...v7.5.0-alpha.0) (2024-11-26)
+
+
+### Bug Fixes
+
+* disable test sqlit ([44afb08](https://github.com/souagrosolucoes/nestjs-query/commit/44afb087d05b35d5c9b6ab635c78ebd7dacf8f51))
+
+
+### Features
+
+* filter contains ([bec5e84](https://github.com/souagrosolucoes/nestjs-query/commit/bec5e84464557a6b9c4a8b1f726710101f0230ca))
+
+
+
 ## [7.3.1](https://github.com/souagrosolucoes/nestjs-query/compare/v7.4.0-alpha.0...v7.3.1) (2024-11-19)
 
 

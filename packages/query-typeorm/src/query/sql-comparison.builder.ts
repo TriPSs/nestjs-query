@@ -224,26 +224,10 @@ export class SQLComparisonBuilder<Entity> {
     return alias ? `${alias}.${field}` : `${field}`
   }
 
-  private operationForTypeDb = (filter: TypeDb): CmpSQLType => {
-    const driverType = this.repo?.manager.connection.options.type
-    const { sql, params } = filter[driverType]
-
-    return {
-      sql,
-      params
-    }
-  }
-
   private JsonContainsComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {
     const { paramName: jsonContains } = this
 
-    const filter: TypeDb = {
-      mysql: { sql: ` JSON_CONTAINS(${col}, :${jsonContains}`, params: { [jsonContains]: `%${JSON.stringify(val)}%` } },
-      postgres: { sql: `${col} @> :${jsonContains}`, params: { [jsonContains]: val } },
-      sqlite: { sql: `${col} LIKE :${jsonContains}`, params: { [jsonContains]: `%${JSON.stringify(val).slice(1, -1)}%` } }
-    }
-
-    return this.operationForTypeDb(filter)
+    return { sql: `${col} @> :${jsonContains}`, params: { [jsonContains]: val } }
   }
 
   private JsonContainedByComparisonSQL<F extends keyof Entity>(col: string, val: EntityComparisonField<Entity, F>): CmpSQLType {
