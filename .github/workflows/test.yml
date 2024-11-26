@@ -31,10 +31,9 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
 
-      - uses: actions/setup-sqlite@v1
-        with:
-          sqlite-version: 3.40.0
-          sqlite-year: 2022
+
+      - name: Setup SQLite environment
+        uses: ccorsi/setup-sqlite@v1.0.1
 
       - uses: nrwl/nx-set-shas@v4
 
