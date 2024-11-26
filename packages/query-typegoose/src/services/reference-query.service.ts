@@ -367,7 +367,7 @@ export abstract class ReferenceQueryService<Entity extends Base> {
     return refModel
   }
 
-  private getRefCount<Relation extends Document>(
+  private getRefCount<Relation>(
     relationName: string,
     relationIds: (string | number)[],
     filter?: Filter<Relation>
