@@ -9,7 +9,7 @@ import { TestSoftDeleteEntity } from './test-soft-delete.entity';
 import { TestSoftDeleteRelation } from './test-soft-delete.relation';
 
 export const CONNECTION_OPTIONS: DataSourceOptions = {
-  type: 'sqlite',
+  type: 'better-sqlite3',
   database: ':memory:',
   dropSchema: true,
   entities: [

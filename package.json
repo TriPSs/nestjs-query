@@ -33,6 +33,7 @@
     "apollo-server-express": "3.13.0",
     "apollo-server-plugin-base": "3.6.2",
     "apollo-server-types": "3.6.2",
+    "better-sqlite3": "^9.6.0",
     "class-validator": "0.14.1",
     "clsx": "2.1.0",
     "date-fns": "3.6.0",
