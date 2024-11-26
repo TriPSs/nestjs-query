@@ -4560,7 +4560,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-mongoose@workspace:packages/query-mongoose"
   dependencies:
-    change-case: "npm:^5.4.4"
+    camel-case: "npm:^4.1.2"
     lodash.escaperegexp: "npm:^4.1.2"
     lodash.merge: "npm:^4.6.2"
     tslib: "npm:^2.6.3"
@@ -4575,7 +4575,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-sequelize@workspace:packages/query-sequelize"
   dependencies:
-    change-case: "npm:^5.4.4"
+    camel-case: "npm:^4.1.2"
     lodash.pick: "npm:4.4.0"
     tslib: "npm:^2.6.3"
   peerDependencies:
@@ -4590,7 +4590,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-typegoose@workspace:packages/query-typegoose"
   dependencies:
-    change-case: "npm:^5.4.4"
+    camel-case: "npm:^4.1.2"
     is-class: "npm:0.0.9"
     lodash.escaperegexp: "npm:^4.1.2"
     lodash.merge: "npm:^4.6.2"
@@ -4607,7 +4607,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-typeorm@workspace:packages/query-typeorm"
   dependencies:
-    change-case: "npm:^5.4.4"
+    camel-case: "npm:^4.1.2"
     lodash.filter: "npm:^4.6.0"
     lodash.merge: "npm:^4.6.2"
     lodash.omit: "npm:^4.5.0"
@@ -7434,13 +7434,6 @@ __metadata:
   version: 5.3.0
   resolution: "chalk@npm:5.3.0"
   checksum: 10/6373caaab21bd64c405bfc4bd9672b145647fc9482657b5ea1d549b3b2765054e9d3d928870cdf764fb4aad67555f5061538ff247b8310f110c5c888d92397ea
-  languageName: node
-  linkType: hard
-
-"change-case@npm:^5.4.4":
-  version: 5.4.4
-  resolution: "change-case@npm:5.4.4"
-  checksum: 10/446e5573f3c854290a91292afef92b957d2e43a928260c91989b482aa860caaa29711b6725fc40c200af68061cbab357b033446d16a17bc5c553636994074e92
   languageName: node
   linkType: hard
 

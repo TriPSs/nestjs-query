@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common'
 import { AggregateQuery, AggregateQueryField, AggregateResponse } from '@ptc-org/nestjs-query-core'
 import { DocumentType } from '@typegoose/typegoose'
-import { camelCase } from 'change-case'
+import { camelCase } from 'camel-case'
 
 import { getSchemaKey } from './helpers'
 
