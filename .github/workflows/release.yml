@@ -32,15 +32,15 @@ jobs:
 
       - uses: nrwl/nx-set-shas@v4
 
-      - name: nx workspace:version
-        run: npx nx run workspace:version
+      - name: npm run version
+        run: npm run version
 
-      - name: nx affected:build
-        run: npx nx affected -t build
+      - name: npm run build
+        run: npm run build
 
-      - name: nx affected:publish
+      - name: npm run publish
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-          npx nx run-many -t publish --all --base origin/master
+          npm run publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
