@@ -17,7 +17,7 @@ const isTypegooseClass = (item: TypegooseInput): item is TypegooseClass => isCla
 const isTypegooseClassWithOptions = (item: ClassOrDiscriminator): item is TypegooseClassWithOptions =>
   isTypegooseClass(item.typegooseClass)
 
-AssemblerSerializer((obj: mongoose.Document) => obj.toObject({ virtuals: true }))(mongoose.Document)
+AssemblerSerializer((obj: mongoose.Document) => obj.toObject({ virtuals: true }) as mongoose.Document)(mongoose.Document)
 
 function ensureProperInput(item: TypegooseInput): ClassOrDiscriminator | undefined {
   if (isTypegooseClass(item)) {
