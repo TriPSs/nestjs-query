@@ -15229,40 +15229,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:6.9.0":
-  version: 6.9.0
-  resolution: "mongodb@npm:6.9.0"
-  dependencies:
-    "@mongodb-js/saslprep": "npm:^1.1.5"
-    bson: "npm:^6.7.0"
-    mongodb-connection-string-url: "npm:^3.0.0"
-  peerDependencies:
-    "@aws-sdk/credential-providers": ^3.188.0
-    "@mongodb-js/zstd": ^1.1.0
-    gcp-metadata: ^5.2.0
-    kerberos: ^2.0.1
-    mongodb-client-encryption: ">=6.0.0 <7"
-    snappy: ^7.2.2
-    socks: ^2.7.1
-  peerDependenciesMeta:
-    "@aws-sdk/credential-providers":
-      optional: true
-    "@mongodb-js/zstd":
-      optional: true
-    gcp-metadata:
-      optional: true
-    kerberos:
-      optional: true
-    mongodb-client-encryption:
-      optional: true
-    snappy:
-      optional: true
-    socks:
-      optional: true
-  checksum: 10/c2b1af2affc27d67ffd966e1821585d88970bfefae21a3f7232d2f32345df3ea1ff329118844904527f6d74cc4fcab7fcafae1f6a4d6b12a58c3f24a9a5e4e9b
-  languageName: node
-  linkType: hard
-
 "mongodb@npm:^5.9.1":
   version: 5.9.2
   resolution: "mongodb@npm:5.9.2"
@@ -15295,18 +15261,52 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongoose@npm:^8.5.3":
-  version: 8.7.1
-  resolution: "mongoose@npm:8.7.1"
+"mongodb@npm:~6.10.0":
+  version: 6.10.0
+  resolution: "mongodb@npm:6.10.0"
+  dependencies:
+    "@mongodb-js/saslprep": "npm:^1.1.5"
+    bson: "npm:^6.7.0"
+    mongodb-connection-string-url: "npm:^3.0.0"
+  peerDependencies:
+    "@aws-sdk/credential-providers": ^3.188.0
+    "@mongodb-js/zstd": ^1.1.0
+    gcp-metadata: ^5.2.0
+    kerberos: ^2.0.1
+    mongodb-client-encryption: ">=6.0.0 <7"
+    snappy: ^7.2.2
+    socks: ^2.7.1
+  peerDependenciesMeta:
+    "@aws-sdk/credential-providers":
+      optional: true
+    "@mongodb-js/zstd":
+      optional: true
+    gcp-metadata:
+      optional: true
+    kerberos:
+      optional: true
+    mongodb-client-encryption:
+      optional: true
+    snappy:
+      optional: true
+    socks:
+      optional: true
+  checksum: 10/cab3b9171de69078a69a969d9c17b78b14fd346ad7579e8e88369d0494cd9bfb3a58e78d312d8480b94c601907aa57b5fa89fe44531de94839a04b79ea856ae0
+  languageName: node
+  linkType: hard
+
+"mongoose@npm:^8.8.3":
+  version: 8.8.4
+  resolution: "mongoose@npm:8.8.4"
   dependencies:
     bson: "npm:^6.7.0"
     kareem: "npm:2.6.3"
-    mongodb: "npm:6.9.0"
+    mongodb: "npm:~6.10.0"
     mpath: "npm:0.9.0"
     mquery: "npm:5.0.0"
     ms: "npm:2.1.3"
     sift: "npm:17.1.3"
-  checksum: 10/9566e470c83059c1ccd0aee025ce69077395f4d9bed82ebfe9cde63e241b25035fd03034d53be10c343c86fbc6d0a85490c6db6ca810318af7a77c2b37c275c7
+  checksum: 10/0267f3f8b65628335375467bdd149fb2a487458c9c66ddd18ea4f9e4000ecbe3729000d29a25c544c5a4e01eaeadcb54c9b4957204bf02a206ed1c32b31ca30f
   languageName: node
   linkType: hard
 
@@ -15560,7 +15560,7 @@ __metadata:
     jest: "npm:29.7.0"
     jest-extended: "npm:4.0.2"
     mongodb-memory-server: "npm:9.3.0"
-    mongoose: "npm:^8.5.3"
+    mongoose: "npm:^8.8.3"
     mysql2: "npm:3.11.0"
     nx: "npm:19.6.1"
     passport: "npm:0.7.0"
