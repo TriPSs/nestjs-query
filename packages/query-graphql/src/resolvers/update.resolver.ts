@@ -204,7 +204,7 @@ export const Updateable =
           throw new Error(`Unable to subscribe to ${updateOneEvent}`)
         }
         const eventName = getSubscriptionEventName(updateOneEvent, authorizeFilter)
-        return this.pubSub.asyncIterator(eventName)
+        return this.pubSub.asyncIterableIterator(eventName)
       }
 
       @ResolverSubscription(() => UMR, { name: updateManyEvent }, commonResolverOpts, {
@@ -219,7 +219,7 @@ export const Updateable =
           throw new Error(`Unable to subscribe to ${updateManyEvent}`)
         }
         const eventName = getSubscriptionEventName(updateManyEvent, authorizeFilter)
-        return this.pubSub.asyncIterator(eventName)
+        return this.pubSub.asyncIterableIterator(eventName)
       }
     }
 

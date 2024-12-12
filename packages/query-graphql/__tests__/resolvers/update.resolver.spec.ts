@@ -14,6 +14,7 @@ import { anything, deepEqual, instance, mock, objectContaining, verify, when } f
 import { UpdatedEvent } from '../../src/resolvers/update.resolver'
 import { EventType, getDTOEventName } from '../../src/subscription'
 import { createResolverFromNest, generateSchema, TestResolverDTO, TestResolverInputDTO, TestService } from '../__fixtures__'
+import { PubSubAsyncIterableIterator } from 'graphql-subscriptions/dist/pubsub-async-iterable-iterator'
 
 describe('UpdateResolver', () => {
   const expectResolverSDL = async (opts?: UpdateResolverOpts<TestResolverDTO>) => {
@@ -361,11 +362,11 @@ describe('UpdateResolver', () => {
             stringField: 'foo'
           }
         }
-        const mockIterator = mock<AsyncIterator<UpdatedEvent<TestResolverDTO>>>()
-        when(mockPubSub.asyncIterator(eventName)).thenReturn(instance(mockIterator))
+        const mockIterator = mock<PubSubAsyncIterableIterator<UpdatedEvent<TestResolverDTO>>>()
+        when(mockPubSub.asyncIterableIterator(eventName)).thenReturn(instance(mockIterator))
         when(mockIterator.next()).thenResolve({ done: false, value: event })
         const result = await resolver.updatedOneSubscription().next()
-        verify(mockPubSub.asyncIterator(eventName)).once()
+        verify(mockPubSub.asyncIterableIterator(eventName)).once()
         return expect(result).toEqual({
           done: false,
           value: event
@@ -395,11 +396,11 @@ describe('UpdateResolver', () => {
         const { resolver, mockPubSub } = await createTestResolver({ enableSubscriptions: true })
         const eventName = getDTOEventName(EventType.UPDATED_MANY, TestResolverDTO)
         const event: UpdateManyResponse = { updatedCount: 1 }
-        const mockIterator = mock<AsyncIterator<UpdateManyResponse>>()
-        when(mockPubSub.asyncIterator(eventName)).thenReturn(instance(mockIterator))
+        const mockIterator = mock<PubSubAsyncIterableIterator<UpdateManyResponse>>()
+        when(mockPubSub.asyncIterableIterator(eventName)).thenReturn(instance(mockIterator))
         when(mockIterator.next()).thenResolve({ done: false, value: event })
         const result = await resolver.updatedManySubscription().next()
-        verify(mockPubSub.asyncIterator(eventName)).once()
+        verify(mockPubSub.asyncIterableIterator(eventName)).once()
         return expect(result).toEqual({
           done: false,
           value: event
