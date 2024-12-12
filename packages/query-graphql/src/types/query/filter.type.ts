@@ -1,8 +1,7 @@
 import { Field, InputType, TypeMetadataStorage } from '@nestjs/graphql'
-import { Class, Filter, MapReflector } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, MapReflector, upperCaseFirst } from '@ptc-org/nestjs-query-core'
 import { Type } from 'class-transformer'
 import { ValidateNested } from 'class-validator'
-import { upperCaseFirst } from 'upper-case-first'
 
 import { getDTONames, getGraphqlObjectName } from '../../common'
 import { getFilterableFields, getQueryOptions, getRelations, SkipIf } from '../../decorators'
