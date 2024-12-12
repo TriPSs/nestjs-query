@@ -1,4 +1,23 @@
  
+# [8.0.0](https://github.com/TriPSs/nestjs-query/compare/v7.1.0...v8.0.0) (2024-12-12)
+
+
+### Features
+
+* **query-graphql:** Updated graphql subscriptions ([ee688a2](https://github.com/TriPSs/nestjs-query/commit/ee688a2a1dc939964bdcabc07ec2a50de36dc7b7))
+
+
+### Reverts
+
+* Replace change-case with camel-case in multiple packages ([0720323](https://github.com/TriPSs/nestjs-query/commit/0720323ecf3941a296c909544c08ec3322f4ce54))
+
+
+### BREAKING CHANGES
+
+* **query-graphql:** Updated to new major version of graphql-subscriptions
+
+
+
 # [7.1.0](https://github.com/TriPSs/nestjs-query/compare/v7.0.1...v7.1.0) (2024-10-16)
 
 
