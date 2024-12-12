@@ -14,6 +14,7 @@ import { anything, deepEqual, instance, mock, objectContaining, verify, when } f
 import { CreatedEvent } from '../../src/resolvers/create.resolver'
 import { EventType, getDTOEventName } from '../../src/subscription'
 import { createResolverFromNest, generateSchema, TestResolverDTO, TestResolverInputDTO, TestService } from '../__fixtures__'
+import { PubSubAsyncIterableIterator } from 'graphql-subscriptions/dist/pubsub-async-iterable-iterator'
 
 describe('CreateResolver', () => {
   const expectResolverSDL = async (opts?: CreateResolverOpts<TestResolverDTO>) => {
@@ -307,11 +308,11 @@ describe('CreateResolver', () => {
             stringField: 'foo'
           }
         }
-        const mockIterator = mock<AsyncIterator<CreatedEvent<TestResolverDTO>>>()
-        when(mockPubSub.asyncIterator(eventName)).thenReturn(instance(mockIterator))
+        const mockIterator = mock<PubSubAsyncIterableIterator<CreatedEvent<TestResolverDTO>>>()
+        when(mockPubSub.asyncIterableIterator(eventName)).thenReturn(instance(mockIterator))
         when(mockIterator.next()).thenResolve({ done: false, value: event })
         const result = await resolver.createdSubscription().next()
-        verify(mockPubSub.asyncIterator(eventName)).once()
+        verify(mockPubSub.asyncIterableIterator(eventName)).once()
         return expect(result).toEqual({
           done: false,
           value: event

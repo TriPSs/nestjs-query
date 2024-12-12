@@ -8,5 +8,5 @@ export interface GraphQLPubSub {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   unsubscribe(subId: number): any
 
-  asyncIterator<T>(triggers: string | string[]): AsyncIterator<T>
+  asyncIterableIterator<T>(triggers: string | string[]): AsyncIterator<T>
 }

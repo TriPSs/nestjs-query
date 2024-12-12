@@ -88,7 +88,7 @@
     "eslint-plugin-tsdoc": "0.2.17",
     "graphql": "16.9.0",
     "graphql-query-complexity": "1.0.0",
-    "graphql-subscriptions": "2.0.0",
+    "graphql-subscriptions": "^3.0.0",
     "graphql-tools": "9.0.1",
     "husky": "9.1.5",
     "jest": "29.7.0",
@@ -113,7 +113,7 @@
     "ts-node": "10.9.2",
     "tsconfig-extends": "1.0.1",
     "tsconfig-paths": "4.2.0",
-    "typescript": "5.5.4"
+    "typescript": "^5.7.2"
   },
   "packageManager": "yarn@4.4.0"
 }
