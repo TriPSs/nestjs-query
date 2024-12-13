@@ -1,4 +1,13 @@
  
+## [8.0.1](https://github.com/TriPSs/nestjs-query/compare/v8.0.0...v8.0.1) (2024-12-13)
+
+
+### Bug Fixes
+
+* update missing peerDependencies version increase ([ed6e57c](https://github.com/TriPSs/nestjs-query/commit/ed6e57cecbb9e014c8fb33fc6da9ba1b7e90310e))
+
+
+
 # [8.0.0](https://github.com/TriPSs/nestjs-query/compare/v7.1.0...v8.0.0) (2024-12-12)
 
 
