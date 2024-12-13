@@ -4558,7 +4558,7 @@ __metadata:
     class-transformer: ^0.5
     class-validator: ^0.14.0
     graphql: ^16.0.0
-    graphql-subscriptions: ^2.0.0
+    graphql-subscriptions: ^3.0.0
     ts-morph: ^19.0.0
   languageName: unknown
   linkType: soft
