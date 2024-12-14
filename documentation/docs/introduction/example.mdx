@@ -270,6 +270,7 @@ npx nest g cl todo-item.create.dto todo-item --flat
 
 
 ```ts title="todo-item/todo-item.create.dto.ts"
+import { Field, InputType } from '@nestjs/graphql';
 import { IsBoolean, IsString } from 'class-validator';
 
 @InputType('CreateTodoItem')
@@ -453,6 +454,7 @@ import { TodoItemModule } from './todo-item/todo-item.module';
       type: 'postgres',
       database: 'gettingstarted',
       username: 'gettingstarted',
+      password: 'gettingstarted',
       autoLoadEntities: true,
       synchronize: true,
       logging: true,
@@ -567,17 +569,16 @@ export class AppModule {}
 </TabItem>
 </Tabs>
 
-Create a `docker-compose.yml` file in the root of the project
+Create a `compose.yml` file in the root of the project
 
 ```dockerfile
-version: "3"
-
 services:
   postgres:
-    image: "postgres:11.5"
+    image: "postgres:17.0-alpine3.20"
     environment:
       - "POSTGRES_USER=gettingstarted"
       - "POSTGRES_DB=gettingstarted"
+      - "POSTGRES_PASSWORD=gettingstarted"
     expose:
       - "5432"
     ports:
