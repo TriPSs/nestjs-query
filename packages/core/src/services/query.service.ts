@@ -7,6 +7,8 @@ import {
   AggregateQuery,
   AggregateResponse,
   CountOptions,
+  CreateManyOptions,
+  CreateOneOptions,
   DeleteManyOptions,
   DeleteManyResponse,
   DeleteOneOptions,
@@ -243,17 +245,19 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    * Create a single record.
    *
    * @param item - the record to create.
+   * @param opts - Additional opts to apply when creating one entity.
    * @returns the created record.
    */
-  createOne(item: C): Promise<DTO>
+  createOne(item: C, opts?: CreateOneOptions<DTO>): Promise<DTO>
 
   /**
    * Creates a multiple record.
    *
    * @param items - the records to create.
+   * @param opts - Additional opts to apply when creating many entities.
    * @returns a created records.
    */
-  createMany(items: C[]): Promise<DTO[]>
+  createMany(items: C[], opts?: CreateManyOptions<DTO>): Promise<DTO[]>
 
   /**
    * Update one record.
