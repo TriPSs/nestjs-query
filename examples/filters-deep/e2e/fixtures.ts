@@ -1,4 +1,4 @@
-import { Connection } from 'typeorm'
+import { DataSource } from 'typeorm'
 
 import { executeTruncate } from '../../helpers'
 import { CategoryEntity } from '../src/category/category.entity'
@@ -6,14 +6,14 @@ import { PostEntity } from '../src/post/post.entity'
 import { UserEntity } from '../src/user/user.entity'
 
 const tables = ['user', 'post', 'category']
-export const truncate = async (connection: Connection): Promise<void> => executeTruncate(connection, tables)
+export const truncate = async (dataSource: DataSource): Promise<void> => executeTruncate(dataSource, tables)
 
-export const refresh = async (connection: Connection): Promise<void> => {
-  await truncate(connection)
+export const refresh = async (dataSource: DataSource): Promise<void> => {
+  await truncate(dataSource)
 
-  const userRepo = connection.getRepository(UserEntity)
-  const postRepo = connection.getRepository(PostEntity)
-  const categoryRepo = connection.getRepository(CategoryEntity)
+  const userRepo = dataSource.getRepository(UserEntity)
+  const postRepo = dataSource.getRepository(PostEntity)
+  const categoryRepo = dataSource.getRepository(CategoryEntity)
 
   const newsCategory = await categoryRepo.save({ name: 'News' })
   const sportsCategory = await categoryRepo.save({ name: 'Sports' })
