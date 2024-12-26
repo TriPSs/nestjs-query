@@ -2,7 +2,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
 import { OffsetConnectionType } from '@ptc-org/nestjs-query-graphql'
 import request from 'supertest'
-import { Connection } from 'typeorm'
+import { DataSource } from 'typeorm'
 
 import { AppModule } from '../src/app.module'
 import { TodoItemOffsetFetchWithNegativeDisableDTO } from '../src/todo-item/dto/todo-item-offset-fetch-all-disable.dto'
@@ -29,10 +29,10 @@ describe('TodoItemResolver (offset pagination - fetch all with negative disabled
     )
 
     await app.init()
-    await refresh(app.get(Connection))
+    await refresh(app.get(DataSource))
   })
 
-  afterAll(() => refresh(app.get(Connection)))
+  afterAll(() => refresh(app.get(DataSource)))
 
   describe('query', () => {
     describe('paging', () => {
