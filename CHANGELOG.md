@@ -880,7 +880,7 @@
 
 ### Bug Fixes
 
-* **typeorm, #954:** Filtering on relations with pagination  ([#977](https://github.com/tripss/nestjs-query/issues/977)) ([f5a6374](https://github.com/tripss/nestjs-query/commit/f5a6374f6e22470f63ef6257f7271c818ed09321)), closes [#954](https://github.com/tripss/nestjs-query/issues/954) [#954](https://github.com/tripss/nestjs-query/issues/954) [#954](https://github.com/tripss/nestjs-query/issues/954) [#954](https://github.com/tripss/nestjs-query/issues/954)
+* **typeorm, #954:** Filtering on relations with pagination  ([#977](https://github.com/tripss/nestjs-query/issues/977)) ([f5a6374](https://github.com/tripss/nestjs-query/commit/f5a6374f6e22470f63ef6257f7271c818ed09321)), closes [#954](https://github.com/doug-martin/nestjs-query/issues/954) [#954](https://github.com/doug-martin/nestjs-query/issues/954) [#954](https://github.com/doug-martin/nestjs-query/issues/954) [#954](https://github.com/doug-martin/nestjs-query/issues/954)
 
 
 
