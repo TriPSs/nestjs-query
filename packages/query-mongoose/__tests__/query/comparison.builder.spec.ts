@@ -73,7 +73,7 @@ describe('ComparisonBuilder', (): void => {
   it('should build like sql fragment', (): void => {
     expect(createComparisonBuilder().build('stringType', 'like', '%hello%')).toEqual({
       stringType: {
-        $regex: /.*hello.*/
+        $regex: /^.*hello.*$/
       }
     })
   })
@@ -81,7 +81,7 @@ describe('ComparisonBuilder', (): void => {
   it('should build notLike sql fragment', (): void => {
     expect(createComparisonBuilder().build('stringType', 'notLike', '%hello%')).toEqual({
       stringType: {
-        $not: { $regex: /.*hello.*/ }
+        $not: { $regex: /^.*hello.*$/ }
       }
     })
   })
@@ -89,7 +89,7 @@ describe('ComparisonBuilder', (): void => {
   it('should build iLike sql fragment', (): void => {
     expect(createComparisonBuilder().build('stringType', 'iLike', '%hello%')).toEqual({
       stringType: {
-        $regex: /.*hello.*/i
+        $regex: /^.*hello.*$/i
       }
     })
   })
@@ -97,7 +97,7 @@ describe('ComparisonBuilder', (): void => {
   it('should build notILike sql fragment', (): void => {
     expect(createComparisonBuilder().build('stringType', 'notILike', '%hello%')).toEqual({
       stringType: {
-        $not: { $regex: /.*hello.*/i }
+        $not: { $regex: /^.*hello.*$/i }
       }
     })
   })
