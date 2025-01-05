@@ -1,17 +1,17 @@
-import { Connection } from 'typeorm'
+import { DataSource } from 'typeorm'
 
 import { executeTruncate } from '../../../examples/helpers'
 import { SubTaskEntity } from '../src/sub-task/sub-task.entity'
 import { TodoItemEntity } from '../src/todo-item/todo-item.entity'
 
 const tables = ['todo_item']
-export const truncate = async (connection: Connection): Promise<void> => executeTruncate(connection, tables)
+export const truncate = async (dataSource: DataSource): Promise<void> => executeTruncate(dataSource, tables)
 
-export const refresh = async (connection: Connection): Promise<void> => {
-  await truncate(connection)
+export const refresh = async (dataSource: DataSource): Promise<void> => {
+  await truncate(dataSource)
 
-  const todoRepo = connection.getRepository(TodoItemEntity)
-  const subTaskRepo = connection.getRepository(SubTaskEntity)
+  const todoRepo = dataSource.getRepository(TodoItemEntity)
+  const subTaskRepo = dataSource.getRepository(SubTaskEntity)
 
   const savedTodos = await todoRepo.save(
     todoRepo.create([

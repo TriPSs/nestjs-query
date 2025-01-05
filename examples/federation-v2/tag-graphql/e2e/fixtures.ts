@@ -1,17 +1,17 @@
-import { Connection } from 'typeorm'
+import { DataSource } from 'typeorm'
 
 import { executeTruncate } from '../../../helpers'
 import { TagEntity } from '../src/tag/tag.entity'
 import { TagTodoItemEntity } from '../src/tag/tag-todo-item.entity'
 
 const tables = ['tag_todo_item', 'tag']
-export const truncate = async (connection: Connection): Promise<void> => executeTruncate(connection, tables)
+export const truncate = async (dataSource: DataSource): Promise<void> => executeTruncate(dataSource, tables)
 
-export const refresh = async (connection: Connection): Promise<void> => {
-  await truncate(connection)
+export const refresh = async (dataSource: DataSource): Promise<void> => {
+  await truncate(dataSource)
 
-  const tagsRepo = connection.getRepository(TagEntity)
-  const tagTodoItemRepo = connection.getRepository(TagTodoItemEntity)
+  const tagsRepo = dataSource.getRepository(TagEntity)
+  const tagTodoItemRepo = dataSource.getRepository(TagTodoItemEntity)
 
   const urgentTag = await tagsRepo.save({ name: 'Urgent' })
   const homeTag = await tagsRepo.save({ name: 'Home' })
