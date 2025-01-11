@@ -658,7 +658,7 @@ import { SortDirection } from '@ptc-org/nestjs-query-core';
   defaultSort: [{ field: 'id', direction: SortDirection.ASC }],
 })
 ```
-Note that default value for `defaultSort` is `[]`, meaning if you do **not** specify it you will receive the results as your underlying database decided to return it which makes it unreliable.
+Note that default value for `defaultSort` is `[]`, meaning if you do **not** specify it you will receive the results as determined by your underlying database, which is unreliable and calculated based on how your database engine works.
 :::
 
 ### Allowed Boolean Expressions
