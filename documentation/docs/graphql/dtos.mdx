@@ -649,6 +649,10 @@ export class TodoItemDTO {
 
 ```
 
+:::info
+When we use the `@FilterableRelation` decorator or other [relation decorators](./relations.mdx) you might want to define the default sorting criteria since its default value is `[]`, meaning if you do **not** specify it you will receive the results as your underlying database decided to return it which makes it unreliable.
+:::
+
 ### Allowed Boolean Expressions
 
 When filtering you can provide `and` and `or` expressions to provide advanced filtering. You can turn off either by
