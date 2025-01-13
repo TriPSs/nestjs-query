@@ -218,10 +218,11 @@ export class FilterQueryBuilder<Entity> {
     }
 
     return sorts.reduce((prevQb, { field, direction, nulls }) => {
-      let col = alias ? `${alias}.${field as string}` : `${field as string}`
+      const stringifiedField = String(field)
+      let col = alias ? `${alias}.${stringifiedField}` : `${stringifiedField}`
 
-      if (this.virtualColumns.includes(field as string)) {
-        col = prevQb.escape(alias ? `${alias}_${field as string}` : `${field as string}`)
+      if (this.virtualColumns.includes(stringifiedField)) {
+        col = prevQb.escape(alias ? `${alias}_${stringifiedField}` : `${stringifiedField}`)
       }
 
       return prevQb.addOrderBy(col, direction, nulls)
