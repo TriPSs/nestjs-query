@@ -1,4 +1,15 @@
  
+## [8.0.2](https://github.com/TriPSs/nestjs-query/compare/v8.0.1...v8.0.2) (2025-01-21)
+
+
+### Bug Fixes
+
+* add missing import in doc + upgrading docker image version ([3ce8691](https://github.com/TriPSs/nestjs-query/commit/3ce86913e60a52188e61149c495a533ffa81fd59))
+* mongoose ilike comparism wasn capable of searching with fixed start/end letter ([4f90c93](https://github.com/TriPSs/nestjs-query/commit/4f90c936d6fc5af3e1c8d1be35e26ad0d2824944))
+* Mongoose ReferenceQueryService only accepted Relations with ObjectIds ([b364870](https://github.com/TriPSs/nestjs-query/commit/b364870b8c7348190359a722785b3c86324353d2))
+
+
+
 ## [8.0.1](https://github.com/TriPSs/nestjs-query/compare/v8.0.0...v8.0.1) (2024-12-13)
 
 
