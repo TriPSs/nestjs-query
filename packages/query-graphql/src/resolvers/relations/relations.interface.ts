@@ -1,4 +1,4 @@
-import { Complexity } from '@nestjs/graphql'
+import { Complexity, FieldOptions } from '@nestjs/graphql'
 import { Class } from '@ptc-org/nestjs-query-core'
 
 import { AuthorizerOptions } from '../../auth'
@@ -63,13 +63,6 @@ export type ResolverRelation<Relation> = {
    */
   allowFiltering?: boolean
 
-  /**
-   * Description of the relation.
-   */
-  description?: string
-
-  complexity?: Complexity
-
   update?: Pick<ResolverRelation<Relation>, 'description'> & ResolverRelationMethodOpts
   remove?: Pick<ResolverRelation<Relation>, 'description'> & ResolverRelationMethodOpts
   /**
@@ -82,7 +75,8 @@ export type ResolverRelation<Relation> = {
 } & DTONamesOpts &
   ResolverMethodOpts &
   QueryArgsTypeOpts<Relation> &
-  Pick<ConnectionOptions, 'enableTotalCount'>
+  Pick<ConnectionOptions, 'enableTotalCount'> &
+  Omit<FieldOptions, 'name' | 'middleware'>
 
 export type RelationTypeMap<RT> = Record<string, RT>
 
