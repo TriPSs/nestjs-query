@@ -63,6 +63,11 @@ export type ResolverRelation<Relation> = {
    */
   allowFiltering?: boolean
 
+  /**
+   * Description of the relation.
+   */
+  description?: string
+
   update?: Pick<ResolverRelation<Relation>, 'description'> & ResolverRelationMethodOpts
   remove?: Pick<ResolverRelation<Relation>, 'description'> & ResolverRelationMethodOpts
   /**
@@ -76,7 +81,7 @@ export type ResolverRelation<Relation> = {
   ResolverMethodOpts &
   QueryArgsTypeOpts<Relation> &
   Pick<ConnectionOptions, 'enableTotalCount'> &
-  Omit<FieldOptions, 'name' | 'middleware'>
+  Omit<FieldOptions, 'name' | 'description' | 'middleware'>
 
 export type RelationTypeMap<RT> = Record<string, RT>
 
