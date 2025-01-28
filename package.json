@@ -26,7 +26,7 @@
     "@nestjs/sequelize": "10.0.1",
     "@nestjs/typeorm": "^10.0.2",
     "class-validator": "0.14.1",
-    "mongoose": "^8.8.3",
+    "mongoose": "^8.9.5",
     "reflect-metadata": "^0.2.2",
     "sequelize": "6.37.3",
     "sequelize-typescript": "2.1.6",
