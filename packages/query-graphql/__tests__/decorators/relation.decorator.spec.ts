@@ -9,7 +9,14 @@ import {
   UnPagedRelation
 } from '@ptc-org/nestjs-query-graphql'
 
-import { CursorConnection, FilterableCursorConnection, FilterableOffsetConnection, getRelations } from '../../src/decorators'
+import {
+  CursorConnection,
+  FilterableCursorConnection,
+  FilterableOffsetConnection,
+  getRelations,
+  RelationOneDecoratorOpts
+} from '../../src/decorators'
+import { RelationManyDecoratorOpts } from 'packages/query-graphql/src/decorators/relation.decorator'
 
 @ObjectType()
 class TestRelation {}
@@ -26,6 +33,23 @@ describe('@Relation', () => {
     const relations = getRelations(TestDTO)
     expect(relations).toEqual({ one: { test: { DTO: TestRelation, allowFiltering: false, ...relationOpts } } })
   })
+
+  it('should add the deprecationReason to the options', () => {
+    // Arrange
+    const relationFn = () => TestRelation
+    const relationOpts: Partial<RelationOneDecoratorOpts<TestRelation>> = {
+      deprecationReason: 'Deprecated for no apparent reason.'
+    }
+    @ObjectType()
+    @Relation('test', relationFn, relationOpts)
+    class TestDTO {}
+
+    // Act
+    const relations = getRelations(TestDTO)
+
+    // Assert
+    expect(relations).toEqual({ one: { test: { DTO: TestRelation, allowFiltering: false, ...relationOpts } } })
+  })
 })
 
 describe('@FilterableRelation', () => {
@@ -40,6 +64,23 @@ describe('@FilterableRelation', () => {
     const relations = getRelations(TestDTO)
     expect(relations).toEqual({ one: { test: { DTO: TestRelation, ...relationOpts, allowFiltering: true } } })
   })
+
+  it('should add the deprecationReason to the options', () => {
+    // Arrange
+    const relationFn = () => TestRelation
+    const relationOpts: Partial<RelationOneDecoratorOpts<TestRelation>> = {
+      deprecationReason: 'Deprecated for no apparent reason.'
+    }
+    @ObjectType()
+    @FilterableRelation('test', relationFn, relationOpts)
+    class TestDTO {}
+
+    // Act
+    const relations = getRelations(TestDTO)
+
+    // Assert
+    expect(relations).toEqual({ one: { test: { DTO: TestRelation, ...relationOpts, allowFiltering: true } } })
+  })
 })
 
 describe('@UnPagedRelation', () => {
@@ -52,6 +93,27 @@ describe('@UnPagedRelation', () => {
     class TestDTO {}
 
     const relations = getRelations(TestDTO)
+    expect(relations).toEqual({
+      many: {
+        tests: { DTO: TestRelation, ...relationOpts, allowFiltering: false, pagingStrategy: PagingStrategies.NONE }
+      }
+    })
+  })
+
+  it('should add the deprecationReason to the options', () => {
+    // Arrange
+    const relationFn = () => TestRelation
+    const relationOpts: Partial<RelationManyDecoratorOpts<TestRelation>> = {
+      deprecationReason: 'Deprecated for no apparent reason.'
+    }
+    @ObjectType()
+    @UnPagedRelation('tests', relationFn, relationOpts)
+    class TestDTO {}
+
+    // Act
+    const relations = getRelations(TestDTO)
+
+    // Assert
     expect(relations).toEqual({
       many: {
         tests: { DTO: TestRelation, ...relationOpts, allowFiltering: false, pagingStrategy: PagingStrategies.NONE }
@@ -76,6 +138,27 @@ describe('@FilterableUnPagedRelation', () => {
       }
     })
   })
+
+  it('should add the deprecationReason to the options', () => {
+    // Arrange
+    const relationFn = () => TestRelation
+    const relationOpts: Partial<RelationManyDecoratorOpts<TestRelation>> = {
+      deprecationReason: 'Deprecated for no apparent reason.'
+    }
+    @ObjectType()
+    @FilterableUnPagedRelation('test', relationFn, relationOpts)
+    class TestDTO {}
+
+    // Act
+    const relations = getRelations(TestDTO)
+
+    // Assert
+    expect(relations).toEqual({
+      many: {
+        test: { DTO: TestRelation, pagingStrategy: PagingStrategies.NONE, ...relationOpts, allowFiltering: true }
+      }
+    })
+  })
 })
 
 describe('@OffsetConnection', () => {
@@ -88,6 +171,27 @@ describe('@OffsetConnection', () => {
     class TestDTO {}
 
     const relations = getRelations(TestDTO)
+    expect(relations).toEqual({
+      many: {
+        test: { DTO: TestRelation, ...relationOpts, allowFiltering: false, pagingStrategy: PagingStrategies.OFFSET }
+      }
+    })
+  })
+
+  it('should add the deprecationReason to the options', () => {
+    // Arrange
+    const relationFn = () => TestRelation
+    const relationOpts: Partial<RelationManyDecoratorOpts<TestRelation>> = {
+      deprecationReason: 'Deprecated for no apparent reason.'
+    }
+    @ObjectType()
+    @OffsetConnection('test', relationFn, relationOpts)
+    class TestDTO {}
+
+    // Act
+    const relations = getRelations(TestDTO)
+
+    // Assert
     expect(relations).toEqual({
       many: {
         test: { DTO: TestRelation, ...relationOpts, allowFiltering: false, pagingStrategy: PagingStrategies.OFFSET }
@@ -112,6 +216,27 @@ describe('@FilterableOffsetConnection', () => {
       }
     })
   })
+
+  it('should add the deprecationReason to the options', () => {
+    // Arrange
+    const relationFn = () => TestRelation
+    const relationOpts: Partial<RelationManyDecoratorOpts<TestRelation>> = {
+      deprecationReason: 'Deprecated for no apparent reason.'
+    }
+    @ObjectType()
+    @FilterableOffsetConnection('test', relationFn, relationOpts)
+    class TestDTO {}
+
+    // Act
+    const relations = getRelations(TestDTO)
+
+    // Assert
+    expect(relations).toEqual({
+      many: {
+        test: { DTO: TestRelation, ...relationOpts, pagingStrategy: PagingStrategies.OFFSET, allowFiltering: true }
+      }
+    })
+  })
 })
 
 describe('@CursorConnection', () => {
@@ -130,6 +255,27 @@ describe('@CursorConnection', () => {
       }
     })
   })
+
+  it('should add the deprecationReason to the options', () => {
+    // Arrange
+    const relationFn = () => TestRelation
+    const relationOpts: Partial<RelationManyDecoratorOpts<TestRelation>> = {
+      deprecationReason: 'Deprecated for no apparent reason.'
+    }
+    @ObjectType()
+    @CursorConnection('test', relationFn, relationOpts)
+    class TestDTO {}
+
+    // Act
+    const relations = getRelations(TestDTO)
+
+    // Assert
+    expect(relations).toEqual({
+      many: {
+        test: { DTO: TestRelation, ...relationOpts, allowFiltering: false, pagingStrategy: PagingStrategies.CURSOR }
+      }
+    })
+  })
 })
 
 describe('@FilterableCursorConnection', () => {
@@ -142,6 +288,27 @@ describe('@FilterableCursorConnection', () => {
     class TestDTO {}
 
     const relations = getRelations(TestDTO)
+    expect(relations).toEqual({
+      many: {
+        test: { DTO: TestRelation, ...relationOpts, pagingStrategy: PagingStrategies.CURSOR, allowFiltering: true }
+      }
+    })
+  })
+
+  it('should add the deprecationReason to the options', () => {
+    // Arrange
+    const relationFn = () => TestRelation
+    const relationOpts: Partial<RelationManyDecoratorOpts<TestRelation>> = {
+      deprecationReason: 'Deprecated for no apparent reason.'
+    }
+    @ObjectType()
+    @FilterableCursorConnection('test', relationFn, relationOpts)
+    class TestDTO {}
+
+    // Act
+    const relations = getRelations(TestDTO)
+
+    // Assert
     expect(relations).toEqual({
       many: {
         test: { DTO: TestRelation, ...relationOpts, pagingStrategy: PagingStrategies.CURSOR, allowFiltering: true }
