@@ -1,4 +1,8 @@
  
+## [8.0.3](https://github.com/TriPSs/nestjs-query/compare/v8.0.2...v8.0.3) (2025-01-30)
+
+
+
 ## [8.0.2](https://github.com/TriPSs/nestjs-query/compare/v8.0.1...v8.0.2) (2025-01-21)
 
 
