@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing'
 import { AggregateResponse, getQueryServiceToken, QueryService } from '@souagrosolucoes/nestjs-query-core'
 import { CursorConnectionType } from '@souagrosolucoes/nestjs-query-graphql'
 import request from 'supertest'
-import { Connection } from 'typeorm'
+import { DataSource } from 'typeorm'
 
 import { AppModule } from '../src/app.module'
 import { AuthService } from '../src/auth/auth.service'
@@ -41,10 +41,10 @@ describe('TagResolver (auth - e2e)', () => {
     )
 
     await app.init()
-    await refresh(app.get(Connection))
+    await refresh(app.get(DataSource))
   })
 
-  afterAll(() => refresh(app.get(Connection)))
+  afterAll(() => refresh(app.get(DataSource)))
 
   beforeEach(async () => {
     const authService = app.get(AuthService)

@@ -9,7 +9,7 @@ import * as updateResolver from '../../src/resolvers/update.resolver'
 describe('CrudResolver', () => {
   const creatableSpy = jest.spyOn(createResolver, 'Creatable')
   const readableSpy = jest.spyOn(readResolver, 'Readable')
-  const updateableSpy = jest.spyOn(updateResolver, 'Updateable')
+  const updatableSpy = jest.spyOn(updateResolver, 'Updatable')
   const deleteResolverSpy = jest.spyOn(deleteResolver, 'DeleteResolver')
 
   beforeEach(() => jest.clearAllMocks())
@@ -49,8 +49,8 @@ describe('CrudResolver', () => {
     expect(readableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(readableSpy).toHaveBeenCalledTimes(1)
 
-    expect(updateableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
-    expect(updateableSpy).toHaveBeenCalledTimes(1)
+    expect(updatableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
+    expect(updatableSpy).toHaveBeenCalledTimes(1)
 
     expect(deleteResolverSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(deleteResolverSpy).toHaveBeenCalledTimes(1)
@@ -65,8 +65,8 @@ describe('CrudResolver', () => {
     expect(readableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(readableSpy).toHaveBeenCalledTimes(1)
 
-    expect(updateableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
-    expect(updateableSpy).toHaveBeenCalledTimes(1)
+    expect(updatableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
+    expect(updatableSpy).toHaveBeenCalledTimes(1)
 
     expect(deleteResolverSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(deleteResolverSpy).toHaveBeenCalledTimes(1)
@@ -81,8 +81,8 @@ describe('CrudResolver', () => {
     expect(readableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(readableSpy).toHaveBeenCalledTimes(1)
 
-    expect(updateableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
-    expect(updateableSpy).toHaveBeenCalledTimes(1)
+    expect(updatableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
+    expect(updatableSpy).toHaveBeenCalledTimes(1)
 
     expect(deleteResolverSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(deleteResolverSpy).toHaveBeenCalledTimes(1)
@@ -96,8 +96,8 @@ describe('CrudResolver', () => {
     expect(readableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(readableSpy).toHaveBeenCalledTimes(1)
 
-    expect(updateableSpy).toHaveBeenCalledWith(TestResolverDTO, { UpdateDTOClass: UpdateTestResolverDTO })
-    expect(updateableSpy).toHaveBeenCalledTimes(1)
+    expect(updatableSpy).toHaveBeenCalledWith(TestResolverDTO, { UpdateDTOClass: UpdateTestResolverDTO })
+    expect(updatableSpy).toHaveBeenCalledTimes(1)
 
     expect(deleteResolverSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(deleteResolverSpy).toHaveBeenCalledTimes(1)
@@ -111,8 +111,8 @@ describe('CrudResolver', () => {
     expect(readableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(readableSpy).toHaveBeenCalledTimes(1)
 
-    expect(updateableSpy).toHaveBeenCalledWith(TestResolverDTO, { UpdateDTOClass: UpdateTestResolverDTO, guards: [] })
-    expect(updateableSpy).toHaveBeenCalledTimes(1)
+    expect(updatableSpy).toHaveBeenCalledWith(TestResolverDTO, { UpdateDTOClass: UpdateTestResolverDTO, guards: [] })
+    expect(updatableSpy).toHaveBeenCalledTimes(1)
 
     expect(deleteResolverSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(deleteResolverSpy).toHaveBeenCalledTimes(1)
@@ -127,8 +127,8 @@ describe('CrudResolver', () => {
     expect(readableSpy).toHaveBeenCalledWith(TestResolverDTO, { pagingStrategy: PagingStrategies.OFFSET })
     expect(readableSpy).toHaveBeenCalledTimes(1)
 
-    expect(updateableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
-    expect(updateableSpy).toHaveBeenCalledTimes(1)
+    expect(updatableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
+    expect(updatableSpy).toHaveBeenCalledTimes(1)
 
     expect(deleteResolverSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(deleteResolverSpy).toHaveBeenCalledTimes(1)

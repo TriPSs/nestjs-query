@@ -5,7 +5,7 @@ title: DTOs
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-The `query-graphql` package leverages most decorators from [`@nestjs/graphql`](https://docs.nestjs.com/graphql/quick-start) and [TypeGraphQL](https://typegraphql.ml), with the exception of `FilterableField`.
+The `query-graphql` package leverages most decorators from [`@nestjs/graphql`](https://docs.nestjs.com/graphql/quick-start) and [TypeGraphQL](https://typegraphql.com), with the exception of `FilterableField`.
 
 ## `@FilterableField`
 
@@ -148,8 +148,7 @@ export class TodoItemDTO {
 
 ## `@IDField`
 
-By default `nestjs-query` uses the default graphql `ID` scalar, if you need to use a different `graphql` `scalar`
-type you can  `@IDField` decorator. `nestjs-query` will `scalar` type passed to the `@IDField` for all auto-generated
+By default `nestjs-query` uses the default graphql `ID` scalar, if you need to use a different `graphql` `scalar` type you can use `@IDField` decorator. `nestjs-query` will use that `scalar` type passed to the `@IDField` for all auto-generated
 `query` and `mutation` endpoints that rely on an input for the `id` (e.g. `findById`, `updateOne`, `deleteOne`).
 
 :::note
@@ -426,7 +425,7 @@ You can override the default `pagingStrategy` to one of the following alternativ
 * `OFFSET` - sets paging to allow `limit` and `offset` fields, and returns an `OffsetConnection`.
 * `NONE` - turn off all paging and always return an `ArrayConnection`.
 
-When using the `OFFSET` strategy your the paging arguments for a many query will accept a `limit` and/or `offset`.
+When using the `OFFSET` strategy your paging arguments for a many query will accept a `limit` and/or `offset`.
 This will also change the return type from a `CursorConnection` to an `OffsetConnection`.
 
 ```ts title="todo-item.dto.ts" {5}
@@ -649,6 +648,18 @@ export class TodoItemDTO {
 }
 
 ```
+
+:::info
+When we use the `@Relation` decorator or other [relation decorators](./relations.mdx) you might want to define the default sorting criteria like this:
+```ts title="todo-item.dto.ts"
+import { SortDirection } from '@ptc-org/nestjs-query-core';
+// ...
+@Relation('assignee', () => UserDTO, {
+  defaultSort: [{ field: 'id', direction: SortDirection.ASC }],
+})
+```
+Note that default value for `defaultSort` is `[]`, meaning if you do **not** specify it you will receive the results as determined by your underlying database, which is unreliable and calculated based on how your database engine works.
+:::
 
 ### Allowed Boolean Expressions
 

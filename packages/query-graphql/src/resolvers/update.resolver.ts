@@ -88,7 +88,7 @@ const defaultUpdateManyInput = <DTO, U>(
  * @internal
  * Mixin to add `update` graphql endpoints.
  */
-export const Updateable =
+export const Updatable =
   <DTO, U, QS extends QueryService<DTO, unknown, U>>(DTOClass: Class<DTO>, opts: UpdateResolverOpts<DTO, U>) =>
   <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<UpdateResolver<DTO, U, QS>> & B => {
     const dtoNames = getDTONames(DTOClass, opts)
@@ -204,7 +204,7 @@ export const Updateable =
           throw new Error(`Unable to subscribe to ${updateOneEvent}`)
         }
         const eventName = getSubscriptionEventName(updateOneEvent, authorizeFilter)
-        return this.pubSub.asyncIterator(eventName)
+        return this.pubSub.asyncIterableIterator(eventName)
       }
 
       @ResolverSubscription(() => UMR, { name: updateManyEvent }, commonResolverOpts, {
@@ -219,7 +219,7 @@ export const Updateable =
           throw new Error(`Unable to subscribe to ${updateManyEvent}`)
         }
         const eventName = getSubscriptionEventName(updateManyEvent, authorizeFilter)
-        return this.pubSub.asyncIterator(eventName)
+        return this.pubSub.asyncIterableIterator(eventName)
       }
     }
 
@@ -233,4 +233,4 @@ export const UpdateResolver = <
 >(
   DTOClass: Class<DTO>,
   opts: UpdateResolverOpts<DTO, U> = {}
-): ResolverClass<DTO, QS, UpdateResolver<DTO, U, QS>> => Updateable(DTOClass, opts)(BaseServiceResolver)
+): ResolverClass<DTO, QS, UpdateResolver<DTO, U, QS>> => Updatable(DTOClass, opts)(BaseServiceResolver)

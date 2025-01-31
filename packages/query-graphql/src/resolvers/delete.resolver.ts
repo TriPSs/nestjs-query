@@ -199,7 +199,7 @@ export const Deletable =
           throw new Error(`Unable to subscribe to ${deletedOneEvent}`)
         }
         const eventName = getSubscriptionEventName(deletedOneEvent, authorizeFilter)
-        return this.pubSub.asyncIterator(eventName)
+        return this.pubSub.asyncIterableIterator(eventName)
       }
 
       @ResolverSubscription(() => DMR, { name: deletedManyEvent }, commonResolverOpts, {
@@ -214,7 +214,7 @@ export const Deletable =
           throw new Error(`Unable to subscribe to ${deletedManyEvent}`)
         }
         const eventName = getSubscriptionEventName(deletedManyEvent, authorizeFilter)
-        return this.pubSub.asyncIterator(eventName)
+        return this.pubSub.asyncIterableIterator(eventName)
       }
     }
 

@@ -1,8 +1,6 @@
 import { ID, ReturnTypeFuncValue } from '@nestjs/graphql'
-import { Class } from '@souagrosolucoes/nestjs-query-core'
-import { lowerCaseFirst } from 'lower-case-first'
+import { Class, lowerCaseFirst, upperCaseFirst } from '@souagrosolucoes/nestjs-query-core'
 import { plural } from 'pluralize'
-import { upperCaseFirst } from 'upper-case-first'
 
 import { getIDField } from '../decorators'
 import { findGraphqlObjectMetadata } from './external.utils'

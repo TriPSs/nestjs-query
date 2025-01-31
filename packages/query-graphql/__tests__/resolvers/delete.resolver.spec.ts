@@ -7,6 +7,7 @@ import { DeleteManyInputType, DeleteOneInputType, DeleteResolver, DeleteResolver
 import { DeletedEvent } from '../../src/resolvers/delete.resolver'
 import { EventType, getDTOEventName } from '../../src/subscription'
 import { createResolverFromNest, generateSchema, TestResolverDTO, TestService } from '../__fixtures__'
+import { PubSubAsyncIterableIterator } from 'graphql-subscriptions/dist/pubsub-async-iterable-iterator'
 
 describe('DeleteResolver', () => {
   const expectResolverSDL = async (opts?: DeleteResolverOpts<TestResolverDTO>) => {
@@ -341,14 +342,14 @@ describe('DeleteResolver', () => {
             stringField: 'foo'
           }
         }
-        const mockIterator = mock<AsyncIterator<DeletedEvent<TestResolverDTO>>>()
+        const mockIterator = mock<PubSubAsyncIterableIterator<DeletedEvent<TestResolverDTO>>>()
 
-        when(mockPubSub.asyncIterator(eventName)).thenReturn(instance(mockIterator))
+        when(mockPubSub.asyncIterableIterator(eventName)).thenReturn(instance(mockIterator))
         when(mockIterator.next()).thenResolve({ done: false, value: event })
 
         const result = await resolver.deletedOneSubscription().next()
 
-        verify(mockPubSub.asyncIterator(eventName)).once()
+        verify(mockPubSub.asyncIterableIterator(eventName)).once()
 
         return expect(result).toEqual({
           done: false,
@@ -379,14 +380,14 @@ describe('DeleteResolver', () => {
         const { resolver, mockPubSub } = await createTestResolver({ enableSubscriptions: true })
         const eventName = getDTOEventName(EventType.DELETED_MANY, TestResolverDTO)
         const event: DeleteManyResponse = { deletedCount: 1 }
-        const mockIterator = mock<AsyncIterator<DeleteManyResponse>>()
+        const mockIterator = mock<PubSubAsyncIterableIterator<DeleteManyResponse>>()
 
-        when(mockPubSub.asyncIterator(eventName)).thenReturn(instance(mockIterator))
+        when(mockPubSub.asyncIterableIterator(eventName)).thenReturn(instance(mockIterator))
         when(mockIterator.next()).thenResolve({ done: false, value: event })
 
         const result = await resolver.deletedManySubscription().next()
 
-        verify(mockPubSub.asyncIterator(eventName)).once()
+        verify(mockPubSub.asyncIterableIterator(eventName)).once()
 
         return expect(result).toEqual({
           done: false,

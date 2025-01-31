@@ -8,18 +8,18 @@ import { TypeOrmQueryService } from './services'
 
 function createTypeOrmQueryServiceProvider<Entity>(
   EntityClass: Class<Entity>,
-  connection?: DataSource | string
+  dataSource?: DataSource | string
 ): FactoryProvider {
   return {
     provide: getQueryServiceToken(EntityClass),
     useFactory(repo: Repository<Entity>) {
       return new TypeOrmQueryService(repo)
     },
-    inject: [getRepositoryToken(EntityClass, connection)]
+    inject: [getRepositoryToken(EntityClass, dataSource)]
   }
 }
 
 export const createTypeOrmQueryServiceProviders = (
   entities: Class<unknown>[],
-  connection?: DataSource | string
-): FactoryProvider[] => entities.map((entity) => createTypeOrmQueryServiceProvider(entity, connection))
+  dataSource?: DataSource | string
+): FactoryProvider[] => entities.map((entity) => createTypeOrmQueryServiceProvider(entity, dataSource))

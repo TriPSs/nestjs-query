@@ -32,10 +32,8 @@
     "dataloader": "^2.2.2",
     "graphql-fields": "^2.0.3",
     "lodash.omit": "^4.5.0",
-    "lower-case-first": "^2.0.2",
     "pluralize": "^8.0.0",
-    "tslib": "^2.6.3",
-    "upper-case-first": "^2.0.2"
+    "tslib": "^2.6.3"
   },
   "peerDependencies": {
     "@apollo/gateway": "^0.44.1 || ^0.46.0 || ^0.48.0 || ^0.49.0 || ^0.50.0 || ^2.0.0",
@@ -45,7 +43,7 @@
     "class-transformer": "^0.5",
     "class-validator": "^0.14.0",
     "graphql": "^16.0.0",
-    "graphql-subscriptions": "^2.0.0",
+    "graphql-subscriptions": "^3.0.0",
     "ts-morph": "^19.0.0"
   },
   "publishConfig": {

@@ -1,8 +1,7 @@
 import { Field, InputType, TypeMetadataStorage } from '@nestjs/graphql'
-import { Class, Filter, MapReflector } from '@souagrosolucoes/nestjs-query-core'
+import { Class, Filter, MapReflector, upperCaseFirst } from '@souagrosolucoes/nestjs-query-core'
 import { Type } from 'class-transformer'
 import { ValidateNested } from 'class-validator'
-import { upperCaseFirst } from 'upper-case-first'
 
 import { getDTONames, getGraphqlObjectName } from '../../common'
 import { getFilterableFields, getQueryOptions, getRelations, SkipIf } from '../../decorators'
@@ -27,7 +26,7 @@ export type FilterableRelations = Record<string, Class<unknown>>
 export interface FilterConstructor<T> {
   hasRequiredFilters: boolean
 
-  new (): Filter<T>
+  new(): Filter<T>
 }
 
 function getObjectTypeName<DTO>(DTOClass: Class<DTO>): string {
@@ -107,13 +106,13 @@ function getOrCreateFilterType<T>(
       const FC = objectTypeMetadata
         ? getOrCreateFilterType(target, typeName, suffix, depth)
         : createFilterComparisonType({
-            FieldType: target,
-            fieldName: `${baseName}${upperCaseFirst(schemaName)}`,
-            allowedComparisons: advancedOptions?.allowedComparisons,
-            returnTypeFunc,
-            decorators: advancedOptions?.filterDecorators,
-            overrideTypeNamePrefix: advancedOptions?.overrideFilterTypeNamePrefix
-          })
+          FieldType: target,
+          fieldName: `${baseName}${upperCaseFirst(schemaName)}`,
+          allowedComparisons: advancedOptions?.allowedComparisons,
+          returnTypeFunc,
+          decorators: advancedOptions?.filterDecorators,
+          overrideTypeNamePrefix: advancedOptions?.overrideFilterTypeNamePrefix
+        })
       const nullable = advancedOptions?.filterRequired !== true
       ValidateNested()(GraphQLFilter.prototype, schemaName)
       if (advancedOptions?.filterRequired) {

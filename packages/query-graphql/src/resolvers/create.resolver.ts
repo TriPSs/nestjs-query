@@ -191,7 +191,7 @@ export const Creatable =
         }
 
         const eventName = getSubscriptionEventName(createdEvent, authorizeFilter)
-        return this.pubSub.asyncIterator<CreatedEvent<DTO>>(eventName)
+        return this.pubSub.asyncIterableIterator<CreatedEvent<DTO>>(eventName)
       }
     }
 

@@ -7,9 +7,9 @@ import type { DataSource } from 'typeorm'
 import { createTypeOrmQueryServiceProviders } from './providers'
 
 export class NestjsQueryTypeOrmModule {
-  static forFeature(entities: Class<unknown>[], connection?: DataSource | string): DynamicModule {
-    const queryServiceProviders = createTypeOrmQueryServiceProviders(entities, connection)
-    const typeOrmModule = TypeOrmModule.forFeature(entities, connection)
+  static forFeature(entities: Class<unknown>[], dataSource?: DataSource | string): DynamicModule {
+    const queryServiceProviders = createTypeOrmQueryServiceProviders(entities, dataSource)
+    const typeOrmModule = TypeOrmModule.forFeature(entities, dataSource)
 
     return {
       imports: [typeOrmModule],

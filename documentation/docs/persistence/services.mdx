@@ -4,7 +4,7 @@ title: Services
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-`@nestjs-query` provides a common interface to use difference ORMs inorder to query and mutate your data.
+`@nestjs-query` provides a common interface to use different ORMs in order to query and mutate your data.
 
 The following ORMs are supported out of the box.
 
@@ -170,7 +170,7 @@ export class TodoItemEntity implements Base {
 
 ### Module
 
-The `nestjs-query` `typeorm`, `sequelize`, `mongoose`, and 'typegoose' packages provide a module that will add providers
+The `nestjs-query` `typeorm`, `sequelize`, `mongoose`, and `typegoose` packages provide a module that will add providers
  to inject auto-created `QueryServices` using the `@InjectQueryService` decorator.
 
 In order to use the decorator you will need to use the module that comes with the `nestjs-query` orm module providing it your entities that you want the services created for.
@@ -378,7 +378,7 @@ try {
 
 To perform an `aggregate` query you can use the `aggregate` method which accepts a `Filter` and `AggregateQuery`.
 
-Supported aggregates are `count`, 'sum', 'avg', `min` and `max`.
+Supported aggregates are `count`, `sum`, `avg`, `min` and `max`.
 
 In this example we'll aggregate on all records.
 
@@ -672,7 +672,7 @@ This section only applies when you combine your DTO and entity and are using Typ
 
 When your DTO and entity are the same class and you have relations defined, you should not decorate your the relations in the DTO with `@Field` or `@FilterableField`.
 
-Instead decorate the class with `@CursorConnection`, `@OffsetConnection`, '@UnPagedRelation' or `@Relation`.
+Instead decorate the class with `@CursorConnection`, `@OffsetConnection`, `@UnPagedRelation` or `@Relation`.
 
 ### Example
 

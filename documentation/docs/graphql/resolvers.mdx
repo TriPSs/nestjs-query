@@ -714,7 +714,7 @@ export class TodoItemResolver extends CRUDResolver(TodoItemDTO, {
 If you find yourself in a situation where you want to override an endpoint name you can use the `one.name` or `many.name` options to override
 
 :::note
-These options are available for the `create`, `read`, `update`, and 'delete' endpoints.
+These options are available for the `create`, `read`, `update`, and `delete` endpoints.
 :::
 
 In this example we'll change the `todoItem` query to `findTodoItem` and the `todoItems` endpoint to `queryForTodoItems`.
@@ -967,7 +967,7 @@ completedTodoItems(
   sorting: [TodoItemSort!] = []
 ): TodoItemConnection!
 ```
-Notice how there is not a query arg but instead the you see the fields of `TodoItemQuery` that is because we used
+Notice how there is not a `query` arg but instead you see the fields of `TodoItemQuery`, that is because we used
 `@Args` without a name and added the `@ArgsType` decorator to the `TodoItemQuery`.
 
 The next piece is
@@ -983,7 +983,7 @@ const filter: Filter<TodoItemDTO> = {
 Here we do a shallow copy of the `filter` and add `completed: { is: true }`. This will override any completed arguments
 that an end user may have provided to ensure we always query for completed todos.
 
-Finally we call create our connection response by using the `createFromPromise` method on the connection.
+Finally we create our connection response by using the `createFromPromise` method on the connection.
 
 ```ts
 // call the original queryMany method with the new query

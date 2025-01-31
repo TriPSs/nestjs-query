@@ -597,10 +597,6 @@ export class RelationQueryBuilder<Entity, Relation> {
     return '__nestjsQuery__entityIndex__'
   }
 
-  private get escapedEntityIndexColName(): string {
-    return this.escapeName(this.entityIndexColName)
-  }
-
   private get unionAlias(): string {
     return 'unioned'
   }

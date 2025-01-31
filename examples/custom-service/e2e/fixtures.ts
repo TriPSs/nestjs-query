@@ -1,15 +1,15 @@
-import { Connection } from 'typeorm'
+import { DataSource } from 'typeorm'
 
 import { executeTruncate } from '../../helpers'
 import { TodoItemEntity } from '../src/todo-item/todo-item.entity'
 
 const tables = ['todo_item']
-export const truncate = async (connection: Connection): Promise<void> => executeTruncate(connection, tables)
+export const truncate = async (dataSource: DataSource): Promise<void> => executeTruncate(dataSource, tables)
 
-export const refresh = async (connection: Connection): Promise<void> => {
-  await truncate(connection)
+export const refresh = async (dataSource: DataSource): Promise<void> => {
+  await truncate(dataSource)
 
-  const todoRepo = connection.getRepository(TodoItemEntity)
+  const todoRepo = dataSource.getRepository(TodoItemEntity)
 
   await todoRepo.save([
     { title: 'Create Nest App', completed: true },
