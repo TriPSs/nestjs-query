@@ -1,4 +1,4 @@
-export { AuthorizationContext, Authorizer, AuthorizerOptions, CustomAuthorizer, OperationGroup } from './auth'
+export { AuthorizationContext, Authorizer, AuthorizerOptions, CustomAuthorizer, getAuthorizerToken, OperationGroup } from './auth'
 export { DTONamesOpts } from './common'
 export {
   Authorize,
