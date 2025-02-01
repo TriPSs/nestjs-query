@@ -9,7 +9,13 @@ import {
   ReturnTypeFunc,
   ReturnTypeFuncValue
 } from '@nestjs/graphql'
-import { upperCaseFirst, Class, FilterComparisonOperators, FilterFieldComparison, isNamed } from '@souagrosolucoes/nestjs-query-core'
+import {
+  upperCaseFirst,
+  Class,
+  FilterComparisonOperators,
+  FilterFieldComparison,
+  isNamed
+} from '@souagrosolucoes/nestjs-query-core'
 import { Type } from 'class-transformer'
 import { IsBoolean, IsDate, IsInt, IsNumber, IsOptional, ValidateNested } from 'class-validator'
 
