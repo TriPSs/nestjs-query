@@ -1,3 +1,33 @@
+ 
+# [8.0.0](https://github.com/souagrosolucoes/nestjs-query/compare/v7.4.0...v8.0.0) (2025-02-01)
+
+
+### Bug Fixes
+
+* add missing import in doc + upgrading docker image version ([3ce8691](https://github.com/souagrosolucoes/nestjs-query/commit/3ce86913e60a52188e61149c495a533ffa81fd59))
+* lint ([df69285](https://github.com/souagrosolucoes/nestjs-query/commit/df6928518c9f10837130e707a2020cabd1e063bd))
+* mongoose ilike comparism wasn capable of searching with fixed start/end letter ([4f90c93](https://github.com/souagrosolucoes/nestjs-query/commit/4f90c936d6fc5af3e1c8d1be35e26ad0d2824944))
+* Mongoose ReferenceQueryService only accepted Relations with ObjectIds ([b364870](https://github.com/souagrosolucoes/nestjs-query/commit/b364870b8c7348190359a722785b3c86324353d2))
+* update missing peerDependencies version increase ([ed6e57c](https://github.com/souagrosolucoes/nestjs-query/commit/ed6e57cecbb9e014c8fb33fc6da9ba1b7e90310e))
+* update yarn.lock ([969e649](https://github.com/souagrosolucoes/nestjs-query/commit/969e649801872376744c260645fcca43319f32df))
+
+
+### Features
+
+* **query-graphql:** Updated graphql subscriptions ([ee688a2](https://github.com/souagrosolucoes/nestjs-query/commit/ee688a2a1dc939964bdcabc07ec2a50de36dc7b7))
+
+
+### Reverts
+
+* Replace change-case with camel-case in multiple packages ([0720323](https://github.com/souagrosolucoes/nestjs-query/commit/0720323ecf3941a296c909544c08ec3322f4ce54))
+
+
+### BREAKING CHANGES
+
+* **query-graphql:** Updated to new major version of graphql-subscriptions
+
+
+
 # [7.1.0](https://github.com/TriPSs/nestjs-query/compare/v7.0.1...v7.1.0) (2024-10-16)
 
 - filter contains ([#5](https://github.com/souagrosolucoes/nestjs-query/issues/5)) ([544163c](https://github.com/souagrosolucoes/nestjs-query/commit/544163c840b5d649488ff812859cac118ba34c49))

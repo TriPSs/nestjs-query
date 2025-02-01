@@ -1,6 +1,6 @@
 {
   "name": "@souagrosolucoes/nestjs-query-mongoose",
-  "version": "7.4.0",
+  "version": "8.0.0",
   "description": "Mongoose adapter for @souagrosolucoes/nestjs-query-core",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
   "bugs": {
