@@ -1,4 +1,18 @@
  
+# [9.0.0](https://github.com/TriPSs/nestjs-query/compare/v8.0.3...v9.0.0) (2025-02-13)
+
+
+### Features
+
+* Updated to NestJS 11 ([8fe3ed9](https://github.com/TriPSs/nestjs-query/commit/8fe3ed98e19b2532526258d17758dc9d4055a521))
+
+
+### BREAKING CHANGES
+
+* Updated to NestJS 11
+
+
+
 ## [8.0.3](https://github.com/TriPSs/nestjs-query/compare/v8.0.2...v8.0.3) (2025-01-30)
 
 
