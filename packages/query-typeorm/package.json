@@ -27,7 +27,7 @@
     "lodash.filter": "^4.6.0",
     "lodash.merge": "^4.6.2",
     "lodash.omit": "^4.5.0",
-    "tslib": "^2.6.3",
+    "tslib": "^2.8.1",
     "uuid": "^10.0.0"
   },
   "peerDependencies": {
