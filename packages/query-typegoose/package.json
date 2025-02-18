@@ -27,7 +27,7 @@
     "is-class": "0.0.9",
     "lodash.escaperegexp": "^4.1.2",
     "lodash.merge": "^4.6.2",
-    "tslib": "^2.6.3"
+    "tslib": "^2.8.1"
   },
   "peerDependencies": {
     "@m8a/nestjs-typegoose": "^9.0.0 || ^10.0.0 || ^11.0.0",
