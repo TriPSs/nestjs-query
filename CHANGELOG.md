@@ -1,4 +1,31 @@
  
+## [9.0.2](https://github.com/TriPSs/nestjs-query/compare/v9.0.1...v9.0.2) (2025-02-17)
+
+
+
+## [9.0.1](https://github.com/TriPSs/nestjs-query/compare/v9.0.0...v9.0.1) (2025-02-17)
+
+
+### Bug Fixes
+
+* Update peer dependencies to support NestJS v11 ([9471198](https://github.com/TriPSs/nestjs-query/commit/9471198b987139f297a56f1f4ca3ed8b5b5dce96)), closes [#358](https://github.com/TriPSs/nestjs-query/issues/358)
+
+
+
+# [9.0.0](https://github.com/TriPSs/nestjs-query/compare/v8.0.3...v9.0.0) (2025-02-13)
+
+
+### Features
+
+* Updated to NestJS 11 ([8fe3ed9](https://github.com/TriPSs/nestjs-query/commit/8fe3ed98e19b2532526258d17758dc9d4055a521))
+
+
+### BREAKING CHANGES
+
+* Updated to NestJS 11
+
+
+
 ## [8.0.3](https://github.com/TriPSs/nestjs-query/compare/v8.0.2...v8.0.3) (2025-01-30)
 
 
