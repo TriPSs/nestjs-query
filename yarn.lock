@@ -6083,7 +6083,7 @@ __metadata:
     class-validator: ^0.14.0
     graphql: ^16.0.0
     graphql-subscriptions: ^3.0.0
-    ts-morph: ^19.0.0
+    ts-morph: ^19.0.0 || ^20.0.0 || ^21.0.0 || ^24.0.0 || ^25.0.0
   languageName: unknown
   linkType: soft
 
