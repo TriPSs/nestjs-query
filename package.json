@@ -11,7 +11,7 @@
     "test:e2e": "nx e2e examples"
   },
   "resolutions": {
-    "@apollo/gateway": "2.8.5",
+    "@apollo/gateway": "2.10.1",
     "@apollo/subgraph": "2.2.3"
   },
   "dependencies": {
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@actions/core": "^1.11.1",
     "@apollo/federation": "0.38.1",
-    "@apollo/gateway": "2.9.3",
+    "@apollo/gateway": "2.10.1",
     "@apollo/server": "^4.11.3",
     "@apollo/subgraph": "2.9.3",
     "@commitlint/cli": "19.7.1",
