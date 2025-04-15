@@ -5,10 +5,12 @@ import {
   JoinColumn,
   ManyToOne,
   ObjectType,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
 
+import { SubSubTaskEntity } from '../sub-sub-task/sub-sub-task.entity'
 import { TodoItemEntity } from '../todo-item/todo-item.entity'
 import { UserEntity } from '../user/user.entity'
 
@@ -56,4 +58,7 @@ export class SubTaskEntity {
 
   @Column({ nullable: true })
   updatedBy?: string
+
+  @OneToMany(() => SubSubTaskEntity, (subSubTask) => subSubTask.subTask)
+  subSubTasks!: SubSubTaskEntity[]
 }
