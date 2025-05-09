@@ -221,11 +221,7 @@ FROM
   "test_entity" "TestEntity"
   LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
   LEFT JOIN "test_entity_many_test_relations_test_relation" "manyTestEntities_oneTestRelation" ON "manyTestEntities_oneTestRelation"."testRelationTestRelationPk" = "oneTestRelation"."test_relation_pk"
-  LEFT JOIN "test_entity" "manyTestEntities" ON "manyTestEntities"."test_entity_pk" = "manyTestEntities_oneTestRelation"."testEntityTestEntityPk"
-LIMIT
-  10
-OFFSET
-  3"
+  LEFT JOIN "test_entity" "manyTestEntities" ON "manyTestEntities"."test_entity_pk" = "manyTestEntities_oneTestRelation"."testEntityTestEntityPk""
 `;
 
 exports[`FilterQueryBuilder #select with paging skip/take - limit/offset should use skip/take when filtering on nested one to many relation 1`] = `
@@ -241,11 +237,7 @@ exports[`FilterQueryBuilder #select with paging skip/take - limit/offset should 
 FROM
   "test_entity" "TestEntity"
   LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
-  LEFT JOIN "test_entity_relation_entity" "testEntityRelation" ON "testEntityRelation"."test_relation_id" = "oneTestRelation"."test_relation_pk"
-LIMIT
-  10
-OFFSET
-  3"
+  LEFT JOIN "test_entity_relation_entity" "testEntityRelation" ON "testEntityRelation"."test_relation_id" = "oneTestRelation"."test_relation_pk""
 `;
 
 exports[`FilterQueryBuilder #select with paging skip/take - limit/offset should use skip/take when filtering on one to many relation 1`] = `
