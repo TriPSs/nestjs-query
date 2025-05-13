@@ -315,6 +315,21 @@ describe('FilterQueryBuilder', (): void => {
           )
         })
 
+        it('should use skip/take when filtering on nested many to many relation', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          when(mockWhereBuilder.build(anything(), anything(), anything(), anything())).thenCall(
+            (qb: WhereExpressionBuilder) => qb
+          )
+
+          expectSelectSQLSnapshot(
+            {
+              paging: { limit: 10, offset: 3 },
+              filter: { oneTestRelation: { manyTestEntities: { testEntityPk: { eq: 'test' } } } }
+            },
+            instance(mockWhereBuilder)
+          )
+        })
+
         it('should use skip/take when filtering on one to many relation', () => {
           const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
           when(mockWhereBuilder.build(anything(), anything(), anything(), anything())).thenCall(
@@ -325,6 +340,21 @@ describe('FilterQueryBuilder', (): void => {
             {
               paging: { limit: 10, offset: 3 },
               filter: { testRelations: { testRelationPk: { eq: 'test' } } }
+            },
+            instance(mockWhereBuilder)
+          )
+        })
+
+        it('should use skip/take when filtering on nested one to many relation', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          when(mockWhereBuilder.build(anything(), anything(), anything(), anything())).thenCall(
+            (qb: WhereExpressionBuilder) => qb
+          )
+
+          expectSelectSQLSnapshot(
+            {
+              paging: { limit: 10, offset: 3 },
+              filter: { oneTestRelation: { testEntityRelation: { testRelationId: { eq: 'test' } } } }
             },
             instance(mockWhereBuilder)
           )
@@ -345,6 +375,21 @@ describe('FilterQueryBuilder', (): void => {
           )
         })
 
+        it('should use limit/offset when filtering on nested one to one relation', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          when(mockWhereBuilder.build(anything(), anything(), anything(), anything())).thenCall(
+            (qb: WhereExpressionBuilder) => qb
+          )
+
+          expectSelectSQLSnapshot(
+            {
+              paging: { limit: 10, offset: 3 },
+              filter: { oneTestRelation: { oneTestEntity: { testEntityPk: { eq: 'test' } } } }
+            },
+            instance(mockWhereBuilder)
+          )
+        })
+
         it('should use limit/offset when filtering on many to one relation', () => {
           const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
           when(mockWhereBuilder.build(anything(), anything(), anything(), anything())).thenCall(
@@ -355,6 +400,21 @@ describe('FilterQueryBuilder', (): void => {
             {
               paging: { limit: 10, offset: 3 },
               filter: { manyToOneRelation: { testRelationPk: { eq: 'test' } } }
+            },
+            instance(mockWhereBuilder)
+          )
+        })
+
+        it('should use limit/offset when filtering on nested many to one relation', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          when(mockWhereBuilder.build(anything(), anything(), anything(), anything())).thenCall(
+            (qb: WhereExpressionBuilder) => qb
+          )
+
+          expectSelectSQLSnapshot(
+            {
+              paging: { limit: 10, offset: 3 },
+              filter: { oneTestRelation: { testEntity: { testEntityPk: { eq: 'test' } } } }
             },
             instance(mockWhereBuilder)
           )
