@@ -1,4 +1,15 @@
  
+## [9.0.3](https://github.com/TriPSs/nestjs-query/compare/v9.0.2...v9.0.3) (2025-05-13)
+
+
+### Bug Fixes
+
+* describe indentation ([90e4074](https://github.com/TriPSs/nestjs-query/commit/90e4074b3229861636f710b2330f6b427525ffef))
+* shouldUseSkipTake to handle nested cases ([ec39883](https://github.com/TriPSs/nestjs-query/commit/ec3988326ded3b378b0f3bbe2c69161eb49c1ebe))
+* Update peer dependencies to support NestJS v11 ([55edc6a](https://github.com/TriPSs/nestjs-query/commit/55edc6a58b208853662bc05058e6d92d6dd4af51)), closes [#358](https://github.com/TriPSs/nestjs-query/issues/358)
+
+
+
 ## [9.0.2](https://github.com/TriPSs/nestjs-query/compare/v9.0.1...v9.0.2) (2025-02-17)
 
 
