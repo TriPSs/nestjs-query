@@ -9,14 +9,6 @@ type TodoItem {
   documentType: String!
 }
 
-type TodoTask {
-  id: ID!
-  title: String!
-  completed: Boolean!
-  documentType: String!
-  priority: Float!
-}
-
 type TodoAppointment {
   id: ID!
   title: String!
@@ -30,6 +22,14 @@ type TodoAppointment {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type TodoTask {
+  id: ID!
+  title: String!
+  completed: Boolean!
+  documentType: String!
+  priority: Float!
+}
 
 type DeleteManyResponse {
   """The number of records deleted."""

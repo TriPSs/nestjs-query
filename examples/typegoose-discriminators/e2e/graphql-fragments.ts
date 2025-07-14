@@ -6,7 +6,7 @@ export const TODO_TASK_FRAGMENT = `
     documentType
     priority
   }
-`;
+`
 
 export const TODO_APPOINTMENT_FRAGMENT = `
   fragment TodoAppointmentFragment on TodoAppointment {
@@ -17,4 +17,4 @@ export const TODO_APPOINTMENT_FRAGMENT = `
     dateTime
     participants
   }
-`;
+`

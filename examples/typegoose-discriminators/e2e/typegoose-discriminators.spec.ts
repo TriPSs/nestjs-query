@@ -1,43 +1,44 @@
-import { INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { TodoTaskDTO } from '../src/todo-item/dto/todo-task.dto';
-import { TodoAppointmentDTO } from '../src/todo-item/dto/todo-appointment.dto';
-import { getModelToken } from '@m8a/nestjs-typegoose';
-import { TodoItemEntity } from '../src/todo-item/entities/todo-item.entity';
-import { Model } from 'mongoose';
-import { TODO_TASK_FRAGMENT, TODO_APPOINTMENT_FRAGMENT } from './graphql-fragments';
+import { getModelToken } from '@m8a/nestjs-typegoose'
+import { INestApplication } from '@nestjs/common'
+import { Test } from '@nestjs/testing'
+import { Model } from 'mongoose'
+import request from 'supertest'
+
+import { AppModule } from '../src/app.module'
+import { TodoAppointmentDTO } from '../src/todo-item/dto/todo-appointment.dto'
+import { TodoTaskDTO } from '../src/todo-item/dto/todo-task.dto'
+import { TodoItemEntity } from '../src/todo-item/entities/todo-item.entity'
+import { TODO_APPOINTMENT_FRAGMENT, TODO_TASK_FRAGMENT } from './graphql-fragments'
 
 describe('Typegoose Discriminators with Concrete DTOs', () => {
-  let app: INestApplication;
-  let todoItemModel: Model<TodoItemEntity>;
+  let app: INestApplication
+  let todoItemModel: Model<TodoItemEntity>
 
   // Variables to hold the created entities so we can use them across tests
-  let task: TodoTaskDTO;
-  let appointment: TodoAppointmentDTO;
-  const taskTitle = `Task ${Date.now()}`;
-  const appointmentTitle = `Appointment ${Date.now()}`;
+  let task: TodoTaskDTO
+  let appointment: TodoAppointmentDTO
+  const taskTitle = `Task ${Date.now()}`
+  const appointmentTitle = `Appointment ${Date.now()}`
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+      imports: [AppModule]
+    }).compile()
 
-    app = moduleRef.createNestApplication();
-    await app.init();
-    todoItemModel = moduleRef.get<Model<TodoItemEntity>>(getModelToken(TodoItemEntity.name));
-  });
+    app = moduleRef.createNestApplication()
+    await app.init()
+    todoItemModel = moduleRef.get<Model<TodoItemEntity>>(getModelToken(TodoItemEntity.name))
+  })
 
   beforeEach(async () => {
-    await todoItemModel.deleteMany({});
-  });
+    await todoItemModel.deleteMany({})
+  })
 
   afterAll(async () => {
     if (app) {
-      await app.close();
+      await app.close()
     }
-  });
+  })
 
   describe('create', () => {
     it('should create a new TodoTask', async () => {
@@ -57,17 +58,17 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
               todoTask: {
                 title: taskTitle,
                 completed: false,
-                priority: 1,
-              },
-            },
-          },
-        });
+                priority: 1
+              }
+            }
+          }
+        })
 
-      expect(response.body.errors).toBeUndefined();
-      task = response.body.data.createOneTodoTask;
-      expect(task.title).toBe(taskTitle);
-      expect(task.documentType).toBe('TodoTaskEntity');
-    });
+      expect(response.body.errors).toBeUndefined()
+      task = response.body.data.createOneTodoTask
+      expect(task.title).toBe(taskTitle)
+      expect(task.documentType).toBe('TodoTaskEntity')
+    })
 
     it('should create a new TodoAppointment', async () => {
       const response = await request(app.getHttpServer())
@@ -87,18 +88,18 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
                 title: appointmentTitle,
                 completed: false,
                 dateTime: new Date(),
-                participants: ['Me', 'You'],
-              },
-            },
-          },
-        });
+                participants: ['Me', 'You']
+              }
+            }
+          }
+        })
 
-      expect(response.body.errors).toBeUndefined();
-      appointment = response.body.data.createOneTodoAppointment;
-      expect(appointment.title).toBe(appointmentTitle);
-      expect(appointment.documentType).toBe('TodoAppointmentEntity');
-    });
-  });
+      expect(response.body.errors).toBeUndefined()
+      appointment = response.body.data.createOneTodoAppointment
+      expect(appointment.title).toBe(appointmentTitle)
+      expect(appointment.documentType).toBe('TodoAppointmentEntity')
+    })
+  })
 
   describe('query and filter', () => {
     beforeEach(async () => {
@@ -119,12 +120,12 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
               todoTask: {
                 title: taskTitle,
                 completed: false,
-                priority: 1,
-              },
-            },
-          },
-        });
-      task = createTaskResponse.body.data.createOneTodoTask;
+                priority: 1
+              }
+            }
+          }
+        })
+      task = createTaskResponse.body.data.createOneTodoTask
 
       const createAppointmentResponse = await request(app.getHttpServer())
         .post('/graphql')
@@ -143,13 +144,13 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
                 title: appointmentTitle,
                 completed: false,
                 dateTime: new Date(),
-                participants: ['Me', 'You'],
-              },
-            },
-          },
-        });
-      appointment = createAppointmentResponse.body.data.createOneTodoAppointment;
-    });
+                participants: ['Me', 'You']
+              }
+            }
+          }
+        })
+      appointment = createAppointmentResponse.body.data.createOneTodoAppointment
+    })
 
     it('should query for all items and verify both are returned', async () => {
       const queryAllResponse = await request(app.getHttpServer())
@@ -167,14 +168,15 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
                 }
               }
             }
-          `,
-        });
-      expect(queryAllResponse.body.errors).toBeUndefined();
-      expect(queryAllResponse.body.data.todoItems.edges).toHaveLength(2);
-      const titles = queryAllResponse.body.data.todoItems.edges.map((e: any) => e.node.title);
-      expect(titles).toContain(taskTitle);
-      expect(titles).toContain(appointmentTitle);
-    });
+          `
+        })
+      expect(queryAllResponse.body.errors).toBeUndefined()
+      expect(queryAllResponse.body.data.todoItems.edges).toHaveLength(2)
+      const edges = queryAllResponse.body.data.todoItems.edges as { node: { title: string } }[]
+      const titles = edges.map((e) => e.node.title)
+      expect(titles).toContain(taskTitle)
+      expect(titles).toContain(appointmentTitle)
+    })
 
     it('should filter on a base field', async () => {
       const filterByTitleResponse = await request(app.getHttpServer())
@@ -190,12 +192,12 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
                 }
               }
             }
-          `,
-        });
-      expect(filterByTitleResponse.body.errors).toBeUndefined();
-      expect(filterByTitleResponse.body.data.todoItems.edges).toHaveLength(1);
-      expect(filterByTitleResponse.body.data.todoItems.edges[0].node.id).toBe(task.id);
-    });
+          `
+        })
+      expect(filterByTitleResponse.body.errors).toBeUndefined()
+      expect(filterByTitleResponse.body.data.todoItems.edges).toHaveLength(1)
+      expect(filterByTitleResponse.body.data.todoItems.edges[0].node.id).toBe(task.id)
+    })
 
     it('should filter on a discriminated field', async () => {
       const filterByPriorityResponse = await request(app.getHttpServer())
@@ -211,13 +213,13 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
                 }
               }
             }
-          `,
-        });
-      expect(filterByPriorityResponse.body.errors).toBeUndefined();
-      expect(filterByPriorityResponse.body.data.todoTasks.edges).toHaveLength(1);
-      expect(filterByPriorityResponse.body.data.todoTasks.edges[0].node.id).toBe(task.id);
-    });
-  });
+          `
+        })
+      expect(filterByPriorityResponse.body.errors).toBeUndefined()
+      expect(filterByPriorityResponse.body.data.todoTasks.edges).toHaveLength(1)
+      expect(filterByPriorityResponse.body.data.todoTasks.edges[0].node.id).toBe(task.id)
+    })
+  })
 
   describe('update and delete', () => {
     beforeEach(async () => {
@@ -238,12 +240,12 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
               todoTask: {
                 title: taskTitle,
                 completed: false,
-                priority: 1,
-              },
-            },
-          },
-        });
-      task = createTaskResponse.body.data.createOneTodoTask;
+                priority: 1
+              }
+            }
+          }
+        })
+      task = createTaskResponse.body.data.createOneTodoTask
 
       const createAppointmentResponse = await request(app.getHttpServer())
         .post('/graphql')
@@ -262,16 +264,16 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
                 title: appointmentTitle,
                 completed: false,
                 dateTime: new Date(),
-                participants: ['Me', 'You'],
-              },
-            },
-          },
-        });
-      appointment = createAppointmentResponse.body.data.createOneTodoAppointment;
-    });
+                participants: ['Me', 'You']
+              }
+            }
+          }
+        })
+      appointment = createAppointmentResponse.body.data.createOneTodoAppointment
+    })
 
     it('should update the task', async () => {
-      const updatedTaskTitle = `Updated Task ${Date.now()}`;
+      const updatedTaskTitle = `Updated Task ${Date.now()}`
       const updateTaskResponse = await request(app.getHttpServer())
         .post('/graphql')
         .send({
@@ -287,14 +289,14 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
             input: {
               id: task.id,
               update: {
-                title: updatedTaskTitle,
-              },
-            },
-          },
-        });
-      expect(updateTaskResponse.body.errors).toBeUndefined();
-      expect(updateTaskResponse.body.data.updateOneTodoTask.title).toBe(updatedTaskTitle);
-    });
+                title: updatedTaskTitle
+              }
+            }
+          }
+        })
+      expect(updateTaskResponse.body.errors).toBeUndefined()
+      expect(updateTaskResponse.body.data.updateOneTodoTask.title).toBe(updatedTaskTitle)
+    })
 
     it('should delete the appointment', async () => {
       const deleteAppointmentResponse = await request(app.getHttpServer())
@@ -306,10 +308,10 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
                 id
               }
             }
-          `,
-        });
-      expect(deleteAppointmentResponse.body.errors).toBeUndefined();
-      expect(deleteAppointmentResponse.body.data.deleteOneTodoAppointment.id).toBe(appointment.id);
+          `
+        })
+      expect(deleteAppointmentResponse.body.errors).toBeUndefined()
+      expect(deleteAppointmentResponse.body.data.deleteOneTodoAppointment.id).toBe(appointment.id)
 
       // 8. Verify the appointment is deleted
       const queryAllAfterDeleteResponse = await request(app.getHttpServer())
@@ -325,11 +327,11 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
                 }
               }
             }
-          `,
-        });
-      expect(queryAllAfterDeleteResponse.body.errors).toBeUndefined();
-      expect(queryAllAfterDeleteResponse.body.data.todoItems.edges).toHaveLength(1);
-      expect(queryAllAfterDeleteResponse.body.data.todoItems.edges[0].node.id).toBe(task.id);
-    });
-  });
-});
+          `
+        })
+      expect(queryAllAfterDeleteResponse.body.errors).toBeUndefined()
+      expect(queryAllAfterDeleteResponse.body.data.todoItems.edges).toHaveLength(1)
+      expect(queryAllAfterDeleteResponse.body.data.todoItems.edges[0].node.id).toBe(task.id)
+    })
+  })
+})

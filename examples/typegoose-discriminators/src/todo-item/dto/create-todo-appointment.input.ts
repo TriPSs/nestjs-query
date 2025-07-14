@@ -1,16 +1,16 @@
-import { InputType, Field, GraphQLISODateTime } from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, InputType } from '@nestjs/graphql'
 
 @InputType()
 export class CreateTodoAppointmentInput {
   @Field()
-  title!: string;
+  title!: string
 
   @Field()
-  completed!: boolean;
+  completed!: boolean
 
   @Field(() => GraphQLISODateTime)
-  dateTime!: Date;
+  dateTime!: Date
 
   @Field(() => [String])
-  participants!: string[];
+  participants!: string[]
 }

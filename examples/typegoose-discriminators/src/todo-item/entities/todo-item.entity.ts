@@ -1,5 +1,5 @@
-import { modelOptions, prop } from '@typegoose/typegoose';
-import { Types } from 'mongoose';
+import { modelOptions, prop } from '@typegoose/typegoose'
+import { Types } from 'mongoose'
 
 @modelOptions({
   schemaOptions: {
@@ -7,16 +7,16 @@ import { Types } from 'mongoose';
   }
 })
 export class TodoItemEntity {
-  id!: string;
+  id!: string
 
-  _id!: Types.ObjectId;
-
-  @prop({ required: true })
-  documentType!: string;
+  _id!: Types.ObjectId
 
   @prop({ required: true })
-  title!: string;
+  documentType!: string
+
+  @prop({ required: true })
+  title!: string
 
   @prop({ required: true, default: false })
-  completed!: boolean;
+  completed!: boolean
 }

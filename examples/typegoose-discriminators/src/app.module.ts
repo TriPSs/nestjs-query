@@ -5,7 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql'
 
 import { formatGraphqlError, mongooseConfig } from '../../helpers'
 import { GqlContext } from './auth.guard'
-import { TodoItemModule } from './todo-item/todo-item.module';
+import { TodoItemModule } from './todo-item/todo-item.module'
 
 const { uri, ...options } = mongooseConfig('typegoose', {})
 
