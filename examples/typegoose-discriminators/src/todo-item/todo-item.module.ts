@@ -1,35 +1,65 @@
-import { Module } from '@nestjs/common'
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
-import { NestjsQueryTypegooseModule } from '@ptc-org/nestjs-query-typegoose'
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
+import { NestjsQueryTypegooseModule, TypegooseQueryService } from '@ptc-org/nestjs-query-typegoose';
+import { Module } from '@nestjs/common';
+import { TodoItemEntity } from './entities/todo-item.entity';
+import { TodoTaskEntity } from './entities/todo-task.entity';
+import { TodoAppointmentEntity } from './entities/todo-appointment.entity';
+import { TodoItemDTO } from './dto/todo-item.dto';
+import { TodoTaskDTO } from './dto/todo-task.dto';
+import { TodoAppointmentDTO } from './dto/todo-appointment.dto';
+import { CreateTodoTaskInput } from './dto/create-todo-task.input';
+import { CreateTodoAppointmentInput } from './dto/create-todo-appointment.input';
+import { InjectModel } from '@m8a/nestjs-typegoose';
+import { ReturnModelType } from '@typegoose/typegoose';
 
-import { AuthGuard } from '../auth.guard'
-import { TodoItemDTO } from './dto/todo-item.dto'
-import { TodoItemInputDTO } from './dto/todo-item-input.dto'
-import { TodoItemUpdateDTO } from './dto/todo-item-update.dto'
-import { TodoItemAssembler } from './todo-item.assembler'
-import { TodoItemEntity } from './todo-item.entity'
-import { TodoItemResolver } from './todo-item.resolver'
+class TodoTaskEntityService extends TypegooseQueryService<TodoTaskEntity> {
+  constructor(@InjectModel(TodoTaskEntity) readonly model: ReturnModelType<typeof TodoTaskEntity>) {
+    super(model)
+  }
+}
 
-const guards = [AuthGuard]
+class TodoAppointmentService extends TypegooseQueryService<TodoAppointmentEntity> {
+  constructor(@InjectModel(TodoAppointmentEntity) readonly model: ReturnModelType<typeof TodoAppointmentEntity>) {
+    super(model)
+  }
+}
 
 @Module({
-  providers: [TodoItemResolver],
   imports: [
     NestjsQueryGraphQLModule.forFeature({
-      imports: [NestjsQueryTypegooseModule.forFeature([TodoItemEntity])],
-      assemblers: [TodoItemAssembler],
+      imports: [NestjsQueryTypegooseModule.forFeature([
+        {
+          typegooseClass: TodoItemEntity,
+          discriminators: [
+            { typegooseClass: TodoTaskEntity },
+            { typegooseClass: TodoAppointmentEntity }
+          ]
+        }
+      ])
+      ],
       resolvers: [
         {
           DTOClass: TodoItemDTO,
-          AssemblerClass: TodoItemAssembler,
-          CreateDTOClass: TodoItemInputDTO,
-          UpdateDTOClass: TodoItemUpdateDTO,
-          enableAggregate: true,
-          aggregate: { guards },
-          create: { guards },
-          update: { guards },
-          delete: { guards }
+          EntityClass: TodoItemEntity,
+          create: {disabled: true}, // Disable create for the base entity
+          update: {disabled: true} // Disable update for the base entity
+        },
+        {
+          DTOClass: TodoTaskDTO,
+          EntityClass: TodoTaskEntity,
+          CreateDTOClass: CreateTodoTaskInput,
+          ServiceClass: TodoTaskEntityService
+        },
+        {
+          DTOClass: TodoAppointmentDTO,
+          EntityClass: TodoAppointmentEntity,
+          CreateDTOClass: CreateTodoAppointmentInput,
+          ServiceClass: TodoAppointmentService
         }
+      ],
+      services: [
+         TodoTaskEntityService,
+         TodoAppointmentService
       ]
     })
   ]

@@ -37,12 +37,12 @@ describe('FilterableField decorator', (): void => {
 
     const fields = getFilterableFields(TestDto)
     expect(fields).toMatchObject([
-      { propertyName: 'stringField', target: String, advancedOptions: undefined, returnTypeFunc: undefined },
+      { propertyName: 'stringField', target: String, advancedOptions: undefined, returnTypeFunc: expect.any(Function) },
       {
         propertyName: 'stringOptionalField',
         target: String,
         advancedOptions: { nullable: true },
-        returnTypeFunc: undefined
+        returnTypeFunc: expect.any(Function)
       },
       {
         propertyName: 'floatField',
@@ -50,12 +50,12 @@ describe('FilterableField decorator', (): void => {
         advancedOptions: { nullable: true },
         returnTypeFunc: floatReturnFunc
       },
-      { propertyName: 'numberField', target: Number, advancedOptions: { nullable: true }, returnTypeFunc: undefined },
+      { propertyName: 'numberField', target: Number, advancedOptions: { nullable: true }, returnTypeFunc: expect.any(Function) },
       {
         propertyName: 'filterOnlyField',
         target: String,
         advancedOptions: { filterOnly: true },
-        returnTypeFunc: undefined
+        returnTypeFunc: expect.any(Function)
       }
     ])
     expect(fieldSpy).toHaveBeenCalledTimes(4)
@@ -98,15 +98,15 @@ describe('FilterableField decorator', (): void => {
 
     it('should return inherited filterable fields for a type', () => {
       expect(getFilterableFields(ImplementingClass)).toEqual([
-        { propertyName: 'id', schemaName: 'id', target: Number, returnTypeFunc: expect.any(Function) },
-        { propertyName: 'implemented', schemaName: 'implemented', target: Boolean }
+        { propertyName: 'id', schemaName: 'id', target: Number, returnTypeFunc: expect.any(Function), advancedOptions: undefined },
+        { propertyName: 'implemented', schemaName: 'implemented', target: Boolean, returnTypeFunc: expect.any(Function), advancedOptions: undefined }
       ])
     })
 
     it('should exclude duplicate fields inherited filterable fields for a type', () => {
       expect(getFilterableFields(DuplicateImplementor)).toEqual([
-        { propertyName: 'implemented', schemaName: 'implemented', target: Boolean, advancedOptions: undefined },
-        { propertyName: 'id', schemaName: 'test', target: Number, advancedOptions: { name: 'test' } }
+        { propertyName: 'implemented', schemaName: 'implemented', target: Boolean, advancedOptions: undefined, returnTypeFunc: expect.any(Function) },
+        { propertyName: 'id', schemaName: 'test', target: Number, advancedOptions: { name: 'test' }, returnTypeFunc: expect.any(Function) }
       ])
     })
   })

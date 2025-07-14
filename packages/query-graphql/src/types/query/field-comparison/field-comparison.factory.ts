@@ -59,6 +59,9 @@ betweenFilterValidationMap.set(GraphQLTimestamp, IsDate())
 
 /** @internal */
 const getTypeName = (SomeType: ReturnTypeFuncValue): string => {
+  if (Array.isArray(SomeType)) {
+    return getTypeName(SomeType[0]);
+  }
   if (knownTypes.has(SomeType) || isNamed(SomeType)) {
     const typeName = (SomeType as { name: string }).name
     return upperCaseFirst(typeName)

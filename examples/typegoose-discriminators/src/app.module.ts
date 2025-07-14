@@ -5,9 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql'
 
 import { formatGraphqlError, mongooseConfig } from '../../helpers'
 import { GqlContext } from './auth.guard'
-import { SubTaskModule } from './sub-task/sub-task.module'
-import { TagModule } from './tag/tag.module'
-import { TodoItemModule } from './todo-item/todo-item.module'
+import { TodoItemModule } from './todo-item/todo-item.module';
 
 const { uri, ...options } = mongooseConfig('typegoose', {})
 
@@ -17,13 +15,11 @@ const { uri, ...options } = mongooseConfig('typegoose', {})
     TypegooseModule.forRoot(uri, options),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: 'examples/typegoose/schema.gql',
+      autoSchemaFile: 'examples/typegoose-discriminators/schema.gql',
       context: ({ req }: { req: { headers: Record<string, string> } }): GqlContext => ({ request: req }),
       formatError: formatGraphqlError
     }),
-    SubTaskModule,
-    TodoItemModule,
-    TagModule
+    TodoItemModule
   ]
 })
 export class AppModule {}
