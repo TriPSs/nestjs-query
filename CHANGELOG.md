@@ -1,4 +1,18 @@
  
+# [9.1.0](https://github.com/TriPSs/nestjs-query/compare/v9.0.3...v9.1.0) (2025-07-15)
+
+
+### Bug Fixes
+
+* **lint:** resolve various linting errors ([f71e99d](https://github.com/TriPSs/nestjs-query/commit/f71e99da1d7f3ad8a9a40c004b1e70d89f7fef07))
+
+
+### Features
+
+* **examples, query-graphql:** add typegoose discriminator e2e test and fix array filtering ([ab29f94](https://github.com/TriPSs/nestjs-query/commit/ab29f943b5d199a3484d834e65b5702e1fb9382c))
+
+
+
 ## [9.0.3](https://github.com/TriPSs/nestjs-query/compare/v9.0.2...v9.0.3) (2025-05-13)
 
 
