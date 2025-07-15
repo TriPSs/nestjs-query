@@ -401,3 +401,85 @@ export class TagDTO {
 </TabItem>
 </Tabs>
 
+
+## Discriminators
+
+Typegoose supports mongoose [discriminators](https://mongoosejs.com/docs/discriminators.html). `nestjs-query` provides support for them through the `NestjsQueryTypegooseModule`.
+
+To use discriminators you need to define them in your `NestjsQueryTypegooseModule.forFeature` call.
+
+When working with discriminators, `nestjs-query` requires you to provide a service class for each discriminated entity. This is necessary for the auto-generated resolvers to be created correctly. These service classes are also the perfect place to add any custom business logic for your discriminated entities.
+
+```ts title="todo-item/todo-item.module.ts"
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
+import { NestjsQueryTypegooseModule, TypegooseQueryService } from '@ptc-org/nestjs-query-typegoose';
+import { Module } from '@nestjs/common';
+import { TodoItemEntity } from './entities/todo-item.entity';
+import { TodoTaskEntity } from './entities/todo-task.entity';
+import { TodoAppointmentEntity } from './entities/todo-appointment.entity';
+import { TodoItemDTO } from './dto/todo-item.dto';
+import { TodoTaskDTO } from './dto/todo-task.dto';
+import { TodoAppointmentDTO } from './dto/todo-appointment.dto';
+import { CreateTodoTaskInput } from './dto/create-todo-task.input';
+import { CreateTodoAppointmentInput } from './dto/create-todo-appointment.input';
+import { InjectModel } from '@m8a/nestjs-typegoose';
+import { ReturnModelType } from '@typegoose/typegoose';
+
+const typegooseModule = NestjsQueryTypegooseModule.forFeature([
+  {
+    typegooseClass: TodoItemEntity,
+    discriminators: [
+      { typegooseClass: TodoTaskEntity },
+      { typegooseClass: TodoAppointmentEntity }
+    ]
+  }
+]);
+
+
+class TodoTaskEntityService extends TypegooseQueryService<TodoTaskEntity> {
+  constructor(@InjectModel(TodoTaskEntity) readonly model: ReturnModelType<typeof TodoTaskEntity>) {
+    super(model)
+  }
+}
+
+class TodoAppointmentService extends TypegooseQueryService<TodoAppointmentEntity> {
+  constructor(@InjectModel(TodoAppointmentEntity) readonly model: ReturnModelType<typeof TodoAppointmentEntity>) {
+    super(model)
+  }
+}
+
+@Module({
+  imports: [
+    NestjsQueryGraphQLModule.forFeature({
+      imports: [typegooseModule],
+      resolvers: [
+        {
+          DTOClass: TodoItemDTO,
+          EntityClass: TodoItemEntity,
+          create: {disabled: true}, // Disable create for the base entity
+          update: {disabled: true} // Disable update for the base entity
+        },
+        {
+          DTOClass: TodoTaskDTO,
+          EntityClass: TodoTaskEntity,
+          // Tell the resolver to use our custom input for the create operation
+          CreateDTOClass: CreateTodoTaskInput,
+          ServiceClass: TodoTaskEntityService
+        },
+        {
+          DTOClass: TodoAppointmentDTO,
+          EntityClass: TodoAppointmentEntity,
+          // Tell the resolver to use our custom input for the create operation
+          CreateDTOClass: CreateTodoAppointmentInput,
+          ServiceClass: TodoAppointmentService
+        }
+      ],
+      services: [
+         TodoTaskEntityService,
+         TodoAppointmentService
+      ]
+    })
+  ]
+})
+export class TodoItemModule {}
+```
