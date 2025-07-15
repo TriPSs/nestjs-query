@@ -8,6 +8,7 @@ import {
   Relation,
   UnPagedRelation
 } from '@ptc-org/nestjs-query-graphql'
+import { RelationManyDecoratorOpts } from 'packages/query-graphql/src/decorators/relation.decorator'
 
 import {
   CursorConnection,
@@ -16,7 +17,6 @@ import {
   getRelations,
   RelationOneDecoratorOpts
 } from '../../src/decorators'
-import { RelationManyDecoratorOpts } from 'packages/query-graphql/src/decorators/relation.decorator'
 
 @ObjectType()
 class TestRelation {}
