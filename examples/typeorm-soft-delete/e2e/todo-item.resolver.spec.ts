@@ -9,7 +9,7 @@ import { AppModule } from '../src/app.module'
 import { SubTaskEntity } from '../src/sub-task/sub-task.entity'
 import { TodoItemDTO } from '../src/todo-item/dto/todo-item.dto'
 import { refresh } from './fixtures'
-import { edgeNodes, pageInfoField, todoItemFields } from './graphql-fragments'
+import { edgeNodes, pageInfoField, todoItemFields, todoItemWithTagsFields } from './graphql-fragments'
 
 describe('SoftDelete - TodoItemResolver (e2e)', () => {
   let app: INestApplication
@@ -335,6 +335,43 @@ describe('SoftDelete - TodoItemResolver (e2e)', () => {
         .expect(200)
         .then(({ body }) => {
           expect(body.data.restoreOneTodoItem).toEqual({ id: '1' })
+        })
+    })
+
+    it(`should return the todos with their tags`, async () => {
+      await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: {},
+          query: `{
+          todoItems {
+            ${pageInfoField}
+            ${edgeNodes(todoItemWithTagsFields)}
+          }
+        }`
+        })
+        .expect(200)
+        .then(({ body }) => {
+          const { edges, pageInfo }: CursorConnectionType<TodoItemDTO> = body.data.todoItems
+          expect(pageInfo).toEqual({
+            endCursor: 'YXJyYXljb25uZWN0aW9uOjQ=',
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: 'YXJyYXljb25uZWN0aW9uOjA='
+          })
+          expect(edges).toHaveLength(5)
+          expect(edges.map((e) => e.node)).toEqual([
+            { id: '1', title: 'Create Nest App', toTags: [{ tag: { id: '1', name: 'To Review' } }] },
+            { id: '2', title: 'Create Entity', toTags: [{ tag: { id: '1', name: 'To Review' } }] },
+            { id: '3', title: 'Create Entity Service', toTags: [{ tag: { id: '1', name: 'To Review' } }] },
+            {
+              id: '4',
+              title: 'Add Todo Item Resolver',
+              toTags: [{ tag: { id: '2', name: 'Reviewed' } }]
+            },
+            { id: '5', title: 'How to create item With Sub Tasks', toTags: [{ tag: { id: '2', name: 'Reviewed' } }] }
+          ])
         })
     })
 
