@@ -33,7 +33,7 @@ export const Referenceable =
       @ResolveReference()
       async resolveReference(
         representation: RepresentationType,
-        @Context() context?: ExecutionContext,
+        @Context() context: ExecutionContext,
         @InjectDataLoaderConfig()
         dataLoaderConfig?: DataLoaderOptions
       ): Promise<DTO> {
@@ -42,25 +42,19 @@ export const Referenceable =
           throw new BadRequestException(`Unable to resolve reference, missing required key ${key} for ${baseName}`)
         }
 
-        // If context is available, use DataLoader for batching
-        if (context) {
-          const loader = DataLoaderFactory.getOrCreateLoader(
-            context,
-            loaderName,
-            () => referenceLoader.createLoader(this.service),
-            dataLoaderConfig
-          )
+        const loader = DataLoaderFactory.getOrCreateLoader(
+          context,
+          loaderName,
+          () => referenceLoader.createLoader(this.service),
+          dataLoaderConfig
+        )
 
-          const result = await loader.load({ id: id as string | number })
-          if (!result) {
-            throw new BadRequestException(`Unable to find ${baseName} with ${key}: ${String(id)}`)
-          }
-
-          return result
+        const result = await loader.load({ id: id as string | number })
+        if (!result) {
+          throw new BadRequestException(`Unable to find ${baseName} with ${key}: ${String(id)}`)
         }
 
-        // Fallback to original behavior when context is not available (for backward compatibility)
-        return this.service.getById(representation[key] as string | number)
+        return result
       }
     }
 
