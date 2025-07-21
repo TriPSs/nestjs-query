@@ -1,6 +1,7 @@
+import { ExecutionContext } from '@nestjs/common'
 import { Query, Resolver } from '@nestjs/graphql'
 import { ReferenceResolver, ReferenceResolverOpts } from '@ptc-org/nestjs-query-graphql'
-import { when } from 'ts-mockito'
+import { anything, when } from 'ts-mockito'
 
 import { createResolverFromNest, generateSchema, TestResolverDTO, TestService } from '../__fixtures__'
 
@@ -33,7 +34,9 @@ describe('ReferenceResolver', () => {
   })
 
   describe('#resolveReference', () => {
-    it('should call the service getById with the provided input', async () => {
+    const createContext = (): ExecutionContext => ({}) as unknown as ExecutionContext
+
+    it('should call the service getById with the provided input (without context)', async () => {
       const { resolver, mockService } = await createResolverFromNest(TestResolver)
       const id = 'id-1'
       const output: TestResolverDTO = {
@@ -44,6 +47,24 @@ describe('ReferenceResolver', () => {
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/naming-convention
       const result = await resolver.resolveReference({ __type: 'TestReference', id })
+      return expect(result).toEqual(output)
+    })
+
+    it('should use DataLoader when context is provided', async () => {
+      const { resolver, mockService } = await createResolverFromNest(TestResolver)
+      const context = createContext()
+      const id = 'id-1'
+      const output: TestResolverDTO = {
+        id,
+        stringField: 'foo'
+      }
+      
+      // Mock the query method for DataLoader with proper ts-mockito syntax
+      when(mockService.query(anything())).thenResolve([output])
+      
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/naming-convention
+      const result = await resolver.resolveReference({ __type: 'TestReference', id }, context)
       return expect(result).toEqual(output)
     })
 
@@ -59,6 +80,21 @@ describe('ReferenceResolver', () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/naming-convention
       return expect(resolver.resolveReference({ __type: 'TestReference' })).rejects.toThrow(
         'Unable to resolve reference, missing required key id for TestResolverDTO'
+      )
+    })
+
+    it('should reject if entity is not found when using DataLoader', async () => {
+      const { resolver, mockService } = await createResolverFromNest(TestResolver)
+      const context = createContext()
+      const id = 'id-not-found'
+      
+      // Mock the query method to return empty array
+      when(mockService.query(anything())).thenResolve([])
+      
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/naming-convention
+      return expect(resolver.resolveReference({ __type: 'TestReference', id }, context)).rejects.toThrow(
+        'Unable to find TestResolverDTO with id: id-not-found'
       )
     })
   })
