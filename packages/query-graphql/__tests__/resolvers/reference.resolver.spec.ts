@@ -44,9 +44,9 @@ describe('ReferenceResolver', () => {
         id,
         stringField: 'foo'
       }
-      
+
       when(mockService.query(anything())).thenResolve([output])
-      
+
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/naming-convention
       const result = await resolver.resolveReference({ __type: 'TestReference', id }, context)
@@ -56,7 +56,7 @@ describe('ReferenceResolver', () => {
     it('should reject if the id is not found', async () => {
       const { resolver } = await createResolverFromNest(TestResolver)
       const context = createContext()
-      
+
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/naming-convention
       return expect(resolver.resolveReference({ __type: 'TestReference' }, context)).rejects.toThrow(
@@ -68,9 +68,9 @@ describe('ReferenceResolver', () => {
       const { resolver, mockService } = await createResolverFromNest(TestResolver)
       const context = createContext()
       const id = 'id-not-found'
-      
+
       when(mockService.query(anything())).thenResolve([])
-      
+
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/naming-convention
       return expect(resolver.resolveReference({ __type: 'TestReference', id }, context)).rejects.toThrow(

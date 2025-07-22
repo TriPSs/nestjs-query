@@ -15,8 +15,8 @@ export class ReferenceLoader<DTO> implements NestjsQueryDataloader<DTO, Referenc
       const ids = args.map((arg) => arg.id)
 
       // Use batch query to fetch all entities at once
-      const filter: Filter<DTO> = { id: { in: ids } };
-      const entities = await service.query({ filter });
+      const filter = { id: { in: ids } } as unknown as Filter<DTO>
+      const entities = await service.query({ filter })
 
       // Create a map for fast lookup by ID
       const entityMap = new Map<string | number, DTO>()
