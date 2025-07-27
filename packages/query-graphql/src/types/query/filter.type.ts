@@ -38,7 +38,7 @@ function getFilterableRelations(relations: Record<string, ResolverRelation<unkno
   Object.keys(relations).forEach((r) => {
     const opts = relations[r]
     if (opts && opts.allowFiltering) {
-      filterableRelations[r] = opts.DTO
+      filterableRelations[r] = opts.DTO as Class<unknown>
     }
   })
   return filterableRelations

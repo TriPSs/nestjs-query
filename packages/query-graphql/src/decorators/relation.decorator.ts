@@ -1,4 +1,4 @@
-import { ArrayReflector, Class, getPrototypeChain } from '@ptc-org/nestjs-query-core'
+import { ArrayReflector, Class, getPrototypeChain, AbstractClass } from '@ptc-org/nestjs-query-core'
 
 import { mergeBaseResolverOpts } from '../common'
 import { RelationsOpts, ResolverRelation } from '../resolvers/relations'
@@ -11,7 +11,7 @@ export const reflector = new ArrayReflector(RELATION_KEY)
 
 export type RelationOneDecoratorOpts<Relation> = Omit<ResolverOneRelation<Relation>, 'DTO' | 'allowFiltering' | 'filterDepth'>
 export type RelationManyDecoratorOpts<Relation> = Omit<ResolverManyRelation<Relation>, 'DTO' | 'allowFiltering' | 'filterDepth'>
-export type RelationTypeFunc<Relation> = () => Class<Relation>
+export type RelationTypeFunc<Relation> = () => Class<Relation> | AbstractClass<Relation>
 export type RelationClassDecorator<DTO> = <Cls extends Class<DTO>>(DTOClass: Cls) => Cls | void
 
 export interface RelationDescriptor<Relation> {

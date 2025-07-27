@@ -9,38 +9,16 @@ import { TypegooseQueryService } from './services'
 import { TypegooseClass, TypegooseClassWithOptions, TypegooseDiscriminator } from './typegoose-interface.helpers'
 import { ReturnModelType } from './typegoose-types.helper'
 
-type ClassOrDiscriminator = TypegooseClassWithOptions | TypegooseDiscriminator
-type TypegooseInput = TypegooseClass | ClassOrDiscriminator
-
-const isTypegooseClass = (item: TypegooseInput): item is TypegooseClass => isClass(item)
-
-const isTypegooseClassWithOptions = (item: ClassOrDiscriminator): item is TypegooseClassWithOptions =>
-  isTypegooseClass(item.typegooseClass)
-
 AssemblerSerializer((obj: mongoose.Document) => obj.toObject({ virtuals: true }) as mongoose.Document)(mongoose.Document)
-
-function ensureProperInput(item: TypegooseInput): ClassOrDiscriminator | undefined {
-  if (isTypegooseClass(item)) {
-    return { typegooseClass: item }
-  }
-  if (isTypegooseClassWithOptions(item)) {
-    return item
-  }
-  return undefined
-}
 
 function createTypegooseQueryServiceProvider<Entity extends Base>(
   model: TypegooseClass | TypegooseClassWithOptions
 ): FactoryProvider {
-  const inputModel = ensureProperInput(model)
-  if (!inputModel) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions,@typescript-eslint/no-base-to-string
-    throw new Error(`Model definitions ${model} is incorrect.`)
-  }
-  const modelName = inputModel.typegooseClass?.name
+  const inputModel = isClass(model) ? { typegooseClass: model } : model
+  const modelName = inputModel.typegooseClass.name
 
   return {
-    provide: getQueryServiceToken({ name: modelName }),
+    provide: getQueryServiceToken(inputModel.typegooseClass),
     useFactory(ModelClass: ReturnModelType<new () => Entity>) {
       // initialize default serializer for documents, this is the type that mongoose returns from queries
       // @ts-expect-error linting issue, tests still pass
@@ -53,4 +31,10 @@ function createTypegooseQueryServiceProvider<Entity extends Base>(
 }
 
 export const createTypegooseQueryServiceProviders = (models: (TypegooseClass | TypegooseClassWithOptions)[]): FactoryProvider[] =>
-  models.map((model) => createTypegooseQueryServiceProvider(model))
+  models.flatMap((model) => {
+    const modelAsWithOptions = isClass(model) ? { typegooseClass: model } : model
+    const modelProvider = createTypegooseQueryServiceProvider(modelAsWithOptions)
+    const discriminators = modelAsWithOptions.discriminators ?? []
+    const discriminatorProviders = discriminators.map((d) => createTypegooseQueryServiceProvider(d))
+    return [modelProvider, ...discriminatorProviders]
+  })

@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { formatGraphqlError, mongooseConfig } from '../../helpers'
 import { GqlContext } from './auth.guard'
 import { TodoItemModule } from './todo-item/todo-item.module'
+import { SubTaskModule } from './sub-task/sub-task.module'
 
 const { uri, ...options } = mongooseConfig('typegoose', {})
 
@@ -19,6 +20,7 @@ const { uri, ...options } = mongooseConfig('typegoose', {})
       context: ({ req }: { req: { headers: Record<string, string> } }): GqlContext => ({ request: req }),
       formatError: formatGraphqlError
     }),
+    SubTaskModule,
     TodoItemModule
   ]
 })

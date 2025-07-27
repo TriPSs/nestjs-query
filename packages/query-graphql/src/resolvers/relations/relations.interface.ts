@@ -1,5 +1,5 @@
 import { Complexity, FieldOptions } from '@nestjs/graphql'
-import { Class } from '@ptc-org/nestjs-query-core'
+import { AbstractClass, Class } from '@ptc-org/nestjs-query-core'
 
 import { AuthorizerOptions } from '../../auth'
 import { DTONamesOpts } from '../../common'
@@ -34,7 +34,7 @@ export type ResolverRelation<Relation> = {
   /**
    * The class type of the relation.
    */
-  DTO: Class<Relation>
+  DTO: Class<Relation> | AbstractClass<Relation>
 
   /**
    * The name of the relation to use when fetching from the QueryService

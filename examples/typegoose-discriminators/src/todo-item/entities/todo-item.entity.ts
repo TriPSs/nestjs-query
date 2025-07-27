@@ -1,9 +1,15 @@
-import { modelOptions, prop } from '@typegoose/typegoose'
+import { modelOptions, prop, Ref } from '@typegoose/typegoose'
 import { Types } from 'mongoose'
+
+import { SubTaskEntity } from '../../sub-task/sub-task.entity'
 
 @modelOptions({
   schemaOptions: {
-    discriminatorKey: 'documentType'
+    discriminatorKey: 'documentType',
+    virtuals: true,
+    toJSON: {
+      virtuals: true
+    }
   }
 })
 export class TodoItemEntity {
@@ -19,4 +25,12 @@ export class TodoItemEntity {
 
   @prop({ required: true, default: false })
   completed!: boolean
+
+  @prop({
+    ref: () => SubTaskEntity,
+    foreignField: 'todoItem',
+    localField: '_id',
+    justOne: false
+  })
+  subTasks!: Ref<SubTaskEntity>[]
 }

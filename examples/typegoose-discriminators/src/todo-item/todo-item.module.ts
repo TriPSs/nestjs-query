@@ -12,18 +12,7 @@ import { TodoTaskDTO } from './dto/todo-task.dto'
 import { TodoAppointmentEntity } from './entities/todo-appointment.entity'
 import { TodoItemEntity } from './entities/todo-item.entity'
 import { TodoTaskEntity } from './entities/todo-task.entity'
-
-class TodoTaskEntityService extends TypegooseQueryService<TodoTaskEntity> {
-  constructor(@InjectModel(TodoTaskEntity) readonly model: ReturnModelType<typeof TodoTaskEntity>) {
-    super(model)
-  }
-}
-
-class TodoAppointmentService extends TypegooseQueryService<TodoAppointmentEntity> {
-  constructor(@InjectModel(TodoAppointmentEntity) readonly model: ReturnModelType<typeof TodoAppointmentEntity>) {
-    super(model)
-  }
-}
+import { TodoTaskAssembler } from './todo-task.assembler'
 
 @Module({
   imports: [
@@ -32,32 +21,22 @@ class TodoAppointmentService extends TypegooseQueryService<TodoAppointmentEntity
         NestjsQueryTypegooseModule.forFeature([
           {
             typegooseClass: TodoItemEntity,
-            discriminators: [{ typegooseClass: TodoTaskEntity }, { typegooseClass: TodoAppointmentEntity }]
+            discriminators: [TodoTaskEntity, TodoAppointmentEntity]
           }
         ])
       ],
-      resolvers: [
+      discriminateDTOs: [
         {
-          DTOClass: TodoItemDTO,
-          EntityClass: TodoItemEntity,
-          create: { disabled: true }, // Disable create for the base entity
-          update: { disabled: true } // Disable update for the base entity
-        },
-        {
-          DTOClass: TodoTaskDTO,
-          EntityClass: TodoTaskEntity,
-          CreateDTOClass: CreateTodoTaskInput,
-          ServiceClass: TodoTaskEntityService
-        },
-        {
-          DTOClass: TodoAppointmentDTO,
-          EntityClass: TodoAppointmentEntity,
-          CreateDTOClass: CreateTodoAppointmentInput,
-          ServiceClass: TodoAppointmentService
+          baseDTO: TodoItemDTO,
+          baseEntity: TodoItemEntity,
+          discriminators: [
+            { DTOClass: TodoTaskDTO, EntityClass: TodoTaskEntity, CreateDTOClass: CreateTodoTaskInput },
+            { DTOClass: TodoAppointmentDTO, EntityClass: TodoAppointmentEntity, CreateDTOClass: CreateTodoAppointmentInput }
+          ]
         }
-      ],
-      services: [TodoTaskEntityService, TodoAppointmentService]
+      ]
     })
-  ]
+  ],
+  providers: []
 })
 export class TodoItemModule {}

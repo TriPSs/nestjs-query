@@ -5,7 +5,9 @@ import { Model } from 'mongoose'
 import request from 'supertest'
 
 import { AppModule } from '../src/app.module'
+import { SubTaskDTO } from '../src/sub-task/dto/sub-task.dto'
 import { TodoAppointmentDTO } from '../src/todo-item/dto/todo-appointment.dto'
+import { TodoItemDTO } from '../src/todo-item/dto/todo-item.dto'
 import { TodoTaskDTO } from '../src/todo-item/dto/todo-task.dto'
 import { TodoItemEntity } from '../src/todo-item/entities/todo-item.entity'
 import { TODO_APPOINTMENT_FRAGMENT, TODO_TASK_FRAGMENT } from './graphql-fragments'
@@ -17,8 +19,11 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
   // Variables to hold the created entities so we can use them across tests
   let task: TodoTaskDTO
   let appointment: TodoAppointmentDTO
+  let taskSubTask: SubTaskDTO
+  let appointmentSubTask: SubTaskDTO
   const taskTitle = `Task ${Date.now()}`
   const appointmentTitle = `Appointment ${Date.now()}`
+  const subTaskTitle = `Sub Task ${Date.now()}`
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -219,6 +224,97 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
       expect(filterByPriorityResponse.body.data.todoTasks.edges).toHaveLength(1)
       expect(filterByPriorityResponse.body.data.todoTasks.edges[0].node.id).toBe(task.id)
     })
+
+    it('should query a TodoTask and return all fragment fields', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          query: `
+            query {
+              todoTask(id: "${task.id}") {
+                ...TodoTaskFragment
+              }
+            }
+            ${TODO_TASK_FRAGMENT}
+          `
+        })
+
+      expect(response.body.errors).toBeUndefined()
+      const todoTask = response.body.data.todoTask
+      expect(todoTask.id).toBe(task.id)
+      expect(todoTask.title).toBe(taskTitle)
+      expect(todoTask.completed).toBe(false)
+      expect(todoTask.documentType).toBe('TodoTaskEntity')
+      expect(todoTask.priority).toBe(1)
+    })
+
+    it('should query a TodoAppointment and return all fragment fields', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          query: `
+            query {
+              todoAppointment(id: "${appointment.id}") {
+                ...TodoAppointmentFragment
+              }
+            }
+            ${TODO_APPOINTMENT_FRAGMENT}
+          `
+        })
+
+      expect(response.body.errors).toBeUndefined()
+      const todoAppointment = response.body.data.todoAppointment
+      expect(todoAppointment.id).toBe(appointment.id)
+      expect(todoAppointment.title).toBe(appointmentTitle)
+      expect(todoAppointment.completed).toBe(false)
+      expect(todoAppointment.documentType).toBe('TodoAppointmentEntity')
+      expect(todoAppointment.dateTime).toBeDefined()
+      expect(todoAppointment.participants).toEqual(['Me', 'You'])
+    })
+
+    it('should query all todoItems and return fragment fields for each discriminated type', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          query: `
+            query {
+              todoItems {
+                edges {
+                  node {
+                    id
+                    title
+                    documentType
+                    ... on TodoTask {
+                      priority
+                    }
+                    ... on TodoAppointment {
+                      dateTime
+                      participants
+                    }
+                  }
+                }
+              }
+            }
+          `
+        })
+
+      expect(response.body.errors).toBeUndefined()
+      const nodes = response.body.data.todoItems.edges.map((edge: { node: TodoItemDTO }) => edge.node)
+      expect(nodes).toHaveLength(2)
+
+      const returnedTask = nodes.find((node: TodoItemDTO) => node.id === task.id)
+      expect(returnedTask).toBeDefined()
+      expect(returnedTask.title).toBe(taskTitle)
+      expect(returnedTask.documentType).toBe('TodoTaskEntity')
+      expect((returnedTask as TodoTaskDTO).priority).toBe(1)
+
+      const returnedAppointment = nodes.find((node: TodoItemDTO) => node.id === appointment.id)
+      expect(returnedAppointment).toBeDefined()
+      expect(returnedAppointment.title).toBe(appointmentTitle)
+      expect(returnedAppointment.documentType).toBe('TodoAppointmentEntity')
+      expect((returnedAppointment as TodoAppointmentDTO).dateTime).toBeDefined()
+      expect((returnedAppointment as TodoAppointmentDTO).participants).toEqual(['Me', 'You'])
+    })
   })
 
   describe('update and delete', () => {
@@ -332,6 +428,166 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
       expect(queryAllAfterDeleteResponse.body.errors).toBeUndefined()
       expect(queryAllAfterDeleteResponse.body.data.todoItems.edges).toHaveLength(1)
       expect(queryAllAfterDeleteResponse.body.data.todoItems.edges[0].node.id).toBe(task.id)
+    })
+  })
+
+  describe('relations', () => {
+    beforeEach(async () => {
+      // Create a task and an appointment before each test in this block
+      const createTaskResponse = await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          query: `
+            mutation CreateTodoTask($input: CreateOneTodoTaskInput!) {
+              createOneTodoTask(input: $input) {
+                ...TodoTaskFragment
+              }
+            }
+            ${TODO_TASK_FRAGMENT}
+          `,
+          variables: {
+            input: {
+              todoTask: {
+                title: taskTitle,
+                completed: false,
+                priority: 1
+              }
+            }
+          }
+        })
+      task = createTaskResponse.body.data.createOneTodoTask
+
+      const createAppointmentResponse = await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          query: `
+            mutation CreateTodoAppointment($input: CreateOneTodoAppointmentInput!) {
+              createOneTodoAppointment(input: $input) {
+                ...TodoAppointmentFragment
+              }
+            }
+            ${TODO_APPOINTMENT_FRAGMENT}
+          `,
+          variables: {
+            input: {
+              todoAppointment: {
+                title: appointmentTitle,
+                completed: false,
+                dateTime: new Date(),
+                participants: ['Me', 'You']
+              }
+            }
+          }
+        })
+      appointment = createAppointmentResponse.body.data.createOneTodoAppointment
+
+      const createTaskSubTaskResponse = await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          query: `
+            mutation CreateSubTask($input: CreateOneSubTaskInput!) {
+              createOneSubTask(input: $input) {
+                id
+                title
+              }
+            }
+          `,
+          variables: {
+            input: {
+              subTask: {
+                title: subTaskTitle,
+                completed: false,
+                todoItem: task.id
+              }
+            }
+          }
+        })
+      taskSubTask = createTaskSubTaskResponse.body.data.createOneSubTask
+
+      const createAppointmentSubTaskResponse = await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          query: `
+            mutation CreateSubTask($input: CreateOneSubTaskInput!) {
+              createOneSubTask(input: $input) {
+                id
+                title
+              }
+            }
+          `,
+          variables: {
+            input: {
+              subTask: {
+                title: subTaskTitle,
+                completed: false,
+                todoItem: appointment.id
+              }
+            }
+          }
+        })
+      appointmentSubTask = createAppointmentSubTaskResponse.body.data.createOneSubTask
+    })
+
+    it('should query for task and its subTasks', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          query: `
+            query {
+              todoTask(id: "${task.id}") {
+                id
+                title
+                subTasks {
+                  edges {
+                    node {
+                      id
+                      title
+                    }
+                  }
+                }
+              }
+            }
+          `
+        })
+
+      expect(response.body.errors).toBeUndefined()
+      const todoTask = response.body.data.todoTask
+      expect(todoTask.id).toBe(task.id)
+      expect(todoTask.title).toBe(taskTitle)
+      expect(todoTask.subTasks.edges).toHaveLength(1)
+      expect(todoTask.subTasks.edges[0].node.id).toBe(taskSubTask.id)
+      expect(todoTask.subTasks.edges[0].node.title).toBe(subTaskTitle)
+    })
+
+    it('should query for appointment and its subTasks', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          query: `
+            query {
+              todoAppointment(id: "${appointment.id}") {
+                id
+                title
+                subTasks {
+                  edges {
+                    node {
+                      id
+                      title
+                    }
+                  }
+                }
+              }
+            }
+          `
+        })
+
+      expect(response.body.errors).toBeUndefined()
+      const todoAppointment = response.body.data.todoAppointment
+      expect(todoAppointment.id).toBe(appointment.id)
+      expect(todoAppointment.title).toBe(appointmentTitle)
+      expect(todoAppointment.subTasks.edges).toHaveLength(1)
+      expect(todoAppointment.subTasks.edges[0].node.id).toBe(appointmentSubTask.id)
+      expect(todoAppointment.subTasks.edges[0].node.title).toBe(subTaskTitle)
     })
   })
 })
