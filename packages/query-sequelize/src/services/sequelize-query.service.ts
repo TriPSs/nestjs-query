@@ -2,6 +2,8 @@ import { NotFoundException } from '@nestjs/common'
 import {
   AggregateQuery,
   AggregateResponse,
+  applyFilter,
+  CreateOneOptions,
   DeepPartial,
   DeleteManyResponse,
   DeleteOneOptions,
@@ -129,9 +131,13 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * const todoItem = await this.service.createOne({title: 'Todo Item', completed: false });
    * ```
    * @param record - The entity to create.
+   * @param opts - Additional options.
    */
-  public async createOne(record: DeepPartial<Entity>): Promise<Entity> {
+  public async createOne(record: DeepPartial<Entity>, opts?: CreateOneOptions<Entity>): Promise<Entity> {
     await this.ensureEntityDoesNotExist(record)
+    if (opts?.filter && !applyFilter(record as Entity, opts.filter)) {
+      throw new Error('Entity does not meet creation constraints')
+    }
     const changedValues = this.getChangedValues(record)
     return this.model.create<Entity>(changedValues as MakeNullishOptional<Entity>)
   }
@@ -147,11 +153,15 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * ]);
    * ```
    * @param records - The entities to create.
+   * @param opts - Additional options.
    */
-  public async createMany(records: DeepPartial<Entity>[]): Promise<Entity[]> {
+  public async createMany(records: DeepPartial<Entity>[], opts?: CreateOneOptions<Entity>): Promise<Entity[]> {
     await Promise.all(records.map((r) => this.ensureEntityDoesNotExist(r)))
+    const filteredRecords = opts?.filter ? applyFilter(records as Entity[], opts.filter) : records
 
-    return this.model.bulkCreate<Entity>(records.map((r) => this.getChangedValues(r) as MakeNullishOptional<Entity>))
+    return this.model.bulkCreate<Entity>(
+      filteredRecords.map((r) => this.getChangedValues(r as DeepPartial<Entity>) as MakeNullishOptional<Entity>)
+    )
   }
 
   /**
