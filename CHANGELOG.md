@@ -1,4 +1,56 @@
  
+# [9.1.0](https://github.com/TriPSs/nestjs-query/compare/v9.0.3...v9.1.0) (2025-07-15)
+
+
+### Bug Fixes
+
+* **lint:** resolve various linting errors ([f71e99d](https://github.com/TriPSs/nestjs-query/commit/f71e99da1d7f3ad8a9a40c004b1e70d89f7fef07))
+
+
+### Features
+
+* **examples, query-graphql:** add typegoose discriminator e2e test and fix array filtering ([ab29f94](https://github.com/TriPSs/nestjs-query/commit/ab29f943b5d199a3484d834e65b5702e1fb9382c))
+
+
+
+## [9.0.3](https://github.com/TriPSs/nestjs-query/compare/v9.0.2...v9.0.3) (2025-05-13)
+
+
+### Bug Fixes
+
+* describe indentation ([90e4074](https://github.com/TriPSs/nestjs-query/commit/90e4074b3229861636f710b2330f6b427525ffef))
+* shouldUseSkipTake to handle nested cases ([ec39883](https://github.com/TriPSs/nestjs-query/commit/ec3988326ded3b378b0f3bbe2c69161eb49c1ebe))
+* Update peer dependencies to support NestJS v11 ([55edc6a](https://github.com/TriPSs/nestjs-query/commit/55edc6a58b208853662bc05058e6d92d6dd4af51)), closes [#358](https://github.com/TriPSs/nestjs-query/issues/358)
+
+
+
+## [9.0.2](https://github.com/TriPSs/nestjs-query/compare/v9.0.1...v9.0.2) (2025-02-17)
+
+
+
+## [9.0.1](https://github.com/TriPSs/nestjs-query/compare/v9.0.0...v9.0.1) (2025-02-17)
+
+
+### Bug Fixes
+
+* Update peer dependencies to support NestJS v11 ([9471198](https://github.com/TriPSs/nestjs-query/commit/9471198b987139f297a56f1f4ca3ed8b5b5dce96)), closes [#358](https://github.com/TriPSs/nestjs-query/issues/358)
+
+
+
+# [9.0.0](https://github.com/TriPSs/nestjs-query/compare/v8.0.3...v9.0.0) (2025-02-13)
+
+
+### Features
+
+* Updated to NestJS 11 ([8fe3ed9](https://github.com/TriPSs/nestjs-query/commit/8fe3ed98e19b2532526258d17758dc9d4055a521))
+
+
+### BREAKING CHANGES
+
+* Updated to NestJS 11
+
+
+
 ## [8.0.3](https://github.com/TriPSs/nestjs-query/compare/v8.0.2...v8.0.3) (2025-01-30)
 
 
