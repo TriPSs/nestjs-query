@@ -26,13 +26,12 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type TodoAppointment implements TodoItemDTO {
+type TodoTask implements TodoItemDTO {
   id: ID!
   title: String!
   completed: Boolean!
   documentType: String!
-  dateTime: DateTime!
-  participants: [String!]!
+  priority: Float!
   subTasks(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
@@ -42,7 +41,7 @@ type TodoAppointment implements TodoItemDTO {
 
     """Specify to sort results."""
     sorting: [SubTaskSort!]! = []
-  ): TodoAppointmentSubTasksConnection!
+  ): TodoTaskSubTasksConnection!
 }
 
 input CursorPaging {
@@ -163,12 +162,13 @@ enum SortNulls {
   NULLS_LAST
 }
 
-type TodoTask implements TodoItemDTO {
+type TodoAppointment implements TodoItemDTO {
   id: ID!
   title: String!
   completed: Boolean!
   documentType: String!
-  priority: Float!
+  dateTime: DateTime!
+  participants: [String!]!
   subTasks(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
@@ -178,7 +178,7 @@ type TodoTask implements TodoItemDTO {
 
     """Specify to sort results."""
     sorting: [SubTaskSort!]! = []
-  ): TodoTaskSubTasksConnection!
+  ): TodoAppointmentSubTasksConnection!
 }
 
 type DeleteManyResponse {
@@ -186,11 +186,15 @@ type DeleteManyResponse {
   deletedCount: Int!
 }
 
-type TodoItemDTODeleteResponse {
+type SubTaskDeleteResponse {
   id: ID
   title: String
+  description: String
   completed: Boolean
-  documentType: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  createdBy: String
+  updatedBy: String
 }
 
 type UpdateManyResponse {
@@ -198,9 +202,9 @@ type UpdateManyResponse {
   updatedCount: Int!
 }
 
-type TodoItemDTOEdge {
-  """The node containing the TodoItemDTO"""
-  node: TodoItemDTO!
+type SubTaskEdge {
+  """The node containing the SubTask"""
+  node: SubTask!
 
   """Cursor for this node."""
   cursor: ConnectionCursor!
@@ -218,104 +222,6 @@ type PageInfo {
 
   """The cursor of the last returned record."""
   endCursor: ConnectionCursor
-}
-
-type TodoItemDTOConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [TodoItemDTOEdge!]!
-}
-
-type TodoTaskDeleteResponse {
-  id: ID
-  title: String
-  completed: Boolean
-  documentType: String
-  priority: Float
-}
-
-type TodoTaskEdge {
-  """The node containing the TodoTask"""
-  node: TodoTask!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-type TodoTaskConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [TodoTaskEdge!]!
-}
-
-type SubTaskEdge {
-  """The node containing the SubTask"""
-  node: SubTask!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-type TodoTaskSubTasksConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [SubTaskEdge!]!
-
-  """Fetch total count of records"""
-  totalCount: Int!
-}
-
-type TodoAppointmentDeleteResponse {
-  id: ID
-  title: String
-  completed: Boolean
-  documentType: String
-  dateTime: DateTime
-  participants: [String!]
-}
-
-type TodoAppointmentEdge {
-  """The node containing the TodoAppointment"""
-  node: TodoAppointment!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-type TodoAppointmentConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [TodoAppointmentEdge!]!
-}
-
-type TodoAppointmentSubTasksConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [SubTaskEdge!]!
-
-  """Fetch total count of records"""
-  totalCount: Int!
-}
-
-type SubTaskDeleteResponse {
-  id: ID
-  title: String
-  description: String
-  completed: Boolean
-  createdAt: DateTime
-  updatedAt: DateTime
-  createdBy: String
-  updatedBy: String
 }
 
 type SubTaskConnection {
@@ -386,7 +292,143 @@ type SubTaskAggregateResponse {
   max: SubTaskMaxAggregate
 }
 
+type TodoTaskDeleteResponse {
+  id: ID
+  title: String
+  completed: Boolean
+  documentType: String
+  priority: Float
+}
+
+type TodoTaskEdge {
+  """The node containing the TodoTask"""
+  node: TodoTask!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type TodoTaskConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TodoTaskEdge!]!
+}
+
+type TodoTaskSubTasksConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [SubTaskEdge!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type TodoItemDTODeleteResponse {
+  id: ID
+  title: String
+  completed: Boolean
+  documentType: String
+}
+
+type TodoItemDTOEdge {
+  """The node containing the TodoItemDTO"""
+  node: TodoItemDTO!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type TodoItemDTOConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TodoItemDTOEdge!]!
+}
+
+type TodoAppointmentDeleteResponse {
+  id: ID
+  title: String
+  completed: Boolean
+  documentType: String
+  dateTime: DateTime
+  participants: [String!]
+}
+
+type TodoAppointmentEdge {
+  """The node containing the TodoAppointment"""
+  node: TodoAppointment!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type TodoAppointmentConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TodoAppointmentEdge!]!
+}
+
+type TodoAppointmentSubTasksConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [SubTaskEdge!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
 type Query {
+  todoItem(
+    """The id of the record to find."""
+    id: ID!
+  ): TodoItemDTO!
+  todoItems(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: TodoItemDTOFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoItemDTOSort!]! = []
+  ): TodoItemDTOConnection!
+  todoAppointment(
+    """The id of the record to find."""
+    id: ID!
+  ): TodoAppointment!
+  todoAppointments(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: TodoAppointmentFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoAppointmentSort!]! = []
+  ): TodoAppointmentConnection!
+  todoTask(
+    """The id of the record to find."""
+    id: ID!
+  ): TodoTask!
+  todoTasks(
+    """Limit or page results."""
+    paging: CursorPaging! = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: TodoTaskFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoTaskSort!]! = []
+  ): TodoTaskConnection!
   subTaskAggregate(
     """Filter to find records to aggregate on"""
     filter: SubTaskAggregateFilter
@@ -405,61 +447,6 @@ type Query {
     """Specify to sort results."""
     sorting: [SubTaskSort!]! = []
   ): SubTaskConnection!
-  todoItem(
-    """The id of the record to find."""
-    id: ID!
-  ): TodoItemDTO!
-  todoItems(
-    """Limit or page results."""
-    paging: CursorPaging! = {first: 10}
-
-    """Specify to filter the records returned."""
-    filter: TodoItemDTOFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [TodoItemDTOSort!]! = []
-  ): TodoItemDTOConnection!
-  todoTask(
-    """The id of the record to find."""
-    id: ID!
-  ): TodoTask!
-  todoTasks(
-    """Limit or page results."""
-    paging: CursorPaging! = {first: 10}
-
-    """Specify to filter the records returned."""
-    filter: TodoTaskFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [TodoTaskSort!]! = []
-  ): TodoTaskConnection!
-  todoAppointment(
-    """The id of the record to find."""
-    id: ID!
-  ): TodoAppointment!
-  todoAppointments(
-    """Limit or page results."""
-    paging: CursorPaging! = {first: 10}
-
-    """Specify to filter the records returned."""
-    filter: TodoAppointmentFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [TodoAppointmentSort!]! = []
-  ): TodoAppointmentConnection!
-}
-
-input SubTaskAggregateFilter {
-  and: [SubTaskAggregateFilter!]
-  or: [SubTaskAggregateFilter!]
-  id: IDFilterComparison
-  title: StringFieldComparison
-  description: StringFieldComparison
-  completed: BooleanFieldComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  createdBy: StringFieldComparison
-  updatedBy: StringFieldComparison
 }
 
 input TodoItemDTOFilter {
@@ -482,6 +469,32 @@ enum TodoItemDTOSortFields {
   title
   completed
   documentType
+}
+
+input TodoAppointmentFilter {
+  and: [TodoAppointmentFilter!]
+  or: [TodoAppointmentFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+  documentType: StringFieldComparison
+  dateTime: DateFieldComparison
+  participants: StringFieldComparison
+}
+
+input TodoAppointmentSort {
+  field: TodoAppointmentSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum TodoAppointmentSortFields {
+  id
+  title
+  completed
+  documentType
+  dateTime
+  participants
 }
 
 input TodoTaskFilter {
@@ -528,9 +541,161 @@ enum TodoTaskSortFields {
   priority
 }
 
-input TodoAppointmentFilter {
-  and: [TodoAppointmentFilter!]
-  or: [TodoAppointmentFilter!]
+input SubTaskAggregateFilter {
+  and: [SubTaskAggregateFilter!]
+  or: [SubTaskAggregateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  description: StringFieldComparison
+  completed: BooleanFieldComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+  createdBy: StringFieldComparison
+  updatedBy: StringFieldComparison
+}
+
+type Mutation {
+  createOneTodoItemDTO(input: CreateOneTodoItemDTOInput!): TodoItemDTO!
+  createManyTodoItemDTOS(input: CreateManyTodoItemDTOSInput!): [TodoItemDTO!]!
+  updateOneTodoItemDTO(input: UpdateOneTodoItemDTOInput!): TodoItemDTO!
+  updateManyTodoItemDTOS(input: UpdateManyTodoItemDTOSInput!): UpdateManyResponse!
+  deleteOneTodoItemDTO(input: DeleteOneTodoItemDTOInput!): TodoItemDTODeleteResponse!
+  deleteManyTodoItemDTOS(input: DeleteManyTodoItemDTOSInput!): DeleteManyResponse!
+  createOneTodoAppointment(input: CreateOneTodoAppointmentInput!): TodoAppointment!
+  createManyTodoAppointments(input: CreateManyTodoAppointmentsInput!): [TodoAppointment!]!
+  updateOneTodoAppointment(input: UpdateOneTodoAppointmentInput!): TodoAppointment!
+  updateManyTodoAppointments(input: UpdateManyTodoAppointmentsInput!): UpdateManyResponse!
+  deleteOneTodoAppointment(input: DeleteOneTodoAppointmentInput!): TodoAppointmentDeleteResponse!
+  deleteManyTodoAppointments(input: DeleteManyTodoAppointmentsInput!): DeleteManyResponse!
+  createOneTodoTask(input: CreateOneTodoTaskInput!): TodoTask!
+  createManyTodoTasks(input: CreateManyTodoTasksInput!): [TodoTask!]!
+  updateOneTodoTask(input: UpdateOneTodoTaskInput!): TodoTask!
+  updateManyTodoTasks(input: UpdateManyTodoTasksInput!): UpdateManyResponse!
+  deleteOneTodoTask(input: DeleteOneTodoTaskInput!): TodoTaskDeleteResponse!
+  deleteManyTodoTasks(input: DeleteManyTodoTasksInput!): DeleteManyResponse!
+  markAllAsComplete(input: String): Float!
+  setTodoItemOnSubTask(input: SetTodoItemOnSubTaskInput!): SubTask!
+  createOneSubTask(input: CreateOneSubTaskInput!): SubTask!
+  createManySubTasks(input: CreateManySubTasksInput!): [SubTask!]!
+  updateOneSubTask(input: UpdateOneSubTaskInput!): SubTask!
+  updateManySubTasks(input: UpdateManySubTasksInput!): UpdateManyResponse!
+  deleteOneSubTask(input: DeleteOneSubTaskInput!): SubTaskDeleteResponse!
+  deleteManySubTasks(input: DeleteManySubTasksInput!): DeleteManyResponse!
+}
+
+input CreateOneTodoItemDTOInput {
+  """The record to create"""
+  todoItemDTO: CreateTodoItemDTO!
+}
+
+input CreateTodoItemDTO {
+  id: ID!
+  title: String!
+  completed: Boolean!
+  documentType: String!
+}
+
+input CreateManyTodoItemDTOSInput {
+  """Array of records to create"""
+  todoItemDTOS: [CreateTodoItemDTO!]!
+}
+
+input UpdateOneTodoItemDTOInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateTodoItemDTO!
+}
+
+input UpdateTodoItemDTO {
+  id: ID
+  title: String
+  completed: Boolean
+  documentType: String
+}
+
+input UpdateManyTodoItemDTOSInput {
+  """Filter used to find fields to update"""
+  filter: TodoItemDTOUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateTodoItemDTO!
+}
+
+input TodoItemDTOUpdateFilter {
+  and: [TodoItemDTOUpdateFilter!]
+  or: [TodoItemDTOUpdateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+  documentType: StringFieldComparison
+}
+
+input DeleteOneTodoItemDTOInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteManyTodoItemDTOSInput {
+  """Filter to find records to delete"""
+  filter: TodoItemDTODeleteFilter!
+}
+
+input TodoItemDTODeleteFilter {
+  and: [TodoItemDTODeleteFilter!]
+  or: [TodoItemDTODeleteFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+  documentType: StringFieldComparison
+}
+
+input CreateOneTodoAppointmentInput {
+  """The record to create"""
+  todoAppointment: CreateTodoAppointmentInput!
+}
+
+input CreateTodoAppointmentInput {
+  title: String!
+  completed: Boolean!
+  dateTime: DateTime!
+  participants: [String!]!
+}
+
+input CreateManyTodoAppointmentsInput {
+  """Array of records to create"""
+  todoAppointments: [CreateTodoAppointmentInput!]!
+}
+
+input UpdateOneTodoAppointmentInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateTodoAppointment!
+}
+
+input UpdateTodoAppointment {
+  id: ID
+  title: String
+  completed: Boolean
+  documentType: String
+  dateTime: DateTime
+  participants: [String!]
+}
+
+input UpdateManyTodoAppointmentsInput {
+  """Filter used to find fields to update"""
+  filter: TodoAppointmentUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateTodoAppointment!
+}
+
+input TodoAppointmentUpdateFilter {
+  and: [TodoAppointmentUpdateFilter!]
+  or: [TodoAppointmentUpdateFilter!]
   id: IDFilterComparison
   title: StringFieldComparison
   completed: BooleanFieldComparison
@@ -539,47 +704,95 @@ input TodoAppointmentFilter {
   participants: StringFieldComparison
 }
 
-input TodoAppointmentSort {
-  field: TodoAppointmentSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
+input DeleteOneTodoAppointmentInput {
+  """The id of the record to delete."""
+  id: ID!
 }
 
-enum TodoAppointmentSortFields {
-  id
-  title
-  completed
-  documentType
-  dateTime
-  participants
+input DeleteManyTodoAppointmentsInput {
+  """Filter to find records to delete"""
+  filter: TodoAppointmentDeleteFilter!
 }
 
-type Mutation {
-  setTodoItemOnSubTask(input: SetTodoItemOnSubTaskInput!): SubTask!
-  createOneSubTask(input: CreateOneSubTaskInput!): SubTask!
-  createManySubTasks(input: CreateManySubTasksInput!): [SubTask!]!
-  updateOneSubTask(input: UpdateOneSubTaskInput!): SubTask!
-  updateManySubTasks(input: UpdateManySubTasksInput!): UpdateManyResponse!
-  deleteOneSubTask(input: DeleteOneSubTaskInput!): SubTaskDeleteResponse!
-  deleteManySubTasks(input: DeleteManySubTasksInput!): DeleteManyResponse!
-  createOneTodoItemDTO(input: CreateOneTodoItemDTOInput!): TodoItemDTO!
-  createManyTodoItemDTOS(input: CreateManyTodoItemDTOSInput!): [TodoItemDTO!]!
-  updateOneTodoItemDTO(input: UpdateOneTodoItemDTOInput!): TodoItemDTO!
-  updateManyTodoItemDTOS(input: UpdateManyTodoItemDTOSInput!): UpdateManyResponse!
-  deleteOneTodoItemDTO(input: DeleteOneTodoItemDTOInput!): TodoItemDTODeleteResponse!
-  deleteManyTodoItemDTOS(input: DeleteManyTodoItemDTOSInput!): DeleteManyResponse!
-  createOneTodoTask(input: CreateOneTodoTaskInput!): TodoTask!
-  createManyTodoTasks(input: CreateManyTodoTasksInput!): [TodoTask!]!
-  updateOneTodoTask(input: UpdateOneTodoTaskInput!): TodoTask!
-  updateManyTodoTasks(input: UpdateManyTodoTasksInput!): UpdateManyResponse!
-  deleteOneTodoTask(input: DeleteOneTodoTaskInput!): TodoTaskDeleteResponse!
-  deleteManyTodoTasks(input: DeleteManyTodoTasksInput!): DeleteManyResponse!
-  createOneTodoAppointment(input: CreateOneTodoAppointmentInput!): TodoAppointment!
-  createManyTodoAppointments(input: CreateManyTodoAppointmentsInput!): [TodoAppointment!]!
-  updateOneTodoAppointment(input: UpdateOneTodoAppointmentInput!): TodoAppointment!
-  updateManyTodoAppointments(input: UpdateManyTodoAppointmentsInput!): UpdateManyResponse!
-  deleteOneTodoAppointment(input: DeleteOneTodoAppointmentInput!): TodoAppointmentDeleteResponse!
-  deleteManyTodoAppointments(input: DeleteManyTodoAppointmentsInput!): DeleteManyResponse!
+input TodoAppointmentDeleteFilter {
+  and: [TodoAppointmentDeleteFilter!]
+  or: [TodoAppointmentDeleteFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+  documentType: StringFieldComparison
+  dateTime: DateFieldComparison
+  participants: StringFieldComparison
+}
+
+input CreateOneTodoTaskInput {
+  """The record to create"""
+  todoTask: CreateTodoTaskInput!
+}
+
+input CreateTodoTaskInput {
+  title: String!
+  completed: Boolean!
+  priority: Int!
+}
+
+input CreateManyTodoTasksInput {
+  """Array of records to create"""
+  todoTasks: [CreateTodoTaskInput!]!
+}
+
+input UpdateOneTodoTaskInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateTodoTask!
+}
+
+input UpdateTodoTask {
+  id: ID
+  title: String
+  completed: Boolean
+  documentType: String
+  priority: Float
+}
+
+input UpdateManyTodoTasksInput {
+  """Filter used to find fields to update"""
+  filter: TodoTaskUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateTodoTask!
+}
+
+input TodoTaskUpdateFilter {
+  and: [TodoTaskUpdateFilter!]
+  or: [TodoTaskUpdateFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+  documentType: StringFieldComparison
+  priority: NumberFieldComparison
+}
+
+input DeleteOneTodoTaskInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteManyTodoTasksInput {
+  """Filter to find records to delete"""
+  filter: TodoTaskDeleteFilter!
+}
+
+input TodoTaskDeleteFilter {
+  and: [TodoTaskDeleteFilter!]
+  or: [TodoTaskDeleteFilter!]
+  id: IDFilterComparison
+  title: StringFieldComparison
+  completed: BooleanFieldComparison
+  documentType: StringFieldComparison
+  priority: NumberFieldComparison
 }
 
 input SetTodoItemOnSubTaskInput {
@@ -664,216 +877,4 @@ input SubTaskDeleteFilter {
   updatedAt: DateFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
-}
-
-input CreateOneTodoItemDTOInput {
-  """The record to create"""
-  todoItemDTO: CreateTodoItemDTO!
-}
-
-input CreateTodoItemDTO {
-  id: ID!
-  title: String!
-  completed: Boolean!
-  documentType: String!
-}
-
-input CreateManyTodoItemDTOSInput {
-  """Array of records to create"""
-  todoItemDTOS: [CreateTodoItemDTO!]!
-}
-
-input UpdateOneTodoItemDTOInput {
-  """The id of the record to update"""
-  id: ID!
-
-  """The update to apply."""
-  update: UpdateTodoItemDTO!
-}
-
-input UpdateTodoItemDTO {
-  id: ID
-  title: String
-  completed: Boolean
-  documentType: String
-}
-
-input UpdateManyTodoItemDTOSInput {
-  """Filter used to find fields to update"""
-  filter: TodoItemDTOUpdateFilter!
-
-  """The update to apply to all records found using the filter"""
-  update: UpdateTodoItemDTO!
-}
-
-input TodoItemDTOUpdateFilter {
-  and: [TodoItemDTOUpdateFilter!]
-  or: [TodoItemDTOUpdateFilter!]
-  id: IDFilterComparison
-  title: StringFieldComparison
-  completed: BooleanFieldComparison
-  documentType: StringFieldComparison
-}
-
-input DeleteOneTodoItemDTOInput {
-  """The id of the record to delete."""
-  id: ID!
-}
-
-input DeleteManyTodoItemDTOSInput {
-  """Filter to find records to delete"""
-  filter: TodoItemDTODeleteFilter!
-}
-
-input TodoItemDTODeleteFilter {
-  and: [TodoItemDTODeleteFilter!]
-  or: [TodoItemDTODeleteFilter!]
-  id: IDFilterComparison
-  title: StringFieldComparison
-  completed: BooleanFieldComparison
-  documentType: StringFieldComparison
-}
-
-input CreateOneTodoTaskInput {
-  """The record to create"""
-  todoTask: CreateTodoTaskInput!
-}
-
-input CreateTodoTaskInput {
-  title: String!
-  completed: Boolean!
-  priority: Int!
-}
-
-input CreateManyTodoTasksInput {
-  """Array of records to create"""
-  todoTasks: [CreateTodoTaskInput!]!
-}
-
-input UpdateOneTodoTaskInput {
-  """The id of the record to update"""
-  id: ID!
-
-  """The update to apply."""
-  update: UpdateTodoTask!
-}
-
-input UpdateTodoTask {
-  id: ID
-  title: String
-  completed: Boolean
-  documentType: String
-  priority: Float
-}
-
-input UpdateManyTodoTasksInput {
-  """Filter used to find fields to update"""
-  filter: TodoTaskUpdateFilter!
-
-  """The update to apply to all records found using the filter"""
-  update: UpdateTodoTask!
-}
-
-input TodoTaskUpdateFilter {
-  and: [TodoTaskUpdateFilter!]
-  or: [TodoTaskUpdateFilter!]
-  id: IDFilterComparison
-  title: StringFieldComparison
-  completed: BooleanFieldComparison
-  documentType: StringFieldComparison
-  priority: NumberFieldComparison
-}
-
-input DeleteOneTodoTaskInput {
-  """The id of the record to delete."""
-  id: ID!
-}
-
-input DeleteManyTodoTasksInput {
-  """Filter to find records to delete"""
-  filter: TodoTaskDeleteFilter!
-}
-
-input TodoTaskDeleteFilter {
-  and: [TodoTaskDeleteFilter!]
-  or: [TodoTaskDeleteFilter!]
-  id: IDFilterComparison
-  title: StringFieldComparison
-  completed: BooleanFieldComparison
-  documentType: StringFieldComparison
-  priority: NumberFieldComparison
-}
-
-input CreateOneTodoAppointmentInput {
-  """The record to create"""
-  todoAppointment: CreateTodoAppointmentInput!
-}
-
-input CreateTodoAppointmentInput {
-  title: String!
-  completed: Boolean!
-  dateTime: DateTime!
-  participants: [String!]!
-}
-
-input CreateManyTodoAppointmentsInput {
-  """Array of records to create"""
-  todoAppointments: [CreateTodoAppointmentInput!]!
-}
-
-input UpdateOneTodoAppointmentInput {
-  """The id of the record to update"""
-  id: ID!
-
-  """The update to apply."""
-  update: UpdateTodoAppointment!
-}
-
-input UpdateTodoAppointment {
-  id: ID
-  title: String
-  completed: Boolean
-  documentType: String
-  dateTime: DateTime
-  participants: [String!]
-}
-
-input UpdateManyTodoAppointmentsInput {
-  """Filter used to find fields to update"""
-  filter: TodoAppointmentUpdateFilter!
-
-  """The update to apply to all records found using the filter"""
-  update: UpdateTodoAppointment!
-}
-
-input TodoAppointmentUpdateFilter {
-  and: [TodoAppointmentUpdateFilter!]
-  or: [TodoAppointmentUpdateFilter!]
-  id: IDFilterComparison
-  title: StringFieldComparison
-  completed: BooleanFieldComparison
-  documentType: StringFieldComparison
-  dateTime: DateFieldComparison
-  participants: StringFieldComparison
-}
-
-input DeleteOneTodoAppointmentInput {
-  """The id of the record to delete."""
-  id: ID!
-}
-
-input DeleteManyTodoAppointmentsInput {
-  """Filter to find records to delete"""
-  filter: TodoAppointmentDeleteFilter!
-}
-
-input TodoAppointmentDeleteFilter {
-  and: [TodoAppointmentDeleteFilter!]
-  or: [TodoAppointmentDeleteFilter!]
-  id: IDFilterComparison
-  title: StringFieldComparison
-  completed: BooleanFieldComparison
-  documentType: StringFieldComparison
-  dateTime: DateFieldComparison
-  participants: StringFieldComparison
 }

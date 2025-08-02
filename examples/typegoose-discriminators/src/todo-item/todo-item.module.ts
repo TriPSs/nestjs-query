@@ -12,7 +12,12 @@ import { TodoTaskDTO } from './dto/todo-task.dto'
 import { TodoAppointmentEntity } from './entities/todo-appointment.entity'
 import { TodoItemEntity } from './entities/todo-item.entity'
 import { TodoTaskEntity } from './entities/todo-task.entity'
-import { TodoTaskAssembler } from './todo-task.assembler'
+
+
+// NOTE: This is just an example!!!!
+// The tests aren't using this module. 
+// The tests use test-setup.ts to setup this module for each test
+// You can look into that file to see how to work with the Nestjs-Query-GraphQL module 
 
 @Module({
   imports: [
@@ -30,7 +35,11 @@ import { TodoTaskAssembler } from './todo-task.assembler'
           baseDTO: TodoItemDTO,
           baseEntity: TodoItemEntity,
           discriminators: [
-            { DTOClass: TodoTaskDTO, EntityClass: TodoTaskEntity, CreateDTOClass: CreateTodoTaskInput },
+            {
+              DTOClass: TodoTaskDTO,
+              EntityClass: TodoTaskEntity,
+              CreateDTOClass: CreateTodoTaskInput
+            },
             { DTOClass: TodoAppointmentDTO, EntityClass: TodoAppointmentEntity, CreateDTOClass: CreateTodoAppointmentInput }
           ]
         }

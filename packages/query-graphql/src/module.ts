@@ -1,9 +1,9 @@
 import { DynamicModule, ForwardReference, Global, Module, Provider } from '@nestjs/common'
-import { Assembler, Class, NestjsQueryCoreModule, AbstractClass } from '@ptc-org/nestjs-query-core'
+import { Assembler, Class, NestjsQueryCoreModule, AbstractClass, QueryService, getQueryServiceToken } from '@ptc-org/nestjs-query-core'
 
 import { DataLoaderOptions, dataLoaderOptionsToken } from './pipes/inject-data-loader-config.pipe'
 import { AutoResolverOpts, createAuthorizerProviders, createHookProviders, createResolvers } from './providers'
-import { ReadResolver, ReadResolverOpts } from './resolvers'
+import { ReadResolverOpts } from './resolvers'
 import { defaultPubSub, GraphQLPubSub, pubSubToken } from './subscription'
 import { PagingStrategies } from './types/query/paging'
 
@@ -18,6 +18,7 @@ export interface DiscriminatedDTO {
   EntityClass: Class<any>
   CreateDTOClass?: Class<any>
   AssemblerClass?: Class<Assembler<any, any, any, any, any, any>>
+  ResolverClass?: Class<any>
 }
 
 export interface DiscriminateDTOsOpts {
@@ -80,19 +81,30 @@ export class NestjsQueryGraphQLModule {
   }
 
   private static getCoreModule(opts: NestjsQueryGraphqlModuleFeatureOpts): DynamicModule {
+    const discriminatedAssemblers = (
+      opts.discriminateDTOs?.flatMap((d) => d.discriminators.map((disc) => disc.AssemblerClass)) ?? []
+    ).filter((AssemblerClass) => AssemblerClass) as Class<
+      Assembler<any, any, any, any, any, any>
+    >[]
+
     return NestjsQueryCoreModule.forFeature({
-      assemblers: opts.assemblers,
+      assemblers: [...(opts.assemblers ?? []), ...discriminatedAssemblers],
       imports: opts.imports ?? []
     })
   }
 
   private static getProviders(opts: NestjsQueryGraphqlModuleFeatureOpts): Provider<unknown>[] {
+    const discriminatedResolvers = (
+      opts.discriminateDTOs?.flatMap((d) => d.discriminators.map((disc) => disc.ResolverClass)) ?? []
+    ).filter((ResolverClass) => ResolverClass) as Provider<unknown>[]
+
     return [
       ...this.getServicesProviders(opts),
       ...this.getPubSubProviders(opts),
       ...this.getAuthorizerProviders(opts),
       ...this.getHookProviders(opts),
-      ...this.getResolverProviders(opts)
+      ...this.getResolverProviders(opts),
+      ...discriminatedResolvers
     ]
   }
 
@@ -115,19 +127,32 @@ export class NestjsQueryGraphQLModule {
         EntityClass: baseEntity,
         read: { one: { name: lowerCaseBaseName }, many: { name: `${lowerCaseBaseName}s` } }
       }
-      const concreteResolverOpts = discriminators.map((d) => {
-        const DTOClass = d.DTOClass
-        const name = DTOClass.name.replace(/DTO$/, '')
-        const lowerCaseName = name.charAt(0).toLowerCase() + name.slice(1)
-        const resolverOpts: AutoResolverOpts<any, any, any, any, any, any> = {
-          ...d,
-          read: { one: { name: lowerCaseName }, many: { name: `${lowerCaseName}s` } }
-        }
-        if (d.AssemblerClass) {
-          (resolverOpts as any).AssemblerClass = d.AssemblerClass
-        }
-        return resolverOpts
-      })
+      const concreteResolverOpts = discriminators
+        .filter((d) => !d.ResolverClass)
+        .map((d) => {
+          const DTOClass = d.DTOClass
+          const name = DTOClass.name.replace(/DTO$/, '')
+          const lowerCaseName = name.charAt(0).toLowerCase() + name.slice(1)
+
+          const baseOpts = {
+            DTOClass: d.DTOClass,
+            CreateDTOClass: d.CreateDTOClass,
+            read: { one: { name: lowerCaseName }, many: { name: `${lowerCaseName}s` } }
+          }
+
+          let resolverOpts: AutoResolverOpts<any, any, any, any, any, any>;
+
+            resolverOpts = {
+                ...baseOpts,
+                EntityClass: d.EntityClass
+            };
+
+
+          if (d.AssemblerClass) {
+            (resolverOpts as any).AssemblerClass = d.AssemblerClass
+          }
+          return resolverOpts
+        })
       return [baseResolverOpts, ...concreteResolverOpts]
     })
     return createResolvers([...(opts.resolvers ?? []), ...discriminatedResolvers])

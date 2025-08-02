@@ -1,41 +1,37 @@
 import { getModelToken } from '@m8a/nestjs-typegoose'
 import { INestApplication } from '@nestjs/common'
-import { Test } from '@nestjs/testing'
 import { Model } from 'mongoose'
 import request from 'supertest'
 
-import { AppModule } from '../src/app.module'
-import { TodoTaskDTO } from '../src/todo-item/dto/todo-task.dto'
 import { TodoItemEntity } from '../src/todo-item/entities/todo-item.entity'
 import { TODO_TASK_FRAGMENT } from './graphql-fragments'
+import { TodoTaskEntity } from '../src/todo-item/entities/todo-task.entity'
 
 describe('Typegoose Discriminators with Custom Assemblers', () => {
   let app: INestApplication
   let todoItemModel: Model<TodoItemEntity>
+  let todoTaskModel: Model<TodoTaskEntity>
 
-  const taskTitle = `Task ${Date.now()}`
-
-  beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({
-      imports: [AppModule]
-    }).compile()
+  beforeEach(async () => {
+    const { createCustomAssemblerTestModule } = await import('./test-setup')
+    const moduleRef = await createCustomAssemblerTestModule()
 
     app = moduleRef.createNestApplication()
     await app.init()
     todoItemModel = moduleRef.get<Model<TodoItemEntity>>(getModelToken(TodoItemEntity.name))
+    todoTaskModel = moduleRef.get<Model<TodoTaskEntity>>(getModelToken(TodoTaskEntity.name))
   })
 
-  beforeEach(async () => {
-    await todoItemModel.deleteMany({})
-  })
-
-  afterAll(async () => {
+  afterEach(async () => {
     if (app) {
+      await todoItemModel.deleteMany({})
+      await todoTaskModel.deleteMany({})
       await app.close()
     }
   })
 
   it('should create a new TodoTask with a custom assembler', async () => {
+    const taskTitle = `Task ${Date.now()}`
     const response = await request(app.getHttpServer())
       .post('/graphql')
       .send({

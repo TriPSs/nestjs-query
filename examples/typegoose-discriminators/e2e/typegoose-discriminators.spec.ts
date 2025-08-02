@@ -1,6 +1,6 @@
 import { getModelToken } from '@m8a/nestjs-typegoose'
 import { INestApplication } from '@nestjs/common'
-import { Test } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing'
 import { Model } from 'mongoose'
 import request from 'supertest'
 
@@ -15,38 +15,86 @@ import { TODO_APPOINTMENT_FRAGMENT, TODO_TASK_FRAGMENT } from './graphql-fragmen
 describe('Typegoose Discriminators with Concrete DTOs', () => {
   let app: INestApplication
   let todoItemModel: Model<TodoItemEntity>
+  let moduleRef: TestingModule
 
-  // Variables to hold the created entities so we can use them across tests
-  let task: TodoTaskDTO
-  let appointment: TodoAppointmentDTO
-  let taskSubTask: SubTaskDTO
-  let appointmentSubTask: SubTaskDTO
-  const taskTitle = `Task ${Date.now()}`
-  const appointmentTitle = `Appointment ${Date.now()}`
-  const subTaskTitle = `Sub Task ${Date.now()}`
+  async function createTestTask(title: string): Promise<TodoTaskDTO> {
+    const response = await request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        query: `
+          mutation CreateTodoTask($input: CreateOneTodoTaskInput!) {
+            createOneTodoTask(input: $input) {
+              ...TodoTaskFragment
+            }
+          }
+          ${TODO_TASK_FRAGMENT}
+        `,
+        variables: {
+          input: {
+            todoTask: {
+              title,
+              completed: false,
+              priority: 1
+            }
+          }
+        }
+      })
+
+    expect(response.body.errors).toBeUndefined()
+    return response.body.data.createOneTodoTask
+  }
+
+  async function createTestAppointment(title: string): Promise<TodoAppointmentDTO> {
+    const response = await request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        query: `
+          mutation CreateTodoAppointment($input: CreateOneTodoAppointmentInput!) {
+            createOneTodoAppointment(input: $input) {
+              ...TodoAppointmentFragment
+            }
+          }
+          ${TODO_APPOINTMENT_FRAGMENT}
+        `,
+        variables: {
+          input: {
+            todoAppointment: {
+              title,
+              completed: false,
+              dateTime: new Date(),
+              participants: ['Me', 'You']
+            }
+          }
+        }
+      })
+
+    expect(response.body.errors).toBeUndefined()
+    return response.body.data.createOneTodoAppointment
+  }
 
   beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({
-      imports: [AppModule]
-    }).compile()
-
+    const { createTestModule } = await import('./test-setup')
+    moduleRef = await createTestModule()
     app = moduleRef.createNestApplication()
     await app.init()
     todoItemModel = moduleRef.get<Model<TodoItemEntity>>(getModelToken(TodoItemEntity.name))
   })
 
-  beforeEach(async () => {
+  afterEach(async () => {
     await todoItemModel.deleteMany({})
   })
 
   afterAll(async () => {
     if (app) {
+      await todoItemModel.deleteMany({})
       await app.close()
+
     }
   })
 
   describe('create', () => {
     it('should create a new TodoTask', async () => {
+      const taskTitle = `Task ${Date.now()}`
       const response = await request(app.getHttpServer())
         .post('/graphql')
         .send({
@@ -70,12 +118,13 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
         })
 
       expect(response.body.errors).toBeUndefined()
-      task = response.body.data.createOneTodoTask
+      const task = response.body.data.createOneTodoTask
       expect(task.title).toBe(taskTitle)
       expect(task.documentType).toBe('TodoTaskEntity')
     })
 
     it('should create a new TodoAppointment', async () => {
+      const appointmentTitle = `Appointment ${Date.now()}`
       const response = await request(app.getHttpServer())
         .post('/graphql')
         .send({
@@ -100,64 +149,19 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
         })
 
       expect(response.body.errors).toBeUndefined()
-      appointment = response.body.data.createOneTodoAppointment
+      const appointment = response.body.data.createOneTodoAppointment
       expect(appointment.title).toBe(appointmentTitle)
       expect(appointment.documentType).toBe('TodoAppointmentEntity')
     })
   })
 
   describe('query and filter', () => {
-    beforeEach(async () => {
-      // Create a task and an appointment before each test in this block
-      const createTaskResponse = await request(app.getHttpServer())
-        .post('/graphql')
-        .send({
-          query: `
-            mutation CreateTodoTask($input: CreateOneTodoTaskInput!) {
-              createOneTodoTask(input: $input) {
-                ...TodoTaskFragment
-              }
-            }
-            ${TODO_TASK_FRAGMENT}
-          `,
-          variables: {
-            input: {
-              todoTask: {
-                title: taskTitle,
-                completed: false,
-                priority: 1
-              }
-            }
-          }
-        })
-      task = createTaskResponse.body.data.createOneTodoTask
-
-      const createAppointmentResponse = await request(app.getHttpServer())
-        .post('/graphql')
-        .send({
-          query: `
-            mutation CreateTodoAppointment($input: CreateOneTodoAppointmentInput!) {
-              createOneTodoAppointment(input: $input) {
-                ...TodoAppointmentFragment
-              }
-            }
-            ${TODO_APPOINTMENT_FRAGMENT}
-          `,
-          variables: {
-            input: {
-              todoAppointment: {
-                title: appointmentTitle,
-                completed: false,
-                dateTime: new Date(),
-                participants: ['Me', 'You']
-              }
-            }
-          }
-        })
-      appointment = createAppointmentResponse.body.data.createOneTodoAppointment
-    })
-
     it('should query for all items and verify both are returned', async () => {
+      const taskTitle = `Task ${Date.now()}`
+      const appointmentTitle = `Appointment ${Date.now()}`
+      await createTestTask(taskTitle)
+      await createTestAppointment(appointmentTitle)
+
       const queryAllResponse = await request(app.getHttpServer())
         .post('/graphql')
         .send({
@@ -184,6 +188,10 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
     })
 
     it('should filter on a base field', async () => {
+      const taskTitle = `Task ${Date.now()}`
+      const task = await createTestTask(taskTitle)
+      await createTestAppointment(`Appointment ${Date.now()}`)
+
       const filterByTitleResponse = await request(app.getHttpServer())
         .post('/graphql')
         .send({
@@ -205,6 +213,9 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
     })
 
     it('should filter on a discriminated field', async () => {
+      const taskTitle = `Task ${Date.now()}`
+      const task = await createTestTask(taskTitle)
+
       const filterByPriorityResponse = await request(app.getHttpServer())
         .post('/graphql')
         .send({
@@ -226,6 +237,9 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
     })
 
     it('should query a TodoTask and return all fragment fields', async () => {
+      const taskTitle = `Task ${Date.now()}`
+      const task = await createTestTask(taskTitle)
+
       const response = await request(app.getHttpServer())
         .post('/graphql')
         .send({
@@ -249,6 +263,9 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
     })
 
     it('should query a TodoAppointment and return all fragment fields', async () => {
+      const appointmentTitle = `Appointment ${Date.now()}`
+      const appointment = await createTestAppointment(appointmentTitle)
+
       const response = await request(app.getHttpServer())
         .post('/graphql')
         .send({
@@ -273,6 +290,11 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
     })
 
     it('should query all todoItems and return fragment fields for each discriminated type', async () => {
+      const taskTitle = `Task ${Date.now()}`
+      const appointmentTitle = `Appointment ${Date.now()}`
+      const task = await createTestTask(taskTitle)
+      const appointment = await createTestAppointment(appointmentTitle)
+
       const response = await request(app.getHttpServer())
         .post('/graphql')
         .send({
@@ -318,57 +340,8 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
   })
 
   describe('update and delete', () => {
-    beforeEach(async () => {
-      // Create a task and an appointment before each test in this block
-      const createTaskResponse = await request(app.getHttpServer())
-        .post('/graphql')
-        .send({
-          query: `
-            mutation CreateTodoTask($input: CreateOneTodoTaskInput!) {
-              createOneTodoTask(input: $input) {
-                ...TodoTaskFragment
-              }
-            }
-            ${TODO_TASK_FRAGMENT}
-          `,
-          variables: {
-            input: {
-              todoTask: {
-                title: taskTitle,
-                completed: false,
-                priority: 1
-              }
-            }
-          }
-        })
-      task = createTaskResponse.body.data.createOneTodoTask
-
-      const createAppointmentResponse = await request(app.getHttpServer())
-        .post('/graphql')
-        .send({
-          query: `
-            mutation CreateTodoAppointment($input: CreateOneTodoAppointmentInput!) {
-              createOneTodoAppointment(input: $input) {
-                ...TodoAppointmentFragment
-              }
-            }
-            ${TODO_APPOINTMENT_FRAGMENT}
-          `,
-          variables: {
-            input: {
-              todoAppointment: {
-                title: appointmentTitle,
-                completed: false,
-                dateTime: new Date(),
-                participants: ['Me', 'You']
-              }
-            }
-          }
-        })
-      appointment = createAppointmentResponse.body.data.createOneTodoAppointment
-    })
-
     it('should update the task', async () => {
+      const task = await createTestTask(`Task ${Date.now()}`)
       const updatedTaskTitle = `Updated Task ${Date.now()}`
       const updateTaskResponse = await request(app.getHttpServer())
         .post('/graphql')
@@ -395,6 +368,9 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
     })
 
     it('should delete the appointment', async () => {
+      const task = await createTestTask(`Task ${Date.now()}`)
+      const appointment = await createTestAppointment(`Appointment ${Date.now()}`)
+
       const deleteAppointmentResponse = await request(app.getHttpServer())
         .post('/graphql')
         .send({
@@ -432,6 +408,15 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
   })
 
   describe('relations', () => {
+    // Variables to hold the created entities so we can use them across tests
+    let task: TodoTaskDTO
+    let appointment: TodoAppointmentDTO
+    let taskSubTask: SubTaskDTO
+    let appointmentSubTask: SubTaskDTO
+    const taskTitle = `Task ${Date.now()}`
+    const appointmentTitle = `Appointment ${Date.now()}`
+    const subTaskTitle = `Sub Task ${Date.now()}`
+
     beforeEach(async () => {
       // Create a task and an appointment before each test in this block
       const createTaskResponse = await request(app.getHttpServer())
@@ -502,6 +487,7 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
             }
           }
         })
+      
       taskSubTask = createTaskSubTaskResponse.body.data.createOneSubTask
 
       const createAppointmentSubTaskResponse = await request(app.getHttpServer())
