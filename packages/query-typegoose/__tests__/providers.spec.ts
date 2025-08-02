@@ -20,9 +20,7 @@ describe('createTypegooseQueryServiceProviders', () => {
     class TestEntity {}
     class TestDiscriminator extends TestEntity {}
 
-    const providers = createTypegooseQueryServiceProviders([
-      { typegooseClass: TestEntity, discriminators: [TestDiscriminator] }
-    ])
+    const providers = createTypegooseQueryServiceProviders([{ typegooseClass: TestEntity, discriminators: [TestDiscriminator] }])
 
     expect(providers).toHaveLength(2)
     expect(providers[0].provide).toBe(getQueryServiceToken(TestEntity))
