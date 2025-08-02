@@ -23,11 +23,11 @@ const UpdateOneRelationMixin =
     const commonResolverOpts = removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
-    const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
+    const { baseNameLower, baseName } = getDTONames(relationDTO as Class<Relation>, { dtoName: relation.dtoName })
     const relationName = relation.relationName ?? baseNameLower
 
     @InputType(`Set${baseName}On${dtoNames.baseName}Input`)
-    class RIT extends RelationInputType(DTOClass, relationDTO) {}
+    class RIT extends RelationInputType(DTOClass, relationDTO as Class<unknown>) {}
 
     @ArgsType()
     class SetArgs extends MutationArgsType(RIT) {}
@@ -71,17 +71,17 @@ const UpdateManyRelationMixin =
     const commonResolverOpts = removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoNames = getDTONames(DTOClass)
-    const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
+    const { baseNameLower, baseName } = getDTONames(relationDTO as Class<Relation>, { dtoName: relation.dtoName })
     const relationName = relation.relationName ?? baseNameLower
 
     @InputType(`Add${baseName}To${dtoNames.baseName}Input`)
-    class AddRelationInput extends RelationsInputType(DTOClass, relationDTO) {}
+    class AddRelationInput extends RelationsInputType(DTOClass, relationDTO as Class<unknown>) {}
 
     @ArgsType()
     class AddArgs extends MutationArgsType(AddRelationInput) {}
 
     @InputType(`Set${baseName}On${dtoNames.baseName}Input`)
-    class SetRelationInput extends RelationsInputType(DTOClass, relationDTO) {}
+    class SetRelationInput extends RelationsInputType(DTOClass, relationDTO as Class<unknown>) {}
 
     @ArgsType()
     class SetArgs extends MutationArgsType(SetRelationInput) {}

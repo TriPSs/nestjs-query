@@ -1,10 +1,10 @@
-import { ExecutionContext, Inject, Optional } from '@nestjs/common'
+import { ExecutionContext } from '@nestjs/common'
 import { Args, ArgsType, Context, Parent, Resolver } from '@nestjs/graphql'
-import { AggregateQuery, AggregateResponse, Class, mergeFilter, QueryService } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, AggregateResponse, Class, Filter, mergeFilter, QueryService } from '@ptc-org/nestjs-query-core'
 
-import { Authorizer, getAuthorizerToken, OperationGroup } from '../../auth'
+import { OperationGroup } from '../../auth'
 import { getDTONames } from '../../common'
-import { AggregateQueryParam, ResolverField } from '../../decorators'
+import { AggregateQueryParam, RelationAuthorizerFilter, ResolverField } from '../../decorators'
 import { InjectDataLoaderConfig } from '../../decorators/inject-dataloader-config.decorator'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { AggregateRelationsLoader, DataLoaderFactory } from '../../loader'
@@ -33,26 +33,20 @@ const AggregateRelationMixin =
     const commonResolverOpts = relation.aggregate || removeRelationOpts(relation)
     const relationDTO = relation.DTO
     const dtoName = getDTONames(DTOClass).baseName
-    const { baseName, baseNameLower } = getDTONames(relationDTO, {
+    const { baseName, baseNameLower } = getDTONames(relationDTO as Class<Relation>, {
       dtoName: relation.dtoName
     })
     const relationName = relation.relationName ?? baseNameLower
     const aggregateRelationLoaderName = `aggregate${baseName}For${dtoName}`
-    const aggregateLoader = new AggregateRelationsLoader<DTO, Relation>(relationDTO, relationName)
-    const authorizerKey = Symbol(`authorizerFor${DTOClass.name}`)
-    const relationAuthorizerKey = Symbol(`authorizerFor${relation.dtoName}`)
+    const aggregateLoader = new AggregateRelationsLoader<DTO, Relation>(relationDTO as Class<Relation>, relationName)
 
     @ArgsType()
-    class RelationQA extends AggregateArgsType(relationDTO) {}
+    class RelationQA extends AggregateArgsType(relationDTO as Class<Relation>) {}
 
-    const [AR] = AggregateResponseType(relationDTO, { prefix: `${dtoName}${baseName}` })
+    const [AR] = AggregateResponseType(relationDTO as Class<Relation>, { prefix: `${dtoName}${baseName}` })
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class AggregateMixin extends Base {
-      @Optional() @Inject(getAuthorizerToken(DTOClass)) [authorizerKey]?: Authorizer<Relation>;
-
-      @Optional() @Inject(getAuthorizerToken(relationDTO)) [relationAuthorizerKey]?: Authorizer<Relation>
-
       @ResolverField(
         `${baseNameLower}Aggregate`,
         () => [AR],
@@ -69,6 +63,11 @@ const AggregateRelationMixin =
         @Args() q: RelationQA,
         @AggregateQueryParam() aggregateQuery: AggregateQuery<Relation>,
         @Context() context: ExecutionContext,
+        @RelationAuthorizerFilter(baseNameLower, {
+          operationGroup: OperationGroup.AGGREGATE,
+          many: true
+        })
+        relationFilter?: Filter<Relation>,
         @InjectDataLoaderConfig()
         dataLoaderConfig?: DataLoaderOptions
       ): Promise<AggregateResponse<Relation>> {
@@ -79,20 +78,10 @@ const AggregateRelationMixin =
           () => aggregateLoader.createLoader(this.service),
           dataLoaderConfig
         )
-        const authContext = {
-          operationName: baseNameLower,
-          operationGroup: OperationGroup.AGGREGATE,
-          readonly: true,
-          many: true
-        }
-        const authFilter = relation.auth
-          ? await relation.auth?.authorize(context, authContext)
-          : ((await this[authorizerKey]?.authorizeRelation(baseNameLower, context, authContext)) ??
-            (await this[relationAuthorizerKey]?.authorize(context, authContext)))
 
         return loader.load({
           dto,
-          filter: mergeFilter(qa.filter ?? {}, authFilter ?? {}),
+          filter: mergeFilter(qa.filter ?? {}, relationFilter ?? {}),
           aggregate: aggregateQuery
         })
       }

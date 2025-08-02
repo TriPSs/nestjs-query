@@ -75,8 +75,11 @@ export function createDefaultAuthorizer<DTO>(
         if (!relation) return
         if (relation.auth) {
           this.relationsAuthorizers.set(relationName, createRelationAuthorizer(relation.auth))
-        } else if (getAuthorizer(relation.DTO)) {
-          this.relationsAuthorizers.set(relationName, this.moduleRef.get(getAuthorizerToken(relation.DTO), { strict: false }))
+        } else if (getAuthorizer(relation.DTO as Class<unknown>)) {
+          this.relationsAuthorizers.set(
+            relationName,
+            this.moduleRef.get(getAuthorizerToken(relation.DTO as Class<unknown>), { strict: false })
+          )
         }
       }
     }
