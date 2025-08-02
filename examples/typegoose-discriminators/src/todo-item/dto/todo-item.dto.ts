@@ -2,11 +2,11 @@ import { ID, InterfaceType } from '@nestjs/graphql'
 import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
 
 @InterfaceType({
-  resolveType: (value) => {
-    if (value.documentType === 'TodoTaskEntity') {
+  resolveType: async (obj: { documentType: string }) => {
+    if (obj.documentType === 'TodoTaskEntity') {
       return import('./todo-task.dto').then((m) => m.TodoTaskDTO)
     }
-    if (value.documentType === 'TodoAppointmentEntity') {
+    if (obj.documentType === 'TodoAppointmentEntity') {
       return import('./todo-appointment.dto').then((m) => m.TodoAppointmentDTO)
     }
     return undefined

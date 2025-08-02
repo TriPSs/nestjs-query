@@ -26,12 +26,127 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type TodoTask implements TodoItemDTO {
+type DeleteManyResponse {
+  """The number of records deleted."""
+  deletedCount: Int!
+}
+
+type SubTaskDeleteResponse {
+  id: ID
+  title: String
+  description: String
+  completed: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  createdBy: String
+  updatedBy: String
+}
+
+type UpdateManyResponse {
+  """The number of records updated."""
+  updatedCount: Int!
+}
+
+type SubTaskEdge {
+  """The node containing the SubTask"""
+  node: SubTask!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+"""Cursor for paging through collections"""
+scalar ConnectionCursor
+
+type PageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
+
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
+}
+
+type SubTaskConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [SubTaskEdge!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type SubTaskAggregateGroupBy {
+  id: ID
+  title: String
+  description: String
+  completed: Boolean
+  createdAt(by: GroupBy! = DAY): DateTime
+  updatedAt(by: GroupBy! = DAY): DateTime
+  createdBy: String
+  updatedBy: String
+}
+
+"""Group by"""
+enum GroupBy {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
+type SubTaskCountAggregate {
+  id: Int
+  title: Int
+  description: Int
+  completed: Int
+  createdAt: Int
+  updatedAt: Int
+  createdBy: Int
+  updatedBy: Int
+}
+
+type SubTaskMinAggregate {
+  id: ID
+  title: String
+  description: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  createdBy: String
+  updatedBy: String
+}
+
+type SubTaskMaxAggregate {
+  id: ID
+  title: String
+  description: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  createdBy: String
+  updatedBy: String
+}
+
+type SubTaskAggregateResponse {
+  groupBy: SubTaskAggregateGroupBy
+  count: SubTaskCountAggregate
+  min: SubTaskMinAggregate
+  max: SubTaskMaxAggregate
+}
+
+type TodoAppointment implements TodoItemDTO {
   id: ID!
   title: String!
   completed: Boolean!
   documentType: String!
-  priority: Float!
+  dateTime: DateTime!
+  participants: [String!]!
   subTasks(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
@@ -41,7 +156,7 @@ type TodoTask implements TodoItemDTO {
 
     """Specify to sort results."""
     sorting: [SubTaskSort!]! = []
-  ): TodoTaskSubTasksConnection!
+  ): TodoAppointmentSubTasksConnection!
 }
 
 input CursorPaging {
@@ -57,9 +172,6 @@ input CursorPaging {
   """Paginate last"""
   last: Int
 }
-
-"""Cursor for paging through collections"""
-scalar ConnectionCursor
 
 input SubTaskFilter {
   and: [SubTaskFilter!]
@@ -162,13 +274,12 @@ enum SortNulls {
   NULLS_LAST
 }
 
-type TodoAppointment implements TodoItemDTO {
+type TodoTask implements TodoItemDTO {
   id: ID!
   title: String!
   completed: Boolean!
   documentType: String!
-  dateTime: DateTime!
-  participants: [String!]!
+  priority: Float!
   subTasks(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
@@ -178,118 +289,7 @@ type TodoAppointment implements TodoItemDTO {
 
     """Specify to sort results."""
     sorting: [SubTaskSort!]! = []
-  ): TodoAppointmentSubTasksConnection!
-}
-
-type DeleteManyResponse {
-  """The number of records deleted."""
-  deletedCount: Int!
-}
-
-type SubTaskDeleteResponse {
-  id: ID
-  title: String
-  description: String
-  completed: Boolean
-  createdAt: DateTime
-  updatedAt: DateTime
-  createdBy: String
-  updatedBy: String
-}
-
-type UpdateManyResponse {
-  """The number of records updated."""
-  updatedCount: Int!
-}
-
-type SubTaskEdge {
-  """The node containing the SubTask"""
-  node: SubTask!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-type PageInfo {
-  """true if paging forward and there are more records."""
-  hasNextPage: Boolean
-
-  """true if paging backwards and there are more records."""
-  hasPreviousPage: Boolean
-
-  """The cursor of the first returned record."""
-  startCursor: ConnectionCursor
-
-  """The cursor of the last returned record."""
-  endCursor: ConnectionCursor
-}
-
-type SubTaskConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [SubTaskEdge!]!
-
-  """Fetch total count of records"""
-  totalCount: Int!
-}
-
-type SubTaskAggregateGroupBy {
-  id: ID
-  title: String
-  description: String
-  completed: Boolean
-  createdAt(by: GroupBy! = DAY): DateTime
-  updatedAt(by: GroupBy! = DAY): DateTime
-  createdBy: String
-  updatedBy: String
-}
-
-"""Group by"""
-enum GroupBy {
-  DAY
-  WEEK
-  MONTH
-  YEAR
-}
-
-type SubTaskCountAggregate {
-  id: Int
-  title: Int
-  description: Int
-  completed: Int
-  createdAt: Int
-  updatedAt: Int
-  createdBy: Int
-  updatedBy: Int
-}
-
-type SubTaskMinAggregate {
-  id: ID
-  title: String
-  description: String
-  createdAt: DateTime
-  updatedAt: DateTime
-  createdBy: String
-  updatedBy: String
-}
-
-type SubTaskMaxAggregate {
-  id: ID
-  title: String
-  description: String
-  createdAt: DateTime
-  updatedAt: DateTime
-  createdBy: String
-  updatedBy: String
-}
-
-type SubTaskAggregateResponse {
-  groupBy: SubTaskAggregateGroupBy
-  count: SubTaskCountAggregate
-  min: SubTaskMinAggregate
-  max: SubTaskMaxAggregate
+  ): TodoTaskSubTasksConnection!
 }
 
 type TodoTaskDeleteResponse {

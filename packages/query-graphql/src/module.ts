@@ -1,5 +1,5 @@
 import { DynamicModule, ForwardReference, Global, Module, Provider } from '@nestjs/common'
-import { Assembler, Class, NestjsQueryCoreModule, AbstractClass, QueryService, getQueryServiceToken } from '@ptc-org/nestjs-query-core'
+import { AbstractClass, Assembler, Class, NestjsQueryCoreModule } from '@ptc-org/nestjs-query-core'
 
 import { DataLoaderOptions, dataLoaderOptionsToken } from './pipes/inject-data-loader-config.pipe'
 import { AutoResolverOpts, createAuthorizerProviders, createHookProviders, createResolvers } from './providers'
@@ -14,15 +14,22 @@ interface DTOModuleOpts<DTO> {
 }
 
 export interface DiscriminatedDTO {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   DTOClass: Class<any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   EntityClass: Class<any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   CreateDTOClass?: Class<any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   AssemblerClass?: Class<Assembler<any, any, any, any, any, any>>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ResolverClass?: Class<any>
 }
 
 export interface DiscriminateDTOsOpts {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   baseDTO: AbstractClass<any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   baseEntity: Class<any>
   discriminators: DiscriminatedDTO[]
 }
@@ -32,11 +39,15 @@ export interface NestjsQueryGraphqlModuleRootOpts {
 }
 
 export interface NestjsQueryGraphqlModuleFeatureOpts {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   imports?: Array<Class<any> | DynamicModule | ForwardReference>
   services?: Provider[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   assemblers?: Class<Assembler<any, any, any, any, any, any>>[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   resolvers?: AutoResolverOpts<any, any, unknown, unknown, ReadResolverOpts<any>, PagingStrategies>[]
   dtos?: DTOModuleOpts<unknown>[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   discriminateDTOs?: DiscriminateDTOsOpts[]
   pubSub?: Provider<GraphQLPubSub>
 }
@@ -83,9 +94,7 @@ export class NestjsQueryGraphQLModule {
   private static getCoreModule(opts: NestjsQueryGraphqlModuleFeatureOpts): DynamicModule {
     const discriminatedAssemblers = (
       opts.discriminateDTOs?.flatMap((d) => d.discriminators.map((disc) => disc.AssemblerClass)) ?? []
-    ).filter((AssemblerClass) => AssemblerClass) as Class<
-      Assembler<any, any, any, any, any, any>
-    >[]
+    ).filter((AssemblerClass) => AssemblerClass)
 
     return NestjsQueryCoreModule.forFeature({
       assemblers: [...(opts.assemblers ?? []), ...discriminatedAssemblers],
@@ -122,8 +131,9 @@ export class NestjsQueryGraphQLModule {
       const { baseDTO, baseEntity, discriminators } = config
       const baseName = baseDTO.name.replace(/DTO$/, '')
       const lowerCaseBaseName = baseName.charAt(0).toLowerCase() + baseName.slice(1)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const baseResolverOpts: AutoResolverOpts<any, any, any, any, any, any> = {
-        DTOClass: baseDTO as Class<any>,
+        DTOClass: baseDTO as Class<unknown>,
         EntityClass: baseEntity,
         read: { one: { name: lowerCaseBaseName }, many: { name: `${lowerCaseBaseName}s` } }
       }
@@ -140,16 +150,15 @@ export class NestjsQueryGraphQLModule {
             read: { one: { name: lowerCaseName }, many: { name: `${lowerCaseName}s` } }
           }
 
-          let resolverOpts: AutoResolverOpts<any, any, any, any, any, any>;
-
-            resolverOpts = {
-                ...baseOpts,
-                EntityClass: d.EntityClass
-            };
-
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const resolverOpts: AutoResolverOpts<any, any, any, any, any, any> = {
+            ...baseOpts,
+            EntityClass: d.EntityClass
+          }
 
           if (d.AssemblerClass) {
-            (resolverOpts as any).AssemblerClass = d.AssemblerClass
+            const resolverOptsWithAssembler = resolverOpts as unknown as { AssemblerClass: unknown }
+            resolverOptsWithAssembler.AssemblerClass = d.AssemblerClass
           }
           return resolverOpts
         })
@@ -161,13 +170,18 @@ export class NestjsQueryGraphQLModule {
   private static getAuthorizerProviders(opts: NestjsQueryGraphqlModuleFeatureOpts): Provider<unknown>[] {
     const resolverDTOs = opts.resolvers?.map((r) => r.DTOClass) ?? []
     const dtos = opts.dtos?.map((o) => o.DTOClass) ?? []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const discriminatedBaseDTOs = opts.discriminateDTOs?.map((d) => d.baseDTO as Class<any>) ?? []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const discriminatedDTOs = opts.discriminateDTOs?.flatMap((d) => d.discriminators.map((disc) => disc.DTOClass)) ?? []
     return createAuthorizerProviders([...resolverDTOs, ...dtos, ...discriminatedBaseDTOs, ...discriminatedDTOs])
   }
 
   private static getHookProviders(opts: NestjsQueryGraphqlModuleFeatureOpts): Provider<unknown>[] {
-    const discriminatedDTOs = opts.discriminateDTOs?.flatMap((d) => d.discriminators.map((disc) => ({ DTOClass: disc.DTOClass }))) ?? []
+    const discriminatedDTOs =
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      opts.discriminateDTOs?.flatMap((d) => d.discriminators.map((disc) => ({ DTOClass: disc.DTOClass }))) ?? []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const discriminatedBaseDTOs = opts.discriminateDTOs?.map((d) => ({ DTOClass: d.baseDTO as Class<any> })) ?? []
     return createHookProviders([...(opts.resolvers ?? []), ...(opts.dtos ?? []), ...discriminatedBaseDTOs, ...discriminatedDTOs])
   }

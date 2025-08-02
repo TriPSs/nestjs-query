@@ -4,8 +4,8 @@ import { Model } from 'mongoose'
 import request from 'supertest'
 
 import { TodoItemEntity } from '../src/todo-item/entities/todo-item.entity'
-import { TODO_TASK_FRAGMENT } from './graphql-fragments'
 import { TodoTaskEntity } from '../src/todo-item/entities/todo-task.entity'
+import { TODO_TASK_FRAGMENT } from './graphql-fragments'
 
 describe('Typegoose Discriminators with Custom Assemblers', () => {
   let app: INestApplication

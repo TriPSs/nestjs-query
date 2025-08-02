@@ -1,10 +1,9 @@
 import { getModelToken } from '@m8a/nestjs-typegoose'
 import { INestApplication } from '@nestjs/common'
-import { Test, TestingModule } from '@nestjs/testing'
+import { TestingModule } from '@nestjs/testing'
 import { Model } from 'mongoose'
 import request from 'supertest'
 
-import { AppModule } from '../src/app.module'
 import { SubTaskDTO } from '../src/sub-task/dto/sub-task.dto'
 import { TodoAppointmentDTO } from '../src/todo-item/dto/todo-appointment.dto'
 import { TodoItemDTO } from '../src/todo-item/dto/todo-item.dto'
@@ -41,7 +40,7 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
       })
 
     expect(response.body.errors).toBeUndefined()
-    return response.body.data.createOneTodoTask
+    return response.body.data.createOneTodoTask as TodoTaskDTO
   }
 
   async function createTestAppointment(title: string): Promise<TodoAppointmentDTO> {
@@ -69,7 +68,7 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
       })
 
     expect(response.body.errors).toBeUndefined()
-    return response.body.data.createOneTodoAppointment
+    return response.body.data.createOneTodoAppointment as TodoAppointmentDTO
   }
 
   beforeAll(async () => {
@@ -88,7 +87,6 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
     if (app) {
       await todoItemModel.deleteMany({})
       await app.close()
-
     }
   })
 
@@ -321,21 +319,21 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
         })
 
       expect(response.body.errors).toBeUndefined()
-      const nodes = response.body.data.todoItems.edges.map((edge: { node: TodoItemDTO }) => edge.node)
+      const nodes = (response.body.data.todoItems.edges as { node: TodoItemDTO }[]).map((edge) => edge.node)
       expect(nodes).toHaveLength(2)
 
-      const returnedTask = nodes.find((node: TodoItemDTO) => node.id === task.id)
+      const returnedTask = nodes.find((node) => node.id === task.id) as TodoTaskDTO | undefined
       expect(returnedTask).toBeDefined()
       expect(returnedTask.title).toBe(taskTitle)
       expect(returnedTask.documentType).toBe('TodoTaskEntity')
-      expect((returnedTask as TodoTaskDTO).priority).toBe(1)
+      expect(returnedTask.priority).toBe(1)
 
-      const returnedAppointment = nodes.find((node: TodoItemDTO) => node.id === appointment.id)
+      const returnedAppointment = nodes.find((node) => node.id === appointment.id) as TodoAppointmentDTO | undefined
       expect(returnedAppointment).toBeDefined()
       expect(returnedAppointment.title).toBe(appointmentTitle)
       expect(returnedAppointment.documentType).toBe('TodoAppointmentEntity')
-      expect((returnedAppointment as TodoAppointmentDTO).dateTime).toBeDefined()
-      expect((returnedAppointment as TodoAppointmentDTO).participants).toEqual(['Me', 'You'])
+      expect(returnedAppointment.dateTime).toBeDefined()
+      expect(returnedAppointment.participants).toEqual(['Me', 'You'])
     })
   })
 
@@ -440,7 +438,7 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
             }
           }
         })
-      task = createTaskResponse.body.data.createOneTodoTask
+      task = createTaskResponse.body.data.createOneTodoTask as TodoTaskDTO
 
       const createAppointmentResponse = await request(app.getHttpServer())
         .post('/graphql')
@@ -464,7 +462,7 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
             }
           }
         })
-      appointment = createAppointmentResponse.body.data.createOneTodoAppointment
+      appointment = createAppointmentResponse.body.data.createOneTodoAppointment as TodoAppointmentDTO
 
       const createTaskSubTaskResponse = await request(app.getHttpServer())
         .post('/graphql')
@@ -487,8 +485,8 @@ describe('Typegoose Discriminators with Concrete DTOs', () => {
             }
           }
         })
-      
-      taskSubTask = createTaskSubTaskResponse.body.data.createOneSubTask
+
+      taskSubTask = createTaskSubTaskResponse.body.data.createOneSubTask as SubTaskDTO
 
       const createAppointmentSubTaskResponse = await request(app.getHttpServer())
         .post('/graphql')

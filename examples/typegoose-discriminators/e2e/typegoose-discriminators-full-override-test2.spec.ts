@@ -1,22 +1,21 @@
-import { INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { TodoAppointmentDTO } from '../src/todo-item/dto/todo-appointment.dto';
+import { INestApplication } from '@nestjs/common'
+import request from 'supertest'
+
+import { TodoAppointmentDTO } from '../src/todo-item/dto/todo-appointment.dto'
 
 describe('Typegoose Discriminators with full override test 2', () => {
-  let app: INestApplication;
+  let app: INestApplication
 
   beforeAll(async () => {
-    const { createFullOverrideTestModule2 } = await import('./test-setup');
-    const moduleRef = await createFullOverrideTestModule2();
-    app = moduleRef.createNestApplication();
-    await app.init();
-  });
+    const { createFullOverrideTestModule2 } = await import('./test-setup')
+    const moduleRef = await createFullOverrideTestModule2()
+    app = moduleRef.createNestApplication()
+    await app.init()
+  })
 
   afterAll(async () => {
-    await app.close();
-  });
+    await app.close()
+  })
 
   async function createTestAppointment(): Promise<TodoAppointmentDTO> {
     const response = await request(app.getHttpServer())
@@ -36,20 +35,20 @@ describe('Typegoose Discriminators with full override test 2', () => {
         variables: {
           input: {
             todoAppointment: {
-              title: "Test Appointment",
+              title: 'Test Appointment',
               completed: false,
               dateTime: new Date(),
-              participants: ["John Doe"]
+              participants: ['John Doe']
             }
           }
         }
-      });
-    expect(response.body.errors).toBeUndefined();
-    return response.body.data.createOneTodoAppointment;
+      })
+    expect(response.body.errors).toBeUndefined()
+    return response.body.data.createOneTodoAppointment as TodoAppointmentDTO
   }
 
   it('should call the custom resolver method and not the service method', async () => {
-    const appointment = await createTestAppointment();
+    const appointment = await createTestAppointment()
     const response = await request(app.getHttpServer())
       .post('/graphql')
       .send({
@@ -61,14 +60,14 @@ describe('Typegoose Discriminators with full override test 2', () => {
             }
           }
         `
-      });
-    expect(response.body.errors).toBeUndefined();
-    expect(response.body.data.addNewParticipant.participants).toEqual(['Jane Doe']);
-  });
+      })
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data.addNewParticipant.participants).toEqual(['Jane Doe'])
+  })
 
   it('should still allow using the base update method', async () => {
-    const appointment = await createTestAppointment();
-    const newDateTime = new Date('2025-08-01T00:00:00.000Z');
+    const appointment = await createTestAppointment()
+    const newDateTime = new Date('2025-08-01T00:00:00.000Z')
     const response = await request(app.getHttpServer())
       .post('/graphql')
       .send({
@@ -80,13 +79,13 @@ describe('Typegoose Discriminators with full override test 2', () => {
             }
           }
         `
-      });
-    expect(response.body.errors).toBeUndefined();
-    expect(response.body.data.updateOneTodoAppointment.dateTime).toBe(newDateTime.toISOString());
-  });
+      })
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data.updateOneTodoAppointment.dateTime).toBe(newDateTime.toISOString())
+  })
 
   it('should expose the custom query and return the last participant', async () => {
-    const appointment = await createTestAppointment();
+    const appointment = await createTestAppointment()
     await request(app.getHttpServer())
       .post('/graphql')
       .send({
@@ -97,7 +96,7 @@ describe('Typegoose Discriminators with full override test 2', () => {
             }
           }
         `
-      });
+      })
 
     const response = await request(app.getHttpServer())
       .post('/graphql')
@@ -107,8 +106,8 @@ describe('Typegoose Discriminators with full override test 2', () => {
             getLastParticipant(id: "${appointment.id}")
           }
         `
-      });
-    expect(response.body.errors).toBeUndefined();
-    expect(response.body.data.getLastParticipant).toBe('Jane Doe');
-  });
-});
+      })
+    expect(response.body.errors).toBeUndefined()
+    expect(response.body.data.getLastParticipant).toBe('Jane Doe')
+  })
+})

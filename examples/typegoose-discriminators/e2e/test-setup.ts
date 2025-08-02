@@ -1,17 +1,17 @@
-import { Test } from '@nestjs/testing';
-import { NestjsQueryGraphQLModule, DiscriminateDTOsOpts } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryTypegooseModule } from '@ptc-org/nestjs-query-typegoose';
+import { Test } from '@nestjs/testing'
+import { DiscriminateDTOsOpts, NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
+import { NestjsQueryTypegooseModule } from '@ptc-org/nestjs-query-typegoose'
 
+import { AppModule } from '../src/app.module'
+import { CreateTodoAppointmentInput } from '../src/todo-item/dto/create-todo-appointment.input'
+import { CreateTodoTaskInput } from '../src/todo-item/dto/create-todo-task.input'
+import { TodoAppointmentDTO } from '../src/todo-item/dto/todo-appointment.dto'
 // Import all the necessary DTOs, Entities, and the custom assembler
-import { TodoItemDTO } from '../src/todo-item/dto/todo-item.dto';
-import { TodoTaskDTO } from '../src/todo-item/dto/todo-task.dto';
-import { TodoAppointmentDTO } from '../src/todo-item/dto/todo-appointment.dto';
-import { TodoItemEntity } from '../src/todo-item/entities/todo-item.entity';
-import { TodoTaskEntity } from '../src/todo-item/entities/todo-task.entity';
-import { TodoAppointmentEntity } from '../src/todo-item/entities/todo-appointment.entity';
-import { CreateTodoTaskInput } from '../src/todo-item/dto/create-todo-task.input';
-import { CreateTodoAppointmentInput } from '../src/todo-item/dto/create-todo-appointment.input';
-import { AppModule } from '../src/app.module';
+import { TodoItemDTO } from '../src/todo-item/dto/todo-item.dto'
+import { TodoTaskDTO } from '../src/todo-item/dto/todo-task.dto'
+import { TodoAppointmentEntity } from '../src/todo-item/entities/todo-appointment.entity'
+import { TodoItemEntity } from '../src/todo-item/entities/todo-item.entity'
+import { TodoTaskEntity } from '../src/todo-item/entities/todo-task.entity'
 
 // Factory function for the original test (no custom assembler)
 export const createTestModule = () => {
@@ -30,7 +30,7 @@ export const createTestModule = () => {
         CreateDTOClass: CreateTodoAppointmentInput
       }
     ]
-  };
+  }
   const todoItemModule = NestjsQueryGraphQLModule.forFeature({
     imports: [
       NestjsQueryTypegooseModule.forFeature([
@@ -41,16 +41,16 @@ export const createTestModule = () => {
       ])
     ],
     discriminateDTOs: [feature]
-  });
+  })
 
   return Test.createTestingModule({
     imports: [AppModule.forTest(todoItemModule)]
-  }).compile();
-};
+  }).compile()
+}
 
 // Factory function for the custom assembler test
 export const createCustomAssemblerTestModule = async () => {
-  const { TodoTaskAssembler } = await import('../src/todo-item/todo-task.assembler');
+  const { TodoTaskAssembler } = await import('../src/todo-item/todo-task.assembler')
   const feature: DiscriminateDTOsOpts = {
     baseDTO: TodoItemDTO,
     baseEntity: TodoItemEntity,
@@ -67,7 +67,7 @@ export const createCustomAssemblerTestModule = async () => {
         CreateDTOClass: CreateTodoAppointmentInput
       }
     ]
-  };
+  }
 
   const todoItemModule = NestjsQueryGraphQLModule.forFeature({
     imports: [
@@ -79,17 +79,17 @@ export const createCustomAssemblerTestModule = async () => {
       ])
     ],
     discriminateDTOs: [feature]
-  });
+  })
 
   return Test.createTestingModule({
     imports: [AppModule.forTest(todoItemModule)]
-  }).compile();
-};
+  }).compile()
+}
 
 export const createFullOverrideTestModule1 = async () => {
-  const { TodoTaskService } = await import('../src/todo-item/todo-task.service');
-  const { TodoTaskResolver } = await import('../src/todo-item/todo-task.resolver');
-  const { TodoTaskAssembler } = await import('../src/todo-item/todo-task.assembler');
+  const { TodoTaskService } = await import('../src/todo-item/todo-task.service')
+  const { TodoTaskResolver } = await import('../src/todo-item/todo-task.resolver')
+  const { TodoTaskAssembler } = await import('../src/todo-item/todo-task.assembler')
   const feature: DiscriminateDTOsOpts = {
     baseDTO: TodoItemDTO,
     baseEntity: TodoItemEntity,
@@ -107,7 +107,7 @@ export const createFullOverrideTestModule1 = async () => {
         CreateDTOClass: CreateTodoAppointmentInput
       }
     ]
-  };
+  }
 
   const todoItemModule = NestjsQueryGraphQLModule.forFeature({
     imports: [
@@ -120,17 +120,17 @@ export const createFullOverrideTestModule1 = async () => {
     ],
     discriminateDTOs: [feature],
     services: [TodoTaskService]
-  });
+  })
 
   return Test.createTestingModule({
     imports: [AppModule.forTest(todoItemModule)]
-  }).compile();
-};
+  }).compile()
+}
 
 export const createFullOverrideTestModule2 = async () => {
-  const { TodoAppointmentService } = await import('../src/todo-item/todo-appointment.service');
-  const { TodoAppointmentAssembler } = await import('../src/todo-item/todo-appointment.assembler');
-  const { TodoAppointmentResolver } = await import('../src/todo-item/todo-appointment.resolver');
+  const { TodoAppointmentService } = await import('../src/todo-item/todo-appointment.service')
+  const { TodoAppointmentAssembler } = await import('../src/todo-item/todo-appointment.assembler')
+  const { TodoAppointmentResolver } = await import('../src/todo-item/todo-appointment.resolver')
 
   const feature: DiscriminateDTOsOpts = {
     baseDTO: TodoItemDTO,
@@ -149,7 +149,7 @@ export const createFullOverrideTestModule2 = async () => {
         ResolverClass: TodoAppointmentResolver
       }
     ]
-  };
+  }
 
   const todoItemModule = NestjsQueryGraphQLModule.forFeature({
     imports: [
@@ -162,9 +162,9 @@ export const createFullOverrideTestModule2 = async () => {
     ],
     discriminateDTOs: [feature],
     services: [TodoAppointmentService]
-  });
+  })
 
   return Test.createTestingModule({
     imports: [AppModule.forTest(todoItemModule)]
-  }).compile();
-};
+  }).compile()
+}

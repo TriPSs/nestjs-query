@@ -53,7 +53,7 @@ export {
   HookTypes
 } from './hooks'
 export { AuthorizerContext, AuthorizerInterceptor, HookContext, HookInterceptor } from './interceptors'
-export { NestjsQueryGraphQLModule, DiscriminateDTOsOpts, DiscriminatedDTO } from './module'
+export { DiscriminatedDTO, DiscriminateDTOsOpts, NestjsQueryGraphQLModule } from './module'
 export { AutoResolverOpts } from './providers'
 export * from './resolvers'
 export { GraphQLPubSub, pubSubToken } from './subscription'
