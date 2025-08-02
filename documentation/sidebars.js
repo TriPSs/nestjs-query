@@ -66,6 +66,7 @@ module.exports = {
       'graphql/relations',
       'graphql/types',
       'graphql/federation',
+      'graphql/discriminated-dtos',
     ],
     Utilities: ['utilities/query-helpers'],
     'Migration Guides': [
