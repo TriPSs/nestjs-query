@@ -10,7 +10,7 @@ export const createTestData = async (dataSource: DataSource) => {
   await dataSource.getRepository(TodoList).delete({})
 
   // Create 5 TodoLists (matching your demo scenario)
-  const todoLists = []
+  const todoLists: TodoList[] = []
   for (let i = 1; i <= 5; i++) {
     const list = await dataSource.getRepository(TodoList).save({
       name: `List ${i}`
@@ -23,9 +23,7 @@ export const createTestData = async (dataSource: DataSource) => {
   for (const list of todoLists) {
     for (let j = 0; j <= 10; j++) {
       const item = await dataSource.getRepository(TodoItem).save({
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         listId: list.id,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         content: `Item ${j} in ${list.name}`
       })
       todoItems.push(item)
