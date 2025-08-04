@@ -19,7 +19,6 @@ describe('Federation N+1 Integration Test (Based on User Demo)', () => {
   let dataSource: DataSource
   let queryCount: number
   let executedQueries: string[]
-  let originalLog: any
 
   beforeAll(async () => {
     // Setup query monitoring to track SQL execution
@@ -203,12 +202,11 @@ describe('Federation N+1 Integration Test (Based on User Demo)', () => {
 
       // Capture console output to verify DataLoader logs
       const consoleLogs: string[] = []
-      originalLog = console.log
-      console.log = jest.fn((...args) => {
+      const logSpy = jest.spyOn(console, 'log').mockImplementation((...args) => {
         const message = args.join(' ')
         consoleLogs.push(message)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        originalLog(...args)
+        // Optionally, call the original implementation if you want logs to still appear:
+        // jest.requireActual('console').log(...args)
       })
 
       const query = `
@@ -223,7 +221,7 @@ describe('Federation N+1 Integration Test (Based on User Demo)', () => {
       await request(app.getHttpServer()).post('/graphql').send({ query }).expect(200)
 
       // Restore console.log
-      console.log = originalLog
+      logSpy.mockRestore()
 
       // Check for DataLoader debug logs (optional in test environment)
       const dataLoaderLogs = consoleLogs.filter((log) => log.includes('DataLoaderFactory') || log.includes('ReferenceLoader'))
