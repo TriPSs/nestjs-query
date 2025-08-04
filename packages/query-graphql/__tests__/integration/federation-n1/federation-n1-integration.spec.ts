@@ -227,7 +227,7 @@ describe('Federation N+1 Integration Test (Based on User Demo)', () => {
 
       // Check for DataLoader debug logs (optional in test environment)
       const dataLoaderLogs = consoleLogs.filter(
-        (log) => log.includes('临时调试：') || log.includes('DataLoaderFactory') || log.includes('ReferenceLoader')
+        (log) => log.includes('DataLoaderFactory') || log.includes('ReferenceLoader')
       )
 
       console.log(`\\nFound ${dataLoaderLogs.length} DataLoader debug logs:`)
