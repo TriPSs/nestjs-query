@@ -1,4 +1,4 @@
-import { BadRequestException, ExecutionContext } from '@nestjs/common'
+import { BadRequestException, ExecutionContext, Logger } from '@nestjs/common'
 import { Context, Resolver, ResolveReference } from '@nestjs/graphql'
 import { Class, QueryService } from '@ptc-org/nestjs-query-core'
 
@@ -30,6 +30,8 @@ export const Referenceable =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class ResolveReferenceResolverBase extends BaseClass {
+      private readonly logger = new Logger(`ReferenceResolver<${baseName}>`)
+
       @ResolveReference()
       async resolveReference(
         representation: RepresentationType,
@@ -42,15 +44,32 @@ export const Referenceable =
           throw new BadRequestException(`Unable to resolve reference, missing required key ${key} for ${baseName}`)
         }
 
+        // Safety check for service availability
+        if (!this.service) {
+          throw new BadRequestException(`Service not available for ${baseName} reference resolution`)
+        }
+
+        // Ensure loader name is unique in Federation scenarios
+        const serviceName = this.service?.constructor?.name || 'UnknownService'
+        const uniqueLoaderName = `${loaderName}_${serviceName}`
+
         const loader = DataLoaderFactory.getOrCreateLoader(
           context,
-          loaderName,
+          uniqueLoaderName,
           () => referenceLoader.createLoader(this.service),
-          dataLoaderConfig
+          {
+            // Ensure batching is enabled for performance
+            batch: true,
+            cache: true,
+            maxBatchSize: 1000,
+            ...dataLoaderConfig
+          }
         )
 
         const result = await loader.load({ id: id as string | number })
+
         if (!result) {
+          this.logger.error(`Unable to find ${baseName} with ${key}: ${String(id)}`)
           throw new BadRequestException(`Unable to find ${baseName} with ${key}: ${String(id)}`)
         }
 
