@@ -5,6 +5,8 @@ import {
   AggregateQuery,
   AggregateResponse,
   CountOptions,
+  CreateManyOptions,
+  CreateOneOptions,
   DeleteManyResponse,
   DeleteOneOptions,
   Filter,
@@ -39,15 +41,15 @@ export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepP
     )
   }
 
-  public async createMany(items: C[]): Promise<DTO[]> {
+  public async createMany(items: C[], opts?: CreateManyOptions<DTO>): Promise<DTO[]> {
     const { assembler } = this
     const converted = await assembler.convertToCreateEntities(items)
-    return this.assembler.convertToDTOs(await this.queryService.createMany(converted))
+    return this.assembler.convertToDTOs(await this.queryService.createMany(converted, this.convertFilterable(opts)))
   }
 
-  public async createOne(item: C): Promise<DTO> {
+  public async createOne(item: C, opts?: CreateOneOptions<DTO>): Promise<DTO> {
     const c = await this.assembler.convertToCreateEntity(item)
-    return this.assembler.convertToDTO(await this.queryService.createOne(c))
+    return this.assembler.convertToDTO(await this.queryService.createOne(c, this.convertFilterable(opts)))
   }
 
   public async deleteMany(filter: Filter<DTO>): Promise<DeleteManyResponse> {
