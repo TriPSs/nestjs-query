@@ -258,7 +258,7 @@ export class TypeOrmQueryService<Entity>
     if (this.filterQueryBuilder.filterHasRelations(filter)) {
       const builder = this.filterQueryBuilder.select({ filter }).distinct(true)
 
-      const distinctRecords = await builder.addSelect(`${builder.alias}.id`).getRawMany()
+      const distinctRecords = await builder.select(`${builder.alias}.id AS id`).getRawMany()
 
       const ids: unknown[] = distinctRecords.map(({ id }) => id as unknown)
       const idsFilter = { id: { in: ids } } as unknown as Filter<Entity>
