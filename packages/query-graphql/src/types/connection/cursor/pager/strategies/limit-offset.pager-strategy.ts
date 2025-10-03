@@ -30,17 +30,26 @@ export class LimitOffsetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     if (includeExtraNode && (!this.enableFetchAllWithNegative || opts.limit !== -1)) {
       // Add 1 to the limit so we will fetch an additional node
       paging.limit += 1
-      // if paging backwards remove one from the offset to check for a previous page.
+      // if paging backwards, remove one from the offset to check for a previous page.
       if (isBackward) {
         paging.offset -= 1
       }
       if (paging.offset < 0) {
-        // if the offset is < 0 it means we underflowed and that we cant have an extra page.
+        // if the offset is < 0, it means we underflow and that we can't have an extra page.
         paging.offset = 0
         paging.limit = opts.limit
       }
     }
-    if (this.enableFetchAllWithNegative && paging.limit === -1) delete paging.limit
+
+    if (this.enableFetchAllWithNegative && paging.limit === -1) {
+      delete paging.limit
+
+      // Delete the offset if it is 0.
+      if (paging.offset === 0) {
+        delete paging.offset
+      }
+    }
+
     return { ...query, paging }
   }
 

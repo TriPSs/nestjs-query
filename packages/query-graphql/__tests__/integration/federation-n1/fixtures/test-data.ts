@@ -6,8 +6,8 @@ import { TodoList } from '../entities/todo-list.entity'
 
 export const createTestData = async (dataSource: DataSource) => {
   // Clear existing data
-  await dataSource.getRepository(TodoItem).delete({})
-  await dataSource.getRepository(TodoList).delete({})
+  await dataSource.getRepository(TodoItem).deleteAll()
+  await dataSource.getRepository(TodoList).deleteAll()
 
   // Create 5 TodoLists (matching your demo scenario)
   const todoLists: TodoList[] = []

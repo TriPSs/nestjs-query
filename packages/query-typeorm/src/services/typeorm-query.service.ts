@@ -254,11 +254,11 @@ export class TypeOrmQueryService<Entity>
     this.ensureIdIsNotPresent(update)
     let updateResult: UpdateResult
 
-    // If the update has relations then fetch all the id's and then do an update on the ids returned
+    // If the update has relations, then fetch all the id's and then do an update on the ids returned
     if (this.filterQueryBuilder.filterHasRelations(filter)) {
       const builder = this.filterQueryBuilder.select({ filter }).distinct(true)
 
-      const distinctRecords = await builder.addSelect(`${builder.alias}.id`).getRawMany()
+      const distinctRecords = await builder.select(`${builder.alias}.id AS id`).getRawMany()
 
       const ids: unknown[] = distinctRecords.map(({ id }) => id as unknown)
       const idsFilter = { id: { in: ids } } as unknown as Filter<Entity>
