@@ -1,10 +1,10 @@
-import { ExecutionContext, Inject, Optional } from '@nestjs/common'
+import { ExecutionContext } from '@nestjs/common'
 import { Args, ArgsType, Context, Parent, Resolver } from '@nestjs/graphql'
-import { Class, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
 
-import { Authorizer, getAuthorizerToken, OperationGroup } from '../../auth'
+import { OperationGroup } from '../../auth'
 import { getDTONames } from '../../common'
-import { GraphQLResolveInfoResult, GraphQLResultInfo, ResolverField } from '../../decorators'
+import { GraphQLResolveInfoResult, GraphQLResultInfo, RelationAuthorizerFilter, ResolverField } from '../../decorators'
 import { InjectDataLoaderConfig } from '../../decorators/inject-dataloader-config.decorator'
 import { AuthorizerInterceptor } from '../../interceptors'
 import { CountRelationsLoader, DataLoaderFactory, FindRelationsLoader, QueryRelationsLoader } from '../../loader'
@@ -30,16 +30,10 @@ const ReadOneRelationMixin =
     const { baseNameLower, baseName } = getDTONames(relationDTO, { dtoName: relation.dtoName })
     const relationName = relation.relationName ?? baseNameLower
     const loaderName = `load${baseName}For${DTOClass.name}`
-    const authorizerKey = Symbol(`authorizerFor${DTOClass.name}`)
-    const relationAuthorizerKey = Symbol(`authorizerFor${relation.dtoName}`)
     const findLoader = new FindRelationsLoader<DTO, Relation>(relationDTO, relationName)
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class ReadOneMixin extends Base {
-      @Optional() @Inject(getAuthorizerToken(DTOClass)) [authorizerKey]?: Authorizer<Relation>;
-
-      @Optional() @Inject(getAuthorizerToken(relationDTO)) [relationAuthorizerKey]?: Authorizer<Relation>
-
       @ResolverField(
         baseNameLower,
         () => relationDTO,
@@ -55,21 +49,16 @@ const ReadOneRelationMixin =
       async [`find${baseName}`](
         @Parent() dto: DTO,
         @Context() context: ExecutionContext,
+        @RelationAuthorizerFilter(baseNameLower, {
+          operationGroup: OperationGroup.READ,
+          many: false
+        })
+        authFilter?: Filter<Relation>,
         @GraphQLResultInfo(DTOClass)
         resolveInfo?: GraphQLResolveInfoResult<Relation>,
         @InjectDataLoaderConfig()
         dataLoaderConfig?: DataLoaderOptions
       ): Promise<Relation | undefined> {
-        const authContext = {
-          operationName: baseNameLower,
-          operationGroup: OperationGroup.READ,
-          readonly: true,
-          many: false
-        }
-        const authFilter = relation.auth
-          ? await relation.auth?.authorize(context, authContext)
-          : ((await this[authorizerKey]?.authorizeRelation(baseNameLower, context, authContext)) ??
-            (await this[relationAuthorizerKey]?.authorize(context, authContext)))
         return DataLoaderFactory.getOrCreateLoader(
           context,
           loaderName,
@@ -104,8 +93,6 @@ const ReadManyRelationMixin =
     const relationName = relation.relationName ?? baseNameLower
     const relationLoaderName = `load${baseName}For${DTOClass.name}`
     const countRelationLoaderName = `count${baseName}For${DTOClass.name}`
-    const authorizerKey = Symbol(`authorizerFor${DTOClass.name}`)
-    const relationAuthorizerKey = Symbol(`authorizerFor${relation.dtoName}`)
     const queryLoader = new QueryRelationsLoader<DTO, Relation>(relationDTO, relationName)
     const countLoader = new CountRelationsLoader<DTO, Relation>(relationDTO, relationName)
     const connectionName = `${dtoName}${baseName}Connection`
@@ -122,10 +109,6 @@ const ReadManyRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class ReadManyMixin extends Base {
-      @Optional() @Inject(getAuthorizerToken(DTOClass)) [authorizerKey]?: Authorizer<Relation>;
-
-      @Optional() @Inject(getAuthorizerToken(relationDTO)) [relationAuthorizerKey]?: Authorizer<Relation>
-
       @ResolverField(
         baseNameLower,
         () => CT.resolveType,
@@ -142,21 +125,16 @@ const ReadManyRelationMixin =
         @Parent() dto: DTO,
         @Args() q: RelationQA,
         @Context() context: ExecutionContext,
+        @RelationAuthorizerFilter(baseNameLower, {
+          operationGroup: OperationGroup.READ,
+          many: true
+        })
+        relationFilter?: Filter<Relation>,
         @GraphQLResultInfo(DTOClass)
         resolveInfo?: GraphQLResolveInfoResult<Relation>,
         @InjectDataLoaderConfig()
         dataLoaderConfig?: DataLoaderOptions
       ): Promise<InstanceType<typeof CT>> {
-        const authContext = {
-          operationName: baseNameLower,
-          operationGroup: OperationGroup.READ,
-          readonly: true,
-          many: true
-        }
-        const authFilter = relation.auth
-          ? await relation.auth?.authorize(context, authContext)
-          : ((await this[authorizerKey]?.authorizeRelation(baseNameLower, context, authContext)) ??
-            (await this[relationAuthorizerKey]?.authorize(context, authContext)))
         const relationQuery = await transformAndValidate(RelationQA, q)
         const relationLoader = DataLoaderFactory.getOrCreateLoader(
           context,
@@ -174,7 +152,7 @@ const ReadManyRelationMixin =
 
         return CT.createFromPromise(
           (query) => relationLoader.load({ dto, query }),
-          mergeQuery(relationQuery, { filter: authFilter, relations: resolveInfo?.relations }),
+          mergeQuery(relationQuery, { filter: relationFilter, relations: resolveInfo?.relations }),
           (filter) => relationCountLoader.load({ dto, filter })
         )
       }
