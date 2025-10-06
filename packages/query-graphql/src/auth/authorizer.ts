@@ -38,10 +38,10 @@ export interface Authorizer<DTO> extends CustomAuthorizer<DTO> {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/no-explicit-any
   authorize(context: any, authorizerContext: AuthorizationContext): Promise<Filter<DTO>>
 
-  authorizeRelation<Relation = unknown>(
+  authorizeRelation(
     relationName: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     context: any,
     authorizerContext: AuthorizationContext
-  ): Promise<Filter<Relation> | undefined>
+  ): Promise<Filter<unknown> | undefined>
 }

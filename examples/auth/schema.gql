@@ -18,64 +18,6 @@ type LoginResponse {
   accessToken: String!
 }
 
-type SubSubTask {
-  id: ID!
-  title: String!
-  public: Boolean!
-}
-
-type DeleteManyResponse {
-  """The number of records deleted."""
-  deletedCount: Int!
-}
-
-type SubSubTaskDeleteResponse {
-  id: ID
-  title: String
-  public: Boolean
-}
-
-type UpdateManyResponse {
-  """The number of records updated."""
-  updatedCount: Int!
-}
-
-type SubSubTaskEdge {
-  """The node containing the SubSubTask"""
-  node: SubSubTask!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-"""Cursor for paging through collections"""
-scalar ConnectionCursor
-
-type PageInfo {
-  """true if paging forward and there are more records."""
-  hasNextPage: Boolean
-
-  """true if paging backwards and there are more records."""
-  hasPreviousPage: Boolean
-
-  """The cursor of the first returned record."""
-  startCursor: ConnectionCursor
-
-  """The cursor of the last returned record."""
-  endCursor: ConnectionCursor
-}
-
-type SubSubTaskConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [SubSubTaskEdge!]!
-
-  """Fetch total count of records"""
-  totalCount: Int!
-}
-
 type Tag {
   id: ID!
   name: String!
@@ -233,6 +175,9 @@ input CursorPaging {
   """Paginate last"""
   last: Int
 }
+
+"""Cursor for paging through collections"""
+scalar ConnectionCursor
 
 input TodoItemFilter {
   and: [TodoItemFilter!]
@@ -507,44 +452,13 @@ type SubTask {
   todoItemId: String!
   createdBy: String
   updatedBy: String
-  subSubTasksAggregate(
-    """Filter to find records to aggregate on"""
-    filter: SubSubTaskAggregateFilter
-  ): [SubTaskSubSubTasksAggregateResponse!]!
   owner: User!
   todoItem: TodoItem!
-  subSubTasks(
-    """Specify to filter the records returned."""
-    filter: SubSubTaskFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [SubSubTaskSort!]! = []
-  ): [SubSubTask!]!
 }
 
-input SubSubTaskAggregateFilter {
-  and: [SubSubTaskAggregateFilter!]
-  or: [SubSubTaskAggregateFilter!]
-  id: IDFilterComparison
-  public: BooleanFieldComparison
-}
-
-input SubSubTaskFilter {
-  and: [SubSubTaskFilter!]
-  or: [SubSubTaskFilter!]
-  id: IDFilterComparison
-  public: BooleanFieldComparison
-}
-
-input SubSubTaskSort {
-  field: SubSubTaskSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum SubSubTaskSortFields {
-  id
-  public
+type DeleteManyResponse {
+  """The number of records deleted."""
+  deletedCount: Int!
 }
 
 type SubTaskDeleteResponse {
@@ -559,12 +473,31 @@ type SubTaskDeleteResponse {
   updatedBy: String
 }
 
+type UpdateManyResponse {
+  """The number of records updated."""
+  updatedCount: Int!
+}
+
 type SubTaskEdge {
   """The node containing the SubTask"""
   node: SubTask!
 
   """Cursor for this node."""
   cursor: ConnectionCursor!
+}
+
+type PageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
+
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
 }
 
 type SubTaskConnection {
@@ -647,41 +580,6 @@ type SubTaskAggregateResponse {
   avg: SubTaskAvgAggregate
   min: SubTaskMinAggregate
   max: SubTaskMaxAggregate
-}
-
-type SubTaskSubSubTasksAggregateGroupBy {
-  id: ID
-  public: Boolean
-}
-
-type SubTaskSubSubTasksCountAggregate {
-  id: Int
-  public: Int
-}
-
-type SubTaskSubSubTasksSumAggregate {
-  id: Float
-}
-
-type SubTaskSubSubTasksAvgAggregate {
-  id: Float
-}
-
-type SubTaskSubSubTasksMinAggregate {
-  id: ID
-}
-
-type SubTaskSubSubTasksMaxAggregate {
-  id: ID
-}
-
-type SubTaskSubSubTasksAggregateResponse {
-  groupBy: SubTaskSubSubTasksAggregateGroupBy
-  count: SubTaskSubSubTasksCountAggregate
-  sum: SubTaskSubSubTasksSumAggregate
-  avg: SubTaskSubSubTasksAvgAggregate
-  min: SubTaskSubSubTasksMinAggregate
-  max: SubTaskSubSubTasksMaxAggregate
 }
 
 type TagDeleteResponse {
@@ -1157,20 +1055,6 @@ type Query {
     """Specify to sort results."""
     sorting: [SubTaskSort!]! = []
   ): SubTaskConnection!
-  subSubTask(
-    """The id of the record to find."""
-    id: ID!
-  ): SubSubTask!
-  subSubTasks(
-    """Limit or page results."""
-    paging: CursorPaging! = {first: 10}
-
-    """Specify to filter the records returned."""
-    filter: SubSubTaskFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [SubSubTaskSort!]! = []
-  ): SubSubTaskConnection!
   tagAggregate(
     """Filter to find records to aggregate on"""
     filter: TagAggregateFilter
@@ -1211,12 +1095,6 @@ type Mutation {
   updateManySubTasks(input: UpdateManySubTasksInput!): UpdateManyResponse!
   deleteOneSubTask(input: DeleteOneSubTaskInput!): SubTaskDeleteResponse!
   deleteManySubTasks(input: DeleteManySubTasksInput!): DeleteManyResponse!
-  createOneSubSubTask(input: CreateOneSubSubTaskInput!): SubSubTask!
-  createManySubSubTasks(input: CreateManySubSubTasksInput!): [SubSubTask!]!
-  updateOneSubSubTask(input: UpdateOneSubSubTaskInput!): SubSubTask!
-  updateManySubSubTasks(input: UpdateManySubSubTasksInput!): UpdateManyResponse!
-  deleteOneSubSubTask(input: DeleteOneSubSubTaskInput!): SubSubTaskDeleteResponse!
-  deleteManySubSubTasks(input: DeleteManySubSubTasksInput!): DeleteManyResponse!
   addTodoItemsToTag(input: AddTodoItemsToTagInput!): Tag!
   setTodoItemsOnTag(input: SetTodoItemsOnTagInput!): Tag!
   removeTodoItemsFromTag(input: RemoveTodoItemsFromTagInput!): Tag!
@@ -1434,68 +1312,6 @@ input SubTaskDeleteFilter {
   todoItemId: StringFieldComparison
   createdBy: StringFieldComparison
   updatedBy: StringFieldComparison
-}
-
-input CreateOneSubSubTaskInput {
-  """The record to create"""
-  subSubTask: CreateSubSubTask!
-}
-
-input CreateSubSubTask {
-  id: ID!
-  title: String!
-  public: Boolean!
-}
-
-input CreateManySubSubTasksInput {
-  """Array of records to create"""
-  subSubTasks: [CreateSubSubTask!]!
-}
-
-input UpdateOneSubSubTaskInput {
-  """The id of the record to update"""
-  id: ID!
-
-  """The update to apply."""
-  update: UpdateSubSubTask!
-}
-
-input UpdateSubSubTask {
-  id: ID
-  title: String
-  public: Boolean
-}
-
-input UpdateManySubSubTasksInput {
-  """Filter used to find fields to update"""
-  filter: SubSubTaskUpdateFilter!
-
-  """The update to apply to all records found using the filter"""
-  update: UpdateSubSubTask!
-}
-
-input SubSubTaskUpdateFilter {
-  and: [SubSubTaskUpdateFilter!]
-  or: [SubSubTaskUpdateFilter!]
-  id: IDFilterComparison
-  public: BooleanFieldComparison
-}
-
-input DeleteOneSubSubTaskInput {
-  """The id of the record to delete."""
-  id: ID!
-}
-
-input DeleteManySubSubTasksInput {
-  """Filter to find records to delete"""
-  filter: SubSubTaskDeleteFilter!
-}
-
-input SubSubTaskDeleteFilter {
-  and: [SubSubTaskDeleteFilter!]
-  or: [SubSubTaskDeleteFilter!]
-  id: IDFilterComparison
-  public: BooleanFieldComparison
 }
 
 input AddTodoItemsToTagInput {
