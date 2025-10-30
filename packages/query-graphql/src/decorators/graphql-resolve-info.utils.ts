@@ -68,7 +68,18 @@ function parseFieldNodes<DTO>(
 ): QueryResolveTree<DTO> | QueryResolveFields<DTO> {
   const asts: ReadonlyArray<SelectionNode> = Array.isArray(inASTs) ? inASTs : [inASTs]
 
-  return asts.reduce((tree, fieldNode) => {
+  const astsWithInlinedFragments = asts.flatMap(ast => {
+    if (ast.kind === Kind.FRAGMENT_SPREAD) {
+      const fragment = resolveInfo.fragments[ast.name.value];
+      if (fragment) {
+        return fragment.selectionSet.selections;
+      }
+      return [];
+    }
+    return ast;
+  })
+
+  return astsWithInlinedFragments.reduce((tree, fieldNode) => {
     let name: string
     let alias: string
 
