@@ -1,7 +1,6 @@
 import { DataSource } from 'typeorm'
 
 import { executeTruncate } from '../../helpers'
-import { SubSubTaskEntity } from '../src/sub-sub-task/sub-sub-task.entity'
 import { SubTaskEntity } from '../src/sub-task/sub-task.entity'
 import { TagEntity } from '../src/tag/tag.entity'
 import { TodoItemEntity } from '../src/todo-item/todo-item.entity'
@@ -16,7 +15,6 @@ export const refresh = async (dataSource: DataSource): Promise<void> => {
   const userRepo = dataSource.getRepository(UserEntity)
   const todoRepo = dataSource.getRepository(TodoItemEntity)
   const subTaskRepo = dataSource.getRepository(SubTaskEntity)
-  const subSubTaskRepo = dataSource.getRepository(SubSubTaskEntity)
   const tagsRepo = dataSource.getRepository(TagEntity)
 
   const users = await userRepo.save([
@@ -52,24 +50,15 @@ export const refresh = async (dataSource: DataSource): Promise<void> => {
     Promise.resolve([] as TodoItemEntity[])
   )
 
-  const subTasks: SubTaskEntity[] = await subTaskRepo.save(
-    todoItems.flatMap(
-      (todo) => [
+  await subTaskRepo.save(
+    todoItems.reduce(
+      (subTasks, todo) => [
+        ...subTasks,
         { completed: true, title: `${todo.title} - Sub Task 1`, todoItem: todo, ownerId: todo.ownerId },
         { completed: false, title: `${todo.title} - Sub Task 2`, todoItem: todo, ownerId: todo.ownerId },
         { completed: false, title: `${todo.title} - Sub Task 3`, todoItem: todo, ownerId: todo.ownerId }
       ],
-      []
-    )
-  )
-
-  await subSubTaskRepo.save(
-    subTasks.flatMap(
-      (parent) => [
-        { subTask: parent, title: `${parent.title} - Sub Sub Task Public`, public: true },
-        { subTask: parent, title: `${parent.title} - Sub Sub Task Private`, public: false }
-      ],
-      []
+      [] as Partial<SubTaskEntity>[]
     )
   )
 }

@@ -426,61 +426,6 @@ describe('TodoItemResolver (auth - e2e)', () => {
           ])
         }))
 
-    it(`should allow fetching subSubTasks, but only the ones that are allowed by the nested authorizers`, () =>
-      request(app.getHttpServer())
-        .post('/graphql')
-        .auth(jwtToken, { type: 'bearer' })
-        .send({
-          operationName: null,
-          variables: {},
-          query: `{
-          todoItems {
-            edges {
-              node {
-                subTasks {
-                  edges {
-                    node {
-                      subSubTasks {
-                        title
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }`
-        })
-        .expect(200)
-        .then(({ body }) => {
-          const {
-            edges: [{ node: task }]
-          }: {
-            edges: Array<{
-              node: {
-                subTasks: {
-                  edges: Array<{
-                    node: {
-                      subSubTasks: Array<{
-                        title: string
-                      }>
-                    }
-                  }>
-                }
-              }
-            }>
-          } = body.data.todoItems
-          const [subTask] = task.subTasks.edges.map((e) => e.node)
-
-          expect(subTask).toEqual({
-            subSubTasks: [
-              {
-                title: 'Create Nest App - Sub Task 1 - Sub Sub Task Public'
-              }
-            ]
-          })
-        }))
-
     it(`should allow querying on tags`, () =>
       request(app.getHttpServer())
         .post('/graphql')
@@ -675,7 +620,7 @@ describe('TodoItemResolver (auth - e2e)', () => {
         .send({
           operationName: null,
           variables: {},
-          query: `{
+          query: `{ 
           todoItemAggregate {
               ${todoItemAggregateFields}
             }
@@ -702,7 +647,7 @@ describe('TodoItemResolver (auth - e2e)', () => {
         .send({
           operationName: null,
           variables: {},
-          query: `{
+          query: `{ 
             todoItemAggregate {
                 ${todoItemAggregateFields}
               }
@@ -729,7 +674,7 @@ describe('TodoItemResolver (auth - e2e)', () => {
         .send({
           operationName: null,
           variables: {},
-          query: `{
+          query: `{ 
           todoItemAggregate(filter: { completed: { is: false } }) {
               ${todoItemAggregateFields}
             }

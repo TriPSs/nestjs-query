@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { formatGraphqlError, typeormOrmConfig } from '../../helpers'
 import { AuthModule } from './auth/auth.module'
-import { SubSubTaskModule } from './sub-sub-task/sub-sub-task.module'
 import { SubTaskModule } from './sub-task/sub-task.module'
 import { TagModule } from './tag/tag.module'
 import { TodoItemModule } from './todo-item/todo-item.module'
@@ -29,7 +28,6 @@ import { UserModule } from './user/user.module'
     UserModule,
     TodoItemModule,
     SubTaskModule,
-    SubSubTaskModule,
     TagModule
   ]
 })

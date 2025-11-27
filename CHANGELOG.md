@@ -1,4 +1,31 @@
  
+## [9.2.1](https://github.com/TriPSs/nestjs-query/compare/v9.2.0...v9.2.1) (2025-10-06)
+
+
+
+# [9.2.0](https://github.com/TriPSs/nestjs-query/compare/v9.1.0...v9.2.0) (2025-10-03)
+
+
+### Bug Fixes
+
+* **aggregate-relations.resolver:** use relation's authorizer to resolve auth filter ([f8751c5](https://github.com/TriPSs/nestjs-query/commit/f8751c53aecd33126288f2c69645179137e49c53))
+* **authorizer:** add generic type to `authorizerRelation` method ([989c8e7](https://github.com/TriPSs/nestjs-query/commit/989c8e7ada42af5e4c0022171665b875a178bb59))
+* fixed typo ([ea5244b](https://github.com/TriPSs/nestjs-query/commit/ea5244b6a5f3f5d6dd119bb5d41fc118431dad01))
+* **query-graphql:** enhance DataLoader implementation with integration tests and improvements ([#389](https://github.com/TriPSs/nestjs-query/issues/389)) ([95f6765](https://github.com/TriPSs/nestjs-query/commit/95f6765755135243f17ed88950c9b0cb3e7bf5f2))
+* **query-graphql:** Improve handling of offset and limit in pager strategies ([9589a48](https://github.com/TriPSs/nestjs-query/commit/9589a482feca3c2a43f03c314cefacc9593fae5e))
+* **query-graphql:** resolve lint errors in federation N+1 integration tests ([5888637](https://github.com/TriPSs/nestjs-query/commit/588863731fc1150f39ad85455772d871a2eecd98))
+* **query-typeorm:** Adjust distinct record query column alias in TypeORMQueryService ([d000186](https://github.com/TriPSs/nestjs-query/commit/d0001861f1b45a024c0e7d9f4cec9046b05ceebd))
+* **read-relations.resolver:** use relation's authorizer to resolve auth filter ([cda8127](https://github.com/TriPSs/nestjs-query/commit/cda81273375faa7cfb8a5dac63056b6390f10c26))
+* resolve TypeScript compilation error in reference loader ([288d76f](https://github.com/TriPSs/nestjs-query/commit/288d76f4f7962ac666928df5ba1d20637a551f6d))
+
+
+### Features
+
+* add DataLoader support to reference resolver to solve n+1 query problem ([4360e1f](https://github.com/TriPSs/nestjs-query/commit/4360e1f253a356b8dd63e3dce374b13f4cd75974))
+* Bump dependencies ([673bc8e](https://github.com/TriPSs/nestjs-query/commit/673bc8e9e4724facceb5584cebf3f11f2a0256c1))
+
+
+
 # [9.1.0](https://github.com/TriPSs/nestjs-query/compare/v9.0.3...v9.1.0) (2025-07-15)
 
 
