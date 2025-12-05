@@ -1,13 +1,16 @@
 import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 
 import { UserDTO } from './user.dto'
 import { UserEntity } from './user.entity'
 import { CreateUserInput, UpdateUserInput } from './user.input'
+import { UserSeederService } from './user.seeder'
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([UserEntity]),
     NestjsQueryGraphQLModule.forFeature({
       imports: [NestjsQueryTypeOrmModule.forFeature([UserEntity])],
       resolvers: [
@@ -23,6 +26,7 @@ import { CreateUserInput, UpdateUserInput } from './user.input'
         }
       ]
     })
-  ]
+  ],
+  providers: [UserSeederService]
 })
 export class UserModule {}

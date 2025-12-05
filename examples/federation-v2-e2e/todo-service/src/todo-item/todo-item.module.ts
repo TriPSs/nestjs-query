@@ -1,13 +1,16 @@
 import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 
 import { TodoItemDTO } from './todo-item.dto'
 import { TodoItemEntity } from './todo-item.entity'
 import { CreateTodoItemInput, UpdateTodoItemInput } from './todo-item.input'
+import { TodoItemSeederService } from './todo-item.seeder'
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([TodoItemEntity]),
     NestjsQueryGraphQLModule.forFeature({
       imports: [NestjsQueryTypeOrmModule.forFeature([TodoItemEntity])],
       resolvers: [
@@ -21,6 +24,7 @@ import { CreateTodoItemInput, UpdateTodoItemInput } from './todo-item.input'
         }
       ]
     })
-  ]
+  ],
+  providers: [TodoItemSeederService]
 })
 export class TodoItemModule {}

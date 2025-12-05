@@ -8,16 +8,25 @@ FROM node:22 AS builder
 
 WORKDIR /build
 
-# Copy the entire nestjs-query project (uses yarn)
+# Copy only dependency files first for caching
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn ./.yarn
 COPY nx.json ./
 COPY tsconfig*.json ./
 COPY jest.* ./
+
+# Copy package.json files for each package (for dependency resolution)
+COPY packages/core/package.json ./packages/core/
+COPY packages/query-graphql/package.json ./packages/query-graphql/
+COPY packages/query-typeorm/package.json ./packages/query-typeorm/
+
+# Install dependencies (this layer will be cached if deps don't change)
+RUN corepack enable && yarn install
+
+# Now copy source code (changes here won't invalidate dep cache)
 COPY packages/ ./packages/
 
-# Install dependencies and build all packages using yarn
-RUN corepack enable && yarn install
+# Build all packages
 RUN yarn nx run-many --target=build --all
 
 # Pack the built packages for installation
