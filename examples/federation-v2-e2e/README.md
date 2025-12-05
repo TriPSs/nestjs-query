@@ -13,7 +13,7 @@ The fix adds `@Parent()` decorator to properly extract the representation from G
 
 ## Directory Structure
 
-```
+```text
 federation-v2-e2e/
 ├── docker-compose.yml      # Orchestrates all services
 ├── user-service/           # User subgraph with numeric ID (exposed on host:3001)
