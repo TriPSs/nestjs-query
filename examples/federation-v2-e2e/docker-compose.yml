@@ -112,3 +112,16 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
+
+  # E2E Test Runner
+  e2e-test:
+    build:
+      context: ../..
+      dockerfile: examples/federation-v2-e2e/e2e-test/Dockerfile
+    environment:
+      GATEWAY_URL: http://gateway:3000/graphql
+    depends_on:
+      gateway:
+        condition: service_healthy
+    profiles:
+      - test

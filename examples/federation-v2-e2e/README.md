@@ -28,6 +28,9 @@ federation-v2-e2e/
 ├── gateway/                # Apollo Gateway (exposed on host:3000)
 │   ├── Dockerfile
 │   └── src/
+├── e2e-test/               # Jest E2E test suite
+│   ├── Dockerfile
+│   └── e2e/
 └── init-scripts/           # PostgreSQL initialization
 ```
 
@@ -70,6 +73,24 @@ curl -s -X POST http://localhost:3000/graphql \
 # 4. Cleanup
 docker compose down -v
 ```
+
+## Running E2E Tests
+
+Run the automated Jest test suite:
+
+```bash
+# Run tests with the test profile
+docker compose --profile test up --build e2e-test
+
+# Or run all services and tests together
+docker compose --profile test up --build
+```
+
+The test suite validates:
+- Federation reference resolution works correctly
+- User references with numeric ID are resolved
+- Tag references with UUID string ID are resolved
+- Issue #410 fix verification
 
 ## Expected Result
 
