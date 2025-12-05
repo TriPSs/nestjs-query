@@ -1,6 +1,6 @@
 {
   "name": "nestjs-query",
-  "version": "9.2.1",
+  "version": "9.3.0",
   "private": true,
   "workspaces": [
     "packages/**"
@@ -89,6 +89,7 @@
     "eslint-plugin-tsdoc": "0.2.17",
     "graphql": "16.11.0",
     "graphql-query-complexity": "1.1.0",
+    "graphql-request": "^7.3.5",
     "graphql-subscriptions": "^3.0.0",
     "graphql-tools": "9.0.20",
     "husky": "9.1.7",

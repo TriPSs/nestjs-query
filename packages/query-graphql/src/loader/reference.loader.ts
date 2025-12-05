@@ -22,15 +22,16 @@ export class ReferenceLoader<DTO> implements NestjsQueryDataloader<DTO, Referenc
         const entities = await service.query({ filter })
 
         // Create entity map for efficient lookup
-        const entityMap = new Map<string | number, DTO>()
+        // Use string keys because representation.id from federation may differ in type from entity.id
+        const entityMap = new Map<string, DTO>()
         entities?.forEach((entity) => {
-          const id = (entity as Record<string, unknown>).id as string | number
-          entityMap.set(id, entity)
+          const id = (entity as Record<string, unknown>).id
+          entityMap.set(String(id), entity)
         })
 
         // Return results in the same order as requested
         const results = args.map((arg) => {
-          const entity = entityMap.get(arg.id)
+          const entity = entityMap.get(String(arg.id))
           if (!entity) {
             this.logger.warn(`Entity not found for ID: ${arg.id} in ${this.DTOClass.name}`)
           }
