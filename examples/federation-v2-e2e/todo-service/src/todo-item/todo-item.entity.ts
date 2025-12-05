@@ -17,6 +17,10 @@ export class TodoItemEntity {
   @Column({ nullable: true })
   assigneeId?: number
 
+  // UUID reference to Tag entity - tests string ID type in Federation
+  @Column({ type: 'uuid', nullable: true })
+  tagId?: string
+
   @CreateDateColumn()
   created!: Date
 

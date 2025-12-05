@@ -5,10 +5,32 @@ import { Repository } from 'typeorm'
 import { TodoItemEntity } from './todo-item.entity'
 
 // Default test todo items for federation testing
+// Tests both numeric ID (assigneeId -> User) and UUID string ID (tagId -> Tag)
 const DEFAULT_TODO_ITEMS = [
-  { id: 1, title: 'Learn GraphQL Federation', description: 'Study Apollo Federation v2', completed: false, assigneeId: 1 },
-  { id: 2, title: 'Fix Issue #410', description: 'Fix referenceBy broken issue', completed: false, assigneeId: 2 },
-  { id: 3, title: 'Write Tests', description: 'Add e2e tests for federation', completed: true, assigneeId: 1 }
+  { 
+    id: 1, 
+    title: 'Learn GraphQL Federation', 
+    description: 'Study Apollo Federation v2', 
+    completed: false, 
+    assigneeId: 1,
+    tagId: '550e8400-e29b-41d4-a716-446655440001' // Frontend tag (UUID)
+  },
+  { 
+    id: 2, 
+    title: 'Fix Issue #410', 
+    description: 'Fix referenceBy broken issue', 
+    completed: false, 
+    assigneeId: 2,
+    tagId: '550e8400-e29b-41d4-a716-446655440003' // Bug tag (UUID)
+  },
+  { 
+    id: 3, 
+    title: 'Write Tests', 
+    description: 'Add e2e tests for federation', 
+    completed: true, 
+    assigneeId: 1,
+    tagId: '550e8400-e29b-41d4-a716-446655440002' // Backend tag (UUID)
+  }
 ]
 
 @Injectable()

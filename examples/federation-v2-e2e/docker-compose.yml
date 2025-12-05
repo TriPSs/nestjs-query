@@ -1,5 +1,6 @@
 # Federation V2 E2E Test Environment
 # Reproduces issue #410: Federation referenceBy broken since v9.2.0
+# Tests both numeric ID (User) and UUID string ID (Tag) types
 #
 # Usage: docker compose up -d --build
 # Note: Run from project root directory to access packages/ for building
@@ -21,7 +22,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # User subgraph service
+  # User subgraph service (numeric ID)
   user-service:
     build:
       context: ../..
@@ -33,6 +34,28 @@ services:
       DB_PORT: 5432
       DB_USER: federation_user
       DB_NAME: federation_user
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "-X", "POST", "-H", "Content-Type: application/json", "-d", "{\"query\":\"{__typename}\"}", "http://localhost:3000/graphql"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # Tag subgraph service (UUID string ID)
+  tag-service:
+    build:
+      context: ../..
+      dockerfile: examples/federation-v2-e2e/tag-service/Dockerfile
+    ports:
+      - "3003:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: federation_tag
+      DB_NAME: federation_tag
     depends_on:
       postgres:
         condition: service_healthy
@@ -75,10 +98,13 @@ services:
     environment:
       USER_SERVICE_URL: http://user-service:3000/graphql
       TODO_SERVICE_URL: http://todo-service:3000/graphql
+      TAG_SERVICE_URL: http://tag-service:3000/graphql
     depends_on:
       user-service:
         condition: service_healthy
       todo-service:
+        condition: service_healthy
+      tag-service:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-sf", "-X", "POST", "-H", "Content-Type: application/json", "-d", "{\"query\":\"{__typename}\"}", "http://localhost:3000/graphql"]
