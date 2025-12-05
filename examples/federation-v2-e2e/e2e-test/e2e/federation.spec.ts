@@ -83,13 +83,13 @@ describe('Federation V2 E2E Tests - Issue #410', () => {
       const todoWithAssignee = response.todoItems.edges.find((e) => e.node.assignee !== null)
 
       expect(todoWithAssignee).toBeDefined()
-      expect(todoWithAssignee!.node.assignee).not.toBeNull()
-      expect(todoWithAssignee!.node.assignee!.id).toBeDefined()
-      expect(todoWithAssignee!.node.assignee!.name).toBeDefined()
-      expect(todoWithAssignee!.node.assignee!.email).toBeDefined()
+      expect(todoWithAssignee?.node.assignee).not.toBeNull()
+      expect(todoWithAssignee?.node.assignee?.id).toBeDefined()
+      expect(todoWithAssignee?.node.assignee?.name).toBeDefined()
+      expect(todoWithAssignee?.node.assignee?.email).toBeDefined()
 
       // Verify numeric ID format (should be a number string like "1", "2")
-      expect(todoWithAssignee!.node.assignee!.id).toMatch(/^\d+$/)
+      expect(todoWithAssignee?.node.assignee?.id).toMatch(/^\d+$/)
     })
 
     it('should resolve Tag reference with UUID string ID', async () => {
@@ -109,13 +109,13 @@ describe('Federation V2 E2E Tests - Issue #410', () => {
       const todoWithTag = response.todoItems.edges.find((e) => e.node.tag !== null)
 
       expect(todoWithTag).toBeDefined()
-      expect(todoWithTag!.node.tag).not.toBeNull()
-      expect(todoWithTag!.node.tag!.id).toBeDefined()
-      expect(todoWithTag!.node.tag!.name).toBeDefined()
+      expect(todoWithTag?.node.tag).not.toBeNull()
+      expect(todoWithTag?.node.tag?.id).toBeDefined()
+      expect(todoWithTag?.node.tag?.name).toBeDefined()
 
       // Verify UUID format
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-      expect(todoWithTag!.node.tag!.id).toMatch(uuidRegex)
+      expect(todoWithTag?.node.tag?.id).toMatch(uuidRegex)
     })
   })
 
@@ -135,7 +135,7 @@ describe('Federation V2 E2E Tests - Issue #410', () => {
 
       const alice = response.users.edges.find((e) => e.node.name === 'Alice')
       expect(alice).toBeDefined()
-      expect(alice!.node.email).toBe('alice@example.com')
+      expect(alice?.node.email).toBe('alice@example.com')
     })
 
     it('should query tags from Tag service', async () => {
@@ -156,7 +156,7 @@ describe('Federation V2 E2E Tests - Issue #410', () => {
 
       // Verify UUID format
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-      expect(frontendTag!.node.id).toMatch(uuidRegex)
+      expect(frontendTag?.node.id).toMatch(uuidRegex)
     })
   })
 
@@ -205,14 +205,10 @@ describe('Federation V2 E2E Tests - Issue #410', () => {
 
       // All todos should have their references resolved correctly
       for (const edge of response.todoItems.edges) {
-        if (edge.node.assignee) {
-          expect(edge.node.assignee.id).toBeDefined()
-          expect(edge.node.assignee.name).toBeDefined()
-        }
-        if (edge.node.tag) {
-          expect(edge.node.tag.id).toBeDefined()
-          expect(edge.node.tag.name).toBeDefined()
-        }
+        // Assignee and tag may be null, but if present, they should have valid data
+        const { assignee, tag } = edge.node
+        expect(assignee === null || (assignee.id !== undefined && assignee.name !== undefined)).toBe(true)
+        expect(tag === null || (tag.id !== undefined && tag.name !== undefined)).toBe(true)
       }
     })
   })

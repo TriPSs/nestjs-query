@@ -10,4 +10,4 @@ async function bootstrap() {
   Logger.log(`Tag service running on port ${port}`)
 }
 
-bootstrap()
+void bootstrap()

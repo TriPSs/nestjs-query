@@ -20,7 +20,7 @@ import { UserSeederService } from './user.seeder'
           CreateDTOClass: CreateUserInput,
           UpdateDTOClass: UpdateUserInput,
           // This is the key config that triggers the bug in issue #410
-          // The auto-generated resolveReference method fails when 
+          // The auto-generated resolveReference method fails when
           // @Context() and @InjectDataLoaderConfig() decorators are present
           referenceBy: { key: 'id' }
         }
