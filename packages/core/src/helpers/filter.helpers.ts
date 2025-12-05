@@ -6,6 +6,7 @@ export type LikeComparisonOperators = 'like' | 'notLike' | 'iLike' | 'notILike'
 export type InComparisonOperators = 'in' | 'notIn'
 export type BetweenComparisonOperators = 'between' | 'notBetween'
 export type RangeComparisonOperators = 'gt' | 'gte' | 'lt' | 'lte'
+export type BitwiseComparisonOperators = 'hasOneOfBits' | 'hasAllBits'
 export type BooleanComparisonOperators = 'eq' | 'neq' | 'is' | 'isNot'
 
 export const isLikeComparisonOperator = (op: unknown): op is LikeComparisonOperators =>
@@ -18,6 +19,9 @@ export const isBetweenComparisonOperators = (op: unknown): op is BetweenComparis
 
 export const isRangeComparisonOperators = (op: unknown): op is RangeComparisonOperators =>
   op === 'gt' || op === 'gte' || op === 'lt' || op === 'lte'
+
+export const isBitwiseComparisonOperators = (op: unknown): op is BitwiseComparisonOperators =>
+  op === 'hasOneOfBits' || op === 'hasAllBits'
 
 export const isBooleanComparisonOperators = (op: unknown): op is BooleanComparisonOperators =>
   op === 'eq' || op === 'neq' || op === 'is' || op === 'isNot'
@@ -36,7 +40,8 @@ export const isComparison = <DTO, K extends keyof DTO>(
       isInComparisonOperators(op) ||
       isBetweenComparisonOperators(op) ||
       isRangeComparisonOperators(op) ||
-      isBooleanComparisonOperators(op)
+      isBooleanComparisonOperators(op) ||
+      isBitwiseComparisonOperators(op)
   )
 }
 

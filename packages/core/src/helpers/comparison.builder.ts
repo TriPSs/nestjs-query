@@ -9,7 +9,9 @@ import {
   isLikeComparisonOperator,
   isRangeComparisonOperators,
   LikeComparisonOperators,
-  RangeComparisonOperators
+  RangeComparisonOperators,
+  BitwiseComparisonOperators,
+  isBitwiseComparisonOperators
 } from './filter.helpers'
 import { ComparisonField, FilterFn } from './types'
 
@@ -36,11 +38,30 @@ export class ComparisonBuilder {
     if (isLikeComparisonOperator(cmp)) {
       return this.likeComparison(cmp, field, val as unknown as string)
     }
-
+    if (isBitwiseComparisonOperators(cmp)) {
+      return this.bitwiseComparison(cmp as BitwiseComparisonOperators, field, val as DTO[F])
+    }
     if (isBetweenComparisonOperators(cmp)) {
       return this.betweenComparison(cmp, field, val as CommonFieldComparisonBetweenType<DTO[F]>)
     }
     throw new Error(`unknown operator ${JSON.stringify(cmp)}`)
+
+  }
+
+  private static bitwiseComparison<DTO, F extends keyof DTO>(cmp: 'hasOneOfBits' | 'hasAllBits', field: F, val: DTO[F]): FilterFn<DTO> {
+    if (cmp === 'hasOneOfBits') {
+      return (dto?: DTO): boolean => {
+        if (!dto) return false
+        // @ts-ignore
+        return (dto[field] & val) !== 0
+      }
+    }
+    // hasAllBits
+    return (dto?: DTO): boolean => {
+      if (!dto) return false
+      // @ts-ignore
+      return (dto[field] & val) === val
+    }
   }
 
   private static booleanComparison<DTO, F extends keyof DTO>(
