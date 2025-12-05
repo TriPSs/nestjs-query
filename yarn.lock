@@ -5157,7 +5157,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-typed-document-node/core@npm:^3.1.1":
+"@graphql-typed-document-node/core@npm:^3.1.1, @graphql-typed-document-node/core@npm:^3.2.0":
   version: 3.2.0
   resolution: "@graphql-typed-document-node/core@npm:3.2.0"
   peerDependencies:
@@ -14275,6 +14275,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql-request@npm:^7.3.5":
+  version: 7.3.5
+  resolution: "graphql-request@npm:7.3.5"
+  dependencies:
+    "@graphql-typed-document-node/core": "npm:^3.2.0"
+  peerDependencies:
+    graphql: 14 - 16
+  checksum: 10/d76e11d83e14e4059ad655ddbf7b4ef78b4ba9590f4fa7889eadfa17391e50d42a62cc26e1f50ebc28a68563e39d48daf25d65ec53ca46162133554cb3fa08de
+  languageName: node
+  linkType: hard
+
 "graphql-subscriptions@npm:^3.0.0":
   version: 3.0.0
   resolution: "graphql-subscriptions@npm:3.0.0"
@@ -18897,6 +18908,7 @@ __metadata:
     eslint-plugin-tsdoc: "npm:0.2.17"
     graphql: "npm:16.11.0"
     graphql-query-complexity: "npm:1.1.0"
+    graphql-request: "npm:^7.3.5"
     graphql-subscriptions: "npm:^3.0.0"
     graphql-tools: "npm:9.0.20"
     husky: "npm:9.1.7"

@@ -1,5 +1,5 @@
 import { BadRequestException, ExecutionContext, Logger } from '@nestjs/common'
-import { Context, Resolver, ResolveReference } from '@nestjs/graphql'
+import { Context, Parent, Resolver, ResolveReference } from '@nestjs/graphql'
 import { Class, QueryService } from '@ptc-org/nestjs-query-core'
 
 import { getDTONames } from '../common'
@@ -34,7 +34,7 @@ export const Referenceable =
 
       @ResolveReference()
       async resolveReference(
-        representation: RepresentationType,
+        @Parent() representation: RepresentationType,
         @Context() context: ExecutionContext,
         @InjectDataLoaderConfig()
         dataLoaderConfig?: DataLoaderOptions
