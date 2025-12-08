@@ -1,5 +1,5 @@
-import { MikroORM, Options } from '@mikro-orm/core'
 import { BetterSqliteDriver } from '@mikro-orm/better-sqlite'
+import { MikroORM, Options } from '@mikro-orm/core'
 
 import { seed } from './seeds'
 import { TestEntity } from './test.entity'
@@ -9,7 +9,7 @@ export const CONNECTION_OPTIONS: Options<BetterSqliteDriver> = {
   driver: BetterSqliteDriver,
   dbName: ':memory:',
   entities: [TestEntity, TestRelation],
-  allowGlobalContext: true,
+  allowGlobalContext: true
 }
 
 export async function createTestConnection(): Promise<MikroORM<BetterSqliteDriver>> {

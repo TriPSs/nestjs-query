@@ -11,18 +11,6 @@ export interface EntityServiceOptions<DTO extends object = object, Entity extend
   assembler?: Class<Assembler<DTO, Entity>>
 }
 
-export function createMikroOrmQueryServiceProviders(
-  options: Array<Class<object> | EntityServiceOptions>,
-  dataSource?: string
-): FactoryProvider[] {
-  return options.map((option) => {
-    if (typeof option === 'object' && 'entity' in option) {
-      return createMikroOrmQueryServiceProvider(option.entity, option.dto, option.assembler, dataSource)
-    }
-    return createMikroOrmQueryServiceProvider(option, undefined, undefined, dataSource)
-  })
-}
-
 function createMikroOrmQueryServiceProvider<DTO extends object = object, Entity extends object = DTO>(
   EntityClass: Class<Entity>,
   DTOClass?: Class<DTO>,
@@ -46,6 +34,18 @@ function createMikroOrmQueryServiceProvider<DTO extends object = object, Entity 
 
       return new MikroOrmQueryService(repo)
     },
-    inject: [getRepositoryToken(EntityClass, dataSource)],
+    inject: [getRepositoryToken(EntityClass, dataSource)]
   }
+}
+
+export function createMikroOrmQueryServiceProviders(
+  options: Array<Class<object> | EntityServiceOptions>,
+  dataSource?: string
+): FactoryProvider[] {
+  return options.map((option) => {
+    if (typeof option === 'object' && 'entity' in option) {
+      return createMikroOrmQueryServiceProvider(option.entity, option.dto, option.assembler, dataSource)
+    }
+    return createMikroOrmQueryServiceProvider(option, undefined, undefined, dataSource)
+  })
 }

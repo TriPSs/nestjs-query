@@ -1,5 +1,5 @@
-import { EntityRepository, MikroORM } from '@mikro-orm/core'
 import { BetterSqliteDriver } from '@mikro-orm/better-sqlite'
+import { EntityRepository, MikroORM } from '@mikro-orm/core'
 import { SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 
 import { MikroOrmQueryService } from '../../src'
@@ -108,8 +108,8 @@ describe('MikroOrmQueryService', () => {
     it('should filter with AND conditions', async () => {
       const result = await queryService.query({
         filter: {
-          and: [{ numberType: { gt: 3 } }, { numberType: { lt: 7 } }],
-        },
+          and: [{ numberType: { gt: 3 } }, { numberType: { lt: 7 } }]
+        }
       })
       expect(result).toHaveLength(3)
       expect(result.every((e) => e.numberType > 3 && e.numberType < 7)).toBe(true)
@@ -118,8 +118,8 @@ describe('MikroOrmQueryService', () => {
     it('should filter with OR conditions', async () => {
       const result = await queryService.query({
         filter: {
-          or: [{ numberType: { eq: 1 } }, { numberType: { eq: 10 } }],
-        },
+          or: [{ numberType: { eq: 1 } }, { numberType: { eq: 10 } }]
+        }
       })
       expect(result).toHaveLength(2)
       expect(result.map((e) => e.numberType).sort((a, b) => a - b)).toEqual([1, 10])
@@ -127,7 +127,7 @@ describe('MikroOrmQueryService', () => {
 
     it('should apply paging with limit', async () => {
       const result = await queryService.query({
-        paging: { limit: 3 },
+        paging: { limit: 3 }
       })
       expect(result).toHaveLength(3)
     })
@@ -135,7 +135,7 @@ describe('MikroOrmQueryService', () => {
     it('should apply paging with offset', async () => {
       const result = await queryService.query({
         paging: { offset: 5, limit: 3 },
-        sorting: [{ field: 'numberType', direction: SortDirection.ASC }],
+        sorting: [{ field: 'numberType', direction: SortDirection.ASC }]
       })
       expect(result).toHaveLength(3)
       expect(result[0].numberType).toBe(6)
@@ -143,7 +143,7 @@ describe('MikroOrmQueryService', () => {
 
     it('should sort ascending', async () => {
       const result = await queryService.query({
-        sorting: [{ field: 'numberType', direction: SortDirection.ASC }],
+        sorting: [{ field: 'numberType', direction: SortDirection.ASC }]
       })
       expect(result[0].numberType).toBe(1)
       expect(result[result.length - 1].numberType).toBe(10)
@@ -151,7 +151,7 @@ describe('MikroOrmQueryService', () => {
 
     it('should sort descending', async () => {
       const result = await queryService.query({
-        sorting: [{ field: 'numberType', direction: SortDirection.DESC }],
+        sorting: [{ field: 'numberType', direction: SortDirection.DESC }]
       })
       expect(result[0].numberType).toBe(10)
       expect(result[result.length - 1].numberType).toBe(1)
@@ -159,14 +159,14 @@ describe('MikroOrmQueryService', () => {
 
     it('should sort with nulls first', async () => {
       const result = await queryService.query({
-        sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }],
+        sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }]
       })
       expect(result[0].numberType).toBe(1)
     })
 
     it('should sort with nulls last', async () => {
       const result = await queryService.query({
-        sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_LAST }],
+        sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_LAST }]
       })
       expect(result[0].numberType).toBe(1)
     })
@@ -186,7 +186,7 @@ describe('MikroOrmQueryService', () => {
     it('should apply filter when getting by id', async () => {
       await expect(
         queryService.getById('test-entity-1', {
-          filter: { numberType: { eq: 999 } },
+          filter: { numberType: { eq: 999 } }
         })
       ).rejects.toThrow()
     })
@@ -206,7 +206,7 @@ describe('MikroOrmQueryService', () => {
 
     it('should apply filter when finding by id', async () => {
       const result = await queryService.findById('test-entity-1', {
-        filter: { numberType: { eq: 999 } },
+        filter: { numberType: { eq: 999 } }
       })
       expect(result).toBeUndefined()
     })
@@ -233,43 +233,43 @@ describe('MikroOrmQueryService', () => {
       const entity = await queryService.getById('test-entity-1')
       const relations = await queryService.queryRelations(TestRelation, 'testRelations', entity, {})
       expect(Array.isArray(relations)).toBe(true)
-      expect((relations as TestRelation[]).length).toBe(3)
+      expect(relations).toHaveLength(3)
     })
 
     it('should query relations for multiple entities', async () => {
       const entities = await queryService.query({ filter: { numberType: { in: [1, 2] } } })
       const relations = await queryService.queryRelations(TestRelation, 'testRelations', entities, {})
       expect(relations).toBeInstanceOf(Map)
-      const map = relations as Map<TestEntity, TestRelation[]>
+      const map = relations
       expect(map.size).toBe(2)
       for (const [, rels] of map) {
-        expect(rels.length).toBe(3)
+        expect(rels).toHaveLength(3)
       }
     })
 
     it('should apply filter to relations query', async () => {
       const entity = await queryService.getById('test-entity-1')
       const relations = await queryService.queryRelations(TestRelation, 'testRelations', entity, {
-        filter: { relationName: { like: '%one' } },
+        filter: { relationName: { like: '%one' } }
       })
-      expect((relations as TestRelation[]).length).toBe(1)
-      expect((relations as TestRelation[])[0].relationName).toContain('one')
+      expect(relations).toHaveLength(1)
+      expect(relations[0].relationName).toContain('one')
     })
 
     it('should apply paging to relations query', async () => {
       const entity = await queryService.getById('test-entity-1')
       const relations = await queryService.queryRelations(TestRelation, 'testRelations', entity, {
-        paging: { limit: 2 },
+        paging: { limit: 2 }
       })
-      expect((relations as TestRelation[]).length).toBe(2)
+      expect(relations).toHaveLength(2)
     })
 
     it('should apply sorting to relations query', async () => {
       const entity = await queryService.getById('test-entity-1')
       const relations = await queryService.queryRelations(TestRelation, 'testRelations', entity, {
-        sorting: [{ field: 'relationName', direction: SortDirection.DESC }],
+        sorting: [{ field: 'relationName', direction: SortDirection.DESC }]
       })
-      const sorted = relations as TestRelation[]
+      const sorted = relations
       expect(sorted[0].relationName).toContain('two')
     })
   })
@@ -285,7 +285,7 @@ describe('MikroOrmQueryService', () => {
       const entities = await queryService.query({ filter: { numberType: { in: [1, 2] } } })
       const counts = await queryService.countRelations(TestRelation, 'testRelations', entities, {})
       expect(counts).toBeInstanceOf(Map)
-      const map = counts as Map<TestEntity, number>
+      const map = counts
       expect(map.size).toBe(2)
       for (const [, count] of map) {
         expect(count).toBe(3)
@@ -295,7 +295,7 @@ describe('MikroOrmQueryService', () => {
     it('should apply filter when counting relations', async () => {
       const entity = await queryService.getById('test-entity-1')
       const count = await queryService.countRelations(TestRelation, 'testRelations', entity, {
-        relationName: { like: '%one' },
+        relationName: { like: '%one' }
       })
       expect(count).toBe(1)
     })
@@ -307,8 +307,8 @@ describe('MikroOrmQueryService', () => {
         queryService.query({
           filter: {
             and: [{ numberType: { eq: 1 } }],
-            numberType: { eq: 2 },
-          } as never,
+            numberType: { eq: 2 }
+          } as never
         })
       ).rejects.toThrow('filter must contain either only `and` or `or` property, or other properties')
     })

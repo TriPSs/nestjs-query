@@ -1,13 +1,4 @@
-import {
-  Collection,
-  EntityKey,
-  EntityRepository,
-  FilterQuery,
-  QueryOrder,
-  QueryOrderMap,
-  Reference,
-  wrap,
-} from '@mikro-orm/core'
+import { Collection, EntityKey, EntityRepository, FilterQuery, QueryOrder, QueryOrderMap, Reference, wrap } from '@mikro-orm/core'
 import { OperatorMap } from '@mikro-orm/core/typings'
 import {
   Assembler,
@@ -24,7 +15,7 @@ import {
   QueryRelationsOptions,
   SortDirection,
   SortField,
-  SortNulls,
+  SortNulls
 } from '@ptc-org/nestjs-query-core'
 
 export class MikroOrmQueryService<DTO extends object, Entity extends object = DTO> extends NoOpQueryService<DTO, Entity> {
@@ -39,11 +30,11 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     const where = this.convertFilter(opts?.filter)
     const entity = await this.repo.findOneOrFail({
       ...where,
-      id,
+      id
     } as unknown as FilterQuery<Entity>)
 
     if (this.assembler) {
-      return await this.assembler.convertToDTO(entity)
+      return this.assembler.convertToDTO(entity)
     }
     return entity as unknown as DTO
   }
@@ -52,18 +43,18 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     const where = this.convertFilter(opts?.filter)
     const entity = await this.repo.findOne({
       ...where,
-      id,
+      id
     } as unknown as FilterQuery<Entity>)
 
     if (!entity) return undefined
 
     if (this.assembler) {
-      return await this.assembler.convertToDTO(entity)
+      return this.assembler.convertToDTO(entity)
     }
     return entity as unknown as DTO
   }
 
-  async query(query: Query<DTO>, opts?: QueryOptions<DTO>): Promise<DTO[]> {
+  async query(query: Query<DTO>, _opts?: QueryOptions<DTO>): Promise<DTO[]> {
     const convertedQuery = this.assembler?.convertQuery?.(query) ?? query
     const orderBy = this.convertSorting(convertedQuery.sorting as SortField<unknown>[] | undefined)
     const { limit, offset } = convertedQuery.paging ?? {}
@@ -72,11 +63,11 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
       orderBy,
       limit,
       offset,
-      where,
+      where
     })
 
     if (this.assembler) {
-      return await this.assembler.convertToDTOs(entities)
+      return this.assembler.convertToDTOs(entities)
     }
     return entities as unknown as DTO[]
   }
@@ -94,13 +85,13 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
 
     if (convertedFilter?.and) {
       return {
-        $and: convertedFilter.and.map((f) => this.convertFilter(f as Filter<DTO> | Filter<Entity>)),
+        $and: convertedFilter.and.map((f) => this.convertFilter(f as Filter<DTO> | Filter<Entity>))
       } as FilterQuery<Entity>
     }
 
     if (convertedFilter?.or) {
       return {
-        $or: convertedFilter.or.map((f) => this.convertFilter(f as Filter<DTO> | Filter<Entity>)),
+        $or: convertedFilter.or.map((f) => this.convertFilter(f as Filter<DTO> | Filter<Entity>))
       } as FilterQuery<Entity>
     }
 
@@ -194,7 +185,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
   private async findRelationForEntity<Relation extends object>(
     entity: Entity,
     relationName: string,
-    opts?: FindRelationOptions<Relation>
+    _opts?: FindRelationOptions<Relation>
   ): Promise<Relation | undefined> {
     const relationRef = (entity as Record<typeof relationName, Reference<Relation> | Relation | undefined>)[relationName]
     if (!relationRef) {
@@ -205,18 +196,18 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
       if ('load' in loadedRef) {
         return (await loadedRef.load()) ?? undefined
       }
-      return loadedRef as Relation | undefined
+      return loadedRef
     }
     if ('load' in relationRef) {
       const relation = (await relationRef.load()) ?? undefined
       return relation
     }
-    const wrapped = wrap(relationRef as Relation)
+    const wrapped = wrap(relationRef)
     if (!wrapped.isInitialized()) {
       const em = this.repo.getEntityManager()
-      await em.refresh(relationRef as Relation)
+      await em.refresh(relationRef)
     }
-    return relationRef as Relation | undefined
+    return relationRef
   }
 
   async countRelations<RelationDTO>(
@@ -238,7 +229,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     relationName: string,
     entities: DTO[] | DTO,
     filter: Filter<RelationDTO>,
-    opts?: QueryRelationsOptions
+    _opts?: QueryRelationsOptions
   ): Promise<Map<DTO, number> | number> {
     if (!Array.isArray(entities)) {
       const dto = entities
@@ -290,7 +281,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     relationName: string,
     entities: DTO[] | DTO,
     query: Query<RelationDTO>,
-    opts?: QueryRelationsOptions
+    _opts?: QueryRelationsOptions
   ): Promise<Map<DTO, RelationDTO[]> | RelationDTO[]> {
     if (!Array.isArray(entities)) {
       const dto = entities
@@ -330,7 +321,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
             orderBy,
             where,
             offset,
-            limit,
+            limit
           })
 
     if (relationEntities.length === 0) {
@@ -359,7 +350,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     return (sorting ?? []).map((s): QueryOrderMap<T> => {
       const direction: QueryOrder = this.convertSortDirection(s)
       return {
-        [s.field as EntityKey<T>]: direction,
+        [s.field as EntityKey<T>]: direction
       } as unknown as Record<EntityKey<T>, boolean>
     })
   }

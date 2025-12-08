@@ -3,30 +3,31 @@ import { EntityManager } from '@mikro-orm/core'
 import { TestEntity } from './test.entity'
 import { TestRelation } from './test-relation.entity'
 
-export const TEST_ENTITIES: Omit<TestEntity, 'testRelations' | 'manyToOneRelation' | 'manyTestRelations' | 'oneTestRelation'>[] = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-].map((i) => ({
-  id: `test-entity-${i}`,
-  boolType: i % 2 === 0,
-  dateType: new Date(`2020-02-${String(i).padStart(2, '0')} 12:00`),
-  numberType: i,
-  stringType: `foo${i}`,
-}))
+export const TEST_ENTITIES: Omit<TestEntity, 'testRelations' | 'manyToOneRelation' | 'manyTestRelations' | 'oneTestRelation'>[] =
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => ({
+    id: `test-entity-${i}`,
+    boolType: i % 2 === 0,
+    dateType: new Date(`2020-02-${String(i).padStart(2, '0')} 12:00`),
+    numberType: i,
+    stringType: `foo${i}`
+  }))
 
-export const TEST_RELATIONS: Omit<TestRelation, 'testEntity' | 'manyTestEntities' | 'oneTestEntity'>[] = TEST_ENTITIES.flatMap((te) => [
-  {
-    id: `test-relations-${te.id}-1`,
-    relationName: `${te.stringType}-test-relation-one`,
-  },
-  {
-    id: `test-relations-${te.id}-2`,
-    relationName: `${te.stringType}-test-relation-two`,
-  },
-  {
-    id: `test-relations-${te.id}-3`,
-    relationName: `${te.stringType}-test-relation-three`,
-  },
-])
+export const TEST_RELATIONS: Omit<TestRelation, 'testEntity' | 'manyTestEntities' | 'oneTestEntity'>[] = TEST_ENTITIES.flatMap(
+  (te) => [
+    {
+      id: `test-relations-${te.id}-1`,
+      relationName: `${te.stringType}-test-relation-one`
+    },
+    {
+      id: `test-relations-${te.id}-2`,
+      relationName: `${te.stringType}-test-relation-two`
+    },
+    {
+      id: `test-relations-${te.id}-3`,
+      relationName: `${te.stringType}-test-relation-three`
+    }
+  ]
+)
 
 export async function seed(em: EntityManager): Promise<void> {
   const testEntities = TEST_ENTITIES.map((data) => {

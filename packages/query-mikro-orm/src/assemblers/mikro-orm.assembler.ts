@@ -6,7 +6,7 @@ export class MikroOrmAssembler<
   C = DeepPartial<DTO>,
   CE = DeepPartial<Entity>,
   U = C,
-  UE = CE,
+  UE = CE
 > extends AbstractAssembler<DTO, Entity, C, CE, U, UE> {
   convertToDTO(entity: Entity): DTO | Promise<DTO> {
     return entity as unknown as DTO

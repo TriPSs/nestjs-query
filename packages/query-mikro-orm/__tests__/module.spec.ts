@@ -23,10 +23,7 @@ describe('NestjsQueryMikroOrmModule', () => {
   describe('forFeature', () => {
     it('should create query services for entities', async () => {
       moduleRef = await Test.createTestingModule({
-        imports: [
-          MikroOrmModule.forRoot(CONNECTION_OPTIONS),
-          NestjsQueryMikroOrmModule.forFeature([TestEntity, TestRelation]),
-        ],
+        imports: [MikroOrmModule.forRoot(CONNECTION_OPTIONS), NestjsQueryMikroOrmModule.forFeature([TestEntity, TestRelation])]
       }).compile()
 
       orm = moduleRef.get(MikroORM)
@@ -42,14 +39,15 @@ describe('NestjsQueryMikroOrmModule', () => {
     it('should create query service with custom DTO', async () => {
       class TestEntityDTO {
         id!: string
+
         stringType!: string
       }
 
       moduleRef = await Test.createTestingModule({
         imports: [
           MikroOrmModule.forRoot(CONNECTION_OPTIONS),
-          NestjsQueryMikroOrmModule.forFeature([{ entity: TestEntity, dto: TestEntityDTO }]),
-        ],
+          NestjsQueryMikroOrmModule.forFeature([{ entity: TestEntity, dto: TestEntityDTO }])
+        ]
       }).compile()
 
       orm = moduleRef.get(MikroORM)
@@ -61,7 +59,7 @@ describe('NestjsQueryMikroOrmModule', () => {
 
     it('should export MikroOrmModule', async () => {
       moduleRef = await Test.createTestingModule({
-        imports: [MikroOrmModule.forRoot(CONNECTION_OPTIONS), NestjsQueryMikroOrmModule.forFeature([TestEntity])],
+        imports: [MikroOrmModule.forRoot(CONNECTION_OPTIONS), NestjsQueryMikroOrmModule.forFeature([TestEntity])]
       }).compile()
 
       orm = moduleRef.get(MikroORM)

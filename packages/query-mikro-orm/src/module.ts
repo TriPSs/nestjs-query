@@ -14,7 +14,7 @@ export class NestjsQueryMikroOrmModule {
       imports: [mikroOrmModule],
       module: NestjsQueryMikroOrmModule,
       providers: queryServiceProviders,
-      exports: [...queryServiceProviders, mikroOrmModule],
+      exports: [...queryServiceProviders, mikroOrmModule]
     }
   }
 }
