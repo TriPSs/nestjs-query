@@ -187,7 +187,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     relationName: string,
     opts?: FindRelationOptions<Relation>
   ): Promise<Relation | undefined> {
-    if (opts?.filter) {
+    if (opts?.filter && Object.keys(opts.filter).length > 0) {
       throw new Error('MikroOrmQueryService does not support filtering on findRelation')
     }
     if (opts?.withDeleted) {
