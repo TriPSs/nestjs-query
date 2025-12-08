@@ -187,12 +187,24 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     relationName: string,
     opts?: FindRelationOptions<Relation>
   ): Promise<Relation | undefined> {
-    if (opts?.filter && Object.keys(opts.filter).length > 0) {
-      throw new Error('MikroOrmQueryService does not support filtering on findRelation')
-    }
     if (opts?.withDeleted) {
       throw new Error('MikroOrmQueryService does not support withDeleted on findRelation')
     }
+
+    const relation = await this.loadRelationForEntity<Relation>(entity, relationName)
+    if (!relation) return undefined
+
+    if (opts?.filter && Object.keys(opts.filter).length > 0) {
+      return this.matchesFilter(relation, opts.filter)
+    }
+
+    return relation
+  }
+
+  private async loadRelationForEntity<Relation extends object>(
+    entity: Entity,
+    relationName: string
+  ): Promise<Relation | undefined> {
     const relationRef = (entity as Record<typeof relationName, Reference<Relation> | Relation | undefined>)[relationName]
     if (!relationRef) {
       const em = this.repo.getEntityManager()
@@ -214,6 +226,26 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
       await em.refresh(relationRef)
     }
     return relationRef
+  }
+
+  private async matchesFilter<Relation extends object>(
+    relation: Relation,
+    filter: Filter<Relation>
+  ): Promise<Relation | undefined> {
+    const em = this.repo.getEntityManager()
+    const where = this.convertFilter(filter as unknown as Filter<Entity>) as unknown as FilterQuery<Relation>
+    const wrapped = wrap(relation, true)
+    const pk = wrapped.getPrimaryKey()
+
+    const found = await em.findOne(
+      relation.constructor as Class<Relation>,
+      {
+        ...where,
+        [wrapped.__meta.primaryKeys[0]]: pk
+      } as FilterQuery<Relation>
+    )
+
+    return (found as Relation) ?? undefined
   }
 
   async countRelations<RelationDTO>(

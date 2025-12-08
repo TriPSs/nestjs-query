@@ -226,6 +226,50 @@ describe('MikroOrmQueryService', () => {
       expect(relations).toBeInstanceOf(Map)
       expect((relations as Map<TestEntity, TestRelation>).size).toBe(2)
     })
+
+    it('should return relation when filter matches', async () => {
+      const entity = await queryService.getById('test-entity-1')
+      const relation = await queryService.findRelation(TestRelation, 'oneTestRelation', entity, {
+        filter: { relationName: { like: '%one' } }
+      })
+      expect(relation).toBeDefined()
+      expect((relation as TestRelation).relationName).toContain('test-relation-one')
+    })
+
+    it('should return undefined when filter does not match', async () => {
+      const entity = await queryService.getById('test-entity-1')
+      const relation = await queryService.findRelation(TestRelation, 'oneTestRelation', entity, {
+        filter: { relationName: { eq: 'non-existent' } }
+      })
+      expect(relation).toBeUndefined()
+    })
+
+    it('should apply filter when finding relations for multiple entities', async () => {
+      const entities = await queryService.query({ filter: { numberType: { in: [1, 2] } } })
+      const relations = await queryService.findRelation(TestRelation, 'oneTestRelation', entities, {
+        filter: { relationName: { like: '%one' } }
+      })
+      expect(relations).toBeInstanceOf(Map)
+      const map = relations as Map<TestEntity, TestRelation | undefined>
+      expect(map.size).toBe(2)
+      for (const [, rel] of map) {
+        expect(rel).toBeDefined()
+        expect(rel?.relationName).toContain('test-relation-one')
+      }
+    })
+
+    it('should return undefined for entities where filter does not match', async () => {
+      const entities = await queryService.query({ filter: { numberType: { in: [1, 2] } } })
+      const relations = await queryService.findRelation(TestRelation, 'oneTestRelation', entities, {
+        filter: { relationName: { eq: 'non-existent' } }
+      })
+      expect(relations).toBeInstanceOf(Map)
+      const map = relations as Map<TestEntity, TestRelation | undefined>
+      expect(map.size).toBe(2)
+      for (const [, rel] of map) {
+        expect(rel).toBeUndefined()
+      }
+    })
   })
 
   describe('#queryRelations', () => {
