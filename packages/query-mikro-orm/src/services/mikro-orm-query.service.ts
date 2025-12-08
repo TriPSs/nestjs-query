@@ -185,8 +185,14 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
   private async findRelationForEntity<Relation extends object>(
     entity: Entity,
     relationName: string,
-    _opts?: FindRelationOptions<Relation>
+    opts?: FindRelationOptions<Relation>
   ): Promise<Relation | undefined> {
+    if (opts?.filter) {
+      throw new Error('MikroOrmQueryService does not support filtering on findRelation')
+    }
+    if (opts?.withDeleted) {
+      throw new Error('MikroOrmQueryService does not support withDeleted on findRelation')
+    }
     const relationRef = (entity as Record<typeof relationName, Reference<Relation> | Relation | undefined>)[relationName]
     if (!relationRef) {
       const em = this.repo.getEntityManager()
@@ -229,8 +235,11 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     relationName: string,
     entities: DTO[] | DTO,
     filter: Filter<RelationDTO>,
-    _opts?: QueryRelationsOptions
+    opts?: QueryRelationsOptions
   ): Promise<Map<DTO, number> | number> {
+    if (opts?.withDeleted) {
+      throw new Error('MikroOrmQueryService does not support withDeleted on countRelations')
+    }
     if (!Array.isArray(entities)) {
       const dto = entities
       const entity = this.assembler ? await Promise.resolve(this.assembler.convertToEntity(dto)) : (dto as unknown as Entity)
@@ -281,8 +290,11 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     relationName: string,
     entities: DTO[] | DTO,
     query: Query<RelationDTO>,
-    _opts?: QueryRelationsOptions
+    opts?: QueryRelationsOptions
   ): Promise<Map<DTO, RelationDTO[]> | RelationDTO[]> {
+    if (opts?.withDeleted) {
+      throw new Error('MikroOrmQueryService does not support withDeleted on queryRelations')
+    }
     if (!Array.isArray(entities)) {
       const dto = entities
       const entity = this.assembler ? await Promise.resolve(this.assembler.convertToEntity(dto)) : (dto as unknown as Entity)
