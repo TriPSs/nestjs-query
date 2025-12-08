@@ -1,0 +1,43 @@
+{
+  "name": "query-mikro-orm",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/query-mikro-orm/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/query-mikro-orm",
+        "tsConfig": "packages/query-mikro-orm/tsconfig.lib.json",
+        "packageJson": "packages/query-mikro-orm/package.json",
+        "main": "packages/query-mikro-orm/src/index.ts",
+        "assets": ["packages/query-mikro-orm/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/query-mikro-orm"],
+      "options": {
+        "jestConfig": "packages/query-mikro-orm/jest.config.ts"
+      }
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {}
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm publish ./dist/packages/query-mikro-orm --access public"
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["core"]
+}
