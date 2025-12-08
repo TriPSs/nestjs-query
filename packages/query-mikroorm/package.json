@@ -1,0 +1,38 @@
+{
+  "name": "@ptc-org/nestjs-query-mikroorm",
+  "version": "9.3.0",
+  "description": "MikroORM adapter for @ptc-org/nestjs-query-core",
+  "homepage": "https://github.com/tripss/nestjs-query#readme",
+  "bugs": {
+    "url": "https://github.com/tripss/nestjs-query/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tripss/nestjs-query.git",
+    "directory": "packages/query-mikroorm"
+  },
+  "license": "MIT",
+  "author": "doug-martin <doug@dougamartin.com>",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "__tests__"
+  },
+  "files": [
+    "src/**"
+  ],
+  "dependencies": {
+    "lodash.omit": "^4.5.0",
+    "tslib": "^2.8.1"
+  },
+  "peerDependencies": {
+    "@mikro-orm/core": "^5.0.0 || ^6.0.0",
+    "@mikro-orm/nestjs": "^5.0.0 || ^6.0.0",
+    "@nestjs/common": "^9.0.0 || ^10.0.0 || ^11.0.0",
+    "class-transformer": "^0.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

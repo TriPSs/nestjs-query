@@ -1,0 +1,43 @@
+{
+  "name": "query-mikroorm",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/query-mikroorm/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/query-mikroorm",
+        "tsConfig": "packages/query-mikroorm/tsconfig.lib.json",
+        "packageJson": "packages/query-mikroorm/package.json",
+        "main": "packages/query-mikroorm/src/index.ts",
+        "assets": ["packages/query-mikroorm/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/query-mikroorm"],
+      "options": {
+        "jestConfig": "packages/query-mikroorm/jest.config.ts"
+      }
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {}
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm publish ./dist/packages/query-mikroorm --access public"
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["core"]
+}
