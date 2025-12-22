@@ -1,0 +1,42 @@
+{
+  "name": "@ptc-org/nestjs-query-mikro-orm",
+  "version": "9.3.0",
+  "description": "MikroORM adapter for @ptc-org/nestjs-query-core",
+  "homepage": "https://github.com/fullstackhouse/nestjs-query#readme",
+  "bugs": {
+    "url": "https://github.com/fullstackhouse/nestjs-query/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fullstackhouse/nestjs-query.git",
+    "directory": "packages/query-mikro-orm"
+  },
+  "license": "MIT",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "__tests__"
+  },
+  "files": [
+    "src/**"
+  ],
+  "dependencies": {
+    "tslib": "^2.8.1"
+  },
+  "peerDependencies": {
+    "@mikro-orm/core": "^6.0.0",
+    "@mikro-orm/nestjs": "^6.0.0",
+    "@nestjs/common": "^9.0.0 || ^10.0.0 || ^11.0.0",
+    "@ptc-org/nestjs-query-core": "^9.0.0"
+  },
+  "devDependencies": {
+    "@mikro-orm/better-sqlite": "^6.4.0",
+    "@mikro-orm/core": "^6.4.0",
+    "@mikro-orm/nestjs": "^6.1.0",
+    "@mikro-orm/sqlite": "^6.4.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

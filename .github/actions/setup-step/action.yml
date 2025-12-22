@@ -5,11 +5,21 @@ author: 'Tycho Bokdam'
 runs:
   using: "composite"
   steps:
+    - name: Get Node version
+      id: node-version
+      shell: bash
+      run: echo "version=$(node --version)" >> $GITHUB_OUTPUT
+
     - name: Cache node modules
       id: cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cache/mongodb-memory-server
           **/node_modules
-        key: cache-node-modules-${{ hashFiles('yarn.lock') }}
+        key: cache-node-modules-${{ steps.node-version.outputs.version }}-${{ hashFiles('yarn.lock') }}
+
+    - name: Install dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: yarn install --immutable
