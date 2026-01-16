@@ -63,6 +63,7 @@ describe('TodoItemResolver (offset pagination - fetch all with negative enabled)
 
             expect(nodes).toEqual(todoItems)
           }))
+
       describeIf(process.env.NESTJS_QUERY_DB_TYPE == 'postgres')('postgres', () => {
         it('should return all the nodes after the given offset', () =>
           request(app.getHttpServer())
@@ -90,6 +91,7 @@ describe('TodoItemResolver (offset pagination - fetch all with negative enabled)
               expect(nodes).toEqual(todoItems.slice(2))
             }))
       })
+
       describeIf(process.env.NESTJS_QUERY_DB_TYPE == 'mysql')('mysql', () => {
         it('should return an error when fetching all the nodes after the given offset', () =>
           request(app.getHttpServer())

@@ -6,7 +6,7 @@ The `@souagrosolucoes/nestjs-query-graphql` package provided base `Resolvers` an
 
 ## Installation
 
-[Installation Docs](../introduction/install.md#ptc-orgnestjs-query-graphql)
+[Installation Docs](../introduction/install.md#souagrosolucoesnestjs-query-graphql)
 
 ### Docs
 

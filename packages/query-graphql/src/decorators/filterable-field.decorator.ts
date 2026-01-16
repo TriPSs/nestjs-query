@@ -77,11 +77,13 @@ export function FilterableField(
     descriptor: TypedPropertyDescriptor<D>
   ): TypedPropertyDescriptor<D> | void => {
     const Ctx = Reflect.getMetadata('design:type', target, propertyName) as Class<unknown>
+    const rt = returnTypeFunc ?? (() => Ctx)
+
     reflector.append(target.constructor as Class<unknown>, {
       propertyName: propertyName.toString(),
       schemaName: advancedOptions?.name || propertyName.toString(),
       target: Ctx,
-      returnTypeFunc,
+      returnTypeFunc: rt,
       advancedOptions
     })
 

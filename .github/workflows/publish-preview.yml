@@ -1,0 +1,31 @@
+name: Publish Preview
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  NX_BRANCH: ${{ github.event.number }}
+  NX_RUN_GROUP: ${{ github.run_id }}
+
+jobs:
+  publish-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Setup
+        uses: ./.github/actions/setup-step
+
+      - name: Build
+        run: yarn nx run-many --target=build --all
+
+      - name: Publish Preview
+        run: npx pkg-pr-new publish './dist/packages/*'

@@ -652,7 +652,7 @@ export class TodoItemDTO {
 :::info
 When we use the `@Relation` decorator or other [relation decorators](./relations.mdx) you might want to define the default sorting criteria like this:
 ```ts title="todo-item.dto.ts"
-import { SortDirection } from '@ptc-org/nestjs-query-core';
+import { SortDirection } from '@souagrosolucoes/nestjs-query-core';
 // ...
 @Relation('assignee', () => UserDTO, {
   defaultSort: [{ field: 'id', direction: SortDirection.ASC }],

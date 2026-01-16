@@ -8,7 +8,7 @@ This package is built using [sequelize](https://sequelize.org/) and [@nestjs/seq
 
 ## Installation
 
-[Installation Docs](../../introduction/install.md#ptc-orgnestjs-query-sequelize)
+[Installation Docs](../../introduction/install.md#souagrosolucoesnestjs-query-sequelize)
 
 ## Docs
 

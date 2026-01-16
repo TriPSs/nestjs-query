@@ -9,6 +9,8 @@ import {
   UnPagedRelation
 } from '@souagrosolucoes/nestjs-query-graphql'
 
+import { RelationManyDecoratorOpts } from 'packages/query-graphql/src/decorators/relation.decorator'
+
 import {
   CursorConnection,
   FilterableCursorConnection,
@@ -16,7 +18,6 @@ import {
   getRelations,
   RelationOneDecoratorOpts
 } from '../../src/decorators'
-import { RelationManyDecoratorOpts } from 'packages/query-graphql/src/decorators/relation.decorator'
 
 @ObjectType()
 class TestRelation {}

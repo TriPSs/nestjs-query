@@ -1,14 +1,14 @@
 {
   "name": "@souagrosolucoes/nestjs-query-mongoose",
-  "version": "8.0.0",
+  "version": "9.3.0",
   "description": "Mongoose adapter for @souagrosolucoes/nestjs-query-core",
-  "homepage": "https://github.com/tripss/nestjs-query#readme",
+  "homepage": "https://github.com/souagrosolucoes/nestjs-query#readme",
   "bugs": {
-    "url": "https://github.com/tripss/nestjs-query/issues"
+    "url": "https://github.com/souagrosolucoes/nestjs-query/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tripss/nestjs-query.git",
+    "url": "git+https://github.com/souagrosolucoes/nestjs-query.git",
     "directory": "packages/query-typeorm-mongo"
   },
   "license": "MIT",
@@ -26,11 +26,11 @@
     "camel-case": "^4.1.2",
     "lodash.escaperegexp": "^4.1.2",
     "lodash.merge": "^4.6.2",
-    "tslib": "^2.6.3"
+    "tslib": "^2.8.1"
   },
   "peerDependencies": {
-    "@nestjs/common": "^9.0.0 || ^10.0.0",
-    "@nestjs/mongoose": "^9.0.0 || ^10.0.0",
+    "@nestjs/common": "^9.0.0 || ^10.0.0 || ^11.0.0",
+    "@nestjs/mongoose": "^9.0.0 || ^10.0.0 || ^11.0.0",
     "mongoose": "^8.0.0"
   },
   "publishConfig": {

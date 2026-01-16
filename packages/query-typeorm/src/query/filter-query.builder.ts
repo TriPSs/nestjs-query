@@ -18,6 +18,7 @@ import {
   UpdateQueryBuilder,
   WhereExpressionBuilder
 } from 'typeorm'
+import { RelationMetadata } from 'typeorm/metadata/RelationMetadata'
 import { SoftDeleteQueryBuilder } from 'typeorm/query-builder/SoftDeleteQueryBuilder'
 
 import { AggregateBuilder } from './aggregate.builder'
@@ -327,31 +328,25 @@ export class FilterQueryBuilder<Entity> {
   }
 
   /**
-   * Checks if the query should use skip/take instead of limit/offset
+   * Checks if the query should use skip/take instead of limit/offset.
+   *
+   * We need to use Skip/Take instead of Limit/Offset when the query involves a join that might be (one|many)-to-many.
+   * This method looks for any n-to-many relations in the filter and if it finds any, it returns true.
+   *
+   * Recursively traverses the filter so we can detect nested n-to-many relations.
    */
-  private shouldUseSkipTake(filter?: Filter<Entity>): boolean {
-    if (!filter) {
-      return false
-    }
+  private shouldUseSkipTake<T>(filter?: Filter<T>, relations: RelationMetadata[] = this.repo.metadata.relations): boolean {
+    if (!filter) return false
 
-    return (
-      getFilterFields(filter).filter((field) => {
-        const relation = this.repo.metadata.relations.find(({ propertyName }) => propertyName === field)
+    return getFilterFields(filter).some((field) => {
+      const relation = relations.find(({ propertyName }) => propertyName === field)
+      if (!relation) return false
+      if (!relation.isOneToOne && !relation.isManyToOne) return true
 
-        if (!relation) {
-          return false
-        }
+      const nestedFilter = filter[field] as Filter<unknown>
 
-        if (!relation || relation.isOneToOne || relation.isManyToOne) {
-          return false
-          // } else if (relation.isOneToMany) {
-          //   TODO
-          // return false
-        } else {
-          return true
-        }
-      }).length > 0
-    )
+      return this.shouldUseSkipTake(nestedFilter, relation.inverseEntityMetadata.relations)
+    })
   }
 
   public getReferencedRelationsWithAliasRecursive(

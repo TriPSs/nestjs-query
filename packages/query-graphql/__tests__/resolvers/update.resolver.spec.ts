@@ -9,12 +9,12 @@ import {
   UpdateResolverOpts
 } from '@souagrosolucoes/nestjs-query-graphql'
 import { PubSub } from 'graphql-subscriptions'
+import { PubSubAsyncIterableIterator } from 'graphql-subscriptions/dist/pubsub-async-iterable-iterator'
 import { anything, deepEqual, instance, mock, objectContaining, verify, when } from 'ts-mockito'
 
 import { UpdatedEvent } from '../../src/resolvers/update.resolver'
 import { EventType, getDTOEventName } from '../../src/subscription'
 import { createResolverFromNest, generateSchema, TestResolverDTO, TestResolverInputDTO, TestService } from '../__fixtures__'
-import { PubSubAsyncIterableIterator } from 'graphql-subscriptions/dist/pubsub-async-iterable-iterator'
 
 describe('UpdateResolver', () => {
   const expectResolverSDL = async (opts?: UpdateResolverOpts<TestResolverDTO>) => {

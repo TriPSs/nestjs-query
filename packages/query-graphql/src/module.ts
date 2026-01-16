@@ -20,7 +20,7 @@ export interface NestjsQueryGraphqlModuleRootOpts {
 
 export interface NestjsQueryGraphqlModuleFeatureOpts {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  imports?: Array<Class<any> | DynamicModule | Promise<DynamicModule> | ForwardReference>
+  imports?: Array<Class<any> | DynamicModule | ForwardReference>
   services?: Provider[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   assemblers?: Class<Assembler<any, any, any, any, any, any>>[]

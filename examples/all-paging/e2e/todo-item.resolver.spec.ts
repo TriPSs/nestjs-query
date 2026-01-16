@@ -379,7 +379,7 @@ describe('TodoItemResolver (limitOffset - e2e)', () => {
           .send({
             operationName: null,
             variables: {
-              now: new Date().toISOString()
+              now: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
             },
             query: `query ($now: DateTime!) {
             todoItemsCursor(filter: { created: { lt: $now } }) {

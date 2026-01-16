@@ -8,7 +8,7 @@ This package is built using [typegoose](https://typegoose.github.io/typegoose/) 
 
 ## Installation
 
-[Installation Docs](../../introduction/install.md#ptc-orgnestjs-query-typegoose)
+[Installation Docs](../../introduction/install.md#souagrosolucoesnestjs-query-typegoose)
 
 ## Docs
 

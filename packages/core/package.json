@@ -1,6 +1,6 @@
 {
   "name": "@souagrosolucoes/nestjs-query-core",
-  "version": "8.0.0",
+  "version": "9.3.0",
   "description": "Base query package",
   "homepage": "https://github.com/tripss/nestjs-query#readme",
   "bugs": {
@@ -24,10 +24,10 @@
   "dependencies": {
     "lodash.merge": "^4.6.2",
     "reflect-metadata": "^0.2.2",
-    "tslib": "^2.6.3"
+    "tslib": "^2.8.1"
   },
   "peerDependencies": {
-    "@nestjs/common": "^9.0.0 || ^10.0.0",
+    "@nestjs/common": "^9.0.0 || ^10.0.0 || ^11.0.0",
     "class-transformer": "^0.5"
   },
   "publishConfig": {
