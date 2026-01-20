@@ -28,9 +28,11 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
 
   async getById(id: string | number, opts?: GetByIdOptions<DTO>): Promise<DTO> {
     const where = this.convertFilter(opts?.filter)
+    const meta = this.repo.getEntityManager().getMetadata().get(this.repo.getEntityName())
+    const pkField = meta.primaryKeys[0]
     const entity = await this.repo.findOneOrFail({
       ...where,
-      id
+      [pkField]: id
     } as unknown as FilterQuery<Entity>)
 
     if (this.assembler) {
@@ -41,9 +43,11 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
 
   async findById(id: string | number, opts?: FindByIdOptions<DTO>): Promise<DTO | undefined> {
     const where = this.convertFilter(opts?.filter)
+    const meta = this.repo.getEntityManager().getMetadata().get(this.repo.getEntityName())
+    const pkField = meta.primaryKeys[0]
     const entity = await this.repo.findOne({
       ...where,
-      id
+      [pkField]: id
     } as unknown as FilterQuery<Entity>)
 
     if (!entity) return undefined
@@ -144,7 +148,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     }
 
     if (k === 'notLike') {
-      return ['$like', { $not: v as string }]
+      return ['$not', { $like: v as string }]
     }
 
     if (k === 'iLike') {
@@ -152,7 +156,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     }
 
     if (k === 'notILike') {
-      return ['$ilike', { $not: v as string }]
+      return ['$not', { $ilike: v as string }]
     }
 
     return [k, this.expandFilter(v as FilterComparisons<unknown>)]
@@ -372,13 +376,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
       return []
     }
     const [relationEntity] = relationEntities
-    const entityClass = (
-      relationEntity as unknown as {
-        __proto__: {
-          constructor: Class<RelationEntity>
-        }
-      }
-    ).__proto__.constructor
+    const entityClass = (Object.getPrototypeOf(relationEntity) as { constructor: Class<RelationEntity> }).constructor
 
     if ((relationDtoClass as unknown) === (entityClass as unknown)) {
       return relationEntities as unknown as RelationDTO[]
