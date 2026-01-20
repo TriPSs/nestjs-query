@@ -1,6 +1,6 @@
 {
   "name": "@ptc-org/nestjs-query-mikro-orm",
-  "version": "9.3.0",
+  "version": "9.4.0",
   "description": "MikroORM adapter for @ptc-org/nestjs-query-core",
   "homepage": "https://github.com/fullstackhouse/nestjs-query#readme",
   "bugs": {

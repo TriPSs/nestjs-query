@@ -1,4 +1,22 @@
  
+# [9.4.0](https://github.com/TriPSs/nestjs-query/compare/v9.3.0...v9.4.0) (2026-01-20)
+
+
+### Bug Fixes
+
+* **ci:** include node version in cache key for native modules ([ea1199a](https://github.com/TriPSs/nestjs-query/commit/ea1199a9a378b2b55129b314a62ec3813d4c4703))
+* **mikro-orm:** address CodeRabbit review comments ([44f8c30](https://github.com/TriPSs/nestjs-query/commit/44f8c30d20b8973e0bafc30ff8b33ec126d6144e))
+* **query-mikro-orm:** add eslint config and fix lint errors ([a88d9f3](https://github.com/TriPSs/nestjs-query/commit/a88d9f30c603517371b50d54f75700d98fa0fde6))
+* **reference-loader:** make key dynamic in createLoader and loader calls ([eede3f6](https://github.com/TriPSs/nestjs-query/commit/eede3f605c6cbd3f2dd0774da89c808752be91b2))
+
+
+### Features
+
+* **ci:** add pkg.pr.new preview releases ([21d77ce](https://github.com/TriPSs/nestjs-query/commit/21d77ce87ae4c9876d8b10b34110818e4732ab33))
+* **query-mikro-orm:** add MikroORM adapter package ([0b71d5a](https://github.com/TriPSs/nestjs-query/commit/0b71d5adce640d020e3dcef0543ee5d95eda04ec)), closes [#178](https://github.com/TriPSs/nestjs-query/issues/178)
+
+
+
 # [9.3.0](https://github.com/TriPSs/nestjs-query/compare/v9.2.1...v9.3.0) (2025-12-05)
 
 
