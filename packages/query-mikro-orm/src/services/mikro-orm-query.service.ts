@@ -4,6 +4,7 @@ import {
   Assembler,
   AssemblerFactory,
   Class,
+  CountOptions,
   Filter,
   FilterComparisons,
   FindByIdOptions,
@@ -74,6 +75,16 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
       return this.assembler.convertToDTOs(entities)
     }
     return entities as unknown as DTO[]
+  }
+
+  async count(filter: Filter<DTO>, opts?: CountOptions): Promise<number> {
+    if (opts?.withDeleted) {
+      throw new Error('MikroOrmQueryService does not support withDeleted on count')
+    }
+
+    const convertedFilter = this.assembler?.convertQuery?.({ filter })?.filter ?? filter
+    const where = this.convertFilter(convertedFilter)
+    return this.repo.count(where)
   }
 
   protected convertFilter(filter: Filter<DTO> | Filter<Entity> | undefined): FilterQuery<Entity> {
