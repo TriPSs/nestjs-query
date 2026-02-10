@@ -79,7 +79,7 @@ describe('CreateResolver', () => {
         id: 'id-1',
         stringField: 'foo'
       }
-      when(mockService.createOne(objectContaining(args.input))).thenResolve(output)
+      when(mockService.createOne(objectContaining(args.input), undefined)).thenResolve(output)
       const result = await resolver.createOne({ input: args })
       return expect(result).toEqual(output)
     })
@@ -110,7 +110,7 @@ describe('CreateResolver', () => {
           stringField: 'foo'
         }
       ]
-      when(mockService.createMany(objectContaining(args.input))).thenResolve(output)
+      when(mockService.createMany(objectContaining(args.input), undefined)).thenResolve(output)
       const result = await resolver.createMany({ input: args })
       return expect(result).toEqual(output)
     })
@@ -135,7 +135,7 @@ describe('CreateResolver', () => {
         }
         const eventName = getDTOEventName(EventType.CREATED, TestResolverDTO)
         const event = { [eventName]: output }
-        when(mockService.createOne(objectContaining(args.input))).thenResolve(output)
+        when(mockService.createOne(objectContaining(args.input), undefined)).thenResolve(output)
         when(mockPubSub.publish(eventName, deepEqual(event))).thenResolve()
         const result = await resolver.createOne({ input: args })
         verify(mockPubSub.publish(eventName, deepEqual(event))).once()
@@ -155,7 +155,7 @@ describe('CreateResolver', () => {
         }
         const eventName = getDTOEventName(EventType.CREATED, TestResolverDTO)
         const event = { [eventName]: output }
-        when(mockService.createOne(objectContaining(args.input))).thenResolve(output)
+        when(mockService.createOne(objectContaining(args.input), undefined)).thenResolve(output)
         when(mockPubSub.publish(eventName, deepEqual(event))).thenResolve()
         const result = await resolver.createOne({ input: args })
         verify(mockPubSub.publish(eventName, deepEqual(event))).once()
@@ -173,7 +173,7 @@ describe('CreateResolver', () => {
           id: 'id-1',
           stringField: 'foo'
         }
-        when(mockService.createOne(objectContaining(args.input))).thenResolve(output)
+        when(mockService.createOne(objectContaining(args.input), undefined)).thenResolve(output)
         const result = await resolver.createOne({ input: args })
         verify(mockPubSub.publish(anything(), anything())).never()
         return expect(result).toEqual(output)
@@ -193,7 +193,7 @@ describe('CreateResolver', () => {
           id: 'id-1',
           stringField: 'foo'
         }
-        when(mockService.createOne(objectContaining(args.input))).thenResolve(output)
+        when(mockService.createOne(objectContaining(args.input), undefined)).thenResolve(output)
         const result = await resolver.createOne({ input: args })
         verify(mockPubSub.publish(anything(), anything())).never()
         return expect(result).toEqual(output)
@@ -218,7 +218,7 @@ describe('CreateResolver', () => {
         ]
         const eventName = getDTOEventName(EventType.CREATED, TestResolverDTO)
         const events = output.map((o) => ({ [eventName]: o }))
-        when(mockService.createMany(objectContaining(args.input))).thenResolve(output)
+        when(mockService.createMany(objectContaining(args.input), undefined)).thenResolve(output)
         events.forEach((e) => when(mockPubSub.publish(eventName, deepEqual(e))).thenResolve())
         const result = await resolver.createMany({ input: args })
         events.forEach((e) => verify(mockPubSub.publish(eventName, deepEqual(e))).once())
@@ -242,7 +242,7 @@ describe('CreateResolver', () => {
         ]
         const eventName = getDTOEventName(EventType.CREATED, TestResolverDTO)
         const events = output.map((o) => ({ [eventName]: o }))
-        when(mockService.createMany(objectContaining(args.input))).thenResolve(output)
+        when(mockService.createMany(objectContaining(args.input), undefined)).thenResolve(output)
         events.forEach((e) => when(mockPubSub.publish(eventName, deepEqual(e))).thenResolve())
         const result = await resolver.createMany({ input: args })
         events.forEach((e) => verify(mockPubSub.publish(eventName, deepEqual(e))).once())
@@ -264,7 +264,7 @@ describe('CreateResolver', () => {
             stringField: 'foo'
           }
         ]
-        when(mockService.createMany(objectContaining(args.input))).thenResolve(output)
+        when(mockService.createMany(objectContaining(args.input), undefined)).thenResolve(output)
         const result = await resolver.createMany({ input: args })
         verify(mockPubSub.publish(anything(), anything())).never()
         return expect(result).toEqual(output)
@@ -288,7 +288,7 @@ describe('CreateResolver', () => {
             stringField: 'foo'
           }
         ]
-        when(mockService.createMany(objectContaining(args.input))).thenResolve(output)
+        when(mockService.createMany(objectContaining(args.input), undefined)).thenResolve(output)
         const result = await resolver.createMany({ input: args })
         verify(mockPubSub.publish(anything(), anything())).never()
         return expect(result).toEqual(output)
