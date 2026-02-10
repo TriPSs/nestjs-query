@@ -1,5 +1,5 @@
 import { BadRequestException, ExecutionContext, Logger } from '@nestjs/common'
-import { Context, Resolver, ResolveReference } from '@nestjs/graphql'
+import { Context, Parent, Resolver, ResolveReference } from '@nestjs/graphql'
 import { Class, QueryService } from '@ptc-org/nestjs-query-core'
 
 import { getDTONames } from '../common'
@@ -34,7 +34,7 @@ export const Referenceable =
 
       @ResolveReference()
       async resolveReference(
-        representation: RepresentationType,
+        @Parent() representation: RepresentationType,
         @Context() context: ExecutionContext,
         @InjectDataLoaderConfig()
         dataLoaderConfig?: DataLoaderOptions
@@ -56,7 +56,7 @@ export const Referenceable =
         const loader = DataLoaderFactory.getOrCreateLoader(
           context,
           uniqueLoaderName,
-          () => referenceLoader.createLoader(this.service),
+          () => referenceLoader.createLoader(this.service, key),
           {
             // Ensure batching is enabled for performance
             batch: true,
@@ -66,7 +66,7 @@ export const Referenceable =
           }
         )
 
-        const result = await loader.load({ id: id as string | number })
+        const result = await loader.load({ [key]: id as string | number })
 
         if (!result) {
           this.logger.error(`Unable to find ${baseName} with ${key}: ${String(id)}`)
