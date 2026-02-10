@@ -212,6 +212,43 @@ describe('MikroOrmQueryService', () => {
     })
   })
 
+  describe('#count', () => {
+    it('should return total count when no filter is provided', async () => {
+      const count = await queryService.count({})
+      expect(count).toBe(TEST_ENTITIES.length)
+    })
+
+    it('should count with eq filter', async () => {
+      const count = await queryService.count({ stringType: { eq: 'foo1' } })
+      expect(count).toBe(1)
+    })
+
+    it('should count with gt filter', async () => {
+      const count = await queryService.count({ numberType: { gt: 5 } })
+      expect(count).toBe(5)
+    })
+
+    it('should count with AND conditions', async () => {
+      const count = await queryService.count({
+        and: [{ numberType: { gt: 3 } }, { numberType: { lt: 7 } }]
+      })
+      expect(count).toBe(3)
+    })
+
+    it('should count with OR conditions', async () => {
+      const count = await queryService.count({
+        or: [{ numberType: { eq: 1 } }, { numberType: { eq: 10 } }]
+      })
+      expect(count).toBe(2)
+    })
+
+    it('should throw error for withDeleted option', async () => {
+      await expect(queryService.count({}, { withDeleted: true })).rejects.toThrow(
+        'MikroOrmQueryService does not support withDeleted on count'
+      )
+    })
+  })
+
   describe('#findRelation', () => {
     it('should find a single relation for an entity', async () => {
       const entity = await queryService.getById('test-entity-1')
