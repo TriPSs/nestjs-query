@@ -137,6 +137,26 @@ export interface CommonFieldComparisonType<FieldType> extends BooleanFieldCompar
    * ```
    */
   notBetween?: CommonFieldComparisonBetweenType<FieldType>
+
+  /**
+   * Checks that a field has at least one of the bits set in the value.
+   *
+   * ```ts
+   * // field & value <> 0
+   * { field: { hasOneOfBits: value } }
+   * ```
+   */
+  hasOneOfBits?: FieldType
+
+  /**
+   * Checks that a field has all bits set in the value.
+   *
+   * ```ts
+   * // field & value = value
+   * { field: { hasAllBits: value } }
+   * ```
+   */
+  hasAllBits?: FieldType
 }
 
 /**
