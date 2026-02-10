@@ -12,7 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@apollo/server": "^5.2.0",
+    "@apollo/server": "^5.4.0",
     "@apollo/subgraph": "^2.12.1",
     "@as-integrations/express5": "^1.1.2",
     "@nestjs/apollo": "^13.2.1",
@@ -30,7 +30,7 @@
     "typeorm": "^0.3.28"
   },
   "devDependencies": {
-    "@nestjs/cli": "^11.0.14",
+    "@nestjs/cli": "^11.0.16",
     "@nestjs/schematics": "^11.0.9",
     "@types/node": "^24.10.1",
     "typescript": "^5.9.3"
