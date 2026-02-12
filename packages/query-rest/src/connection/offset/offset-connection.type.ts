@@ -1,11 +1,11 @@
 import { Class, MapReflector, Query } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
 
+import { Field } from '../../decorators'
 import { OffsetQueryArgsTypeOpts, PagingStrategies } from '../../types/query'
 import { Count, OffsetConnectionType, OffsetPageInfoType, QueryMany, StaticConnectionType } from '../interfaces'
 import { getOrCreateOffsetPageInfoType } from './offset-page-info.type'
 import { OffsetPager } from './pager'
-import { Field } from '../../decorators'
 
 const reflector = new MapReflector('nestjs-query:offset-connection-type')
 

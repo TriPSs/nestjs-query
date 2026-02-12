@@ -1,7 +1,7 @@
 import { Class, MapReflector, Query } from '@ptc-org/nestjs-query-core'
 
-import { QueryMany, StaticConnectionType } from './interfaces'
 import { NonePagingQueryArgsTypeOpts, PagingStrategies } from '../types'
+import { QueryMany, StaticConnectionType } from './interfaces'
 
 const reflector = new MapReflector('nestjs-query:array-connection-type')
 

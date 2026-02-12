@@ -55,14 +55,14 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator) 
 
     if (returnTypeFunc) {
       const returnedType = returnTypeFunc()
-      const isArray = Array.isArray(returnedType)
-      const type = isArray ? returnedType[0] : returnedType
+      const isReturnTypeArray = Array.isArray(returnedType)
+      const type = isReturnTypeArray ? returnedType[0] : returnedType
 
       decorators.push(
         ApiResponse({
           status: 200,
           type,
-          isArray
+          isArray: isReturnTypeArray
         })
       )
 
