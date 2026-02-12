@@ -1,0 +1,48 @@
+{
+  "name": "query-rest",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/query-rest/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/query-rest/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/query-rest"],
+      "options": {
+        "jestConfig": "packages/query-rest/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/query-rest",
+        "tsConfig": "packages/query-rest/tsconfig.lib.json",
+        "packageJson": "packages/query-rest/package.json",
+        "main": "packages/query-rest/src/index.ts",
+        "assets": ["packages/query-rest/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true,
+        "buildableProjectDepsInPackageJsonType": "dependencies"
+      }
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {}
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm publish ./dist/packages/query-rest --access public"
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["core"]
+}
