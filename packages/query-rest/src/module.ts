@@ -1,11 +1,9 @@
 import { DynamicModule, ForwardReference, Provider, Type } from '@nestjs/common'
 import { Assembler, Class, NestjsQueryCoreModule } from '@ptc-org/nestjs-query-core'
 
-import { createAuthorizerProviders } from './providers'
-import { createHookProviders } from './providers/hook.provider'
-import { AutoResolverOpts, createEndpoints } from './providers/resolver.provider'
-import { ReadResolverOpts } from './resolvers'
-import { PagingStrategies } from './types'
+import { ReadControllerOpts } from './controllers'
+import { AutoControllerOpts, createAuthorizerProviders, createEndpoints, createHookProviders } from './providers'
+import { PagingStrategies } from './types/query'
 
 interface DTOModuleOpts<DTO> {
   DTOClass: Class<DTO>
@@ -13,12 +11,11 @@ interface DTOModuleOpts<DTO> {
 
 export interface NestjsQueryRestModuleFeatureOpts {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  imports?: Array<Class<any> | DynamicModule | Promise<DynamicModule> | ForwardReference>
+  imports?: Array<Class<any> | DynamicModule | ForwardReference>
   services?: Provider[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   assemblers?: Class<Assembler<any, any, any, any, any, any>>[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  endpoints?: AutoResolverOpts<any, any, unknown, unknown, ReadResolverOpts<any>, PagingStrategies>[]
+  endpoints?: AutoControllerOpts<any, any, unknown, unknown, ReadControllerOpts<any>, PagingStrategies>[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   // resolvers?: AutoResolverOpts<any, any, unknown, unknown, ReadResolverOpts<any>, PagingStrategies>[]
   dtos?: DTOModuleOpts<unknown>[]

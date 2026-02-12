@@ -1,6 +1,6 @@
 import { Class, Filter, Query } from '@ptc-org/nestjs-query-core'
 
-import { PagingStrategies } from '../types'
+import { PagingStrategies } from '../types/query'
 
 interface BaseConnectionOptions {
   enableTotalCount?: boolean
@@ -46,8 +46,8 @@ export interface Pager<DTO, R extends PagerResult> {
 export type InferConnectionTypeFromStrategy<DTO, S extends PagingStrategies> = S extends PagingStrategies.NONE
   ? ArrayConnectionType<DTO>
   : S extends PagingStrategies.OFFSET
-  ? OffsetConnectionType<DTO>
-  : never
+    ? OffsetConnectionType<DTO>
+    : never
 
 export interface StaticConnectionType<DTO, S extends PagingStrategies> extends Class<InferConnectionTypeFromStrategy<DTO, S>> {
   createFromPromise<Q extends Query<DTO>>(

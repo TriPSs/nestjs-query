@@ -43,14 +43,16 @@ function getAuthorizationContext(
   return {
     operationName: methodName.toString(),
     readonly:
-      partialAuthContext.operationGroup === OperationGroup.READ || partialAuthContext.operationGroup === OperationGroup.AGGREGATE,
+      partialAuthContext.operationGroup === OperationGroup.READ ||
+      partialAuthContext.operationGroup === OperationGroup.AGGREGATE ||
+      partialAuthContext.operationGroup === OperationGroup.EXPORT,
     ...partialAuthContext
   }
 }
 
 export function AuthorizerFilter<DTO>(partialAuthContext?: PartialAuthorizationContext): ParameterDecorator {
   // eslint-disable-next-line @typescript-eslint/ban-types
-  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
+  return (target: object, propertyKey: string | symbol, parameterIndex: number) => {
     const authorizationContext = getAuthorizationContext(propertyKey, partialAuthContext)
     return createParamDecorator((data: unknown, executionContext: ExecutionContext) =>
       getAuthorizerFilter(getContext<AuthorizerContext<DTO>>(executionContext), authorizationContext)

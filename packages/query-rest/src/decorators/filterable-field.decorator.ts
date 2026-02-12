@@ -1,5 +1,4 @@
 import { applyDecorators } from '@nestjs/common'
-import { ApiPropertyOptions } from '@nestjs/swagger'
 import { ArrayReflector, Class, getPrototypeChain } from '@ptc-org/nestjs-query-core'
 
 import { ReturnTypeFunc, ReturnTypeFuncValue } from '../interfaces/return-type-func'
@@ -12,7 +11,7 @@ export type FilterableFieldOptions = {
   filterRequired?: boolean
   filterOnly?: boolean
   filterDecorators?: PropertyDecorator[]
-} & ApiPropertyOptions
+} & FieldOptions
 
 export interface FilterableFieldDescriptor {
   propertyName: string
@@ -80,8 +79,7 @@ export function FilterableField(
     advancedOptions = maybeOptions
   }
   return <D>(
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    target: Object,
+    target: object,
     propertyName: string | symbol,
     descriptor: TypedPropertyDescriptor<D>
   ): TypedPropertyDescriptor<D> | void => {

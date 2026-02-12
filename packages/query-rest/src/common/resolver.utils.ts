@@ -1,4 +1,4 @@
-import { BaseResolverOptions } from '../decorators'
+import { BaseResolverOptions } from '../decorators/resolver-method.decorator'
 
 const mergeArrays = <T>(arr1?: T[], arr2?: T[]): T[] | undefined => {
   if (arr1 || arr2) {

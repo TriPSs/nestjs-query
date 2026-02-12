@@ -1,16 +1,17 @@
-import { Class, MetaValue, ValueReflector } from '@ptc-org/nestjs-query-core'
+import { ArrayReflector, Class, getPrototypeChain, MetaValue } from '@ptc-org/nestjs-query-core'
 
 import { Field, FieldOptions } from '../index'
 import { ID_FIELD_KEY } from './constants'
 
-const reflector = new ValueReflector(ID_FIELD_KEY)
+const reflector = new ArrayReflector(ID_FIELD_KEY)
 
-export interface IDFieldOptions extends FieldOptions {
+export type IDFieldOptions = FieldOptions & {
   idOnly?: boolean
 }
 
 export interface IDFieldDescriptor {
   propertyName: string
+  idOnly: boolean
 }
 
 /**
@@ -35,13 +36,12 @@ export function IDField(options?: IDFieldOptions): PropertyDecorator & MethodDec
     propertyName: string | symbol,
     descriptor?: TypedPropertyDescriptor<D>
   ): TypedPropertyDescriptor<D> | void => {
-    reflector.set(target.constructor as Class<unknown>, {
-      propertyName: propertyName.toString()
+    reflector.append(target.constructor as Class<unknown>, {
+      propertyName: propertyName.toString(),
+      idOnly: options?.idOnly ?? false
     })
 
-    if (options?.idOnly) {
-      return
-    }
+    delete options?.idOnly
 
     if (descriptor) {
       return Field(options)(target, propertyName, descriptor)
@@ -50,6 +50,10 @@ export function IDField(options?: IDFieldOptions): PropertyDecorator & MethodDec
   }
 }
 
-export function getIDField<DTO>(DTOClass: Class<DTO>): MetaValue<IDFieldDescriptor> {
-  return reflector.get<DTO, IDFieldDescriptor>(DTOClass, true)
+export function getIDFields<DTO>(DTOClass: Class<DTO>): MetaValue<IDFieldDescriptor[]> {
+  return getPrototypeChain(DTOClass).reduce((fields, Cls) => {
+    const typeFields = reflector.get<unknown, IDFieldDescriptor>(Cls) ?? []
+
+    return [...typeFields, ...fields]
+  }, [] as IDFieldDescriptor[])
 }

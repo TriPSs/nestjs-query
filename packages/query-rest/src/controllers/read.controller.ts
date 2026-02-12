@@ -1,43 +1,58 @@
-import { Param } from '@nestjs/common'
-import { Class, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, mergeFilter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
 import omit from 'lodash.omit'
 
-import { OperationGroup } from '../auth'
+import {
+  ApiSchema,
+  AuthorizerFilter,
+  Get,
+  HookTypes,
+  OffsetQueryArgsTypeOpts,
+  OperationGroup,
+  ParamArgsType,
+  ParamHookArgs,
+  QueryArgsType,
+  QueryParamArgsType,
+  QueryType
+} from '../'
 import { getDTONames } from '../common'
 import { ConnectionOptions, InferConnectionTypeFromStrategy } from '../connection/interfaces'
-import { AuthorizerFilter, Get, QueryHookArgs } from '../decorators'
-import { HookTypes } from '../hooks'
+import { QueryHookArgs } from '../decorators/hook-args.decorator'
+import { ParamArgs } from '../decorators/param-args.decorator'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
-import { QueryArgsType } from '../types'
-import { FindOneArgsType } from '../types/find-one-args.type'
-import { OffsetQueryArgsTypeOpts, PagingStrategies, QueryArgsTypeOpts, QueryType, StaticQueryType } from '../types/query'
-import { BaseServiceResolver, ExtractPagingStrategy, ResolverClass, ResolverOpts, ServiceResolver } from './resolver.interface'
+import { PagingStrategies, QueryArgsTypeOpts, StaticQueryType } from '../types/query'
+import {
+  BaseServiceResolver,
+  ControllerClass,
+  ControllerOpts,
+  ExtractPagingStrategy,
+  ServiceController
+} from './controller.interface'
 
-export type ReadResolverFromOpts<
+export type ReadControllerFromOpts<
   DTO,
-  Opts extends ReadResolverOpts<DTO>,
+  Opts extends ReadControllerOpts<DTO>,
   QS extends QueryService<DTO, unknown, unknown>
-> = ReadResolver<DTO, ExtractPagingStrategy<DTO, Opts>, QS>
+> = ReadController<DTO, ExtractPagingStrategy<DTO, Opts>, QS>
 
-export type ReadResolverOpts<DTO> = {
+export type ReadControllerOpts<DTO> = {
   QueryArgs?: StaticQueryType<DTO, PagingStrategies>
 
   /**
    * DTO to return with finding one record
    */
   FindDTOClass?: Class<DTO>
-} & ResolverOpts &
+} & ControllerOpts &
   QueryArgsTypeOpts<DTO> &
   Pick<ConnectionOptions, 'enableTotalCount'>
 
-export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends QueryService<DTO, unknown, unknown>>
-  extends ServiceResolver<DTO, QS> {
+export interface ReadController<DTO, PS extends PagingStrategies, QS extends QueryService<DTO, unknown, unknown>>
+  extends ServiceController<DTO, QS> {
   queryMany(
     query: QueryType<DTO, PagingStrategies>,
     authorizeFilter?: Filter<DTO>
   ): Promise<InferConnectionTypeFromStrategy<DTO, PS>>
 
-  findById(id: FindOneArgsType, authorizeFilter?: Filter<DTO>): Promise<DTO | undefined>
+  findById(params: ParamArgsType, authorizeFilter?: Filter<DTO>): Promise<DTO | undefined>
 }
 
 /**
@@ -45,11 +60,11 @@ export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends Query
  * Mixin to add `read` graphql endpoints.
  */
 export const Readable =
-  <DTO, ReadOpts extends ReadResolverOpts<DTO>, QS extends QueryService<DTO, unknown, unknown>>(
+  <DTO, ReadOpts extends ReadControllerOpts<DTO>, QS extends QueryService<DTO, unknown, unknown>>(
     DTOClass: Class<DTO>,
     opts: ReadOpts
   ) =>
-  <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<ReadResolverFromOpts<DTO, ReadOpts, QS>> & B => {
+  <B extends Class<ServiceController<DTO, QS>>>(BaseClass: B): Class<ReadControllerFromOpts<DTO, ReadOpts, QS>> & B => {
     if (opts.disabled) {
       return BaseClass as never
     }
@@ -64,18 +79,16 @@ export const Readable =
 
     class QA extends QueryArgs {}
 
-    class FOP extends FindOneArgsType(FindDTOClass) {}
+    @ApiSchema({ name: `Find${DTOClass.name}Args` })
+    class FOP extends ParamArgsType(FindDTOClass) {}
+
+    @ApiSchema({ name: `Query${DTOClass.name}Args` })
+    class QOP extends QueryParamArgsType(DTOClass) {}
 
     Object.defineProperty(QA, 'name', {
       writable: false,
       // set a unique name otherwise DI does not inject a unique one for each request
       value: `Query${DTOClass.name}Args`
-    })
-
-    Object.defineProperty(FOP, 'name', {
-      writable: false,
-      // set a unique name otherwise DI does not inject a unique one for each request
-      value: `Find${DTOClass.name}Args`
     })
 
     class ReadResolverBase extends BaseClass {
@@ -95,7 +108,7 @@ export const Readable =
         opts.one ?? {}
       )
       public async findById(
-        @Param() params: FOP,
+        @ParamArgs() params: FOP,
         @AuthorizerFilter({
           operationGroup: OperationGroup.READ,
           many: false
@@ -124,6 +137,7 @@ export const Readable =
         opts.many ?? {}
       )
       public async queryMany(
+        @ParamHookArgs() params: QOP,
         @QueryHookArgs() query: QA,
         @AuthorizerFilter({
           operationGroup: OperationGroup.READ,
@@ -136,7 +150,7 @@ export const Readable =
             this.service.query(q, {
               withDeleted: opts?.many?.withDeleted
             }),
-          mergeQuery(query, { filter: authorizeFilter }),
+          mergeQuery(query, { filter: mergeFilter(params.getFilter(), authorizeFilter) }),
           (filter) =>
             this.service.count(filter, {
               withDeleted: opts?.many?.withDeleted
@@ -145,15 +159,15 @@ export const Readable =
       }
     }
 
-    return ReadResolverBase as Class<ReadResolverFromOpts<DTO, ReadOpts, QS>> & B
+    return ReadResolverBase as Class<ReadControllerFromOpts<DTO, ReadOpts, QS>> & B
   }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export const ReadResolver = <
+export const ReadController = <
   DTO,
-  ReadOpts extends ReadResolverOpts<DTO> = OffsetQueryArgsTypeOpts<DTO>,
+  ReadOpts extends ReadControllerOpts<DTO> = OffsetQueryArgsTypeOpts<DTO>,
   QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>
 >(
   DTOClass: Class<DTO>,
   opts: ReadOpts = {} as ReadOpts
-): ResolverClass<DTO, QS, ReadResolverFromOpts<DTO, ReadOpts, QS>> => Readable(DTOClass, opts)(BaseServiceResolver)
+): ControllerClass<DTO, QS, ReadControllerFromOpts<DTO, ReadOpts, QS>> => Readable(DTOClass, opts)(BaseServiceResolver)

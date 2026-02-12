@@ -3,11 +3,11 @@ import { Class } from '@ptc-org/nestjs-query-core'
 
 import { getHooksForType } from '../decorators'
 import { getHookToken, HookTypes } from '../hooks'
-import { PagingStrategies } from '../types'
-import { CRUDAutoResolverOpts } from './resolver.provider'
+import { PagingStrategies } from '../types/query'
+import { CRUDAutoControllerOpts } from './controller.provider'
 
 export type HookProviderOptions<DTO, C, U> = Pick<
-  CRUDAutoResolverOpts<DTO, C, U, unknown, PagingStrategies>,
+  CRUDAutoControllerOpts<DTO, C, U, unknown, PagingStrategies>,
   'DTOClass' | 'CreateDTOClass' | 'UpdateDTOClass'
 >
 

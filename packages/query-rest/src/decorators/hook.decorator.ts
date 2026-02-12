@@ -2,9 +2,16 @@
 import { Class, getClassMetadata, MetaValue } from '@ptc-org/nestjs-query-core'
 
 import {
+  // BeforeCreateManyHook,
   BeforeCreateOneHook,
   BeforeQueryManyHook,
   BeforeUpdateOneHook,
+  // BeforeDeleteManyHook,
+  // BeforeDeleteOneHook,
+  // BeforeFindOneHook,
+  // BeforeQueryManyHook,
+  // BeforeUpdateManyHook,
+  // BeforeUpdateOneHook,
   createDefaultHook,
   Hook,
   HookTypes,

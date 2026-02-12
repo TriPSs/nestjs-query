@@ -13,7 +13,7 @@ export type NamedEndpoint = {
   operationOptions?: ApiOperationOptions
 }
 
-export interface ResolverOpts extends QueryResolverMethodOpts, DTONamesOpts {
+export interface ControllerOpts extends QueryResolverMethodOpts, DTONamesOpts {
   /**
    * Options for single record graphql endpoints
    */
@@ -24,15 +24,19 @@ export interface ResolverOpts extends QueryResolverMethodOpts, DTONamesOpts {
   many?: QueryResolverMethodOpts & NamedEndpoint
 }
 
-export type MutationOpts = Omit<ResolverOpts, 'many'>
+export type MutationOpts = Omit<ControllerOpts, 'many'>
 
 /** @internal */
-export interface ServiceResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> {
+export interface ServiceController<DTO, QS extends QueryService<DTO, unknown, unknown>> {
   service: QS
 }
 
 /** @internal */
-export interface ResolverClass<DTO, QS extends QueryService<DTO, unknown, unknown>, Resolver extends ServiceResolver<DTO, QS>> {
+export interface ControllerClass<
+  DTO,
+  QS extends QueryService<DTO, unknown, unknown>,
+  Resolver extends ServiceController<DTO, QS>
+> {
   new (service: QS): Resolver
 }
 
@@ -56,7 +60,7 @@ export type MergePagingStrategyOpts<
 > = Opts['pagingStrategy'] extends PagingStrategies
   ? Opts
   : S extends PagingStrategies
-  ? Omit<Opts, 'pagingStrategy'> & {
-      pagingStrategy: S
-    }
-  : Opts
+    ? Omit<Opts, 'pagingStrategy'> & {
+        pagingStrategy: S
+      }
+    : Opts

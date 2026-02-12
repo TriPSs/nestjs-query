@@ -22,14 +22,12 @@ export const getOrCreateOffsetPageInfoType = (): OffsetPageInfoTypeConstructor =
     }
 
     @Field({
-      description: 'true if paging forward and there are more records.',
-      nullable: true
+      description: '`true` if paging forward and there are more records.'
     })
     hasNextPage: boolean
 
     @Field({
-      description: 'true if paging backwards and there are more records.',
-      nullable: true
+      description: '`true` if paging backwards and there are more records.'
     })
     hasPreviousPage: boolean
   }

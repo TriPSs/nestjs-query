@@ -1,4 +1,4 @@
-import { ArgumentMetadata, Body as NestBody, Inject, PipeTransform, Query as NestQuery } from '@nestjs/common'
+import { ArgumentMetadata, Body as NestBody, Inject, Param as NestParam, PipeTransform, Query as NestQuery } from '@nestjs/common'
 import { REQUEST } from '@nestjs/core'
 import { Class, Query } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
@@ -14,14 +14,16 @@ class HooksTransformer<T> implements PipeTransform {
   public async transform(value: T, metadata: ArgumentMetadata): Promise<MutationArgsType<T> | Query<T>> {
     const transformedValue = this.transformValue(value, metadata.metatype)
 
-    if (metadata.type === 'query') {
-      return this.runQueryHooks(transformedValue as BuildableQueryType<T>)
+    if (metadata.type === 'param') {
+      return transformedValue
+    } else if (metadata.type === 'query') {
+      return this.runQueryHooks(transformedValue)
     }
 
     return this.runMutationHooks(transformedValue)
   }
 
-  private transformValue(value: T, type?: Class<T>): T {
+  private transformValue<T>(value: T, type?: Class<T>): T {
     if (!type || value instanceof type) {
       return value
     }
@@ -31,7 +33,6 @@ class HooksTransformer<T> implements PipeTransform {
 
   private async runMutationHooks(data: T): Promise<MutationArgsType<T>> {
     const hooks = (this.request as HookContext<Hook<unknown>>).hooks
-
     if (hooks && hooks.length > 0) {
       let hookedArgs = { input: data }
       for (const hook of hooks) {
@@ -58,6 +59,10 @@ class HooksTransformer<T> implements PipeTransform {
 
     return hookedArgs
   }
+}
+
+export const ParamHookArgs = <DTO, T extends BuildableQueryType<DTO>>(): ParameterDecorator => {
+  return NestParam(HooksTransformer<T>)
 }
 
 export const QueryHookArgs = <DTO, T extends BuildableQueryType<DTO>>(): ParameterDecorator => {

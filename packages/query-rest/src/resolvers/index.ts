@@ -1,6 +1,0 @@
-export { CreateResolver, CreateResolverOpts } from './create.resolver'
-export { CRUDResolver, CRUDResolverOpts } from './crud.resolver'
-// export { DeleteResolver, DeleteResolverOpts } from './delete.resolver'
-export { ReadResolver, ReadResolverOpts } from './read.resolver'
-export { ResolverOpts } from './resolver.interface'
-// export { UpdateResolver, UpdateResolverOpts } from './update.resolver'

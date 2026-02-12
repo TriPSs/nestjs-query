@@ -8,7 +8,8 @@ import {
   SerializeOptions,
   UseInterceptors
 } from '@nestjs/common'
-import { ApiBody, ApiBodyOptions, ApiOperation, ApiOperationOptions, ApiParam, ApiResponse } from '@nestjs/swagger'
+import { ApiBody, ApiConsumes, ApiOperation, ApiOperationOptions, ApiResponse } from '@nestjs/swagger'
+import { ApiBodyOptions } from '@nestjs/swagger/dist/decorators/api-body.decorator'
 import { isArray } from 'class-validator'
 
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
@@ -21,6 +22,7 @@ interface MethodDecoratorArg extends ResolverMethodOpts {
 
 interface MutationMethodDecoratorArg extends MethodDecoratorArg {
   body?: ApiBodyOptions
+  consumes?: string[]
 }
 
 const methodDecorator = (method: (path?: string | string[]) => MethodDecorator) => {
@@ -50,38 +52,17 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator) 
     const paths: string[] = options.path && !isArray(options.path) ? ([options.path] as string[]) : (options.path as string[])
 
     const decorators = [method(paths), ResolverMethod(options, ...resolverOpts)]
-      // Add all params to the swagger definition
-      .concat(
-        paths.reduce(
-          (params, path) =>
-            params.concat(
-              path
-                .split('/')
-                .filter((partialPath) => partialPath.startsWith(':'))
-                .map((param) => param.replace(':', ''))
-                .filter((param) => param !== 'id')
-                .map((param) =>
-                  ApiParam({
-                    name: param,
-                    type: 'string',
-                    required: true
-                  })
-                )
-            ),
-          [] as MethodDecorator[]
-        )
-      )
 
     if (returnTypeFunc) {
       const returnedType = returnTypeFunc()
-      const returnTypeIsArray = Array.isArray(returnedType)
-      const type = returnTypeIsArray ? returnedType[0] : returnedType
+      const isArray = Array.isArray(returnedType)
+      const type = isArray ? returnedType[0] : returnedType
 
       decorators.push(
         ApiResponse({
           status: 200,
           type,
-          isArray: returnTypeIsArray
+          isArray
         })
       )
 
@@ -92,6 +73,12 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator) 
         }),
         UseInterceptors(ClassSerializerInterceptor)
       )
+    } else {
+      decorators.push(
+        ApiResponse({
+          status: 204
+        })
+      )
     }
 
     if (options.operation) {
@@ -100,6 +87,10 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator) 
 
     if ((options as MutationMethodDecoratorArg).body) {
       decorators.push(ApiBody((options as MutationMethodDecoratorArg).body))
+    }
+
+    if ((options as MutationMethodDecoratorArg).consumes?.length > 0) {
+      decorators.push(ApiConsumes(...(options as MutationMethodDecoratorArg).consumes))
     }
 
     return applyDecorators(...decorators)

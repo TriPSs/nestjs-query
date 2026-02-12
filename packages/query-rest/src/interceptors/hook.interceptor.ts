@@ -26,7 +26,7 @@ export function HookInterceptor(type: HookTypes, ...DTOClasses: Class<unknown>[]
     constructor(@Inject(hookToken) readonly hooks: Hook<typeof HookedClasses>[]) {}
 
     public intercept(context: ExecutionContext, next: CallHandler) {
-      const request = context.switchToHttp().getRequest<HookContext<Hook<unknown>>>()
+      const request = context.switchToHttp().getRequest()
       request.hooks = this.hooks
 
       return next.handle()

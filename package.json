@@ -27,6 +27,7 @@
     "@nestjs/swagger": "^11.2.6",
     "@nestjs/typeorm": "^11.0.0",
     "class-validator": "0.14.1",
+    "csv-stringify": "^6.6.0",
     "mongoose": "8.10.1",
     "reflect-metadata": "^0.2.2",
     "sequelize": "6.37.7",

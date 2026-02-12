@@ -1,7 +1,5 @@
-import { Class } from '@ptc-org/nestjs-query-core'
-import { lowerCaseFirst } from 'lower-case-first'
+import { Class, lowerCaseFirst, upperCaseFirst } from '@ptc-org/nestjs-query-core'
 import { plural } from 'pluralize'
-import { upperCaseFirst } from 'upper-case-first'
 
 export interface DTONamesOpts {
   dtoName?: string

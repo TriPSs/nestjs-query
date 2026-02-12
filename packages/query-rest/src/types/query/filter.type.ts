@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common'
 import { Class, Filter, MapReflector } from '@ptc-org/nestjs-query-core'
 
-import { Field, filterableFieldOptionsToField, getFilterableFields } from '../../decorators'
+import { Field, FilterableFieldOptions, filterableFieldOptionsToField, getFilterableFields } from '../../decorators'
 
 const reflector = new MapReflector('nestjs-query:filter-type')
 // internal cache is used to exit early if the same filter is requested multiple times
@@ -70,7 +70,7 @@ function getOrCreateFilterType<T>(
             required: Boolean(
               typeof advancedOptions.filterRequired !== 'undefined' ? advancedOptions.filterRequired : advancedOptions.required
             )
-          })
+          } as FilterableFieldOptions)
         ),
         ...(advancedOptions.filterDecorators || [])
       )(QueryFilter.prototype, schemaName)
@@ -89,6 +89,10 @@ export function FilterType<T>(TClass: Class<T>, BaseClass: Class<unknown>): Filt
   return getOrCreateFilterType(TClass, null, null, BaseClass)
 }
 
+export function ExportFilterType<T>(TClass: Class<T>, BaseClass: Class<unknown>): FilterConstructor<T> {
+  return getOrCreateFilterType(TClass, null, 'Export', BaseClass)
+}
+//
 // export function DeleteFilterType<T>(TClass: Class<T>, BaseClass: Class<unknown>): FilterConstructor<T> {
 //   return getOrCreateFilterType(TClass, null, 'Delete', BaseClass)
 // }

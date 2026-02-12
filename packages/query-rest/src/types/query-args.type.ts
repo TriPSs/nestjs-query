@@ -10,9 +10,10 @@ import {
   QueryArgsTypeOpts,
   StaticQueryType
 } from './query'
+import { createNonePagingQueryArgs } from './query/query-args/none-paging-query-args.type'
 import { createOffsetQueryArgs } from './query/query-args/offset-query-args.type'
 
-const getMergedQueryOpts = <DTO>(DTOClass: Class<DTO>, opts?: QueryArgsTypeOpts<DTO>): QueryArgsTypeOpts<DTO> => {
+export const getMergedQueryOpts = <DTO>(DTOClass: Class<DTO>, opts?: QueryArgsTypeOpts<DTO>): QueryArgsTypeOpts<DTO> => {
   const decoratorOpts = getQueryOptions(DTOClass)
   return {
     ...DEFAULT_QUERY_OPTS,
@@ -21,11 +22,6 @@ const getMergedQueryOpts = <DTO>(DTOClass: Class<DTO>, opts?: QueryArgsTypeOpts<
     ...removeUndefinedValues(opts ?? {})
   }
 }
-
-// tests if the object is a QueryArgs Class
-// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
-export const isStaticQueryArgsType = <DTO>(obj: any): obj is StaticQueryType<DTO, PagingStrategies> =>
-  typeof obj === 'function' && 'PageType' in obj && 'SortType' in obj && 'FilterType' in obj
 
 export function QueryArgsType<DTO>(
   DTOClass: Class<DTO>,
@@ -44,7 +40,5 @@ export function QueryArgsType<DTO>(DTOClass: Class<DTO>, opts?: QueryArgsTypeOpt
     return createOffsetQueryArgs(DTOClass, mergedOpts)
   }
 
-  // TODO:: Support none paging type
-  return createOffsetQueryArgs(DTOClass, mergedOpts as never)
-  //   return createNonePagingQueryArgsType(DTOClass, mergedOpts)
+  return createNonePagingQueryArgs(DTOClass, mergedOpts)
 }

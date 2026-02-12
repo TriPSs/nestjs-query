@@ -10,5 +10,5 @@ export type PagingTypes = OffsetPagingType | NonePagingType
 export type InferPagingTypeFromStrategy<PS extends PagingStrategies> = PS extends PagingStrategies.OFFSET
   ? OffsetPagingType
   : PS extends PagingStrategies.NONE
-  ? NonePagingType
-  : never
+    ? NonePagingType
+    : never

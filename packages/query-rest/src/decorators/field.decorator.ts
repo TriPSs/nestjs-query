@@ -1,8 +1,11 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
+import { METADATA_FACTORY_NAME } from '@nestjs/swagger/dist/plugin/plugin-constants'
 import { Expose, Transform, Type } from 'class-transformer'
 import {
   ArrayMaxSize,
+  ArrayMinSize,
+  IsBoolean,
   IsDate,
   IsEnum,
   IsNotEmpty,
@@ -22,6 +25,7 @@ import { ReturnTypeFunc } from '../interfaces/return-type-func'
 export type FieldOptions = ApiPropertyOptions & {
   // prevents the IsEnum decorator from being added
   skipIsEnum?: boolean
+  skipRequired?: boolean
   forceArray?: boolean
 }
 
@@ -91,18 +95,23 @@ export function Field(
     // Remove non-valid options
     delete options.forceArray
     delete options.skipIsEnum
+    delete options.skipRequired
 
-    const decorators = [
+    const decorators: Array<PropertyDecorator> = [
       Expose({ name: advancedOptions?.name }),
       ApiProperty({
         type,
         isArray,
-        ...options
+        ...(options as ApiPropertyOptions)
       })
     ]
 
     if (isArray && options.maxItems !== undefined) {
       decorators.push(ArrayMaxSize(options.maxItems))
+    }
+
+    if (isArray && options.minItems !== undefined) {
+      decorators.push(ArrayMinSize(options.minItems))
     }
 
     if (isArray && advancedOptions?.forceArray) {
@@ -125,25 +134,27 @@ export function Field(
       decorators.push(Max(options.maximum))
     }
 
-    if (options.required) {
-      decorators.push(IsNotEmpty())
-    } else {
-      decorators.push(IsOptional())
+    if (!advancedOptions?.skipRequired) {
+      if (options.required) {
+        decorators.push(IsNotEmpty())
+      } else {
+        decorators.push(IsOptional())
+      }
     }
 
     if (type) {
       decorators.push(Type(() => type as never))
 
       if (type === String) {
-        decorators.push(IsString())
+        decorators.push(IsString({ each: isArray }))
       } else if (type === Number) {
-        decorators.push(IsNumber())
+        decorators.push(IsNumber({}, { each: isArray }))
       } else if (type === Date) {
-        decorators.push(IsDate())
-      }
-
-      if (returnTypeFunc && typeof type === 'function') {
-        decorators.push(ValidateNested())
+        decorators.push(IsDate({ each: isArray }))
+      } else if (type === Boolean) {
+        decorators.push(IsBoolean({ each: isArray }))
+      } else if (returnTypeFunc && typeof type === 'function') {
+        decorators.push(ValidateNested({ each: isArray }))
 
         if (!isArray) {
           decorators.push(IsObject())

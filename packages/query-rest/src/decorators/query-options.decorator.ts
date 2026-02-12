@@ -1,6 +1,6 @@
 import { Class, MetaValue, ValueReflector } from '@ptc-org/nestjs-query-core'
 
-import { QueryArgsTypeOpts } from '../types'
+import { QueryArgsTypeOpts } from '../types/query'
 import { QUERY_OPTIONS_KEY } from './constants'
 
 const valueReflector = new ValueReflector(QUERY_OPTIONS_KEY)

@@ -2,6 +2,7 @@ import { Filter } from '@ptc-org/nestjs-query-core'
 
 export enum OperationGroup {
   READ = 'read',
+  EXPORT = 'export',
   AGGREGATE = 'aggregate',
   CREATE = 'create',
   UPDATE = 'update',

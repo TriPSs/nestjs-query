@@ -1,24 +1,21 @@
 import { Class } from '@ptc-org/nestjs-query-core'
 import { RestQuery } from '@ptc-org/nestjs-query-rest'
 
-import { getOrCreateOffsetConnectionType } from '../../../connection/offset/offset-connection.type'
+import { getOrCreateArrayConnectionType } from '../../../connection/array-connection.type'
 import { Field, SkipIf } from '../../../decorators'
 import { BuildableQueryType } from '../buildable-query.type'
 import { FilterType } from '../filter.type'
-import { OffsetPaging } from '../offset-paging.type'
 import { PagingStrategies } from '../paging'
 import { DEFAULT_QUERY_OPTS } from './constants'
-import { OffsetQueryArgsTypeOpts, StaticQueryType } from './interfaces'
+import { NonePagingQueryArgsTypeOpts, StaticQueryType } from './interfaces'
 
-export function createOffsetQueryArgs<DTO>(
+export function createNonePagingQueryArgs<DTO>(
   DTOClass: Class<DTO>,
-  opts: OffsetQueryArgsTypeOpts<DTO> = { ...DEFAULT_QUERY_OPTS, pagingStrategy: PagingStrategies.OFFSET }
-): StaticQueryType<DTO, PagingStrategies.OFFSET> {
-  // const S = getOrCreateSortType(DTOClass)
+  opts: NonePagingQueryArgsTypeOpts<DTO> = { ...DEFAULT_QUERY_OPTS, pagingStrategy: PagingStrategies.NONE }
+): StaticQueryType<DTO, PagingStrategies.NONE> {
+  const ConnectionType = getOrCreateArrayConnectionType(DTOClass, opts)
 
-  const ConnectionType = getOrCreateOffsetConnectionType(DTOClass, opts)
-
-  class QueryArgs extends OffsetPaging implements BuildableQueryType<DTO> {
+  class QueryNonPagingArgs implements BuildableQueryType<DTO> {
     static ConnectionType = ConnectionType
 
     public sorting = opts.defaultSort
@@ -40,10 +37,6 @@ export function createOffsetQueryArgs<DTO>(
     public buildQuery(): RestQuery<DTO> {
       return {
         query: this.query,
-        paging: {
-          limit: this.limit || opts.maxResultsSize,
-          offset: this.offset
-        },
         filter: this.filter,
         sorting: this.sorting,
         relations: []
@@ -51,5 +44,5 @@ export function createOffsetQueryArgs<DTO>(
     }
   }
 
-  return FilterType<DTO>(DTOClass, QueryArgs) as never as StaticQueryType<DTO, PagingStrategies.OFFSET>
+  return FilterType<DTO>(DTOClass, QueryNonPagingArgs) as never as StaticQueryType<DTO, PagingStrategies.NONE>
 }

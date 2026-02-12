@@ -1,30 +1,31 @@
 // eslint-disable-next-line max-classes-per-file
-import { Param } from '@nestjs/common'
 import { PartialType } from '@nestjs/swagger'
 import { Class, DeepPartial, Filter, QueryService } from '@ptc-org/nestjs-query-core'
 import omit from 'lodash.omit'
 
+import { ApiSchema, MutationArgsType, Put } from '../'
 import { OperationGroup } from '../auth'
 import { DTONames, getDTONames } from '../common'
-import { ApiSchema, AuthorizerFilter, BodyHookArgs, Put } from '../decorators'
+import { AuthorizerFilter } from '../decorators'
+import { BodyHookArgs } from '../decorators/hook-args.decorator'
+import { ParamArgs } from '../decorators/param-args.decorator'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
-import { MutationArgsType, UpdateOneInputType } from '../types'
-import { FindOneArgsType } from '../types/find-one-args.type'
-import { BaseServiceResolver, MutationOpts, ResolverClass, ServiceResolver } from './resolver.interface'
+import { ParamArgsType } from '../types/param-args.type'
+import { UpdateOneInputType } from '../types/update-one-input.type'
+import { BaseServiceResolver, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
 
-export interface UpdateResolverOpts<DTO, U = DeepPartial<DTO>> extends MutationOpts {
+export interface UpdateControllerOpts<DTO, U = DeepPartial<DTO>> extends MutationOpts {
   UpdateDTOClass?: Class<U>
   UpdateOneInput?: Class<UpdateOneInputType<U>>
 }
 
-export interface UpdateResolver<DTO, U, QS extends QueryService<DTO, unknown, U>> extends ServiceResolver<DTO, QS> {
-  updateOne(id: FindOneArgsType, input: MutationArgsType<UpdateOneInputType<U>>, authFilter?: Filter<DTO>): Promise<DTO>
+export interface UpdateController<DTO, U, QS extends QueryService<DTO, unknown, U>> extends ServiceController<DTO, QS> {
+  updateOne(id: ParamArgsType, input: MutationArgsType<UpdateOneInputType<U>>, authFilter?: Filter<DTO>): Promise<DTO>
 }
 
 /** @internal */
 const defaultUpdateDTO = <DTO, U>(dtoNames: DTONames, DTOClass: Class<DTO>): Class<U> => {
-  @ApiSchema({ name: `Update${dtoNames.baseName}` })
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   class DefaultUpdateDTO extends PartialType(DTOClass) {}
@@ -41,8 +42,8 @@ const defaultUpdateOneInput = <U>(dtoNames: DTONames, UpdateDTO: Class<U>): Clas
  * Mixin to add `update` graphql endpoints.
  */
 export const Updateable =
-  <DTO, U, QS extends QueryService<DTO, unknown, U>>(DTOClass: Class<DTO>, opts: UpdateResolverOpts<DTO, U>) =>
-  <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<UpdateResolver<DTO, U, QS>> & B => {
+  <DTO, U, QS extends QueryService<DTO, unknown, U>>(DTOClass: Class<DTO>, opts: UpdateControllerOpts<DTO, U>) =>
+  <B extends Class<ServiceController<DTO, QS>>>(BaseClass: B): Class<UpdateController<DTO, U, QS>> & B => {
     if (opts.disabled) {
       return BaseClass as never
     }
@@ -56,10 +57,11 @@ export const Updateable =
 
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'UpdateDTOClass', 'UpdateOneInput', 'UpdateManyInput')
 
+    @ApiSchema({ name: `Update${DTOClass.name}` })
     class UOI extends MutationArgsType(UpdateOneInput) {}
 
     @ApiSchema({ name: `FindUpdate${DTOClass.name}Args` })
-    class UOP extends FindOneArgsType(DTOClass) {}
+    class UOP extends ParamArgsType(DTOClass) {}
 
     class UpdateResolverBase extends BaseClass {
       @Put(
@@ -73,7 +75,7 @@ export const Updateable =
             ...opts?.one?.operationOptions
           },
           body: {
-            type: UpdateDTOClass
+            type: UOI
           }
         },
         {
@@ -83,7 +85,7 @@ export const Updateable =
         opts?.one ?? {}
       )
       public updateOne(
-        @Param() params: UOP,
+        @ParamArgs() params: UOP,
         @BodyHookArgs() { input }: UOI,
         @AuthorizerFilter({
           operationGroup: OperationGroup.UPDATE,
@@ -91,7 +93,7 @@ export const Updateable =
         })
         authorizeFilter?: Filter<DTO>
       ): Promise<DTO> {
-        return this.service.updateOne(params.id, input.update, { filter: authorizeFilter ?? {} })
+        return this.service.updateOne(params.getId(), input.update, { filter: authorizeFilter ?? {} })
       }
     }
 
@@ -99,11 +101,11 @@ export const Updateable =
   }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export const UpdateResolver = <
+export const UpdateController = <
   DTO,
   U = DeepPartial<DTO>,
   QS extends QueryService<DTO, unknown, U> = QueryService<DTO, unknown, U>
 >(
   DTOClass: Class<DTO>,
-  opts: UpdateResolverOpts<DTO, U> = {}
-): ResolverClass<DTO, QS, UpdateResolver<DTO, U, QS>> => Updateable(DTOClass, opts)(BaseServiceResolver)
+  opts: UpdateControllerOpts<DTO, U> = {}
+): ControllerClass<DTO, QS, UpdateController<DTO, U, QS>> => Updateable(DTOClass, opts)(BaseServiceResolver)

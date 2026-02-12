@@ -1,16 +1,12 @@
 // eslint-disable-next-line max-classes-per-file
-import { Param } from '@nestjs/common'
 import { Class, Filter, QueryService } from '@ptc-org/nestjs-query-core'
 import omit from 'lodash.omit'
 
-import { OperationGroup } from '../auth'
+import { AuthorizerFilter, AuthorizerInterceptor, Delete, OperationGroup, ParamArgsType } from '../'
 import { getDTONames } from '../common'
-import { AuthorizerFilter, Delete } from '../decorators'
-import { AuthorizerInterceptor } from '../interceptors'
-import { FindOneArgsType } from '../types/find-one-args.type'
-import { BaseServiceResolver, MutationOpts, ResolverClass, ServiceResolver } from './resolver.interface'
+import { ParamArgs } from '../decorators/param-args.decorator'
+import { BaseServiceResolver, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface DeleteResolverOpts<DTO> extends MutationOpts {
   /**
    * Use soft delete when doing delete mutation
@@ -18,8 +14,8 @@ export interface DeleteResolverOpts<DTO> extends MutationOpts {
   useSoftDelete?: boolean
 }
 
-export interface DeleteResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceResolver<DTO, QS> {
-  deleteOne(id: FindOneArgsType, authorizeFilter?: Filter<DTO>): Promise<Partial<DTO>>
+export interface DeleteController<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceController<DTO, QS> {
+  deleteOne(id: ParamArgsType, authorizeFilter?: Filter<DTO>): Promise<Partial<DTO>>
 }
 
 /**
@@ -28,12 +24,12 @@ export interface DeleteResolver<DTO, QS extends QueryService<DTO, unknown, unkno
  */
 export const Deletable =
   <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts: DeleteResolverOpts<DTO>) =>
-  <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<DeleteResolver<DTO, QS>> & B => {
+  <B extends Class<ServiceController<DTO, QS>>>(BaseClass: B): Class<DeleteController<DTO, QS>> & B => {
     const dtoNames = getDTONames(DTOClass, opts)
 
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'DeleteOneInput', 'DeleteManyInput', 'useSoftDelete')
 
-    class DOP extends FindOneArgsType(DTOClass) {}
+    class DOP extends ParamArgsType(DTOClass) {}
 
     Object.defineProperty(DOP, 'name', {
       writable: false,
@@ -58,7 +54,7 @@ export const Deletable =
         opts.one ?? {}
       )
       async deleteOne(
-        @Param() params: DOP,
+        @ParamArgs() params: DOP,
         @AuthorizerFilter({
           operationGroup: OperationGroup.DELETE,
           many: false
@@ -75,7 +71,7 @@ export const Deletable =
     return DeleteResolverBase
   }
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export const DeleteResolver = <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(
+export const DeleteController = <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(
   DTOClass: Class<DTO>,
   opts: DeleteResolverOpts<DTO> = {}
-): ResolverClass<DTO, QS, DeleteResolver<DTO, QS>> => Deletable<DTO, QS>(DTOClass, opts)(BaseServiceResolver)
+): ControllerClass<DTO, QS, DeleteController<DTO, QS>> => Deletable<DTO, QS>(DTOClass, opts)(BaseServiceResolver)

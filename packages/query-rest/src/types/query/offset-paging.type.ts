@@ -1,28 +1,24 @@
-import { ApiProperty } from '@nestjs/swagger'
 import { Paging } from '@ptc-org/nestjs-query-core'
-import { Expose, Type } from 'class-transformer'
-import { IsNumber, IsOptional, Max, Min } from 'class-validator'
+
+import { Field } from '../../decorators'
 
 export class OffsetPaging implements Paging {
-  @Expose()
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  @Min(1)
-  @Max(50)
-  @ApiProperty({
+  @Field({
+    type: Number,
+    description: 'The maximum number of results to return.',
     nullable: true,
-    required: false
+    default: 25,
+    minimum: 1,
+    maximum: 50
   })
   limit?: number
 
-  @Expose()
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  @ApiProperty({
+  @Field({
+    type: Number,
+    description: 'The offset to start returning results from.',
     nullable: true,
-    required: false
+    required: false,
+    minimum: 0
   })
   offset?: number
 }

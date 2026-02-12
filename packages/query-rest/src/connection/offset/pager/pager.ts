@@ -1,15 +1,15 @@
-import { Query } from '@ptc-org/nestjs-query-core'
+import { Filter, Query } from '@ptc-org/nestjs-query-core'
 
 import { Count, Pager, QueryMany } from '../../interfaces'
 import { OffsetPagerResult, OffsetPagingMeta, OffsetPagingOpts, QueryResults } from './interfaces'
 
-const EMPTY_PAGING_RESULTS = <DTO>(): OffsetPagerResult<DTO> => ({
+const createEmptyPageResult = <DTO>(): OffsetPagerResult<DTO> => ({
   nodes: [],
   pageInfo: { hasNextPage: false, hasPreviousPage: false },
   totalCount: undefined
 })
 
-const DEFAULT_PAGING_META = <DTO>(query: Query<DTO>): OffsetPagingMeta<DTO> => ({
+const createDefaultPagingMeta = <DTO>(query: Query<DTO>): OffsetPagingMeta<DTO> => ({
   opts: { offset: 0, limit: 0 },
   query
 })
@@ -22,7 +22,7 @@ export class OffsetPager<DTO> implements Pager<DTO, OffsetPagerResult<DTO>> {
   ): Promise<OffsetPagerResult<DTO>> {
     const pagingMeta = this.getPageMeta(query)
     if (!this.isValidPaging(pagingMeta)) {
-      return EMPTY_PAGING_RESULTS()
+      return createEmptyPageResult()
     }
     const results = await this.runQuery(queryMany, query, pagingMeta)
     return this.createPagingResult(results, pagingMeta, await count?.(query.filter))
@@ -47,7 +47,7 @@ export class OffsetPager<DTO> implements Pager<DTO, OffsetPagerResult<DTO>> {
   private getPageMeta(query: Query<DTO>): OffsetPagingMeta<DTO> {
     const { limit = 25, offset = 0 } = query.paging ?? {}
     if (!limit) {
-      return DEFAULT_PAGING_META(query)
+      return createDefaultPagingMeta(query)
     }
     return { opts: { limit, offset }, query }
   }

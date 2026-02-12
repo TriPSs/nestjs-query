@@ -11698,6 +11698,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"csv-stringify@npm:^6.6.0":
+  version: 6.6.0
+  resolution: "csv-stringify@npm:6.6.0"
+  checksum: 10/8ff6340c9352e85974961ee8719de1dc725e7d2cb7085a02c641bbe71a2c3eec6868e2bb296201d239d855df280952da5336cfd01a46db0c66e54597d753e7d6
+  languageName: node
+  linkType: hard
+
 "dargs@npm:^8.0.0":
   version: 8.1.0
   resolution: "dargs@npm:8.1.0"
@@ -19204,6 +19211,7 @@ __metadata:
     class-transformer: "npm:0.5.1"
     class-validator: "npm:0.14.1"
     clsx: "npm:^2.1.1"
+    csv-stringify: "npm:^6.6.0"
     dataloader: "npm:2.2.3"
     eslint: "npm:8.57.0"
     eslint-config-airbnb: "npm:19.0.4"
