@@ -118,6 +118,14 @@ export function Field(
       decorators.push(Transform(({ value }) => (Array.isArray(value) ? value : [value])))
     }
 
+    if (!advancedOptions?.skipRequired) {
+      if (options.required) {
+        decorators.push(IsNotEmpty())
+      } else {
+        decorators.push(IsOptional())
+      }
+    }
+
     if (options.minLength) {
       decorators.push(MinLength(options.minLength))
     }
@@ -132,14 +140,6 @@ export function Field(
 
     if (options.maximum !== undefined) {
       decorators.push(Max(options.maximum))
-    }
-
-    if (!advancedOptions?.skipRequired) {
-      if (options.required) {
-        decorators.push(IsNotEmpty())
-      } else {
-        decorators.push(IsOptional())
-      }
     }
 
     if (type) {
