@@ -5,7 +5,7 @@ title: Filtering
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Filtering in `query-graphql` has has an object based syntax
+Filtering in `nestjs-query` has an object based syntax.
 
 For a full reference of filter operations [see filter reference](../../concepts/queries.mdx#filter-reference)
 
@@ -88,20 +88,20 @@ The following example filters for all todoItems that are marked completed.
 
 ## Setting the generated filter-type depth
 
-When querying the default filter is one level deep. You can specify the generated filter-type depth by using the QueryOptions decorator on your DTO.
+When querying the default filter is one level deep. You can specify the generated filter-type depth by using the `QueryOptions` decorator on your DTO.
 
-You can find the documentation and an example in the [QueryOptions reference](../dtos.mdx#generated-filter-type-depth).
+You can find the documentation and an example in the [`QueryOptions` reference](../dtos.mdx#generated-filter-type-depth).
 
 
 ## Setting a default filter
 
-When querying the default filter is empty. You can specify a default filter by using the QueryOptions decorator on your DTO.
+When querying the default filter is empty. You can specify a default filter by using the `QueryOptions` decorator on your DTO.
 
-You can find the documentation and an example in the [QueryOptions reference](../dtos.mdx#setting-a-default-filter).
+You can find the documentation and an example in the [`QueryOptions` reference](../dtos.mdx#setting-a-default-filter).
 
 
 ## Setting allowed boolean expressions
 
-When filtering you can provide and and or expressions to provide advanced filtering. You can turn off either by using the QueryOptions decorator on your DTO.
+When filtering you can provide `and` and `or` expressions to provide advanced filtering. You can turn off either by using the `QueryOptions` decorator on your DTO.
 
-You can find the documentation and an example in the [QueryOptions reference](../dtos.mdx#allowed-boolean-expressions).
+You can find the documentation and an example in the [`QueryOptions` reference](../dtos.mdx#allowed-boolean-expressions).

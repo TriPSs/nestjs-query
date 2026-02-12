@@ -54,7 +54,7 @@ describe('WhereBuilder', (): void => {
       {
         $and: [
           {
-            $and: [{ numberType: { $eq: 1 } }, { stringType: { $regex: /foo.*/ } }, { boolType: { $eq: true } }]
+            $and: [{ numberType: { $eq: 1 } }, { stringType: { $regex: /^foo.*$/ } }, { boolType: { $eq: true } }]
           }
         ]
       }
@@ -88,8 +88,8 @@ describe('WhereBuilder', (): void => {
         },
         {
           $and: [
-            { $and: [{ $and: [{ numberType: { $gt: 10 } }, { stringType: { $regex: /foo.*/ } }] }] },
-            { $and: [{ $and: [{ numberType: { $lt: 20 } }, { stringType: { $regex: /.*bar/ } }] }] }
+            { $and: [{ $and: [{ numberType: { $gt: 10 } }, { stringType: { $regex: /^foo.*$/ } }] }] },
+            { $and: [{ $and: [{ numberType: { $lt: 20 } }, { stringType: { $regex: /^.*bar$/ } }] }] }
           ]
         }
       )
@@ -147,14 +147,14 @@ describe('WhereBuilder', (): void => {
             {
               $and: [
                 {
-                  $and: [{ numberType: { $gt: 10 } }, { stringType: { $regex: /foo.*/ } }]
+                  $and: [{ numberType: { $gt: 10 } }, { stringType: { $regex: /^foo.*$/ } }]
                 }
               ]
             },
             {
               $and: [
                 {
-                  $and: [{ numberType: { $lt: 20 } }, { stringType: { $regex: /.*bar/ } }]
+                  $and: [{ numberType: { $lt: 20 } }, { stringType: { $regex: /^.*bar$/ } }]
                 }
               ]
             }

@@ -1,4 +1,181 @@
  
+# [9.4.0](https://github.com/TriPSs/nestjs-query/compare/v9.3.0...v9.4.0) (2026-01-20)
+
+
+### Bug Fixes
+
+* **ci:** include node version in cache key for native modules ([ea1199a](https://github.com/TriPSs/nestjs-query/commit/ea1199a9a378b2b55129b314a62ec3813d4c4703))
+* **mikro-orm:** address CodeRabbit review comments ([44f8c30](https://github.com/TriPSs/nestjs-query/commit/44f8c30d20b8973e0bafc30ff8b33ec126d6144e))
+* **query-mikro-orm:** add eslint config and fix lint errors ([a88d9f3](https://github.com/TriPSs/nestjs-query/commit/a88d9f30c603517371b50d54f75700d98fa0fde6))
+* **reference-loader:** make key dynamic in createLoader and loader calls ([eede3f6](https://github.com/TriPSs/nestjs-query/commit/eede3f605c6cbd3f2dd0774da89c808752be91b2))
+
+
+### Features
+
+* **ci:** add pkg.pr.new preview releases ([21d77ce](https://github.com/TriPSs/nestjs-query/commit/21d77ce87ae4c9876d8b10b34110818e4732ab33))
+* **query-mikro-orm:** add MikroORM adapter package ([0b71d5a](https://github.com/TriPSs/nestjs-query/commit/0b71d5adce640d020e3dcef0543ee5d95eda04ec)), closes [#178](https://github.com/TriPSs/nestjs-query/issues/178)
+
+
+
+# [9.3.0](https://github.com/TriPSs/nestjs-query/compare/v9.2.1...v9.3.0) (2025-12-05)
+
+
+### Bug Fixes
+
+* lint errors and exclude federation-v2-e2e from Jest e2e tests ([c11dc44](https://github.com/TriPSs/nestjs-query/commit/c11dc4477ecd6b673773d546fbd0523266dc4d3e))
+* **query-graphql:** add @Parent() decorator to resolveReference for Federation [#410](https://github.com/TriPSs/nestjs-query/issues/410) ([bdb4f7d](https://github.com/TriPSs/nestjs-query/commit/bdb4f7d98acdff57139d4b46df4a4092d893850d))
+* **tests:** remove trailing comma in Jest config ([0d929f0](https://github.com/TriPSs/nestjs-query/commit/0d929f045b5db2f49efd838df07d9690279267f9))
+
+
+### Features
+
+* **examples:** add federation-v2-e2e to reproduce issue [#410](https://github.com/TriPSs/nestjs-query/issues/410) ([8aa75d1](https://github.com/TriPSs/nestjs-query/commit/8aa75d14641c1e3a4d5bfdfbbe1d29bd980151f7))
+* **examples:** add seeder services for todo and user ([0c0314a](https://github.com/TriPSs/nestjs-query/commit/0c0314a67f0b582beedafa3a74dff926c8b035e1))
+* **examples:** add tag-service with UUID ID to federation-v2-e2e ([e010419](https://github.com/TriPSs/nestjs-query/commit/e010419d5d4972d5f9f996bde2aef6af3f2fc6f7)), closes [#410](https://github.com/TriPSs/nestjs-query/issues/410)
+
+
+### Reverts
+
+* restore deleteAll() for TypeORM 0.3.24+ compatibility ([edf9fc4](https://github.com/TriPSs/nestjs-query/commit/edf9fc482b44fd8a61160ff9d787491646a13c12))
+
+
+
+## [9.2.1](https://github.com/TriPSs/nestjs-query/compare/v9.2.0...v9.2.1) (2025-10-06)
+
+
+
+# [9.2.0](https://github.com/TriPSs/nestjs-query/compare/v9.1.0...v9.2.0) (2025-10-03)
+
+
+### Bug Fixes
+
+* **aggregate-relations.resolver:** use relation's authorizer to resolve auth filter ([f8751c5](https://github.com/TriPSs/nestjs-query/commit/f8751c53aecd33126288f2c69645179137e49c53))
+* **authorizer:** add generic type to `authorizerRelation` method ([989c8e7](https://github.com/TriPSs/nestjs-query/commit/989c8e7ada42af5e4c0022171665b875a178bb59))
+* fixed typo ([ea5244b](https://github.com/TriPSs/nestjs-query/commit/ea5244b6a5f3f5d6dd119bb5d41fc118431dad01))
+* **query-graphql:** enhance DataLoader implementation with integration tests and improvements ([#389](https://github.com/TriPSs/nestjs-query/issues/389)) ([95f6765](https://github.com/TriPSs/nestjs-query/commit/95f6765755135243f17ed88950c9b0cb3e7bf5f2))
+* **query-graphql:** Improve handling of offset and limit in pager strategies ([9589a48](https://github.com/TriPSs/nestjs-query/commit/9589a482feca3c2a43f03c314cefacc9593fae5e))
+* **query-graphql:** resolve lint errors in federation N+1 integration tests ([5888637](https://github.com/TriPSs/nestjs-query/commit/588863731fc1150f39ad85455772d871a2eecd98))
+* **query-typeorm:** Adjust distinct record query column alias in TypeORMQueryService ([d000186](https://github.com/TriPSs/nestjs-query/commit/d0001861f1b45a024c0e7d9f4cec9046b05ceebd))
+* **read-relations.resolver:** use relation's authorizer to resolve auth filter ([cda8127](https://github.com/TriPSs/nestjs-query/commit/cda81273375faa7cfb8a5dac63056b6390f10c26))
+* resolve TypeScript compilation error in reference loader ([288d76f](https://github.com/TriPSs/nestjs-query/commit/288d76f4f7962ac666928df5ba1d20637a551f6d))
+
+
+### Features
+
+* add DataLoader support to reference resolver to solve n+1 query problem ([4360e1f](https://github.com/TriPSs/nestjs-query/commit/4360e1f253a356b8dd63e3dce374b13f4cd75974))
+* Bump dependencies ([673bc8e](https://github.com/TriPSs/nestjs-query/commit/673bc8e9e4724facceb5584cebf3f11f2a0256c1))
+
+
+
+# [9.1.0](https://github.com/TriPSs/nestjs-query/compare/v9.0.3...v9.1.0) (2025-07-15)
+
+
+### Bug Fixes
+
+* **lint:** resolve various linting errors ([f71e99d](https://github.com/TriPSs/nestjs-query/commit/f71e99da1d7f3ad8a9a40c004b1e70d89f7fef07))
+
+
+### Features
+
+* **examples, query-graphql:** add typegoose discriminator e2e test and fix array filtering ([ab29f94](https://github.com/TriPSs/nestjs-query/commit/ab29f943b5d199a3484d834e65b5702e1fb9382c))
+
+
+
+## [9.0.3](https://github.com/TriPSs/nestjs-query/compare/v9.0.2...v9.0.3) (2025-05-13)
+
+
+### Bug Fixes
+
+* describe indentation ([90e4074](https://github.com/TriPSs/nestjs-query/commit/90e4074b3229861636f710b2330f6b427525ffef))
+* shouldUseSkipTake to handle nested cases ([ec39883](https://github.com/TriPSs/nestjs-query/commit/ec3988326ded3b378b0f3bbe2c69161eb49c1ebe))
+* Update peer dependencies to support NestJS v11 ([55edc6a](https://github.com/TriPSs/nestjs-query/commit/55edc6a58b208853662bc05058e6d92d6dd4af51)), closes [#358](https://github.com/TriPSs/nestjs-query/issues/358)
+
+
+
+## [9.0.2](https://github.com/TriPSs/nestjs-query/compare/v9.0.1...v9.0.2) (2025-02-17)
+
+
+
+## [9.0.1](https://github.com/TriPSs/nestjs-query/compare/v9.0.0...v9.0.1) (2025-02-17)
+
+
+### Bug Fixes
+
+* Update peer dependencies to support NestJS v11 ([9471198](https://github.com/TriPSs/nestjs-query/commit/9471198b987139f297a56f1f4ca3ed8b5b5dce96)), closes [#358](https://github.com/TriPSs/nestjs-query/issues/358)
+
+
+
+# [9.0.0](https://github.com/TriPSs/nestjs-query/compare/v8.0.3...v9.0.0) (2025-02-13)
+
+
+### Features
+
+* Updated to NestJS 11 ([8fe3ed9](https://github.com/TriPSs/nestjs-query/commit/8fe3ed98e19b2532526258d17758dc9d4055a521))
+
+
+### BREAKING CHANGES
+
+* Updated to NestJS 11
+
+
+
+## [8.0.3](https://github.com/TriPSs/nestjs-query/compare/v8.0.2...v8.0.3) (2025-01-30)
+
+
+
+## [8.0.2](https://github.com/TriPSs/nestjs-query/compare/v8.0.1...v8.0.2) (2025-01-21)
+
+
+### Bug Fixes
+
+* add missing import in doc + upgrading docker image version ([3ce8691](https://github.com/TriPSs/nestjs-query/commit/3ce86913e60a52188e61149c495a533ffa81fd59))
+* mongoose ilike comparism wasn capable of searching with fixed start/end letter ([4f90c93](https://github.com/TriPSs/nestjs-query/commit/4f90c936d6fc5af3e1c8d1be35e26ad0d2824944))
+* Mongoose ReferenceQueryService only accepted Relations with ObjectIds ([b364870](https://github.com/TriPSs/nestjs-query/commit/b364870b8c7348190359a722785b3c86324353d2))
+
+
+
+## [8.0.1](https://github.com/TriPSs/nestjs-query/compare/v8.0.0...v8.0.1) (2024-12-13)
+
+
+### Bug Fixes
+
+* update missing peerDependencies version increase ([ed6e57c](https://github.com/TriPSs/nestjs-query/commit/ed6e57cecbb9e014c8fb33fc6da9ba1b7e90310e))
+
+
+
+# [8.0.0](https://github.com/TriPSs/nestjs-query/compare/v7.1.0...v8.0.0) (2024-12-12)
+
+
+### Features
+
+* **query-graphql:** Updated graphql subscriptions ([ee688a2](https://github.com/TriPSs/nestjs-query/commit/ee688a2a1dc939964bdcabc07ec2a50de36dc7b7))
+
+
+### Reverts
+
+* Replace change-case with camel-case in multiple packages ([0720323](https://github.com/TriPSs/nestjs-query/commit/0720323ecf3941a296c909544c08ec3322f4ce54))
+
+
+### BREAKING CHANGES
+
+* **query-graphql:** Updated to new major version of graphql-subscriptions
+
+
+
+# [7.1.0](https://github.com/TriPSs/nestjs-query/compare/v7.0.1...v7.1.0) (2024-10-16)
+
+
+### Bug Fixes
+
+* Adjust package.json configurations and correct filter defaultValue syntax ([cc19f4c](https://github.com/TriPSs/nestjs-query/commit/cc19f4c4f24f5ae872d966f2719b5ca11edbc99a))
+
+
+### Features
+
+* support querying soft deleted relations ([00296c0](https://github.com/TriPSs/nestjs-query/commit/00296c0e656f7865bcf5bb54848a07d53be8d7d7))
+
+
+
 ## [7.0.1](https://github.com/TriPSs/nestjs-query/compare/v7.0.0...v7.0.1) (2024-09-25)
 
 
@@ -838,7 +1015,7 @@
 
 ### Bug Fixes
 
-* **typeorm, #954:** Filtering on relations with pagination  ([#977](https://github.com/tripss/nestjs-query/issues/977)) ([f5a6374](https://github.com/tripss/nestjs-query/commit/f5a6374f6e22470f63ef6257f7271c818ed09321)), closes [#954](https://github.com/tripss/nestjs-query/issues/954) [#954](https://github.com/tripss/nestjs-query/issues/954) [#954](https://github.com/tripss/nestjs-query/issues/954) [#954](https://github.com/tripss/nestjs-query/issues/954)
+* **typeorm, #954:** Filtering on relations with pagination  ([#977](https://github.com/tripss/nestjs-query/issues/977)) ([f5a6374](https://github.com/tripss/nestjs-query/commit/f5a6374f6e22470f63ef6257f7271c818ed09321)), closes [#954](https://github.com/doug-martin/nestjs-query/issues/954) [#954](https://github.com/doug-martin/nestjs-query/issues/954) [#954](https://github.com/doug-martin/nestjs-query/issues/954) [#954](https://github.com/doug-martin/nestjs-query/issues/954)
 
 
 

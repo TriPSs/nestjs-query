@@ -34,13 +34,13 @@ jobs:
       GITHUB_HEAD_REF: ${{ steps.script.outputs.headRef }}
       GITHUB_BASE_REF: ${{ steps.script.outputs.tagHash }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Cache node modules
         id: cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             **/node_modules
@@ -58,12 +58,12 @@ jobs:
     needs: [ prepare-env ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             **/node_modules

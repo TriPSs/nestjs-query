@@ -37,7 +37,12 @@ const ReadOneRelationMixin =
       @ResolverField(
         baseNameLower,
         () => relationDTO,
-        { nullable: relation.nullable, complexity: relation.complexity, description: relation?.description },
+        {
+          nullable: relation.nullable,
+          complexity: relation.complexity,
+          description: relation?.description,
+          deprecationReason: relation?.deprecationReason
+        },
         commonResolverOpts,
         { interceptors: [AuthorizerInterceptor(DTOClass)] }
       )
@@ -107,7 +112,12 @@ const ReadManyRelationMixin =
       @ResolverField(
         baseNameLower,
         () => CT.resolveType,
-        { nullable: relation.nullable, complexity: relation.complexity, description: relation?.description },
+        {
+          nullable: relation.nullable,
+          complexity: relation.complexity,
+          description: relation?.description,
+          deprecationReason: relation?.deprecationReason
+        },
         commonResolverOpts,
         { interceptors: [AuthorizerInterceptor(DTOClass)] }
       )
@@ -129,14 +139,14 @@ const ReadManyRelationMixin =
         const relationLoader = DataLoaderFactory.getOrCreateLoader(
           context,
           relationLoaderName,
-          () => queryLoader.createLoader(this.service),
+          () => queryLoader.createLoader(this.service, { withDeleted: relation.withDeleted }),
           dataLoaderConfig
         )
 
         const relationCountLoader = DataLoaderFactory.getOrCreateLoader(
           context,
           countRelationLoaderName,
-          () => countLoader.createLoader(this.service),
+          () => countLoader.createLoader(this.service, { withDeleted: relation.withDeleted }),
           dataLoaderConfig
         )
 

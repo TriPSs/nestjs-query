@@ -22,15 +22,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [ 20.x, 21.x ]
+        node-version: [ 22.x, 23.x ]
         target: [ 'build', 'test', 'lint' ]
     steps:
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -69,11 +69,11 @@ jobs:
         db-type: ['postgres', 'mysql']
     steps:
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -95,3 +95,24 @@ jobs:
           directory: ./coverage
           fail_ci_if_error: false
           name: run-e2e-${{ matrix.node-version }}-${{ matrix.db-type }}
+
+  federation-e2e-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+
+      - name: Build and run Federation E2E tests
+        run: |
+          cd examples/federation-v2-e2e
+          docker compose --profile test up --build --exit-code-from e2e-test e2e-test
+
+      - name: Show logs on failure
+        if: failure()
+        run: |
+          cd examples/federation-v2-e2e
+          docker compose logs

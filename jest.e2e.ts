@@ -1,4 +1,5 @@
-/* eslint-disable */
+import type { Config } from 'jest'
+
 export default {
   displayName: 'examples',
   preset: './jest.preset.js',
@@ -14,6 +15,7 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   testMatch: ['**/examples/**/e2e/**/*.spec.ts'],
+  testPathIgnorePatterns: ['/node_modules/', '/federation-v2-e2e/'],
   setupFilesAfterEnv: ['jest-extended'],
   coverageDirectory: './coverage/examples'
-}
+} satisfies Config

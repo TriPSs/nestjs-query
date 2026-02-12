@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing'
 import { AggregateResponse, getQueryServiceToken, QueryService } from '@ptc-org/nestjs-query-core'
 import { CursorConnectionType } from '@ptc-org/nestjs-query-graphql'
 import request from 'supertest'
-import { Connection } from 'typeorm'
+import { DataSource } from 'typeorm'
 
 import { AppModule } from '../src/app.module'
 import { AuthService } from '../src/auth/auth.service'
@@ -45,7 +45,7 @@ describe('TodoItemResolver (auth - e2e)', () => {
     )
 
     await app.init()
-    await refresh(app.get(Connection))
+    await refresh(app.get(DataSource))
   })
 
   beforeEach(async () => {
@@ -54,7 +54,7 @@ describe('TodoItemResolver (auth - e2e)', () => {
     user3JwtToken = (await authService.login({ username: 'nestjs-query-3', id: 3 })).accessToken
   })
 
-  afterAll(() => refresh(app.get(Connection)))
+  afterAll(() => refresh(app.get(DataSource)))
 
   describe('find one', () => {
     it('should require authorization token', () =>

@@ -6,7 +6,9 @@
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "outputs": [
+        "{options.outputFile}"
+      ]
     },
     "e2e": {
       "executor": "@nx/jest:jest",
@@ -27,7 +29,6 @@
     "query-mongoose",
     "query-sequelize",
     "query-typegoose",
-    "query-typeorm",
-    "query-rest"
+    "query-typeorm"
   ]
 }

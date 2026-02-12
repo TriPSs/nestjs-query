@@ -17,7 +17,7 @@ const isTypegooseClass = (item: TypegooseInput): item is TypegooseClass => isCla
 const isTypegooseClassWithOptions = (item: ClassOrDiscriminator): item is TypegooseClassWithOptions =>
   isTypegooseClass(item.typegooseClass)
 
-AssemblerSerializer((obj: mongoose.Document) => obj.toObject({ virtuals: true }))(mongoose.Document)
+AssemblerSerializer((obj: mongoose.Document) => obj.toObject({ virtuals: true }) as mongoose.Document)(mongoose.Document)
 
 function ensureProperInput(item: TypegooseInput): ClassOrDiscriminator | undefined {
   if (isTypegooseClass(item)) {
@@ -43,7 +43,7 @@ function createTypegooseQueryServiceProvider<Entity extends Base>(
     provide: getQueryServiceToken({ name: modelName }),
     useFactory(ModelClass: ReturnModelType<new () => Entity>) {
       // initialize default serializer for documents, this is the type that mongoose returns from queries
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      // @ts-expect-error linting issue, tests still pass
       AssemblerSerializer((obj: DocumentType<unknown>) => obj.toObject({ virtuals: true }))(ModelClass)
 
       return new TypegooseQueryService(ModelClass)

@@ -9,6 +9,7 @@ import {
   InjectPubSub
 } from '@ptc-org/nestjs-query-graphql'
 import { PubSub } from 'graphql-subscriptions'
+import { PubSubAsyncIterableIterator } from 'graphql-subscriptions/dist/pubsub-async-iterable-iterator'
 import { anything, deepEqual, instance, mock, objectContaining, verify, when } from 'ts-mockito'
 
 import { CreatedEvent } from '../../src/resolvers/create.resolver'
@@ -307,11 +308,11 @@ describe('CreateResolver', () => {
             stringField: 'foo'
           }
         }
-        const mockIterator = mock<AsyncIterator<CreatedEvent<TestResolverDTO>>>()
-        when(mockPubSub.asyncIterator(eventName)).thenReturn(instance(mockIterator))
+        const mockIterator = mock<PubSubAsyncIterableIterator<CreatedEvent<TestResolverDTO>>>()
+        when(mockPubSub.asyncIterableIterator(eventName)).thenReturn(instance(mockIterator))
         when(mockIterator.next()).thenResolve({ done: false, value: event })
         const result = await resolver.createdSubscription().next()
-        verify(mockPubSub.asyncIterator(eventName)).once()
+        verify(mockPubSub.asyncIterableIterator(eventName)).once()
         return expect(result).toEqual({
           done: false,
           value: event

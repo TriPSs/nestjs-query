@@ -9,10 +9,9 @@ import {
   ReturnTypeFunc,
   ReturnTypeFuncValue
 } from '@nestjs/graphql'
-import { Class, FilterComparisonOperators, FilterFieldComparison, isNamed } from '@ptc-org/nestjs-query-core'
+import { Class, FilterComparisonOperators, FilterFieldComparison, isNamed, upperCaseFirst } from '@ptc-org/nestjs-query-core'
 import { Type } from 'class-transformer'
 import { IsBoolean, IsDate, IsInt, IsNumber, IsOptional, ValidateNested } from 'class-validator'
-import { upperCaseFirst } from 'upper-case-first'
 
 import { getGraphqlEnumMetadata } from '../../../common'
 import { composeDecorators, SkipIf } from '../../../decorators'
@@ -60,6 +59,9 @@ betweenFilterValidationMap.set(GraphQLTimestamp, IsDate())
 
 /** @internal */
 const getTypeName = (SomeType: ReturnTypeFuncValue): string => {
+  if (Array.isArray(SomeType)) {
+    return getTypeName(SomeType[0] as ReturnTypeFuncValue)
+  }
   if (knownTypes.has(SomeType) || isNamed(SomeType)) {
     const typeName = (SomeType as { name: string }).name
     return upperCaseFirst(typeName)

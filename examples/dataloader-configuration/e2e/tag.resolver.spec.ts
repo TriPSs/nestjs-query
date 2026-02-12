@@ -2,7 +2,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
 import { CursorConnectionType } from '@ptc-org/nestjs-query-graphql'
 import request from 'supertest'
-import { Connection } from 'typeorm'
+import { DataSource } from 'typeorm'
 
 import { refresh } from '../e2e/fixtures'
 import { AppModule } from '../src/app.module'
@@ -37,7 +37,7 @@ describe('TagResolver (dataloader-configuration - e2e)', () => {
     )
 
     await app.init()
-    await refresh(app.get(Connection))
+    await refresh(app.get(DataSource))
   })
 
   afterAll(async () => {
