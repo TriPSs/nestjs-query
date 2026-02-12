@@ -24,6 +24,7 @@
     "@nestjs/passport": "11.0.5",
     "@nestjs/platform-express": "11.1.6",
     "@nestjs/sequelize": "11.0.0",
+    "@nestjs/swagger": "^11.2.6",
     "@nestjs/typeorm": "^11.0.0",
     "class-validator": "0.14.1",
     "mongoose": "8.10.1",
