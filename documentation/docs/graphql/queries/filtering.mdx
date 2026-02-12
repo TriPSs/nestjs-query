@@ -105,3 +105,79 @@ You can find the documentation and an example in the [`QueryOptions` reference](
 When filtering you can provide `and` and `or` expressions to provide advanced filtering. You can turn off either by using the `QueryOptions` decorator on your DTO.
 
 You can find the documentation and an example in the [`QueryOptions` reference](../dtos.mdx#allowed-boolean-expressions).
+
+## How Filters Are Applied
+
+Filters in `nestjs-query` come from multiple sources and combine differently depending on the source.
+
+### Filter Sources
+
+| Source | When Applied | How Combined |
+|--------|--------------|--------------|
+| User filter (GraphQL args) | Always | Base filter |
+| Default filter (`@QueryOptions`) | Only when user provides NO filter | Replaces empty filter |
+| Auth filter (`@Authorize`) | Always | ANDed with user filter |
+
+### Default Filter Behavior
+
+The `defaultFilter` from `@QueryOptions` is used as the GraphQL field's `defaultValue`. This means:
+
+- ✅ If user provides NO filter → defaultFilter is used
+- ❌ If user provides ANY filter → defaultFilter is completely ignored
+
+```ts
+@QueryOptions({ defaultFilter: { archived: { is: false } } })
+```
+
+:::warning
+Default filter is NOT merged - it's a fallback. Use [authorization](../authorization.mdx) for filters that must always apply.
+:::
+
+### Authorization Filter Behavior
+
+Filters from `@Authorize` are **always merged** with the user's filter using AND logic:
+
+```ts
+// User query
+filter: { title: { like: '%todo%' } }
+
+// @Authorize returns
+{ ownerId: { eq: currentUserId } }
+
+// Actual filter applied
+{ and: [{ title: { like: '%todo%' } }, { ownerId: { eq: currentUserId } }] }
+```
+
+For more details, see [Authorization](../authorization.mdx).
+
+### Filter Flow
+
+```
+GraphQL Query (filter arg)
+    ↓
+Default filter applied if user filter empty
+    ↓
+Resolver receives query
+    ↓
+Auth filter merged (AND)
+    ↓
+QueryService.query()
+    ↓
+ORM (TypeORM/Sequelize/Mongoose)
+    ↓
+Database
+```
+
+### Relation Filters
+
+When querying relations, authorization filters are resolved in order (first non-empty wins):
+
+1. **Custom authorizer's `authorizeRelation()` method** - if returns a filter, used exclusively
+2. **Relation's `auth` option** - if defined on the relation decorator
+3. **Related DTO's `@Authorize` decorator** - fallback to the related type's auth
+
+:::note
+Relation auth filters are NOT merged - the first non-empty result is used.
+:::
+
+See [Relation Filtering](../authorization.mdx#relation-filtering) for details.
