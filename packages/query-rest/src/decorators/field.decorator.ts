@@ -163,7 +163,7 @@ export function Field(
     }
 
     if (options.enum && !advancedOptions?.skipIsEnum) {
-      decorators.push(IsEnum(options.enum))
+      decorators.push(IsEnum(options.enum, { each: isArray}))
     }
 
     return applyDecorators(...decorators)(target, propertyKey, descriptor)
