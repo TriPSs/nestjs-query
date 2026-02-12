@@ -21,7 +21,7 @@ export interface FilterableFieldDescriptor {
   advancedOptions?: FilterableFieldOptions
 }
 
-export function filterableFieldOptionsToField(advancedOptions: FilterableFieldOptions): FieldOptions {
+export function filterableFieldOptionsToField(advancedOptions: FilterableFieldOptions = {}): FieldOptions {
   // Remove fields that are not needed in the Field decorator
   const { filterRequired, filterDecorators, filterOnly, ...fieldOptions } = advancedOptions
 
