@@ -61,7 +61,7 @@ export const Deletable =
         })
         authorizeFilter?: Filter<DTO>
       ): Promise<Partial<DTO>> {
-        return this.service.deleteOne(params.id, {
+        return this.service.deleteOne(params.getId(), {
           filter: authorizeFilter ?? {},
           useSoftDelete: opts?.useSoftDelete ?? false
         })
