@@ -115,7 +115,7 @@ export const Readable =
         })
         authorizeFilter?: Filter<DTO>
       ): Promise<DTO> {
-        return this.service.getById(params.id, {
+        return this.service.getById(params.getId(), {
           filter: authorizeFilter,
           withDeleted: opts?.one?.withDeleted
         })
