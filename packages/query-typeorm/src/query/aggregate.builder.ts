@@ -26,9 +26,11 @@ const AGG_REGEXP = /(AVG|SUM|COUNT|MAX|MIN|GROUP_BY)_(.*)/
  */
 export class AggregateBuilder<Entity> {
   private readonly isPostgres: boolean
+  private readonly isSqlServer: boolean
 
   constructor(readonly repo: Repository<Entity>) {
     this.isPostgres = DriverUtils.isPostgresFamily(repo.manager.connection.driver)
+    this.isSqlServer = !this.isPostgres && AggregateBuilder.isSqlServerFamily(repo)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -71,7 +73,12 @@ export class AggregateBuilder<Entity> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  public static getGroupByAlias<Entity>(field: keyof Entity): string {
+  public getGroupByAlias<Entity>(field: keyof Entity): string {
+    if (this.isSqlServer) {
+      const column = this.repo.metadata.findColumnWithPropertyName(field as string)
+      return column?.databaseName ?? (field as string)
+    }
+
     return `GROUP_BY_${field as string}`
   }
 
@@ -170,5 +177,9 @@ export class AggregateBuilder<Entity> {
   ): field is AggregateQueryGroupByField<Entity> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return Boolean(field && field.args && (field as AggregateQueryGroupByField<Entity>).args?.by)
+  }
+
+  static isSqlServerFamily(repo: Repository<unknown>): boolean {
+    return repo.manager.connection.driver.options?.type === 'mssql'
   }
 }
