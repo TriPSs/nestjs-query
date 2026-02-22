@@ -26,6 +26,7 @@ const AGG_REGEXP = /(AVG|SUM|COUNT|MAX|MIN|GROUP_BY)_(.*)/
  */
 export class AggregateBuilder<Entity> {
   private readonly isPostgres: boolean
+
   private readonly isSqlServer: boolean
 
   constructor(readonly repo: Repository<Entity>) {
@@ -179,7 +180,7 @@ export class AggregateBuilder<Entity> {
     return Boolean(field && field.args && (field as AggregateQueryGroupByField<Entity>).args?.by)
   }
 
-  static isSqlServerFamily(repo: Repository<unknown>): boolean {
+  private static isSqlServerFamily(repo: Repository<unknown>): boolean {
     return repo.manager.connection.driver.options?.type === 'mssql'
   }
 }
