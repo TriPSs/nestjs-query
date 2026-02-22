@@ -49,7 +49,7 @@ export class AggregateBuilder<Entity> {
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
   private static getAggregateGroupBySelects<Entity>(query: AggregateQuery<Entity>): string[] {
-    return (query.groupBy ?? []).map(({ field }) => this.getGroupByAlias(field))
+    return (query.groupBy ?? []).map(({ field }) => AggregateBuilder.makeGroupByAlias(field))
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -74,13 +74,18 @@ export class AggregateBuilder<Entity> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
+  public static makeGroupByAlias<Entity>(field: keyof Entity): string {
+    return `GROUP_BY_${field as string}`
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   public getGroupByAlias<Entity>(field: keyof Entity): string {
     if (this.isSqlServer) {
       const column = this.repo.metadata.findColumnWithPropertyName(field as string)
       return column?.databaseName ?? (field as string)
     }
 
-    return `GROUP_BY_${field as string}`
+    return AggregateBuilder.makeGroupByAlias(field)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -143,7 +148,7 @@ export class AggregateBuilder<Entity> {
 
     return aggregatedFields.map((aggregatedField) => {
       const col = alias ? `${alias}.${aggregatedField.field as string}` : (aggregatedField.field as string)
-      const groupByAlias = AggregateBuilder.getGroupByAlias(aggregatedField.field as string)
+      const groupByAlias = AggregateBuilder.makeGroupByAlias(aggregatedField.field as string)
 
       if (this.isAggregateQueryGroupByField(aggregatedField)) {
         let query = `DATE(${col})`
