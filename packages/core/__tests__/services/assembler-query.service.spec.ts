@@ -445,7 +445,7 @@ describe('AssemblerQueryService', () => {
     it('should transform the results for a single entity', () => {
       const mockQueryService = mock<QueryService<TestEntity>>()
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
-      when(mockQueryService.createOne(objectContaining({ bar: 'baz' }))).thenResolve({
+      when(mockQueryService.createOne(objectContaining({ bar: 'baz' }), undefined)).thenResolve({
         bar: 'baz'
       })
 
@@ -457,7 +457,7 @@ describe('AssemblerQueryService', () => {
     it('should transform the results for a single entity', () => {
       const mockQueryService = mock<QueryService<TestEntity>>()
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
-      when(mockQueryService.createMany(deepEqual([{ bar: 'baz' }]))).thenResolve([{ bar: 'baz' }])
+      when(mockQueryService.createMany(deepEqual([{ bar: 'baz' }]), undefined)).thenResolve([{ bar: 'baz' }])
 
       return expect(assemblerService.createMany([{ foo: 'baz' }])).resolves.toEqual([{ foo: 'baz' }])
     })
