@@ -386,6 +386,25 @@ Notice how `hasNextPage` is `true` and there is an `endCursor` that can be used 
 We can also page backward by using `before` and `last`. In the following example we'll use the `startCursor` from the
 previous example and set `last` to 2.
 
+### Using Offset with Cursors
+
+You can combine `offset` with cursor pagination to skip additional records. This is useful when you need to skip a specific number of records after a cursor position.
+
+```graphql
+{
+  todoItems(paging: { first: 2, after: "YXJyYXljb25uZWN0aW9uOjE=", offset: 3 }) {
+    edges {
+      node {
+        id
+        title
+      }
+    }
+  }
+}
+```
+
+In this example, pagination starts after the cursor position, then skips 3 more records before returning the next 2 items.
+
 <Tabs
   defaultValue="graphql"
   values={[

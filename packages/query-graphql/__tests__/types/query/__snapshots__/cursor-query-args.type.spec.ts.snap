@@ -80,6 +80,9 @@ input CursorPaging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 input TestQueryFilter {
@@ -372,6 +375,9 @@ input CursorPaging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 input TestQueryFilter {
@@ -664,6 +670,9 @@ input CursorPaging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 input TestFilterRequiredDtoFilter {

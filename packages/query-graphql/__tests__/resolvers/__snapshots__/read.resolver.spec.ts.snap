@@ -73,6 +73,9 @@ input CursorPaging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 input TestResolverDTOFilter {
@@ -219,6 +222,9 @@ input CursorPaging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 input TestResolverDTOFilter {
@@ -549,6 +555,9 @@ input CursorPaging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 input TestResolverDTOFilter {
@@ -831,6 +840,9 @@ input CursorPaging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 input TestResolverDTOFilter {
@@ -975,6 +987,9 @@ input CursorPaging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 input TestResolverDTOFilter {
@@ -1297,6 +1312,9 @@ input CursorPaging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 input TestResolverDTOFilter {
@@ -1441,6 +1459,9 @@ input CursorPaging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 input TestResolverDTOFilter {
@@ -1585,6 +1606,9 @@ input CursorPaging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 input TestResolverDTOFilter {
