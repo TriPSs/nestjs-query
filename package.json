@@ -37,7 +37,7 @@
     "@actions/core": "^1.11.1",
     "@apollo/federation": "0.38.1",
     "@apollo/gateway": "2.11.2",
-    "@apollo/server": "^4.11.3",
+    "@apollo/server": "^5.5.0",
     "@apollo/subgraph": "2.11.2",
     "@as-integrations/express5": "^1.1.2",
     "@commitlint/cli": "19.7.1",
