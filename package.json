@@ -3,6 +3,7 @@
   "version": "9.4.0",
   "private": true,
   "workspaces": [
+    "examples/**",
     "packages/**"
   ],
   "scripts": {
@@ -11,8 +12,9 @@
     "test:e2e": "nx e2e examples"
   },
   "resolutions": {
-    "@apollo/gateway": "2.12.1",
-    "@apollo/subgraph": "2.12.1"
+    "@apollo/gateway": "2.13.3",
+    "@apollo/server": "^5.5.0",
+    "@apollo/subgraph": "2.13.3"
   },
   "dependencies": {
     "@m8a/nestjs-typegoose": "12.0.1",
@@ -31,14 +33,14 @@
     "sequelize": "6.37.8",
     "sequelize-typescript": "2.1.6",
     "tslib": "^2.8.1",
-    "typeorm": "0.3.27"
+    "typeorm": "0.3.28"
   },
   "devDependencies": {
     "@actions/core": "^1.11.1",
     "@apollo/federation": "0.38.1",
-    "@apollo/gateway": "2.12.1",
-    "@apollo/server": "^4.11.3",
-    "@apollo/subgraph": "2.12.1",
+    "@apollo/gateway": "2.13.3",
+    "@apollo/server": "^5.5.0",
+    "@apollo/subgraph": "2.13.3",
     "@as-integrations/express5": "^1.1.2",
     "@commitlint/cli": "19.7.1",
     "@commitlint/config-conventional": "^19.7.1",
