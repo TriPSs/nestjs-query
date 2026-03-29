@@ -13,7 +13,7 @@
   "description": "",
   "dependencies": {
     "@apollo/server": "^5.4.0",
-    "@apollo/subgraph": "^2.12.1",
+    "@apollo/subgraph": "^2.13.2",
     "@as-integrations/express5": "^1.1.2",
     "@nestjs/apollo": "^13.2.1",
     "@nestjs/common": "^11.1.9",
