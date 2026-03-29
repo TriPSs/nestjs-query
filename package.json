@@ -3,7 +3,6 @@
   "version": "9.4.0",
   "private": true,
   "workspaces": [
-    "examples/**",
     "packages/**"
   ],
   "scripts": {
