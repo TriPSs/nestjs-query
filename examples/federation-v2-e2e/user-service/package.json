@@ -5,6 +5,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "start:dev": "nest start --watch"
+  },
   "description": "",
   "dependencies": {
     "@apollo/server": "^5.5.0",
