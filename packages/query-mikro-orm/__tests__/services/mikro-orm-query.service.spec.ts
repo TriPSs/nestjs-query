@@ -394,4 +394,178 @@ describe('MikroOrmQueryService', () => {
       ).rejects.toThrow('filter must contain either only `and` or `or` property, or other properties')
     })
   })
+
+  describe('#createOne', () => {
+    it('should create a new entity and persist to database', async () => {
+      const result = await queryService.createOne({
+        id: 'new-entity-1',
+        stringType: 'new-entity',
+        boolType: true,
+        numberType: 100,
+        dateType: new Date()
+      })
+      expect(result.stringType).toBe('new-entity')
+      expect(result.numberType).toBe(100)
+      expect(result.id).toBe('new-entity-1')
+
+      const found = await queryService.findById('new-entity-1')
+      expect(found).toBeDefined()
+      expect(found?.stringType).toBe('new-entity')
+    })
+  })
+
+  describe('#createMany', () => {
+    it('should create multiple entities and persist to database', async () => {
+      const result = await queryService.createMany([
+        { id: 'batch-entity-1', stringType: 'batch-1', boolType: true, numberType: 101, dateType: new Date() },
+        { id: 'batch-entity-2', stringType: 'batch-2', boolType: false, numberType: 102, dateType: new Date() }
+      ])
+      expect(result).toHaveLength(2)
+      expect(result[0].stringType).toBe('batch-1')
+      expect(result[1].stringType).toBe('batch-2')
+
+      const count = await queryService.count({ stringType: { like: 'batch-%' } })
+      expect(count).toBe(2)
+    })
+  })
+
+  describe('#updateOne', () => {
+    it('should update an existing entity and persist changes', async () => {
+      const result = await queryService.updateOne('test-entity-1', { stringType: 'updated-foo' })
+      expect(result.stringType).toBe('updated-foo')
+      expect(result.id).toBe('test-entity-1')
+
+      const found = await queryService.findById('test-entity-1')
+      expect(found?.stringType).toBe('updated-foo')
+    })
+
+    it('should throw when entity not found', async () => {
+      await expect(queryService.updateOne('non-existent', { stringType: 'test' })).rejects.toThrow()
+    })
+  })
+
+  describe('#updateMany', () => {
+    it('should update multiple entities matching filter', async () => {
+      const result = await queryService.updateMany({ boolType: false }, { numberType: { lt: 3 } })
+      expect(result.updatedCount).toBe(2)
+    })
+
+    it('should persist changes to the database', async () => {
+      await queryService.updateMany({ stringType: 'bulk-updated' }, { numberType: { in: [4, 5] } })
+      const updated = await queryService.query({ filter: { stringType: { eq: 'bulk-updated' } } })
+      expect(updated).toHaveLength(2)
+    })
+
+    it('should return 0 when no entities match', async () => {
+      const result = await queryService.updateMany({ stringType: 'test' }, { numberType: { eq: 9999 } })
+      expect(result.updatedCount).toBe(0)
+    })
+  })
+
+  describe('#deleteOne', () => {
+    it('should delete an existing entity and remove from database', async () => {
+      const deleted = await queryService.deleteOne('test-entity-1')
+      expect(deleted.id).toBe('test-entity-1')
+
+      const found = await queryService.findById('test-entity-1')
+      expect(found).toBeUndefined()
+    })
+
+    it('should throw when entity not found', async () => {
+      await expect(queryService.deleteOne('non-existent')).rejects.toThrow()
+    })
+
+    it('should throw for useSoftDelete option', async () => {
+      await expect(queryService.deleteOne('test-entity-3', { useSoftDelete: true })).rejects.toThrow(
+        'MikroOrmQueryService does not support useSoftDelete on deleteOne'
+      )
+    })
+  })
+
+  describe('#deleteMany', () => {
+    it('should delete multiple entities matching filter', async () => {
+      const result = await queryService.deleteMany({ numberType: { lt: 3 } })
+      expect(result.deletedCount).toBe(2)
+
+      const remaining = await queryService.query({ filter: { numberType: { lt: 3 } } })
+      expect(remaining).toHaveLength(0)
+    })
+
+    it('should return 0 when no entities match', async () => {
+      const result = await queryService.deleteMany({ numberType: { eq: 9999 } })
+      expect(result.deletedCount).toBe(0)
+    })
+
+    it('should throw for useSoftDelete option', async () => {
+      await expect(queryService.deleteMany({}, { useSoftDelete: true })).rejects.toThrow(
+        'MikroOrmQueryService does not support useSoftDelete on deleteMany'
+      )
+    })
+  })
+
+  describe('#aggregate', () => {
+    it('should count entities', async () => {
+      const result = await queryService.aggregate({}, { count: [{ field: 'id', args: {} }] })
+      expect(result).toHaveLength(1)
+      expect(result[0].count?.id).toBe(TEST_ENTITIES.length)
+    })
+
+    it('should sum numeric field', async () => {
+      const result = await queryService.aggregate({}, { sum: [{ field: 'numberType', args: {} }] })
+      expect(result).toHaveLength(1)
+      const expectedSum = TEST_ENTITIES.reduce((sum, e) => sum + e.numberType, 0)
+      expect(result[0].sum?.numberType).toBe(expectedSum)
+    })
+
+    it('should calculate average of numeric field', async () => {
+      const result = await queryService.aggregate({}, { avg: [{ field: 'numberType', args: {} }] })
+      expect(result).toHaveLength(1)
+      const expectedAvg = TEST_ENTITIES.reduce((sum, e) => sum + e.numberType, 0) / TEST_ENTITIES.length
+      expect(result[0].avg?.numberType).toBe(expectedAvg)
+    })
+
+    it('should find max of numeric field', async () => {
+      const result = await queryService.aggregate({}, { max: [{ field: 'numberType', args: {} }] })
+      expect(result).toHaveLength(1)
+      expect(result[0].max?.numberType).toBe(10)
+    })
+
+    it('should find min of numeric field', async () => {
+      const result = await queryService.aggregate({}, { min: [{ field: 'numberType', args: {} }] })
+      expect(result).toHaveLength(1)
+      expect(result[0].min?.numberType).toBe(1)
+    })
+
+    it('should apply filter to aggregate', async () => {
+      const result = await queryService.aggregate({ numberType: { gt: 5 } }, { count: [{ field: 'id', args: {} }] })
+      expect(result).toHaveLength(1)
+      expect(result[0].count?.id).toBe(5)
+    })
+
+    it('should group by field', async () => {
+      const result = await queryService.aggregate(
+        {},
+        {
+          count: [{ field: 'id', args: {} }],
+          groupBy: [{ field: 'boolType', args: {} }]
+        }
+      )
+      expect(result).toHaveLength(2)
+      const trueGroup = result.find((r) => Boolean(r.groupBy?.boolType) === true)
+      const falseGroup = result.find((r) => Boolean(r.groupBy?.boolType) === false)
+      expect(trueGroup?.count?.id).toBe(5)
+      expect(falseGroup?.count?.id).toBe(5)
+    })
+
+    it('should return empty array when no aggregations specified', async () => {
+      const result = await queryService.aggregate({}, {})
+      expect(result).toEqual([])
+    })
+
+    it('should throw for withDeleted option', async () => {
+      await expect(
+        queryService.aggregate({}, { count: [{ field: 'id', args: {} }] }, { withDeleted: true })
+      ).rejects.toThrow('MikroOrmQueryService does not support withDeleted on aggregate')
+    })
+  })
 })
