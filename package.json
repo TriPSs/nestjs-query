@@ -19,7 +19,7 @@
   "dependencies": {
     "@m8a/nestjs-typegoose": "12.0.1",
     "@nestjs/common": "11.1.17",
-    "@nestjs/core": "11.1.17",
+    "@nestjs/core": "11.1.18",
     "@nestjs/graphql": "^13.2.4",
     "@nestjs/jwt": "11.0.2",
     "@nestjs/mongoose": "11.0.4",
