@@ -19,8 +19,8 @@ export interface CRUDResolverOpts<
   U = DeepPartial<DTO>,
   R extends ReadResolverOpts<DTO> = ReadResolverOpts<DTO>,
   PS extends PagingStrategies = PagingStrategies.CURSOR
-> extends BaseResolverOptions,
-    Pick<ConnectionOptions, 'enableTotalCount'> {
+>
+  extends BaseResolverOptions, Pick<ConnectionOptions, 'enableTotalCount'> {
   /**
    * The DTO that should be used as input for create endpoints.
    */
@@ -50,7 +50,9 @@ export interface CRUDResolver<
   U,
   R extends ReadResolverOpts<DTO>,
   QS extends QueryService<DTO, C, U> = QueryService<DTO, C, U>
-> extends CreateResolver<DTO, C, QS>,
+>
+  extends
+    CreateResolver<DTO, C, QS>,
     ReadResolverFromOpts<DTO, R, QS>,
     UpdateResolver<DTO, U, QS>,
     DeleteResolver<DTO, QS>,

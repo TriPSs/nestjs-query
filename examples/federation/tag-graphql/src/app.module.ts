@@ -11,7 +11,7 @@ import { TagModule } from './tag/tag.module'
     TypeOrmModule.forRoot(typeormOrmConfig('federation_tag')),
     GraphQLModule.forRoot({
       driver: ApolloFederationDriver,
-      autoSchemaFile: 'examples/federation/tag-graphql/schema.gql'
+      autoSchemaFile: { federation: { version: 2, importUrl: 'https://specs.apollo.dev/federation/v2.7' } }
     }),
     TagModule
   ]

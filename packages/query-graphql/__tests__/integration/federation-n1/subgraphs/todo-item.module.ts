@@ -16,7 +16,7 @@ import { TodoList } from '../entities/todo-list.entity'
     TypeOrmModule.forFeature([TodoItem, TodoList]),
     GraphQLModule.forRoot({
       driver: ApolloFederationDriver,
-      autoSchemaFile: { federation: 2 }
+      autoSchemaFile: { federation: { version: 2, importUrl: 'https://specs.apollo.dev/federation/v2.7' } }
     }),
     NestjsQueryGraphQLModule.forFeature({
       imports: [NestjsQueryTypeOrmModule.forFeature([TodoItem])],
