@@ -12567,13 +12567,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"diff-sequences@npm:^29.6.3":
-  version: 29.6.3
-  resolution: "diff-sequences@npm:29.6.3"
-  checksum: 10/179daf9d2f9af5c57ad66d97cb902a538bcf8ed64963fa7aa0c329b3de3665ce2eb6ffdc2f69f29d445fa4af2517e5e55e5b6e00c00a9ae4f43645f97f7078cb
-  languageName: node
-  linkType: hard
-
 "diff@npm:^4.0.1":
   version: 4.0.4
   resolution: "diff@npm:4.0.4"
@@ -16784,7 +16777,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-diff@npm:30.4.1":
+"jest-diff@npm:30.4.1, jest-diff@npm:^30.0.0":
   version: 30.4.1
   resolution: "jest-diff@npm:30.4.1"
   dependencies:
@@ -16793,18 +16786,6 @@ __metadata:
     chalk: "npm:^4.1.2"
     pretty-format: "npm:30.4.1"
   checksum: 10/594212df96bf101170afdb7eebd188d6d7d27241cbdd18b61d95f1142a3c94ae3b270377d15e719fb3c5efe4458d32acba8ad13dd6230dd7d6917a9eebb32625
-  languageName: node
-  linkType: hard
-
-"jest-diff@npm:^29.0.0":
-  version: 29.7.0
-  resolution: "jest-diff@npm:29.7.0"
-  dependencies:
-    chalk: "npm:^4.0.0"
-    diff-sequences: "npm:^29.6.3"
-    jest-get-type: "npm:^29.6.3"
-    pretty-format: "npm:^29.7.0"
-  checksum: 10/6f3a7eb9cd9de5ea9e5aa94aed535631fa6f80221832952839b3cb59dd419b91c20b73887deb0b62230d06d02d6b6cf34ebb810b88d904bb4fe1e2e4f0905c98
   languageName: node
   linkType: hard
 
@@ -16919,25 +16900,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-extended@npm:4.0.2":
-  version: 4.0.2
-  resolution: "jest-extended@npm:4.0.2"
+"jest-extended@npm:7.0.0":
+  version: 7.0.0
+  resolution: "jest-extended@npm:7.0.0"
   dependencies:
-    jest-diff: "npm:^29.0.0"
-    jest-get-type: "npm:^29.0.0"
+    jest-diff: "npm:^30.0.0"
   peerDependencies:
     jest: ">=27.2.5"
+    typescript: ">=5.0.0"
   peerDependenciesMeta:
     jest:
       optional: true
-  checksum: 10/6633c425636751462b0f2106915c6ed91ab07a0e55d28477ae2405361e0a05f617f4dae60b0d4332096e2757644a2a6c5d40e618be6a6c0d47a0325f7e696ce6
-  languageName: node
-  linkType: hard
-
-"jest-get-type@npm:^29.0.0, jest-get-type@npm:^29.6.3":
-  version: 29.6.3
-  resolution: "jest-get-type@npm:29.6.3"
-  checksum: 10/88ac9102d4679d768accae29f1e75f592b760b44277df288ad76ce5bf038c3f5ce3719dea8aa0f035dac30e9eb034b848ce716b9183ad7cc222d029f03e92205
+    typescript:
+      optional: false
+  checksum: 10/9f0cfca09f7c25aca82ed060de049105bd11e1a2b969d304223c87ef58fe514ae8ee35d6c4c532fc94ae262ac397913bc9d1c3c484d9c5980a924f0de45559c6
   languageName: node
   linkType: hard
 
@@ -20188,7 +20164,7 @@ __metadata:
     graphql-tools: "npm:9.0.28"
     husky: "npm:9.1.7"
     jest: "npm:30.0.5"
-    jest-extended: "npm:4.0.2"
+    jest-extended: "npm:7.0.0"
     jest-util: "npm:30.0.5"
     mongodb-memory-server: "npm:9.5.0"
     mongoose: "npm:8.21.1"
@@ -22430,7 +22406,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^29.0.0, pretty-format@npm:^29.7.0":
+"pretty-format@npm:^29.0.0":
   version: 29.7.0
   resolution: "pretty-format@npm:29.7.0"
   dependencies:
