@@ -1,6 +1,6 @@
 /* eslint-disable */
 // eslint-disable-next-line import/no-default-export
-export default {
+module.exports = {
   displayName: 'query-sequelize',
   preset: '../../jest.preset.js',
   globals: {},

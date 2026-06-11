@@ -35,7 +35,7 @@ describe('Federation Reference Resolution Integration Test', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
-          type: 'sqlite',
+          type: 'better-sqlite3',
           database: ':memory:',
           entities: [TodoList, TodoItem],
           synchronize: true
@@ -43,7 +43,7 @@ describe('Federation Reference Resolution Integration Test', () => {
         TypeOrmModule.forFeature([TodoList, TodoItem]),
         GraphQLModule.forRoot<ApolloFederationDriverConfig>({
           driver: ApolloFederationDriver,
-          autoSchemaFile: { federation: { version: 2, importUrl: 'https://specs.apollo.dev/federation/v2.7' } }
+          autoSchemaFile: { federation: { version: 2, importUrl: 'https://specs.apollo.dev/federation/v2.12' } }
         }),
         NestjsQueryGraphQLModule.forFeature({
           imports: [NestjsQueryTypeOrmModule.forFeature([TodoList, TodoItem])],

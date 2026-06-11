@@ -3,6 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/query-graphql/src",
   "projectType": "library",
+  "tags": [],
+  "implicitDependencies": ["core"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -38,7 +40,5 @@
         "command": "npm publish ./dist/packages/query-graphql --access public"
       }
     }
-  },
-  "tags": [],
-  "implicitDependencies": ["core"]
+  }
 }
