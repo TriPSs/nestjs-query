@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknestjs_query=self.webpackChunknestjs_query||[]).push([[7472],{5922(e){e.exports=JSON.parse('{"title":"Recent posts","items":[]}')}}]);
