@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/core/src",
   "projectType": "library",
+  "tags": [],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -38,6 +39,5 @@
         "command": "npm publish ./dist/packages/core --access public"
       }
     }
-  },
-  "tags": []
+  }
 }

@@ -146,7 +146,10 @@ export class AggregateBuilder<Entity> {
           } else if (aggregatedField.args.by === GroupBy.MONTH) {
             query = `DATE(TO_CHAR(${col}, 'YYYY-mm-01'))`
           } else if (aggregatedField.args.by === GroupBy.WEEK) {
-            query = `TO_DATE(TO_CHAR(${col}, 'YYYY-WW-01'), 'YYYY-WW-01')`
+            // ISO 8601 week (Monday-based), matches the MySQL branch below (%X-%V).
+            // Postgres `WW` is anchored to Jan 1 and produces Thursday-cutoff weeks in years
+            // where Jan 1 is a Thursday, which is rarely what users want.
+            query = `DATE(DATE_TRUNC('week', ${col}))`
           }
         } else {
           if (aggregatedField.args.by === GroupBy.YEAR) {

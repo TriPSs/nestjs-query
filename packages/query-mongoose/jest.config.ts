@@ -1,6 +1,4 @@
-/* eslint-disable */
-// eslint-disable-next-line import/no-default-export
-export default {
+module.exports = {
   displayName: 'query-mongoose',
   preset: '../../jest.preset.js',
   globals: {},

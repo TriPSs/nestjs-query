@@ -20,7 +20,7 @@ export type EntityComparisonField<Entity, F extends keyof Entity> =
  * @internal
  * Builder to create SQL Comparisons. (=, !=, \>, etc...)
  */
-export class ComparisonBuilder<Entity extends Document> {
+export class ComparisonBuilder<Entity extends Document<any>> {
   static DEFAULT_COMPARISON_MAP: Record<string, string> = {
     eq: '$eq',
     neq: '$ne',

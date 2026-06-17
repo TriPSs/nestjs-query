@@ -39,7 +39,7 @@ type MongoDBDeletedOutput = {
  * }
  * ```
  */
-export class MongooseQueryService<Entity extends Document>
+export class MongooseQueryService<Entity extends Document<any>>
   extends ReferenceQueryService<Entity>
   implements QueryService<Entity, DeepPartial<Entity>, DeepPartial<Entity>>
 {

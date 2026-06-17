@@ -424,19 +424,24 @@ exports[`FilterQueryBuilder #softDelete with filter should call whereBuilder#bui
 SET
   "deleted_at" = CURRENT_TIMESTAMP
 WHERE
-  "string_type" = 'foo'"
+  "string_type" = 'foo'
+  AND "deleted_at" IS NULL"
 `;
 
 exports[`FilterQueryBuilder #softDelete with paging should ignore paging args 1`] = `
 "UPDATE "test_soft_delete_entity"
 SET
-  "deleted_at" = CURRENT_TIMESTAMP"
+  "deleted_at" = CURRENT_TIMESTAMP
+WHERE
+  "deleted_at" IS NULL"
 `;
 
 exports[`FilterQueryBuilder #softDelete with sorting should ignore sorting 1`] = `
 "UPDATE "test_soft_delete_entity"
 SET
-  "deleted_at" = CURRENT_TIMESTAMP"
+  "deleted_at" = CURRENT_TIMESTAMP
+WHERE
+  "deleted_at" IS NULL"
 `;
 
 exports[`FilterQueryBuilder #update with filter should call whereBuilder#build if there is a filter 1`] = `

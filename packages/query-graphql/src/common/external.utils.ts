@@ -1,7 +1,12 @@
 import { TypeMetadataStorage } from '@nestjs/graphql'
 import { EnumMetadata } from '@nestjs/graphql/dist/schema-builder/metadata'
 import { ObjectTypeMetadata } from '@nestjs/graphql/dist/schema-builder/metadata/object-type.metadata'
-import { LazyMetadataStorage } from '@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage'
+// `@nestjs/graphql` maps its internals via a `"./*": "./*"` exports wildcard which — unlike legacy CJS
+// resolution — does NOT append the file extension. The two imports above are used in type positions only
+// (erased at compile time), but `LazyMetadataStorage` is a runtime value, so its specifier must carry the
+// explicit `.js` or Node throws `Cannot find module .../lazy-metadata.storage` when the service boots.
+// eslint-disable-next-line import/extensions
+import { LazyMetadataStorage } from '@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage.js'
 import { Class } from '@ptc-org/nestjs-query-core'
 
 import { UnregisteredObjectType } from '../types/type.errors'
