@@ -175,6 +175,50 @@ describe('CursorConnectionType', (): void => {
         })
       })
 
+      describe('with first and offset', () => {
+        it('should add offset to the cursor offset when using first with offset', async () => {
+          const queryMany = jest.fn()
+          const dtos = [createTestDTO(3), createTestDTO(4)]
+          queryMany.mockResolvedValueOnce([...dtos])
+          const response = await TestConnection.createFromPromise(queryMany, { paging: createPage({ first: 2, offset: 2 }) })
+          expect(queryMany).toHaveBeenCalledTimes(1)
+          expect(queryMany).toHaveBeenCalledWith({ paging: { limit: 3, offset: 2 } })
+          expect(response.edges).toEqual([
+            { cursor: 'YXJyYXljb25uZWN0aW9uOjI=', node: dtos[0] },
+            { cursor: 'YXJyYXljb25uZWN0aW9uOjM=', node: dtos[1] }
+          ])
+          expect(response.pageInfo).toEqual({
+            endCursor: 'YXJyYXljb25uZWN0aW9uOjM=',
+            hasNextPage: false,
+            hasPreviousPage: true, // true because offset > 0 means there are previous records
+            startCursor: 'YXJyYXljb25uZWN0aW9uOjI='
+          })
+        })
+
+        it('should combine after cursor with additional offset', async () => {
+          const queryMany = jest.fn()
+          const dtos = [createTestDTO(5), createTestDTO(6), createTestDTO(7)]
+          queryMany.mockResolvedValueOnce([...dtos])
+          // after cursor points to index 1, offset adds 3 more, so we start at index 5
+          const response = await TestConnection.createFromPromise(queryMany, {
+            paging: createPage({ first: 2, after: 'YXJyYXljb25uZWN0aW9uOjE=', offset: 3 })
+          })
+          expect(queryMany).toHaveBeenCalledTimes(1)
+          // after cursor 1 means start at 2, plus offset 3 = start at 5
+          expect(queryMany).toHaveBeenCalledWith({ paging: { limit: 3, offset: 5 } })
+          expect(response.edges).toEqual([
+            { cursor: 'YXJyYXljb25uZWN0aW9uOjU=', node: dtos[0] },
+            { cursor: 'YXJyYXljb25uZWN0aW9uOjY=', node: dtos[1] }
+          ])
+          expect(response.pageInfo).toEqual({
+            endCursor: 'YXJyYXljb25uZWN0aW9uOjY=',
+            hasNextPage: true,
+            hasPreviousPage: true,
+            startCursor: 'YXJyYXljb25uZWN0aW9uOjU='
+          })
+        })
+      })
+
       describe('with last', () => {
         it("should return hasPreviousPage false if paging backwards and we're on the first page", async () => {
           const queryMany = jest.fn()

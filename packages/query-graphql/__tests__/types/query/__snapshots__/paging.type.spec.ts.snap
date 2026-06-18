@@ -17,6 +17,9 @@ input Paging {
 
   """Paginate last"""
   last: Int
+
+  """Offset to skip additional records"""
+  offset: Int
 }
 
 """Cursor for paging through collections"""
