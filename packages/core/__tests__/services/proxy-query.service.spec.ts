@@ -23,12 +23,12 @@ describe('ProxyQueryService', () => {
   })
   it('should proxy to the underlying service when calling createMany', () => {
     const entities = [{ foo: 'bar' }]
-    when(mockQueryService.createMany(entities)).thenResolve(entities)
+    when(mockQueryService.createMany(entities, undefined)).thenResolve(entities)
     return expect(queryService.createMany(entities)).resolves.toBe(entities)
   })
   it('should proxy to the underlying service when calling createOne', () => {
     const entity = { foo: 'bar' }
-    when(mockQueryService.createOne(entity)).thenResolve(entity)
+    when(mockQueryService.createOne(entity, undefined)).thenResolve(entity)
     return expect(queryService.createOne(entity)).resolves.toBe(entity)
   })
   it('should proxy to the underlying service when calling deleteMany', () => {

@@ -25,7 +25,14 @@ import { BaseServiceResolver, ResolverClass, ServiceResolver, SubscriptionResolv
 
 export type CreatedEvent<DTO> = { [eventName: string]: DTO }
 
-export interface CreateResolverOpts<DTO, C = DeepPartial<DTO>> extends SubscriptionResolverOpts {
+interface AuthValidationOpts {
+  /**
+   * Determines whether the auth filter should be passed into the query service
+   */
+  validateWithAuthFilter?: boolean
+}
+
+export interface CreateResolverOpts<DTO, C = DeepPartial<DTO>> extends SubscriptionResolverOpts, AuthValidationOpts {
   /**
    * The Input DTO that should be used to create records.
    */
@@ -41,6 +48,9 @@ export interface CreateResolverOpts<DTO, C = DeepPartial<DTO>> extends Subscript
 
   createOneMutationName?: string
   createManyMutationName?: string
+
+  one?: SubscriptionResolverOpts['one'] & AuthValidationOpts
+  many?: SubscriptionResolverOpts['many'] & AuthValidationOpts
 }
 
 export interface CreateResolver<DTO, C, QS extends QueryService<DTO, C, unknown>> extends ServiceResolver<DTO, QS> {
@@ -134,11 +144,12 @@ export const Creatable =
         @AuthorizerFilter({
           operationGroup: OperationGroup.CREATE,
           many: false
-        }) // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        })
         authorizeFilter?: Filter<DTO>
       ): Promise<DTO> {
-        // Ignore `authorizeFilter` for now but give users the ability to throw an UnauthorizedException
-        const created = await this.service.createOne(input.input.input)
+        const createOneOpts =
+          opts?.validateWithAuthFilter || opts?.one?.validateWithAuthFilter ? { filter: authorizeFilter ?? {} } : undefined
+        const created = await this.service.createOne(input.input.input, createOneOpts)
         if (enableOneSubscriptions) {
           await this.publishCreatedEvent(created, authorizeFilter)
         }
@@ -159,11 +170,12 @@ export const Creatable =
         @AuthorizerFilter({
           operationGroup: OperationGroup.CREATE,
           many: true
-        }) // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        })
         authorizeFilter?: Filter<DTO>
       ): Promise<DTO[]> {
-        // Ignore `authorizeFilter` for now but give users the ability to throw an UnauthorizedException
-        const created = await this.service.createMany(input.input.input)
+        const createManyOpts =
+          opts.validateWithAuthFilter || opts.many?.validateWithAuthFilter ? { filter: authorizeFilter ?? {} } : undefined
+        const created = await this.service.createMany(input.input.input, createManyOpts)
         if (enableManySubscriptions) {
           await Promise.all(created.map((c) => this.publishCreatedEvent(c, authorizeFilter)))
         }

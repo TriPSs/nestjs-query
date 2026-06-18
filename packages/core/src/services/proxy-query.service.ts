@@ -4,6 +4,8 @@ import {
   AggregateQuery,
   AggregateResponse,
   CountOptions,
+  CreateManyOptions,
+  CreateOneOptions,
   DeleteManyResponse,
   DeleteOneOptions,
   Filter,
@@ -172,12 +174,12 @@ export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> 
     return this.proxied.findRelation(RelationClass, relationName, dto, opts)
   }
 
-  public createMany(items: C[]): Promise<DTO[]> {
-    return this.proxied.createMany(items)
+  public createMany(items: C[], opts?: CreateManyOptions<DTO>): Promise<DTO[]> {
+    return this.proxied.createMany(items, opts)
   }
 
-  public createOne(item: C): Promise<DTO> {
-    return this.proxied.createOne(item)
+  public createOne(item: C, opts?: CreateOneOptions<DTO>): Promise<DTO> {
+    return this.proxied.createOne(item, opts)
   }
 
   public async deleteMany(filter: Filter<DTO>): Promise<DeleteManyResponse> {
