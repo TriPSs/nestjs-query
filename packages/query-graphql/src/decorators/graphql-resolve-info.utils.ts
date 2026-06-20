@@ -13,7 +13,6 @@ import type { CursorConnectionType, OffsetConnectionType } from '../types'
 import type { RelationDescriptor } from './relation.decorator'
 import type { QueryResolveFields, QueryResolveTree, SelectRelation } from '@ptc-org/nestjs-query-core'
 import type { GraphQLCompositeType, GraphQLResolveInfo as ResolveInfo, SelectionNode } from 'graphql'
-
 /**
  * Parts based of https://github.com/graphile/graphile-engine/blob/master/packages/graphql-parse-resolve-info/src/index.ts
  */
@@ -60,6 +59,27 @@ function getDirectiveResults(fieldNode: SelectionNode, info: ResolveInfo) {
   }, directiveResult)
 }
 
+function inlineFragments(nodes: ReadonlyArray<SelectionNode>, resolveInfo: ResolveInfo): SelectionNode[] {
+  return nodes.flatMap((ast) => {
+    if (ast.kind !== Kind.FRAGMENT_SPREAD) return ast
+
+    if (ast.directives?.length) {
+      const { shouldInclude, shouldSkip } = getDirectiveResults(ast, resolveInfo)
+      // field/fragment is not included if either the @skip condition is true or the @include condition is false
+      // https://facebook.github.io/graphql/draft/#sec--include
+      if (shouldSkip || !shouldInclude) {
+        return []
+      }
+    }
+
+    const fragment = resolveInfo.fragments[ast.name.value]
+    if (fragment) {
+      return inlineFragments(fragment.selectionSet.selections, resolveInfo)
+    }
+    return []
+  })
+}
+
 function parseFieldNodes<DTO>(
   inASTs: ReadonlyArray<SelectionNode> | SelectionNode,
   resolveInfo: ResolveInfo,
@@ -68,7 +88,9 @@ function parseFieldNodes<DTO>(
 ): QueryResolveTree<DTO> | QueryResolveFields<DTO> {
   const asts: ReadonlyArray<SelectionNode> = Array.isArray(inASTs) ? inASTs : [inASTs]
 
-  return asts.reduce((tree, fieldNode) => {
+  const astsWithInlinedFragments = inlineFragments(asts, resolveInfo)
+
+  return astsWithInlinedFragments.reduce((tree, fieldNode) => {
     let name: string
     let alias: string
 
