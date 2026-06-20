@@ -861,7 +861,7 @@ describe('MongooseQueryService', () => {
       })
 
       it('should return an empty array if no results are found.', async () => {
-        const entities: TestEntity[] = [TEST_ENTITIES[0], { id: new Types.ObjectId() } as TestEntity]
+        const entities: TestEntity[] = [TEST_ENTITIES[0], { id: new Types.ObjectId() as never as string } as TestEntity]
         const queryService = moduleRef.get(TestEntityService)
         const queryResult = await queryService.queryRelations(TestReference, 'testReferences', entities, {
           filter: { referenceName: { isNot: null } }

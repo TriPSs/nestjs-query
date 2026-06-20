@@ -29,13 +29,19 @@ export function isSchemaTypeWithReferenceOptions(type: unknown): type is SchemaT
 }
 
 export type EmbeddedSchemaTypeOptions = {
-  $embeddedSchemaType: { options: ReferenceOptions }
+  // Mongoose 9 renamed the array element accessor `$embeddedSchemaType` to `embeddedSchemaType`; support both.
+  $embeddedSchemaType?: { options: ReferenceOptions }
+  embeddedSchemaType?: { options: ReferenceOptions }
+}
+
+export function getEmbeddedSchemaType(schemaType: EmbeddedSchemaTypeOptions): { options: ReferenceOptions } | undefined {
+  return schemaType.embeddedSchemaType ?? schemaType.$embeddedSchemaType
 }
 
 export function isEmbeddedSchemaTypeOptions(options: unknown): options is EmbeddedSchemaTypeOptions {
-  if (options && typeof options === 'object' && '$embeddedSchemaType' in options) {
-    const { $embeddedSchemaType } = options as { $embeddedSchemaType: { options: unknown } }
-    return isReferenceOptions($embeddedSchemaType.options)
+  if (options && typeof options === 'object' && ('embeddedSchemaType' in options || '$embeddedSchemaType' in options)) {
+    const embedded = getEmbeddedSchemaType(options as EmbeddedSchemaTypeOptions)
+    return !!embedded && isReferenceOptions(embedded.options)
   }
   return false
 }

@@ -14,6 +14,7 @@ import {
 import { Document, Model as MongooseModel, PipelineStage, Types, UpdateQuery } from 'mongoose'
 
 import {
+  getEmbeddedSchemaType,
   isEmbeddedSchemaTypeOptions,
   isSchemaTypeWithReferenceOptions,
   isVirtualTypeWithReferenceOptions,
@@ -131,7 +132,7 @@ export abstract class ReferenceQueryService<Entity extends Document<any>> {
       return this.batchFindRelations(RelationClass, relationName, dto, opts)
     }
 
-    const foundEntity = await this.Model.findById(dto._id ?? dto.id)
+    const foundEntity = await this.Model.findById(dto._id ?? (dto as { id?: unknown }).id)
     if (!foundEntity) {
       return undefined
     }
@@ -308,7 +309,7 @@ export abstract class ReferenceQueryService<Entity extends Document<any>> {
     if (Array.isArray(dto)) {
       return this.batchQueryRelations(RelationClass, relationName, dto, query)
     }
-    const foundEntity = await this.Model.findById(dto._id ?? dto.id)
+    const foundEntity = await this.Model.findById(dto._id ?? (dto as { id?: unknown }).id)
     if (!foundEntity) {
       return []
     }
@@ -445,7 +446,7 @@ export abstract class ReferenceQueryService<Entity extends Document<any>> {
     if (this.isReferencePath(refName)) {
       const schemaType = this.Model.schema.path(refName)
       if (isEmbeddedSchemaTypeOptions(schemaType)) {
-        return db.model<Ref>(schemaType.$embeddedSchemaType.options.ref)
+        return db.model<Ref>(getEmbeddedSchemaType(schemaType)!.options.ref)
       }
       if (isSchemaTypeWithReferenceOptions(schemaType)) {
         return db.model<Ref>(schemaType.options.ref)
