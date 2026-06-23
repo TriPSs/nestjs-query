@@ -82,6 +82,7 @@ tsconfig.tsbuildinfo
 
 # intelliJ workspace files
 .idea
+.junie
 
 documentation/.docusaurus
 /**/package-lock.json
