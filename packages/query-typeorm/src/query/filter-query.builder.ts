@@ -241,7 +241,7 @@ export class FilterQueryBuilder<Entity> {
     }
 
     return aggregatedGroupBy.reduce((prevQb, aggregatedField) => {
-      return prevQb.addGroupBy(prevQb.escape(AggregateBuilder.getGroupByAlias(aggregatedField.field)))
+      return prevQb.addGroupBy(prevQb.escape(this.aggregateBuilder.getGroupByAlias(aggregatedField.field)))
     }, qb)
   }
 
@@ -256,7 +256,7 @@ export class FilterQueryBuilder<Entity> {
     }
 
     return aggregatedGroupBy.reduce((prevQb, aggregatedField) => {
-      return prevQb.addOrderBy(prevQb.escape(AggregateBuilder.getGroupByAlias(aggregatedField.field)), 'ASC')
+      return prevQb.addOrderBy(prevQb.escape(this.aggregateBuilder.getGroupByAlias(aggregatedField.field)), 'ASC')
     }, qb)
   }
 
