@@ -12310,13 +12310,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.11.19":
-  version: 1.11.20
-  resolution: "dayjs@npm:1.11.20"
-  checksum: 10/5347533f21a55b8bb1b1ef559be9b805514c3a8fb7e68b75fb7e73808131c59e70909c073aa44ce8a0d159195cd110cdd4081cf87ab96cb06fee3edacae791c6
-  languageName: node
-  linkType: hard
-
 "dayjs@npm:^1.11.20":
   version: 1.11.21
   resolution: "dayjs@npm:1.11.21"
@@ -12403,7 +12396,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dedent@npm:^1.6.0, dedent@npm:^1.7.0, dedent@npm:^1.7.2":
+"dedent@npm:^1.6.0, dedent@npm:^1.7.2":
   version: 1.7.2
   resolution: "dedent@npm:1.7.2"
   peerDependencies:
@@ -20265,7 +20258,7 @@ __metadata:
     tsconfig-extends: "npm:1.0.1"
     tsconfig-paths: "npm:4.2.0"
     tslib: "npm:^2.8.1"
-    typeorm: "npm:1.0.0"
+    typeorm: "npm:0.3.29"
     typescript: "npm:^5.9.3"
   languageName: unknown
   linkType: soft
@@ -24883,7 +24876,7 @@ __metadata:
     pg: "npm:^8.20.0"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"
-    typeorm: "npm:^0.3.28"
+    typeorm: "npm:^0.3.29"
     typescript: "npm:^5.9.3"
   languageName: unknown
   linkType: soft
@@ -25115,7 +25108,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tinyglobby@npm:^0.2.13, tinyglobby@npm:^0.2.14, tinyglobby@npm:^0.2.16":
+"tinyglobby@npm:^0.2.13, tinyglobby@npm:^0.2.14":
   version: 0.2.17
   resolution: "tinyglobby@npm:0.2.17"
   dependencies:
@@ -25188,7 +25181,7 @@ __metadata:
     pg: "npm:^8.20.0"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"
-    typeorm: "npm:^0.3.28"
+    typeorm: "npm:^0.3.29"
     typescript: "npm:^5.9.3"
   languageName: unknown
   linkType: soft
@@ -25693,93 +25686,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typeorm@npm:1.0.0":
-  version: 1.0.0
-  resolution: "typeorm@npm:1.0.0"
-  dependencies:
-    "@sqltools/formatter": "npm:^1.2.5"
-    ansis: "npm:^4.2.0"
-    dayjs: "npm:^1.11.20"
-    debug: "npm:^4.4.3"
-    dedent: "npm:^1.7.2"
-    reflect-metadata: "npm:^0.2.2"
-    sql-highlight: "npm:^6.1.0"
-    tinyglobby: "npm:^0.2.16"
-    tslib: "npm:^2.8.1"
-    yargs: "npm:^18.0.0"
-  peerDependencies:
-    "@google-cloud/spanner": ^8.0.0
-    "@sap/hana-client": ^2.14.22
-    better-sqlite3: ^12.0.0
-    ioredis: ^5.0.4
-    mongodb: ^7.0.0
-    mssql: ^12.0.0
-    mysql2: ^3.15.3
-    oracledb: ^6.3.0
-    pg: ^8.5.1
-    pg-native: ^3.0.0
-    pg-query-stream: ^4.0.0
-    redis: ^5.0.0
-    sql.js: ^1.4.0
-    ts-node: ^10.9.2
-    typeorm-aurora-data-api-driver: ^3.0.0
-  peerDependenciesMeta:
-    "@google-cloud/spanner":
-      optional: true
-    "@sap/hana-client":
-      optional: true
-    better-sqlite3:
-      optional: true
-    ioredis:
-      optional: true
-    mongodb:
-      optional: true
-    mssql:
-      optional: true
-    mysql2:
-      optional: true
-    oracledb:
-      optional: true
-    pg:
-      optional: true
-    pg-native:
-      optional: true
-    pg-query-stream:
-      optional: true
-    redis:
-      optional: true
-    sql.js:
-      optional: true
-    ts-node:
-      optional: true
-    typeorm-aurora-data-api-driver:
-      optional: true
-  bin:
-    typeorm: cli.js
-    typeorm-ts-node-commonjs: cli-ts-node-commonjs.js
-    typeorm-ts-node-esm: cli-ts-node-esm.js
-  checksum: 10/56ed87a4215181482ced4d00f14143c5c4f0e7fcc803e0d748ff7b2b98062c6bcb921819a347e79dca9ab0438f81496a2fbf45a7aeec6b98cc138e7a8528f2fa
-  languageName: node
-  linkType: hard
-
-"typeorm@npm:^0.3.28":
-  version: 0.3.28
-  resolution: "typeorm@npm:0.3.28"
+"typeorm@npm:0.3.29":
+  version: 0.3.29
+  resolution: "typeorm@npm:0.3.29"
   dependencies:
     "@sqltools/formatter": "npm:^1.2.5"
     ansis: "npm:^4.2.0"
     app-root-path: "npm:^3.1.0"
     buffer: "npm:^6.0.3"
-    dayjs: "npm:^1.11.19"
+    dayjs: "npm:^1.11.20"
     debug: "npm:^4.4.3"
-    dedent: "npm:^1.7.0"
+    dedent: "npm:^1.7.2"
     dotenv: "npm:^16.6.1"
     glob: "npm:^10.5.0"
     reflect-metadata: "npm:^0.2.2"
     sha.js: "npm:^2.4.12"
     sql-highlight: "npm:^6.1.0"
     tslib: "npm:^2.8.1"
-    uuid: "npm:^11.1.0"
+    uuid: "npm:^11.1.1"
     yargs: "npm:^17.7.2"
   peerDependencies:
     "@google-cloud/spanner": ^5.18.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -25835,7 +25759,84 @@ __metadata:
     typeorm: cli.js
     typeorm-ts-node-commonjs: cli-ts-node-commonjs.js
     typeorm-ts-node-esm: cli-ts-node-esm.js
-  checksum: 10/4eb217d65414291fb226267d903d123a16a9eb090b4e8f8da2dfe2f64680265823bea3712d363d31fe96c6dc2cef00edd545f42e63ec65b8a1899a1b455f757b
+  checksum: 10/ae6bfced76e01fa2405f2a6114a0c89cfab877afd4435ab33040deb1ce9d657015e484c557311c22e0c0d8e9ce10b9e23fc3af147e3395e029070f3a3a5fb0ec
+  languageName: node
+  linkType: hard
+
+"typeorm@npm:^0.3.29":
+  version: 0.3.30
+  resolution: "typeorm@npm:0.3.30"
+  dependencies:
+    "@sqltools/formatter": "npm:^1.2.5"
+    ansis: "npm:^4.2.0"
+    app-root-path: "npm:^3.1.0"
+    buffer: "npm:^6.0.3"
+    dayjs: "npm:^1.11.20"
+    debug: "npm:^4.4.3"
+    dedent: "npm:^1.7.2"
+    dotenv: "npm:^16.6.1"
+    glob: "npm:^10.5.0"
+    reflect-metadata: "npm:^0.2.2"
+    sha.js: "npm:^2.4.12"
+    sql-highlight: "npm:^6.1.0"
+    tslib: "npm:^2.8.1"
+    uuid: "npm:^11.1.1"
+    yargs: "npm:^17.7.2"
+  peerDependencies:
+    "@google-cloud/spanner": ^5.18.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
+    "@sap/hana-client": ^2.14.22
+    better-sqlite3: ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
+    ioredis: ^5.0.4
+    mongodb: ^5.8.0 || ^6.0.0
+    mssql: ^9.1.1 || ^10.0.0 || ^11.0.0 || ^12.0.0
+    mysql2: ^2.2.5 || ^3.0.1
+    oracledb: ^6.3.0
+    pg: ^8.5.1
+    pg-native: ^3.0.0
+    pg-query-stream: ^4.0.0
+    redis: ^3.1.1 || ^4.0.0 || ^5.0.14
+    sql.js: ^1.4.0
+    sqlite3: ^5.0.3
+    ts-node: ^10.7.0
+    typeorm-aurora-data-api-driver: ^2.0.0 || ^3.0.0
+  peerDependenciesMeta:
+    "@google-cloud/spanner":
+      optional: true
+    "@sap/hana-client":
+      optional: true
+    better-sqlite3:
+      optional: true
+    ioredis:
+      optional: true
+    mongodb:
+      optional: true
+    mssql:
+      optional: true
+    mysql2:
+      optional: true
+    oracledb:
+      optional: true
+    pg:
+      optional: true
+    pg-native:
+      optional: true
+    pg-query-stream:
+      optional: true
+    redis:
+      optional: true
+    sql.js:
+      optional: true
+    sqlite3:
+      optional: true
+    ts-node:
+      optional: true
+    typeorm-aurora-data-api-driver:
+      optional: true
+  bin:
+    typeorm: cli.js
+    typeorm-ts-node-commonjs: cli-ts-node-commonjs.js
+    typeorm-ts-node-esm: cli-ts-node-esm.js
+  checksum: 10/560d3995ffb9bc69956e6fecc9c3fe576397a0674909ba753b235418e72d9e433fe14ddfb82af4975ceb6a441579b1ea19aefe5811ccb991d879834e05cfa093
   languageName: node
   linkType: hard
 
@@ -26309,7 +26310,7 @@ __metadata:
     pg: "npm:^8.20.0"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"
-    typeorm: "npm:^0.3.28"
+    typeorm: "npm:^0.3.29"
     typescript: "npm:^5.9.3"
   languageName: unknown
   linkType: soft
@@ -26342,12 +26343,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^11.1.0":
-  version: 11.1.0
-  resolution: "uuid@npm:11.1.0"
+"uuid@npm:^11.1.1":
+  version: 11.1.1
+  resolution: "uuid@npm:11.1.1"
   bin:
     uuid: dist/esm/bin/uuid
-  checksum: 10/d2da43b49b154d154574891ced66d0c83fc70caaad87e043400cf644423b067542d6f3eb641b7c819224a7cd3b4c2f21906acbedd6ec9c6a05887aa9115a9cf5
+  checksum: 10/16411d3dc12a08d6691616c09a75e66a7f900ba1beef6628a76fe0602f82fae2ee537b564d0b7bc95c24f58d059ca9b58c75a1e806118efb50e17822ff00ddd2
   languageName: node
   linkType: hard
 
