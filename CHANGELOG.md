@@ -1,4 +1,20 @@
  
+## [9.5.0](https://github.com/TriPSs/nestjs-query/compare/v9.4.0...v9.5.0) (2026-06-27)
+
+
+### Features
+
+* **ci:** trigger preview release on master push ([#4](https://github.com/TriPSs/nestjs-query/issues/4)) ([b95f2a7](https://github.com/TriPSs/nestjs-query/commit/b95f2a7a79dd91a30f67375c3c8f07f0a788048e))
+* **query-mikro-orm:** add count() method to MikroOrmQueryService ([1b6a309](https://github.com/TriPSs/nestjs-query/commit/1b6a309301bf02272d1a8a0df722301cae7e4e3c))
+* **query-mikro-orm:** add MikroORM adapter package ([#3](https://github.com/TriPSs/nestjs-query/issues/3)) ([f3bddb6](https://github.com/TriPSs/nestjs-query/commit/f3bddb672e136b63480ff25889d9f050a25bb6be)), closes [#178](https://github.com/TriPSs/nestjs-query/issues/178)
+* **query-typeorm:** Extend TypeORM peer dependency to include v1.x.x ([bb2fde4](https://github.com/TriPSs/nestjs-query/commit/bb2fde43670ddbb1a8c8f1a2f855fa67b9695992))
+
+
+### Bug Fixes
+
+* **query-graphql:** pin @nestjs/graphql deep import to .js for Node exports resolution ([fc45679](https://github.com/TriPSs/nestjs-query/commit/fc45679d4f04c722a138cb3f3fe8a8ec883afb03))
+* **query-typeorm:** use ISO 8601 week for Postgres WEEK grouping ([77d89a8](https://github.com/TriPSs/nestjs-query/commit/77d89a8197e7cad00ef45e2d249ad0951edf55b2))
+
 # [9.4.0](https://github.com/TriPSs/nestjs-query/compare/v9.3.0...v9.4.0) (2026-01-20)
 
 
