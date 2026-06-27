@@ -18,6 +18,7 @@ import { PipelineStage } from 'mongoose'
 
 import { AggregateBuilder, FilterQueryBuilder } from '../query'
 import {
+  getEmbeddedSchemaType,
   isEmbeddedSchemaTypeOptions,
   isSchemaTypeWithReferenceOptions,
   isVirtualTypeWithReferenceOptions,
@@ -351,14 +352,14 @@ export abstract class ReferenceQueryService<Entity extends Base> {
     if (this.isReferencePath(refName)) {
       const schemaType = this.Model.schema.path(refName)
       if (isEmbeddedSchemaTypeOptions(schemaType)) {
-        refModel = getModelWithString(schemaType.$embeddedSchemaType.options.ref)
+        refModel = getModelWithString(getEmbeddedSchemaType(schemaType)!.options.ref) as ReturnModelType<Class<Ref>>
       } else if (isSchemaTypeWithReferenceOptions(schemaType)) {
-        refModel = getModelWithString(schemaType.options.ref)
+        refModel = getModelWithString(schemaType.options.ref) as ReturnModelType<Class<Ref>>
       }
     } else if (this.isVirtualPath(refName)) {
       const schemaType = this.Model.schema.virtualpath(refName)
       if (isVirtualTypeWithReferenceOptions(schemaType)) {
-        refModel = getModelWithString(schemaType.options.ref)
+        refModel = getModelWithString(schemaType.options.ref) as ReturnModelType<Class<Ref>>
       }
     }
     if (!refModel) {

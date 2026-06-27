@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common'
 import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
 import escapeRegExp from 'lodash.escaperegexp'
-import { Document, FilterQuery, Model as MongooseModel, Schema, Types } from 'mongoose'
+import { Document, QueryFilter, Model as MongooseModel, Schema, Types } from 'mongoose'
 
 import { getSchemaKey } from './helpers'
 
@@ -50,15 +50,15 @@ export class ComparisonBuilder<Entity extends Document<any>> {
     field: F,
     cmp: FilterComparisonOperators<Entity[F]>,
     val: EntityComparisonField<Entity, F>
-  ): FilterQuery<Entity> {
+  ): QueryFilter<Entity> {
     const schemaKey = getSchemaKey(`${String(field)}`)
     const normalizedCmp = (cmp as string).toLowerCase()
-    let querySelector: FilterQuery<Entity[F]> | undefined
+    let querySelector: QueryFilter<Entity[F]> | undefined
     if (this.comparisonMap[normalizedCmp]) {
       // comparison operator (e.b. =, !=, >, <)
       querySelector = {
         [this.comparisonMap[normalizedCmp]]: this.convertQueryValue(field, val as Entity[F])
-      } as FilterQuery<Entity[F]>
+      } as QueryFilter<Entity[F]>
     }
 
     if (normalizedCmp.includes('like')) {
@@ -73,14 +73,14 @@ export class ComparisonBuilder<Entity extends Document<any>> {
       throw new BadRequestException(`unknown operator ${JSON.stringify(cmp)}`)
     }
 
-    return { [schemaKey]: querySelector } as FilterQuery<Entity>
+    return { [schemaKey]: querySelector } as QueryFilter<Entity>
   }
 
   private betweenComparison<F extends keyof Entity>(
     cmp: string,
     field: F,
     val: EntityComparisonField<Entity, F>
-  ): FilterQuery<Entity[F]> {
+  ): QueryFilter<Entity[F]> {
     if (!this.isBetweenVal(val)) {
       throw new Error(`Invalid value for ${cmp} expected {lower: val, upper: val} got ${JSON.stringify(val)}`)
     }
@@ -96,7 +96,7 @@ export class ComparisonBuilder<Entity extends Document<any>> {
     return val !== null && typeof val === 'object' && 'lower' in val && 'upper' in val
   }
 
-  private likeComparison<F extends keyof Entity>(cmp: string, val: EntityComparisonField<Entity, F>): FilterQuery<RegExp> {
+  private likeComparison<F extends keyof Entity>(cmp: string, val: EntityComparisonField<Entity, F>): QueryFilter<RegExp> {
     const regExpStr = escapeRegExp(`${String(val)}`).replace(/%/g, '.*')
     const regExp = new RegExp(`^${regExpStr}$`, cmp.includes('ilike') ? 'i' : undefined)
 
@@ -123,8 +123,11 @@ export class ComparisonBuilder<Entity extends Document<any>> {
       return val.map((v) => this.convertToObjectId(v))
     }
     if (typeof val === 'string' || typeof val === 'number') {
-      if (Types.ObjectId.isValid(val)) {
-        return new Types.ObjectId(val)
+      // Mongoose 9 narrowed ObjectId's accepted input types to exclude `number`;
+      // the runtime still accepts it, so assert to satisfy the compiler without changing behavior.
+      const idVal = val as string
+      if (Types.ObjectId.isValid(idVal)) {
+        return new Types.ObjectId(idVal)
       }
     }
     return val

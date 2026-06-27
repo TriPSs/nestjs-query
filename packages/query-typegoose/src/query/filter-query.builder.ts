@@ -13,7 +13,7 @@ const TYPEGOOSE_SORT_DIRECTION: Record<SortDirection, 1 | -1> = {
 type TypegooseSort = Record<string, 1 | -1>
 
 type TypegooseQuery<Entity> = {
-  filterQuery: mongoose.FilterQuery<new () => Entity>
+  filterQuery: mongoose.QueryFilter<Entity>
   options: { limit?: number; skip?: number; sort?: TypegooseSort }
 }
 
@@ -63,7 +63,7 @@ export class FilterQueryBuilder<Entity> {
     }
   }
 
-  public buildIdFilterQuery(id: unknown, filter?: Filter<Entity>): mongoose.FilterQuery<new () => Entity> {
+  public buildIdFilterQuery(id: unknown, filter?: Filter<Entity>): mongoose.QueryFilter<Entity> {
     return {
       ...this.buildFilterQuery(filter),
       _id: Array.isArray(id) ? { $in: id } : id
@@ -75,7 +75,7 @@ export class FilterQueryBuilder<Entity> {
    *
    * @param filter - the filter.
    */
-  public buildFilterQuery(filter?: Filter<Entity>): mongoose.FilterQuery<new () => Entity> {
+  public buildFilterQuery(filter?: Filter<Entity>): mongoose.QueryFilter<Entity> {
     if (!filter) {
       return {}
     }
