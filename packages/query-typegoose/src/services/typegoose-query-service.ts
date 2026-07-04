@@ -119,7 +119,7 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
    */
   async createOne(record: DeepPartial<Entity>): Promise<DocumentType<Entity>> {
     this.ensureIdIsNotPresent(record)
-    const doc = await this.Model.create(record)
+    const doc = await this.Model.create(record as Partial<Entity>)
     return doc
   }
 
@@ -137,7 +137,7 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
    */
   async createMany(records: DeepPartial<Entity>[]): Promise<DocumentType<Entity>[]> {
     records.forEach((r) => this.ensureIdIsNotPresent(r))
-    const entities = await this.Model.create(records)
+    const entities = await this.Model.create(records as Partial<Entity>[])
     return entities
   }
 

@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Filter } from '@ptc-org/nestjs-query-core'
 import { FilterableField, FilterType } from '@ptc-org/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
-import { Document, FilterQuery, model } from 'mongoose'
+import { Document, QueryFilter, model } from 'mongoose'
 
 import { WhereBuilder } from '../../src/query'
 import { TestEntity, TestEntitySchema } from '../__fixtures__/test.entity'
@@ -11,12 +11,13 @@ import { TestEntity, TestEntitySchema } from '../__fixtures__/test.entity'
 describe('WhereBuilder', (): void => {
   const createWhereBuilder = () => new WhereBuilder<TestEntity>(model('TestEntity', TestEntitySchema))
 
-  const expectFilter = <T = TestEntity>(
+  const expectFilter = <T extends Document<any> = TestEntity>(
     filter: Filter<T>,
-    expectedFilterQuery: FilterQuery<T>,
-    whereBuilder?: WhereBuilder<Document<any>>
+    expectedFilterQuery: QueryFilter<T>,
+    whereBuilder?: WhereBuilder<T>
   ): void => {
-    const actual = (whereBuilder ?? createWhereBuilder()).build(filter)
+    const builder = (whereBuilder ?? createWhereBuilder()) as WhereBuilder<T>
+    const actual = builder.build(filter)
     expect(actual).toEqual(expectedFilterQuery)
   }
 
@@ -25,7 +26,7 @@ describe('WhereBuilder', (): void => {
   })
 
   it('or multiple operators for a single field together', (): void => {
-    expectFilter(
+    expectFilter<TestEntity>(
       {
         numberType: { gt: 10, lt: 20, gte: 21, lte: 31 }
       },
@@ -119,7 +120,7 @@ describe('WhereBuilder', (): void => {
 
   describe('or', (): void => {
     it('or multiple expressions together', (): void => {
-      expectFilter(
+      expectFilter<TestEntity>(
         {
           or: [{ numberType: { gt: 10 } }, { numberType: { lt: 20 } }, { numberType: { gte: 30 } }, { numberType: { lte: 40 } }]
         },
