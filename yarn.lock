@@ -5634,17 +5634,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@m8a/nestjs-typegoose@npm:12.0.1":
-  version: 12.0.1
-  resolution: "@m8a/nestjs-typegoose@npm:12.0.1"
+"@m8a/nestjs-typegoose@npm:13.0.0":
+  version: 13.0.0
+  resolution: "@m8a/nestjs-typegoose@npm:13.0.0"
   dependencies:
     is-class: "npm:0.0.9"
   peerDependencies:
     "@nestjs/common": ^10.0.0 || ^11.0.0
     "@nestjs/core": ^10.0.0 || ^11.0.0
-    "@typegoose/typegoose": ^12.0.0
-    mongoose: ^8.0.1
-  checksum: 10/65fae553e4b0ae74008d210022969267a0f88e1e0532930880b54b3e47d8b7bf63ea5ea5dfd24793473df21347f784fbae1efa36d099fded650119a7087ff317
+    "@typegoose/typegoose": ^13.0.0
+    mongoose: ^9.0.0
+  checksum: 10/9d2b079097ca3566b1bba8c3db0fe4531380009068e4b5469c6f1ba7b13cd2dbd9b5a111818b991b3fb19c421448d62d4028640c0ac48bb1ad47e82bf1adab4b
   languageName: node
   linkType: hard
 
@@ -7288,8 +7288,8 @@ __metadata:
     tslib: "npm:^2.8.1"
   peerDependencies:
     "@nestjs/common": ^9.0.0 || ^10.0.0 || ^11.0.0
-    "@nestjs/mongoose": ^9.0.0 || ^10.0.0 || ^11.0.0
-    mongoose: ^8.0.0
+    "@nestjs/mongoose": ^11.0.0
+    mongoose: ^9.0.0
   languageName: unknown
   linkType: soft
 
@@ -7318,10 +7318,10 @@ __metadata:
     lodash.merge: "npm:^4.6.2"
     tslib: "npm:^2.8.1"
   peerDependencies:
-    "@m8a/nestjs-typegoose": ^9.0.0 || ^10.0.0 || ^11.0.0
+    "@m8a/nestjs-typegoose": ^13.0.0
     "@nestjs/common": ^9.0.0 || ^10.0.0 || ^11.0.0
-    "@typegoose/typegoose": ^9.0.0 || ^10.0.0 || ^11.0.0
-    mongoose: ^6.5.0 || ^7.0.3 || ^8.0.0
+    "@typegoose/typegoose": ^13.0.0
+    mongoose: ^9.0.0
   languageName: unknown
   linkType: soft
 
@@ -7726,18 +7726,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typegoose/typegoose@npm:12.21.1":
-  version: 12.21.1
-  resolution: "@typegoose/typegoose@npm:12.21.1"
+"@typegoose/typegoose@npm:13.3.0":
+  version: 13.3.0
+  resolution: "@typegoose/typegoose@npm:13.3.0"
   dependencies:
     lodash: "npm:^4.17.20"
     loglevel: "npm:^1.9.2"
     reflect-metadata: "npm:^0.2.2"
-    semver: "npm:^7.7.2"
+    semver: "npm:^7.7.3"
     tslib: "npm:^2.8.1"
   peerDependencies:
-    mongoose: ~8.21.0
-  checksum: 10/ed9976ffd706ede755d078c15235128c06751e75262286845f00c62d01a31ab6df102a3e3f3c85287d8a1180950921fc3c19dc20e760fb879ae7b9b0a54f6f66
+    mongoose: ~9.6.0
+  checksum: 10/f1078bf8e75adbec1104381934d20e362d6366d00b91cdc5ff16d073fcd1454b1c392d9c93aab476ce0691cb1ae14f35e46b1ae3ff70df441aa59f9849800d61
   languageName: node
   linkType: hard
 
@@ -8473,12 +8473,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/whatwg-url@npm:^11.0.2":
-  version: 11.0.5
-  resolution: "@types/whatwg-url@npm:11.0.5"
+"@types/whatwg-url@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "@types/whatwg-url@npm:13.0.0"
   dependencies:
     "@types/webidl-conversions": "npm:*"
-  checksum: 10/23a0c45aff51817807b473a6adb181d6e3bb0d27dde54e84883d5d5bc93358e95204d2188e7ff7fdc2cdaf157e97e1188ef0a22ec79228da300fc30d4a05b56a
+  checksum: 10/82018c7dc057dd4b5ee6137e54a659d2d043146eaade8afc2dda472773cc66f2abad73525020a2bf399a09b1bf448504f9e519d6b2d7495e6e781bb5de686753
   languageName: node
   linkType: hard
 
@@ -10727,10 +10727,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bson@npm:^6.10.4":
-  version: 6.10.4
-  resolution: "bson@npm:6.10.4"
-  checksum: 10/8a79a452219a13898358a5abc93e32bc3805236334f962661da121ce15bd5cade27718ba3310ee2a143ff508489b08467eed172ecb2a658cb8d2e94fdb76b215
+"bson@npm:^7.2.0":
+  version: 7.3.1
+  resolution: "bson@npm:7.3.1"
+  checksum: 10/be4eb108d29a1ae9f7e4c53bddda2b8637bb7f54334a1c3ca71e45f78b11d8e8ff38b37a2e981125f31bdc2e6456070aa71c07ef3a4d4119ab48e8b49d7af584
   languageName: node
   linkType: hard
 
@@ -12340,7 +12340,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:4.x, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.3, debug@npm:^4.3.4, debug@npm:^4.3.7, debug@npm:^4.4.0, debug@npm:^4.4.3":
+"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.3, debug@npm:^4.3.4, debug@npm:^4.3.7, debug@npm:^4.4.0, debug@npm:^4.4.3":
   version: 4.4.3
   resolution: "debug@npm:4.4.3"
   dependencies:
@@ -18063,10 +18063,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kareem@npm:2.6.3":
-  version: 2.6.3
-  resolution: "kareem@npm:2.6.3"
-  checksum: 10/8c2a2795b9b8537ad592d30e6a607e7db737c7401d4c178fa4f2984e7bb7444d0f185570ae0132633aeef8b3eb27d1b5fded07921661738a5723681eb6d246b4
+"kareem@npm:3.3.0":
+  version: 3.3.0
+  resolution: "kareem@npm:3.3.0"
+  checksum: 10/28fa51f594531ddf88b00e421156fd6e2b4d3c0fe069f908cc705587a2c3ba55ac90c7dbe6ffd867259b9116efcf0d3efdaab7b6a9ad711259d186c88ac18393
   languageName: node
   linkType: hard
 
@@ -19847,13 +19847,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb-connection-string-url@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "mongodb-connection-string-url@npm:3.0.2"
+"mongodb-connection-string-url@npm:^7.0.0":
+  version: 7.0.1
+  resolution: "mongodb-connection-string-url@npm:7.0.1"
   dependencies:
-    "@types/whatwg-url": "npm:^11.0.2"
-    whatwg-url: "npm:^14.1.0 || ^13.0.0"
-  checksum: 10/99ac939a67cc963b90cfe70a8e45250a8386c531be7d22ffa5d1f3e5dd2406b149fb823b91ac161e4a4a29dfac754b49bca8f6dd786cfc66ae0ca80db5f5f23d
+    "@types/whatwg-url": "npm:^13.0.0"
+    whatwg-url: "npm:^14.1.0"
+  checksum: 10/6b48e3d0674d375163613617bdecbc18860bfaa8635873cef8a2eb41cb04a317b5f541b8f732664d03c098f9937c02c3eb013289e124f6473a44ed3aa6daceee
   languageName: node
   linkType: hard
 
@@ -19919,21 +19919,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:~6.20.0":
-  version: 6.20.0
-  resolution: "mongodb@npm:6.20.0"
+"mongodb@npm:~7.2":
+  version: 7.2.0
+  resolution: "mongodb@npm:7.2.0"
   dependencies:
     "@mongodb-js/saslprep": "npm:^1.3.0"
-    bson: "npm:^6.10.4"
-    mongodb-connection-string-url: "npm:^3.0.2"
+    bson: "npm:^7.2.0"
+    mongodb-connection-string-url: "npm:^7.0.0"
   peerDependencies:
-    "@aws-sdk/credential-providers": ^3.188.0
-    "@mongodb-js/zstd": ^1.1.0 || ^2.0.0
-    gcp-metadata: ^5.2.0
-    kerberos: ^2.0.1
-    mongodb-client-encryption: ">=6.0.0 <7"
+    "@aws-sdk/credential-providers": ^3.806.0
+    "@mongodb-js/zstd": ^7.0.0
+    gcp-metadata: ^7.0.1
+    kerberos: ^7.0.0
+    mongodb-client-encryption: ">=7.0.0 <7.1.0"
     snappy: ^7.3.2
-    socks: ^2.7.1
+    socks: ^2.8.6
   peerDependenciesMeta:
     "@aws-sdk/credential-providers":
       optional: true
@@ -19949,22 +19949,21 @@ __metadata:
       optional: true
     socks:
       optional: true
-  checksum: 10/2718cdd4433bc3847f01a2ffae3a7e7ea8499035be4fccaf76278cbe3f915f2dd6c53135be0e3cc2cdd8e27a0b957da49e337d9b96b53e6287ec8971cea96b4b
+  checksum: 10/9a1df6e0a1eb072efdfad3b9c452f0a225f966e890e027efbbca9f591a2a49fa6209faadfd9dfab8ee55362d0378c8f8d2dd2837873bc6aecff6ae422b359aad
   languageName: node
   linkType: hard
 
-"mongoose@npm:8.22.1":
-  version: 8.22.1
-  resolution: "mongoose@npm:8.22.1"
+"mongoose@npm:9.6.3":
+  version: 9.6.3
+  resolution: "mongoose@npm:9.6.3"
   dependencies:
-    bson: "npm:^6.10.4"
-    kareem: "npm:2.6.3"
-    mongodb: "npm:~6.20.0"
+    kareem: "npm:3.3.0"
+    mongodb: "npm:~7.2"
     mpath: "npm:0.9.0"
-    mquery: "npm:5.0.0"
+    mquery: "npm:6.0.0"
     ms: "npm:2.1.3"
     sift: "npm:17.1.3"
-  checksum: 10/f9e63ca88b40924275264aca28f7686d45a6ebc77ec4d7ffc5aa6cd1da979bd6a0d4ff87c948fa96f789bd80189e368c897c165a817667b1d82c67c199802489
+  checksum: 10/fd5c0b2bf6e14be267ee18ba5a65ec994288cc2d5916012cb7348f46983ed992309a4736c1e6ccdc4d9a8d7491c9c7f1bc46a7a908d5a9e2d960871e436d68fd
   languageName: node
   linkType: hard
 
@@ -19982,12 +19981,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mquery@npm:5.0.0":
-  version: 5.0.0
-  resolution: "mquery@npm:5.0.0"
-  dependencies:
-    debug: "npm:4.x"
-  checksum: 10/36a792b2dc3fae92be0a7460151807fbbefe1299f8f286acd74968482e0dc042321c78ad76d6f975f0638370ff88df6e81db5efe17df5d53d2fb289cedbb0c23
+"mquery@npm:6.0.0":
+  version: 6.0.0
+  resolution: "mquery@npm:6.0.0"
+  checksum: 10/79f0f8361f701e422fb7f179c0bf3d1c0a22d4da9893b6aa1e09e331455c18ad4c6023909c2ad9a6a23d9be0e634fef9790eaffe0c461543a1338e1d7b9a4a83
   languageName: node
   linkType: hard
 
@@ -20177,7 +20174,7 @@ __metadata:
     "@docusaurus/module-type-aliases": "npm:3.10.1"
     "@docusaurus/preset-classic": "npm:3.10.1"
     "@jscutlery/semver": "npm:6.1.2"
-    "@m8a/nestjs-typegoose": "npm:12.0.1"
+    "@m8a/nestjs-typegoose": "npm:13.0.0"
     "@mikro-orm/better-sqlite": "npm:^6.6.14"
     "@mikro-orm/core": "npm:^6.6.14"
     "@mikro-orm/nestjs": "npm:^6.1.2"
@@ -20200,7 +20197,7 @@ __metadata:
     "@nx/jest": "npm:22.7.5"
     "@nx/js": "npm:22.7.5"
     "@nx/node": "npm:22.7.5"
-    "@typegoose/typegoose": "npm:12.21.1"
+    "@typegoose/typegoose": "npm:13.3.0"
     "@types/express": "npm:4.17.25"
     "@types/jest": "npm:30.0.0"
     "@types/lodash.escaperegexp": "npm:4.1.9"
@@ -20242,7 +20239,7 @@ __metadata:
     jest-extended: "npm:7.0.0"
     jest-util: "npm:30.0.5"
     mongodb-memory-server: "npm:9.5.0"
-    mongoose: "npm:8.22.1"
+    mongoose: "npm:9.6.3"
     mysql2: "npm:3.22.5"
     nx: "npm:22.7.5"
     passport: "npm:0.7.0"
@@ -26805,7 +26802,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"whatwg-url@npm:^14.1.0 || ^13.0.0":
+"whatwg-url@npm:^14.1.0":
   version: 14.2.0
   resolution: "whatwg-url@npm:14.2.0"
   dependencies:

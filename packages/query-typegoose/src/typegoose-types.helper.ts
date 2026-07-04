@@ -91,7 +91,8 @@ type CustomModelType<T, QueryHelpers = BeAnObject> = mongoose.Model<
   QueryHelpers, // query helpers
   IObjectWithTypegooseFunction, // instance methods
   BeAnyObject,
-  DocumentType<T>
+  DocumentType<T>,
+  mongoose.Schema<T> // schema type
 >
 
 export type ReturnModelType<U extends AnyParamConstructor<unknown>, QueryHelpers = BeAnObject> = CustomModelType<

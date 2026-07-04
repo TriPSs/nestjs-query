@@ -108,7 +108,8 @@ export class ComparisonBuilder<Entity extends Document<any>> {
   }
 
   private convertQueryValue<F extends keyof Entity>(field: F, val: Entity[F]): Entity[F] {
-    const schemaType = this.Model.schema.path(getSchemaKey(field as string))
+    const schema = this.Model.schema as Schema<Entity>
+    const schemaType = schema.path(getSchemaKey(field as string))
     if (!schemaType) {
       throw new BadRequestException(`unknown comparison field ${String(field)}`)
     }

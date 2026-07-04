@@ -352,7 +352,10 @@ export abstract class ReferenceQueryService<Entity extends Base> {
     if (this.isReferencePath(refName)) {
       const schemaType = this.Model.schema.path(refName)
       if (isEmbeddedSchemaTypeOptions(schemaType)) {
-        refModel = getModelWithString(getEmbeddedSchemaType(schemaType)!.options.ref) as ReturnModelType<Class<Ref>>
+        const embedded = getEmbeddedSchemaType(schemaType)
+        if (embedded) {
+          refModel = getModelWithString(embedded.options.ref) as ReturnModelType<Class<Ref>>
+        }
       } else if (isSchemaTypeWithReferenceOptions(schemaType)) {
         refModel = getModelWithString(schemaType.options.ref) as ReturnModelType<Class<Ref>>
       }
