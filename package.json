@@ -104,7 +104,7 @@
     "jest-util": "30.0.5",
     "mongodb-memory-server": "9.5.0",
     "mysql2": "3.22.5",
-    "nx": "22.7.5",
+    "nx": "22.7.7",
     "passport": "0.7.0",
     "passport-jwt": "4.0.1",
     "passport-local": "1.0.0",
