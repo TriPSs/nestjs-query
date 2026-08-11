@@ -1,10 +1,17 @@
-import { Collection, EntityKey, EntityRepository, FilterQuery, QueryOrder, QueryOrderMap, Reference, wrap } from '@mikro-orm/core'
+import { Collection, EntityData, EntityKey, EntityRepository, FilterQuery, QueryOrder, QueryOrderMap, Reference, wrap } from '@mikro-orm/core'
 import { OperatorMap } from '@mikro-orm/core/typings'
 import {
+  AggregateOptions,
+  AggregateQuery,
+  AggregateResponse,
   Assembler,
   AssemblerFactory,
   Class,
   CountOptions,
+  DeepPartial,
+  DeleteManyOptions,
+  DeleteManyResponse,
+  DeleteOneOptions,
   Filter,
   FilterComparisons,
   FindByIdOptions,
@@ -16,7 +23,9 @@ import {
   QueryRelationsOptions,
   SortDirection,
   SortField,
-  SortNulls
+  SortNulls,
+  UpdateManyResponse,
+  UpdateOneOptions
 } from '@ptc-org/nestjs-query-core'
 
 export class MikroOrmQueryService<DTO extends object, Entity extends object = DTO> extends NoOpQueryService<DTO, Entity> {
@@ -85,6 +94,244 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     const convertedFilter = this.assembler?.convertQuery?.({ filter })?.filter ?? filter
     const where = this.convertFilter(convertedFilter)
     return this.repo.count(where)
+  }
+
+  async createOne(record: DeepPartial<DTO>): Promise<DTO> {
+    const em = this.repo.getEntityManager()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const entity = em.create(this.repo.getEntityName(), record as any)
+    await em.persistAndFlush(entity)
+
+    if (this.assembler) {
+      return this.assembler.convertToDTO(entity as Entity)
+    }
+    return entity as unknown as DTO
+  }
+
+  async createMany(records: DeepPartial<DTO>[]): Promise<DTO[]> {
+    const em = this.repo.getEntityManager()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const entities = records.map((r) => em.create(this.repo.getEntityName(), r as any))
+    await em.persistAndFlush(entities)
+
+    if (this.assembler) {
+      return this.assembler.convertToDTOs(entities as Entity[])
+    }
+    return entities as unknown as DTO[]
+  }
+
+  async updateOne(id: string | number, update: DeepPartial<DTO>, opts?: UpdateOneOptions<DTO>): Promise<DTO> {
+    const entity = await this.getEntityById(id, opts?.filter)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    wrap(entity).assign(update as any)
+    await this.repo.getEntityManager().flush()
+
+    if (this.assembler) {
+      return this.assembler.convertToDTO(entity)
+    }
+    return entity as unknown as DTO
+  }
+
+  async updateMany(update: DeepPartial<DTO>, filter: Filter<DTO>): Promise<UpdateManyResponse> {
+    const em = this.repo.getEntityManager()
+    const where = this.convertFilter(filter)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const updatedCount = await em.nativeUpdate(this.repo.getEntityName(), where, update as any)
+    return { updatedCount }
+  }
+
+  async deleteOne(id: string | number, opts?: DeleteOneOptions<DTO>): Promise<DTO> {
+    if (opts?.useSoftDelete) {
+      throw new Error('MikroOrmQueryService does not support useSoftDelete on deleteOne')
+    }
+
+    const entity = await this.getEntityById(id, opts?.filter)
+    const dto = this.assembler ? this.assembler.convertToDTO(entity) : (entity as unknown as DTO)
+    await this.repo.getEntityManager().removeAndFlush(entity)
+    return dto
+  }
+
+  async deleteMany(filter: Filter<DTO>, opts?: DeleteManyOptions<DTO>): Promise<DeleteManyResponse> {
+    if (opts?.useSoftDelete) {
+      throw new Error('MikroOrmQueryService does not support useSoftDelete on deleteMany')
+    }
+
+    const em = this.repo.getEntityManager()
+    const where = this.convertFilter(filter)
+    const deletedCount = await em.nativeDelete(this.repo.getEntityName(), where)
+    return { deletedCount }
+  }
+
+  async aggregate(
+    filter: Filter<DTO>,
+    aggregateQuery: AggregateQuery<DTO>,
+    opts?: AggregateOptions
+  ): Promise<AggregateResponse<DTO>[]> {
+    if (opts?.withDeleted) {
+      throw new Error('MikroOrmQueryService does not support withDeleted on aggregate')
+    }
+
+    const em = this.repo.getEntityManager()
+    const meta = em.getMetadata().get(this.repo.getEntityName())
+    const tableName = meta.tableName
+    const where = this.convertFilter(filter)
+
+    const selects: string[] = []
+    const groupByFields: string[] = []
+
+    if (aggregateQuery.count) {
+      for (const { field } of aggregateQuery.count) {
+        selects.push(`COUNT(${String(field)}) as count_${String(field)}`)
+      }
+    }
+
+    if (aggregateQuery.sum) {
+      for (const { field } of aggregateQuery.sum) {
+        selects.push(`SUM(${String(field)}) as sum_${String(field)}`)
+      }
+    }
+
+    if (aggregateQuery.avg) {
+      for (const { field } of aggregateQuery.avg) {
+        selects.push(`AVG(${String(field)}) as avg_${String(field)}`)
+      }
+    }
+
+    if (aggregateQuery.max) {
+      for (const { field } of aggregateQuery.max) {
+        selects.push(`MAX(${String(field)}) as max_${String(field)}`)
+      }
+    }
+
+    if (aggregateQuery.min) {
+      for (const { field } of aggregateQuery.min) {
+        selects.push(`MIN(${String(field)}) as min_${String(field)}`)
+      }
+    }
+
+    if (aggregateQuery.groupBy) {
+      for (const { field } of aggregateQuery.groupBy) {
+        const fieldName = String(field)
+        selects.push(`${fieldName} as groupBy_${fieldName}`)
+        groupByFields.push(fieldName)
+      }
+    }
+
+    if (selects.length === 0) {
+      return []
+    }
+
+    const entities = await this.repo.findAll({ where })
+    return this.computeAggregateInMemory(entities, aggregateQuery)
+  }
+
+  private computeAggregateInMemory(
+    entities: Entity[],
+    aggregateQuery: AggregateQuery<DTO>
+  ): AggregateResponse<DTO>[] {
+    if (!aggregateQuery.groupBy || aggregateQuery.groupBy.length === 0) {
+      return [this.computeAggregateForGroup(entities, aggregateQuery)]
+    }
+
+    const groups = new Map<string, Entity[]>()
+    for (const entity of entities) {
+      const keyParts = aggregateQuery.groupBy.map(({ field }) => {
+        const value = (entity as Record<string, unknown>)[String(field)]
+        return JSON.stringify(value)
+      })
+      const key = keyParts.join('|')
+      const group = groups.get(key) ?? []
+      group.push(entity)
+      groups.set(key, group)
+    }
+
+    const results: AggregateResponse<DTO>[] = []
+    for (const [, groupEntities] of groups) {
+      const result = this.computeAggregateForGroup(groupEntities, aggregateQuery)
+      if (aggregateQuery.groupBy && groupEntities.length > 0) {
+        result.groupBy = {} as Partial<DTO>
+        for (const { field } of aggregateQuery.groupBy) {
+          const value = (groupEntities[0] as Record<string, unknown>)[String(field)]
+          ;(result.groupBy as Record<string, unknown>)[String(field)] = value
+        }
+      }
+      results.push(result)
+    }
+
+    return results
+  }
+
+  private computeAggregateForGroup(entities: Entity[], aggregateQuery: AggregateQuery<DTO>): AggregateResponse<DTO> {
+    const response: AggregateResponse<DTO> = {}
+
+    if (aggregateQuery.count) {
+      response.count = {}
+      for (const { field } of aggregateQuery.count) {
+        ;(response.count as Record<string, number>)[String(field)] = entities.length
+      }
+    }
+
+    if (aggregateQuery.sum) {
+      response.sum = {}
+      for (const { field } of aggregateQuery.sum) {
+        const sum = entities.reduce((acc, e) => {
+          const val = (e as Record<string, unknown>)[String(field)]
+          return acc + (typeof val === 'number' ? val : 0)
+        }, 0)
+        ;(response.sum as Record<string, number>)[String(field)] = sum
+      }
+    }
+
+    if (aggregateQuery.avg) {
+      response.avg = {}
+      for (const { field } of aggregateQuery.avg) {
+        const sum = entities.reduce((acc, e) => {
+          const val = (e as Record<string, unknown>)[String(field)]
+          return acc + (typeof val === 'number' ? val : 0)
+        }, 0)
+        ;(response.avg as Record<string, number>)[String(field)] = entities.length > 0 ? sum / entities.length : 0
+      }
+    }
+
+    if (aggregateQuery.max) {
+      response.max = {}
+      for (const { field } of aggregateQuery.max) {
+        let max: unknown = undefined
+        for (const e of entities) {
+          const val = (e as Record<string, unknown>)[String(field)]
+          if (max === undefined || (val !== undefined && val !== null && (val as number) > (max as number))) {
+            max = val
+          }
+        }
+        ;(response.max as Record<string, unknown>)[String(field)] = max
+      }
+    }
+
+    if (aggregateQuery.min) {
+      response.min = {}
+      for (const { field } of aggregateQuery.min) {
+        let min: unknown = undefined
+        for (const e of entities) {
+          const val = (e as Record<string, unknown>)[String(field)]
+          if (min === undefined || (val !== undefined && val !== null && (val as number) < (min as number))) {
+            min = val
+          }
+        }
+        ;(response.min as Record<string, unknown>)[String(field)] = min
+      }
+    }
+
+    return response
+  }
+
+  private async getEntityById(id: string | number, filter?: Filter<DTO>): Promise<Entity> {
+    const where = this.convertFilter(filter)
+    const meta = this.repo.getEntityManager().getMetadata().get(this.repo.getEntityName())
+    const pkField = meta.primaryKeys[0]
+    return this.repo.findOneOrFail({
+      ...where,
+      [pkField]: id
+    } as unknown as FilterQuery<Entity>)
   }
 
   protected convertFilter(filter: Filter<DTO> | Filter<Entity> | undefined): FilterQuery<Entity> {
