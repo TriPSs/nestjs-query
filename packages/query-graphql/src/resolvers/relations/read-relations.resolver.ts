@@ -136,6 +136,10 @@ const ReadManyRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class ReadManyMixin extends Base {
+      /**
+       * Resolves the connection of the relation, exposing the properties of each relationship on the
+       * edges when the relation declares a pivot.
+       */
       @ResolverField(
         baseNameLower,
         () => CT.resolveType,

@@ -27,6 +27,10 @@ export interface EdgeTypeConstructor<DTO> {
 
 const reflector = new MapReflector('nestjs-query:edge-type')
 
+/**
+ * The name the edge is registered under, defaulting to the one derived from the DTO when the caller
+ * did not need a connection specific edge.
+ */
 const getOrCreateEdgeName = <DTO>(DTOClass: Class<DTO>, opts?: EdgeTypeOpts): string => {
   if (opts?.edgeName) {
     return opts.edgeName
@@ -34,6 +38,13 @@ const getOrCreateEdgeName = <DTO>(DTOClass: Class<DTO>, opts?: EdgeTypeOpts): st
   return `${getGraphqlObjectName(DTOClass, 'Unable to make EdgeType for class.')}Edge`
 }
 
+/**
+ * Builds the graphql edge of a cursor connection, memoized so the same DTO and name always resolve
+ * to a single type.
+ *
+ * When `opts.pivot` is given the edge also exposes the properties of the relationship, resolved
+ * lazily so the pivot is only loaded when the field is selected.
+ */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export function getOrCreateEdgeType<DTO>(DTOClass: Class<DTO>, opts?: EdgeTypeOpts): EdgeTypeConstructor<DTO> {
   const edgeName = getOrCreateEdgeName(DTOClass, opts)

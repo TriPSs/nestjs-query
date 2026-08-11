@@ -142,6 +142,10 @@ const UpdateManyRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class UpdateManyMixin extends Base {
+      /**
+       * Adds relations to the record, writing the pivot properties of each new relationship when the
+       * mutation was given any.
+       */
       @ResolverRelationMutation(
         () => DTOClass,
         {
@@ -167,6 +171,10 @@ const UpdateManyRelationMixin =
         return dto
       }
 
+      /**
+       * Replaces the relations of the record, writing the pivot properties of each relationship when
+       * the mutation was given any.
+       */
       @ResolverRelationMutation(
         () => DTOClass,
         {
@@ -242,6 +250,9 @@ const UpdatePivotPropertiesRelationMixin =
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class UpdatePivotPropertiesMixin extends Base {
+      /**
+       * Writes the properties of an existing relationship, leaving the relationship itself alone.
+       */
       @ResolverRelationMutation(
         () => DTOClass,
         {

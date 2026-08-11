@@ -43,6 +43,13 @@ function getEdgeName(connectionName: string): string {
   return `${baseName}Edge`
 }
 
+/**
+ * Builds the cursor connection of a DTO, memoized under the connection name so the same name always
+ * resolves to a single graphql type.
+ *
+ * A connection exposing pivot properties gets an edge of its own, since the edge carries the pivot
+ * field and cannot be shared with the other connections of the DTO.
+ */
 export function getOrCreateCursorConnectionType<DTO>(
   TItemClass: Class<DTO>,
   maybeOpts?: CursorConnectionOptions
@@ -62,6 +69,12 @@ export function getOrCreateCursorConnectionType<DTO>(
         return this
       }
 
+      /**
+       * Pages the query and wraps each result in an edge.
+       *
+       * `connectionOpts.pivot` is passed on to the edges as a thunk, so the pivot of a node is only
+       * resolved if the field asking for it was selected.
+       */
       static async createFromPromise<Q extends Query<DTO>>(
         queryMany: QueryMany<DTO, Q>,
         query: Q,

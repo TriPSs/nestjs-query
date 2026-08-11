@@ -64,6 +64,10 @@ export function PivotMapping(pairs: PivotPair[]) {
   }
 }
 
+/**
+ * The pairs declared by `@PivotMapping`, looked up through the prototype chain so a pivot inherits
+ * the mapping of the class it extends.
+ */
 export function getPivotMapping<Pivot>(PivotClass: Class<Pivot>): MetaValue<PivotPair[]> {
   return getPrototypeChain(PivotClass).reduce<MetaValue<PivotPair[]>>(
     (mapping, Cls) => mapping ?? reflector.get<unknown, PivotPair[]>(Cls),

@@ -32,6 +32,9 @@ function createQueryServiceProvider<DTO, Entity extends DeepPartial<Entity>>({
   }
 }
 
+/**
+ * Registers a `QueryService` for each DTO declared under `queryServices` on a feature module.
+ */
 export const createQueryServiceProviders = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   opts: QueryServiceOpts<any, any>[]

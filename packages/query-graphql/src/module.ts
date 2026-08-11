@@ -107,6 +107,9 @@ export class NestjsQueryGraphQLModule {
     return opts.services ?? []
   }
 
+  /**
+   * Providers for the DTOs that need a `QueryService` but no resolver.
+   */
   private static getQueryServiceProviders(opts: NestjsQueryGraphqlModuleFeatureOpts): Provider<unknown>[] {
     return createQueryServiceProviders(opts.queryServices ?? [])
   }

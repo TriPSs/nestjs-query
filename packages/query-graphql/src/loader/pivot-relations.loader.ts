@@ -5,8 +5,12 @@ import { NestjsQueryDataloader } from './relations.loader'
 
 export type PivotRelationsArgs<DTO, Node> = { dto: DTO; node: Node }
 
-// Serialised rather than joined: a separator can appear inside an id, and `('a|b', 'c')` must
-// not collide with `('a', 'b|c')`.
+/**
+ * Indexes a pivot record by both ends of the relationship it ties.
+ *
+ * Serialised rather than joined: a separator can appear inside an id, and `('a|b', 'c')` must not
+ * collide with `('a', 'b|c')`.
+ */
 const pairKey = (parentId: unknown, nodeId: unknown): string => JSON.stringify([parentId, nodeId])
 
 /**
@@ -22,6 +26,9 @@ export class PivotRelationsLoader<DTO, Node, Pivot> implements NestjsQueryDatalo
 > {
   constructor(readonly pivot: ResolvedPivot<Pivot>) {}
 
+  /**
+   * Builds the batch function resolving each parent/node pair to the pivot record tying them, if any.
+   */
   public createLoader(service: QueryService<Pivot, unknown, unknown>) {
     return async (queryArgs: ReadonlyArray<PivotRelationsArgs<DTO, Node>>): Promise<(Pivot | undefined)[]> => {
       const parentIds = this.unique(queryArgs.map(({ dto }) => this.parentId(dto)))
@@ -44,14 +51,23 @@ export class PivotRelationsLoader<DTO, Node, Pivot> implements NestjsQueryDatalo
     }
   }
 
+  /**
+   * The id the parent DTO carries for its end of the relationship.
+   */
   private parentId(dto: DTO): unknown {
     return (dto as Record<string, unknown>)[this.pivot.parent.idField]
   }
 
+  /**
+   * The id the node carries for its end of the relationship.
+   */
   private nodeId(node: Node): unknown {
     return (node as Record<string, unknown>)[this.pivot.node.idField]
   }
 
+  /**
+   * The distinct ids to query for, dropping the ends that were never loaded.
+   */
   private unique(ids: unknown[]): unknown[] {
     return [...new Set(ids.filter((id) => id !== undefined && id !== null))]
   }

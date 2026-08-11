@@ -44,8 +44,15 @@ export interface ResolvedPivot<Pivot> {
   omitFields?: string[]
 }
 
+/**
+ * Whether the relation declared its pivot as the bare type function shorthand, rather than as options.
+ */
 const isPivotTypeFunc = <Pivot>(pivot: PivotRelationOption<Pivot>): pivot is PivotTypeFunc<Pivot> => typeof pivot === 'function'
 
+/**
+ * Whether the pivot type is the class itself rather than a function returning it, which is how
+ * circular imports between the pivot and the types it ties are broken.
+ */
 const isClass = <Pivot>(DTO: Class<Pivot> | PivotTypeFunc<Pivot>): DTO is Class<Pivot> => 'prototype' in DTO
 
 /**
@@ -59,12 +66,19 @@ const getAssembledEntity = <Pivot>(PivotDTO: Class<Pivot>): Class<unknown> | und
   return entities.length === 1 ? entities[0] : undefined
 }
 
+/**
+ * Pairs a declared pivot end with the id field of the DTO sitting at that end.
+ */
 const toEndKey = (end: PivotEnd, DTOClass: Class<unknown>): PivotEndKey => ({
   key: end.key,
   reference: end.reference,
   idField: getIDField(DTOClass)?.propertyName ?? 'id'
 })
 
+/**
+ * What the pivot declares it ties, in words, so a mapping that does not cover the relation can say
+ * what it does cover.
+ */
 const describeMapping = <Pivot>(PivotDTO: Class<Pivot>): string => {
   const pairs = getPivotMapping(PivotDTO)
 

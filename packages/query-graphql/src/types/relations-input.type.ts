@@ -22,6 +22,10 @@ export interface RelationsInputTypeOpts {
   }
 }
 
+/**
+ * Builds the input identifying a record and the relations of it a mutation applies to, optionally
+ * accepting the properties to write on each relationship.
+ */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export function RelationsInputType(
   DTOClass: Class<unknown>,

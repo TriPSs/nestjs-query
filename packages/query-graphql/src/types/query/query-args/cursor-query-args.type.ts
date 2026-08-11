@@ -15,6 +15,13 @@ import { CursorQueryArgsTypeOpts, QueryType, StaticQueryType } from './interface
 
 export type CursorQueryArgsType<DTO> = QueryType<DTO, PagingStrategies.CURSOR>
 
+/**
+ * Builds the args of a cursor paged query: the filter, the sorts, the paging and the connection they
+ * resolve to.
+ *
+ * A connection exposing filterable pivot properties gets a filter of its own, so the pivot field is
+ * added without touching the filter shared by every other query of the DTO.
+ */
 export function createCursorQueryArgsType<DTO>(
   DTOClass: Class<DTO>,
   opts: CursorQueryArgsTypeOpts<DTO> = { ...DEFAULT_QUERY_OPTS, pagingStrategy: PagingStrategies.CURSOR }

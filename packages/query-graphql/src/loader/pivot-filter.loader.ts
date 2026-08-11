@@ -14,6 +14,10 @@ export type PivotFilterArgs<DTO, Pivot> = { dto: DTO; filter: Filter<Pivot> }
 export class PivotFilterLoader<DTO, Pivot> implements NestjsQueryDataloader<Pivot, PivotFilterArgs<DTO, Pivot>, unknown[]> {
   constructor(readonly pivot: ResolvedPivot<Pivot>) {}
 
+  /**
+   * Builds the batch function resolving each parent to the ids of the nodes whose relationship
+   * matches the filter.
+   */
   public createLoader(service: QueryService<Pivot, unknown, unknown>) {
     return async (queryArgs: ReadonlyArray<PivotFilterArgs<DTO, Pivot>>): Promise<unknown[][]> => {
       const results: unknown[][] = []
@@ -45,10 +49,17 @@ export class PivotFilterLoader<DTO, Pivot> implements NestjsQueryDataloader<Pivo
     }
   }
 
+  /**
+   * The id the parent DTO carries for its end of the relationship.
+   */
   private parentId(dto: DTO): unknown {
     return (dto as Record<string, unknown>)[this.pivot.parent.idField]
   }
 
+  /**
+   * Buckets the batched args by filter, keeping the position each one was asked in so the results
+   * can be handed back in order.
+   */
   private groupByFilter(
     queryArgs: ReadonlyArray<PivotFilterArgs<DTO, Pivot>>
   ): Map<string, (PivotFilterArgs<DTO, Pivot> & { index: number })[]> {
