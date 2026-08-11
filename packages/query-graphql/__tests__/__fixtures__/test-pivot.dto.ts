@@ -20,6 +20,21 @@ export class TestPivotDTO {
 }
 
 /**
+ * The same pivot, with the pair declared node-first: the order of a pair carries no meaning.
+ */
+@ObjectType()
+@PivotMapping([
+  [
+    { DTO: () => TestRelationDTO, key: 'testRelationId' },
+    { DTO: () => TestResolverDTO, key: 'testResolverId' }
+  ]
+])
+export class TestReversedPivotDTO {
+  @FilterableField()
+  since!: string
+}
+
+/**
  * The same pivot, but with its ends pointing at the relations instead of at the keys.
  */
 @ObjectType()

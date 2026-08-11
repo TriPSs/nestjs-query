@@ -132,6 +132,19 @@ describe('ReadRelationsResolver - pivot - behaviour', () => {
       })
     })
 
+    it('should not query the pivot when the relation returned no nodes', async () => {
+      const { resolver, mockService, mockPivotService } = await createTestResolver()
+
+      when(mockService.queryRelations(TestRelationDTO, 'relations', deepEqual([dto]), anything(), anything())).thenResolve(
+        new Map([[dto, []]])
+      )
+
+      const connection = await queryRelations(resolver, dto, query, {})
+
+      expect(connection.edges).toEqual([])
+      verify(mockPivotService.query(anything())).never()
+    })
+
     it('should resolve to undefined when the relationship has no pivot record', async () => {
       const { resolver, mockPivotService } = await createTestResolver()
 
@@ -274,6 +287,21 @@ describe('ReadRelationsResolver - pivot - behaviour', () => {
 
       expect(connection.edges).toEqual([])
       verify(mockService.queryRelations(TestRelationDTO, 'relations', anything(), anything(), anything())).never()
+    })
+
+    it('should report a total count of zero when nothing matches', async () => {
+      const { resolver, mockPivotService } = await createTestResolver({ enableFilter: true })
+
+      when(mockPivotService.query(anything())).thenResolve([])
+
+      const connection = (await queryRelations(
+        resolver,
+        dto,
+        { paging: { first: 10 }, filter: { properties: { since: { eq: 'nope' } } } } as CursorQueryArgsType<TestRelationDTO>,
+        {}
+      )) as PivotConnection & { totalCount: Promise<number> }
+
+      await expect(connection.totalCount).resolves.toBe(0)
     })
   })
 })
