@@ -8,6 +8,7 @@ import { getOrCreateCursorConnectionType } from '../../connection'
 import { PropertyMax } from '../../validators/property-max.validator'
 import { FilterType } from '../filter.type'
 import { CursorPagingType, getOrCreateCursorPagingType, PagingStrategies } from '../paging'
+import { getOrCreatePivotFilterType, getPivotFilterName } from '../pivot-filter.type'
 import { getOrCreateSortType } from '../sorting.type'
 import { DEFAULT_QUERY_OPTS } from './constants'
 import { CursorQueryArgsTypeOpts, QueryType, StaticQueryType } from './interfaces'
@@ -18,7 +19,10 @@ export function createCursorQueryArgsType<DTO>(
   DTOClass: Class<DTO>,
   opts: CursorQueryArgsTypeOpts<DTO> = { ...DEFAULT_QUERY_OPTS, pagingStrategy: PagingStrategies.CURSOR }
 ): StaticQueryType<DTO, PagingStrategies.CURSOR> {
-  const F = FilterType(DTOClass)
+  const F =
+    opts.edgePivot?.enableFilter && opts.connectionName
+      ? getOrCreatePivotFilterType(DTOClass, { typeName: getPivotFilterName(opts.connectionName), pivot: opts.edgePivot })
+      : FilterType(DTOClass)
   const S = getOrCreateSortType(DTOClass)
   const P = getOrCreateCursorPagingType(opts)
   const C = getOrCreateCursorConnectionType(DTOClass, opts)

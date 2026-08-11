@@ -8,6 +8,7 @@ import { PagingStrategies } from '../../query'
 import {
   Count,
   CountFn,
+  CreateConnectionOptions,
   CursorConnectionOptions,
   CursorConnectionType,
   EdgeType,
@@ -32,6 +33,16 @@ function getOrCreateConnectionName<DTO>(DTOClass: Class<DTO>, opts: CursorConnec
   return `${objName}Connection`
 }
 
+/**
+ * An edge exposing pivot properties cannot be shared between connections of the same DTO, so it is
+ * named after the connection it belongs to (`UserGroupsConnection` -> `UserGroupsEdge`).
+ */
+function getEdgeName(connectionName: string): string {
+  const suffix = 'Connection'
+  const baseName = connectionName.endsWith(suffix) ? connectionName.slice(0, -suffix.length) : connectionName
+  return `${baseName}Edge`
+}
+
 export function getOrCreateCursorConnectionType<DTO>(
   TItemClass: Class<DTO>,
   maybeOpts?: CursorConnectionOptions
@@ -40,7 +51,9 @@ export function getOrCreateCursorConnectionType<DTO>(
   const connectionName = getOrCreateConnectionName(TItemClass, opts)
   return reflector.memoize(TItemClass, connectionName, () => {
     const pager = createPager<DTO>(TItemClass, opts)
-    const E = getOrCreateEdgeType(TItemClass)
+    const E = opts.edgePivot
+      ? getOrCreateEdgeType(TItemClass, { pivot: opts.edgePivot, edgeName: getEdgeName(connectionName) })
+      : getOrCreateEdgeType(TItemClass)
     const PIT = getOrCreatePageInfoType()
 
     @ObjectType(connectionName)
@@ -52,13 +65,15 @@ export function getOrCreateCursorConnectionType<DTO>(
       static async createFromPromise<Q extends Query<DTO>>(
         queryMany: QueryMany<DTO, Q>,
         query: Q,
-        count?: Count<DTO>
+        count?: Count<DTO>,
+        connectionOpts?: CreateConnectionOptions<DTO>
       ): Promise<AbstractConnection> {
         const { pageInfo, edges, totalCount } = await pager.page(queryMany, query, count ?? DEFAULT_COUNT)
+        const pivot = connectionOpts?.pivot
         return new AbstractConnection(
           // create the appropriate graphql instance
           new PIT(pageInfo.hasNextPage, pageInfo.hasPreviousPage, pageInfo.startCursor, pageInfo.endCursor),
-          edges.map(({ node, cursor }) => new E(node, cursor)),
+          edges.map(({ node, cursor }) => new E(node, cursor, pivot ? () => pivot(node) : undefined)),
           totalCount
         )
       }

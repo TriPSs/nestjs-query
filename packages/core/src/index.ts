@@ -6,7 +6,8 @@ export {
   AssemblerFactory,
   AssemblerSerializer,
   ClassTransformerAssembler,
-  DefaultAssembler
+  DefaultAssembler,
+  getAssemblers
 } from './assemblers'
 export * from './common'
 export { getQueryServiceToken, InjectAssemblerQueryService, InjectQueryService } from './decorators'
