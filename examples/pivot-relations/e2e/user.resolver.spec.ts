@@ -173,7 +173,7 @@ describe('UserResolver (pivot-relations - e2e)', () => {
           }
         }
       `)
-      expect(querySpy).toHaveBeenCalled()
+      expect(querySpy).toHaveBeenCalledTimes(1)
 
       querySpy.mockRestore()
     })
