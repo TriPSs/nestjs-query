@@ -171,6 +171,15 @@ describe('ReadRelationsResolver - pivot - behaviour', () => {
 
       expect(properties).toEqual([pivotRow('rel-1', '2020'), undefined, otherPivot])
       verify(mockPivotService.query(anything())).once()
+
+      // one call is not enough: it has to carry every parent and every node of the request
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const [pivotQuery] = capture(mockPivotService.query).last()
+      expect(pivotQuery).toEqual({
+        filter: {
+          and: [{ testResolverId: { in: ['dto-1', 'dto-2'] } }, { testRelationId: { in: ['rel-1', 'rel-2', 'rel-3'] } }]
+        }
+      })
     })
   })
 

@@ -3,7 +3,10 @@ import { Test } from '@nestjs/testing'
 import request from 'supertest'
 import { DataSource } from 'typeorm'
 
+import { getQueryServiceToken, QueryService } from '@ptc-org/nestjs-query-core'
+
 import { AppModule } from '../src/app.module'
+import { MembershipDTO } from '../src/membership/dto/membership.dto'
 import { refresh } from './fixtures'
 
 describe('UserResolver (pivot-relations - e2e)', () => {
@@ -45,7 +48,7 @@ describe('UserResolver (pivot-relations - e2e)', () => {
         {
           user(id: 1) {
             name
-            groups {
+            groups(sorting: [{ field: id, direction: ASC }]) {
               edges {
                 node {
                   name
@@ -132,11 +135,14 @@ describe('UserResolver (pivot-relations - e2e)', () => {
         ])
       }))
 
-    it('should not query the pivot when the properties are not selected', () =>
-      graphql(`
+    it('should not query the pivot when the properties are not selected', async () => {
+      const pivotService = app.get<QueryService<MembershipDTO, unknown, unknown>>(getQueryServiceToken(MembershipDTO))
+      const querySpy = jest.spyOn(pivotService, 'query')
+
+      const { body } = await graphql(`
         {
           user(id: 1) {
-            groups {
+            groups(sorting: [{ field: id, direction: ASC }]) {
               edges {
                 node {
                   name
@@ -145,10 +151,32 @@ describe('UserResolver (pivot-relations - e2e)', () => {
             }
           }
         }
-      `).then(({ body }) => {
-        expect(body.errors).toBeUndefined()
-        expect(body.data.user.groups.edges).toEqual([{ node: { name: 'Admins' } }, { node: { name: 'Engineers' } }])
-      }))
+      `)
+
+      expect(body.errors).toBeUndefined()
+      expect(body.data.user.groups.edges).toEqual([{ node: { name: 'Admins' } }, { node: { name: 'Engineers' } }])
+      // the whole point of the lazy getter: nothing is queried unless the field is selected
+      expect(querySpy).not.toHaveBeenCalled()
+
+      // ...and the same spy does fire once the field is asked for, so the assertion above is not
+      // passing simply because it watches the wrong instance
+      await graphql(`
+        {
+          user(id: 1) {
+            groups {
+              edges {
+                properties {
+                  role
+                }
+              }
+            }
+          }
+        }
+      `)
+      expect(querySpy).toHaveBeenCalled()
+
+      querySpy.mockRestore()
+    })
   })
 
   describe('filtering by the properties', () => {
