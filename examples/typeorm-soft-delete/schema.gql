@@ -2,6 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Tag {
+  id: ID!
+  name: String!
+}
+
+type TodoItemToTag {
+  todoID: ID!
+  tagID: ID!
+  tag: Tag
+}
+
 type TodoItem {
   id: ID!
   title: String!
@@ -17,6 +28,13 @@ type TodoItem {
     """Specify to sort results."""
     sorting: [SubTaskSort!]! = []
   ): [SubTask!]!
+  toTags(
+    """Specify to filter the records returned."""
+    filter: TodoItemToTagFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [TodoItemToTagSort!]! = []
+  ): [TodoItemToTag!]!
 }
 
 """
@@ -158,6 +176,24 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
+}
+
+input TodoItemToTagFilter {
+  and: [TodoItemToTagFilter!]
+  or: [TodoItemToTagFilter!]
+  todoID: IDFilterComparison
+  tagID: IDFilterComparison
+}
+
+input TodoItemToTagSort {
+  field: TodoItemToTagSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum TodoItemToTagSortFields {
+  todoID
+  tagID
 }
 
 type SubTask {

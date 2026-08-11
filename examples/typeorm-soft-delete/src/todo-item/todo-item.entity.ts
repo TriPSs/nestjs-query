@@ -10,6 +10,7 @@ import {
 } from 'typeorm'
 
 import { SubTaskEntity } from '../sub-task/sub-task.entity'
+import { TodoToTagEntity } from '../todo-to-tag/todo-to-tag.entity'
 
 @Entity({ name: 'todo_item' })
 export class TodoItemEntity {
@@ -27,6 +28,9 @@ export class TodoItemEntity {
 
   @OneToMany(() => SubTaskEntity, (subTask) => subTask.todoItem)
   subTasks!: SubTaskEntity[]
+
+  @OneToMany(() => TodoToTagEntity, (todoToTag) => todoToTag.todoItem)
+  toTags!: TodoToTagEntity[]
 
   @VirtualColumn({
     query: (alias) => `SELECT COUNT(*)

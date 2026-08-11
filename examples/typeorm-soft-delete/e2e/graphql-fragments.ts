@@ -5,6 +5,17 @@ export const todoItemFields = `
   description
 `
 
+export const todoItemWithTagsFields = `
+  id
+  title
+  toTags {
+    tag {
+      id
+      name
+    }
+  }
+`
+
 export const pageInfoField = `
   pageInfo{
     hasNextPage
