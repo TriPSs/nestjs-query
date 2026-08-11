@@ -2,7 +2,14 @@ import { DynamicModule, ForwardReference, Global, Module, Provider } from '@nest
 import { Assembler, Class, NestjsQueryCoreModule } from '@ptc-org/nestjs-query-core'
 
 import { DataLoaderOptions, dataLoaderOptionsToken } from './pipes/inject-data-loader-config.pipe'
-import { AutoResolverOpts, createAuthorizerProviders, createHookProviders, createResolvers } from './providers'
+import {
+  AutoResolverOpts,
+  createAuthorizerProviders,
+  createHookProviders,
+  createQueryServiceProviders,
+  createResolvers,
+  QueryServiceOpts
+} from './providers'
 import { ReadResolverOpts } from './resolvers'
 import { defaultPubSub, GraphQLPubSub, pubSubToken } from './subscription'
 import { PagingStrategies } from './types/query/paging'
@@ -26,6 +33,11 @@ export interface NestjsQueryGraphqlModuleFeatureOpts {
   assemblers?: Class<Assembler<any, any, any, any, any, any>>[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   resolvers?: AutoResolverOpts<any, any, unknown, unknown, ReadResolverOpts<any>, PagingStrategies>[]
+  /**
+   * DTOs that need a `QueryService` but no resolver, such as the pivot of a relation.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  queryServices?: QueryServiceOpts<any, any>[]
   dtos?: DTOModuleOpts<unknown>[]
   pubSub?: Provider<GraphQLPubSub>
 }
@@ -79,6 +91,7 @@ export class NestjsQueryGraphQLModule {
   private static getProviders(opts: NestjsQueryGraphqlModuleFeatureOpts): Provider<unknown>[] {
     return [
       ...this.getServicesProviders(opts),
+      ...this.getQueryServiceProviders(opts),
       ...this.getPubSubProviders(opts),
       ...this.getAuthorizerProviders(opts),
       ...this.getHookProviders(opts),
@@ -92,6 +105,13 @@ export class NestjsQueryGraphQLModule {
 
   private static getServicesProviders(opts: NestjsQueryGraphqlModuleFeatureOpts): Provider<unknown>[] {
     return opts.services ?? []
+  }
+
+  /**
+   * Providers for the DTOs that need a `QueryService` but no resolver.
+   */
+  private static getQueryServiceProviders(opts: NestjsQueryGraphqlModuleFeatureOpts): Provider<unknown>[] {
+    return createQueryServiceProviders(opts.queryServices ?? [])
   }
 
   private static getResolverProviders(opts: NestjsQueryGraphqlModuleFeatureOpts): Provider<unknown>[] {

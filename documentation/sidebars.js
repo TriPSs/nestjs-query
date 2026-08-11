@@ -64,6 +64,7 @@ module.exports = {
       'graphql/aggregations',
       'graphql/subscriptions',
       'graphql/relations',
+      'graphql/pivot-relations',
       'graphql/types',
       'graphql/federation',
     ],

@@ -4,14 +4,18 @@ export {
   ArrayConnectionType,
   ConnectionOptions,
   ConnectionType,
+  CreateConnectionOptions,
   CursorConnectionOptions,
   CursorConnectionType,
+  DEFAULT_PIVOT_FIELD_NAME,
+  EdgePivotOptions,
   EdgeType,
   InferConnectionTypeFromStrategy,
   OffsetConnectionOptions,
   OffsetConnectionType,
   OffsetPageInfoType,
   PageInfoType,
+  PivotFn,
   StaticConnectionType
 } from './connection'
 export { CreateManyInputType } from './create-many-input.type'
@@ -22,6 +26,12 @@ export { DeleteManyResponseType } from './delete-many-reponse.type'
 export { DeleteOneInputType } from './delete-one-input.type'
 export { FindOneArgsType } from './find-one-args.type'
 export { MutationArgsType } from './mutation-args.type'
+export {
+  definePivotPropertiesField,
+  getOrCreatePivotPropertiesType,
+  PivotPropertiesInputType,
+  PivotPropertiesTypeOpts
+} from './pivot-properties-input.type'
 export {
   CursorPagingType,
   CursorQueryArgsType,
@@ -38,7 +48,7 @@ export {
   UpdateFilterType
 } from './query'
 export { RelationInputType } from './relation-input.type'
-export { RelationsInputType } from './relations-input.type'
+export { RelationsInputType, RelationsInputTypeOpts } from './relations-input.type'
 export { SubscriptionArgsType } from './subscription-args.type'
 export { SubscriptionFilterInputType } from './subscription-filter-input.type'
 export { UpdateManyInputType } from './update-many-input.type'
