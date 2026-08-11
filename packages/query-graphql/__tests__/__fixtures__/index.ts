@@ -12,7 +12,7 @@ import { TestResolverAuthorizer } from './test-resolver.authorizer'
 import { TestResolverDTO } from './test-resolver.dto'
 import { TestService } from './test-resolver.service'
 
-export { TestPivotDTO } from './test-pivot.dto'
+export { TestPivotDTO, TestRelationKeyedPivotDTO } from './test-pivot.dto'
 export { TestPivotService } from './test-pivot.service'
 export { TestRelationDTO } from './test-relation.dto'
 export { TestResolverAuthorizer } from './test-resolver.authorizer'

@@ -9,6 +9,7 @@ import {
   TestPivotDTO,
   TestPivotService,
   TestRelationDTO,
+  TestRelationKeyedPivotDTO,
   TestResolverDTO,
   TestService
 } from '../../../__fixtures__'
@@ -100,6 +101,17 @@ describe('ReadRelationsResolver - pivot - behaviour', () => {
     )
   })
 
+  it('should refuse a field name the edge already uses', () => {
+    expect(() =>
+      ReadRelationsResolver(TestResolverDTO, {
+        many: { relations: { DTO: TestRelationDTO, pivot: { DTO: () => TestPivotDTO, fieldName: 'node' } } }
+      })
+    ).toThrow(
+      "Unable to expose the pivot of TestResolverDTORelationsEdge as 'node': the edge already uses that name. " +
+        "Set 'pivot.fieldName' to something other than node, cursor, pivotFn."
+    )
+  })
+
   describe('resolving the properties', () => {
     it('should query the pivot by both ends of the relationship', async () => {
       const { resolver, mockPivotService } = await createTestResolver()
@@ -159,6 +171,51 @@ describe('ReadRelationsResolver - pivot - behaviour', () => {
 
       expect(properties).toEqual([pivotRow('rel-1', '2020'), undefined, otherPivot])
       verify(mockPivotService.query(anything())).once()
+    })
+  })
+
+  describe('ends pointing at a relation', () => {
+    it('should select the relations so their ids can be read back', async () => {
+      @Resolver(() => TestResolverDTO)
+      class TestRelationKeyedResolver extends ReadRelationsResolver(TestResolverDTO, {
+        many: { relations: { DTO: TestRelationDTO, pivot: () => TestRelationKeyedPivotDTO } }
+      }) {
+        constructor(service: TestService) {
+          super(service)
+        }
+      }
+
+      const mockPivotService = mock(TestPivotService)
+      const { resolver, mockService } = await createResolverFromNest(TestRelationKeyedResolver, TestResolverDTO, [
+        { provide: getQueryServiceToken(TestRelationKeyedPivotDTO), useValue: instance(mockPivotService) }
+      ])
+
+      when(mockService.queryRelations(TestRelationDTO, 'relations', deepEqual([dto]), anything(), anything())).thenResolve(
+        new Map([[dto, nodes]])
+      )
+      when(mockPivotService.query(anything())).thenResolve([
+        { testResolver: { id: dto.id }, testRelation: { id: 'rel-1' }, since: '2020' } as never
+      ])
+
+      const connection = await queryRelations(resolver, dto, query, {})
+
+      // resolution is lazy, so the query only happens once the fields are read
+      const properties = await Promise.all(connection.edges.map((edge) => edge.properties))
+
+      expect(properties).toEqual([{ testResolver: { id: dto.id }, testRelation: { id: 'rel-1' }, since: '2020' }, undefined])
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const [pivotQuery] = capture(mockPivotService.query).last()
+      expect(pivotQuery).toEqual({
+        filter: {
+          and: [{ testResolver: { id: { in: ['dto-1'] } } }, { testRelation: { id: { in: ['rel-1', 'rel-2'] } } }]
+        },
+        // without this the relations come back unhydrated and no edge finds its pivot
+        relations: [
+          { name: 'testResolver', query: {} },
+          { name: 'testRelation', query: {} }
+        ]
+      })
     })
   })
 

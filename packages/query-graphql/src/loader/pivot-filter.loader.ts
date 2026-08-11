@@ -1,6 +1,6 @@
 import { Filter, mergeFilter, QueryService } from '@ptc-org/nestjs-query-core'
 
-import { pivotEndFilter, pivotEndId, ResolvedPivot } from '../resolvers/relations/pivot.helpers'
+import { pivotEndFilter, pivotEndId, pivotSelectRelations, ResolvedPivot } from '../resolvers/relations/pivot.helpers'
 import { NestjsQueryDataloader } from './relations.loader'
 
 export type PivotFilterArgs<DTO, Pivot> = { dto: DTO; filter: Filter<Pivot> }
@@ -25,7 +25,8 @@ export class PivotFilterLoader<DTO, Pivot> implements NestjsQueryDataloader<Pivo
           const parentIds = [...new Set(args.map(({ dto }) => this.parentId(dto)))]
 
           const pivots = await service.query({
-            filter: mergeFilter(pivotEndFilter<Pivot>(this.pivot.parent, parentIds), filter)
+            filter: mergeFilter(pivotEndFilter<Pivot>(this.pivot.parent, parentIds), filter),
+            relations: pivotSelectRelations(this.pivot)
           })
 
           const byParent = new Map<string, unknown[]>()

@@ -18,3 +18,18 @@ export class TestPivotDTO {
   @FilterableField()
   since!: string
 }
+
+/**
+ * The same pivot, but with its ends pointing at the relations instead of at the keys.
+ */
+@ObjectType()
+@PivotMapping([
+  [
+    { DTO: () => TestResolverDTO, key: 'testResolver', reference: 'id' },
+    { DTO: () => TestRelationDTO, key: 'testRelation', reference: 'id' }
+  ]
+])
+export class TestRelationKeyedPivotDTO {
+  @FilterableField()
+  since!: string
+}

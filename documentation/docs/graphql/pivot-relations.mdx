@@ -177,9 +177,9 @@ it and say which of its fields carries the id:
 ```
 
 :::note
-Reading and filtering work either way. Writing needs the provider to support the filter it produces:
-a nested relation filter in an `UPDATE` is only implemented by TypeORM today, so prefer the key form
-when `enableUpdate` is on.
+Reading and filtering work either way — the loaders select the referenced relations so their ids can
+be read back. Writing is different: it produces a nested relation filter in an `UPDATE`, which only
+some providers support, so prefer the key form when `enableUpdate` is on.
 :::
 
 The relation only points at the pivot — everything else it needs is already declared there:
@@ -275,12 +275,19 @@ it is a plain injection, so a hand-written service, a decorated one, or a `Relat
 its own all work:
 
 ```ts title="user/user.module.ts"
+import { getQueryServiceToken } from '@ptc-org/nestjs-query-core'
+
 NestjsQueryGraphQLModule.forFeature({
   imports: [NestjsQueryTypeOrmModule.forFeature([UserEntity, MembershipEntity])],
   resolvers: [{ DTOClass: UserDTO, EntityClass: UserEntity }],
   services: [{ provide: getQueryServiceToken(MembershipDTO), useClass: MyMembershipService }]
 })
 ```
+
+:::note
+Register the pivot service either through `queryServices` or as a raw provider, not both — two
+providers for the same token in one module is an error in current NestJS versions.
+:::
 
 :::note
 `RelationQueryService` issues one query per parent for the relation it overrides. That is how it
@@ -333,7 +340,7 @@ alongside the filter on the node itself:
 ```graphql
 {
   user(id: 1) {
-    # the groups where *this user* is an owner
+    # the engineering groups where *this user* is an owner
     groups(filter: { name: { like: "Eng%" }, properties: { role: { eq: "owner" } } }) {
       totalCount
       edges {

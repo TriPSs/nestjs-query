@@ -1,11 +1,13 @@
 import { QueryService } from '@ptc-org/nestjs-query-core'
 
-import { getPivotFilter, pivotEndId, ResolvedPivot } from '../resolvers/relations/pivot.helpers'
+import { getPivotFilter, pivotEndId, pivotSelectRelations, ResolvedPivot } from '../resolvers/relations/pivot.helpers'
 import { NestjsQueryDataloader } from './relations.loader'
 
 export type PivotRelationsArgs<DTO, Node> = { dto: DTO; node: Node }
 
-const pairKey = (parentId: unknown, nodeId: unknown): string => `${String(parentId)}|${String(nodeId)}`
+// Serialised rather than joined: a separator can appear inside an id, and `('a|b', 'c')` must
+// not collide with `('a', 'b|c')`.
+const pairKey = (parentId: unknown, nodeId: unknown): string => JSON.stringify([parentId, nodeId])
 
 /**
  * Loads the pivot records tying a parent to the nodes of one of its relations.
@@ -29,7 +31,10 @@ export class PivotRelationsLoader<DTO, Node, Pivot> implements NestjsQueryDatalo
         return queryArgs.map((): Pivot | undefined => undefined)
       }
 
-      const pivots = await service.query({ filter: getPivotFilter(this.pivot, parentIds, nodeIds) })
+      const pivots = await service.query({
+        filter: getPivotFilter(this.pivot, parentIds, nodeIds),
+        relations: pivotSelectRelations(this.pivot)
+      })
 
       const index = new Map<string, Pivot>(
         pivots.map((pivot) => [pairKey(pivotEndId(pivot, this.pivot.parent), pivotEndId(pivot, this.pivot.node)), pivot])

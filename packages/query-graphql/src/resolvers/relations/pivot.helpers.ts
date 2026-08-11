@@ -1,4 +1,12 @@
-import { AssemblerFactory, AssemblerQueryService, Class, Filter, getAssemblers, QueryService } from '@ptc-org/nestjs-query-core'
+import {
+  AssemblerFactory,
+  AssemblerQueryService,
+  Class,
+  Filter,
+  getAssemblers,
+  QueryService,
+  SelectRelation
+} from '@ptc-org/nestjs-query-core'
 
 import { DTONames } from '../../common'
 import { findPivotPair, getIDField, getPivotMapping, PivotEnd } from '../../decorators'
@@ -157,6 +165,21 @@ export const getPivotFilter = <Pivot>(pivot: ResolvedPivot<Pivot>, parentIds: un
   ({
     and: [pivotEndFilter(pivot.parent, parentIds), pivotEndFilter(pivot.node, nodeIds)]
   }) as Filter<Pivot>
+
+/**
+ * The relations a pivot query has to select for {@link pivotEndId} to find the ids.
+ *
+ * A relation referenced only by a filter is joined without being selected, so an end pointing at one
+ * would come back missing unless it is asked for explicitly.
+ */
+export const pivotSelectRelations = <Pivot>(pivot: ResolvedPivot<Pivot>): SelectRelation<Pivot>[] | undefined => {
+  const relations = [pivot.parent, pivot.node]
+    .filter((end) => Boolean(end.reference))
+    .map((end) => ({ name: end.key, query: {} }) as SelectRelation<Pivot>)
+
+  // Left out entirely when the ends are plain keys, so the query stays as it was.
+  return relations.length ? relations : undefined
+}
 
 /**
  * The id a pivot record carries for one end, whether the key holds it directly or through a relation.

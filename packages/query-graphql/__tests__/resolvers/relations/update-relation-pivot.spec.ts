@@ -94,6 +94,25 @@ describe('UpdateRelationsResolver - pivot', () => {
       })
     })
 
+    it('should not write the properties when the relation mutation is rejected', async () => {
+      const { resolver, mockService, mockPivotService } = await createTestResolver()
+      const input = { id: 'record-id', relationIds: ['rel-1', 'forbidden'], properties: { since: '2020' } }
+
+      // The service rejects the whole mutation when a relation is filtered out by the authorizer,
+      // which is what keeps the pivot write from running for relations the caller cannot touch.
+      when(mockService.addRelations('relations', input.id, deepEqual(input.relationIds), anything())).thenReject(
+        new Error('Unable to find all relations to add to TestResolverDTO')
+      )
+
+      await expect(
+        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        resolver.addRelationsToTestResolverDTO({ input })
+      ).rejects.toThrow('Unable to find all relations to add to TestResolverDTO')
+
+      verify(mockPivotService.updateMany(anything(), anything())).never()
+    })
+
     it('should not touch the pivot when no properties are provided', async () => {
       const { resolver, mockService, mockPivotService } = await createTestResolver()
       const input = { id: 'record-id', relationIds: ['rel-1'] }

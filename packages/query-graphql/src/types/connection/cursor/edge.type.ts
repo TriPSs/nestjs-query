@@ -5,6 +5,11 @@ import { getGraphqlObjectName } from '../../../common'
 import { ConnectionCursorScalar, ConnectionCursorType } from '../../cursor.scalar'
 import { DEFAULT_PIVOT_FIELD_NAME, EdgePivotOptions, EdgeType } from '../interfaces'
 
+/**
+ * Names the edge itself uses, which a pivot field may not take over.
+ */
+const RESERVED_EDGE_FIELDS = ['node', 'cursor', 'pivotFn']
+
 export interface EdgeTypeOpts {
   /**
    * Override the name of the generated graphql object.
@@ -55,6 +60,15 @@ export function getOrCreateEdgeType<DTO>(DTOClass: Class<DTO>, opts?: EdgeTypeOp
 
     if (opts?.pivot) {
       const { DTO: PivotDTO, fieldName = DEFAULT_PIVOT_FIELD_NAME, description } = opts.pivot
+
+      // The getter is defined on the prototype, so a name the edge already uses would shadow the
+      // property the constructor assigns.
+      if (RESERVED_EDGE_FIELDS.includes(fieldName)) {
+        throw new Error(
+          `Unable to expose the pivot of ${edgeName} as '${fieldName}': the edge already uses that name. ` +
+            `Set 'pivot.fieldName' to something other than ${RESERVED_EDGE_FIELDS.join(', ')}.`
+        )
+      }
 
       // The field name is dynamic, so the getter and its decorator are applied programmatically.
       Object.defineProperty(AbstractEdge.prototype, fieldName, {
