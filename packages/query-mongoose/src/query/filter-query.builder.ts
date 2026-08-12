@@ -11,12 +11,12 @@ const MONGOOSE_SORT_DIRECTION: Record<SortDirection, 1 | -1> = {
 }
 
 type MongooseSort = Record<string, 1 | -1>
-type MongooseQuery<Entity extends Document> = {
+type MongooseQuery<Entity extends Document<any>> = {
   filterQuery: FilterQuery<Entity>
   options: { limit?: number; skip?: number; sort?: MongooseSort }
 }
 
-type MongooseAggregateQuery<Entity extends Document> = MongooseQuery<Entity> & {
+type MongooseAggregateQuery<Entity extends Document<any>> = MongooseQuery<Entity> & {
   aggregate: MongooseGroupAndAggregate
 }
 
@@ -25,7 +25,7 @@ type MongooseAggregateQuery<Entity extends Document> = MongooseQuery<Entity> & {
  *
  * Class that will convert a Query into a `typeorm` Query Builder.
  */
-export class FilterQueryBuilder<Entity extends Document> {
+export class FilterQueryBuilder<Entity extends Document<any>> {
   constructor(
     readonly Model: MongooseModel<Entity>,
     readonly whereBuilder: WhereBuilder<Entity> = new WhereBuilder<Entity>(Model),

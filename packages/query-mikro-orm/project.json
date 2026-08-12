@@ -3,6 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/query-mikro-orm/src",
   "projectType": "library",
+  "tags": [],
+  "implicitDependencies": ["core"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -37,7 +39,5 @@
         "command": "npm publish ./dist/packages/query-mikro-orm --access public"
       }
     }
-  },
-  "tags": [],
-  "implicitDependencies": ["core"]
+  }
 }

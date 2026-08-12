@@ -14,7 +14,7 @@ describe('WhereBuilder', (): void => {
   const expectFilter = <T = TestEntity>(
     filter: Filter<T>,
     expectedFilterQuery: FilterQuery<T>,
-    whereBuilder?: WhereBuilder<Document>
+    whereBuilder?: WhereBuilder<Document<any>>
   ): void => {
     const actual = (whereBuilder ?? createWhereBuilder()).build(filter)
     expect(actual).toEqual(expectedFilterQuery)
@@ -195,7 +195,7 @@ describe('WhereBuilder', (): void => {
       const TestSubObjectSchema = SchemaFactory.createForClass(TestSubObjectDTO)
       @ObjectType()
       @Schema()
-      class TestMainObject extends Document {
+      class TestMainObject extends Document<any> {
         @FilterableField(() => TestSubObjectDTO)
         @Prop({ type: TestSubObjectSchema, required: true })
         subType: TestSubObjectDTO

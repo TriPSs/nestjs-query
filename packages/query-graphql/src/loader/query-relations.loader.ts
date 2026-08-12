@@ -5,9 +5,11 @@ import { NestjsQueryDataloader } from './relations.loader'
 type QueryRelationsArgs<DTO, Relation> = { dto: DTO; query: Query<Relation> }
 type QueryRelationsMap<DTO, Relation> = Map<string, (QueryRelationsArgs<DTO, Relation> & { index: number })[]>
 
-export class QueryRelationsLoader<DTO, Relation>
-  implements NestjsQueryDataloader<DTO, QueryRelationsArgs<DTO, Relation>, Relation[] | Error>
-{
+export class QueryRelationsLoader<DTO, Relation> implements NestjsQueryDataloader<
+  DTO,
+  QueryRelationsArgs<DTO, Relation>,
+  Relation[] | Error
+> {
   constructor(
     readonly RelationDTO: Class<Relation>,
     readonly relationName: string

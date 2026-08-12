@@ -21,12 +21,12 @@ import {
 } from '../mongoose-types.helper'
 import { AggregateBuilder, FilterQueryBuilder } from '../query'
 
-export abstract class ReferenceQueryService<Entity extends Document> {
+export abstract class ReferenceQueryService<Entity extends Document<any>> {
   public abstract readonly Model: MongooseModel<Entity>
 
   public abstract getById(id: string | number, opts?: GetByIdOptions<Entity>): Promise<Entity>
 
-  public aggregateRelations<Relation extends Document>(
+  public aggregateRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -34,7 +34,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     aggregate: AggregateQuery<Relation>
   ): Promise<Map<Entity, AggregateResponse<Relation>[]>>
 
-  public aggregateRelations<Relation extends Document>(
+  public aggregateRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
@@ -42,7 +42,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     aggregate: AggregateQuery<Relation>
   ): Promise<AggregateResponse<Relation>[]>
 
-  public async aggregateRelations<Relation extends Document>(
+  public async aggregateRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -72,21 +72,21 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return AggregateBuilder.convertToAggregateResponse(aggResult)
   }
 
-  public countRelations<Relation extends Document>(
+  public countRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
     filter: Filter<Relation>
   ): Promise<Map<Entity, number>>
 
-  public countRelations<Relation extends Document>(
+  public countRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
     filter: Filter<Relation>
   ): Promise<number>
 
-  async countRelations<Relation extends Document>(
+  async countRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -106,21 +106,21 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return relationModel.countDocuments(referenceQueryBuilder.buildFilterQuery(refFilter)).exec()
   }
 
-  public findRelation<Relation extends Document>(
+  public findRelation<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: Entity[],
     opts?: FindRelationOptions<Relation>
   ): Promise<Map<Entity, Relation | undefined>>
 
-  public findRelation<Relation extends Document>(
+  public findRelation<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
     opts?: FindRelationOptions<Relation>
   ): Promise<Relation | undefined>
 
-  public async findRelation<Relation extends Document>(
+  public async findRelation<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -153,7 +153,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
    * @param opts - A query to filter, page or sort relations.
    * @param withDeleted - Also query the soft deleted records
    */
-  private async batchQueryRelations<Relation extends Document>(
+  private async batchQueryRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: Entity[],
@@ -213,7 +213,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
    * @param filter - Filter.
    * @param query - A query to filter, page or sort relations.
    */
-  private async batchAggregateRelations<Relation extends Document>(
+  private async batchAggregateRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -238,7 +238,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
    * @param relationName - The name of relation to query for.
    * @param filter - The filter to apply to the relation query.
    */
-  private async batchCountRelations<Relation extends Document>(
+  private async batchCountRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -259,7 +259,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
    * @param relationName - The name of relation to query for.
    * @param opts - A query to filter, page or sort relations.
    */
-  private async batchFindRelations<Relation extends Document>(
+  private async batchFindRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: Entity[],
@@ -284,21 +284,21 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return results
   }
 
-  public queryRelations<Relation extends Document>(
+  public queryRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
     query: Query<Relation>
   ): Promise<Map<Entity, Relation[]>>
 
-  public queryRelations<Relation extends Document>(
+  public queryRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
     query: Query<Relation>
   ): Promise<Relation[]>
 
-  public async queryRelations<Relation extends Document>(
+  public async queryRelations<Relation extends Document<any>>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -319,7 +319,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return assembler.convertToDTOs(populated.get(relationName) as Document[])
   }
 
-  public async addRelations<Relation extends Document>(
+  public async addRelations<Relation extends Document<any>>(
     relationName: string,
     id: string,
     relationIds: (string | number)[],
@@ -336,7 +336,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return this.getById(id)
   }
 
-  public async setRelations<Relation extends Document>(
+  public async setRelations<Relation extends Document<any>>(
     relationName: string,
     id: string,
     relationIds: (string | number)[],
@@ -353,7 +353,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return this.getById(id)
   }
 
-  public async setRelation<Relation extends Document>(
+  public async setRelation<Relation extends Document<any>>(
     relationName: string,
     id: string | number,
     relationId: string | number,
@@ -370,7 +370,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return this.getById(id)
   }
 
-  public async removeRelation<Relation extends Document>(
+  public async removeRelation<Relation extends Document<any>>(
     relationName: string,
     id: string | number,
     relationId: string | number,
@@ -391,7 +391,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return this.getById(id)
   }
 
-  public async removeRelations<Relation extends Document>(
+  public async removeRelations<Relation extends Document<any>>(
     relationName: string,
     id: string | number,
     relationIds: string[] | number[],
@@ -436,11 +436,11 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return !!this.Model.schema.virtualpath(refName)
   }
 
-  private getReferenceQueryBuilder<Ref extends Document>(refName: string): FilterQueryBuilder<Ref> {
+  private getReferenceQueryBuilder<Ref extends Document<any>>(refName: string): FilterQueryBuilder<Ref> {
     return new FilterQueryBuilder<Ref>(this.getReferenceModel(refName))
   }
 
-  private getReferenceModel<Ref extends Document>(refName: string): MongooseModel<Ref> {
+  private getReferenceModel<Ref extends Document<any>>(refName: string): MongooseModel<Ref> {
     const { db } = this.Model
     if (this.isReferencePath(refName)) {
       const schemaType = this.Model.schema.path(refName)
@@ -459,7 +459,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     throw new Error(`Unable to lookup reference type for ${refName}`)
   }
 
-  private getReferenceFilter<Relation extends Document>(
+  private getReferenceFilter<Relation extends Document<any>>(
     refName: string,
     entity: Entity | Entity[],
     filter?: Filter<Relation>
@@ -502,7 +502,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     return undefined
   }
 
-  private getRefCount<Relation extends Document>(
+  private getRefCount<Relation extends Document<any>>(
     relationName: string,
     relationIds: (string | number)[],
     filter?: Filter<Relation>

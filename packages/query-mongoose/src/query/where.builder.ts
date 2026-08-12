@@ -7,7 +7,7 @@ import { ComparisonBuilder, EntityComparisonField } from './comparison.builder'
  * @internal
  * Builds a WHERE clause from a Filter.
  */
-export class WhereBuilder<Entity extends Document> {
+export class WhereBuilder<Entity extends Document<any>> {
   constructor(
     readonly Model: MongooseModel<Entity>,
     readonly comparisonBuilder: ComparisonBuilder<Entity> = new ComparisonBuilder(Model)

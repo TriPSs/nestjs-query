@@ -6,9 +6,11 @@ export type FindRelationsArgs<DTO, Relation> = { dto: DTO } & FindRelationOption
 type FindRelationsOpts<Relation> = Omit<FindRelationOptions<Relation>, 'filter'>
 type FindRelationsMap<DTO, Relation> = Map<string, (FindRelationsArgs<DTO, Relation> & { index: number })[]>
 
-export class FindRelationsLoader<DTO, Relation>
-  implements NestjsQueryDataloader<DTO, FindRelationsArgs<DTO, Relation>, Relation | undefined | Error>
-{
+export class FindRelationsLoader<DTO, Relation> implements NestjsQueryDataloader<
+  DTO,
+  FindRelationsArgs<DTO, Relation>,
+  Relation | undefined | Error
+> {
   constructor(
     readonly RelationDTO: Class<Relation>,
     readonly relationName: string

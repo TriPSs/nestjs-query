@@ -53,12 +53,12 @@ describe('MongooseQueryService', () => {
     }).compile()
   })
 
-  function convertDocument<Doc extends Document>(doc: Doc): Doc {
+  function convertDocument<Doc extends Document<any>>(doc: Doc): Doc {
     return doc.toObject({ virtuals: true })
     // return doc.toObject({ virtuals: true });
   }
 
-  function convertDocuments<Doc extends Document>(docs: Doc[]): Doc[] {
+  function convertDocuments<Doc extends Document<any>>(docs: Doc[]): Doc[] {
     return docs.map((doc) => convertDocument(doc))
   }
 
