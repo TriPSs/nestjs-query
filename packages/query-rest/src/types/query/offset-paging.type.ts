@@ -1,7 +1,6 @@
 import { Paging } from '@ptc-org/nestjs-query-core'
 
 import { Field } from '../../decorators'
-import { IsInt } from 'class-validator'
 
 export class OffsetPaging implements Paging {
   @Field({
@@ -12,7 +11,6 @@ export class OffsetPaging implements Paging {
     minimum: 1,
     maximum: 50
   })
-  @IsInt()
   limit?: number
 
   @Field({
@@ -22,6 +20,5 @@ export class OffsetPaging implements Paging {
     required: false,
     minimum: 0
   })
-  @IsInt()
   offset?: number
 }

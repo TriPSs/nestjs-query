@@ -45,8 +45,11 @@ export type ReadControllerOpts<DTO> = {
   QueryArgsTypeOpts<DTO> &
   Pick<ConnectionOptions, 'enableTotalCount'>
 
-export interface ReadController<DTO, PS extends PagingStrategies, QS extends QueryService<DTO, unknown, unknown>>
-  extends ServiceController<DTO, QS> {
+export interface ReadController<
+  DTO,
+  PS extends PagingStrategies,
+  QS extends QueryService<DTO, unknown, unknown>
+> extends ServiceController<DTO, QS> {
   queryMany(
     query: QueryType<DTO, PagingStrategies>,
     authorizeFilter?: Filter<DTO>

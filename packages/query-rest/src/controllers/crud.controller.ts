@@ -17,8 +17,8 @@ export interface CRUDControllerOpts<
   U = DeepPartial<DTO>,
   R = ReadControllerOpts<DTO>,
   PS extends PagingStrategies = PagingStrategies.NONE
-> extends BaseResolverOptions,
-    Pick<ConnectionOptions, 'enableTotalCount'> {
+>
+  extends BaseResolverOptions, Pick<ConnectionOptions, 'enableTotalCount'> {
   /**
    * The DTO that should be used as input for create endpoints.
    */
@@ -35,7 +35,7 @@ export interface CRUDControllerOpts<
   create?: CreateResolverOpts<DTO, C>
   read?: R
   update?: UpdateControllerOpts<DTO, U>
-  delete?: DeleteResolverOpts<DTO>
+  delete?: DeleteResolverOpts
   export?: ExportControllerOpts<DTO>
 
   basePath?: string
@@ -48,9 +48,8 @@ export interface CRUDController<
   U,
   R extends ReadControllerOpts<DTO>,
   QS extends QueryService<DTO, C, U> = QueryService<DTO, C, U>
-> extends CreateController<DTO, C, QS>,
-    ReadControllerFromOpts<DTO, R, QS>,
-    UpdateController<DTO, U, QS> {}
+>
+  extends CreateController<DTO, C, QS>, ReadControllerFromOpts<DTO, R, QS>, UpdateController<DTO, U, QS> {}
 
 // DeleteResolver<DTO, QS>,
 // AggregateResolver<DTO, QS> {
@@ -90,11 +89,11 @@ function extractUpdateResolverOpts<DTO, U>(
   return mergeBaseResolverOpts<UpdateControllerOpts<DTO, U>>({ UpdateDTOClass, ...update }, opts)
 }
 
-function extractDeleteResolverOpts<DTO>(
+function extractDeleteResolverOpts(
   opts: CRUDControllerOpts<DTO, unknown, unknown, ReadControllerOpts<DTO>, PagingStrategies>
-): DeleteResolverOpts<DTO> {
-  const { delete: deleteArgs = {} } = opts
-  return mergeBaseResolverOpts<DeleteResolverOpts<DTO>>(deleteArgs, opts)
+): DeleteResolverOpts {
+  const { delete: deleteArgs } = opts
+  return mergeBaseResolverOpts<DeleteResolverOpts>(deleteArgs, opts)
 }
 
 function extractExportResolverOpts<DTO>(

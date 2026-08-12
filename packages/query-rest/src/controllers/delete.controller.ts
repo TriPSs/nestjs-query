@@ -7,7 +7,7 @@ import { getDTONames } from '../common'
 import { ParamArgs } from '../decorators/param-args.decorator'
 import { BaseServiceResolver, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
 
-export interface DeleteResolverOpts<DTO> extends MutationOpts {
+export interface DeleteResolverOpts extends MutationOpts {
   /**
    * Use soft delete when doing delete mutation
    */
@@ -23,7 +23,7 @@ export interface DeleteController<DTO, QS extends QueryService<DTO, unknown, unk
  * Mixin to add `delete` graphql endpoints.
  */
 export const Deletable =
-  <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts: DeleteResolverOpts<DTO>) =>
+  <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts: DeleteResolverOpts) =>
   <B extends Class<ServiceController<DTO, QS>>>(BaseClass: B): Class<DeleteController<DTO, QS>> & B => {
     const dtoNames = getDTONames(DTOClass, opts)
 
@@ -73,5 +73,5 @@ export const Deletable =
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const DeleteController = <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(
   DTOClass: Class<DTO>,
-  opts: DeleteResolverOpts<DTO> = {}
+  opts: DeleteResolverOpts = {}
 ): ControllerClass<DTO, QS, DeleteController<DTO, QS>> => Deletable<DTO, QS>(DTOClass, opts)(BaseServiceResolver)

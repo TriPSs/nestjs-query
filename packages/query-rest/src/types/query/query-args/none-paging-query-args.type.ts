@@ -1,8 +1,8 @@
 import { Class } from '@ptc-org/nestjs-query-core'
-import { RestQuery } from '@ptc-org/nestjs-query-rest'
 
 import { getOrCreateArrayConnectionType } from '../../../connection/array-connection.type'
 import { Field, SkipIf } from '../../../decorators'
+import { RestQuery } from '../../../types'
 import { BuildableQueryType } from '../buildable-query.type'
 import { FilterType } from '../filter.type'
 import { PagingStrategies } from '../paging'

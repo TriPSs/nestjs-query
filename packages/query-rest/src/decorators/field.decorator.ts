@@ -78,9 +78,10 @@ export function Field(
   }
 
   return <D>(target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<D>) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const metadataType = target?.constructor?.[METADATA_FACTORY_NAME]?.()[propertyKey]?.type
     const returnedType = !returnTypeFunc
-      ? (target?.constructor?.[METADATA_FACTORY_NAME]?.()[propertyKey]?.type ??
-        Reflect.getMetadata('design:type', target, propertyKey))
+      ? (metadataType ?? Reflect.getMetadata('design:type', target, propertyKey))
       : returnTypeFunc()
 
     const isArray = returnedType && Array.isArray(returnedType)
@@ -115,7 +116,7 @@ export function Field(
     }
 
     if (isArray && advancedOptions?.forceArray) {
-      decorators.push(Transform(({ value }) => (Array.isArray(value) ? value : [value])))
+      decorators.push(Transform(({ value }) => (Array.isArray(value) ? value : [value]) as unknown[]))
     }
 
     if (!advancedOptions?.skipRequired) {

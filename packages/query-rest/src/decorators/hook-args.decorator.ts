@@ -15,20 +15,20 @@ class HooksTransformer<T> implements PipeTransform {
     const transformedValue = this.transformValue(value, metadata.metatype)
 
     if (metadata.type === 'param') {
-      return transformedValue
+      return transformedValue as MutationArgsType<T> | Query<T>
     } else if (metadata.type === 'query') {
-      return this.runQueryHooks(transformedValue)
+      return this.runQueryHooks(transformedValue as BuildableQueryType<T>)
     }
 
-    return this.runMutationHooks(transformedValue)
+    return this.runMutationHooks(transformedValue as T)
   }
 
-  private transformValue<T>(value: T, type?: Class<T>): T {
+  private transformValue<V>(value: V, type?: Class<V>): V {
     if (!type || value instanceof type) {
       return value
     }
 
-    return plainToInstance<T, unknown>(type, value, { excludeExtraneousValues: true })
+    return plainToInstance<V, unknown>(type, value, { excludeExtraneousValues: true })
   }
 
   private async runMutationHooks(data: T): Promise<MutationArgsType<T>> {

@@ -19,6 +19,7 @@ function getOrCreateFilterType<T>(
   TClass: Class<T>,
   prefix: string | null,
   suffix: string | null,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   BaseClass: Class<any>
 ): FilterConstructor<T> {
   const $prefix = prefix ?? ''
@@ -56,6 +57,7 @@ function getOrCreateFilterType<T>(
           return filters
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
         return super.filter
       }
     }

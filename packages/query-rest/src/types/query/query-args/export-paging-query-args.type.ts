@@ -1,6 +1,7 @@
 import { Class } from '@ptc-org/nestjs-query-core'
-import { Field, getMergedQueryOpts, RestQuery, SkipIf } from '@ptc-org/nestjs-query-rest'
 
+import { Field, SkipIf } from '../../../decorators'
+import { getMergedQueryOpts, RestQuery } from '../../../types'
 import { BuildableQueryType } from '../buildable-query.type'
 import { ExportFilterType } from '../filter.type'
 import { PagingStrategies } from '../paging'

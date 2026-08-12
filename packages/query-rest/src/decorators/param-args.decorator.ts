@@ -5,16 +5,16 @@ import { plainToInstance } from 'class-transformer'
 import { MutationArgsType, ParamArgsType } from '../types'
 
 class ParamTransformer<T> implements PipeTransform {
-  public async transform(value: T, metadata: ArgumentMetadata): Promise<MutationArgsType<T> | Query<T>> {
-    return this.transformValue(value, metadata.metatype)
+  public transform(value: T, metadata: ArgumentMetadata): MutationArgsType<T> | Query<T> {
+    return this.transformValue(value, metadata.metatype) as MutationArgsType<T> | Query<T>
   }
 
-  private transformValue<T>(value: T, type?: Class<T>): T {
+  private transformValue<V>(value: V, type?: Class<V>): V {
     if (!type || value instanceof type) {
       return value
     }
 
-    return plainToInstance<T, unknown>(type, value, { excludeExtraneousValues: true })
+    return plainToInstance<V, unknown>(type, value, { excludeExtraneousValues: true })
   }
 }
 

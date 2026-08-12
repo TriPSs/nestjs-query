@@ -16,6 +16,7 @@ export interface QueryParamArgsType {
 /**
  * The input type for "one" endpoints.
  */
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export function ParamArgsType(DTOClass: Class<unknown>): Class<ParamArgsType> {
   const dtoIDFields = getIDFields(DTOClass)
   const properties = dtoIDFields.map(({ propertyName }) => propertyName)
@@ -30,13 +31,14 @@ export function ParamArgsType(DTOClass: Class<unknown>): Class<ParamArgsType> {
 
     getId() {
       // Return the default "id", unless it's not set then return the first ID field
-      return this.id || this[properties[0]]
+      return this.id || (this as Record<string, string | number>)[properties[0]]
     }
   }
 
   return FindOneArgs
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export function QueryParamArgsType(DTOClass: Class<unknown>): Class<QueryParamArgsType> {
   const dtoIDFields = getIDFields(DTOClass)
   const properties = dtoIDFields.map(({ propertyName }) => propertyName)
@@ -55,7 +57,7 @@ export function QueryParamArgsType(DTOClass: Class<unknown>): Class<QueryParamAr
   class QueryArgs extends PickType(DTOClass, properties as never) implements QueryParamArgsType {
     getFilter(): Filter<unknown> {
       return properties.reduce((filter, property) => {
-        filter[property] = { eq: this[property] as any }
+        filter[property] = { eq: this[property] as unknown }
 
         return filter
       }, {}) as Filter<unknown>
