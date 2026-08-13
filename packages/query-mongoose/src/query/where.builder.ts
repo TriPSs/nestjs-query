@@ -1,5 +1,5 @@
 import { Filter, FilterComparisons, FilterFieldComparison } from '@ptc-org/nestjs-query-core'
-import { Document, FilterQuery, Model as MongooseModel } from 'mongoose'
+import { Document, QueryFilter, Model as MongooseModel } from 'mongoose'
 
 import { ComparisonBuilder, EntityComparisonField } from './comparison.builder'
 
@@ -17,12 +17,12 @@ export class WhereBuilder<Entity extends Document<any>> {
    * Builds a WHERE clause from a Filter.
    * @param filter - the filter to build the WHERE clause from.
    */
-  build(filter: Filter<Entity>): FilterQuery<Entity> {
+  build(filter: Filter<Entity>): QueryFilter<Entity> {
     const normalizedFilter = this.getNormalizedFilter(filter)
     const { and, or } = normalizedFilter
-    let ands: FilterQuery<Entity>[] = []
-    let ors: FilterQuery<Entity>[] = []
-    let filterQuery: FilterQuery<Entity> = {}
+    let ands: QueryFilter<Entity>[] = []
+    let ors: QueryFilter<Entity>[] = []
+    let filterQuery: QueryFilter<Entity> = {}
     if (and && and.length) {
       ands = and.map((f) => this.build(f))
     }
@@ -34,10 +34,10 @@ export class WhereBuilder<Entity extends Document<any>> {
       ands = [...ands, filterAnds]
     }
     if (ands.length) {
-      filterQuery = { ...filterQuery, $and: ands } as FilterQuery<Entity>
+      filterQuery = { ...filterQuery, $and: ands } as QueryFilter<Entity>
     }
     if (ors.length) {
-      filterQuery = { ...filterQuery, $or: ors } as FilterQuery<Entity>
+      filterQuery = { ...filterQuery, $or: ors } as QueryFilter<Entity>
     }
     return filterQuery
   }
@@ -78,7 +78,7 @@ export class WhereBuilder<Entity extends Document<any>> {
    * Creates field comparisons from a filter. This method will ignore and/or properties.
    * @param filter - the filter with fields to create comparisons for.
    */
-  private filterFields(filter: Filter<Entity>): FilterQuery<Entity> | undefined {
+  private filterFields(filter: Filter<Entity>): QueryFilter<Entity> | undefined {
     const ands = Object.keys(filter)
       .filter((f) => f !== 'and' && f !== 'or')
       .map((field) => this.withFilterComparison(field as keyof Entity, this.getField(filter, field as keyof Entity)))
@@ -86,7 +86,7 @@ export class WhereBuilder<Entity extends Document<any>> {
       return ands[0]
     }
     if (ands.length) {
-      return { $and: ands } as FilterQuery<Entity>
+      return { $and: ands } as QueryFilter<Entity>
     }
     return undefined
   }
@@ -98,7 +98,7 @@ export class WhereBuilder<Entity extends Document<any>> {
     return obj[field] as FilterFieldComparison<Entity[K]>
   }
 
-  private withFilterComparison<T extends keyof Entity>(field: T, cmp: FilterFieldComparison<Entity[T]>): FilterQuery<Entity> {
+  private withFilterComparison<T extends keyof Entity>(field: T, cmp: FilterFieldComparison<Entity[T]>): QueryFilter<Entity> {
     const opts = Object.keys(cmp) as (keyof FilterFieldComparison<Entity[T]>)[]
     if (opts.length === 1) {
       const cmpType = opts[0]
@@ -106,6 +106,6 @@ export class WhereBuilder<Entity extends Document<any>> {
     }
     return {
       $or: opts.map((cmpType) => this.comparisonBuilder.build(field, cmpType, cmp[cmpType] as EntityComparisonField<Entity, T>))
-    } as FilterQuery<Entity>
+    } as QueryFilter<Entity>
   }
 }

@@ -1,5 +1,7 @@
 const nxPreset = require('@nx/jest/preset').default
 
+const esmPackages = ['uuid']
+
 module.exports = {
   ...nxPreset,
   collectCoverage: true,
@@ -24,5 +26,6 @@ module.exports = {
   },
   testEnvironment: 'node',
   setupFilesAfterEnv: ['jest-extended'],
-  testTimeout: 10000
+  testTimeout: 10000,
+  transformIgnorePatterns: [`node_modules/(?!(${esmPackages.join('|')})/)`]
 }

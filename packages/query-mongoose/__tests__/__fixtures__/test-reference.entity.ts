@@ -3,6 +3,9 @@ import { Document, SchemaTypes, Types } from 'mongoose'
 
 @Schema()
 export class TestReference extends Document<any> {
+  // Mongoose 9's `Document<any>` no longer surfaces the `id` virtual on the type; declare it for tests.
+  declare id: string
+
   @Prop({ required: true })
   referenceName!: string
 

@@ -11,9 +11,10 @@ import {
   ModifyRelationOptions,
   Query
 } from '@ptc-org/nestjs-query-core'
-import { Document, Model as MongooseModel, PipelineStage, Types, UpdateQuery } from 'mongoose'
+import { Document, Model as MongooseModel, PipelineStage, Schema, Types, UpdateQuery } from 'mongoose'
 
 import {
+  getEmbeddedSchemaType,
   isEmbeddedSchemaTypeOptions,
   isSchemaTypeWithReferenceOptions,
   isVirtualTypeWithReferenceOptions,
@@ -131,7 +132,7 @@ export abstract class ReferenceQueryService<Entity extends Document<any>> {
       return this.batchFindRelations(RelationClass, relationName, dto, opts)
     }
 
-    const foundEntity = await this.Model.findById(dto._id ?? dto.id)
+    const foundEntity = await this.Model.findById(dto._id ?? (dto as { id?: unknown }).id)
     if (!foundEntity) {
       return undefined
     }
@@ -308,7 +309,7 @@ export abstract class ReferenceQueryService<Entity extends Document<any>> {
     if (Array.isArray(dto)) {
       return this.batchQueryRelations(RelationClass, relationName, dto, query)
     }
-    const foundEntity = await this.Model.findById(dto._id ?? dto.id)
+    const foundEntity = await this.Model.findById(dto._id ?? (dto as { id?: unknown }).id)
     if (!foundEntity) {
       return []
     }
@@ -428,12 +429,16 @@ export abstract class ReferenceQueryService<Entity extends Document<any>> {
     throw new Error(`Unable to find reference ${refName} on ${this.Model.modelName}`)
   }
 
+  private get schema(): Schema<Entity> {
+    return this.Model.schema as Schema<Entity>
+  }
+
   private isReferencePath(refName: string): boolean {
-    return !!this.Model.schema.path(refName)
+    return !!this.schema.path(refName)
   }
 
   private isVirtualPath(refName: string): boolean {
-    return !!this.Model.schema.virtualpath(refName)
+    return !!this.schema.virtualpath(refName)
   }
 
   private getReferenceQueryBuilder<Ref extends Document<any>>(refName: string): FilterQueryBuilder<Ref> {
@@ -443,15 +448,18 @@ export abstract class ReferenceQueryService<Entity extends Document<any>> {
   private getReferenceModel<Ref extends Document<any>>(refName: string): MongooseModel<Ref> {
     const { db } = this.Model
     if (this.isReferencePath(refName)) {
-      const schemaType = this.Model.schema.path(refName)
+      const schemaType = this.schema.path(refName)
       if (isEmbeddedSchemaTypeOptions(schemaType)) {
-        return db.model<Ref>(schemaType.$embeddedSchemaType.options.ref)
+        const embedded = getEmbeddedSchemaType(schemaType)
+        if (embedded) {
+          return db.model<Ref>(embedded.options.ref)
+        }
       }
       if (isSchemaTypeWithReferenceOptions(schemaType)) {
         return db.model<Ref>(schemaType.options.ref)
       }
     } else if (this.isVirtualPath(refName)) {
-      const schemaType = this.Model.schema.virtualpath(refName)
+      const schemaType = this.schema.virtualpath(refName)
       if (isVirtualTypeWithReferenceOptions(schemaType)) {
         return db.model<Ref>(schemaType.options.ref)
       }
@@ -490,7 +498,7 @@ export abstract class ReferenceQueryService<Entity extends Document<any>> {
       }
     }
     if (this.isVirtualPath(refName)) {
-      const virtualType = this.Model.schema.virtualpath(refName)
+      const virtualType = this.schema.virtualpath(refName)
       if (!isVirtualTypeWithReferenceOptions(virtualType)) {
         throw new Error(`Unable to lookup reference type for ${refName}`)
       }
