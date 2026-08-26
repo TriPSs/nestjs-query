@@ -25,6 +25,10 @@ export interface DeleteController<DTO, QS extends QueryService<DTO, unknown, unk
 export const Deletable =
   <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts: DeleteResolverOpts) =>
   <B extends Class<ServiceController<DTO, QS>>>(BaseClass: B): Class<DeleteController<DTO, QS>> & B => {
+    if (opts.disabled) {
+      return BaseClass as never
+    }
+
     const dtoNames = getDTONames(DTOClass, opts)
 
     const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'DeleteOneInput', 'DeleteManyInput', 'useSoftDelete')

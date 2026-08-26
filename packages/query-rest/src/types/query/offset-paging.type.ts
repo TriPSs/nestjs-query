@@ -18,7 +18,8 @@ export class OffsetPaging implements Paging {
     description: 'The offset to start returning results from.',
     nullable: true,
     required: false,
-    minimum: 0
+    minimum: 0,
+    default: 0
   })
   offset?: number
 }

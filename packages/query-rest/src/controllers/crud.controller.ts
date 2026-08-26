@@ -6,8 +6,8 @@ import { BaseResolverOptions } from '../decorators'
 import { PagingStrategies } from '../types/query'
 import { ControllerClass, MergePagingStrategyOpts } from './controller.interface'
 import { CreateController, CreateResolverOpts } from './create.controller'
-import { Deletable, DeleteResolverOpts } from './delete.controller'
-import { Exportable, ExportControllerOpts } from './export.controller'
+import { Deletable, DeleteController, DeleteResolverOpts } from './delete.controller'
+import { Exportable, ExportController, ExportControllerOpts } from './export.controller'
 import { Readable, ReadControllerFromOpts, ReadControllerOpts } from './read.controller'
 import { Updateable, UpdateController, UpdateControllerOpts } from './update.controller'
 
@@ -49,7 +49,12 @@ export interface CRUDController<
   R extends ReadControllerOpts<DTO>,
   QS extends QueryService<DTO, C, U> = QueryService<DTO, C, U>
 >
-  extends CreateController<DTO, C, QS>, ReadControllerFromOpts<DTO, R, QS>, UpdateController<DTO, U, QS> {}
+  extends
+    CreateController<DTO, C, QS>,
+    ReadControllerFromOpts<DTO, R, QS>,
+    UpdateController<DTO, U, QS>,
+    DeleteController<DTO, QS>,
+    ExportController<DTO, QS> {}
 
 // DeleteResolver<DTO, QS>,
 // AggregateResolver<DTO, QS> {

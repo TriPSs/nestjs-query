@@ -1,5 +1,6 @@
 export { AuthorizationContext, Authorizer, AuthorizerOptions, CustomAuthorizer, OperationGroup } from './auth'
 export * from './connection'
+export * from './controllers'
 export * from './decorators'
 export * from './hooks'
 export * from './interceptors'

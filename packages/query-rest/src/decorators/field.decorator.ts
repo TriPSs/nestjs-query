@@ -31,32 +31,28 @@ export type FieldOptions = ApiPropertyOptions & {
 }
 
 /**
- * Decorator for Fields that should be filterable through a [[FilterType]]
+ * Decorator for fields that should be filterable through a [[FilterType]].
  *
  * @example
  *
  * In the following DTO `id`, `title` and `completed` are filterable.
  *
  * ```ts
- * import { FilterableField } from '@ptc-org/nestjs-query-graphql';
- * import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
+ * import { FilterableField } from '@ptc-org/nestjs-query-rest';
  *
- * @ObjectType('TodoItem')
  * export class TodoItemDTO {
- *   @FilterableField(() => ID)
- *   id!: string;
+ *   @FilterableField()
+ *   id!: string
  *
  *   @FilterableField()
- *   title!: string;
+ *   title!: string
  *
  *   @FilterableField()
- *   completed!: boolean;
+ *   completed!: boolean
  *
- *   @Field(() => GraphQLISODateTime)
- *   created!: Date;
+ *   created!: Date
  *
- *   @Field(() => GraphQLISODateTime)
- *   updated!: Date;
+ *   updated!: Date
  * }
  * ```
  */
@@ -117,7 +113,7 @@ export function Field(
     }
 
     if (isArray && advancedOptions?.forceArray) {
-      decorators.push(Transform(({ value }) => (Array.isArray(value) ? value : [value]) as unknown[]))
+      decorators.push(Transform(({ value }) => (value == null || Array.isArray(value) ? value : [value]) as unknown[]))
     }
 
     if (!advancedOptions?.skipRequired) {
@@ -128,11 +124,11 @@ export function Field(
       }
     }
 
-    if (options.minLength) {
+    if (options.minLength !== undefined) {
       decorators.push(MinLength(options.minLength))
     }
 
-    if (options.maxLength) {
+    if (options.maxLength !== undefined) {
       decorators.push(MaxLength(options.maxLength))
     }
 
