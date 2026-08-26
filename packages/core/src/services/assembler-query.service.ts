@@ -80,6 +80,10 @@ export class AssemblerQueryService<
     return this.assembler.convertToDTOs(await this.queryService.query(this.assembler.convertQuery(query), opts as never))
   }
 
+  public async exportMany(query: Query<DTO>, opts?: QueryOptions<DTO>): Promise<DTO[]> {
+    return this.assembler.convertToDTOs(await this.queryService.exportMany(this.assembler.convertQuery(query), opts as never))
+  }
+
   public async aggregate(
     filter: Filter<DTO>,
     aggregate: AggregateQuery<DTO>,

@@ -47,6 +47,12 @@ describe('ProxyQueryService', () => {
     when(mockQueryService.findById(1, undefined)).thenResolve(result)
     return expect(queryService.findById(1)).resolves.toBe(result)
   })
+  it('should proxy to the underlying service when calling exportMany', () => {
+    const query = { filter: { foo: { eq: 'bar' } } }
+    const result = [{ foo: 'bar' }]
+    when(mockQueryService.exportMany(query, undefined)).thenResolve(result)
+    return expect(queryService.exportMany(query)).resolves.toBe(result)
+  })
   it('should proxy to the underlying service when calling findRelation with one dto', () => {
     const relationName = 'test'
     const dto = new TestType()

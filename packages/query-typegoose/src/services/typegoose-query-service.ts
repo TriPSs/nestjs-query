@@ -9,6 +9,7 @@ import {
   FindByIdOptions,
   GetByIdOptions,
   Query,
+  QueryOptions,
   QueryService,
   UpdateManyResponse,
   UpdateOneOptions
@@ -50,6 +51,10 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
     const { filterQuery, options } = this.filterQueryBuilder.buildQuery(query)
     const entities = await this.Model.find(filterQuery, {}, options).exec()
     return entities
+  }
+
+  async exportMany(query: Query<Entity>, _opts?: QueryOptions<Entity>): Promise<DocumentType<Entity>[]> {
+    return this.query(query)
   }
 
   async aggregate(filter: Filter<Entity>, aggregateQuery: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {

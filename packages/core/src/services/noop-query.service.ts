@@ -94,6 +94,10 @@ export class NoOpQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> i
     return Promise.reject(new NotImplementedException('query is not implemented'))
   }
 
+  public exportMany(query: Query<DTO>, opts?: QueryOptions<DTO>): Promise<DTO[]> {
+    return this.query(query, opts)
+  }
+
   public aggregate(
     filter: Filter<DTO>,
     aggregate: AggregateQuery<DTO>,

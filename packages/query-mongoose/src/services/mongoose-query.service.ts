@@ -10,6 +10,7 @@ import {
   FindByIdOptions,
   GetByIdOptions,
   Query,
+  QueryOptions,
   QueryService,
   UpdateManyResponse,
   UpdateOneOptions
@@ -66,6 +67,10 @@ export class MongooseQueryService<Entity extends Document<any>>
   public async query(query: Query<Entity>): Promise<Entity[]> {
     const { filterQuery, options } = this.filterQueryBuilder.buildQuery(query)
     return this.Model.find(filterQuery, {}, options).exec()
+  }
+
+  public exportMany(query: Query<Entity>, _opts?: QueryOptions<Entity>): Promise<Entity[]> {
+    return this.query(query)
   }
 
   public async aggregate(filter: Filter<Entity>, aggregateQuery: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {

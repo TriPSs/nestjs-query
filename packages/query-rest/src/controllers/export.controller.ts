@@ -100,10 +100,7 @@ export const Exportable =
         })
         authorizeFilter?: Filter<DTO>
       ): Promise<string> {
-        // TODO:: Add export many to query service
-        const method = 'exportMany' in this.service ? 'exportMany' : 'query'
-
-        const items: DTO[] = await (this.service as unknown as Record<string, (...args: unknown[]) => Promise<DTO[]>>)[method](
+        const items = await this.service.exportMany(
           mergeQuery(query, {
             filter: authorizeFilter,
             paging: {
