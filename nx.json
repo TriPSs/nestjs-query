@@ -4,6 +4,7 @@
     "libsDir": "packages",
     "appsDir": ""
   },
+  "tui": { "enabled": false },
   "targetDependencies": {
     "build": [
       {

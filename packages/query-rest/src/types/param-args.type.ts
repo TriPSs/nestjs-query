@@ -31,7 +31,7 @@ export function ParamArgsType(DTOClass: Class<unknown>): Class<ParamArgsType> {
 
     getId() {
       // Return the default "id", unless it's not set then return the first ID field
-      return this.id || (this as Record<string, string | number>)[properties[0]]
+      return this.id || (this as unknown as Record<string, string | number>)[properties[0]]
     }
   }
 

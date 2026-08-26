@@ -94,7 +94,9 @@ export const Exportable =
         // TODO:: Add export many to query service
         const method = 'exportMany' in this.service ? 'exportMany' : 'query'
 
-        const items: DTO[] = await (this.service as Record<string, (...args: unknown[]) => Promise<DTO[]>>)[method](
+        const items: DTO[] = await (this.service as unknown as Record<string, (...args: unknown[]) => Promise<DTO[]>>)[
+          method
+        ](
           mergeQuery(query, {
             filter: authorizeFilter,
             paging: {

@@ -2,7 +2,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
 import { OffsetConnectionType } from '@ptc-org/nestjs-query-rest'
 import request from 'supertest'
-import { Connection } from 'typeorm'
+import { DataSource } from 'typeorm'
 
 import { generateOpenapiSpec } from '../../helpers/generate-openapi-spec'
 import { AppModule } from '../src/app.module'
@@ -28,10 +28,10 @@ describe('TagResolver (basic rest - e2e)', () => {
     generateOpenapiSpec(app, __dirname)
 
     await app.init()
-    await refresh(app.get(Connection))
+    await refresh(app.get(DataSource))
   })
 
-  afterAll(() => refresh(app.get(Connection)))
+  afterAll(() => refresh(app.get(DataSource)))
 
   const tags = [
     { id: 1, name: 'Urgent' },
