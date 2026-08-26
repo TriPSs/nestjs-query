@@ -61,6 +61,7 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator) 
       decorators.push(
         ApiResponse({
           status: 200,
+          description: 'Successful response.',
           type,
           isArray: isReturnTypeArray
         })
@@ -76,7 +77,8 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator) 
     } else {
       decorators.push(
         ApiResponse({
-          status: 204
+          status: 204,
+          description: 'Request completed successfully.'
         })
       )
     }
