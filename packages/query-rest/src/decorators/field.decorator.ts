@@ -143,23 +143,27 @@ export function Field(
       decorators.push(Max(options.maximum))
     }
 
-    if (type) {
+    if (type && type !== Boolean) {
       decorators.push(Type(() => type as never))
+    }
 
-      if (type === String) {
-        decorators.push(IsString({ each: isArray }))
-      } else if (type === Number) {
-        decorators.push(IsNumber({}, { each: isArray }))
-      } else if (type === Date) {
-        decorators.push(IsDate({ each: isArray }))
-      } else if (type === Boolean) {
-        decorators.push(IsBoolean({ each: isArray }))
-      } else if (returnTypeFunc && typeof type === 'function') {
-        decorators.push(ValidateNested({ each: isArray }))
+    if (type === String) {
+      decorators.push(IsString({ each: isArray }))
+    } else if (type === Number) {
+      decorators.push(IsNumber({}, { each: isArray }))
+    } else if (type === Date) {
+      decorators.push(IsDate({ each: isArray }))
+    } else if (type === Boolean) {
+      // Boolean('false') is true, so parse HTTP query parameter values explicitly.
+      decorators.push(
+        Transform(({ value }: { value: unknown }): unknown => (value === 'true' ? true : value === 'false' ? false : value)),
+        IsBoolean({ each: isArray })
+      )
+    } else if (returnTypeFunc && typeof type === 'function') {
+      decorators.push(ValidateNested({ each: isArray }))
 
-        if (!isArray) {
-          decorators.push(IsObject())
-        }
+      if (!isArray) {
+        decorators.push(IsObject())
       }
     }
 

@@ -1,4 +1,3 @@
-import { applyDecorators } from '@nestjs/common'
 import { ArrayReflector, Class, getPrototypeChain } from '@ptc-org/nestjs-query-core'
 
 import { ReturnTypeFunc, ReturnTypeFuncValue } from '../interfaces/return-type-func'
@@ -84,11 +83,12 @@ export function FilterableField(
     descriptor: TypedPropertyDescriptor<D>
   ): TypedPropertyDescriptor<D> | void => {
     const Ctx = Reflect.getMetadata('design:type', target, propertyName) as Class<unknown>
+    const rt = returnTypeFunc ?? (() => Ctx)
     reflector.append(target.constructor as Class<unknown>, {
       propertyName: propertyName.toString(),
       schemaName: propertyName.toString(),
       target: Ctx,
-      returnTypeFunc,
+      returnTypeFunc: rt,
       advancedOptions
     })
 
@@ -96,7 +96,13 @@ export function FilterableField(
       return undefined
     }
 
-    applyDecorators(Field(() => returnTypeFunc, filterableFieldOptionsToField(advancedOptions)))(target, propertyName, descriptor)
+    if (returnTypeFunc) {
+      return Field(returnTypeFunc, filterableFieldOptionsToField(advancedOptions))(target, propertyName, descriptor)
+    }
+    if (advancedOptions) {
+      return Field(filterableFieldOptionsToField(advancedOptions))(target, propertyName, descriptor)
+    }
+    return Field()(target, propertyName, descriptor)
   }
 }
 

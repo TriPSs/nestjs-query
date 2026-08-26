@@ -46,7 +46,7 @@ function getOrCreateFilterType<T>(
 
       public get filter(): Filter<T> {
         const filters = fields.reduce((filter, field) => {
-          if (this[field.schemaName]) {
+          if (this[field.schemaName] !== undefined) {
             filter[field.schemaName] = { eq: this[field.schemaName] }
           }
 
@@ -62,9 +62,10 @@ function getOrCreateFilterType<T>(
       }
     }
 
-    fields.forEach(({ schemaName, advancedOptions }) => {
+    fields.forEach(({ schemaName, returnTypeFunc, advancedOptions = {} }) => {
       applyDecorators(
         Field(
+          returnTypeFunc,
           filterableFieldOptionsToField({
             ...advancedOptions,
             nullable:
