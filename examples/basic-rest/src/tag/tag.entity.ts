@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToMany, ObjectType, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 import { TodoItemEntity } from '../todo-item/todo-item.entity'
 
