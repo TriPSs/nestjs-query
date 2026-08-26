@@ -53,6 +53,19 @@ describe('TagResolver (basic rest - e2e)', () => {
         }))
   })
 
+  describe('export', () => {
+    it('should export tags as CSV', () =>
+      request(app.getHttpServer())
+        .get('/tag-dtos/export')
+        .expect('content-type', /text\/csv/)
+        .expect(200)
+        .then(({ text }) => {
+          expect(text).toContain('"id","name","created","updated"')
+          expect(text).toContain('Urgent')
+          expect(text).toContain('Blocked')
+        }))
+  })
+
   afterAll(async () => {
     await app.close()
   })
