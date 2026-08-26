@@ -92,7 +92,7 @@ function extractUpdateResolverOpts<DTO, U>(
 function extractDeleteResolverOpts<DTO>(
   opts: CRUDControllerOpts<DTO, unknown, unknown, ReadControllerOpts<DTO>, PagingStrategies>
 ): DeleteResolverOpts {
-  const { delete: deleteArgs } = opts
+  const { delete: deleteArgs = {} } = opts
   return mergeBaseResolverOpts<DeleteResolverOpts>(deleteArgs, opts)
 }
 

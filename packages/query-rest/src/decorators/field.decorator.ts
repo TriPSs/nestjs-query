@@ -1,6 +1,5 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
-import { METADATA_FACTORY_NAME } from '@nestjs/swagger/dist/plugin/plugin-constants'
 import { Expose, Transform, Type } from 'class-transformer'
 import {
   ArrayMaxSize,
@@ -21,6 +20,8 @@ import {
 } from 'class-validator'
 
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
+
+const OPENAPI_METADATA_FACTORY = '_OPENAPI_METADATA_FACTORY'
 
 export type FieldOptions = ApiPropertyOptions & {
   // prevents the IsEnum decorator from being added
@@ -79,7 +80,7 @@ export function Field(
 
   return <D>(target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<D>) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    const metadataType = target?.constructor?.[METADATA_FACTORY_NAME]?.()[propertyKey]?.type
+    const metadataType = target?.constructor?.[OPENAPI_METADATA_FACTORY]?.()[propertyKey]?.type
     const returnedType = !returnTypeFunc
       ? (metadataType ?? Reflect.getMetadata('design:type', target, propertyKey))
       : returnTypeFunc()
