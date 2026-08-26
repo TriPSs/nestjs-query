@@ -5,10 +5,9 @@ export interface UpdateOneInputType<U> {
 }
 
 /**
- * The abstract input type for create one operations.
+ * The abstract input type for update one operations.
  *
- * @param fieldName - The name of the field to be exposed in the graphql schema
- * @param UpdateClass - The InputType to be used.
+ * @param UpdateClass - The class used as the request body input.
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export function UpdateOneInputType<U>(UpdateClass: Class<U>): Class<UpdateOneInputType<U>> {

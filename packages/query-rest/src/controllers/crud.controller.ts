@@ -109,24 +109,21 @@ function extractExportResolverOpts<DTO>(
 }
 
 /**
- * Factory to create a resolver that includes all CRUD methods from [[CreateResolver]], [[ReadResolver]],
- * [[UpdateResolver]], and [[DeleteResolver]].
+ * Factory to create a controller that includes create, read, update, delete, and export endpoints.
  *
  * ```ts
- * import { CRUDResolver } from '@ptc-org/nestjs-query-graphql';
- * import { Resolver } from '@nestjs/graphql';
- * import { TodoItemDTO } from './dto/todo-item.dto';
- * import { TodoItemService } from './todo-item.service';
+ * import { Controller } from '@nestjs/common'
+ * import { CRUDController } from '@ptc-org/nestjs-query-rest'
  *
- * @Resolver()
- * export class TodoItemResolver extends CRUDResolver(TodoItemDTO) {
+ * @Controller('todo-items')
+ * export class TodoItemController extends CRUDController(TodoItemDTO) {
  *   constructor(readonly service: TodoItemService) {
- *     super(service);
+ *     super(service)
  *   }
  * }
  * ```
- * @param DTOClass - The DTO Class that the resolver is for. All methods will use types derived from this class.
- * @param opts - Options to customize the resolver.
+ * @param DTOClass - The DTO class that the controller is for. All endpoints use types derived from this class.
+ * @param opts - Options to customize the controller endpoints.
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const CRUDController = <

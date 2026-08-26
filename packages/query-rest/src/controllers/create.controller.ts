@@ -44,7 +44,7 @@ const defaultCreateOneInput = <C>(dtoNames: DTONames, InputDTO: Class<C>): Class
 
 /**
  * @internal
- * Mixin to add `create` graphql endpoints.
+ * Mixin to add `create` REST endpoints.
  */
 export const Creatable =
   <DTO, C, QS extends QueryService<DTO, C, unknown>>(DTOClass: Class<DTO>, opts: CreateResolverOpts<DTO, C>) =>
@@ -107,19 +107,21 @@ export const Creatable =
 /**
  * Factory to create a new abstract class that can be extended to add `create` endpoints.
  *
- * Assume we have `TodoItemDTO`, you can create a resolver with `createOneTodoItem` and `createManyTodoItems` graphql
- * query endpoints using the following code.
+ * Assume we have `TodoItemDTO`, you can create a controller with a `POST` endpoint using the following code.
  *
  * ```ts
- * @Controller()
- * export class TodoItemResolver extends CreateResolver(TodoItemDTO) {
+ * import { Controller } from '@nestjs/common'
+ * import { CreateController } from '@ptc-org/nestjs-query-rest'
+ *
+ * @Controller('todo-items')
+ * export class TodoItemController extends CreateController(TodoItemDTO) {
  *   constructor(readonly service: TodoItemService) {
- *    super(service);
+ *     super(service)
  *   }
  * }
  * ```
  *
- * @param DTOClass - The DTO class that should be returned from the `createOne` and `createMany` endpoint.
+ * @param DTOClass - The DTO class returned from the `createOne` endpoint.
  * @param opts - Options to customize endpoints.
  * @typeparam DTO - The type of DTO that should be created.
  * @typeparam C - The create DTO type.

@@ -60,7 +60,7 @@ export interface ReadController<
 
 /**
  * @internal
- * Mixin to add `read` graphql endpoints.
+ * Mixin to add `read` REST endpoints.
  */
 export const Readable =
   <DTO, ReadOpts extends ReadControllerOpts<DTO>, QS extends QueryService<DTO, unknown, unknown>>(

@@ -28,32 +28,30 @@ export function filterableFieldOptionsToField(advancedOptions: FilterableFieldOp
 }
 
 /**
- * Decorator for Fields that should be filterable through a [[FilterType]]
+ * Decorator for fields that should be filterable through a [[FilterType]].
  *
  * @example
  *
  * In the following DTO `id`, `title` and `completed` are filterable.
  *
  * ```ts
- * import { FilterableField } from '@ptc-org/nestjs-query-graphql';
- * import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
+ * import { FilterableField, Field } from '@ptc-org/nestjs-query-rest'
  *
- * @ObjectType('TodoItem')
  * export class TodoItemDTO {
- *   @FilterableField(() => ID)
- *   id!: string;
+ *   @FilterableField()
+ *   id!: string
  *
  *   @FilterableField()
- *   title!: string;
+ *   title!: string
  *
  *   @FilterableField()
- *   completed!: boolean;
+ *   completed!: boolean
  *
- *   @Field(() => GraphQLISODateTime)
- *   created!: Date;
+ *   @Field()
+ *   created!: Date
  *
- *   @Field(() => GraphQLISODateTime)
- *   updated!: Date;
+ *   @Field()
+ *   updated!: Date
  * }
  * ```
  */

@@ -39,7 +39,7 @@ const defaultUpdateOneInput = <U>(dtoNames: DTONames, UpdateDTO: Class<U>): Clas
 
 /**
  * @internal
- * Mixin to add `update` graphql endpoints.
+ * Mixin to add `update` REST endpoints.
  */
 export const Updateable =
   <DTO, U, QS extends QueryService<DTO, unknown, U>>(DTOClass: Class<DTO>, opts: UpdateControllerOpts<DTO, U>) =>

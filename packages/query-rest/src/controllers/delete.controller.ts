@@ -20,7 +20,7 @@ export interface DeleteController<DTO, QS extends QueryService<DTO, unknown, unk
 
 /**
  * @internal
- * Mixin to add `delete` graphql endpoints.
+ * Mixin to add `delete` REST endpoints.
  */
 export const Deletable =
   <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts: DeleteResolverOpts) =>

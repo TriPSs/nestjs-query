@@ -6,20 +6,20 @@ import { QueryOptionsDecoratorOpts, QueryResolverMethodOpts } from '../decorator
 import { PagingStrategies, QueryArgsTypeOpts } from '../types/query'
 
 export type NamedEndpoint = {
-  /** Specify to override the name of the graphql query or mutation * */
+  /** Specify the REST endpoint path. */
   path?: string
-  /** Specify a description for the graphql query or mutation* */
+  /** Specify a description for the REST endpoint. */
   description?: string
   operationOptions?: ApiOperationOptions
 }
 
 export interface ControllerOpts extends QueryResolverMethodOpts, DTONamesOpts {
   /**
-   * Options for single record graphql endpoints
+   * Options for single-record REST endpoints.
    */
   one?: QueryResolverMethodOpts & NamedEndpoint
   /**
-   * Options for multiple record graphql endpoints
+   * Options for multiple-record REST endpoints.
    */
   many?: QueryResolverMethodOpts & NamedEndpoint
 }
