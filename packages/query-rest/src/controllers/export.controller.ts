@@ -31,6 +31,15 @@ export interface ExportController<DTO, QS extends QueryService<DTO, unknown, unk
   exportMany(query: QueryType<DTO, PagingStrategies.NONE>, authorizeFilter?: Filter<DTO>): Promise<string>
 }
 
+export const stringifyExportCsv = <DTO>(ExportDTOClass: Class<DTO>, items: DTO[]): string =>
+  stringifyCsv(plainToInstance(ExportDTOClass, items, { excludeExtraneousValues: true }), {
+    header: true,
+    delimiter: ',',
+    defaultEncoding: 'utf8',
+    quoted_string: true,
+    escape_formulas: true
+  })
+
 /**
  * @internal
  * Mixin to add `export` rest endpoint.
@@ -94,9 +103,7 @@ export const Exportable =
         // TODO:: Add export many to query service
         const method = 'exportMany' in this.service ? 'exportMany' : 'query'
 
-        const items: DTO[] = await (this.service as unknown as Record<string, (...args: unknown[]) => Promise<DTO[]>>)[
-          method
-        ](
+        const items: DTO[] = await (this.service as unknown as Record<string, (...args: unknown[]) => Promise<DTO[]>>)[method](
           mergeQuery(query, {
             filter: authorizeFilter,
             paging: {
@@ -109,12 +116,7 @@ export const Exportable =
           }
         )
 
-        return stringifyCsv(plainToInstance(ExportDTOClass, items, { excludeExtraneousValues: true }), {
-          header: true,
-          delimiter: ',',
-          defaultEncoding: 'utf8',
-          quoted_string: true
-        })
+        return stringifyExportCsv(ExportDTOClass, items)
       }
     }
 
