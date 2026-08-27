@@ -1,11 +1,10 @@
-import { Class } from '@ptc-org/nestjs-query-core'
+import { Class, Paging } from '@ptc-org/nestjs-query-core'
 
 import { getOrCreateOffsetConnectionType } from '../../../connection/offset/offset-connection.type'
 import { Field, SkipIf } from '../../../decorators'
 import { RestQuery } from '../../../types'
 import { BuildableQueryType } from '../buildable-query.type'
 import { FilterType } from '../filter.type'
-import { OffsetPaging } from '../offset-paging.type'
 import { PagingStrategies } from '../paging'
 import { DEFAULT_QUERY_OPTS } from './constants'
 import { OffsetQueryArgsTypeOpts, StaticQueryType } from './interfaces'
@@ -14,12 +13,32 @@ export function createOffsetQueryArgs<DTO>(
   DTOClass: Class<DTO>,
   opts: OffsetQueryArgsTypeOpts<DTO> = { ...DEFAULT_QUERY_OPTS, pagingStrategy: PagingStrategies.OFFSET }
 ): StaticQueryType<DTO, PagingStrategies.OFFSET> {
-  // const S = getOrCreateSortType(DTOClass)
-
   const ConnectionType = getOrCreateOffsetConnectionType(DTOClass, opts)
+  const defaultResultSize = opts.defaultResultSize ?? DEFAULT_QUERY_OPTS.defaultResultSize
+  const maxResultsSize = opts.maxResultsSize ?? DEFAULT_QUERY_OPTS.maxResultsSize
 
-  class QueryArgs extends OffsetPaging implements BuildableQueryType<DTO> {
+  class QueryArgs implements Paging, BuildableQueryType<DTO> {
     static ConnectionType = ConnectionType
+
+    @Field({
+      type: Number,
+      description: 'The maximum number of results to return.',
+      nullable: true,
+      default: defaultResultSize,
+      minimum: 1,
+      maximum: maxResultsSize
+    })
+    limit?: number
+
+    @Field({
+      type: Number,
+      description: 'The offset to start returning results from.',
+      nullable: true,
+      required: false,
+      minimum: 0,
+      default: 0
+    })
+    offset?: number
 
     public sorting = opts.defaultSort
 
@@ -41,7 +60,7 @@ export function createOffsetQueryArgs<DTO>(
       return {
         query: this.query,
         paging: {
-          limit: this.limit || opts.maxResultsSize,
+          limit: this.limit || defaultResultSize,
           offset: this.offset
         },
         filter: this.filter,

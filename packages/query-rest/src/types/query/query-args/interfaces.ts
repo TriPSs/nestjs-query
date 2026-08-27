@@ -11,7 +11,7 @@ export type BaseQueryArgsTypeOpts<DTO> = {
   enableSearch?: boolean
   /**
    * The default number of results to return.
-   * [Default=10]
+   * [Default=25]
    */
   defaultResultSize?: number
   /**
