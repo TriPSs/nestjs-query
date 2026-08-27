@@ -23,7 +23,7 @@ const AGG_REGEXP = /(avg|sum|count|max|min|group_by)_(.*)/
  * @internal
  * Builds a WHERE clause from a Filter.
  */
-export class AggregateBuilder<Entity extends Document> {
+export class AggregateBuilder<Entity extends Document<any>> {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   static convertToAggregateResponse<Entity>(aggregates: Record<string, unknown>[]): AggregateResponse<Entity>[] {
     return aggregates.map(({ _id, ...response }) => {

@@ -2,7 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, SchemaTypes, Types } from 'mongoose'
 
 @Schema()
-export class TestEntity extends Document<string> {
+export class TestEntity extends Document<any> {
+  // Mongoose 9's `Document<any>` no longer surfaces the `id` virtual on the type; declare it for tests.
+  declare id: string
+
   @Prop({ required: true })
   stringType!: string
 

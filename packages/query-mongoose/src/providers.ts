@@ -5,7 +5,7 @@ import { Document, Model } from 'mongoose'
 
 import { MongooseQueryService } from './services'
 
-export type NestjsQueryModelDefinition<Entity extends Document> = {
+export type NestjsQueryModelDefinition<Entity extends Document<any>> = {
   document: Class<Entity>
 } & ModelDefinition
 
@@ -13,7 +13,9 @@ export type NestjsQueryModelDefinition<Entity extends Document> = {
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 AssemblerSerializer((obj: Document) => obj.toObject({ virtuals: true }))(Document)
 
-function createMongooseQueryServiceProvider<Entity extends Document>(model: NestjsQueryModelDefinition<Entity>): FactoryProvider {
+function createMongooseQueryServiceProvider<Entity extends Document<any>>(
+  model: NestjsQueryModelDefinition<Entity>
+): FactoryProvider {
   return {
     provide: getQueryServiceToken(model.document),
     useFactory(ModelClass: Model<Entity>) {
@@ -26,5 +28,5 @@ function createMongooseQueryServiceProvider<Entity extends Document>(model: Nest
   }
 }
 
-export const createMongooseQueryServiceProviders = (models: NestjsQueryModelDefinition<Document>[]): FactoryProvider[] =>
+export const createMongooseQueryServiceProviders = (models: NestjsQueryModelDefinition<Document<any>>[]): FactoryProvider[] =>
   models.map((model) => createMongooseQueryServiceProvider(model))

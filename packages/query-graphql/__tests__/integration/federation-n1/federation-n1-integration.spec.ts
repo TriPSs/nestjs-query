@@ -28,7 +28,7 @@ describe('Federation N+1 Integration Test (Based on User Demo)', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
-          type: 'sqlite',
+          type: 'better-sqlite3',
           database: ':memory:',
           entities: [TodoList, TodoItem],
           synchronize: true,
@@ -36,7 +36,7 @@ describe('Federation N+1 Integration Test (Based on User Demo)', () => {
           logger: {
             logQuery: (query, parameters) => {
               queryCount++
-              const fullQuery = parameters ? `${query} -- PARAMETERS: [${parameters.join(',')}]` : query
+              const fullQuery = Array.isArray(parameters) ? `${query} -- PARAMETERS: [${parameters.join(',')}]` : query
               executedQueries.push(fullQuery)
               console.log(`[SQL ${queryCount}] ${fullQuery}`)
             },

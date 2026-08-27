@@ -1302,7 +1302,7 @@ describe('SequelizeQueryService', (): void => {
       await truncate(moduleRef.get(Sequelize))
       const queryService = moduleRef.get(TestEntityService)
       const created = await queryService.createMany(PLAIN_TEST_ENTITIES)
-      expect(created.map((c) => c.get({ plain: true }))).toEqual(expect.objectContaining(PLAIN_TEST_ENTITIES))
+      expect(created.map((c) => c.get({ plain: true }))).toEqual(expect.arrayContaining(PLAIN_TEST_ENTITIES))
     })
 
     it('call save on the repo with instances of entities when passed instances', async () => {

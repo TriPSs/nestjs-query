@@ -82,6 +82,7 @@ tsconfig.tsbuildinfo
 
 # intelliJ workspace files
 .idea
+.junie
 
 documentation/.docusaurus
 /**/package-lock.json
@@ -97,3 +98,6 @@ documentation/.docusaurus
 .nx/workspace-data
 
 .npmrc
+.claude/worktrees
+.nx/polygraph
+.nx/self-healing

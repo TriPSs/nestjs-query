@@ -5,7 +5,7 @@ import { Document } from 'mongoose'
 import { createMongooseQueryServiceProviders, NestjsQueryModelDefinition } from './providers'
 
 export class NestjsQueryMongooseModule {
-  static forFeature(models: NestjsQueryModelDefinition<Document>[], connectionName?: string): DynamicModule {
+  static forFeature(models: NestjsQueryModelDefinition<Document<any>>[], connectionName?: string): DynamicModule {
     const queryServiceProviders = createMongooseQueryServiceProviders(models)
     const mongooseModule = MongooseModule.forFeature(models, connectionName)
     return {

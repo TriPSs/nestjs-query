@@ -51,15 +51,15 @@ export class ComparisonBuilder<Entity> {
     field: F,
     cmp: FilterComparisonOperators<Entity[F]>,
     val: EntityComparisonField<Entity, F>
-  ): mongoose.FilterQuery<Entity> {
+  ): mongoose.QueryFilter<Entity> {
     const schemaKey = getSchemaKey(`${String(field)}`)
     const normalizedCmp = (cmp as string).toLowerCase()
-    let querySelector: mongoose.FilterQuery<Entity[F]> | undefined
+    let querySelector: mongoose.QueryFilter<Entity[F]> | undefined
     if (this.comparisonMap[normalizedCmp]) {
       // comparison operator (e.b. =, !=, >, <)
       querySelector = {
         [this.comparisonMap[normalizedCmp]]: this.convertQueryValue(field, val as Entity[F])
-      } as mongoose.FilterQuery<Entity[F]>
+      } as mongoose.QueryFilter<Entity[F]>
     }
     if (normalizedCmp.includes('like')) {
       querySelector = this.likeComparison(normalizedCmp, val)
@@ -73,14 +73,14 @@ export class ComparisonBuilder<Entity> {
       throw new BadRequestException(`unknown operator ${JSON.stringify(cmp)}`)
     }
 
-    return { [schemaKey]: querySelector } as mongoose.FilterQuery<Entity>
+    return { [schemaKey]: querySelector } as mongoose.QueryFilter<Entity>
   }
 
   private betweenComparison<F extends keyof Entity>(
     cmp: string,
     field: F,
     val: EntityComparisonField<Entity, F>
-  ): mongoose.FilterQuery<Entity[F]> {
+  ): mongoose.QueryFilter<Entity[F]> {
     if (!this.isBetweenVal(val)) {
       throw new Error(`Invalid value for ${cmp} expected {lower: val, upper: val} got ${JSON.stringify(val)}`)
     }
@@ -99,7 +99,7 @@ export class ComparisonBuilder<Entity> {
   private likeComparison<F extends keyof Entity>(
     cmp: string,
     val: EntityComparisonField<Entity, F>
-  ): mongoose.FilterQuery<RegExp> {
+  ): mongoose.QueryFilter<RegExp> {
     const regExpStr = escapeRegExp(`${String(val)}`).replace(/%/g, '.*')
     const regExp = new RegExp(regExpStr, cmp.includes('ilike') ? 'i' : undefined)
     if (cmp.startsWith('not')) {
@@ -124,8 +124,11 @@ export class ComparisonBuilder<Entity> {
       return val.map((v) => this.convertToObjectId(v))
     }
     if (typeof val === 'string' || typeof val === 'number') {
-      if (mongoose.Types.ObjectId.isValid(val)) {
-        return new mongoose.Types.ObjectId(val)
+      // Mongoose 9 narrowed ObjectId's accepted input types to exclude `number`;
+      // the runtime still accepts it, so assert to satisfy the compiler without changing behavior.
+      const idVal = val as string
+      if (mongoose.Types.ObjectId.isValid(idVal)) {
+        return new mongoose.Types.ObjectId(idVal)
       }
     }
     return val

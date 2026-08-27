@@ -39,7 +39,7 @@ type MongoDBDeletedOutput = {
  * }
  * ```
  */
-export class MongooseQueryService<Entity extends Document>
+export class MongooseQueryService<Entity extends Document<any>>
   extends ReferenceQueryService<Entity>
   implements QueryService<Entity, DeepPartial<Entity>, DeepPartial<Entity>>
 {
@@ -135,7 +135,7 @@ export class MongooseQueryService<Entity extends Document>
    */
   async createOne(record: DeepPartial<Entity>): Promise<Entity> {
     this.ensureIdIsNotPresent(record)
-    return this.Model.create(record)
+    return this.Model.create(record as Partial<Entity>)
   }
 
   /**
@@ -152,7 +152,7 @@ export class MongooseQueryService<Entity extends Document>
    */
   public async createMany(records: DeepPartial<Entity>[]): Promise<Entity[]> {
     records.forEach((r) => this.ensureIdIsNotPresent(r))
-    return this.Model.create(records)
+    return this.Model.create(records as Partial<Entity>[])
   }
 
   /**

@@ -1,5 +1,5 @@
 import { AggregateQuery, Filter, Query, SortDirection, SortField } from '@ptc-org/nestjs-query-core'
-import { Document, FilterQuery, Model as MongooseModel } from 'mongoose'
+import { Document, QueryFilter, Model as MongooseModel } from 'mongoose'
 
 import { AggregateBuilder, MongooseGroupAndAggregate } from './aggregate.builder'
 import { getSchemaKey } from './helpers'
@@ -11,12 +11,12 @@ const MONGOOSE_SORT_DIRECTION: Record<SortDirection, 1 | -1> = {
 }
 
 type MongooseSort = Record<string, 1 | -1>
-type MongooseQuery<Entity extends Document> = {
-  filterQuery: FilterQuery<Entity>
+type MongooseQuery<Entity extends Document<any>> = {
+  filterQuery: QueryFilter<Entity>
   options: { limit?: number; skip?: number; sort?: MongooseSort }
 }
 
-type MongooseAggregateQuery<Entity extends Document> = MongooseQuery<Entity> & {
+type MongooseAggregateQuery<Entity extends Document<any>> = MongooseQuery<Entity> & {
   aggregate: MongooseGroupAndAggregate
 }
 
@@ -25,7 +25,7 @@ type MongooseAggregateQuery<Entity extends Document> = MongooseQuery<Entity> & {
  *
  * Class that will convert a Query into a `typeorm` Query Builder.
  */
-export class FilterQueryBuilder<Entity extends Document> {
+export class FilterQueryBuilder<Entity extends Document<any>> {
   constructor(
     readonly Model: MongooseModel<Entity>,
     readonly whereBuilder: WhereBuilder<Entity> = new WhereBuilder<Entity>(Model),
@@ -59,7 +59,7 @@ export class FilterQueryBuilder<Entity extends Document> {
     }
   }
 
-  public buildIdFilterQuery(id: unknown, filter?: Filter<Entity>): FilterQuery<Entity> {
+  public buildIdFilterQuery(id: unknown, filter?: Filter<Entity>): QueryFilter<Entity> {
     return {
       ...this.buildFilterQuery(filter),
       _id: Array.isArray(id) ? { $in: id } : id
@@ -71,7 +71,7 @@ export class FilterQueryBuilder<Entity extends Document> {
    *
    * @param filter - the filter.
    */
-  public buildFilterQuery(filter?: Filter<Entity>): FilterQuery<Entity> {
+  public buildFilterQuery(filter?: Filter<Entity>): QueryFilter<Entity> {
     if (!filter) {
       return {}
     }

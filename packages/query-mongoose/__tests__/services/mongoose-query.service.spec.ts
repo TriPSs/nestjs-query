@@ -53,12 +53,12 @@ describe('MongooseQueryService', () => {
     }).compile()
   })
 
-  function convertDocument<Doc extends Document>(doc: Doc): Doc {
+  function convertDocument<Doc extends Document<any>>(doc: Doc): Doc {
     return doc.toObject({ virtuals: true })
     // return doc.toObject({ virtuals: true });
   }
 
-  function convertDocuments<Doc extends Document>(docs: Doc[]): Doc[] {
+  function convertDocuments<Doc extends Document<any>>(docs: Doc[]): Doc[] {
     return docs.map((doc) => convertDocument(doc))
   }
 
@@ -861,7 +861,7 @@ describe('MongooseQueryService', () => {
       })
 
       it('should return an empty array if no results are found.', async () => {
-        const entities: TestEntity[] = [TEST_ENTITIES[0], { id: new Types.ObjectId() } as TestEntity]
+        const entities: TestEntity[] = [TEST_ENTITIES[0], { id: new Types.ObjectId() as never as string } as TestEntity]
         const queryService = moduleRef.get(TestEntityService)
         const queryResult = await queryService.queryRelations(TestReference, 'testReferences', entities, {
           filter: { referenceName: { isNot: null } }
