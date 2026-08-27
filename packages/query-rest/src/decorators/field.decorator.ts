@@ -4,6 +4,7 @@ import { Expose, Transform, Type } from 'class-transformer'
 import {
   ArrayMaxSize,
   ArrayMinSize,
+  IsArray,
   IsBoolean,
   IsDate,
   IsEnum,
@@ -103,6 +104,10 @@ export function Field(
         ...(options as ApiPropertyOptions)
       })
     ]
+
+    if (isArray) {
+      decorators.push(IsArray())
+    }
 
     if (isArray && options.maxItems !== undefined) {
       decorators.push(ArrayMaxSize(options.maxItems))

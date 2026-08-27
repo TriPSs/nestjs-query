@@ -9,6 +9,11 @@ describe('Field', () => {
     values?: string[] | null
   }
 
+  class StrictArrayDTO {
+    @Field(() => [String])
+    values!: string[]
+  }
+
   it.each([
     ['an array', ['one', 'two'], ['one', 'two']],
     ['a single value', 'one', ['one']],
@@ -16,6 +21,18 @@ describe('Field', () => {
     ['undefined', undefined, undefined]
   ])('preserves %s when forceArray is enabled', (_description, value, expected) => {
     expect(plainToInstance(TestDTO, { values: value }).values).toEqual(expected)
+  })
+
+  it('rejects scalar values for array fields', () => {
+    const dto = plainToInstance(StrictArrayDTO, { values: 'one' })
+
+    expect(validateSync(dto)).toHaveLength(1)
+  })
+
+  it('accepts scalar values normalized by forceArray', () => {
+    const dto = plainToInstance(TestDTO, { values: 'one' })
+
+    expect(validateSync(dto)).toHaveLength(0)
   })
 
   it('resolves Swagger metadata factory types for transformation and validation', () => {
