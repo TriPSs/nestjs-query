@@ -76,7 +76,7 @@ export function Field(
 
   return <D>(target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<D>) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    const metadataType = target?.constructor?.[OPENAPI_METADATA_FACTORY]?.()[propertyKey]?.type
+    const metadataType = target?.constructor?.[OPENAPI_METADATA_FACTORY]?.()[propertyKey]?.type as ReturnTypeFunc | undefined
     const returnedType = !returnTypeFunc
       ? (metadataType ?? Reflect.getMetadata('design:type', target, propertyKey))
       : returnTypeFunc()
@@ -98,8 +98,8 @@ export function Field(
     const decorators: Array<PropertyDecorator> = [
       Expose({ name: advancedOptions?.name }),
       ApiProperty({
-        type,
-        isArray,
+        type: metadataType ?? type,
+        isArray: metadataType ? undefined : isArray,
         ...(options as ApiPropertyOptions)
       })
     ]
@@ -156,7 +156,7 @@ export function Field(
         Transform(({ value }: { value: unknown }): unknown => (value === 'true' ? true : value === 'false' ? false : value)),
         IsBoolean({ each: isArray })
       )
-    } else if (returnTypeFunc && typeof type === 'function') {
+    } else if ((returnTypeFunc || metadataType) && typeof type === 'function') {
       decorators.push(ValidateNested({ each: isArray }))
 
       if (!isArray) {

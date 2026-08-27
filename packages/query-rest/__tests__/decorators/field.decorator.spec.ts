@@ -1,4 +1,5 @@
 import { plainToInstance } from 'class-transformer'
+import { validateSync } from 'class-validator'
 
 import { Field } from '../../src/decorators'
 
@@ -15,5 +16,25 @@ describe('Field', () => {
     ['undefined', undefined, undefined]
   ])('preserves %s when forceArray is enabled', (_description, value, expected) => {
     expect(plainToInstance(TestDTO, { values: value }).values).toEqual(expected)
+  })
+
+  it('resolves Swagger metadata factory types for transformation and validation', () => {
+    const metadataType = () => Number
+
+    class SwaggerMetadataDTO {
+      @Field()
+      value!: number
+
+      static _OPENAPI_METADATA_FACTORY() {
+        return { value: { type: metadataType } }
+      }
+    }
+
+    const dto = plainToInstance(SwaggerMetadataDTO, { value: 'not-a-number' })
+    const apiProperty = Reflect.getMetadata('swagger/apiModelProperties', SwaggerMetadataDTO.prototype, 'value')
+
+    expect(dto.value).toBeNaN()
+    expect(validateSync(dto)).toHaveLength(1)
+    expect(apiProperty.type).toBe(metadataType)
   })
 })
