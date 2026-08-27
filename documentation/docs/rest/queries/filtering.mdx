@@ -65,7 +65,7 @@ export class TodoItemDTO {}
 }
 ```
 
-`disableFilter` removes generated filter query parameters. Authorization filters are still applied by the server.
+`disableFilter` removes generated filter query parameters from the read collection endpoint. The CSV export endpoint still exposes its filter parameters, and authorization filters are still applied by the server.
 
 ## Search terms
 

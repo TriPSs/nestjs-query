@@ -8,6 +8,12 @@ The `@ptc-org/nestjs-query-rest` package creates documented REST CRUD controller
 
 See the [installation guide](../introduction/install.md#ptc-orgnestjs-query-rest).
 
+This example uses the TypeORM adapter, so install it and TypeORM alongside the REST package (plus the TypeORM driver for your database):
+
+```sh
+npm i @ptc-org/nestjs-query-typeorm @nestjs/typeorm typeorm
+```
+
 ## Define the DTOs
 
 The response DTO declares the fields returned by the API and which fields clients may filter on. Separate create and update DTOs keep writable fields explicit.

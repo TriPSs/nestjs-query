@@ -38,7 +38,7 @@ import { TodoItemEntity } from './todo-item.entity'
 export class TodoItemModule {}
 ```
 
-Use `AssemblerClass` instead of `EntityClass` when an [assembler](../concepts/advanced/assemblers.mdx) maps the entity and DTO. Use `ServiceClass` when the endpoint is backed directly by a custom `QueryService`.
+Use `AssemblerClass` instead of `EntityClass` when an [assembler](../concepts/advanced/assemblers.mdx) maps the entity and DTO, and register the assembler in the module's `assemblers` array. Use `ServiceClass` when the endpoint is backed directly by a custom `QueryService`, and register that provider in `services`.
 
 ## Custom controllers
 

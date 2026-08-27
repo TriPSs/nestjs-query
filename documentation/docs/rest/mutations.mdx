@@ -68,6 +68,7 @@ Set `useSoftDelete: true` when the persistence adapter and service support soft 
     one: { path: ':id', guards: [EditorGuard] }
   },
   delete: {
+    useSoftDelete: true,
     one: { path: ':id/archive', description: 'Archive a task' }
   }
 }

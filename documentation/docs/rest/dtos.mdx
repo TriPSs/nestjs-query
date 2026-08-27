@@ -99,13 +99,14 @@ Use `idOnly: true` when an identifier should be accepted as a route parameter bu
 Use `@QueryOptions` to set collection defaults on the DTO. Endpoint-level options override decorator options.
 
 ```ts
+import { SortDirection } from '@ptc-org/nestjs-query-core'
 import { FilterableField, IDField, PagingStrategies, QueryOptions } from '@ptc-org/nestjs-query-rest'
 
 @QueryOptions({
   pagingStrategy: PagingStrategies.OFFSET,
   defaultResultSize: 20,
   maxResultsSize: 100,
-  defaultSort: [{ field: 'created', direction: 'DESC' }],
+  defaultSort: [{ field: 'created', direction: SortDirection.DESC }],
   enableTotalCount: true
 })
 export class TodoItemDTO {

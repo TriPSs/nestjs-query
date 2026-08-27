@@ -51,17 +51,17 @@ export class TodoItemUpdateDTO {
 `BeforeQueryMany` receives the built core query and can add filters, sorting, or other query properties. It is also the place to interpret the optional search term enabled by `enableSearch`.
 
 ```ts title="todo-item.dto.ts"
-import { Query, mergeFilter } from '@ptc-org/nestjs-query-core'
-import { BeforeQueryMany, FilterableField } from '@ptc-org/nestjs-query-rest'
+import { mergeFilter } from '@ptc-org/nestjs-query-core'
+import { BeforeQueryMany, FilterableField, RestQuery } from '@ptc-org/nestjs-query-rest'
 
-@BeforeQueryMany((query: Query<TodoItemDTO>) => {
+@BeforeQueryMany((query: RestQuery<TodoItemDTO>) => {
   if (!query.query) {
     return query
   }
 
   return {
     ...query,
-    filter: mergeFilter(query.filter, {
+    filter: mergeFilter(query.filter ?? {}, {
       title: { like: `%${query.query}%` }
     })
   }

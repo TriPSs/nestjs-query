@@ -11,8 +11,8 @@ Accept: text/csv
 
 ```csv
 "id","title","completed"
-"1","Write REST documentation","false"
-"2","Review examples","false"
+1,"Write REST documentation",false
+2,"Review examples",false
 ```
 
 The response content type is `text/csv`. String fields are quoted and spreadsheet formulas are escaped.
@@ -25,6 +25,7 @@ The default export limit is `1000`. Change it or disable export independently:
 {
   DTOClass: TodoItemDTO,
   EntityClass: TodoItemEntity,
+  basePath: 'todo-items',
   export: {
     limit: 5000,
     many: {
@@ -41,13 +42,14 @@ The generated path appends `/export` to `many.path`, so the example above is ser
 {
   DTOClass: TodoItemDTO,
   EntityClass: TodoItemEntity,
+  basePath: 'todo-items',
   export: { disabled: true }
 }
 ```
 
 ## Export a different shape
 
-Use `ExportDTOClass` to select and rename CSV columns without changing the normal response DTO. Decorated fields are serialized in the export.
+Use `ExportDTOClass` to select CSV columns without changing the normal response DTO. Decorated fields are serialized in the export, and their property names become the CSV headers.
 
 ```ts title="todo-item-export.dto.ts"
 import { Field } from '@ptc-org/nestjs-query-rest'
@@ -56,10 +58,10 @@ export class TodoItemExportDTO {
   @Field()
   id!: number
 
-  @Field({ name: 'task' })
+  @Field()
   title!: string
 
-  @Field({ name: 'done' })
+  @Field()
   completed!: boolean
 }
 ```
@@ -68,6 +70,7 @@ export class TodoItemExportDTO {
 {
   DTOClass: TodoItemDTO,
   EntityClass: TodoItemEntity,
+  basePath: 'todo-items',
   export: { ExportDTOClass: TodoItemExportDTO }
 }
 ```
