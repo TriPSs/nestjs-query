@@ -78,7 +78,7 @@ export function Field(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const metadataType = target?.constructor?.[OPENAPI_METADATA_FACTORY]?.()[propertyKey]?.type as ReturnTypeFunc | undefined
     const returnedType = !returnTypeFunc
-      ? (metadataType ?? Reflect.getMetadata('design:type', target, propertyKey))
+      ? (metadataType?.() ?? Reflect.getMetadata('design:type', target, propertyKey))
       : returnTypeFunc()
 
     const isArray = returnedType && Array.isArray(returnedType)

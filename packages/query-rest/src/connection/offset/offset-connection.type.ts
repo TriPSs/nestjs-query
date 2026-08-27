@@ -1,7 +1,7 @@
 import { Class, MapReflector, Query } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
 
-import { Field } from '../../decorators'
+import { Field, SkipIf } from '../../decorators'
 import { OffsetQueryArgsTypeOpts, PagingStrategies } from '../../types/query'
 import { Count, OffsetConnectionType, OffsetPageInfoType, QueryMany, StaticConnectionType } from '../interfaces'
 import { getOrCreateOffsetPageInfoType } from './offset-page-info.type'
@@ -25,7 +25,7 @@ export function getOrCreateOffsetConnectionType<DTO>(
         query: Query<DTO>,
         count?: Count<DTO>
       ): Promise<OffsetConnection> {
-        const { pageInfo, nodes, totalCount } = await pager.page(queryMany, query, count)
+        const { pageInfo, nodes, totalCount } = await pager.page(queryMany, query, opts.enableTotalCount ? count : undefined)
 
         return new OffsetConnection(new PIT(pageInfo.hasNextPage, pageInfo.hasPreviousPage), nodes, totalCount)
       }
@@ -41,9 +41,12 @@ export function getOrCreateOffsetConnectionType<DTO>(
       })
       public pageInfo!: OffsetPageInfoType
 
-      @Field({
-        description: 'Total amount of records.'
-      })
+      @SkipIf(
+        () => !opts.enableTotalCount,
+        Field({
+          description: 'Total amount of records.'
+        })
+      )
       public totalCount?: number
 
       @Field(() => [TItemClass], {
