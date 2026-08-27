@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`UpdateManyResponseType should create a @nestjs/graphql object type 1`] = `
 "type UpdateManyResponse {

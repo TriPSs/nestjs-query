@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Offset paging strategy QueryArgsType with decorator options allow apply the options to the generated SDL 1`] = `
 "type TestQuery {
