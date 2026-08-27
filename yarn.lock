@@ -18346,7 +18346,7 @@ __metadata:
     passport-jwt: "npm:4.0.1"
     passport-local: "npm:1.0.0"
     pg: "npm:8.23.0"
-    prettier: "npm:3.9.6"
+    prettier: "npm:3.8.4"
     react: "npm:^19.2.7"
     react-dom: "npm:^19.2.7"
     reflect-metadata: "npm:^0.2.2"
@@ -20476,12 +20476,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.9.6":
-  version: 3.9.6
-  resolution: "prettier@npm:3.9.6"
+"prettier@npm:3.8.4":
+  version: 3.8.4
+  resolution: "prettier@npm:3.8.4"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10/1dd1a1e0e40ec3b91cda9d294c4a95022aef61880ca3f441aad99b1252279f58a766c4cece81132c01550dcff1fd445efbd8812ea4a2374313e7fc6c8136f11f
+  checksum: 10/54684a3cc6689238692b29fab541c01934af7677be94c02293ba49981a1ac121c8bebe2a865f0c3b963e99d208f847c53aed354cc0ce8750e2d45791d64506c5
   languageName: node
   linkType: hard
 

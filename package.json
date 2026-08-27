@@ -111,7 +111,7 @@
     "passport-jwt": "4.0.1",
     "passport-local": "1.0.0",
     "pg": "8.23.0",
-    "prettier": "3.9.6",
+    "prettier": "3.8.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "sql-formatter": "^15.8.1",

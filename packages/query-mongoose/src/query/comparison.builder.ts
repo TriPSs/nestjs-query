@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common'
 import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
 import escapeRegExp from 'lodash.escaperegexp'
-import { Document, QueryFilter, Model as MongooseModel, Schema, Types } from 'mongoose'
+import { Document, Model as MongooseModel, QueryFilter, Schema, Types } from 'mongoose'
 
 import { getSchemaKey } from './helpers'
 
