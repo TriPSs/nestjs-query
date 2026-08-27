@@ -1,0 +1,19 @@
+packages/query-mongoose/src/services/mongoose-query.service.ts
+  s_e78cadb435d700::t_ff6cbbf4f1235f 43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "016ca35ff82e4448d6957119c6ebf5308b1a780a",
+  "prompts": {},
+  "sessions": {
+    "s_e78cadb435d700": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cd5f72cc-911e-4fda-87eb-52c5a0e4781b",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
