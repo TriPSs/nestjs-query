@@ -32,7 +32,7 @@ function getOrCreateFilterType<T>(
     const fields = getFilterableFields(TClass)
 
     // if the filter is already in the cache, exist early and return it
-    // otherwise add it to the cache early so we don't get into an infinite loop
+    // otherwise, add it to the cache early so we don't get into an infinite loop
     let TClassCache = internalCache.get(TClass)
 
     if (TClassCache && TClassCache.has(typeName)) {

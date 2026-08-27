@@ -51,5 +51,9 @@ export function createOffsetQueryArgs<DTO>(
     }
   }
 
+  if (opts.disableFilter) {
+    return QueryArgs as StaticQueryType<DTO, PagingStrategies.OFFSET>
+  }
+
   return FilterType<DTO>(DTOClass, QueryArgs) as never as StaticQueryType<DTO, PagingStrategies.OFFSET>
 }

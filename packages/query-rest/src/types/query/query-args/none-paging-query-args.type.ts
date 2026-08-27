@@ -44,5 +44,9 @@ export function createNonePagingQueryArgs<DTO>(
     }
   }
 
+  if (opts.disableFilter) {
+    return QueryNonPagingArgs as StaticQueryType<DTO, PagingStrategies.NONE>
+  }
+
   return FilterType<DTO>(DTOClass, QueryNonPagingArgs) as never as StaticQueryType<DTO, PagingStrategies.NONE>
 }
