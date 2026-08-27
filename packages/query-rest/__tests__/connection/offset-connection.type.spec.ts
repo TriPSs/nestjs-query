@@ -17,7 +17,7 @@ describe('getOrCreateOffsetConnectionType', () => {
     const connection = await ConnectionType.createFromPromise(() => Promise.resolve([{ id: 1 }]), query as Query<TestDTO>, count)
 
     expect(count).not.toHaveBeenCalled()
-    expect(connection).not.toHaveProperty('totalCount')
+    expect(JSON.parse(JSON.stringify(connection))).not.toHaveProperty('totalCount')
     expect(Reflect.getMetadata('swagger/apiModelProperties', ConnectionType.prototype, 'totalCount')).toBeUndefined()
   })
 

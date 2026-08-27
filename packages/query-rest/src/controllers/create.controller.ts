@@ -4,7 +4,9 @@ import { Class, DeepPartial, Filter, QueryService } from '@ptc-org/nestjs-query-
 import omit from 'lodash.omit'
 
 import { ApiSchema, HookTypes, MutationArgsType, Post } from '../'
+import { OperationGroup } from '../auth'
 import { DTONames, getDTONames } from '../common'
+import { AuthorizerFilter } from '../decorators'
 import { BodyHookArgs } from '../decorators/hook-args.decorator'
 import { ParamArgs } from '../decorators/param-args.decorator'
 import { HookInterceptor } from '../interceptors'
@@ -90,8 +92,15 @@ export const Creatable =
         commonResolverOpts,
         opts.one ?? {}
       )
-      public async createOne(@ParamArgs() params: COP, @BodyHookArgs() { input }: COI): Promise<DTO> {
-        // Ignore `authorizeFilter` for now but give users the ability to throw an UnauthorizedException
+      public async createOne(
+        @ParamArgs() params: COP,
+        @BodyHookArgs() { input }: COI,
+        @AuthorizerFilter({
+          operationGroup: OperationGroup.CREATE,
+          many: false
+        }) // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        authorizeFilter?: Filter<DTO>
+      ): Promise<DTO> {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return this.service.createOne({
