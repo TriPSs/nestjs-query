@@ -16,7 +16,8 @@ export interface CRUDControllerOpts<
   C = DeepPartial<DTO>,
   U = DeepPartial<DTO>,
   R = ReadControllerOpts<DTO>,
-  PS extends PagingStrategies = PagingStrategies.NONE
+  PS extends PagingStrategies = PagingStrategies.NONE,
+  E = DeepPartial<DTO>
 >
   extends BaseResolverOptions, Pick<ConnectionOptions, 'enableTotalCount'> {
   /**
@@ -36,7 +37,7 @@ export interface CRUDControllerOpts<
   read?: R
   update?: UpdateControllerOpts<DTO, U>
   delete?: DeleteResolverOpts
-  export?: ExportControllerOpts<DTO>
+  export?: ExportControllerOpts<DTO, E>
 
   basePath?: string
   tags?: string[]
@@ -67,14 +68,14 @@ export interface CRUDController<
 // }
 
 function extractCreateResolverOpts<DTO, C>(
-  opts: CRUDControllerOpts<DTO, C, unknown, ReadControllerOpts<DTO>, PagingStrategies>
+  opts: CRUDControllerOpts<DTO, C, unknown, ReadControllerOpts<DTO>, PagingStrategies, unknown>
 ): CreateResolverOpts<DTO, C> {
   const { CreateDTOClass, create } = opts
   return mergeBaseResolverOpts<CreateResolverOpts<DTO, C>>({ CreateDTOClass, ...create }, opts)
 }
 
 function extractReadResolverOpts<DTO, R extends ReadControllerOpts<DTO>, PS extends PagingStrategies>(
-  opts: CRUDControllerOpts<DTO, unknown, unknown, R, PagingStrategies>
+  opts: CRUDControllerOpts<DTO, unknown, unknown, R, PagingStrategies, unknown>
 ): MergePagingStrategyOpts<DTO, R, PS> {
   const { enableTotalCount, pagingStrategy, read } = opts
   return mergeBaseResolverOpts(
@@ -88,24 +89,24 @@ function extractReadResolverOpts<DTO, R extends ReadControllerOpts<DTO>, PS exte
 }
 
 function extractUpdateResolverOpts<DTO, U>(
-  opts: CRUDControllerOpts<DTO, unknown, U, ReadControllerOpts<DTO>, PagingStrategies>
+  opts: CRUDControllerOpts<DTO, unknown, U, ReadControllerOpts<DTO>, PagingStrategies, unknown>
 ): UpdateControllerOpts<DTO, U> {
   const { UpdateDTOClass, update } = opts
   return mergeBaseResolverOpts<UpdateControllerOpts<DTO, U>>({ UpdateDTOClass, ...update }, opts)
 }
 
 function extractDeleteResolverOpts<DTO>(
-  opts: CRUDControllerOpts<DTO, unknown, unknown, ReadControllerOpts<DTO>, PagingStrategies>
+  opts: CRUDControllerOpts<DTO, unknown, unknown, ReadControllerOpts<DTO>, PagingStrategies, unknown>
 ): DeleteResolverOpts {
   const { delete: deleteArgs = {} } = opts
   return mergeBaseResolverOpts<DeleteResolverOpts>(deleteArgs, opts)
 }
 
-function extractExportResolverOpts<DTO>(
-  opts: CRUDControllerOpts<DTO, unknown, unknown, ReadControllerOpts<DTO>, PagingStrategies>
-): ExportControllerOpts<DTO> {
+function extractExportResolverOpts<DTO, E>(
+  opts: CRUDControllerOpts<DTO, unknown, unknown, ReadControllerOpts<DTO>, PagingStrategies, E>
+): ExportControllerOpts<DTO, E> {
   const { export: exportArgs = {} } = opts
-  return mergeBaseResolverOpts<ExportControllerOpts<DTO>>(exportArgs, opts)
+  return mergeBaseResolverOpts<ExportControllerOpts<DTO, E>>(exportArgs, opts)
 }
 
 /**
@@ -131,10 +132,11 @@ export const CRUDController = <
   C = DeepPartial<DTO>,
   U = DeepPartial<DTO>,
   R extends ReadControllerOpts<DTO> = ReadControllerOpts<DTO>,
-  PS extends PagingStrategies = PagingStrategies.NONE
+  PS extends PagingStrategies = PagingStrategies.NONE,
+  E = DeepPartial<DTO>
 >(
   DTOClass: Class<DTO>,
-  opts: CRUDControllerOpts<DTO, C, U, R, PS> = {}
+  opts: CRUDControllerOpts<DTO, C, U, R, PS, E> = {}
 ): ControllerClass<DTO, QueryService<DTO, C, U>, CRUDController<DTO, C, U, MergePagingStrategyOpts<DTO, R, PS>>> => {
   const readable = Readable(DTOClass, extractReadResolverOpts(opts))
   const updatable = Updateable(DTOClass, extractUpdateResolverOpts(opts))

@@ -1,29 +1,27 @@
 import { Header } from '@nestjs/common'
 import { ApiProduces } from '@nestjs/swagger'
-import { Class, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, DeepPartial, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
 import { stringify as stringifyCsv } from 'csv-stringify/sync'
 import omit from 'lodash.omit'
 
 import { AuthorizerFilter, Get, HookTypes, NonePagingQueryArgsTypeOpts, OperationGroup, QueryType } from '../'
 import { getDTONames } from '../common'
-import { QueryHookArgs } from '../decorators/hook-args.decorator'
+import { QueryHookArgs } from '../decorators'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import { PagingStrategies, StaticQueryType } from '../types/query'
 import { createExportQueryArgs } from '../types/query/query-args/export-paging-query-args.type'
 import { BaseServiceResolver, ControllerClass, ControllerOpts, ServiceController } from './controller.interface'
 
-export type ExportControllerFromOpts<DTO, QS extends QueryService<DTO, unknown, unknown>> = ExportController<DTO, QS>
-
-export type ExportControllerOpts<DTO> = {
+export type ExportControllerOpts<DTO, ExportDTO = DeepPartial<DTO>> = {
   QueryArgs?: StaticQueryType<DTO, PagingStrategies>
 
   limit?: number
 
   /**
-   * DTO to return with finding one record
+   * DTO used to select fields for CSV serialization.
    */
-  ExportDTOClass?: Class<DTO>
+  ExportDTOClass?: Class<ExportDTO>
 } & ControllerOpts &
   NonePagingQueryArgsTypeOpts<DTO>
 
@@ -31,7 +29,7 @@ export interface ExportController<DTO, QS extends QueryService<DTO, unknown, unk
   exportMany(query: QueryType<DTO, PagingStrategies.NONE>, authorizeFilter?: Filter<DTO>): Promise<string>
 }
 
-export const stringifyExportCsv = <DTO>(ExportDTOClass: Class<DTO>, items: DTO[]): string =>
+export const stringifyExportCsv = <DTO, ExportDTO>(ExportDTOClass: Class<ExportDTO>, items: DTO[]): string =>
   stringifyCsv(plainToInstance(ExportDTOClass, items, { excludeExtraneousValues: true }), {
     header: true,
     delimiter: ',',
@@ -45,11 +43,11 @@ export const stringifyExportCsv = <DTO>(ExportDTOClass: Class<DTO>, items: DTO[]
  * Mixin to add `export` rest endpoint.
  */
 export const Exportable =
-  <DTO, ReadOpts extends ExportControllerOpts<DTO>, QS extends QueryService<DTO, unknown, unknown>>(
+  <DTO, ExportDTO, QS extends QueryService<DTO, unknown, unknown>>(
     DTOClass: Class<DTO>,
-    opts: ReadOpts
+    opts: ExportControllerOpts<DTO, ExportDTO>
   ) =>
-  <B extends Class<ServiceController<DTO, QS>>>(BaseClass: B): Class<ExportControllerFromOpts<DTO, QS>> & B => {
+  <B extends Class<ServiceController<DTO, QS>>>(BaseClass: B): Class<ExportController<DTO, QS>> & B => {
     if (opts.disabled) {
       return BaseClass as never
     }
@@ -113,19 +111,19 @@ export const Exportable =
           }
         )
 
-        return stringifyExportCsv(ExportDTOClass, items)
+        return stringifyExportCsv<DTO, ExportDTO>(ExportDTOClass as Class<ExportDTO>, items)
       }
     }
 
-    return ExportResolverBase as Class<ExportControllerFromOpts<DTO, QS>> & B
+    return ExportResolverBase as Class<ExportController<DTO, QS>> & B
   }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const ExportController = <
   DTO,
-  ReadOpts extends ExportControllerOpts<DTO> = ExportControllerOpts<DTO>,
+  ExportDTO = DeepPartial<DTO>,
   QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>
 >(
   DTOClass: Class<DTO>,
-  opts: ReadOpts = {} as ReadOpts
-): ControllerClass<DTO, QS, ExportControllerFromOpts<DTO, QS>> => Exportable(DTOClass, opts)(BaseServiceResolver)
+  opts: ExportControllerOpts<DTO, ExportDTO> = {}
+): ControllerClass<DTO, QS, ExportController<DTO, QS>> => Exportable<DTO, ExportDTO, QS>(DTOClass, opts)(BaseServiceResolver)
