@@ -53,6 +53,11 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
     return entities
   }
 
+  /**
+   * Unlike the TypeORM adapter, Typegoose's `query` does not accept {@link QueryOptions}, so `withDeleted` is not
+   * supported here. `_opts` is kept in the signature so subclasses can add support without widening it.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async exportMany(query: Query<Entity>, _opts?: QueryOptions<Entity>): Promise<DocumentType<Entity>[]> {
     return this.query(query)
   }
