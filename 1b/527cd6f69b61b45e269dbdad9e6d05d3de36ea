@@ -1,0 +1,19 @@
+packages/query-rest/src/controllers/update.controller.ts
+  s_e78cadb435d700::t_ef228b121b87f1 9,13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "1b527cd6f69b61b45e269dbdad9e6d05d3de36ea",
+  "prompts": {},
+  "sessions": {
+    "s_e78cadb435d700": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cd5f72cc-911e-4fda-87eb-52c5a0e4781b",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
