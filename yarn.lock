@@ -5398,7 +5398,7 @@ __metadata:
   version: 2.1.1
   resolution: "@nestjs/mapped-types@npm:2.1.1"
   peerDependencies:
-    "@nestjs/common": ^9.0.0 || ^10.0.0 || ^11.0.0
+    "@nestjs/common": ^10.0.0 || ^11.0.0
     class-transformer: ^0.4.0 || ^0.5.0
     class-validator: ^0.13.0 || ^0.14.0 || ^0.15.0
     reflect-metadata: ^0.1.12 || ^0.2.0
@@ -5415,8 +5415,8 @@ __metadata:
   version: 11.0.4
   resolution: "@nestjs/mongoose@npm:11.0.4"
   peerDependencies:
-    "@nestjs/common": ^9.0.0 || ^10.0.0 || ^11.0.0
-    "@nestjs/core": ^9.0.0 || ^10.0.0 || ^11.0.0
+    "@nestjs/common": ^10.0.0 || ^11.0.0
+    "@nestjs/core": ^10.0.0 || ^11.0.0
     mongoose: ^7.0.0 || ^8.0.0 || ^9.0.0
     rxjs: ^7.0.0
   checksum: 10/8648a89db52220e7e2ca6eae4acf4bd4fad6f42a26388e8b92bc52a00c722e12c409f97bf7c5498f5bfb8b8dd309389772d1e0eda776bdb2e49fdd91edf23221
@@ -5427,7 +5427,7 @@ __metadata:
   version: 11.0.5
   resolution: "@nestjs/passport@npm:11.0.5"
   peerDependencies:
-    "@nestjs/common": ^9.0.0 || ^10.0.0 || ^11.0.0
+    "@nestjs/common": ^10.0.0 || ^11.0.0
     passport: ^0.5.0 || ^0.6.0 || ^0.7.0
   checksum: 10/4d9c7cd68c0dbd29caeab10027349049b1f7b784f5ea1e4529b29c95b1ed00df997111e45292a07603309f66dc115bdb37cd728d991746c5344ff3d9b2153421
   languageName: node
