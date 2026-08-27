@@ -89,7 +89,7 @@ jobs:
           NESTJS_QUERY_DB_TYPE: ${{ matrix.db-type }}
 
       - name: Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./coverage
