@@ -3,6 +3,8 @@ import {
   ClassSerializerInterceptor,
   Delete as NestDelete,
   Get as NestGet,
+  HttpCode,
+  HttpStatus,
   Post as NestPost,
   Put as NestPut,
   SerializeOptions,
@@ -25,7 +27,7 @@ interface MutationMethodDecoratorArg extends MethodDecoratorArg {
   consumes?: string[]
 }
 
-const methodDecorator = (method: (path?: string | string[]) => MethodDecorator) => {
+const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, successStatus: HttpStatus) => {
   return (
     returnTypeFuncOrOptions?: ReturnTypeFunc | MethodDecoratorArg | MutationMethodDecoratorArg,
     maybeOptions: MethodDecoratorArg | MutationMethodDecoratorArg = {},
@@ -60,7 +62,7 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator) 
 
       decorators.push(
         ApiResponse({
-          status: 200,
+          status: successStatus,
           description: 'Successful response.',
           type,
           isArray: isReturnTypeArray
@@ -76,8 +78,9 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator) 
       )
     } else {
       decorators.push(
+        HttpCode(HttpStatus.NO_CONTENT),
         ApiResponse({
-          status: 204,
+          status: HttpStatus.NO_CONTENT,
           description: 'Request completed successfully.'
         })
       )
@@ -111,7 +114,7 @@ export function Get(
   maybeOptions?: MethodDecoratorArg,
   ...resolverOpts: ResolverMethodOpts[]
 ): MethodDecorator | PropertyDecorator {
-  return methodDecorator(NestGet)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
+  return methodDecorator(NestGet, HttpStatus.OK)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
 }
 
 export function Post(
@@ -129,7 +132,7 @@ export function Post(
   maybeOptions?: MutationMethodDecoratorArg,
   ...resolverOpts: ResolverMethodOpts[]
 ): MethodDecorator | PropertyDecorator {
-  return methodDecorator(NestPost)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
+  return methodDecorator(NestPost, HttpStatus.CREATED)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
 }
 
 export function Put(
@@ -147,7 +150,7 @@ export function Put(
   maybeOptions?: MutationMethodDecoratorArg,
   ...resolverOpts: ResolverMethodOpts[]
 ): MethodDecorator | PropertyDecorator {
-  return methodDecorator(NestPut)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
+  return methodDecorator(NestPut, HttpStatus.OK)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
 }
 
 export function Delete(
@@ -165,5 +168,5 @@ export function Delete(
   maybeOptions?: MutationMethodDecoratorArg,
   ...resolverOpts: ResolverMethodOpts[]
 ): MethodDecorator | PropertyDecorator {
-  return methodDecorator(NestDelete)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
+  return methodDecorator(NestDelete, HttpStatus.OK)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
 }
