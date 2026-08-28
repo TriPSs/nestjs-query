@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql'
 import { Class } from '@ptc-org/nestjs-query-core'
-import { IsPositive, Min, Validate } from 'class-validator'
+import { IsInt, IsPositive, Min, Validate } from 'class-validator'
 
 import { SkipIf } from '../../../decorators'
 import { ConnectionCursorScalar, ConnectionCursorType } from '../../cursor.scalar'
@@ -57,6 +57,15 @@ export const getOrCreateCursorPagingType = <DTO>(opts: CursorQueryArgsTypeOpts<D
     @SkipIf(() => opts.enableFetchAllWithNegative, IsPositive())
     @Min(opts.enableFetchAllWithNegative ? -1 : 1)
     last?: number
+
+    @Field(() => Int, {
+      nullable: true,
+      description: 'Offset to skip additional records'
+    })
+    @IsUndefined()
+    @IsInt()
+    @Min(0)
+    offset?: number
   }
 
   graphQLCursorPaging = GraphQLCursorPagingImpl

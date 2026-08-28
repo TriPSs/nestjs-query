@@ -91,18 +91,20 @@ export class LimitOffsetPagerStrategy<DTO> implements PagerStrategy<DTO> {
   }
 
   private getOffset(cursor: CursorPagingType): number {
+    const additionalOffset = cursor.offset ?? 0
+
     if (isBackwardPaging(cursor)) {
-      if (this.enableFetchAllWithNegative && cursor.last === -1) return 0
+      if (this.enableFetchAllWithNegative && cursor.last === -1) return additionalOffset
       const { last, before } = cursor
       const beforeOffset = before ? LimitOffsetPagerStrategy.cursorToOffset(before) : 0
       const offset = last ? beforeOffset - last : 0
 
       // Check to see if our before-page is underflowing past the 0th item
-      return Math.max(offset, 0)
+      return Math.max(offset, 0) + additionalOffset
     }
     const { after } = cursor
     const offset = after ? LimitOffsetPagerStrategy.cursorToOffset(after) + 1 : 0
-    return Math.max(offset, 0)
+    return Math.max(offset, 0) + additionalOffset
   }
 
   private static offsetToCursor(offset: number): string {

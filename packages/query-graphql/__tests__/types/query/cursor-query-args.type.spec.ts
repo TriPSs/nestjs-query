@@ -107,6 +107,42 @@ describe('Cursor paging strategy QueryArgsType with manual options', (): void =>
     expect(queryInstance.paging).toBeInstanceOf(TestCursorQuery.PageType)
   })
 
+  it('should allow paging with first and offset combined', () => {
+    const queryObj: TestCursorQuery = {
+      paging: {
+        first: 10,
+        offset: 5
+      }
+    }
+    const queryInstance = plainToClass(TestCursorQuery, queryObj)
+    expect(validateSync(queryInstance)).toEqual([])
+  })
+
+  it('should allow paging with first, after, and offset combined', () => {
+    const queryObj: TestCursorQuery = {
+      paging: {
+        first: 10,
+        after: 'YXJyYXljb25uZWN0aW9uOjEw',
+        offset: 5
+      }
+    }
+    const queryInstance = plainToClass(TestCursorQuery, queryObj)
+    expect(validateSync(queryInstance)).toEqual([])
+  })
+
+  it('should reject negative offset values', () => {
+    const queryObj: TestCursorQuery = {
+      paging: {
+        first: 10,
+        offset: -1
+      }
+    }
+    const queryInstance = plainToClass(TestCursorQuery, queryObj)
+    const errors = validateSync(queryInstance)
+    expect(errors.length).toBe(1)
+    expect(errors[0].property).toBe('paging')
+  })
+
   it('should sorting to the correct instance of sorting', () => {
     const queryObj: TestCursorQuery = {
       sorting: [{ field: 'stringField', direction: SortDirection.ASC, nulls: SortNulls.NULLS_LAST }]
