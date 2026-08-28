@@ -104,7 +104,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Docker Compose
-        uses: docker/setup-compose-action@v1
+        uses: docker/setup-compose-action@v2
 
       - name: Build and run Federation E2E tests
         run: |
