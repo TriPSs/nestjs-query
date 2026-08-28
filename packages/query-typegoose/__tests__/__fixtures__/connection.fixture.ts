@@ -16,8 +16,9 @@ export class MongoServer {
     }
   }
 
-  async dropDatabase(): Promise<void> {
-    await connections[connections.length - 1].dropDatabase()
+  async clearDatabase(): Promise<void> {
+    const collections = await connections[connections.length - 1].db.collections()
+    await Promise.all(collections.map((collection) => collection.deleteMany({})))
   }
 
   async prepareDb(): Promise<void> {
