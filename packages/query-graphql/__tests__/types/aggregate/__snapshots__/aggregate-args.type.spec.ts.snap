@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AggregateArgsType should create an aggregate type with the correct fields for each type 1`] = `
 "type Query {

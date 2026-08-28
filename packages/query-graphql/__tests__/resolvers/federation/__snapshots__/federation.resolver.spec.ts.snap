@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FederationResolver should not add federation methods if one and many are empty 1`] = `
 "type TestResolverDTO {

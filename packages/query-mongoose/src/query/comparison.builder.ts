@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common'
 import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
 import escapeRegExp from 'lodash.escaperegexp'
-import { Document, QueryFilter, Model as MongooseModel, Schema, Types } from 'mongoose'
+import { Document, Model as MongooseModel, QueryFilter, Schema, Types } from 'mongoose'
 
 import { getSchemaKey } from './helpers'
 
@@ -20,7 +20,7 @@ export type EntityComparisonField<Entity, F extends keyof Entity> =
  * @internal
  * Builder to create SQL Comparisons. (=, !=, \>, etc...)
  */
-export class ComparisonBuilder<Entity extends Document<any>> {
+export class ComparisonBuilder<Entity extends Document> {
   static DEFAULT_COMPARISON_MAP: Record<string, string> = {
     eq: '$eq',
     neq: '$ne',

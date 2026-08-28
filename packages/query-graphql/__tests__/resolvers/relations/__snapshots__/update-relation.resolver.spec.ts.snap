@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`UpdateRelationsResolver many should not add update many methods if disableUpdate is true 1`] = `
 "type TestResolverDTO {

@@ -93,6 +93,10 @@ export class TypeOrmQueryService<Entity>
     return qb.getMany()
   }
 
+  public exportMany(query: Query<Entity>, opts?: QueryOptions<Entity>): Promise<Entity[]> {
+    return this.query(query, opts)
+  }
+
   public async aggregate(
     filter: Filter<Entity>,
     aggregate: AggregateQuery<Entity>,

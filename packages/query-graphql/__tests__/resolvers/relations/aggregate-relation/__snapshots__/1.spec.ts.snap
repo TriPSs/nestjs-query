@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AggregateRelationsResolver aggregate should not add read methods if enableAggregate is not true 1`] = `
 "type TestResolverDTO {

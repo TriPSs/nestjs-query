@@ -1,5 +1,5 @@
 import { Filter, FilterComparisons, FilterFieldComparison } from '@ptc-org/nestjs-query-core'
-import { Document, QueryFilter, Model as MongooseModel } from 'mongoose'
+import { Document, Model as MongooseModel, QueryFilter } from 'mongoose'
 
 import { ComparisonBuilder, EntityComparisonField } from './comparison.builder'
 
@@ -7,7 +7,7 @@ import { ComparisonBuilder, EntityComparisonField } from './comparison.builder'
  * @internal
  * Builds a WHERE clause from a Filter.
  */
-export class WhereBuilder<Entity extends Document<any>> {
+export class WhereBuilder<Entity extends Document> {
   constructor(
     readonly Model: MongooseModel<Entity>,
     readonly comparisonBuilder: ComparisonBuilder<Entity> = new ComparisonBuilder(Model)

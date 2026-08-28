@@ -76,6 +76,19 @@ describe('AssemblerQueryService', () => {
     })
   })
 
+  describe('exportMany', () => {
+    it('transforms the query and results', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+
+      when(mockQueryService.exportMany(objectContaining({ filter: { bar: { eq: 'bar' } } }), undefined)).thenResolve([
+        { bar: 'bar' }
+      ])
+
+      return expect(assemblerService.exportMany({ filter: { foo: { eq: 'bar' } } })).resolves.toEqual([{ foo: 'bar' }])
+    })
+  })
+
   describe('count', () => {
     it('transform the filter and results', () => {
       const mockQueryService = mock<QueryService<TestEntity>>()

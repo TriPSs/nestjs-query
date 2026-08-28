@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AggregateResponseType should create an aggregate type with a custom name 1`] = `
 "type FakeTypeAggregateGroupBy {

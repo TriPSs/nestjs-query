@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`None paging strategy QueryArgsType with manual options create a query for string fields 1`] = `
 "type Query {

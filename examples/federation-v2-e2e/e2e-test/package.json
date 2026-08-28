@@ -16,8 +16,8 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^22.19.1",
-    "jest": "^30.3.0",
-    "ts-jest": "^29.4.6",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.12",
     "typescript": "^5.9.3"
   },
   "nx": {

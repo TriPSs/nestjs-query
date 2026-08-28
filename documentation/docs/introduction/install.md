@@ -17,6 +17,14 @@ npm i @ptc-org/nestjs-query-graphql @nestjs/common @nestjs/graphql graphql graph
 
 **NOTE** `@ptc-org/nestjs-query-graphql` has opted for peer dependencies to follow nest conventions and to prevent duplicate installations of packages.
 
+## @ptc-org/nestjs-query-rest
+
+```sh
+npm i @ptc-org/nestjs-query-rest @nestjs/common @nestjs/core @nestjs/swagger class-transformer class-validator
+```
+
+**NOTE** `@ptc-org/nestjs-query-rest` uses peer dependencies so that it shares the NestJS, Swagger, validation, and transformation packages used by your application.
+
 ## @ptc-org/nestjs-query-typeorm
 
 ```sh

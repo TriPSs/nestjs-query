@@ -9,6 +9,7 @@ import {
   FindByIdOptions,
   GetByIdOptions,
   Query,
+  QueryOptions,
   QueryService,
   UpdateManyResponse,
   UpdateOneOptions
@@ -50,6 +51,15 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
     const { filterQuery, options } = this.filterQueryBuilder.buildQuery(query)
     const entities = await this.Model.find(filterQuery, {}, options).exec()
     return entities
+  }
+
+  /**
+   * Unlike the TypeORM adapter, Typegoose's `query` does not accept {@link QueryOptions}, so `withDeleted` is not
+   * supported here. `_opts` is kept in the signature so subclasses can add support without widening it.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async exportMany(query: Query<Entity>, _opts?: QueryOptions<Entity>): Promise<DocumentType<Entity>[]> {
+    return this.query(query)
   }
 
   async aggregate(filter: Filter<Entity>, aggregateQuery: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
