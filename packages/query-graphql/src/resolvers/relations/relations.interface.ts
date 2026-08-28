@@ -5,11 +5,51 @@ import { AuthorizerOptions } from '../../auth'
 import { DTONamesOpts } from '../../common'
 import { ResolverMethodOpts } from '../../decorators'
 import { ResolverRelationMethodOpts } from '../../decorators/resolver-method.decorator'
-import { ConnectionOptions, QueryArgsTypeOpts } from '../../types'
+import { ConnectionOptions, EdgePivotOptions, QueryArgsTypeOpts } from '../../types'
 
 export type ReferencesKeys<DTO, Reference> = {
   [F in keyof Reference]?: keyof DTO
 }
+
+export type PivotTypeFunc<Pivot> = () => Class<Pivot>
+
+/**
+ * Options to expose the properties of the pivot (a.k.a. join/through) record of a many relation.
+ *
+ * Given `User -\> Membership -\> Group`, the pivot is `Membership` and its properties are exposed on
+ * the edges of the `groups` connection.
+ *
+ * Only the pivot type is required: how it ties the two ends together comes from the `@PivotMapping`
+ * declared on the pivot itself.
+ */
+export interface PivotRelationOpts<Pivot> extends Omit<EdgePivotOptions<Pivot>, 'DTO'> {
+  /**
+   * The class type of the pivot record.
+   */
+  DTO: Class<Pivot> | PivotTypeFunc<Pivot>
+  /**
+   * Additional fields of the pivot record that must not be writable.
+   *
+   * The keys of the relationship and the id of the pivot record are always omitted.
+   */
+  omitFields?: (keyof Pivot & string)[]
+  /**
+   * The entity backing the pivot DTO.
+   *
+   * Only needed as an escape hatch: the `QueryService` is looked up by the entity of the registered
+   * assembler, falling back to the pivot DTO itself.
+   */
+  EntityClass?: Class<unknown>
+  /**
+   * Enable mutations to write the pivot properties.
+   */
+  enableUpdate?: boolean
+}
+
+/**
+ * The pivot type on its own, or the full options.
+ */
+export type PivotRelationOption<Pivot> = PivotRelationOpts<Pivot> | PivotTypeFunc<Pivot>
 
 export interface ResolverRelationReference<DTO, Reference> extends DTONamesOpts, ResolverMethodOpts {
   /**
@@ -76,6 +116,16 @@ export type ResolverRelation<Relation> = {
   enableAggregate?: boolean
   aggregate?: Pick<ResolverRelation<Relation>, 'description'> & ResolverRelationMethodOpts
 
+  /**
+   * Expose the properties of the pivot record on the edges of the relation.
+   *
+   * Accepts the pivot type on its own - `pivot: () =\> MembershipDTO` - or the full options.
+   *
+   * Only supported by the cursor paging strategy, since it is the only one that creates edges.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pivot?: PivotRelationOption<any>
+
   auth?: AuthorizerOptions<Relation>
 } & DTONamesOpts &
   ResolverMethodOpts &
@@ -87,7 +137,7 @@ export type RelationTypeMap<RT> = Record<string, RT>
 
 export type ResolverOneRelation<Relation> = Omit<
   ResolverRelation<Relation>,
-  'disableFilter' | 'disableSort' | 'enableAggregate' | 'aggregate'
+  'disableFilter' | 'disableSort' | 'enableAggregate' | 'aggregate' | 'pivot'
 >
 export type ResolverManyRelation<Relation> = Omit<ResolverRelation<Relation>, 'enableLookAhead'>
 

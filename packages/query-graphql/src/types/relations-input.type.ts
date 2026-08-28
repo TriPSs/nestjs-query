@@ -3,14 +3,35 @@ import { Class } from '@ptc-org/nestjs-query-core'
 import { ArrayUnique, IsNotEmpty } from 'class-validator'
 
 import { getDTOIdTypeOrDefault } from '../common'
+import { definePivotPropertiesField } from './pivot-properties-input.type'
 
-export interface RelationsInputType {
+export interface RelationsInputType<Pivot = unknown> {
   id: string | number
   relationIds: (string | number)[]
+  properties?: Pivot
 }
 
+export interface RelationsInputTypeOpts {
+  /**
+   * Also accept the properties of the pivot record, applied to every relation of the mutation.
+   */
+  pivot?: {
+    PropertiesClass: Class<unknown>
+    fieldName: string
+    description?: string
+  }
+}
+
+/**
+ * Builds the input identifying a record and the relations of it a mutation applies to, optionally
+ * accepting the properties to write on each relationship.
+ */
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export function RelationsInputType(DTOClass: Class<unknown>, RelationClass: Class<unknown>): Class<RelationsInputType> {
+export function RelationsInputType(
+  DTOClass: Class<unknown>,
+  RelationClass: Class<unknown>,
+  opts?: RelationsInputTypeOpts
+): Class<RelationsInputType> {
   const DTOIDType = getDTOIdTypeOrDefault([DTOClass])
   const RelationIDType = getDTOIdTypeOrDefault([RelationClass])
 
@@ -24,6 +45,14 @@ export function RelationsInputType(DTOClass: Class<unknown>, RelationClass: Clas
     @ArrayUnique()
     @IsNotEmpty({ each: true })
     relationIds!: (string | number)[]
+  }
+
+  if (opts?.pivot) {
+    definePivotPropertiesField(RelationsInput, opts.pivot.PropertiesClass, {
+      fieldName: opts.pivot.fieldName,
+      nullable: true,
+      description: opts.pivot.description ?? 'The properties of the relationship, applied to every relation.'
+    })
   }
 
   return RelationsInput

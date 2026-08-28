@@ -1,0 +1,452 @@
+---
+title: Pivot Relations
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+A many-to-many relationship is often more than a pair of ids. The row that ties the two records
+together carries data of its own: *when* a user joined a group, *which role* they hold in it, *how
+many* units of a product an order holds.
+
+That data belongs to neither side of the relationship, so it has no place on either node. It belongs
+to the **edge**.
+
+```graphql
+{
+  user(id: 1) {
+    groups {
+      edges {
+        node {
+          name
+        }
+        # the columns of the row that ties the user to the group
+        properties {
+          since
+          role
+        }
+      }
+    }
+  }
+}
+```
+
+:::note
+Pivot properties are exposed on edges, so they only work with `@CursorConnection` — it is the only
+paging strategy that creates edges. Configuring a pivot on any other strategy throws at startup.
+:::
+
+## Modelling the relationship
+
+Two pieces are needed:
+
+1. The **relationship**, used to page over the nodes — a plain many-to-many.
+2. The **pivot entity**, mapping the same join table, used to read and write the properties.
+
+The parent does not need to declare anything about the pivot: it is queried through its own service,
+by both ends of the relationship.
+
+<Tabs
+  defaultValue="userentity"
+  values={[
+    { label: 'UserEntity', value: 'userentity', },
+    { label: 'MembershipEntity', value: 'membershipentity', },
+    { label: 'GroupEntity', value: 'groupentity', },
+  ]
+}>
+<TabItem value="userentity">
+
+```ts title="user/user.entity.ts"
+@Entity({ name: 'user' })
+export class UserEntity {
+  @PrimaryGeneratedColumn()
+  id!: number
+
+  @Column()
+  name!: string
+
+  // (1) the relationship itself — nothing about the pivot is declared here
+  @ManyToMany(() => GroupEntity, (group) => group.users)
+  @JoinTable({
+    name: 'membership',
+    joinColumn: { name: 'userId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'groupId', referencedColumnName: 'id' }
+  })
+  groups!: GroupEntity[]
+}
+```
+
+</TabItem>
+<TabItem value="membershipentity">
+
+```ts title="membership/membership.entity.ts"
+// (2) maps the very same table as the @JoinTable above
+@Entity({ name: 'membership' })
+export class MembershipEntity {
+  @PrimaryColumn()
+  userId!: number
+
+  @PrimaryColumn()
+  groupId!: number
+
+  @Column({ nullable: true })
+  since?: Date
+
+  @Column({ nullable: true })
+  role?: string
+
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  user!: UserEntity
+
+  @ManyToOne(() => GroupEntity, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'groupId' })
+  group!: GroupEntity
+}
+```
+
+:::caution
+The extra columns must be nullable or carry a default. `addGroupsToUser` inserts the join row
+through the many-to-many, and only then writes the properties.
+:::
+
+</TabItem>
+<TabItem value="groupentity">
+
+```ts title="group/group.entity.ts"
+@Entity({ name: 'group' })
+export class GroupEntity {
+  @PrimaryGeneratedColumn()
+  id!: number
+
+  @Column()
+  name!: string
+
+  @ManyToMany(() => UserEntity, (user) => user.groups)
+  users!: UserEntity[]
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Exposing the properties
+
+The pivot declares **what it ties together**, with `@PivotMapping`. The keys belong to the entity,
+not to the DTO — the type only carries the data the relationship holds:
+
+```ts title="membership/dto/membership.dto.ts"
+@ObjectType('Membership')
+@PivotMapping([[{ DTO: () => UserDTO, key: 'userId' }, { DTO: () => GroupDTO, key: 'groupId' }]])
+export class MembershipDTO {
+  @FilterableField(() => GraphQLISODateTime, { nullable: true })
+  since?: Date
+
+  @FilterableField({ nullable: true })
+  role?: string
+}
+```
+
+`key` names the field of the pivot **entity** identifying that end. It does not have to exist on the
+DTO: filters are resolved against the entity, so `userId` never has to be exposed.
+
+It takes a **list of pairs**, because the same pivot may tie more than one pair of types — a
+relationship table in a graph database being the usual case:
+
+```ts
+@PivotMapping([
+  [{ DTO: () => UserDTO, key: 'fromId' }, { DTO: () => GroupDTO, key: 'toId' }],
+  [{ DTO: () => UserDTO, key: 'fromId' }, { DTO: () => TeamDTO, key: 'toId' }]
+])
+```
+
+Each relation picks the pair matching its own two ends, in whichever order it was declared.
+
+### Keys that are relations
+
+When the id is not stored as a column — or you would rather go through the relation — point `key` at
+it and say which of its fields carries the id:
+
+```ts
+@PivotMapping([
+  [
+    { DTO: () => UserDTO, key: 'user', reference: 'id' },
+    { DTO: () => GroupDTO, key: 'group', reference: 'id' }
+  ]
+])
+```
+
+:::note
+Reading and filtering work either way — the loaders select the referenced relations so their ids can
+be read back. Writing is different: it produces a nested relation filter in an `UPDATE`, which only
+some providers support, so prefer the key form when `enableUpdate` is on.
+:::
+
+The relation only points at the pivot — everything else it needs is already declared there:
+
+```ts title="user/dto/user.dto.ts"
+@ObjectType('User')
+@CursorConnection('groups', () => GroupDTO, {
+  pivot: () => MembershipDTO
+})
+export class UserDTO {
+  @FilterableField(() => ID)
+  id!: number
+
+  @FilterableField()
+  name!: string
+}
+```
+
+Turn the mutations and the filter on through the object form:
+
+```ts
+@CursorConnection('groups', () => GroupDTO, {
+  pivot: { DTO: () => MembershipDTO, enableUpdate: true, enableFilter: true }
+})
+```
+
+Which produces:
+
+```graphql
+type UserGroupsEdge {
+  """The node containing the Group"""
+  node: Group!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+
+  """The properties of the relationship between the parent and the Group"""
+  properties: Membership
+}
+
+type UserGroupsConnection {
+  pageInfo: PageInfo!
+  edges: [UserGroupsEdge!]!
+}
+```
+
+Note the edge is named after the connection. Without a pivot every connection of a DTO shares one
+`GroupEdge`; a pivot makes the edge specific to *this* relationship, so `User.groups` and
+`Organization.groups` can each carry their own properties.
+
+## Registering the pivot
+
+The pivot is read and written through its own `QueryService`, but it has no endpoints of its own.
+`queryServices` registers exactly that — a service, no resolver:
+
+```ts title="user/user.module.ts"
+NestjsQueryGraphQLModule.forFeature({
+  imports: [NestjsQueryTypeOrmModule.forFeature([UserEntity, MembershipEntity])],
+  resolvers: [{ DTOClass: UserDTO, EntityClass: UserEntity }],
+  queryServices: [{ DTOClass: MembershipDTO, EntityClass: MembershipEntity }]
+})
+```
+
+If the pivot DTO *is* the entity, registering it with the ORM module is enough — `queryServices` is
+only needed to bridge a DTO to a different entity. A declared `@Assembler` is picked up
+automatically too.
+
+## Custom relation services
+
+A pivot resolves through **its own service**, independent of how the relation itself is loaded. That
+makes it work unchanged with a [`RelationQueryService`](../concepts/services.mdx) that swaps the
+service of a relation:
+
+```ts
+@QueryService(UserDTO)
+export class UserService extends RelationQueryService<UserDTO> {
+  constructor(@InjectQueryService(UserEntity) service: QueryService<UserEntity>) {
+    super(service, {
+      groups: {
+        service: someOtherService,
+        query: (user) => ({ filter: { ownerId: { eq: user.id } } })
+      }
+    })
+  }
+}
+```
+
+The nodes come from `someOtherService`, the properties from the pivot's service, and the edges pair
+them up by id as usual.
+
+To customise how the **properties** are loaded, register whatever you want under the pivot's token —
+it is a plain injection, so a hand-written service, a decorated one, or a `RelationQueryService` of
+its own all work:
+
+```ts title="user/user.module.ts"
+import { getQueryServiceToken } from '@ptc-org/nestjs-query-core'
+
+NestjsQueryGraphQLModule.forFeature({
+  imports: [NestjsQueryTypeOrmModule.forFeature([UserEntity, MembershipEntity])],
+  resolvers: [{ DTOClass: UserDTO, EntityClass: UserEntity }],
+  services: [{ provide: getQueryServiceToken(MembershipDTO), useClass: MyMembershipService }]
+})
+```
+
+:::note
+Register the pivot service either through `queryServices` or as a raw provider, not both — two
+providers for the same token in one module is an error in current NestJS versions.
+:::
+
+:::note
+`RelationQueryService` issues one query per parent for the relation it overrides. That is how it
+works, and it does not change the pivot: the properties of every edge in the request are still
+batched into a single query.
+:::
+
+## Options
+
+Passing `pivot: () => MembershipDTO` is shorthand for `pivot: { DTO: () => MembershipDTO }`.
+
+### On the relation
+
+| Option | Required | Description |
+| --- | --- | --- |
+| `DTO` | yes | The `@ObjectType` of the pivot record, or a function returning it. |
+| `enableUpdate` | no | Adds the pivot properties to the relation mutations. |
+| `enableFilter` | no | Allows filtering the connection by the properties of the relationship. |
+| `fieldName` | no | The name of the field on the edge. Defaults to `properties`. |
+| `omitFields` | no | Extra fields of the pivot that must not be writable. The keys of the relationship and the id of the pivot are always omitted. |
+| `EntityClass` | no | Escape hatch to point at the entity backing the pivot, when it is neither the DTO nor a declared assembler. |
+| `description` | no | Description of the field. |
+
+### On each end of `@PivotMapping`
+
+| Option | Required | Description |
+| --- | --- | --- |
+| `DTO` | yes | A function returning the type at this end. |
+| `key` | yes | The field of the pivot **entity** identifying this end. |
+| `reference` | no | Set when `key` points at a relation, naming the field of it holding the id. |
+
+## Performance
+
+The properties are resolved lazily, exactly like `totalCount`: nothing is queried unless the field
+is selected. When it is, a request-scoped [dataloader](./dataloaders.mdx) batches **every edge of
+every parent in the request into a single query**:
+
+```sql
+SELECT ... FROM membership WHERE userId IN (1, 2) AND groupId IN (1, 2, 3)
+```
+
+Nothing is resolved through the parent entity, so a relationship whose pivot is not mapped as a
+relation on either side works exactly the same.
+
+## Filtering
+
+With `enableFilter: true` the connection accepts a filter on the properties of the relationship,
+alongside the filter on the node itself:
+
+```graphql
+{
+  user(id: 1) {
+    # the engineering groups where *this user* is an owner
+    groups(filter: { name: { like: "Eng%" }, properties: { role: { eq: "owner" } } }) {
+      totalCount
+      edges {
+        node { name }
+        properties { since }
+      }
+    }
+  }
+}
+```
+
+The filter is **correlated to the parent**. `properties: { role: { eq: "owner" } }` means "where this
+user is an owner", not "groups that have some owner" — which is what filtering through the pivot as
+a plain relation would give you.
+
+The base filter of a DTO is shared by every connection of that DTO, so a dedicated one is generated
+for the relation:
+
+```graphql
+input UserGroupsFilter {
+  and: [GroupFilter!]
+  or: [GroupFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+
+  """Filter by the properties of the relationship."""
+  properties: MembershipFilter
+}
+```
+
+:::note
+`properties` is only available at the top level of the filter — the `and`/`or` branches still take
+the plain `GroupFilter`.
+:::
+
+### How it is resolved
+
+The pivot filter is not a column of the node, so it cannot go into the same `WHERE`. It is resolved
+in two steps, both batched per request:
+
+1. the pivot records of the parents matching the filter are read, giving the ids of the nodes;
+2. those ids are merged into the relation query as `id: { in: [...] }`.
+
+If nothing matches, the relation is never queried at all.
+
+The trade-off is one extra query, and an `IN` list bounded by how many relationships the parent has
+that match. It is also worth knowing that each parent ends up with its own list of ids, so **the
+node queries of different parents are no longer batched together** when this filter is used.
+
+### Filtering the root query
+
+To filter the *root* query by the properties — "every user who is an owner of something" — expose the
+pivot as a filterable relation of the parent. That does require the relation to exist on the entity.
+
+```ts
+@FilterableCursorConnection('memberships', () => MembershipDTO)
+export class UserDTO { ... }
+```
+
+```graphql
+{
+  users(filter: { memberships: { role: { eq: "owner" } } }) {
+    edges { node { name } }
+  }
+}
+```
+
+## Mutations
+
+With `enableUpdate: true`, the properties can be written in two ways.
+
+**Along with the relationship**, applied to every id of the mutation:
+
+```graphql
+mutation {
+  addGroupsToUser(input: {
+    id: 1,
+    relationIds: [2, 3],
+    properties: { role: "member", since: "2024-01-01T00:00:00.000Z" }
+  }) {
+    id
+  }
+}
+```
+
+**On an existing relationship**, to change the properties without touching the relationship itself:
+
+```graphql
+mutation {
+  setGroupsPropertiesOnUser(input: {
+    id: 1,
+    relationId: 2,
+    properties: { role: "owner" }
+  }) {
+    id
+  }
+}
+```
+
+The properties input is partial, so the example above leaves `since` untouched. The mutation fails
+with a `NotFoundException` when the relationship does not exist — it writes properties, it does not
+create relationships.
+
+The keys of the relationship (`userId`, `groupId`) and the id of the pivot are stripped from the
+input, so a caller cannot repoint a relationship by writing its keys.
+
+:::note
+Both mutations apply the same authorizer filters as the other relation mutations.
+:::
