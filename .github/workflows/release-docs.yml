@@ -34,7 +34,7 @@ jobs:
         run: npx nx build documentation
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        uses: JamesIves/github-pages-deploy-action@v4.9.0
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: ./dist/documentation # The folder the action should deploy.
