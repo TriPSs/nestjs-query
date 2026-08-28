@@ -85,12 +85,7 @@ tsconfig.tsbuildinfo
 .junie
 .air/plans
 
-documentation/.docusaurus
 /**/package-lock.json
-
-# Generated Docusaurus files
-.docusaurus/
-.cache-loader/
 
 # VSCode workspace files
 .vscode

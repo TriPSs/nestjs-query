@@ -1,3 +1,7 @@
+---
+title: Contributing
+---
+
 `nestjs-query` welcomes any contribution!
 
 For all feature, bug and pull requests please adhere to the following **golden rule**:
@@ -53,7 +57,7 @@ Pull Requests are the best way to contribute to this library. When issuing a pul
 
 Before you begin writing any new code you will need to run the following
 
-```
+```bash
 npm install
 npm run bootstrap
 npm run build
@@ -63,15 +67,15 @@ npm run build
 
 ### Unit Tests
 
-:::note
+<Note>
 Unit tests should not rely on any persistent storage. If you want to test the full stack write an e2e test.
-:::
+</Note>
 
 If you have created a new class you should create a corresponding `.spec.ts` file in the packages test directory. The test file should be located in a test directory that matches the path in the `src` directory.
 
 For example if you created a new class with the following directory structure
 
-```
+```text
 /src
   /my
     /cool.feature.ts
@@ -79,7 +83,7 @@ For example if you created a new class with the following directory structure
 
 Your test file would be located in
 
-```
+```text
 /test
   /my 
     /cool.feature.spec.ts
@@ -131,24 +135,24 @@ All `e2e` tests are located in the `examples` directory.
 
 The first time you run the `e2e` tests you will need to start all backing services. 
 
-```
+```bash
 cd ./examples
 docker compose up -d
-```  
+```
 
 To run the tests you can issue the following from the root 
 
-```
+```bash
 npm run jest:e2e
 ```
 
 ### Running All Tests
 
-:::note
+<Note>
 You will need to start the backing services described in `Running E2E Tests` first.
-:::
+</Note>
 
-```
+```bash
 npm run jest
 ```
 
@@ -161,7 +165,7 @@ Format: `<type>(<scope>): <subject>`
 `<scope>` is optional, but is typically the scope of the feature either package (e.g. `core`, `grapqql`, `typeorm` etc)
 
 Example
-```
+```text
 feat: allow overriding of webpack config
 ^--^  ^--------------------------------^
 |     |
@@ -183,10 +187,9 @@ The various types of commits:
 
 All new features require documentation so other users can take advantage of them.
 
-:::info
+<Info>
 `nestjs-query` uses [Mintlify](https://mintlify.com/) for documentation.
-::: 
-
+</Info>
 ### Serving Docs Locally
 
 Running the documentation locally is the easiest way to view your changes to ensure they render as you expect.
@@ -207,10 +210,10 @@ If you find yourself in a situation where you are adding a new feature or docume
 * `persistence` - Documentation related to the different persistence libary adapters.
 * `utilities` - Miscellaneous utilties that are useful when building an application.
 * `migration-guides` - Documentation on how to upgrade between versions when breaking changes are introduced.
-* `faq.md` - Common questions with links to the relevant documentation.
+* `faq` - Common questions with links to the relevant documentation.
 
 If you are unsure where to add documentation, feel free to issue a draft PR and include a question on where to add the relevant documentation!
 
-:::info
-When creating a new page, add it to the navigation in `docs/docs.json`.
-:::
+<Info>
+  When creating a new page, add it to the navigation in `docs/docs.json`.
+</Info>
