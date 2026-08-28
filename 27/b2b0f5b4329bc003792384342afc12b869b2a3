@@ -1,0 +1,25 @@
+package.json
+  h_b13471b77746e9 14-16
+  s_74a9443c1ea870::t_cc7de199c6b08d 20-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "27b2b0f5b4329bc003792384342afc12b869b2a3",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_74a9443c1ea870": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3872d6c8-4592-4f0d-a2d7-5df2d0a6bb7f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
