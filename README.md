@@ -27,7 +27,7 @@ While working on projects in NestJS it was easy to get up and running with Graph
 * [Example](https://nestjs-query.mintlify.site/introduction/example)
 * [TypeORM](https://nestjs-query.mintlify.site/persistence/typeorm/getting-started)
 * [Sequelize](https://nestjs-query.mintlify.site/persistence/sequelize/getting-started)
-* [GraphQL](https://nestjs-query.mintlify.site/graphql/resolvers)
+* [GraphQL](https://nestjs-query.mintlify.site/graphql/getting-started)
 
 ## Packages
 

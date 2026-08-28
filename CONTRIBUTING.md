@@ -52,7 +52,7 @@ yarn nx e2e examples
 
 Stop the services when finished with `yarn docker down`.
 
-Unit tests belong in the matching `test/` path and use the `*.spec.ts` naming convention. They should not depend on persistent external storage; use an E2E test for full-stack behavior.
+Unit tests belong in the matching `__tests__/` path and use the `*.spec.ts` naming convention. They should not depend on persistent external storage; use an E2E test for full-stack behavior.
 
 ## Pull requests
 
@@ -79,7 +79,7 @@ cd docs
 yarn dlx mint dev
 ```
 
-Place pages in the directory matching their subject (`introduction`, `concepts`, `graphql`, `persistence`, `utilities`, or `migration-guides`) and add every new page to `docs/docs.json`.
+Place pages in the directory matching their subject (`introduction`, `concepts`, `graphql`, `rest`, `persistence`, `utilities`, or `migration-guides`) and add every new page to `docs/docs.json`.
 
 ## Commit messages
 

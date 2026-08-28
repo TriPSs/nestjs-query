@@ -8,4 +8,4 @@ The MikroORM persistence adapter for Nestjs-Query. It provides an implementation
 
 ## Getting Started
 
-See the [MikroORM package documentation](https://github.com/TriPSs/nestjs-query/tree/master/packages/query-mikro-orm) and the [Nestjs-Query documentation](https://nestjs-query.mintlify.site/introduction/getting-started) for setup information.
+See the [MikroORM NestJS integration guide](https://mikro-orm.io/docs/usage-with-nestjs) for MikroORM installation and configuration, then use the [Nestjs-Query installation guide](https://nestjs-query.mintlify.site/introduction/install) and [getting started guide](https://nestjs-query.mintlify.site/introduction/getting-started) to configure Nestjs-Query.
