@@ -91,7 +91,7 @@ describe('TypegooseQueryService-With Descriminates', () => {
 
   beforeEach(async () => mongo.prepareDb())
 
-  afterEach(async () => mongo.dropDatabase())
+  afterEach(async () => mongo.clearDatabase())
 
   describe('#query with discriminated entity', () => {
     it('call find and return the result', async () => {

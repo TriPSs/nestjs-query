@@ -18,7 +18,7 @@
     "@apollo/gateway": "2.14.1",
     "@apollo/server": "^5.5.1",
     "@apollo/subgraph": "2.14.1",
-    "better-sqlite3": "^12.10.0"
+    "better-sqlite3": "^13.0.3"
   },
   "dependenciesMeta": {
     "better-sqlite3": {
@@ -88,7 +88,7 @@
     "@types/ws": "8.18.1",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
-    "better-sqlite3": "^12.10.0",
+    "better-sqlite3": "^13.0.3",
     "class-transformer": "0.5.1",
     "class-validator": "0.15.1",
     "clsx": "^2.1.1",
