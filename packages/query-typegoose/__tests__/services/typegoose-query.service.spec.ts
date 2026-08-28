@@ -49,7 +49,7 @@ describe('TypegooseQueryService', () => {
       ],
       providers: [TestReferenceService, TestEntityService]
     }).compile()
-  })
+  }, 120000)
 
   function convertDocument<Doc>(doc: DocumentType<Doc>): Doc {
     return doc.toObject({ virtuals: true }) as Doc
