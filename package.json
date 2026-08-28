@@ -23,6 +23,9 @@
   "dependenciesMeta": {
     "better-sqlite3": {
       "built": true
+    },
+    "sqlite3": {
+      "built": true
     }
   },
   "dependencies": {
