@@ -1,4 +1,70 @@
  
+## [10.0.0](https://github.com/TriPSs/nestjs-query/compare/v9.5.0...v10.0.0) (2026-08-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop NestJS 9 support
+* **typegoose,mongoose:** support Typegoose 13 and Mongoose 9
+
+### Features
+
+* **core:** add export many query service ([f2b7bc9](https://github.com/TriPSs/nestjs-query/commit/f2b7bc9710e4388255ad8d2808e142611eef0a11))
+* drop NestJS 9 support ([84ef88f](https://github.com/TriPSs/nestjs-query/commit/84ef88fa596934e0b1d616ce8235c676c976f9d2))
+* **query-rest:** Add `idOnly` option to IDFieldOptions in id-field.decorator ([4111575](https://github.com/TriPSs/nestjs-query/commit/4111575e3c0f7f64febc12239261d6b89c7f7b15))
+* **query-rest:** Add `IsDate` validation to field decorator ([e2353ec](https://github.com/TriPSs/nestjs-query/commit/e2353ec725e87ff392b3b91eb9c5bdd95b282df3))
+* **query-rest:** Added `forceArray` option to to `@Field` decorator ([45932c9](https://github.com/TriPSs/nestjs-query/commit/45932c96088354c270df54b1e7f8d676be36ea47))
+* **query-rest:** Introduce `FindOneArgsType` and refactor resolvers to use it ([697e90f](https://github.com/TriPSs/nestjs-query/commit/697e90f87a347d95646ee17b0f7ff5a6aca825bf))
+* **query-rest:** Migrate resolvers to controllers for REST module ([aec1959](https://github.com/TriPSs/nestjs-query/commit/aec19596facc717b4047a8924f62cd146b395d35))
+* **rest:** Added support for `@FilterableField` ([ad5c987](https://github.com/TriPSs/nestjs-query/commit/ad5c987ed5acbc5c7b68006e5956b6cbdf71ee16))
+* **rest:** Created rest package ([dbfca70](https://github.com/TriPSs/nestjs-query/commit/dbfca705b27da558d79d0ea29bd6a85c3f3d7f35))
+* **typegoose,mongoose:** support Typegoose 13 and Mongoose 9 ([4f013e9](https://github.com/TriPSs/nestjs-query/commit/4f013e9782427f163f1e7f6a22a3df39fd7efe39))
+
+
+### Bug Fixes
+
+* **examples-basic-rest:** Fix incorrect type annotations in ManyToMany decorator ([3acbec7](https://github.com/TriPSs/nestjs-query/commit/3acbec7978a0a7cf08a9c313dea4daa8753ba297))
+* **examples/mongoose:** declare virtual `id` on TagEntity ([cbb46d2](https://github.com/TriPSs/nestjs-query/commit/cbb46d212f2ef86b509b0bd6344d3bbfa0763c45))
+* **examples:** Resolve lint warnings ([e7d5011](https://github.com/TriPSs/nestjs-query/commit/e7d5011bc68e2558a99568b29519221489914931))
+* **nestjs-rest:** Fix decorator metadata retrieval and class naming ([1a33964](https://github.com/TriPSs/nestjs-query/commit/1a33964dea21f1560c75a7da0f20b964f1a278f8))
+* **packages-query-mongoose:** Correct Mongoose import order and downgrade Prettier version ([1d2bd75](https://github.com/TriPSs/nestjs-query/commit/1d2bd75c7dd44b33fd635739d664362e0a15177a))
+* **query-rest:** Add `@IsInt` validation to `limit` and `offset` in `OffsetPaging` ([bc2dc71](https://github.com/TriPSs/nestjs-query/commit/bc2dc713d91850ab22c6ee94e01d87c6bf39785f))
+* **query-rest:** Add `each` option to `IsEnum` decorator in `field.decorator` ([724e7e9](https://github.com/TriPSs/nestjs-query/commit/724e7e90cade5f30d8cb1fb598f8e91deb5f7b8b))
+* **query-rest:** Add default value for `advancedOptions` in `filterableFieldOptionsToField` ([f05d3d1](https://github.com/TriPSs/nestjs-query/commit/f05d3d1a6bbfffcf166085a76362f8b39b809f58))
+* **query-rest:** Add default value for `delete` resolver options in `crud.controller` ([0e8a10c](https://github.com/TriPSs/nestjs-query/commit/0e8a10ca04a4a0f45066bb6c5b1453b8947fbf07))
+* **query-rest:** Add min and max validation to field decorator ([b70eacd](https://github.com/TriPSs/nestjs-query/commit/b70eacdf97261bb951a61a41df6983575297fdfd))
+* **query-rest:** Add name option to Expose decorator in field decorator ([7d46be2](https://github.com/TriPSs/nestjs-query/commit/7d46be2aad8656d67f0de7389ad5bd8303461a83))
+* **query-rest:** Added `IsArray` validation to `@Field` if field is array ([3eb2454](https://github.com/TriPSs/nestjs-query/commit/3eb2454dc7b76ae4982c26c5b35ed3116b6967b3))
+* **query-rest:** align documented response statuses ([1ae3e3e](https://github.com/TriPSs/nestjs-query/commit/1ae3e3e58701101e8aaececdd18140a8559a4a4d))
+* **query-rest:** apply endpoint paging limits ([327c7dc](https://github.com/TriPSs/nestjs-query/commit/327c7dc308cbf764c655ff4c7141edac20842ba9))
+* **query-rest:** authorize create endpoints ([4a8c237](https://github.com/TriPSs/nestjs-query/commit/4a8c237d6d3715857f163c51abd34ba4c7333db4))
+* **query-rest:** Clean up code and improve readability in decorators and connections ([a87e00f](https://github.com/TriPSs/nestjs-query/commit/a87e00f3a39fb8a984c892372eee6fb54a5e7458))
+* **query-rest:** enhance ApiResponse descriptions for clarity ([37a0f57](https://github.com/TriPSs/nestjs-query/commit/37a0f57c20b88fa4a9593638ed6540187dd93caf))
+* **query-rest:** enhance delete controller and default values handling ([856c183](https://github.com/TriPSs/nestjs-query/commit/856c183e25dfd62ec75ed13634da0c085258eb65))
+* **query-rest:** Fixed paging not working when there are no additional hooks ([887910b](https://github.com/TriPSs/nestjs-query/commit/887910bc1f8b0cffea58d7780d99bbc0760906d8))
+* **query-rest:** handle default REST endpoint options ([e61340b](https://github.com/TriPSs/nestjs-query/commit/e61340b5ff423ae7811647e90113d6f62a5546ec))
+* **query-rest:** honor disabled query filters ([4f092cd](https://github.com/TriPSs/nestjs-query/commit/4f092cd7d1790393f25745f00b6c12bda0e693f5))
+* **query-rest:** honor total count option ([f562884](https://github.com/TriPSs/nestjs-query/commit/f56288443bb4273ffef2d604703ed4f2dbe73739))
+* **query-rest:** preserve falsy field filters ([cf67e21](https://github.com/TriPSs/nestjs-query/commit/cf67e21e78fad55f5481edbe0f1a91c333fc8363))
+* **query-rest:** Prevent non-valid options from being passed to swagger in `@Field` decorator ([85393ad](https://github.com/TriPSs/nestjs-query/commit/85393ad1652af6ad82dc9fd747778c3efa697cee))
+* **query-rest:** Read resolver not respecting `disabled` opt ([87b7c05](https://github.com/TriPSs/nestjs-query/commit/87b7c057ca93b6fb616502c65096ca5ab452b625))
+* **query-rest:** Reorder and adjust required/optional field decorators ([b8a2d39](https://github.com/TriPSs/nestjs-query/commit/b8a2d392b371d0e830552e23bb650ac6cd05267b))
+* **query-rest:** replace GraphQL references with REST terminology ([8f19a1a](https://github.com/TriPSs/nestjs-query/commit/8f19a1a347fe4823600b4220d1d001dd151a3aba))
+* **query-rest:** resolve Swagger metadata factory types ([b8faaf1](https://github.com/TriPSs/nestjs-query/commit/b8faaf1b4055d06717ade8222cc1892aff609c51))
+* **query-rest:** Type `ExportDTOClass` independently of the DTO ([6717686](https://github.com/TriPSs/nestjs-query/commit/671768628ed0c126b128b60524049b1840a5108d))
+* **query-rest:** update constants for REST key naming ([329f6ca](https://github.com/TriPSs/nestjs-query/commit/329f6cabebb16d2d19a50bcb74463391670e9a21))
+* **query-rest:** Use `getId` helper in `delete.controller.ts` ([73e9e6e](https://github.com/TriPSs/nestjs-query/commit/73e9e6e34300ebf3baaa8a8bc7b547b81cdb4c94))
+* **query-rest:** Use `getId` helper in `read.controller.ts` ([b9d0510](https://github.com/TriPSs/nestjs-query/commit/b9d0510a1e83978d9a53fcaf01ee80b3cd21a375))
+* **query-rest:** validate array field shapes ([b8d9e70](https://github.com/TriPSs/nestjs-query/commit/b8d9e70f13b1dafee90422c7984b4506e64852ba))
+* **query-typegoose:** Resolve reference model casts ([30f336c](https://github.com/TriPSs/nestjs-query/commit/30f336cd5c7e2a08308a667bbc6a077460b0ea70))
+* **rest:** escape formulas in CSV exports ([542c48d](https://github.com/TriPSs/nestjs-query/commit/542c48dfd875b9d12c1516fabfc8d54d85129a43))
+* **rest:** Fixed `forceArray` and `skipIsEnum` not working for `@Field` ([67a9196](https://github.com/TriPSs/nestjs-query/commit/67a919668b2810e53ba59ab2163b4510b312748d))
+* **rest:** Fixed filterable fields always required ([f1ef57f](https://github.com/TriPSs/nestjs-query/commit/f1ef57f5303c3c8fb2091acfb3430cc08639743a))
+* **typegoose,mongoose:** resolve CI lint and build failures for mongoose 9 ([23e96a1](https://github.com/TriPSs/nestjs-query/commit/23e96a18c64d55974217e5cd2359c2fce060ab48))
+* update dependencies and add missing Jest-related entries ([b99f800](https://github.com/TriPSs/nestjs-query/commit/b99f8008b8d1cdc749aaf633ca717d8e5fa586fb))
+* update dependencies and resolve package version inconsistencies ([8cb68e7](https://github.com/TriPSs/nestjs-query/commit/8cb68e71cb777f8fba673c5628429b037780179a))
+* Updated `@nx/*` dependencies to version `22.7.8`. ([8abbe65](https://github.com/TriPSs/nestjs-query/commit/8abbe65aa0224239f0982cdb66d91792b4e8b238))
+
 ## [9.5.0](https://github.com/TriPSs/nestjs-query/compare/v9.4.0...v9.5.0) (2026-06-27)
 
 
