@@ -473,5 +473,3 @@ Finally we invoke the service `updateMany` with a filter that ensures we only up
 ```ts
 return this.service.updateMany({ ...input.update, completed: false }, mergeFilter(input.filter, { completed: { is: false } }))
 ```
-
-[Edit this page](https://github.com/tripss/nestjs-query/edit/master/docs/graphql/hooks)
