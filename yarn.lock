@@ -18353,6 +18353,9 @@ __metadata:
     tslib: "npm:^2.8.1"
     typeorm: "npm:1.1.0"
     typescript: "npm:^5.9.3"
+  dependenciesMeta:
+    better-sqlite3:
+      built: true
   languageName: unknown
   linkType: soft
 

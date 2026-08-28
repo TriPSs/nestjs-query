@@ -20,6 +20,11 @@
     "@apollo/subgraph": "2.14.1",
     "better-sqlite3": "^12.10.0"
   },
+  "dependenciesMeta": {
+    "better-sqlite3": {
+      "built": true
+    }
+  },
   "dependencies": {
     "@m8a/nestjs-typegoose": "13.0.0",
     "@nestjs/common": "11.1.26",
