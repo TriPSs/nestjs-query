@@ -1,0 +1,14 @@
+packages/query-typegoose/__tests__/services/typegoose-query.service.spec.ts
+  h_b13471b77746e9 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "285b76f92769f459ae7bdf404c75410bcde59949",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
