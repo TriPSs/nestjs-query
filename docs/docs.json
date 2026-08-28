@@ -1,0 +1,135 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Nestjs-query",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#55D799",
+    "dark": "#0D9373"
+  },
+  "favicon": "/images/favicon.ico",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "General",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": ["introduction/getting-started", "introduction/install", "introduction/example"]
+          },
+          {
+            "group": "Concepts",
+            "pages": ["concepts/dtos", "concepts/queries", "concepts/services", "concepts/advanced/assemblers"]
+          },
+          {
+            "group": "Persistence",
+            "pages": [
+              "persistence/services",
+              {
+                "group": "TypeORM",
+                "pages": [
+                  "persistence/typeorm/getting-started",
+                  "persistence/typeorm/custom-service",
+                  "persistence/typeorm/multiple-databases",
+                  "persistence/typeorm/soft-delete",
+                  "persistence/typeorm/testing-services"
+                ]
+              },
+              {
+                "group": "Sequelize",
+                "pages": [
+                  "persistence/sequelize/getting-started",
+                  "persistence/sequelize/custom-service",
+                  "persistence/sequelize/serialization"
+                ]
+              },
+              {
+                "group": "Mongoose",
+                "pages": [
+                  "persistence/mongoose/getting-started",
+                  "persistence/mongoose/relations",
+                  "persistence/mongoose/custom-service",
+                  "persistence/mongoose/serialization"
+                ]
+              },
+              {
+                "group": "Typegoose",
+                "pages": [
+                  "persistence/typegoose/getting-started",
+                  "persistence/typegoose/relations",
+                  "persistence/typegoose/custom-service",
+                  "persistence/typegoose/serialization"
+                ]
+              }
+            ]
+          },
+          { "group": "Utilities", "pages": ["utilities/query-helpers"] },
+          { "group": "Project", "pages": ["faq", "contributing"] },
+          {
+            "group": "Migration Guides",
+            "pages": [
+              "migration-guides/v2.x.x-to-v3.x.x",
+              "migration-guides/v0.24.x-to-v0.25.x",
+              "migration-guides/v0.23.x-to-v0.24.x",
+              "migration-guides/v0.22.x-to-v0.23.x",
+              "migration-guides/v0.15.x-to-v0.16.x",
+              "migration-guides/v0.14.x-to-v0.15.x",
+              "migration-guides/v0.13.x-to-v0.14.x",
+              "migration-guides/v0.12.x-to-v0.13.x",
+              "migration-guides/v0.10.x-to-v0.11.x",
+              "migration-guides/v0.5.x-to-v0.6.x"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "GraphQL",
+        "groups": [
+          {
+            "group": "GraphQL",
+            "pages": [
+              "graphql/getting-started",
+              "graphql/dtos",
+              "graphql/resolvers",
+              "graphql/dataloaders",
+              "graphql/queries/endpoints",
+              "graphql/queries/filtering",
+              "graphql/queries/paging",
+              "graphql/queries/sorting",
+              "graphql/mutations",
+              "graphql/hooks",
+              "graphql/authorization",
+              "graphql/aggregations",
+              "graphql/subscriptions",
+              "graphql/relations",
+              "graphql/types",
+              "graphql/federation"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "REST",
+        "groups": [
+          {
+            "group": "REST",
+            "pages": [
+              "rest/getting-started",
+              "rest/dtos",
+              "rest/controllers",
+              "rest/queries/endpoints",
+              "rest/queries/filtering",
+              "rest/queries/paging",
+              "rest/mutations",
+              "rest/hooks",
+              "rest/authorization",
+              "rest/export",
+              "rest/openapi"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": "/images/logo.svg"
+}

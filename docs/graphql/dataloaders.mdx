@@ -1,0 +1,34 @@
+---
+title: 'Dataloaders'
+description: 'Nestjs-query integrates a standard implementation of . Dataloaders are there to solve the . Sometimes the default implementation can fail, for example when asynchronous  are used and the  problem occurs again despite using dataloaders. Then it may be useful to configure the default implementation of the dataloader, for example to pass a custom batch scheduler.'
+---
+
+The following example demonstrates how to configure the generated dataloaders. For more information about the dataloader configuration, see the [dataloader documentation](https://www.npmjs.com/package/dataloader/v/2.2.2).
+
+app.module.ts
+
+```ts
+import { Module } from '@nestjs/common'
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
+
+@Module({
+  imports: [
+    // ... other imports
+    NestjsQueryGraphQLModule.forRoot({
+      dataLoader: {
+        batchScheduleFn(callback) {
+          // Here is an example of a batch scheduler that collects
+          // all requests in a time window of 250ms:
+          setTimeout(callback, 250)
+        }
+      }
+    })
+    // ... other imports
+  ],
+  controllers: [],
+  providers: []
+})
+export class AppModule {}
+```
+
+[Edit this page](https://github.com/tripss/nestjs-query/edit/master/docs/graphql/dataloaders)

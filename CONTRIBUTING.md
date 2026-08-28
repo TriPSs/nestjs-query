@@ -184,7 +184,7 @@ The various types of commits:
 All new features require documentation so other users can take advantage of them.
 
 :::info
-`nestjs-query` uses [docusaurus](https://v2.docusaurus.io/) for documentation.
+`nestjs-query` uses [Mintlify](https://mintlify.com/) for documentation.
 ::: 
 
 ### Serving Docs Locally
@@ -192,8 +192,9 @@ All new features require documentation so other users can take advantage of them
 Running the documentation locally is the easiest way to view your changes to ensure they render as you expect.
 
 To run the docs locally do the following:
-```
-nx serve documentation
+```bash
+cd ./docs
+yarn dlx mint dev
 ```
 
 ### Creating A New Page
@@ -211,5 +212,5 @@ If you find yourself in a situation where you are adding a new feature or docume
 If you are unsure where to add documentation, feel free to issue a draft PR and include a question on where to add the relevant documentation!
 
 :::info
-When creating a new page you need to be sure to add it to the `documentation/sidebars.js`.
+When creating a new page, add it to the navigation in `docs/docs.json`.
 :::

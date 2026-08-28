@@ -1,0 +1,132 @@
+---
+title: 'DTOs'
+description: 'REST DTOs describe response serialization, request validation, OpenAPI schemas, identifiers, and the fields accepted as filters. The decorators combine metadata from , , and .'
+---
+
+## `@Field`[​](#field 'Direct link to field')
+
+Use `@Field` for properties exposed in request or response schemas. The decorator infers primitive types from TypeScript metadata and accepts Swagger property options such as `description`, `example`, `nullable`, `minLength`, `maxLength`, `minimum`, `maximum`, and `enum`.
+
+todo-item-input.dto.ts
+
+```ts
+import { Field } from '@ptc-org/nestjs-query-rest'
+
+export class TodoItemInputDTO {
+
+  @Field({ description: 'A short task title', maxLength: 100 })
+  title!: string
+
+  @Field({ default: false })
+  completed!: boolean
+}
+```
+
+For nested objects and arrays, provide an explicit return type:
+
+```ts
+export class LabelDTO {
+
+  @Field()
+  name!: string
+}
+export class TodoItemDTO {
+
+  @Field(() => [LabelDTO])
+  labels!: LabelDTO[]
+}
+```
+
+Set `nullable: true` on optional update properties. Required fields receive validation metadata by default.
+
+## `@FilterableField`[​](#filterablefield 'Direct link to filterablefield')
+
+`@FilterableField` includes the property in the schema just like `@Field` and exposes it as an equality query parameter on collection and export endpoints.
+
+todo-item.dto.ts
+
+```ts
+import { Field, FilterableField, IDField } from '@ptc-org/nestjs-query-rest'
+
+export class TodoItemDTO {
+
+  @IDField()
+  id!: number
+
+  @FilterableField()
+  title!: string
+
+  @FilterableField()
+  completed!: boolean
+
+  @Field()
+  created!: Date
+}
+```
+
+The DTO above accepts requests such as:
+
+```http
+GET /todo-items?completed=false&title=Write%20docs
+```
+
+Additional filter options include:
+
+- `filterRequired: true` makes the query parameter mandatory whenever the generated filter is used.
+- `filterOnly: true` accepts the property as a filter but excludes it from serialized response fields.
+- `filterDecorators` applies additional decorators to the generated query property.
+- Standard `Field`/Swagger options control transformation and validation.
+
+```ts
+export class TodoItemDTO {
+
+  @FilterableField({ filterRequired: true })
+  tenantId!: string
+
+  @FilterableField({ filterOnly: true })
+  internalStatus!: string
+}
+```
+
+## `@IDField`[​](#idfield 'Direct link to idfield')
+
+`@IDField` identifies the property used by `GET`, `PUT`, and `DELETE` single-record routes. Declare it on the response DTO so the generated `:id` parameter is transformed to the correct type.
+
+```ts
+export class TodoItemDTO {
+
+  @IDField()
+  id!: number
+}
+```
+
+Use `idOnly: true` when an identifier should be accepted as a route parameter but omitted from generated mutation bodies.
+
+## `@QueryOptions`[​](#queryoptions 'Direct link to queryoptions')
+
+Use `@QueryOptions` to set collection defaults on the DTO. Endpoint-level options override decorator options.
+
+```ts
+import { SortDirection } from '@ptc-org/nestjs-query-core'
+import { FilterableField, IDField, PagingStrategies, QueryOptions } from '@ptc-org/nestjs-query-rest'
+
+@QueryOptions({
+  pagingStrategy: PagingStrategies.OFFSET,
+  defaultResultSize: 20,
+  maxResultsSize: 100,
+  defaultSort: [{ field: 'created', direction: SortDirection.DESC }],
+  enableTotalCount: true
+})
+export class TodoItemDTO {
+
+  @IDField()
+  id!: number
+
+  @FilterableField()
+  created!: Date
+}
+```
+
+See [filtering](/rest/queries/filtering) and [paging](/rest/queries/paging) for the generated HTTP API.
+
+[Edit this page](https://github.com/tripss/nestjs-query/edit/master/docs/rest/dtos)

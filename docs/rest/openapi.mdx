@@ -1,0 +1,63 @@
+---
+title: 'OpenAPI'
+description: 'Generated REST controllers include Swagger schemas, operation IDs, tags, request bodies, query parameters, response types, and success status codes.'
+---
+
+## Configure Swagger[​](#configure-swagger 'Direct link to Configure Swagger')
+
+Use the standard Nest Swagger setup:
+
+main.ts
+
+```ts
+import { ValidationPipe } from '@nestjs/common'
+import { NestFactory } from '@nestjs/core'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { AppModule } from './app.module'
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule)
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }))
+  const config = new DocumentBuilder().setTitle('Todo API').setVersion('1.0').addBearerAuth().build()
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('api', app, document)
+  await app.listen(3000)
+}
+void bootstrap()
+```
+
+The Swagger UI is then available at `/api`.
+
+## Customize generated operations[​](#customize-generated-operations 'Direct link to Customize generated operations')
+
+Set shared tags at the endpoint level and operation-specific descriptions, tags, or Swagger operation options under `one` or `many`.
+
+```ts
+{
+  DTOClass: TodoItemDTO,
+  EntityClass: TodoItemEntity,
+  tags: ['Todo items'],
+  read: {
+    many: {
+      description: 'List todo items visible to the current user',
+      operationOptions: {
+        summary: 'List todo items',
+        deprecated: false
+      }
+    }
+  }
+}
+```
+
+Operation IDs are derived from the plural DTO name, for example `todoItemDTOs.queryMany` and `todoItemDTOs.createOne`. Use `dtoName` to change that logical name and `basePath` to change only the URL path.
+
+## Schema accuracy[​](#schema-accuracy 'Direct link to Schema accuracy')
+
+Use `@Field`, `@FilterableField`, and `@IDField` on DTO properties so Swagger, transformation, and validation share the same metadata. When reflection cannot infer a nested or array type, pass a return type explicitly:
+
+```ts
+@Field(() => [LabelDTO], { description: 'Labels attached to the task' })
+labels!: LabelDTO[]
+```
+
+[Edit this page](https://github.com/tripss/nestjs-query/edit/master/docs/rest/openapi)

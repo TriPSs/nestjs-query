@@ -1,0 +1,180 @@
+---
+title: Filtering
+---
+
+Filtering in `nestjs-query` has an object based syntax.
+
+For a full reference of filter operations [see filter reference](../../concepts/queries#filter-reference)
+
+The following example filters for all todoItems that are marked completed.
+
+<Tabs>
+<Tab title="GraphQL">
+
+```graphql
+{
+  todoItems(filter: { completed: { is: true } }) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
+        title
+        completed
+        created
+        updated
+      }
+      cursor
+    }
+  }
+}
+```
+
+</Tab>
+<Tab title="Response">
+
+```json
+{
+  "data": {
+    "todoItems": {
+      "pageInfo": {
+        "hasNextPage": false,
+        "hasPreviousPage": false,
+        "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
+        "endCursor": "YXJyYXljb25uZWN0aW9uOjE="
+      },
+      "edges": [
+        {
+          "node": {
+            "id": "3",
+            "title": "Create Many Todo Items - 2",
+            "completed": true,
+            "created": "2020-01-14T07:00:34.111Z",
+            "updated": "2020-01-14T07:00:34.111Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjA="
+        },
+        {
+          "node": {
+            "id": "5",
+            "title": "Create Many Todo Items - 4",
+            "completed": true,
+            "created": "2020-01-14T07:01:27.805Z",
+            "updated": "2020-01-14T07:01:27.805Z"
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjE="
+        }
+      ]
+    }
+  }
+}
+```
+
+</Tab>
+</Tabs>
+
+## Setting the generated filter-type depth
+
+When querying the default filter is one level deep. You can specify the generated filter-type depth by using the `QueryOptions` decorator on your DTO.
+
+You can find the documentation and an example in the [`QueryOptions` reference](../dtos#generated-filter-type-depth).
+
+## Setting a default filter
+
+When querying the default filter is empty. You can specify a default filter by using the `QueryOptions` decorator on your DTO.
+
+You can find the documentation and an example in the [`QueryOptions` reference](../dtos#setting-a-default-filter).
+
+## Setting allowed boolean expressions
+
+When filtering you can provide `and` and `or` expressions to provide advanced filtering. You can turn off either by using the `QueryOptions` decorator on your DTO.
+
+You can find the documentation and an example in the [`QueryOptions` reference](../dtos#allowed-boolean-expressions).
+
+## How Filters Are Applied
+
+Filters in `nestjs-query` come from multiple sources and combine differently depending on the source.
+
+### Filter Sources
+
+| Source                           | When Applied                      | How Combined           |
+| -------------------------------- | --------------------------------- | ---------------------- |
+| User filter (GraphQL args)       | Always                            | Base filter            |
+| Default filter (`@QueryOptions`) | Only when user provides NO filter | Replaces empty filter  |
+| Auth filter (`@Authorize`)       | Always                            | ANDed with user filter |
+
+### Default Filter Behavior
+
+The `defaultFilter` from `@QueryOptions` is used as the GraphQL field's `defaultValue`. This means:
+
+- ✅ If user provides NO filter → defaultFilter is used
+- ❌ If user provides ANY filter → defaultFilter is completely ignored
+
+```ts
+@QueryOptions({ defaultFilter: { archived: { is: false } } })
+```
+
+<Warning>
+  Default filter is NOT merged - it's a fallback. Use [authorization](../authorization) for filters that must always apply.
+</Warning>
+
+### Authorization Filter Behavior
+
+Filters from `@Authorize` are **always merged** with the user's filter using AND logic:
+
+```ts
+// User query
+filter: {
+  title: {
+    like: '%todo%'
+  }
+}
+
+// @Authorize returns
+{
+  ownerId: {
+    eq: currentUserId
+  }
+}
+
+// Actual filter applied
+{
+  and: [{ title: { like: '%todo%' } }, { ownerId: { eq: currentUserId } }]
+}
+```
+
+For more details, see [Authorization](../authorization).
+
+### Filter Flow
+
+```text
+GraphQL Query (filter arg)
+    ↓
+Default filter applied if user filter empty
+    ↓
+Resolver receives query
+    ↓
+Auth filter merged (AND)
+    ↓
+QueryService.query()
+    ↓
+ORM (TypeORM/Sequelize/Mongoose)
+    ↓
+Database
+```
+
+### Relation Filters
+
+When querying relations, authorization filters are resolved in order (first non-empty wins):
+
+1. **Custom authorizer's `authorizeRelation()` method** - if returns a filter, used exclusively
+2. **Relation's `auth` option** - if defined on the relation decorator
+3. **Related DTO's `@Authorize` decorator** - fallback to the related type's auth
+
+<Note>Relation auth filters are NOT merged - the first non-empty result is used.</Note>
+
+See [Relation Filtering](../authorization#relation-filtering) for details.
