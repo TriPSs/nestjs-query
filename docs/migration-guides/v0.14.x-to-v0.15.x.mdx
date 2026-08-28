@@ -1,6 +1,6 @@
 ---
-title: "v0.14.x to v0.15.x"
-description: "In the  the cursor connection type was updated to allow for enabling a  field. When enabling this field  needed to explicitly name each connection type to allow each relation connection to independently enable the  field."
+title: 'v0.14.x to v0.15.x'
+description: 'In the  the cursor connection type was updated to allow for enabling a  field. When enabling this field  needed to explicitly name each connection type to allow each relation connection to independently enable the  field.'
 ---
 
 In previous versions of `nestjs-query` the connection type was shared between all instances which caused the totalCount field to not always be exposed. In `v0.15.x` all instances of a connection are uniquely named.
@@ -17,55 +17,71 @@ For example, suppose the following DTOS.
     import { FilterableField, Connection } from '@ptc-org/nestjs-query-graphql';
     import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
     import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto';
+
     @ObjectType('TodoItem')
     @Connection('subTasks', () => SubTaskDTO, { enableTotalCount: true })
     export class TodoItemDTO {
+
       @FilterableField(() => ID)
       id!: number;
+
       @FilterableField()
       title!: string;
+
       @FilterableField({ nullable: true })
       description?: string;
+
       @FilterableField()
       completed!: boolean;
+
       @FilterableField(() => GraphQLISODateTime)
       created!: Date;
+
       @FilterableField(() => GraphQLISODateTime)
       updated!: Date;
+
       @FilterableField()
       priority!: number;
     }
     ```
+
   </Tab>
 
-  <Tab title="Example">
-    sub-task.dto.ts
-  </Tab>
+<Tab title="Example">sub-task.dto.ts</Tab>
 
   <Tab title="Example">
     ```ts
     import { FilterableField, Relation } from '@ptc-org/nestjs-query-graphql';
     import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
     import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto';
+
     @ObjectType('SubTask')
     @Relation('todoItem', () => TodoItemDTO, { disableRemove: true })
     export class SubTaskDTO {
+
       @FilterableField(() => ID)
       id!: number;
+
       @FilterableField()
       title!: string;
+
       @FilterableField({ nullable: true })
       description?: string;
+
       @FilterableField()
       completed!: boolean;
+
       @FilterableField(() => GraphQLISODateTime)
       created!: Date;
+
       @FilterableField(() => GraphQLISODateTime)
       updated!: Date;
+
       @FilterableField()
       todoItemId!: string;
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -81,11 +97,7 @@ type TodoItem {
   updated: DateTime!
   age: Float!
   priority: Float!
-  subTasks(
-    paging: CursorPaging = { first: 10 }
-    filter: SubTaskFilter = {}
-    sorting: [SubTaskSort!] = []
-  ): SubTaskConnection!
+  subTasks(paging: CursorPaging = { first: 10 }, filter: SubTaskFilter = {}, sorting: [SubTaskSort!] = []): SubTaskConnection!
 }
 type SubTaskConnection {
   pageInfo: PageInfo!

@@ -1,41 +1,40 @@
 ---
-title: "Authorization"
+title: 'Authorization'
 ---
 
 <Note>
-  The following section assumes you are familiar with [authentication in nestjs](https://docs.nestjs.com/techniques/authentication).
+  The following section assumes you are familiar with [authentication in
+  nestjs](https://docs.nestjs.com/techniques/authentication).
 </Note>
 
 `nestjs-query` provides authorization helpers out of the box to reduce the amount of boilerplate typically required.
 
 The `nestjs-query` graphql package exposes decorators and options to allow the following
 
-* Additional filtering for objects based on the graphql context.
-* Filtering relations based on the graphql context.
-* Low level authorization service support when your authorizer needs to use other services or additional information that is not in the graphql context.
+- Additional filtering for objects based on the graphql context.
+- Filtering relations based on the graphql context.
+- Low level authorization service support when your authorizer needs to use other services or additional information that is not in the graphql context.
 
 <Info>
   If you are looking to modify incoming requests based on the context, take a look at the [hooks documentation](/graphql/hooks)
 </Info>
 
-<Note>
-  Authorization is invoked as the last step before calling the `QueryService`.
-</Note>
+<Note>Authorization is invoked as the last step before calling the `QueryService`.</Note>
 
-## Getting Started[​](#getting-started "Direct link to Getting Started")
+## Getting Started[​](#getting-started 'Direct link to Getting Started')
 
 All examples assume you have a guard that adds a `user` to the req on the context.
 
 ```ts
 type AuthenticatedUser = {
-  id: number;
-  username: string;
-};
+  id: number
+  username: string
+}
 type UserContext = {
   req: {
-    user: AuthenticatedUser;
-  };
-};
+    user: AuthenticatedUser
+  }
+}
 ```
 
 For the sake of this example we'll use a `JWTAuthGuard` described in [implementing passport jwt](https://docs.nestjs.com/techniques/authentication#implementing-passport-jwt) nestjs docs.
@@ -47,14 +46,15 @@ The `guards` option will ensure that all queries and mutations will have the `gu
 todo-item/todo-item.module.ts
 
 ```ts
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
-import { Module } from '@nestjs/common';
-import { TodoItemInputDTO } from './dto/todo-item-input.dto';
-import { TodoItemUpdateDTO } from './dto/todo-item-update.dto';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
+import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
+import { Module } from '@nestjs/common'
+import { TodoItemInputDTO } from './dto/todo-item-input.dto'
+import { TodoItemUpdateDTO } from './dto/todo-item-update.dto'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
+import { JwtAuthGuard } from '../auth/jwt-auth.guard'
+
 @Module({
   imports: [
     NestjsQueryGraphQLModule.forFeature({
@@ -64,36 +64,37 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
           DTOClass: TodoItemDTO,
           CreateDTOClass: TodoItemInputDTO,
           UpdateDTOClass: TodoItemUpdateDTO,
-          guards: [JwtAuthGuard],
-        },
-      ],
-    }),
-  ],
+          guards: [JwtAuthGuard]
+        }
+      ]
+    })
+  ]
 })
 export class TodoItemModule {}
 ```
 
-## @Authorize Decorator[​](#authorize-decorator "Direct link to @Authorize Decorator")
+## @Authorize Decorator[​](#authorize-decorator 'Direct link to @Authorize Decorator')
 
 The `@ptc-org/nestjs-query-graphql` package includes an `@Authorize` decorator that allows you to add additional filter criteria to authorize an incoming request.
 
 The `@Authorize` decorator accepts the following types.
 
-* An `object` that has an `authorize` method that returns a Filter for the DTO.
-* An instance of an `Authorizer` that implements the `authorize` and `authorizeRelation` methods.
-* An `Authorizer` class reference that implements the `Authorizer` interface. The `Authorizer` class will be instantiated using the `nestjs`'s dependency injection.
+- An `object` that has an `authorize` method that returns a Filter for the DTO.
+- An instance of an `Authorizer` that implements the `authorize` and `authorizeRelation` methods.
+- An `Authorizer` class reference that implements the `Authorizer` interface. The `Authorizer` class will be instantiated using the `nestjs`'s dependency injection.
 
 The `@Authorize` decorator does not return an unauthorized error instead the following will occur:
 
-* `queryMany` results will not include any DTOs that do not match the filter criteria.
-* `findOne` will return a not found for a DTO that cannot be found for the `id` and auth filter.
-* `updateOne` will return a not found error if the DTO to update cannot be found for the `id` and auth filter.
-* `updateMany` will exclude any records that do not match the user provided filter and the auth filter from being updated.
-* `deleteOne` will return a not found error if the DTO to delete cannot be found for the `id` and auth filter.
-* `deleteMany` will exclude any records that do not match the user provided filter and the auth filter from being deleted.
+- `queryMany` results will not include any DTOs that do not match the filter criteria.
+- `findOne` will return a not found for a DTO that cannot be found for the `id` and auth filter.
+- `updateOne` will return a not found error if the DTO to update cannot be found for the `id` and auth filter.
+- `updateMany` will exclude any records that do not match the user provided filter and the auth filter from being updated.
+- `deleteOne` will return a not found error if the DTO to delete cannot be found for the `id` and auth filter.
+- `deleteMany` will exclude any records that do not match the user provided filter and the auth filter from being deleted.
 
 <Note>
-  You can throw an `UnauthorizedException` or return a rejected promise with an `UnauthorizedException` in your authorize function, if you can determine at that point that the user should not be able to access the endpoint.
+  You can throw an `UnauthorizedException` or return a rejected promise with an `UnauthorizedException` in your authorize
+  function, if you can determine at that point that the user should not be able to access the endpoint.
 </Note>
 
 In the following example the `authorize` function returns a `Filter` that includes the `ownerId` to ensure that only `TodoItems` that belong to the authenticated user are returned.
@@ -101,104 +102,119 @@ In the following example the `authorize` function returns a `Filter` that includ
 todo-item/dto/todo-item.dto.ts
 
 ```ts
-import {
-  FilterableField,
-  IDField,
-  FilterableConnection,
-  FilterableRelation,
-  Authorize
-} from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
-import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto';
-import { TagDTO } from '../../tag/dto/tag.dto';
-import { UserDTO } from '../../user/user.dto';
-import { UserContext } from '../../auth/auth.interfaces';
+import { FilterableField, IDField, FilterableConnection, FilterableRelation, Authorize } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
+import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'
+import { TagDTO } from '../../tag/dto/tag.dto'
+import { UserDTO } from '../../user/user.dto'
+import { UserContext } from '../../auth/auth.interfaces'
+
 @ObjectType('TodoItem')
 @Authorize({ authorize: (context: UserContext) => ({ ownerId: { eq: context.req.user.id } }) })
 @FilterableRelation('owner', () => UserDTO)
 @FilterableConnection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 @FilterableConnection('tags', () => TagDTO)
 export class TodoItemDTO {
+
   @IDField(() => ID)
-  id!: number;
+  id!: number
+
   @FilterableField()
-  title!: string;
+  title!: string
+
   @FilterableField({ nullable: true })
-  description?: string;
+  description?: string
+
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
+
   @FilterableField(() => GraphQLISODateTime)
-  created!: Date;
+  created!: Date
+
   @FilterableField(() => GraphQLISODateTime)
-  updated!: Date;
+  updated!: Date
+
   @Field()
-  age!: number;
+  age!: number
+
   @FilterableField()
-  priority!: number;
+  priority!: number
+
   @FilterableField({ nullable: true })
-  createdBy?: string;
+  createdBy?: string
+
   @FilterableField({ nullable: true })
-  updatedBy?: string;
+  updatedBy?: string
+
   @FilterableField()
-  ownerId!: number;
+  ownerId!: number
 }
 ```
 
 <Note>
-  The above example is pretty straight forward, however your authorize function can be as complex as you need it to be based on information in the context.
+  The above example is pretty straight forward, however your authorize function can be as complex as you need it to be based on
+  information in the context.
 </Note>
 
-### Relation Filtering[​](#relation-filtering "Direct link to Relation Filtering")
+### Relation Filtering[​](#relation-filtering 'Direct link to Relation Filtering')
 
 By default when relations are queried any additional filters defined using the `@Authorize` decorator on the relation DTO will also be included.
 
 When mutating relations
 
-* If the DTO that is having a relation(s) added or removed cannot be found for the `id` and auth filter a not found error will be returned.
-* When adding or removing a single relation if the relation cannot be found for the `id` and auth filter a not found error will be returned.
-* When adding or removing multiple relations if all relations cannot be found a not found error will be throw.
+- If the DTO that is having a relation(s) added or removed cannot be found for the `id` and auth filter a not found error will be returned.
+- When adding or removing a single relation if the relation cannot be found for the `id` and auth filter a not found error will be returned.
+- When adding or removing multiple relations if all relations cannot be found a not found error will be throw.
 
 For example given the following `SubTaskDTO` definition whenever the `subTasks` connection is queried through a `todoItem`, only `subTasks` that belong to the user will be returned.
 
 sub-task/dto/sub-task.dto.ts
 
 ```ts
-import { FilterableField, IDField, FilterableRelation, Authorize } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
-import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto';
-import { UserContext } from '../../auth/auth.interfaces';
+import { FilterableField, IDField, FilterableRelation, Authorize } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
+import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
+import { UserContext } from '../../auth/auth.interfaces'
+
 @ObjectType('SubTask')
 @Authorize({ authorize: (context: UserContext) => ({ ownerId: { eq: context.req.user.id } }) })
 @FilterableRelation('todoItem', () => TodoItemDTO, { update: { enabled: true } })
 export class SubTaskDTO {
+
   @IDField(() => ID)
-  id!: number;
+  id!: number
+
   @FilterableField()
-  title!: string;
+  title!: string
+
   @FilterableField({ nullable: true })
-  description?: string;
+  description?: string
+
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
+
   @FilterableField(() => GraphQLISODateTime)
-  created!: Date;
+  created!: Date
+
   @FilterableField(() => GraphQLISODateTime)
-  updated!: Date;
+  updated!: Date
+
   @FilterableField()
-  todoItemId!: string;
+  todoItemId!: string
+
   @FilterableField({ nullable: true })
-  createdBy?: string;
+  createdBy?: string
+
   @FilterableField({ nullable: true })
-  updatedBy?: string;
+  updatedBy?: string
 }
 ```
 
-### Customizing Relation Authorization[​](#customizing-relation-authorization "Direct link to Customizing Relation Authorization")
+### Customizing Relation Authorization[​](#customizing-relation-authorization 'Direct link to Customizing Relation Authorization')
 
 If you run into a case where you need to handle authorization for a relation differently from the `@Authorize` decorator on the relation DTO you can specify the `auth` option in your relation/connection decorator.
 
-<Warning>
-  The `auth` option will take precedence over the `@Authorize` decorator on the relation DTO.
-</Warning>
+<Warning>The `auth` option will take precedence over the `@Authorize` decorator on the relation DTO.</Warning>
 
 For example you could define the subtasks with the `auth` option, only allowing completed subtasks to be returned.
 
@@ -211,35 +227,37 @@ For example you could define the subtasks with the `auth` option, only allowing 
 })
 ```
 
-### Custom Authorizer[​](#custom-authorizer "Direct link to Custom Authorizer")
+### Custom Authorizer[​](#custom-authorizer 'Direct link to Custom Authorizer')
 
 When you need more control over authorization you can create a `CustomAuthorizer`. You may want to use a `CustomAuthorizer` if you need to use additional services to do authorization for a DTO.
 
 The `CustomAuthorizer` interface ensures two methods:
 
-* `authorize` - Should return a filter that should be used for all queries and mutations for the DTO.
-* `authorizeRelation` - Optionally modify the filter for the relation that will be used when querying the relation or adding/removing relations to/from the DTO. If undefined is returned, the authorization filter of the relation DTO will be used instead.
+- `authorize` - Should return a filter that should be used for all queries and mutations for the DTO.
+- `authorizeRelation` - Optionally modify the filter for the relation that will be used when querying the relation or adding/removing relations to/from the DTO. If undefined is returned, the authorization filter of the relation DTO will be used instead.
 
 In this example we'll create a simple authorizer for `SubTasks`. You can use this as a base to create a more complex authorizers that depends on other services.
 
 sub-task/sub-task.authorizer.ts
 
 ```ts
-import { Injectable } from '@nestjs/common';
-import { Authorizer } from '@ptc-org/nestjs-query-graphql';
-import { Filter } from '@ptc-org/nestjs-query-core';
-import { UserContext } from '../auth/auth.interfaces';
-import { SubTaskDTO } from './dto/sub-task.dto';
+import { Injectable } from '@nestjs/common'
+import { Authorizer } from '@ptc-org/nestjs-query-graphql'
+import { Filter } from '@ptc-org/nestjs-query-core'
+import { UserContext } from '../auth/auth.interfaces'
+import { SubTaskDTO } from './dto/sub-task.dto'
+
 @Injectable()
 export class SubTaskAuthorizer implements CustomAuthorizer<SubTaskDTO> {
+
   authorize(context: UserContext): Promise<Filter<SubTaskDTO>> {
-    return Promise.resolve({ ownerId: { eq: context.req.user.id } });
+    return Promise.resolve({ ownerId: { eq: context.req.user.id } })
   }
   authorizeRelation(relationName: string, context: UserContext): Promise<Filter<unknown> | undefined> {
     if (relationName === 'todoItem') {
-      return Promise.resolve({ ownerId: { eq: context.req.user.id } });
+      return Promise.resolve({ ownerId: { eq: context.req.user.id } })
     }
-    return Promise.resolve(undefined);
+    return Promise.resolve(undefined)
   }
 }
 ```
@@ -249,39 +267,49 @@ To use the `SubTaskAuthorizer` you only need to provide it as an argument to the
 sub-task/sub-task.dto.ts
 
 ```ts
-import { Authorize, FilterableField, IDField, FilterableRelation } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
-import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto';
-import { UserDTO } from '../../user/user.dto';
-import { SubTaskAuthorizer } from '../sub-task.authorizer';
+import { Authorize, FilterableField, IDField, FilterableRelation } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
+import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
+import { UserDTO } from '../../user/user.dto'
+import { SubTaskAuthorizer } from '../sub-task.authorizer'
+
 @ObjectType('SubTask')
 @Authorize(SubTaskAuthorizer)
 @FilterableRelation('owner', () => UserDTO)
 @FilterableRelation('todoItem', () => TodoItemDTO, { update: { enabled: true } })
 export class SubTaskDTO {
+
   @IDField(() => ID)
-  id!: number;
+  id!: number
+
   @FilterableField()
-  title!: string;
+  title!: string
+
   @FilterableField({ nullable: true })
-  description?: string;
+  description?: string
+
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
+
   @FilterableField(() => GraphQLISODateTime)
-  created!: Date;
+  created!: Date
+
   @FilterableField(() => GraphQLISODateTime)
-  updated!: Date;
+  updated!: Date
+
   @FilterableField()
-  todoItemId!: string;
+  todoItemId!: string
+
   @FilterableField({ nullable: true })
-  createdBy?: string;
+  createdBy?: string
+
   @FilterableField({ nullable: true })
-  updatedBy?: string;
-  ownerId!: number;
+  updatedBy?: string
+  ownerId!: number
 }
 ```
 
-## Using Authorizers In Your Resolver[​](#using-authorizers-in-your-resolver "Direct link to Using Authorizers In Your Resolver")
+## Using Authorizers In Your Resolver[​](#using-authorizers-in-your-resolver 'Direct link to Using Authorizers In Your Resolver')
 
 The easiest way to leverage `Authorizers` in a custom resolver is to use the `AuthorizerInterceptor` and `AuthorizerFilter` param decorator.
 
@@ -293,35 +321,38 @@ In this example there are two important additions:
 todo-item/todo-item.resolver.ts
 
 ```ts
-import { Filter, InjectQueryService, mergeFilter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core';
-import { AuthorizerInterceptor, AuthorizerFilter, ConnectionType } from '@ptc-org/nestjs-query-graphql';
-import { Args, Query, Resolver } from '@nestjs/graphql';
-import { UseInterceptors } from '@nestjs/common';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoItemConnection, TodoItemQuery } from './types';
+import { Filter, InjectQueryService, mergeFilter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { AuthorizerInterceptor, AuthorizerFilter, ConnectionType } from '@ptc-org/nestjs-query-graphql'
+import { Args, Query, Resolver } from '@nestjs/graphql'
+import { UseInterceptors } from '@nestjs/common'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoItemConnection, TodoItemQuery } from './types'
+
 @Resolver(() => TodoItemDTO)
 @UseInterceptors(AuthorizerInterceptor(TodoItemDTO))
 export class TodoItemResolver {
+
   constructor(@InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>) {}
   // Set the return type to the TodoItemConnection
+
   @Query(() => TodoItemConnection)
   async uncompletedTodoItems(
     @Args() query: TodoItemQuery,
-    @AuthorizerFilter() authFilter: Filter<TodoItemDTO>,
+    @AuthorizerFilter() authFilter: Filter<TodoItemDTO>
   ): Promise<ConnectionType<TodoItemDTO>> {
     // add the completed filter the user provided filter
-    const filter: Filter<TodoItemDTO> = mergeFilter(query.filter ?? {}, { completed: { is: false } });
-    const uncompletedQuery = mergeQuery(query, { filter: mergeFilter(filter, authFilter) });
+    const filter: Filter<TodoItemDTO> = mergeFilter(query.filter ?? {}, { completed: { is: false } })
+    const uncompletedQuery = mergeQuery(query, { filter: mergeFilter(filter, authFilter) })
     return TodoItemConnection.createFromPromise(
       (q) => this.service.query(q),
       uncompletedQuery,
-      (q) => this.service.count(q),
-    );
+      (q) => this.service.count(q)
+    )
   }
 }
 ```
 
-## @InjectAuthorizer Decorator[​](#injectauthorizer-decorator "Direct link to @InjectAuthorizer Decorator")
+## @InjectAuthorizer Decorator[​](#injectauthorizer-decorator 'Direct link to @InjectAuthorizer Decorator')
 
 If you need access to an authorizer for a DTO you can use the `@InjectAuthorizer` decorator.
 
@@ -332,31 +363,36 @@ In this example the `Authorizer` is injected as a `readonly` property you can th
 todo-item/todo-item.resolver.ts
 
 ```ts
-import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core';
-import { CRUDResolver, InjectAuthorizer } from '@ptc-org/nestjs-query-graphql';
-import { Resolver, Query, Args } from '@nestjs/graphql';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
+import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core'
+import { CRUDResolver, InjectAuthorizer } from '@ptc-org/nestjs-query-graphql'
+import { Resolver, Query, Args } from '@nestjs/graphql'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
+
 @Resolver(() => TodoItemDTO)
 export class TodoItemResolver extends CRUDResolver(TodoItemDTO) {
+
   constructor(
     @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>,
-    @InjectAuthorizer(TodoItemDTO) readonly authorizer: Authorizer<TodoItemDTO>,
+    @InjectAuthorizer(TodoItemDTO) readonly authorizer: Authorizer<TodoItemDTO>
   ) {
-    super(service);
+    super(service)
   }
 }
 ```
 
 <Info>
-  If you are extending the `CRUDResolver` directly be sure to [register your DTOs with the `NestjsQueryGraphQLModule`](/graphql/resolvers#crudresolver)
+  If you are extending the `CRUDResolver` directly be sure to [register your DTOs with the
+  `NestjsQueryGraphQLModule`](/graphql/resolvers#crudresolver)
 </Info>
 
 <Info>
-  When using `@InjectAuthorizer`, the injected Authorizer is not the CustomAuthorizer, but the DefaultCRUDAuthorizer that internally uses the CustomAuthorizer. If you want to use the CustomAuthorizer directly, inject it with `@InjectCustomAuthorizer` instead.
+  When using `@InjectAuthorizer`, the injected Authorizer is not the CustomAuthorizer, but the DefaultCRUDAuthorizer that
+  internally uses the CustomAuthorizer. If you want to use the CustomAuthorizer directly, inject it with `@InjectCustomAuthorizer`
+  instead.
 </Info>
 
-## Authorize depending on operation[​](#authorize-depending-on-operation "Direct link to Authorize depending on operation")
+## Authorize depending on operation[​](#authorize-depending-on-operation 'Direct link to Authorize depending on operation')
 
 Sometimes it might be necessary to perform different authorization based on the kind of operation an user wants to execute. E.g. some users could be allowed to read all todo items but only update/delete their own.
 
@@ -365,24 +401,26 @@ In this case we can make use of the second parameter of the `authorize` function
 sub-task/sub-task.authorizer.ts
 
 ```ts
-import { Injectable } from '@nestjs/common';
-import { CustomAuthorizer } from '@ptc-org/nestjs-query-graphql';
-import { Filter } from '@ptc-org/nestjs-query-core';
-import { UserContext } from '../auth/auth.interfaces';
-import { SubTaskDTO } from './dto/sub-task.dto';
+import { Injectable } from '@nestjs/common'
+import { CustomAuthorizer } from '@ptc-org/nestjs-query-graphql'
+import { Filter } from '@ptc-org/nestjs-query-core'
+import { UserContext } from '../auth/auth.interfaces'
+import { SubTaskDTO } from './dto/sub-task.dto'
+
 @Injectable()
 export class SubTaskAuthorizer implements CustomAuthorizer<SubTaskDTO> {
+
   authorize(context: UserContext, authorizationContext?: AuthorizationContext): Promise<Filter<SubTaskDTO>> {
     if (authorizationContext?.readonly) {
-      return Promise.resolve({});
+      return Promise.resolve({})
     }
-    return Promise.resolve({ ownerId: { eq: context.req.user.id } });
+    return Promise.resolve({ ownerId: { eq: context.req.user.id } })
   }
   authorizeRelation(relationName: string, context: UserContext): Promise<Filter<unknown>> {
     if (relationName === 'todoItem') {
-      return Promise.resolve({ ownerId: { eq: context.req.user.id } });
+      return Promise.resolve({ ownerId: { eq: context.req.user.id } })
     }
-    return Promise.resolve({});
+    return Promise.resolve({})
   }
 }
 ```
@@ -393,21 +431,23 @@ authorizer.ts
 
 ```ts
 export enum OperationGroup {
+
   READ = 'read',
   AGGREGATE = 'aggregate',
   CREATE = 'create',
   UPDATE = 'update',
-  DELETE = 'delete',
+  DELETE = 'delete'
 }
 interface AuthorizationContext {
+
   /** The name of the method that uses the @AuthorizeFilter decorator */
-  operationName: string;
+  operationName: string
   /** The group this operation belongs to */
-  operationGroup: OperationGroup;
+  operationGroup: OperationGroup
   /** If the operation does not modify any entities */
-  readonly: boolean;
+  readonly: boolean
   /** If the operation can affect multiple entities */
-  many: boolean;
+  many: boolean
 }
 ```
 
@@ -426,27 +466,27 @@ You can leave out the `operationName` to let the context use the name of the dec
 
 The `operationNames` of the generated CRUD resolver methods are similar to the ones of the [QueryService](/concepts/services):
 
-* `queryMany`
-* `findById`
-* `aggregate`
-* `createOne`
-* `createMany`
-* `updateOne`
-* `updateMany`
-* `deleteOne`
-* `deleteMany`
+- `queryMany`
+- `findById`
+- `aggregate`
+- `createOne`
+- `createMany`
+- `updateOne`
+- `updateMany`
+- `deleteOne`
+- `deleteMany`
 
 **Relations**
 
-* `query{PluralRelationName}` (e.g. querySubTasks)
-* `find{SingularRelationName}` (e.g. findTodoItem)
-* `aggregate{PluralRelationName}` (e.g. aggregateSubTasks)
-* `remove{SingularRelationName}from{SingularParentName}` (e.g. removeSubTaskFromTodoItem)
-* `remove{PluralRelationName}from{SingularParentName}` (e.g. removeSubTasksFromTodoItem)
-* `set{SingularRelationName}On{SingularParentName}` (e.g. setSubTaskOnTodoItem)
-* `add{PluralRelationName}On{SingularParentName}` (e.g. addSubTasksOnTodoItem)
+- `query{PluralRelationName}` (e.g. querySubTasks)
+- `find{SingularRelationName}` (e.g. findTodoItem)
+- `aggregate{PluralRelationName}` (e.g. aggregateSubTasks)
+- `remove{SingularRelationName}from{SingularParentName}` (e.g. removeSubTaskFromTodoItem)
+- `remove{PluralRelationName}from{SingularParentName}` (e.g. removeSubTasksFromTodoItem)
+- `set{SingularRelationName}On{SingularParentName}` (e.g. setSubTaskOnTodoItem)
+- `add{PluralRelationName}On{SingularParentName}` (e.g. addSubTasksOnTodoItem)
 
-## Complete Example[​](#complete-example "Direct link to Complete Example")
+## Complete Example[​](#complete-example 'Direct link to Complete Example')
 
 You can find a complete example in [`../../../examples/auth`](https://github.com/tripss/nestjs-query/tree/master/examples/auth)
 

@@ -1,9 +1,9 @@
 ---
-title: "Getting Started"
-description: "The  package creates documented REST CRUD controllers on top of a . It provides DTO decorators, generated controllers, filtering, offset paging, hooks, authorization, and CSV export."
+title: 'Getting Started'
+description: 'The  package creates documented REST CRUD controllers on top of a . It provides DTO decorators, generated controllers, filtering, offset paging, hooks, authorization, and CSV export.'
 ---
 
-## Installation[​](#installation "Direct link to Installation")
+## Installation[​](#installation 'Direct link to Installation')
 
 See the [installation guide](/introduction/install#ptc-orgnestjs-query-rest).
 
@@ -13,7 +13,7 @@ This example uses the TypeORM adapter, so install it and TypeORM alongside the R
 npm i @ptc-org/nestjs-query-typeorm @nestjs/typeorm typeorm
 ```
 
-## Define the DTOs[​](#define-the-dtos "Direct link to Define the DTOs")
+## Define the DTOs[​](#define-the-dtos 'Direct link to Define the DTOs')
 
 The response DTO declares the fields returned by the API and which fields clients may filter on. Separate create and update DTOs keep writable fields explicit.
 
@@ -21,11 +21,15 @@ todo-item.dto.ts
 
 ```ts
 import { FilterableField, IDField } from '@ptc-org/nestjs-query-rest'
+
 export class TodoItemDTO {
+
   @IDField()
   id!: number
+
   @FilterableField()
   title!: string
+
   @FilterableField()
   completed!: boolean
 }
@@ -35,9 +39,12 @@ todo-item-input.dto.ts
 
 ```ts
 import { Field } from '@ptc-org/nestjs-query-rest'
+
 export class TodoItemInputDTO {
+
   @Field({ maxLength: 100 })
   title!: string
+
   @Field()
   completed!: boolean
 }
@@ -47,15 +54,18 @@ todo-item-update.dto.ts
 
 ```ts
 import { Field } from '@ptc-org/nestjs-query-rest'
+
 export class TodoItemUpdateDTO {
+
   @Field({ nullable: true, maxLength: 100 })
   title?: string
+
   @Field({ nullable: true })
   completed?: boolean
 }
 ```
 
-## Register an endpoint[​](#register-an-endpoint "Direct link to Register an endpoint")
+## Register an endpoint[​](#register-an-endpoint 'Direct link to Register an endpoint')
 
 Register the persistence module and describe the endpoint in `NestjsQueryRestModule.forFeature`. `basePath` is optional; without it, the path is derived from and pluralized from the DTO class name (`TodoItemDTO` becomes `/todo-item-dtos`).
 
@@ -69,6 +79,7 @@ import { TodoItemDTO } from './dto/todo-item.dto'
 import { TodoItemInputDTO } from './dto/todo-item-input.dto'
 import { TodoItemUpdateDTO } from './dto/todo-item-update.dto'
 import { TodoItemEntity } from './todo-item.entity'
+
 @Module({
   imports: [
     NestjsQueryRestModule.forFeature({
@@ -99,7 +110,7 @@ This creates the following endpoints:
 | `DELETE` | `/todo-items/:id`    | Delete one record              |
 | `GET`    | `/todo-items/export` | Export matching records as CSV |
 
-## Enable request transformation and validation[​](#enable-request-transformation-and-validation "Direct link to Enable request transformation and validation")
+## Enable request transformation and validation[​](#enable-request-transformation-and-validation 'Direct link to Enable request transformation and validation')
 
 The generated query and body DTOs use `class-transformer` and `class-validator`. Enable Nest's `ValidationPipe` so query strings such as `limit=10` are converted and validated.
 
@@ -109,6 +120,7 @@ main.ts
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   app.useGlobalPipes(

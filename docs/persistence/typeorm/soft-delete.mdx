@@ -2,42 +2,45 @@
 title: Soft Delete
 ---
 
-`TypeOrm` supports [soft deletes](https://typeorm.io/#/delete-query-builder/soft-delete). This feature does not delete records but instead updates the column decorated with `@DeleteDateColumn`. 
+`TypeOrm` supports [soft deletes](https://typeorm.io/#/delete-query-builder/soft-delete). This feature does not delete records but instead updates the column decorated with `@DeleteDateColumn`.
 
 Before continuing it is recommended that you read the following.
-* https://typeorm.io/#/decorator-reference/deletedatecolumn
-* https://typeorm.io/#/delete-query-builder/soft-delete
-  
+
+- https://typeorm.io/#/decorator-reference/deletedatecolumn
+- https://typeorm.io/#/delete-query-builder/soft-delete
+
 ## Setting up your entity.
 
 Before enabling soft deletes you must add the DeleteDateColumn to your entity.
 
 ```ts title="todo-item.entity.ts"
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm'
 
 @Entity({ name: 'todo_item' })
 export class TodoItemEntity {
+
   @PrimaryGeneratedColumn()
-  id!: number;
+  id!: number
 
   @Column()
-  title!: string;
+  title!: string
 
   @Column({ nullable: true })
-  description?: string;
+  description?: string
 
   @Column()
-  completed!: boolean;
+  completed!: boolean
 
   @CreateDateColumn()
-  created!: Date;
+  created!: Date
 
   @UpdateDateColumn()
-  updated!: Date;
+  updated!: Date
 
   // Add this column to your entity!
+
   @DeleteDateColumn()
-  deletedAt?: Date;
+  deletedAt?: Date
 }
 ```
 
@@ -48,17 +51,18 @@ The important column is the `deletedAt` column in the above example. Without thi
 Once you have added the column to your entity you need to declare your service setting the `useSoftDelete` flag.
 
 ```ts title="todo-item.service.ts"
-import { QueryService } from '@ptc-org/nestjs-query-core';
-import { TypeOrmQueryService } from '@ptc-org/nestjs-query-typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { TodoItemEntity } from './todo-item.entity';
+import { QueryService } from '@ptc-org/nestjs-query-core'
+import { TypeOrmQueryService } from '@ptc-org/nestjs-query-typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { TodoItemEntity } from './todo-item.entity'
 
 @QueryService(TodoItemEntity)
 export class TodoItemService extends TypeOrmQueryService<TodoItemEntity> {
+
   constructor(@InjectRepository(TodoItemEntity) repo: Repository<TodoItemEntity>) {
     // pass the use soft delete option to the service.
-    super(repo, { useSoftDelete: true });
+    super(repo, { useSoftDelete: true })
   }
 }
 ```
@@ -70,31 +74,34 @@ Notice that when calling `super` the `useSoftDelete` option is set to `true`. Th
 `nestjs-query` does not automatically expose `restore` mutations. In this example we add the restore mutations.
 
 ```ts title="todo-item.resolver.ts"
-import { UpdateManyResponse, Filter } from '@ptc-org/nestjs-query-core';
-import { CRUDResolver, FilterType, UpdateManyResponseType } from '@ptc-org/nestjs-query-graphql';
-import { Resolver, Args, Mutation, ID } from '@nestjs/graphql';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoItemService } from './todo-item.service';
+import { UpdateManyResponse, Filter } from '@ptc-org/nestjs-query-core'
+import { CRUDResolver, FilterType, UpdateManyResponseType } from '@ptc-org/nestjs-query-graphql'
+import { Resolver, Args, Mutation, ID } from '@nestjs/graphql'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoItemService } from './todo-item.service'
 
 @Resolver(() => TodoItemDTO)
 export class TodoItemResolver extends CRUDResolver(TodoItemDTO) {
+
   constructor(readonly service: TodoItemService) {
-    super(service);
+    super(service)
   }
 
   // restore one mutation will update the `deletedAt` column to null.
+
   @Mutation(() => TodoItemDTO)
   restoreOneTodoItem(@Args('input', { type: () => ID }) id: number): Promise<TodoItemDTO> {
-    return this.service.restoreOne(id);
+    return this.service.restoreOne(id)
   }
 
   // restore many mutation will update the `deletedAt` column to null for all todo items that
   // match the filter.
+
   @Mutation(() => UpdateManyResponseType())
   restoreManyTodoItems(
-    @Args('input', { type: () => FilterType(TodoItemDTO) }) filter: Filter<TodoItemDTO>,
+    @Args('input', { type: () => FilterType(TodoItemDTO) }) filter: Filter<TodoItemDTO>
   ): Promise<UpdateManyResponse> {
-    return this.service.restoreMany(filter);
+    return this.service.restoreMany(filter)
   }
 }
 ```

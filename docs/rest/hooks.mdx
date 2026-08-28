@@ -1,9 +1,9 @@
 ---
-title: "Hooks"
-description: "Hooks transform generated endpoint arguments before the query service is called. REST currently exposes , , and . A hook can be an inline function or an injectable class."
+title: 'Hooks'
+description: 'Hooks transform generated endpoint arguments before the query service is called. REST currently exposes , , and . A hook can be an inline function or an injectable class.'
 ---
 
-## Mutation hooks[​](#mutation-hooks "Direct link to Mutation hooks")
+## Mutation hooks[​](#mutation-hooks 'Direct link to Mutation hooks')
 
 Decorate the create or update DTO when a value should be derived from the HTTP request rather than accepted from the client.
 
@@ -12,9 +12,11 @@ todo-item-input.dto.ts
 ```ts
 import { Request } from 'express'
 import { BeforeCreateOne, CreateOneInputType, Field } from '@ptc-org/nestjs-query-rest'
+
 type AuthenticatedRequest = Request & {
   user: { id: string }
 }
+
 @BeforeCreateOne((args: CreateOneInputType<TodoItemInputDTO>, request: AuthenticatedRequest) => ({
   input: {
     ...args.input,
@@ -22,6 +24,7 @@ type AuthenticatedRequest = Request & {
   }
 }))
 export class TodoItemInputDTO {
+
   @Field()
   title!: string
   ownerId!: string
@@ -34,6 +37,7 @@ todo-item-update.dto.ts
 
 ```ts
 import { BeforeUpdateOne, UpdateOneInputType } from '@ptc-org/nestjs-query-rest'
+
 @BeforeUpdateOne((args: UpdateOneInputType<TodoItemUpdateDTO>, request: AuthenticatedRequest) => ({
   update: {
     ...args.update,
@@ -41,11 +45,12 @@ import { BeforeUpdateOne, UpdateOneInputType } from '@ptc-org/nestjs-query-rest'
   }
 }))
 export class TodoItemUpdateDTO {
+
   updatedById?: string
 }
 ```
 
-## Query hooks[​](#query-hooks "Direct link to Query hooks")
+## Query hooks[​](#query-hooks 'Direct link to Query hooks')
 
 `BeforeQueryMany` receives the built core query and can add filters, sorting, or other query properties. It is also the place to interpret the optional search term enabled by `enableSearch`.
 
@@ -54,6 +59,7 @@ todo-item.dto.ts
 ```ts
 import { mergeFilter } from '@ptc-org/nestjs-query-core'
 import { BeforeQueryMany, FilterableField, RestQuery } from '@ptc-org/nestjs-query-rest'
+
 @BeforeQueryMany((query: RestQuery<TodoItemDTO>) => {
   if (!query.query) {
     return query
@@ -66,6 +72,7 @@ import { BeforeQueryMany, FilterableField, RestQuery } from '@ptc-org/nestjs-que
   }
 })
 export class TodoItemDTO {
+
   @FilterableField()
   title!: string
 }
@@ -73,21 +80,24 @@ export class TodoItemDTO {
 
 The same query hook runs for collection and CSV export requests.
 
-## Injectable hooks[​](#injectable-hooks "Direct link to Injectable hooks")
+## Injectable hooks[​](#injectable-hooks 'Direct link to Injectable hooks')
 
 Use a class when a hook needs injected services:
 
 ```ts
 import { Injectable } from '@nestjs/common'
 import { BeforeCreateOneHook, CreateOneInputType } from '@ptc-org/nestjs-query-rest'
+
 @Injectable()
 export class SetOwnerHook implements BeforeCreateOneHook<TodoItemInputDTO, AuthenticatedRequest> {
+
   run(args: CreateOneInputType<TodoItemInputDTO>, request: AuthenticatedRequest) {
     return {
       input: { ...args.input, ownerId: request.user.id }
     }
   }
 }
+
 @BeforeCreateOne(SetOwnerHook)
 export class TodoItemInputDTO {}
 ```

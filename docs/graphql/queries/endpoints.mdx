@@ -2,40 +2,39 @@
 title: Endpoints
 ---
 
-
 The [CRUDResolver](../resolvers) automatically exposes two query endpoints. The endpoints names will be derived from
 name provided to `@ObjectType` or the class name.
 
 The following examples are based on the following `TodoItemDTO`
 
 ```ts title="todo-item.dto.ts"
-import { FilterableField } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
+import { FilterableField } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 
 @ObjectType('TodoItem')
 export class TodoItemDTO {
+
   @IDField(() => ID)
-  id!: string;
+  id!: string
 
   @FilterableField()
-  title!: string;
+  title!: string
 
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
 
   @FilterableField(() => GraphQLISODateTime)
-  created!: Date;
+  created!: Date
 
   @FilterableField(() => GraphQLISODateTime)
-  updated!: Date;
+  updated!: Date
 }
-
 ```
 
 In the following examples you will see two endpoints referenced
 
-* `todoItem` - graphql endpoint to find a record by id.
-* `todoItems` - graphql endpoint to filter, page, and sort records,
+- `todoItem` - graphql endpoint to find a record by id.
+- `todoItems` - graphql endpoint to filter, page, and sort records,
 
 ## Find By Id
 
@@ -54,13 +53,10 @@ The following example finds a `TodoItem` by id.
     updated
   }
 }
-
 ```
-
 
 </Tab>
 <Tab title="Response">
-
 
 ```json
 {
@@ -87,8 +83,8 @@ As described above the `CRUDResolver` will expose a query method called `todoIte
 a [`connection`](https://relay.dev/graphql/connections.htm) or array depending on the [paging strategy you choose](./paging)
 
 <Note>
-All examples below assume that a connection is returned but filtering and sorting work the same way for all paging
-strategies. To read how to page collections read the [paging docs](./paging)
+  All examples below assume that a connection is returned but filtering and sorting work the same way for all paging strategies.
+  To read how to page collections read the [paging docs](./paging)
 </Note>
 
 By default if you do not provided an arguments it will uses a default value for [the page size](../dtos#result-page-size) and for the [sorting](../dtos/#default-sort).
@@ -98,15 +94,15 @@ By default if you do not provided an arguments it will uses a default value for 
 
 ```graphql
 {
-  todoItems{
-    pageInfo{
+  todoItems {
+    pageInfo {
       hasNextPage
       hasPreviousPage
       startCursor
       endCursor
     }
-    edges{
-      node{
+    edges {
+      node {
         id
         title
         completed
@@ -119,10 +115,8 @@ By default if you do not provided an arguments it will uses a default value for 
 }
 ```
 
-
 </Tab>
 <Tab title="Response">
-
 
 ```json
 {

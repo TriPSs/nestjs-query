@@ -8,6 +8,7 @@ Every property decorated with `@FilterableField` becomes an optional equality qu
 import { FilterableField, IDField } from '@ptc-org/nestjs-query-rest'
 
 export class TodoItemDTO {
+
   @IDField()
   id!: number
 
@@ -38,6 +39,7 @@ The field type controls query-string conversion and validation. For example, `co
 
 ```ts
 export class TodoItemDTO {
+
   @FilterableField({ filterRequired: true })
   tenantId!: string
 

@@ -1,54 +1,62 @@
 ---
-title: "Aggregations"
-description: "When aggregations are enabled  will expose a new query that enables using the following common aggregations , , , , and ."
+title: 'Aggregations'
+description: 'When aggregations are enabled  will expose a new query that enables using the following common aggregations , , , , and .'
 ---
 
-<Note>
-  Only fields decorated with `@FilterableField` will be exposed in aggregate queries.
-</Note>
+<Note>Only fields decorated with `@FilterableField` will be exposed in aggregate queries.</Note>
 
 All examples will be based on the following `TodoItem` DTO. All fields except `age`, because it is not decorated with `@FilterableField` or `@IDField`, will be exposed in aggregate queries.
 
 todo-item/dto/todo-item.dto.ts
 
 ```ts
-import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
+import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
+
 @ObjectType('TodoItem')
 export class TodoItemDTO {
+
   @IDField(() => ID)
-  id!: number;
+  id!: number
+
   @FilterableField()
-  title!: string;
+  title!: string
+
   @FilterableField({ nullable: true })
-  description?: string;
+  description?: string
+
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
+
   @FilterableField(() => GraphQLISODateTime)
-  created!: Date;
+  created!: Date
+
   @FilterableField(() => GraphQLISODateTime)
-  updated!: Date;
+  updated!: Date
+
   @Field()
-  age!: number;
+  age!: number
+
   @FilterableField()
-  priority!: number;
+  priority!: number
 }
 ```
 
-### Enabling Aggregate Queries[​](#enabling-aggregate-queries "Direct link to Enabling Aggregate Queries")
+### Enabling Aggregate Queries[​](#enabling-aggregate-queries 'Direct link to Enabling Aggregate Queries')
 
 To enable aggregate queries you can set the `enableAggregate` option in your resolver
 
 todo-item/todo-item.module.ts
 
 ```ts
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
-import { Module } from '@nestjs/common';
-import { TodoItemInputDTO } from './dto/todo-item-input.dto';
-import { TodoItemUpdateDTO } from './dto/todo-item-update.dto';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
+import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
+import { Module } from '@nestjs/common'
+import { TodoItemInputDTO } from './dto/todo-item-input.dto'
+import { TodoItemUpdateDTO } from './dto/todo-item-update.dto'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
+
 @Module({
   imports: [
     NestjsQueryGraphQLModule.forFeature({
@@ -60,10 +68,10 @@ import { TodoItemEntity } from './todo-item.entity';
           CreateDTOClass: TodoItemInputDTO,
           UpdateDTOClass: TodoItemUpdateDTO,
           enableAggregate: true
-        },
-      ],
-    }),
-  ],
+        }
+      ]
+    })
+  ]
 })
 export class TodoItemModule {}
 ```
@@ -72,18 +80,12 @@ All aggregate queries use the following naming convention `${objectName}Aggregat
 
 Below is a fragment from the generated schema for `TodoItem`
 
-<Info>
-  `nestjs-query` will only expose number fields for `avg` and `sum`.
-</Info>
+<Info>`nestjs-query` will only expose number fields for `avg` and `sum`.</Info>
 
 ```graphql
 type Query {
   todoItem(id: ID!): TodoItem
-  todoItems(
-    paging: CursorPaging = { first: 10 }
-    filter: TodoItemFilter = {}
-    sorting: [TodoItemSort!] = []
-  ): TodoItemConnection!
+  todoItems(paging: CursorPaging = { first: 10 }, filter: TodoItemFilter = {}, sorting: [TodoItemSort!] = []): TodoItemConnection!
   todoItemAggregate(filter: TodoItemAggregateFilter): [TodoItemAggregateResponse!]!
 }
 input TodoItemAggregateFilter {
@@ -151,9 +153,9 @@ type TodoItemSumAggregate {
 }
 ```
 
-## Examples[​](#examples "Direct link to Examples")
+## Examples[​](#examples 'Direct link to Examples')
 
-### Basic[​](#basic "Direct link to Basic")
+### Basic[​](#basic 'Direct link to Basic')
 
 <Tabs>
   <Tab title="GraphQL">
@@ -217,7 +219,7 @@ type TodoItemSumAggregate {
   </Tab>
 </Tabs>
 
-### With GroupBy[​](#with-groupby "Direct link to With GroupBy")
+### With GroupBy[​](#with-groupby 'Direct link to With GroupBy')
 
 To group your aggregate queries you can add a `groupBy` to specify one or more fields to group on.
 
@@ -313,7 +315,7 @@ To group your aggregate queries you can add a `groupBy` to specify one or more f
   </Tab>
 </Tabs>
 
-### With Filter[​](#with-filter "Direct link to With Filter")
+### With Filter[​](#with-filter 'Direct link to With Filter')
 
 You can also provide a filter to only aggregate on a subset of data.
 
@@ -405,7 +407,7 @@ For example assume description is null for all todo items you will get `0` back.
   </Tab>
 </Tabs>
 
-## Aggregating Relations[​](#aggregating-relations "Direct link to Aggregating Relations")
+## Aggregating Relations[​](#aggregating-relations 'Direct link to Aggregating Relations')
 
 When using the `enableAggregate` option any defined `many` relations will also expose a aggregate query `{relationName}Aggregate`
 
@@ -428,9 +430,7 @@ type TodoItem {
     filter: SubTaskFilter = {}
     sorting: [SubTaskSort!] = []
   ): TodoItemSubTasksConnection!
-  subTasksAggregate(
-    filter: SubTaskAggregateFilter
-  ):[ TodoItemSubTasksAggregateResponse!]!
+  subTasksAggregate(filter: SubTaskAggregateFilter): [TodoItemSubTasksAggregateResponse!]!
 }
 type TodoItemSubTasksAggregateResponse {
   groupBy: TodoItemSubTasksAggregateGroupBy
@@ -484,9 +484,9 @@ type TodoItemSubTasksSumAggregate {
 }
 ```
 
-## Examples[​](#examples-1 "Direct link to Examples")
+## Examples[​](#examples-1 'Direct link to Examples')
 
-### Basic[​](#basic-1 "Direct link to Basic")
+### Basic[​](#basic-1 'Direct link to Basic')
 
 In this example we'll aggregate on all related `subTasks`.
 
@@ -552,7 +552,7 @@ In this example we'll aggregate on all related `subTasks`.
   </Tab>
 </Tabs>
 
-### With GroupBy[​](#with-groupby-1 "Direct link to With GroupBy")
+### With GroupBy[​](#with-groupby-1 'Direct link to With GroupBy')
 
 In this example we'll aggregate on all related `subTasks` and group by `completed`.
 
@@ -646,7 +646,7 @@ In this example we'll aggregate on all related `subTasks` and group by `complete
   </Tab>
 </Tabs>
 
-### With Filter[​](#with-filter-1 "Direct link to With Filter")
+### With Filter[​](#with-filter-1 'Direct link to With Filter')
 
 This example will aggregate all related `subTasks` that are not completed.
 
@@ -700,9 +700,9 @@ This example will aggregate all related `subTasks` that are not completed.
   </Tab>
 </Tabs>
 
-## Advanced[​](#advanced "Direct link to Advanced")
+## Advanced[​](#advanced 'Direct link to Advanced')
 
-### Enabling Aggregates Only For Root[​](#enabling-aggregates-only-for-root "Direct link to Enabling Aggregates Only For Root")
+### Enabling Aggregates Only For Root[​](#enabling-aggregates-only-for-root 'Direct link to Enabling Aggregates Only For Root')
 
 When using the `enableAggregate` option it will enable aggregates on the root type as well as all relations. If you only want to expose aggregate functionality on the root type you can specify the `aggregate` option.
 
@@ -714,6 +714,7 @@ import { TodoItemInputDTO } from './dto/todo-item-input.dto'
 import { TodoItemUpdateDTO } from './dto/todo-item-update.dto'
 import { TodoItemDTO } from './dto/todo-item.dto'
 import { TodoItemEntity } from './todo-item.entity'
+
 @Module({
   imports: [
     NestjsQueryGraphQLModule.forFeature({
@@ -733,7 +734,7 @@ import { TodoItemEntity } from './todo-item.entity'
 export class TodoItemModule {}
 ```
 
-### Disable Aggregate for Single Relation[​](#disable-aggregate-for-single-relation "Direct link to Disable Aggregate for Single Relation")
+### Disable Aggregate for Single Relation[​](#disable-aggregate-for-single-relation 'Direct link to Disable Aggregate for Single Relation')
 
 You can also selectively disable aggregates on an individual relation by specifying the enableAggregate option when defining the relation.
 
@@ -741,33 +742,40 @@ You can also selectively disable aggregates on an individual relation by specify
 import { FilterableField, FilterableConnection, IDField } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'
+
 @ObjectType('TodoItem')
 @FilterableConnection('subTasks', () => SubTaskDTO, { enableAggregate: false })
 export class TodoItemDTO {
+
   @IDField(() => ID)
   id!: number
+
   @FilterableField()
   title!: string
+
   @FilterableField({ nullable: true })
   description?: string
+
   @FilterableField()
   completed!: boolean
+
   @FilterableField(() => GraphQLISODateTime)
   created!: Date
+
   @FilterableField(() => GraphQLISODateTime)
   updated!: Date
+
   @Field()
   age!: number
+
   @FilterableField()
   priority!: number
 }
 ```
 
-### Group aggregate on DAY/WEEK/MONTH[​](#group-aggregate-on-dayweekmonth "Direct link to Group aggregate on DAY/WEEK/MONTH")
+### Group aggregate on DAY/WEEK/MONTH[​](#group-aggregate-on-dayweekmonth 'Direct link to Group aggregate on DAY/WEEK/MONTH')
 
-<Warning>
-  This functionality only works for typeorm!
-</Warning>
+<Warning>This functionality only works for typeorm!</Warning>
 
 You can change how datetime fields are grouped by passing `WEEK`, `MONTH` or `YEAR` to the date fields `by`.
 

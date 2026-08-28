@@ -2,14 +2,13 @@
 title: Sorting
 ---
 
-
 You can sort by one or more fields by using the `sorting` parameter.
 
 The `sorting` parameter is an array where each item has the following options.
 
-* `field!` - The name of the field to sort by.
-* `direction!` - The direction to sort either `ASC` or `DESC`.
-* `nulls?` - Optional field to set nulls sort order `NULLS_FIRST` or `NULLS_last`
+- `field!` - The name of the field to sort by.
+- `direction!` - The direction to sort either `ASC` or `DESC`.
+- `nulls?` - Optional field to set nulls sort order `NULLS_FIRST` or `NULLS_last`
 
 In this example we sort by title descending.
 
@@ -37,7 +36,6 @@ In this example we sort by title descending.
     }
   }
 }
-
 ```
 
 </Tab>
@@ -109,6 +107,7 @@ In this example we sort by title descending.
   }
 }
 ```
+
 </Tab>
 </Tabs>
 
@@ -119,12 +118,7 @@ In this example we sort by completed and title.
 
 ```graphql
 {
-  todoItems(
-    sorting: [
-      { field: completed, direction: ASC }
-      { field: title, direction: DESC }
-    ]
-  ) {
+  todoItems(sorting: [{ field: completed, direction: ASC }, { field: title, direction: DESC }]) {
     pageInfo {
       hasNextPage
       hasPreviousPage
@@ -214,6 +208,7 @@ In this example we sort by completed and title.
   }
 }
 ```
+
 </Tab>
 </Tabs>
 
@@ -222,5 +217,3 @@ In this example we sort by completed and title.
 When querying the default is based on the persistence layer. You can override the default by using the QueryOptions decorator on your DTO.
 
 You can find the documentation and an example in the [QueryOptions reference](../dtos#default-sort).
-
-

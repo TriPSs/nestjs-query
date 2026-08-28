@@ -9,11 +9,11 @@ For most use cases `nestjs-query` will take care of the serialization for you th
 To convert your DTO into a model, you can inject your Model and create a new instance.
 
 ```ts
-new TodoItemModel(todoItemDTO);
+new TodoItemModel(todoItemDTO)
 ```
 
 When converting your entity into a DTO, you can use the following.
 
 ```ts
-const dto = plainToClass(TodoItemDTO, todoItemEntity.toObject({ virtuals: true }));
+const dto = plainToClass(TodoItemDTO, todoItemEntity.toObject({ virtuals: true }))
 ```

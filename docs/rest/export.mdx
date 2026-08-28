@@ -1,6 +1,6 @@
 ---
-title: "CSV Export"
-description: "Every  includes a CSV endpoint at . It supports the same generated filters, search hook, authorization filter, default sorting, and soft-delete visibility options as collection reads."
+title: 'CSV Export'
+description: 'Every  includes a CSV endpoint at . It supports the same generated filters, search hook, authorization filter, default sorting, and soft-delete visibility options as collection reads.'
 ---
 
 ```http
@@ -16,7 +16,7 @@ Accept: text/csv
 
 The response content type is `text/csv`. String fields are quoted and spreadsheet formulas are escaped.
 
-## Configure exports[​](#configure-exports "Direct link to Configure exports")
+## Configure exports[​](#configure-exports 'Direct link to Configure exports')
 
 The default export limit is `1000`. Change it or disable export independently:
 
@@ -46,7 +46,7 @@ The generated path appends `/export` to `many.path`, so the example above is ser
 }
 ```
 
-## Export a different shape[​](#export-a-different-shape "Direct link to Export a different shape")
+## Export a different shape[​](#export-a-different-shape 'Direct link to Export a different shape')
 
 Use `ExportDTOClass` to select CSV columns without changing the normal response DTO. Decorated fields are serialized in the export, and their property names become the CSV headers.
 
@@ -54,11 +54,15 @@ todo-item-export.dto.ts
 
 ```ts
 import { Field } from '@ptc-org/nestjs-query-rest'
+
 export class TodoItemExportDTO {
+
   @Field()
   id!: number
+
   @Field()
   title!: string
+
   @Field()
   completed!: boolean
 }

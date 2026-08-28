@@ -1,78 +1,83 @@
 ---
-title: "Queries"
-description: "The core of  is the , it is used by ,  ,  and ."
+title: 'Queries'
+description: 'The core of  is the , it is used by ,  ,  and .'
 ---
 
 The query interface contains three optional fields.
 
-* `filter`
-* `paging`
-* `sorting`
+- `filter`
+- `paging`
+- `sorting`
 
 All examples will be based on the following class.
 
 ```ts
 interface MyClass {
-  title: string;
-  completed: boolean;
-  age: number;
+
+  title: string
+  completed: boolean
+  age: number
 }
 ```
 
-## Filtering[​](#filtering "Direct link to Filtering")
+## Filtering[​](#filtering 'Direct link to Filtering')
 
 The `filter` field allows the filtering of fields based on the shape of the object the filter is used for.
 
 See the [filter reference](#filter-reference) for a complete list of comparisons available.
 
 <Note>
-  The `Filter` interface is typesafe and the typescript compiler will complain if you include extra fields that are not present on the type you are creating the query for.
+  The `Filter` interface is typesafe and the typescript compiler will complain if you include extra fields that are not present on
+  the type you are creating the query for.
 </Note>
 
 Lets create a simple filter that would allow us to filter for titles equal to `'Foo Bar'`
 
-### Simple[​](#simple "Direct link to Simple")
+### Simple[​](#simple 'Direct link to Simple')
 
 ```ts
-import { Query } from '@ptc-org/nestjs-query-core';
+import { Query } from '@ptc-org/nestjs-query-core'
+
 const q: Query<MyClass> = {
   filter: {
-    title: { eq: 'Foo Bar' },
-  },
-};
+    title: { eq: 'Foo Bar' }
+  }
+}
 ```
 
-### Multiple Fields[​](#multiple-fields "Direct link to Multiple Fields")
+### Multiple Fields[​](#multiple-fields 'Direct link to Multiple Fields')
 
 You can also filter on multiple fields.
 
 ```ts
-import { Query } from '@ptc-org/nestjs-query-core';
+import { Query } from '@ptc-org/nestjs-query-core'
+
 const q: Query<MyClass> = {
   filter: {
     // title = 'Foo Bar' AND completed IS TRUE and age > 10
     title: { eq: 'Foo Bar' },
     completed: { is: true },
-    age: { gt: 10 },
-  },
-};
+    age: { gt: 10 }
+  }
+}
 ```
 
-### Multiple Comparisons on a single field.[​](#multiple-comparisons-on-a-single-field "Direct link to Multiple Comparisons on a single field.")
+### Multiple Comparisons on a single field.[​](#multiple-comparisons-on-a-single-field 'Direct link to Multiple Comparisons on a single field.')
 
 If you include multiple comparisons for a single field they will be ORed together.
 
 ```ts
-import { Query } from '@ptc-org/nestjs-query-core';
+import { Query } from '@ptc-org/nestjs-query-core'
+
 const q: Query<MyClass> = {
   filter: {
     // title = 'Foo Bar' OR field LIKE '%foo%'
-    title: { eq: 'Foo Bar', like: '%foo%' },
-  },
-};
+    title: { eq: 'Foo Bar', like: '%foo%' }
+  }
+}
 ```
 
-### And/Or[​](#andor "Direct link to And/Or")
+### And/Or[​](#andor 'Direct link to And/Or')
 
 The filter also allows for more complex `and` and `or` filters. The `and` and `or` accept an array of filters allowing for nested complex queries.
 
@@ -81,9 +86,9 @@ In this example we `AND` two filters for the same property together: `age >= 10 
 ```ts
 const q: Query<MyClass> = {
   filter: {
-    and: [{ age: { gte: 10 } }, { age: { lte: 20 } }],
-  },
-};
+    and: [{ age: { gte: 10 } }, { age: { lte: 20 } }]
+  }
+}
 ```
 
 In this example a simple `OR` condition is created: `age >= 10 OR title NOT LIKE '%bar'`
@@ -91,9 +96,9 @@ In this example a simple `OR` condition is created: `age >= 10 OR title NOT LIKE
 ```ts
 const q: Query<MyClass> = {
   filter: {
-    or: [{ age: { gte: 10 } }, { title: { notLike: '%bar' } }],
-  },
-};
+    or: [{ age: { gte: 10 } }, { title: { notLike: '%bar' } }]
+  }
+}
 ```
 
 This example combines `AND` and `OR` filters: `age >= 10 AND (title LIKE '%bar' OR title = 'foobar')`.
@@ -104,16 +109,16 @@ const q: Query<MyClass> = {
     and: [
       { age: { gte: 10 } },
       {
-        or: [{ title: { like: '%bar' } }, { title: { eq: 'foobar' } }],
-      },
-    ],
-  },
-};
+        or: [{ title: { like: '%bar' } }, { title: { eq: 'foobar' } }]
+      }
+    ]
+  }
+}
 ```
 
-***
+---
 
-## Paging[​](#paging "Direct link to Paging")
+## Paging[​](#paging 'Direct link to Paging')
 
 The `core` package defines a basic paging interface has two optional fields `limit` and `offset`.
 
@@ -150,17 +155,17 @@ The `core` package defines a basic paging interface has two optional fields `lim
   </Tab>
 </Tabs>
 
-***
+---
 
-## Sorting[​](#sorting "Direct link to Sorting")
+## Sorting[​](#sorting 'Direct link to Sorting')
 
 The `sorting` field allows to specify the sort order for your query.
 
 The `sorting` field is an array of object containing:
 
-* `field` - the field to sort on
-* `direction` - `ASC` or `DESC`
-* `nulls?` - Optional nulls sort, `NULLS_FIRST` or `NULLS_LAST`
+- `field` - the field to sort on
+- `direction` - `ASC` or `DESC`
+- `nulls?` - Optional nulls sort, `NULLS_FIRST` or `NULLS_LAST`
 
 <Tabs>
   <Tab title="Single-Sort">
@@ -185,155 +190,156 @@ The `sorting` field is an array of object containing:
   </Tab>
 </Tabs>
 
-## Filter Reference[​](#filter-reference "Direct link to Filter Reference")
+## Filter Reference[​](#filter-reference 'Direct link to Filter Reference')
 
 The `filter` option supports the following field comparisons.
 
 <Note>
-  The following examples show an approximation of the SQL that will be generated. The ORM will take care of handling the dialect specifics
+  The following examples show an approximation of the SQL that will be generated. The ORM will take care of handling the dialect
+  specifics
 </Note>
 
-### Common Comparisons[​](#common-comparisons "Direct link to Common Comparisons")
+### Common Comparisons[​](#common-comparisons 'Direct link to Common Comparisons')
 
 All types support the following comparisons.
 
-* `is` - Check is a field is `null`, `true` or `false`.
+- `is` - Check is a field is `null`, `true` or `false`.
   ```ts
   // title IS NULL
   {
     title: {
-      is: null;
+      is: null
     }
   }
   // completed IS TRUE
   {
     completed: {
-      is: true;
+      is: true
     }
   }
   // completed IS false
   {
     completed: {
-      is: false;
+      is: false
     }
   }
   ```
-* `isNot` - Check is a field is not `null`, `true` or `false`.
+- `isNot` - Check is a field is not `null`, `true` or `false`.
   ```ts
   // title IS NOT NULL
   {
     title: {
-      isNot: null;
+      isNot: null
     }
   }
   // completed IS NOT TRUE
   {
     completed: {
-      isNot: true;
+      isNot: true
     }
   }
   // completed IS NOT false
   {
     completed: {
-      isNot: false;
+      isNot: false
     }
   }
   ```
-* `neq` - field is not equal to a value.
+- `neq` - field is not equal to a value.
   ```ts
   // title != 'foo'
   {
     title: {
-      neq: 'foo';
+      neq: 'foo'
     }
   }
   ```
-* `gt` - field is greater than a value.
+- `gt` - field is greater than a value.
   ```ts
   // title > 'foo'
   {
     title: {
-      gt: 'foo';
+      gt: 'foo'
     }
   }
   ```
-* `gte` - field is greater than or equal to a value.
+- `gte` - field is greater than or equal to a value.
   ```ts
   // title >= 'foo'
   {
     title: {
-      gte: 'foo';
+      gte: 'foo'
     }
   }
   ```
-* `lt` - field is less than a value.
+- `lt` - field is less than a value.
   ```ts
   // title < 'foo'
   {
     title: {
-      lt: 'foo';
+      lt: 'foo'
     }
   }
   ```
-* `lte` - field is less than or equal to a value.
+- `lte` - field is less than or equal to a value.
   ```ts
   // title <= 'foo'
   {
     title: {
-      lte: 'foo';
+      lte: 'foo'
     }
   }
   ```
-* `in` - field is in a list of values.
+- `in` - field is in a list of values.
   ```ts
   // title IN ('foo', 'bar', 'baz')
   { title: { in: ['foo', 'bar', 'baz'] } }
   ```
-* `notIn` - field is not in a list of values.
+- `notIn` - field is not in a list of values.
   ```ts
   // title NOT IN ('foo', 'bar', 'baz')
   {
     title: {
-      notIn: ['foo', 'bar', 'baz'];
+      notIn: ['foo', 'bar', 'baz']
     }
   }
   ```
 
-### String Comparisons[​](#string-comparisons "Direct link to String Comparisons")
+### String Comparisons[​](#string-comparisons 'Direct link to String Comparisons')
 
-* `like` - field is like a value (case sensitive).
+- `like` - field is like a value (case sensitive).
   ```ts
   // title LIKE 'Foo%'
   {
     title: {
-      like: 'Foo%';
+      like: 'Foo%'
     }
   }
   ```
-* `notLike` - field is not like a value (case sensitive).
+- `notLike` - field is not like a value (case sensitive).
   ```ts
   // title NOT LIKE 'Foo%'
   {
     title: {
-      notLike: 'Foo%';
+      notLike: 'Foo%'
     }
   }
   ```
-* `iLike` - field is like a value (case insensitive).
+- `iLike` - field is like a value (case insensitive).
   ```ts
   // title ILIKE 'Foo%'
   {
     title: {
-      iLike: 'Foo%';
+      iLike: 'Foo%'
     }
   }
   ```
-* `notILike` - field is not like a value (case insensitive).
+- `notILike` - field is not like a value (case insensitive).
   ```ts
   // title NOT ILIKE 'Foo%'
   {
     title: {
-      notILike: 'Foo%';
+      notILike: 'Foo%'
     }
   }
   ```

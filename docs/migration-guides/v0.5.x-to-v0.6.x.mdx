@@ -1,8 +1,8 @@
 ---
-title: "v0.5.x to v0.6.x"
+title: 'v0.5.x to v0.6.x'
 ---
 
-### `@InjectTypeOrmQueryService`[​](#injecttypeormqueryservice "Direct link to injecttypeormqueryservice")
+### `@InjectTypeOrmQueryService`[​](#injecttypeormqueryservice 'Direct link to injecttypeormqueryservice')
 
 In the `v0.6.x` an new decorator was added `@InjectTypeOrmQueryService` to auto-create a TypeOrm query service.
 
@@ -11,13 +11,14 @@ This means you no longer need to manually create a service in order to expose yo
 To enable decorator import the `NestjsQueryTypeOrmModule` to your module definition
 
 ```ts
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
-import { Module } from '@nestjs/common';
-import { TodoItemEntity } from './todo-item.entity';
-import { TodoItemResolver } from './todo-item.resolver';
+import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
+import { Module } from '@nestjs/common'
+import { TodoItemEntity } from './todo-item.entity'
+import { TodoItemResolver } from './todo-item.resolver'
+
 @Module({
   providers: [TodoItemResolver],
-  imports: [NestjsQueryTypeOrmModule.forFeature([TodoItemEntity])],
+  imports: [NestjsQueryTypeOrmModule.forFeature([TodoItemEntity])]
 })
 export class TodoItemModule {}
 ```
@@ -25,21 +26,23 @@ export class TodoItemModule {}
 One you have imported the module you can inject a `TypeOrmQueryService`.
 
 ```ts
-import { QueryService } from '@ptc-org/nestjs-query-core';
-import { CRUDResolver } from '@ptc-org/nestjs-query-graphql';
-import { Resolver } from '@nestjs/graphql';
-import { InjectTypeOrmQueryService } from '@ptc-org/nestjs-query-typeorm';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
+import { QueryService } from '@ptc-org/nestjs-query-core'
+import { CRUDResolver } from '@ptc-org/nestjs-query-graphql'
+import { Resolver } from '@nestjs/graphql'
+import { InjectTypeOrmQueryService } from '@ptc-org/nestjs-query-typeorm'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
+
 @Resolver(() => TodoItemDTO)
 export class TodoItemResolver extends CRUDResolver(TodoItemDTO) {
+
   constructor(@InjectTypeOrmQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>) {
-    super(service);
+    super(service)
   }
 }
 ```
 
-## `TypeOrmQueryService`[​](#typeormqueryservice "Direct link to typeormqueryservice")
+## `TypeOrmQueryService`[​](#typeormqueryservice 'Direct link to typeormqueryservice')
 
 In the previous version of `@nestjs-query` the `TypeOrmQueryService` translated between the DTO and Entity. For a more in-depth description see [#41](https://github.com/tripss/nestjs-query/issues/41)
 
@@ -48,16 +51,18 @@ In the latest version the `TypeOrmQueryService` only operates on entities.
 `v0.5.x`
 
 ```ts
-import { QueryService } from '@ptc-org/nestjs-query-core';
-import { TypeOrmQueryService } from '@ptc-org/nestjs-query-typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { TodoItemDTO } from './todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
+import { QueryService } from '@ptc-org/nestjs-query-core'
+import { TypeOrmQueryService } from '@ptc-org/nestjs-query-typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { TodoItemDTO } from './todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
+
 @QueryService(TodoItemDTO)
 export class TodoItemService extends TypeOrmQueryService<TodoItemDTO, TodoItemEntity> {
+
   constructor(@InjectRepository(TodoItemEntity) readonly repo: Repository<TodoItemEntity>) {
-    super(repo);
+    super(repo)
   }
 }
 ```
@@ -65,36 +70,41 @@ export class TodoItemService extends TypeOrmQueryService<TodoItemDTO, TodoItemEn
 `v0.6.x`
 
 ```ts
-import { QueryService } from '@ptc-org/nestjs-query-core';
-import { TypeOrmQueryService } from '@ptc-org/nestjs-query-typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { TodoItemEntity } from './todo-item.entity';
+import { QueryService } from '@ptc-org/nestjs-query-core'
+import { TypeOrmQueryService } from '@ptc-org/nestjs-query-typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { TodoItemEntity } from './todo-item.entity'
+
 @QueryService(TodoItemEntity)
 export class TodoItemService extends TypeOrmQueryService<TodoItemEntity> {
+
   constructor(@InjectRepository(TodoItemEntity) readonly repo: Repository<TodoItemEntity>) {
-    super(repo);
+    super(repo)
   }
 }
 ```
 
-## `AssemblerQueryService`[​](#assemblerqueryservice "Direct link to assemblerqueryservice")
+## `AssemblerQueryService`[​](#assemblerqueryservice 'Direct link to assemblerqueryservice')
 
 In previous versions of `nestjs-query` the `QueryService` would automatically translate betwen your DTO and database type. This created a soft-dependecy between the persistence service and the view layer. In `v0.6.0` `AssemblerQueryService` was introduced to handle translating between your DTO and persistence type.
 
 ```ts
-import { AssemblerQueryService, QueryService } from '@ptc-org/nestjs-query-core';
-import { InjectTypeOrmQueryService } from '@ptc-org/nestjs-query-typeorm';
-import { TodoItemDTO } from './todo-item.dto';
-import { TodoItemAssembler } from './todo-item.assembler';
-import { TodoItemEntity } from './todo-item.entity';
+import { AssemblerQueryService, QueryService } from '@ptc-org/nestjs-query-core'
+import { InjectTypeOrmQueryService } from '@ptc-org/nestjs-query-typeorm'
+import { TodoItemDTO } from './todo-item.dto'
+import { TodoItemAssembler } from './todo-item.assembler'
+import { TodoItemEntity } from './todo-item.entity'
+
 @QueryService(TodoItemDTO)
 export class TodoItemService extends AssemblerQueryService<TodoItemDTO, TodoItemEntity> {
+
   constructor(
     assembler: TodoItemAssembler,
-    @InjectTypeOrmQueryService(TodoItemEntity) queryService: QueryService<TodoItemEntity>,
+
+    @InjectTypeOrmQueryService(TodoItemEntity) queryService: QueryService<TodoItemEntity>
   ) {
-    super(assembler, queryService);
+    super(assembler, queryService)
   }
 }
 ```

@@ -2,18 +2,13 @@
 title: Relations
 ---
 
-
 Relations work a little differently in `typegoose` when compared to other relational ORMs such as `sequelize` or
 `typeorm`. You can read more about relations (references) in `typegoose` [here](https://mongoosejs.com/docs/populate
 .html)
 
-<Note>
-There are multiple ways to set of references in Typegoose. These are intended as a starting point.
-</Note>
+<Note>There are multiple ways to set of references in Typegoose. These are intended as a starting point.</Note>
 
-<Warning>
-Filtering on references is not supported by Typegoose.
-</Warning>
+<Warning>Filtering on references is not supported by Typegoose.</Warning>
 
 ## One to Many/Many To One Example
 
@@ -24,173 +19,173 @@ For example, lets add sub tasks to our todo items by storing a `todoItem` ref on
 <Tabs>
 <Tab title="Todo Item">
 
-
 ```ts title="todo-item/todo-item.entity.ts" {24-25}
-import { Prop, modelOptions } from '@typegoose/typegoose';
-import { Base } from '@typegoose/typegoose/lib/defaultClasses';
+import { Prop, modelOptions } from '@typegoose/typegoose'
+import { Base } from '@typegoose/typegoose/lib/defaultClasses'
 
 @modelOptions({ schemaOptions: { timestamps: true } })
 export class TodoItemEntity extends Base {
+
   @Prop({ required: true })
-  title!: string;
+  title!: string
 
   @Prop()
-  description?: string;
+  description?: string
 
   @Prop({ required: true })
-  completed!: boolean;
+  completed!: boolean
 
   @Prop({ default: Date.now })
-  createdAt!: Date;
+  createdAt!: Date
 
   @Prop({ default: Date.now })
-  updatedAt!: Date;
+  updatedAt!: Date
 
   @Prop({ default: 0 })
-  priority!: number;
+  priority!: number
 
   @Prop({ ref: () => SubTaskEntity })
-  subTasks: Ref<SubTaskEntity>[];
+  subTasks: Ref<SubTaskEntity>[]
 
   @Prop()
-  createdBy?: string;
+  createdBy?: string
 
   @Prop()
-  updatedBy?: string;
+  updatedBy?: string
 }
 ```
 
 </Tab>
 <Tab title="Subtask">
 
-
 ```ts title="sub-task/sub-task.entity.ts" {15-16}
-import { Prop, modelOptions, Ref } from '@typegoose/typegoose';
-import { Base } from '@typegoose/typegoose/lib/defaultClasses';
+import { Prop, modelOptions, Ref } from '@typegoose/typegoose'
+import { Base } from '@typegoose/typegoose/lib/defaultClasses'
 
 @modelOptions({ schemaOptions: { timestamps: true } })
 export class SubTaskEntity extends Base {
+
   @Prop({ required: true })
-  title!: string;
+  title!: string
 
   @Prop()
-  description?: string;
+  description?: string
 
   @Prop({ required: true })
-  completed!: boolean;
+  completed!: boolean
 
   @Prop({ ref: () => TodoItemEntity, required: true })
-  todoItem!: Ref<TodoItemEntity>;
+  todoItem!: Ref<TodoItemEntity>
 
   @Prop()
-  createdAt!: Date;
+  createdAt!: Date
 
   @Prop()
-  updatedAt!: Date;
+  updatedAt!: Date
 
   @Prop()
-  createdBy?: string;
+  createdBy?: string
 
   @Prop()
-  updatedBy?: string;
+  updatedBy?: string
 }
 ```
 
 </Tab>
 </Tabs>
-
 
 Now that we have the relationships defined, we can add the `@Relation` and `@Connection` to our DTOs
 
 <Tabs>
 <Tab title="Todo Item">
 
-
 ```ts title="todo-item/todo-item.dto.ts"
-import { FilterableField, IDField, KeySet, Connection } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
-import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto';
+import { FilterableField, IDField, KeySet, Connection } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
+import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'
 
 @ObjectType('TodoItem')
 @KeySet(['id'])
 // disable the remove because mongoose does not support removing a virtual
+
 @Connection('subTasks', () => SubTaskDTO, { update: { enabled: true } })
 export class TodoItemDTO {
+
   @IDField(() => ID)
-  id!: string;
+  id!: string
 
   @FilterableField()
-  title!: string;
+  title!: string
 
   @FilterableField({ nullable: true })
-  description?: string;
+  description?: string
 
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
 
   @FilterableField(() => GraphQLISODateTime)
-  createdAt!: Date;
+  createdAt!: Date
 
   @FilterableField(() => GraphQLISODateTime)
-  updatedAt!: Date;
+  updatedAt!: Date
 
   @Field()
-  age!: number;
+  age!: number
 
   @FilterableField()
-  priority!: number;
+  priority!: number
 
   @FilterableField({ nullable: true })
-  createdBy?: string;
+  createdBy?: string
 
   @FilterableField({ nullable: true })
-  updatedBy?: string;
+  updatedBy?: string
 }
 ```
 
 </Tab>
 <Tab title="Subtask">
 
-
 ```ts title="sub-task/sub-task.dto.ts"
-import { FilterableField, IDField, KeySet, Relation } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
-import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto';
+import { FilterableField, IDField, KeySet, Relation } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
+import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 
 @ObjectType('SubTask')
 @KeySet(['id'])
 // disable the remove because a sub task cannot exist without a todoitem
+
 @Relation('todoItem', () => TodoItemDTO, { update: { enabled: true } })
 export class SubTaskDTO {
+
   @IDField(() => ID)
-  id!: string;
+  id!: string
 
   @FilterableField()
-  title!: string;
+  title!: string
 
   @FilterableField({ nullable: true })
-  description?: string;
+  description?: string
 
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
 
   @FilterableField(() => GraphQLISODateTime)
-  createdAt!: Date;
+  createdAt!: Date
 
   @FilterableField(() => GraphQLISODateTime)
-  updatedAt!: Date;
+  updatedAt!: Date
 
   @FilterableField({ nullable: true })
-  createdBy?: string;
+  createdBy?: string
 
   @FilterableField({ nullable: true })
-  updatedBy?: string;
+  updatedBy?: string
 }
 ```
 
 </Tab>
 </Tabs>
-
 
 ## Many To Many Example
 
@@ -199,182 +194,180 @@ In this example, we'll add `tags` to `todoItems` by storing an array of `tag` re
 <Tabs>
 <Tab title="Todo Item">
 
-
 ```ts title="todo-item/todo-item.entity.ts" {21-23}
-import { Prop, modelOption, Ref } from '@typegoose/typegoose';
-import { Base } from '@typegoose/typegoose/lib/defaultClasses';
+import { Prop, modelOption, Ref } from '@typegoose/typegoose'
+import { Base } from '@typegoose/typegoose/lib/defaultClasses'
 
 @modelOptions({ schemaOptions: { timestamps: true } })
 export class TodoItemEntity extends Base {
+
   @Prop({ required: true })
-  title!: string;
+  title!: string
 
   @Prop()
-  description?: string;
+  description?: string
 
   @Prop({ required: true })
-  completed!: boolean;
+  completed!: boolean
 
   @Prop({ default: Date.now })
-  createdAt!: Date;
+  createdAt!: Date
 
   @Prop({ default: Date.now })
-  updatedAt!: Date;
+  updatedAt!: Date
 
   @Prop({ ref: () => TagEntity })
-  tags!: Ref<TagEntity>[];
+  tags!: Ref<TagEntity>[]
 
   @Prop({ default: 0 })
-  priority!: number;
+  priority!: number
 
   @Prop()
-  createdBy?: string;
+  createdBy?: string
 
   @Prop()
-  updatedBy?: string;
+  updatedBy?: string
 
   public get id(): string {
     // eslint-disable-next-line no-underscore-dangle
-    return this._id.toHexString();
+    return this._id.toHexString()
   }
 }
-
 ```
 
 </Tab>
 <Tab title="Tag">
 
-
 ```ts title="tag/tag.entity.ts" {33-38}
-import { Base } from '@typegoose/typegoose/lib/defaultClasses';
-import { Prop, modelOptions, Ref } from '@typegoose/typegoose';
-import { Types } from 'mongoose';
-import { TodoItemEntity } from '../todo-item/todo-item.entity';
+import { Base } from '@typegoose/typegoose/lib/defaultClasses'
+import { Prop, modelOptions, Ref } from '@typegoose/typegoose'
+import { Types } from 'mongoose'
+import { TodoItemEntity } from '../todo-item/todo-item.entity'
 
 @modelOptions({
   schemaOptions: {
     timestamps: true,
     collection: 'tags',
-    toObject: { virtuals: true },
-  },
+    toObject: { virtuals: true }
+  }
 })
 export class TagEntity implements Base {
-  _id!: Types.ObjectId;
 
-  id!: string;
+  _id!: Types.ObjectId
+
+  id!: string
 
   @Prop({ required: true })
-  name!: string;
+  name!: string
 
   @Prop()
-  createdAt!: Date;
+  createdAt!: Date
 
   @Prop()
-  updatedAt!: Date;
+  updatedAt!: Date
 
   @Prop()
-  createdBy?: string;
+  createdBy?: string
 
   @Prop()
-  updatedBy?: string;
+  updatedBy?: string
 
   @Prop({
     ref: 'TodoItemEntity',
     localField: '_id',
-    foreignField: 'tags',
+    foreignField: 'tags'
   })
-  todoItems?: Ref<TodoItemEntity>[];
+  todoItems?: Ref<TodoItemEntity>[]
 }
 ```
 
 </Tab>
 </Tabs>
-
 
 Now that we have the relationship defined, we can add the `@Connection` to our DTOS
 
 <Tabs>
 <Tab title="Todo Item">
 
-
 ```ts title="todo-item/todo-item.dto.ts"
-import { FilterableField, IDField, KeySet, Connection } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
-import { TagDTO } from '../../tag/dto/tag.dto';
+import { FilterableField, IDField, KeySet, Connection } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
+import { TagDTO } from '../../tag/dto/tag.dto'
 
 @ObjectType('TodoItem')
 @KeySet(['id'])
 @Connection('tags', () => TagDTO)
 export class TodoItemDTO {
+
   @IDField(() => ID)
-  id!: string;
+  id!: string
 
   @FilterableField()
-  title!: string;
+  title!: string
 
   @FilterableField({ nullable: true })
-  description?: string;
+  description?: string
 
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
 
   @FilterableField(() => GraphQLISODateTime)
-  createdAt!: Date;
+  createdAt!: Date
 
   @FilterableField(() => GraphQLISODateTime)
-  updatedAt!: Date;
+  updatedAt!: Date
 
   @Field()
-  age!: number;
+  age!: number
 
   @FilterableField()
-  priority!: number;
+  priority!: number
 
   @FilterableField({ nullable: true })
-  createdBy?: string;
+  createdBy?: string
 
   @FilterableField({ nullable: true })
-  updatedBy?: string;
+  updatedBy?: string
 }
 ```
 
 </Tab>
 <Tab title="Tag">
 
-
 ```ts title="tag/tag.dto.ts"
-import { FilterableField, IDField, KeySet, Connection } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
-import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto';
+import { FilterableField, IDField, KeySet, Connection } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
+import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 
 @ObjectType('Tag')
 @KeySet(['id'])
 // disable update and remove since it is a virtual in the entity
+
 @Connection('todoItems', () => TodoItemDTO)
 export class TagDTO {
+
   @IDField(() => ID)
-  id!: string;
+  id!: string
 
   @FilterableField()
-  name!: string;
+  name!: string
 
   @FilterableField(() => GraphQLISODateTime)
-  createdAt!: Date;
+  createdAt!: Date
 
   @FilterableField(() => GraphQLISODateTime)
-  updatedAt!: Date;
+  updatedAt!: Date
 
   @FilterableField({ nullable: true })
-  createdBy?: string;
+  createdBy?: string
 
   @FilterableField({ nullable: true })
-  updatedBy?: string;
+  updatedBy?: string
 }
 ```
 
 </Tab>
 </Tabs>
-
 
 ## Discriminators
 
@@ -385,38 +378,36 @@ To use discriminators you need to define them in your `NestjsQueryTypegooseModul
 When working with discriminators, `nestjs-query` requires you to provide a service class for each discriminated entity. This is necessary for the auto-generated resolvers to be created correctly. These service classes are also the perfect place to add any custom business logic for your discriminated entities.
 
 ```ts title="todo-item/todo-item.module.ts"
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryTypegooseModule, TypegooseQueryService } from '@ptc-org/nestjs-query-typegoose';
-import { Module } from '@nestjs/common';
-import { TodoItemEntity } from './entities/todo-item.entity';
-import { TodoTaskEntity } from './entities/todo-task.entity';
-import { TodoAppointmentEntity } from './entities/todo-appointment.entity';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoTaskDTO } from './dto/todo-task.dto';
-import { TodoAppointmentDTO } from './dto/todo-appointment.dto';
-import { CreateTodoTaskInput } from './dto/create-todo-task.input';
-import { CreateTodoAppointmentInput } from './dto/create-todo-appointment.input';
-import { InjectModel } from '@m8a/nestjs-typegoose';
-import { ReturnModelType } from '@typegoose/typegoose';
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
+import { NestjsQueryTypegooseModule, TypegooseQueryService } from '@ptc-org/nestjs-query-typegoose'
+import { Module } from '@nestjs/common'
+import { TodoItemEntity } from './entities/todo-item.entity'
+import { TodoTaskEntity } from './entities/todo-task.entity'
+import { TodoAppointmentEntity } from './entities/todo-appointment.entity'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoTaskDTO } from './dto/todo-task.dto'
+import { TodoAppointmentDTO } from './dto/todo-appointment.dto'
+import { CreateTodoTaskInput } from './dto/create-todo-task.input'
+import { CreateTodoAppointmentInput } from './dto/create-todo-appointment.input'
+import { InjectModel } from '@m8a/nestjs-typegoose'
+import { ReturnModelType } from '@typegoose/typegoose'
 
 const typegooseModule = NestjsQueryTypegooseModule.forFeature([
   {
     typegooseClass: TodoItemEntity,
-    discriminators: [
-      { typegooseClass: TodoTaskEntity },
-      { typegooseClass: TodoAppointmentEntity }
-    ]
+    discriminators: [{ typegooseClass: TodoTaskEntity }, { typegooseClass: TodoAppointmentEntity }]
   }
-]);
-
+])
 
 class TodoTaskEntityService extends TypegooseQueryService<TodoTaskEntity> {
+
   constructor(@InjectModel(TodoTaskEntity) readonly model: ReturnModelType<typeof TodoTaskEntity>) {
     super(model)
   }
 }
 
 class TodoAppointmentService extends TypegooseQueryService<TodoAppointmentEntity> {
+
   constructor(@InjectModel(TodoAppointmentEntity) readonly model: ReturnModelType<typeof TodoAppointmentEntity>) {
     super(model)
   }
@@ -430,8 +421,8 @@ class TodoAppointmentService extends TypegooseQueryService<TodoAppointmentEntity
         {
           DTOClass: TodoItemDTO,
           EntityClass: TodoItemEntity,
-          create: {disabled: true}, // Disable create for the base entity
-          update: {disabled: true} // Disable update for the base entity
+          create: { disabled: true }, // Disable create for the base entity
+          update: { disabled: true } // Disable update for the base entity
         },
         {
           DTOClass: TodoTaskDTO,
@@ -448,10 +439,7 @@ class TodoAppointmentService extends TypegooseQueryService<TodoAppointmentEntity
           ServiceClass: TodoAppointmentService
         }
       ],
-      services: [
-         TodoTaskEntityService,
-         TodoAppointmentService
-      ]
+      services: [TodoTaskEntityService, TodoAppointmentService]
     })
   ]
 })

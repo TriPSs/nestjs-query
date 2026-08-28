@@ -2,7 +2,6 @@
 title: Filtering
 ---
 
-
 Filtering in `nestjs-query` has an object based syntax.
 
 For a full reference of filter operations [see filter reference](../../concepts/queries#filter-reference)
@@ -14,15 +13,15 @@ The following example filters for all todoItems that are marked completed.
 
 ```graphql
 {
-  todoItems(filter: {completed: {is: true}}){
-    pageInfo{
+  todoItems(filter: { completed: { is: true } }) {
+    pageInfo {
       hasNextPage
       hasPreviousPage
       startCursor
       endCursor
     }
-    edges{
-      node{
+    edges {
+      node {
         id
         title
         completed
@@ -84,13 +83,11 @@ When querying the default filter is one level deep. You can specify the generate
 
 You can find the documentation and an example in the [`QueryOptions` reference](../dtos#generated-filter-type-depth).
 
-
 ## Setting a default filter
 
 When querying the default filter is empty. You can specify a default filter by using the `QueryOptions` decorator on your DTO.
 
 You can find the documentation and an example in the [`QueryOptions` reference](../dtos#setting-a-default-filter).
-
 
 ## Setting allowed boolean expressions
 
@@ -104,11 +101,11 @@ Filters in `nestjs-query` come from multiple sources and combine differently dep
 
 ### Filter Sources
 
-| Source | When Applied | How Combined |
-|--------|--------------|--------------|
-| User filter (GraphQL args) | Always | Base filter |
-| Default filter (`@QueryOptions`) | Only when user provides NO filter | Replaces empty filter |
-| Auth filter (`@Authorize`) | Always | ANDed with user filter |
+| Source                           | When Applied                      | How Combined           |
+| -------------------------------- | --------------------------------- | ---------------------- |
+| User filter (GraphQL args)       | Always                            | Base filter            |
+| Default filter (`@QueryOptions`) | Only when user provides NO filter | Replaces empty filter  |
+| Auth filter (`@Authorize`)       | Always                            | ANDed with user filter |
 
 ### Default Filter Behavior
 
@@ -122,7 +119,7 @@ The `defaultFilter` from `@QueryOptions` is used as the GraphQL field's `default
 ```
 
 <Warning>
-Default filter is NOT merged - it's a fallback. Use [authorization](../authorization) for filters that must always apply.
+  Default filter is NOT merged - it's a fallback. Use [authorization](../authorization) for filters that must always apply.
 </Warning>
 
 ### Authorization Filter Behavior
@@ -131,13 +128,23 @@ Filters from `@Authorize` are **always merged** with the user's filter using AND
 
 ```ts
 // User query
-filter: { title: { like: '%todo%' } }
+filter: {
+  title: {
+    like: '%todo%'
+  }
+}
 
 // @Authorize returns
-{ ownerId: { eq: currentUserId } }
+{
+  ownerId: {
+    eq: currentUserId
+  }
+}
 
 // Actual filter applied
-{ and: [{ title: { like: '%todo%' } }, { ownerId: { eq: currentUserId } }] }
+{
+  and: [{ title: { like: '%todo%' } }, { ownerId: { eq: currentUserId } }]
+}
 ```
 
 For more details, see [Authorization](../authorization).
@@ -168,8 +175,6 @@ When querying relations, authorization filters are resolved in order (first non-
 2. **Relation's `auth` option** - if defined on the relation decorator
 3. **Related DTO's `@Authorize` decorator** - fallback to the related type's auth
 
-<Note>
-Relation auth filters are NOT merged - the first non-empty result is used.
-</Note>
+<Note>Relation auth filters are NOT merged - the first non-empty result is used.</Note>
 
 See [Relation Filtering](../authorization#relation-filtering) for details.

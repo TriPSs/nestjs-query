@@ -1,8 +1,8 @@
 ---
-title: "Controllers"
+title: 'Controllers'
 ---
 
-## Auto-generated controllers[​](#auto-generated-controllers "Direct link to Auto-generated controllers")
+## Auto-generated controllers[​](#auto-generated-controllers 'Direct link to Auto-generated controllers')
 
 The simplest setup is the `endpoints` option of `NestjsQueryRestModule`. Each entry creates a Nest controller backed by an entity, assembler, or custom `QueryService`.
 
@@ -16,6 +16,7 @@ import { TodoItemDTO } from './dto/todo-item.dto'
 import { TodoItemInputDTO } from './dto/todo-item-input.dto'
 import { TodoItemUpdateDTO } from './dto/todo-item-update.dto'
 import { TodoItemEntity } from './todo-item.entity'
+
 @Module({
   imports: [
     NestjsQueryRestModule.forFeature({
@@ -40,7 +41,7 @@ export class TodoItemModule {}
 
 Use `AssemblerClass` instead of `EntityClass` when an [assembler](/concepts/advanced/assemblers) maps the entity and DTO, and register the assembler in the module's `assemblers` array. Use `ServiceClass` when the endpoint is backed directly by a custom `QueryService`, and register that provider in `services`.
 
-## Custom controllers[​](#custom-controllers "Direct link to Custom controllers")
+## Custom controllers[​](#custom-controllers 'Direct link to Custom controllers')
 
 Extend `CRUDController` to override an endpoint or add ordinary Nest routes. Register the controller and DTO with `NestjsQueryRestModule` so authorizers and hooks are provided.
 
@@ -52,11 +53,14 @@ import { InjectQueryService, QueryService } from '@ptc-org/nestjs-query-core'
 import { CRUDController } from '@ptc-org/nestjs-query-rest'
 import { TodoItemDTO } from './dto/todo-item.dto'
 import { TodoItemEntity } from './todo-item.entity'
+
 @Controller('todo-items')
 export class TodoItemController extends CRUDController(TodoItemDTO) {
+
   constructor(@InjectQueryService(TodoItemEntity) service: QueryService<TodoItemDTO>) {
     super(service)
   }
+
   @Get('health')
   health() {
     return { status: 'ok' }
@@ -81,16 +85,16 @@ export class TodoItemModule {}
 
 For narrower controllers, extend `CreateController`, `ReadController`, `UpdateController`, `DeleteController`, or `ExportController` instead.
 
-## Options[​](#options "Direct link to Options")
+## Options[​](#options 'Direct link to Options')
 
 Top-level `CRUDController` and endpoint options include:
 
-* `CreateDTOClass` and `UpdateDTOClass` select mutation body DTOs.
-* `basePath` overrides the generated controller path.
-* `dtoName` changes the name used to derive operation IDs and the default path.
-* `pagingStrategy`, `defaultResultSize`, `maxResultsSize`, `defaultSort`, `defaultFilter`, `disableFilter`, `enableSearch`, and `enableTotalCount` configure collection queries.
-* `guards`, `interceptors`, `pipes`, `filters`, `decorators`, and `tags` apply Nest or OpenAPI behavior to all generated methods.
-* `create`, `read`, `update`, `delete`, and `export` configure one controller group independently.
+- `CreateDTOClass` and `UpdateDTOClass` select mutation body DTOs.
+- `basePath` overrides the generated controller path.
+- `dtoName` changes the name used to derive operation IDs and the default path.
+- `pagingStrategy`, `defaultResultSize`, `maxResultsSize`, `defaultSort`, `defaultFilter`, `disableFilter`, `enableSearch`, and `enableTotalCount` configure collection queries.
+- `guards`, `interceptors`, `pipes`, `filters`, `decorators`, and `tags` apply Nest or OpenAPI behavior to all generated methods.
+- `create`, `read`, `update`, `delete`, and `export` configure one controller group independently.
 
 Each operation group accepts `disabled`. The `one` and `many` nested options support a custom `path`, `description`, `operationOptions`, and method-level guards, interceptors, pipes, filters, decorators, and tags.
 
@@ -116,7 +120,8 @@ Each operation group accepts `disabled`. The `one` and `many` nested options sup
 ```
 
 <Note>
-  Static paths can conflict with the default `:id` route. The generated export route is registered as `/export`; avoid using `export` as a record identifier, and use explicit custom paths when necessary.
+  Static paths can conflict with the default `:id` route. The generated export route is registered as `/export`; avoid using
+  `export` as a record identifier, and use explicit custom paths when necessary.
 </Note>
 
 [Edit this page](https://github.com/tripss/nestjs-query/edit/master/docs/rest/controllers)

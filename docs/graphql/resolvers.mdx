@@ -1,10 +1,10 @@
 ---
-title: "Resolvers"
+title: 'Resolvers'
 ---
 
-## Defining the Resolver[​](#defining-the-resolver "Direct link to Defining the Resolver")
+## Defining the Resolver[​](#defining-the-resolver 'Direct link to Defining the Resolver')
 
-### Auto Generated Resolver[​](#auto-generated-resolver "Direct link to Auto Generated Resolver")
+### Auto Generated Resolver[​](#auto-generated-resolver 'Direct link to Auto Generated Resolver')
 
 The easiest way to get started is to use the `@NestjsQueryGraphQLModule`. The `NestjsQueryGraphQLModule` will automatically create a CRUDResolver for you.
 
@@ -20,6 +20,7 @@ The easiest way to get started is to use the `@NestjsQueryGraphQLModule`. The `N
     import { Module } from '@nestjs/common';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -30,11 +31,10 @@ The easiest way to get started is to use the `@NestjsQueryGraphQLModule`. The `N
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
-  <Tab title="Mongoose">
-    todo-item.module.ts
-  </Tab>
+<Tab title="Mongoose">todo-item.module.ts</Tab>
 
   <Tab title="Example">
     ```ts
@@ -43,6 +43,7 @@ The easiest way to get started is to use the `@NestjsQueryGraphQLModule`. The `N
     import { Module } from '@nestjs/common';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -53,11 +54,10 @@ The easiest way to get started is to use the `@NestjsQueryGraphQLModule`. The `N
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
-  <Tab title="Example">
-    todo-item.module.ts
-  </Tab>
+<Tab title="Example">todo-item.module.ts</Tab>
 
   <Tab title="Example">
     ```ts
@@ -66,6 +66,7 @@ The easiest way to get started is to use the `@NestjsQueryGraphQLModule`. The `N
     import { Module } from '@nestjs/common';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -80,43 +81,46 @@ The easiest way to get started is to use the `@NestjsQueryGraphQLModule`. The `N
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 </Tabs>
 
-### CRUDResolver[​](#crudresolver "Direct link to CRUDResolver")
+### CRUDResolver[​](#crudresolver 'Direct link to CRUDResolver')
 
 If you want to override auto generated queries or mutations you can use the `CRUDResolver` to manually define your resolver.
 
 Resolvers work the same as they do in [`@nestjs/graphql`](https://docs.nestjs.com/graphql/resolvers-map) by annotating your class with `@Resolver`.
 
 <Note>
-  In this example the DTO and entity are the same shape, if you have a case where they are different or have computed fields check out [Assemblers](/concepts/advanced/assemblers) to understand how to convert to and from the DTO/Entity.
+  In this example the DTO and entity are the same shape, if you have a case where they are different or have computed fields check
+  out [Assemblers](/concepts/advanced/assemblers) to understand how to convert to and from the DTO/Entity.
 </Note>
 
 <Warning>
   When using the `@Resolver` decorator from `@nestjs/graphql` you must use the following
 
-  ```ts
-  @Resolver(() => DTOClass)
-  ```
+```ts
+@Resolver(() => DTOClass)
+```
 
-  otherwise relations will not work.
+otherwise relations will not work.
+
 </Warning>
 
 todo-item.resolver.ts
 
 ```ts
-import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core';
-import { CRUDResolver } from '@ptc-org/nestjs-query-graphql';
-import { Resolver, Query, Args } from '@nestjs/graphql';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
+import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core'
+import { CRUDResolver } from '@ptc-org/nestjs-query-graphql'
+import { Resolver, Query, Args } from '@nestjs/graphql'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
+
 @Resolver(() => TodoItemDTO)
 export class TodoItemResolver extends CRUDResolver(TodoItemDTO) {
-  constructor(
-    @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>
-  ) {
-    super(service);
+
+  constructor(@InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>) {
+    super(service)
   }
 }
 ```
@@ -138,6 +142,7 @@ Notice how the `dtos` property is specified instead of the resolvers, this allow
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
     import { TodoItemResolver } from './todo-item.resolver'
+
     @Module({
       providers: [TodoItemResolver]
       imports: [
@@ -149,11 +154,10 @@ Notice how the `dtos` property is specified instead of the resolvers, this allow
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
-  <Tab title="Mongoose">
-    todo-item.module.ts
-  </Tab>
+<Tab title="Mongoose">todo-item.module.ts</Tab>
 
   <Tab title="Example">
     ```ts
@@ -163,6 +167,7 @@ Notice how the `dtos` property is specified instead of the resolvers, this allow
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
     import { TodoItemResolver } from './todo-item.resolver'
+
     @Module({
       providers: [TodoItemResolver]
       imports: [
@@ -174,11 +179,10 @@ Notice how the `dtos` property is specified instead of the resolvers, this allow
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
-  <Tab title="Example">
-    todo-item.module.ts
-  </Tab>
+<Tab title="Example">todo-item.module.ts</Tab>
 
   <Tab title="Example">
     ```ts
@@ -188,6 +192,7 @@ Notice how the `dtos` property is specified instead of the resolvers, this allow
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
     import { TodoItemResolver } from './todo-item.resolver'
+
     @Module({
       providers: [TodoItemResolver]
       imports: [
@@ -203,109 +208,111 @@ Notice how the `dtos` property is specified instead of the resolvers, this allow
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 </Tabs>
 
 <Warning>
-  All of the subsequent examples omit the module definition for custom resolvers but you should still register your DTOs to ensure all the providers are set up properly.
+  All of the subsequent examples omit the module definition for custom resolvers but you should still register your DTOs to ensure
+  all the providers are set up properly.
 </Warning>
 
-### Generated Endpoints[​](#generated-endpoints "Direct link to Generated Endpoints")
+### Generated Endpoints[​](#generated-endpoints 'Direct link to Generated Endpoints')
 
 When using the auto-generated resolver or extending `CRUDResolver` the methods that will be exposed for the `TodoItemDTO` are:
 
-* `todoItem` - Find a single `TodoItem` by id.
-* `todoItems` - Filter, sort, and page `TodoItems`
-* `createOneTodoItem` - Create a single `TodoItem`
-* `createManyTodoItems` - Create multiple `TodoItems`.
-* `updateOneTodoItem` - Update a single `TodoItem` by id.
-* `updateManyTodoItems` - Update multiple `TodoItems` using a filter.
-* `deleteOneTodoItem` - Delete a single `TodoItem` by id.
-* `deleteManyTodoItems` - Delete multiple `TodoItems` using a filter.
+- `todoItem` - Find a single `TodoItem` by id.
+- `todoItems` - Filter, sort, and page `TodoItems`
+- `createOneTodoItem` - Create a single `TodoItem`
+- `createManyTodoItems` - Create multiple `TodoItems`.
+- `updateOneTodoItem` - Update a single `TodoItem` by id.
+- `updateManyTodoItems` - Update multiple `TodoItems` using a filter.
+- `deleteOneTodoItem` - Delete a single `TodoItem` by id.
+- `deleteManyTodoItems` - Delete multiple `TodoItems` using a filter.
 
 You can read more about the methods in the [Queries](/graphql/queries/endpoints) and [Mutations](/graphql/mutations) docs.
 
-***
+---
 
-## Options[​](#options "Direct link to Options")
+## Options[​](#options 'Direct link to Options')
 
 When using `NestjsQueryGraphQLModule` or `CRUDResolver` you can define a number of options to control your endpoints.
 
-* `CreateDTOClass` - The input DTO to use for create mutations. See [Create and Update DTOs](#create-and-update-dtos)
+- `CreateDTOClass` - The input DTO to use for create mutations. See [Create and Update DTOs](#create-and-update-dtos)
 
-* `UpdateDTOClass` - The input DTO to use for update mutations. See [Create and Update DTOs](#create-and-update-dtos)
+- `UpdateDTOClass` - The input DTO to use for update mutations. See [Create and Update DTOs](#create-and-update-dtos)
 
-* `enableSubscriptions?` - Set to `true` to enable graphql subscriptions. See [Subscriptions](/graphql/subscriptions).
+- `enableSubscriptions?` - Set to `true` to enable graphql subscriptions. See [Subscriptions](/graphql/subscriptions).
 
-* `enableAggregate?` - When set to true an aggregate query will be enabled on the type and all relations (unless the explicitly disable it). See [Aggregation](/graphql/aggregations)
+- `enableAggregate?` - When set to true an aggregate query will be enabled on the type and all relations (unless the explicitly disable it). See [Aggregation](/graphql/aggregations)
 
-* `create` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
+- `create` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
 
-  * `CreateDTOClass` - The input DTO to use for create mutations.
-  * `CreateOneInput` - The `InputType` to use for create one mutations.
-  * `CreateManyInput` - The `InputType` to use for create many mutations.
+  - `CreateDTOClass` - The input DTO to use for create mutations.
+  - `CreateOneInput` - The `InputType` to use for create one mutations.
+  - `CreateManyInput` - The `InputType` to use for create many mutations.
 
-* `read` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
+- `read` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
 
-  * `QueryArgs` - Specify to override the auto-generated `ArgsType` to use to filter records in `queryMany` endpoint.
+  - `QueryArgs` - Specify to override the auto-generated `ArgsType` to use to filter records in `queryMany` endpoint.
 
-* `update` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
+- `update` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
 
-  * `UpdateDTOClass` - The input DTO to use for update mutations.
-  * `UpdateOneInput` - The `InputType` to use for update one mutations.
-  * `UpdateManyInput` - The `InputType` to use for update many mutations.
+  - `UpdateDTOClass` - The input DTO to use for update mutations.
+  - `UpdateOneInput` - The `InputType` to use for update one mutations.
+  - `UpdateManyInput` - The `InputType` to use for update many mutations.
 
-* `delete` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
+- `delete` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
 
-  * `DeleteOneInput` - The `InputType` to use for delete one mutations.
-  * `DeleteManyInput` - The `InputType` to use for delete many mutations.
+  - `DeleteOneInput` - The `InputType` to use for delete one mutations.
+  - `DeleteManyInput` - The `InputType` to use for delete many mutations.
 
-* `aggregate` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
+- `aggregate` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
 
-  * `enabled` - Set to true to enable aggregations. If this is used in place of the root `enableAggregate` option relations will not have aggregate queries exposed.
+  - `enabled` - Set to true to enable aggregations. If this is used in place of the root `enableAggregate` option relations will not have aggregate queries exposed.
 
-#### `ResolverOptions`[​](#resolveroptions "Direct link to resolveroptions")
+#### `ResolverOptions`[​](#resolveroptions 'Direct link to resolveroptions')
 
 The `create`, `read`, `update`, and `delete` options above all accept the following options.
 
-* `dtoName` - Set to override the default name (the name passed to `@ObjectType` or the name of the class).
+- `dtoName` - Set to override the default name (the name passed to `@ObjectType` or the name of the class).
 
-* `disabled=false` - Set to true to disable all endpoints.
+- `disabled=false` - Set to true to disable all endpoints.
 
-* `guards=[]` - An array of [guards](https://docs.nestjs.com/guards) to add to all endpoints.
+- `guards=[]` - An array of [guards](https://docs.nestjs.com/guards) to add to all endpoints.
 
-* `interceptors=[]` - An array of [interceptors](https://docs.nestjs.com/interceptors) to add to all endpoints.
+- `interceptors=[]` - An array of [interceptors](https://docs.nestjs.com/interceptors) to add to all endpoints.
 
-* `pipes=[]` - An array of [pipes](https://docs.nestjs.com/pipes) to add to all endpoints.
+- `pipes=[]` - An array of [pipes](https://docs.nestjs.com/pipes) to add to all endpoints.
 
-* `filters=[]` - An array of [filters](https://docs.nestjs.com/exception-filters) to add to all endpoints.
+- `filters=[]` - An array of [filters](https://docs.nestjs.com/exception-filters) to add to all endpoints.
 
-* `decorators=[]` - An array of custom `PropertyDecorator` or `MethodDecorators` to add to the endpoint.
+- `decorators=[]` - An array of custom `PropertyDecorator` or `MethodDecorators` to add to the endpoint.
 
-* `enableSubscriptions?` - Set to `true` to enable graphql subscriptions. See [Subscriptions](/graphql/subscriptions).
+- `enableSubscriptions?` - Set to `true` to enable graphql subscriptions. See [Subscriptions](/graphql/subscriptions).
 
-* `one`, `many` - Both the `one` and `many` accept the following options:
+- `one`, `many` - Both the `one` and `many` accept the following options:
 
-  * `name?` - Override the endpoint name.
-  * `disabled=false` - Set to true to disable the endpoint.
-  * `enableSubscriptions?` - Set to `true` to enable graphql subscriptions. See [Subscriptions](/graphql/subscriptions).
-  * `guards=[]` - An array of [guards](https://docs.nestjs.com/guards) to add to the endpoint.
-  * `interceptors=[]` - An array of [interceptors](https://docs.nestjs.com/interceptors) to add to the endpoint.
-  * `pipes=[]` - An array of [pipes](https://docs.nestjs.com/pipes) to add to the endpoint.
-  * `filters=[]` - An array of [filters](https://docs.nestjs.com/exception-filters) to add to the endpoint.
-  * `decorators=[]` - An array of custom `PropertyDecorator` or `MethodDecorators` to add to the endpoint.
+  - `name?` - Override the endpoint name.
+  - `disabled=false` - Set to true to disable the endpoint.
+  - `enableSubscriptions?` - Set to `true` to enable graphql subscriptions. See [Subscriptions](/graphql/subscriptions).
+  - `guards=[]` - An array of [guards](https://docs.nestjs.com/guards) to add to the endpoint.
+  - `interceptors=[]` - An array of [interceptors](https://docs.nestjs.com/interceptors) to add to the endpoint.
+  - `pipes=[]` - An array of [pipes](https://docs.nestjs.com/pipes) to add to the endpoint.
+  - `filters=[]` - An array of [filters](https://docs.nestjs.com/exception-filters) to add to the endpoint.
+  - `decorators=[]` - An array of custom `PropertyDecorator` or `MethodDecorators` to add to the endpoint.
 
-***
+---
 
-## Examples[​](#examples "Direct link to Examples")
+## Examples[​](#examples 'Direct link to Examples')
 
-### Create and Update DTOs.[​](#create-and-update-dtos "Direct link to Create and Update DTOs.")
+### Create and Update DTOs.[​](#create-and-update-dtos 'Direct link to Create and Update DTOs.')
 
 There may be times when you want to specify certain validation or only allow certain fields when updating or creating records.
 
 To allow for this you can specify the `CreateDTOClass` and `UpdateDTOClass` options.
 
-#### Example[​](#example "Direct link to Example")
+#### Example[​](#example 'Direct link to Example')
 
 In this example we'll create a new `TodoItemInputDTO` that adds validation and limits the fields you can modify.
 
@@ -314,18 +321,21 @@ Assume we have the following class `todo-item.input.ts` which omits the `id`, `c
 todo-item.input.ts
 
 ```ts
-import { Field, InputType } from '@nestjs/graphql';
-import { IsString, Length } from 'class-validator';
+import { Field, InputType } from '@nestjs/graphql'
+import { IsString, Length } from 'class-validator'
+
 @InputType('TodoItemInput')
 export class TodoItemInputDTO {
+
   @Field()
   // ensure it is a string field
   @IsString()
   // min length of 5 and max of 5 characters
   @Length(5, 50)
-  title!: string;
+  title!: string
+
   @Field()
-  completed!: boolean;
+  completed!: boolean
 }
 ```
 
@@ -344,6 +354,7 @@ We can then update our resolver to use the new `TodoItemInputDTO`
     import { TodoItemInputDTO } from './todo-item.input';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -359,11 +370,10 @@ We can then update our resolver to use the new `TodoItemInputDTO`
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
-  <Tab title="Example">
-    todo-item.resolver.ts
-  </Tab>
+<Tab title="Example">todo-item.resolver.ts</Tab>
 
   <Tab title="Example">
     ```ts
@@ -373,24 +383,28 @@ We can then update our resolver to use the new `TodoItemInputDTO`
     import { TodoItemInputDTO } from './todo-item.input';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Resolver()
     export class TodoItemResolver extends CRUDResolver(TodoItemDTO, {
+
       CreateDTOClass: TodoItemInputDTO,
       UpdateDTOClass: TodoItemInputDTO,
     }) {
       constructor(
+
           @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>
       ) {
         super(service);
       }
     }
     ```
+
   </Tab>
 </Tabs>
 
-***
+---
 
-### Disabling Endpoints.[​](#disabling-endpoints "Direct link to Disabling Endpoints.")
+### Disabling Endpoints.[​](#disabling-endpoints 'Direct link to Disabling Endpoints.')
 
 There may be scenarios where you wish to disable certain methods.
 
@@ -410,6 +424,7 @@ In this example we disable all `create` endpoints
     import { Module } from '@nestjs/common';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -424,11 +439,10 @@ In this example we disable all `create` endpoints
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
-  <Tab title="Example">
-    todo-item.resolver.ts
-  </Tab>
+<Tab title="Example">todo-item.resolver.ts</Tab>
 
   <Tab title="Example">
     ```ts
@@ -437,17 +451,21 @@ In this example we disable all `create` endpoints
     import { Resolver } from '@nestjs/graphql';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Resolver()
     export class TodoItemResolver extends CRUDResolver(TodoItemDTO, {
+
       create: { disabled: true },
     }) {
       constructor(
+
           @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>
       ) {
         super(service);
       }
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -469,6 +487,7 @@ In this example we disable all `many` mutations. This will prevent `createManyTo
     import { Module } from '@nestjs/common';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -485,11 +504,10 @@ In this example we disable all `many` mutations. This will prevent `createManyTo
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
-  <Tab title="Example">
-    todo-item.resolver.ts
-  </Tab>
+<Tab title="Example">todo-item.resolver.ts</Tab>
 
   <Tab title="Example">
     ```ts
@@ -498,25 +516,29 @@ In this example we disable all `many` mutations. This will prevent `createManyTo
     import { Resolver } from '@nestjs/graphql';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Resolver()
     export class TodoItemResolver extends CRUDResolver(TodoItemDTO, {
+
       create: { many: { disabled: true } },
       update: { many: { disabled: true } },
       delete: { many: { disabled: true } },
     }) {
       constructor(
+
           @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>
       ) {
         super(service);
       }
     }
     ```
+
   </Tab>
 </Tabs>
 
-***
+---
 
-### Guards, Pipes, Filters, and Interceptors[​](#guards-pipes-filters-and-interceptors "Direct link to Guards, Pipes, Filters, and Interceptors")
+### Guards, Pipes, Filters, and Interceptors[​](#guards-pipes-filters-and-interceptors 'Direct link to Guards, Pipes, Filters, and Interceptors')
 
 In this section we'll just demonstrate using a `guard` but the same pattern applies for `pipes`, `filters` and `interceptors`
 
@@ -527,26 +549,21 @@ Assume we have the following auth guard that checks for a certain header and val
 auth.guard.ts
 
 ```ts
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { GqlExecutionContext } from '@nestjs/graphql';
-import { AUTH_HEADER_NAME } from './constants';
-import { config } from './config';
+import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common'
+import { Observable } from 'rxjs'
+import { GqlExecutionContext } from '@nestjs/graphql'
+import { AUTH_HEADER_NAME } from './constants'
+import { config } from './config'
+
 @Injectable()
 export class AuthGuard implements CanActivate {
-  private logger = new Logger(AuthGuard.name);
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    const ctx = GqlExecutionContext.create(context);
-    const req = ctx.getContext().request;
-    this.logger.log(`Req = ${req.headers}`);
-    return req.headers[AUTH_HEADER_NAME] === config.auth.header;
+
+  private logger = new Logger(AuthGuard.name)
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+    const ctx = GqlExecutionContext.create(context)
+    const req = ctx.getContext().request
+    this.logger.log(`Req = ${req.headers}`)
+    return req.headers[AUTH_HEADER_NAME] === config.auth.header
   }
 }
 ```
@@ -566,7 +583,9 @@ We can then add it to each of our mutation endpoints
     import { AuthGuard } from '../auth.guard';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     const guards = [AuthGuard];
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -583,11 +602,10 @@ We can then add it to each of our mutation endpoints
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
-  <Tab title="Example">
-    todo-item.resolver.ts
-  </Tab>
+<Tab title="Example">todo-item.resolver.ts</Tab>
 
   <Tab title="Example">
     ```ts
@@ -597,20 +615,25 @@ We can then add it to each of our mutation endpoints
     import { AuthGuard } from '../auth.guard';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     const guards = [AuthGuard];
+
     @Resolver()
     export class TodoItemResolver extends CRUDResolver(TodoItemDTO, {
+
       create: { guards },
       update: { guards },
       delete: { guards },
     }) {
       constructor(
+
           @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>
       ) {
         super(service);
       }
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -631,7 +654,9 @@ You can also apply to individual methods using the `one` and `many` fields. For 
     import { AuthGuard } from '../auth.guard';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     const guards = [AuthGuard];
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -648,11 +673,10 @@ You can also apply to individual methods using the `one` and `many` fields. For 
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
-  <Tab title="Example">
-    todo-item.resolver.ts
-  </Tab>
+<Tab title="Example">todo-item.resolver.ts</Tab>
 
   <Tab title="Example">
     ```ts
@@ -662,32 +686,35 @@ You can also apply to individual methods using the `one` and `many` fields. For 
     import { AuthGuard } from '../auth.guard';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     const guards = [AuthGuard];
+
     @Resolver()
     export class TodoItemResolver extends CRUDResolver(TodoItemDTO, {
+
       create: { many: { guards } },
       update: { many: { guards } },
       delete: { many: { guards } },
     }) {
       constructor(
+
           @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>
       ) {
         super(service);
       }
     }
     ```
+
   </Tab>
 </Tabs>
 
-***
+---
 
-### Override Endpoint Name[​](#override-endpoint-name "Direct link to Override Endpoint Name")
+### Override Endpoint Name[​](#override-endpoint-name 'Direct link to Override Endpoint Name')
 
 If you find yourself in a situation where you want to override an endpoint name you can use the `one.name` or `many.name` options to override
 
-<Note>
-  These options are available for the `create`, `read`, `update`, and `delete` endpoints.
-</Note>
+<Note>These options are available for the `create`, `read`, `update`, and `delete` endpoints.</Note>
 
 In this example we'll change the `todoItem` query to `findTodoItem` and the `todoItems` endpoint to `queryForTodoItems`.
 
@@ -703,6 +730,7 @@ In this example we'll change the `todoItem` query to `findTodoItem` and the `tod
     import { Module } from '@nestjs/common';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -717,11 +745,10 @@ In this example we'll change the `todoItem` query to `findTodoItem` and the `tod
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
-  <Tab title="Example">
-    todo-item.resolver.ts
-  </Tab>
+<Tab title="Example">todo-item.resolver.ts</Tab>
 
   <Tab title="Example">
     ```ts
@@ -730,32 +757,36 @@ In this example we'll change the `todoItem` query to `findTodoItem` and the `tod
     import { Resolver } from '@nestjs/graphql';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Resolver()
     export class TodoItemResolver extends CRUDResolver(TodoItemDTO, {
+
       read: { one: { name: 'findTodoItem' }, many: { name: 'queryForTodoItems' } },
     }) {
       constructor(
+
           @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>
       ) {
         super(service);
       }
     }
     ```
+
   </Tab>
 </Tabs>
 
-## Individual Resolvers[​](#individual-resolvers "Direct link to Individual Resolvers")
+## Individual Resolvers[​](#individual-resolvers 'Direct link to Individual Resolvers')
 
 The `@ptc-org/nestjs-query-graphql` package exposes each part of `CRUD` into individual mixins and resolvers allowing you to pick and choose what functionality you want to expose.
 
 <Note>
   This is advanced usage of the resolvers API and is subject to change!
 
-  * All examples below can be achieved with resolver options.
-  * The following resolvers do not expose relations options, to add relations options see [Relateable](/graphql/relations#relatable)
-</Note>
+- All examples below can be achieved with resolver options.
+- The following resolvers do not expose relations options, to add relations options see [Relateable](/graphql/relations#relatable)
+  </Note>
 
-### `CreateResolver`[​](#createresolver "Direct link to createresolver")
+### `CreateResolver`[​](#createresolver 'Direct link to createresolver')
 
 The `CreateResolver` will only expose the `createOne` and `createMany` endpoints. The [options](#options) described for `create` can be passed to the `CreateResolver`
 
@@ -764,24 +795,24 @@ For example the following resolver will expose the `createOneTodoItem` and `crea
 todo-item.resolver.ts
 
 ```ts
-import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core';
-import { CreateResolver } from '@ptc-org/nestjs-query-graphql';
-import { Resolver } from '@nestjs/graphql';
-import { TodoItemDTO } from './todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
+import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core'
+import { CreateResolver } from '@ptc-org/nestjs-query-graphql'
+import { Resolver } from '@nestjs/graphql'
+import { TodoItemDTO } from './todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
+
 @Resolver()
 export class TodoItemResolver extends CreateResolver(TodoItemDTO) {
-  constructor(
-      @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>
-  ) {
-    super(service);
+
+  constructor(@InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>) {
+    super(service)
   }
 }
 ```
 
-***
+---
 
-### `ReadResolver`[​](#readresolver "Direct link to readresolver")
+### `ReadResolver`[​](#readresolver 'Direct link to readresolver')
 
 The `ReadResolver` will only expose the `query` and `findById` endpoints. The [options](#options) described for `read` can be passed to the `ReadResolver`
 
@@ -790,24 +821,24 @@ For example the following resolver will expose the `todoItems` and `todoItem` qu
 todo-item.resolver.ts
 
 ```ts
-import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core';
-import { ReadResolver } from '@ptc-org/nestjs-query-graphql';
-import { Resolver } from '@nestjs/graphql';
-import { TodoItemDTO } from './todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
+import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core'
+import { ReadResolver } from '@ptc-org/nestjs-query-graphql'
+import { Resolver } from '@nestjs/graphql'
+import { TodoItemDTO } from './todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
+
 @Resolver()
 export class TodoItemResolver extends ReadResolver(TodoItemDTO) {
-  constructor(
-    @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>
-  ) {
-    super(service);
+
+  constructor(@InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>) {
+    super(service)
   }
 }
 ```
 
-***
+---
 
-### `UpdateResolver`[​](#updateresolver "Direct link to updateresolver")
+### `UpdateResolver`[​](#updateresolver 'Direct link to updateresolver')
 
 The `UpdateResolver` will only expose the `updateOne` and `updateMany` endpoints. The [options](#options) described for `update` can be passed to the `UpdateResolver`
 
@@ -816,24 +847,24 @@ For example the following resolver will expose the `updateOneTodoItem` and `upda
 todo-item.resolver.ts
 
 ```ts
-import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core';
-import { UpdateResolver } from '@ptc-org/nestjs-query-graphql';
-import { Resolver } from '@nestjs/graphql';
-import { TodoItemDTO } from './todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
+import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core'
+import { UpdateResolver } from '@ptc-org/nestjs-query-graphql'
+import { Resolver } from '@nestjs/graphql'
+import { TodoItemDTO } from './todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
+
 @Resolver()
 export class TodoItemResolver extends UpdateResolver(TodoItemDTO) {
-  constructor(
-    @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>
-  ) {
-    super(service);
+
+  constructor(@InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>) {
+    super(service)
   }
 }
 ```
 
-***
+---
 
-### `DeleteResolver`[​](#deleteresolver "Direct link to deleteresolver")
+### `DeleteResolver`[​](#deleteresolver 'Direct link to deleteresolver')
 
 The `DeleteResolver` will only expose the `deleteOne` and `deleteMany` endpoints. The [options](#options) described for `delete` can be passed to the `DeleteResolver`
 
@@ -842,29 +873,30 @@ For example the following resolver will expose the `deleteOneTodoItem` and `dele
 todo-item.resolver.ts
 
 ```ts
-import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core';
-import { DeleteResolver } from '@ptc-org/nestjs-query-graphql';
-import { Resolver } from '@nestjs/graphql';
-import { TodoItemDTO } from './todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
+import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core'
+import { DeleteResolver } from '@ptc-org/nestjs-query-graphql'
+import { Resolver } from '@nestjs/graphql'
+import { TodoItemDTO } from './todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
+
 @Resolver()
 export class TodoItemResolver extends DeleteResolver(TodoItemDTO) {
-  constructor(
-    @InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>
-  ) {
-    super(service);
+
+  constructor(@InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>) {
+    super(service)
   }
 }
 ```
 
-***
+---
 
-## Custom Endpoints[​](#custom-endpoints "Direct link to Custom Endpoints")
+## Custom Endpoints[​](#custom-endpoints 'Direct link to Custom Endpoints')
 
 You can also create custom methods.
 
 <Note>
-  Unless you are overriding an endpoint you DO NOT need to extend the crud resolver directly, instead you can create a new resolver for your type and add the new endpoint. `@nestjs/graphql` will handle merging the two resolver into one.
+  Unless you are overriding an endpoint you DO NOT need to extend the crud resolver directly, instead you can create a new
+  resolver for your type and add the new endpoint. `@nestjs/graphql` will handle merging the two resolver into one.
 </Note>
 
 Lets create a new query endpoint that only returns completed `TodoItems`.
@@ -874,12 +906,13 @@ First create a file named `types.ts`. And add the following.
 types.ts
 
 ```ts
-import { QueryArgsType } from '@ptc-org/nestjs-query-graphql';
-import { ArgsType } from '@nestjs/graphql';
-import { TodoItemDTO } from './dto/todo-item.dto';
+import { QueryArgsType } from '@ptc-org/nestjs-query-graphql'
+import { ArgsType } from '@nestjs/graphql'
+import { TodoItemDTO } from './dto/todo-item.dto'
+
 @ArgsType()
 export class TodoItemQuery extends QueryArgsType(TodoItemDTO) {}
-export const TodoItemConnection = TodoItemQuery.ConnectionType;
+export const TodoItemConnection = TodoItemQuery.ConnectionType
 ```
 
 In the code above we export two types. `TodoItemConnection` and `TodoItemQuery`. Because of the way `@nestjs/graphql` and `nest` work we need to extend the `QueryArgsType` so that it will know the type to serialize into.
@@ -895,10 +928,13 @@ import { Args, Query, Resolver } from '@nestjs/graphql';
 import { TodoItemDTO } from './dto/todo-item.dto';
 import { TodoItemAssembler } from './todo-item.assembler';
 import { TodoItemConnection, TodoItemQuery } from './types';
+
 @Resolver(() => TodoItemDTO)
 export class TodoItemResolver {
+
   constructor(@InjectQueryService(TodoItemEntity) readonly service: QueryService<TodoItemEntity>) {}
   // Set the return type to the TodoItemConnection
+
   @Query(() => TodoItemConnection)
   completedTodoItems(@Args() query: TodoItemQuery): Promise<ConnectionType<TodoItemDTO>> {
     // add the completed filter the user provided filter
@@ -944,8 +980,8 @@ The next piece is
 // add the completed filter the user provided filter
 const filter: Filter<TodoItemDTO> = {
   ...query.filter,
-  ...{ completed: { is: true } },
-};
+  ...{ completed: { is: true } }
+}
 ```
 
 Here we do a shallow copy of the `filter` and add `completed: { is: true }`. This will override any completed arguments that an end user may have provided to ensure we always query for completed todos.
@@ -954,7 +990,7 @@ Finally we create our connection response by using the `createFromPromise` metho
 
 ```ts
 // call the original queryMany method with the new query
-return TodoItemConnection.createFromPromise((q) => this.service.query(q), { ...query, ...{ filter } });
+return TodoItemConnection.createFromPromise((q) => this.service.query(q), { ...query, ...{ filter } })
 ```
 
 The last step is to add the resolver to the module, by registering our resolver as a provider and importing the `NestjsQueryGraphQLModule` we will get both the auto generated resolver along with the custom endpoints from the custom resolver.
@@ -962,13 +998,14 @@ The last step is to add the resolver to the module, by registering our resolver 
 todo-items.module.ts
 
 ```ts
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
-import { Module } from '@nestjs/common';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoItemAssembler } from './todo-item.assembler';
-import { TodoItemEntity } from './todo-item.entity';
-import { TodoItemResolver } from './todo-item.resolver';
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
+import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
+import { Module } from '@nestjs/common'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoItemAssembler } from './todo-item.assembler'
+import { TodoItemEntity } from './todo-item.entity'
+import { TodoItemResolver } from './todo-item.resolver'
+
 @Module({
   providers: [TodoItemResolver],
   imports: [
@@ -978,11 +1015,11 @@ import { TodoItemResolver } from './todo-item.resolver';
       resolvers: [
         {
           DTOClass: TodoItemDTO,
-          EntityClass: TodoItemEntity,
-        },
-      ],
-    }),
-  ],
+          EntityClass: TodoItemEntity
+        }
+      ]
+    })
+  ]
 })
 export class TodoItemModule {}
 ```

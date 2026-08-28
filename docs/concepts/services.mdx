@@ -1,138 +1,134 @@
 ---
-title: "QueryService"
-description: "The  package defines a  which is used to query and modify records."
+title: 'QueryService'
+description: 'The  package defines a  which is used to query and modify records.'
 ---
 
-## Methods[​](#methods "Direct link to Methods")
+## Methods[​](#methods 'Direct link to Methods')
 
 The following methods are defined on the `QueryService`
 
-### `query`[​](#query "Direct link to query")
+### `query`[​](#query 'Direct link to query')
 
 Query for multiple records, with a filter, paging and sorting.
 
-#### Arguments[​](#arguments "Direct link to Arguments")
+#### Arguments[​](#arguments 'Direct link to Arguments')
 
-* `query: Query<DTO>` - The query to filter, page, and sort results.
+- `query: Query<DTO>` - The query to filter, page, and sort results.
 
-#### Returns[​](#returns "Direct link to Returns")
+#### Returns[​](#returns 'Direct link to Returns')
 
 An array of DTOs
 
-### `findById`[​](#findbyid "Direct link to findbyid")
+### `findById`[​](#findbyid 'Direct link to findbyid')
 
 Find a record by its id.
 
-#### Arguments[​](#arguments-1 "Direct link to Arguments")
+#### Arguments[​](#arguments-1 'Direct link to Arguments')
 
-* `id: string | number` - The id of the record to find
+- `id: string | number` - The id of the record to find
 
-#### Returns[​](#returns-1 "Direct link to Returns")
+#### Returns[​](#returns-1 'Direct link to Returns')
 
 The DTO or undefined
 
-### `getById`[​](#getbyid "Direct link to getbyid")
+### `getById`[​](#getbyid 'Direct link to getbyid')
 
-* get a record by its id or return a rejected promise with a NotFound error.
+- get a record by its id or return a rejected promise with a NotFound error.
 
-#### Arguments[​](#arguments-2 "Direct link to Arguments")
+#### Arguments[​](#arguments-2 'Direct link to Arguments')
 
-* `id: string | number` - The id of the record to find
+- `id: string | number` - The id of the record to find
 
-#### Returns[​](#returns-2 "Direct link to Returns")
+#### Returns[​](#returns-2 'Direct link to Returns')
 
 The DTO or a NotFoundException.
 
-### `createMany`[​](#createmany "Direct link to createmany")
+### `createMany`[​](#createmany 'Direct link to createmany')
 
 Create multiple records.
 
-#### Arguments[​](#arguments-3 "Direct link to Arguments")
+#### Arguments[​](#arguments-3 'Direct link to Arguments')
 
-* `items: DeepPartial<DTO>[]` - An array of partial DTOs to persist
+- `items: DeepPartial<DTO>[]` - An array of partial DTOs to persist
 
-#### Returns[​](#returns-3 "Direct link to Returns")
+#### Returns[​](#returns-3 'Direct link to Returns')
 
 The saved DTOs.
 
-### `createOne`[​](#createone "Direct link to createone")
+### `createOne`[​](#createone 'Direct link to createone')
 
 Create a single DTO.
 
-#### Arguments[​](#arguments-4 "Direct link to Arguments")
+#### Arguments[​](#arguments-4 'Direct link to Arguments')
 
-* `item: DeepPartial<DTO>` - A partial of the DTO to persist
+- `item: DeepPartial<DTO>` - A partial of the DTO to persist
 
-#### Returns[​](#returns-4 "Direct link to Returns")
+#### Returns[​](#returns-4 'Direct link to Returns')
 
 The saved DTO
 
-### `updateMany`[​](#updatemany "Direct link to updatemany")
+### `updateMany`[​](#updatemany 'Direct link to updatemany')
 
 Update multiple records based on a filter.
 
-#### Arguments[​](#arguments-5 "Direct link to Arguments")
+#### Arguments[​](#arguments-5 'Direct link to Arguments')
 
-* `update: DeepPartial<DTO>` - The update to apply
-* `filter: Filter<DTO>` - A `Filter` used to find the records to update
+- `update: DeepPartial<DTO>` - The update to apply
+- `filter: Filter<DTO>` - A `Filter` used to find the records to update
 
-#### Returns[​](#returns-5 "Direct link to Returns")
+#### Returns[​](#returns-5 'Direct link to Returns')
 
 An object with the `updatedCount`
 
-<Note>
-  UpdatedCount may be 0 if the database does not return the number of rows updated.
-</Note>
+<Note>UpdatedCount may be 0 if the database does not return the number of rows updated.</Note>
 
-### `updateOne`[​](#updateone "Direct link to updateone")
+### `updateOne`[​](#updateone 'Direct link to updateone')
 
 Update a single record.
 
-#### Arguments[​](#arguments-6 "Direct link to Arguments")
+#### Arguments[​](#arguments-6 'Direct link to Arguments')
 
-* `id: string | number` - The id of the record to update
-* `update: DeepPartial<DTO>` - The update to apply
+- `id: string | number` - The id of the record to update
+- `update: DeepPartial<DTO>` - The update to apply
 
-#### Returns[​](#returns-6 "Direct link to Returns")
+#### Returns[​](#returns-6 'Direct link to Returns')
 
 The updated DTO
 
-### `deleteMany`[​](#deletemany "Direct link to deletemany")
+### `deleteMany`[​](#deletemany 'Direct link to deletemany')
 
 Delete multiple records.
 
-#### Arguments[​](#arguments-7 "Direct link to Arguments")
+#### Arguments[​](#arguments-7 'Direct link to Arguments')
 
-* `filter: Filter<DTO>` - The filter to find the records to delete.
+- `filter: Filter<DTO>` - The filter to find the records to delete.
 
-#### Returns[​](#returns-7 "Direct link to Returns")
+#### Returns[​](#returns-7 'Direct link to Returns')
 
 An object with a `deletedCount` field.
 
-<Note>
-  `deletedCount` may be 0 if the database does not return the number of rows deleted.
-</Note>
+<Note>`deletedCount` may be 0 if the database does not return the number of rows deleted.</Note>
 
-### `deleteOne`[​](#deleteone "Direct link to deleteone")
+### `deleteOne`[​](#deleteone 'Direct link to deleteone')
 
 Delete a single record.
 
-#### Arguments[​](#arguments-8 "Direct link to Arguments")
+#### Arguments[​](#arguments-8 'Direct link to Arguments')
 
-* `id: number | string`
+- `id: number | string`
 
-#### Returns[​](#returns-8 "Direct link to Returns")
+#### Returns[​](#returns-8 'Direct link to Returns')
 
 `Promise<DTO>`
 
-### `aggregate`[​](#aggregate "Direct link to aggregate")
+### `aggregate`[​](#aggregate 'Direct link to aggregate')
 
 Performs an aggregate query, supported aggregate functions are `groupBy`, `count`, `sum`, `avg`, `min`, and `max`
 
-#### Arguments[​](#arguments-9 "Direct link to Arguments")
+#### Arguments[​](#arguments-9 'Direct link to Arguments')
 
-* `filter: Filter<DTO>` - Additional filter to apply
-* `aggregate: AggregateQuery<DTO>` - The aggregate query
+- `filter: Filter<DTO>` - Additional filter to apply
+- `aggregate: AggregateQuery<DTO>` - The aggregate query
 
 Example `AggregateQuery`
 
@@ -146,216 +142,216 @@ Example `AggregateQuery`
 }
 ```
 
-#### Returns[​](#returns-9 "Direct link to Returns")
+#### Returns[​](#returns-9 'Direct link to Returns')
 
 An array of aggregate responses.
 
 Example `AggregateResponse`
 
 ```ts
-[
+;[
   {
     count: { id: 5 },
     sum: { id: 10 },
     avg: { id: 2.5 },
-    min: {id: 1, title: 'A Title'},
-    max: {id: 4, title: 'Z Title'}
+    min: { id: 1, title: 'A Title' },
+    max: { id: 4, title: 'Z Title' }
   }
 ]
 ```
 
-### `count`[​](#count "Direct link to count")
+### `count`[​](#count 'Direct link to count')
 
 Count the number of records that match the `filter`
 
-#### Arguments[​](#arguments-10 "Direct link to Arguments")
+#### Arguments[​](#arguments-10 'Direct link to Arguments')
 
-* `filter: Filter<DTO>` - The filter a count records by
+- `filter: Filter<DTO>` - The filter a count records by
 
-#### Returns[​](#returns-10 "Direct link to Returns")
+#### Returns[​](#returns-10 'Direct link to Returns')
 
 A count of records that match the `filter`
 
-### `queryRelations`[​](#queryrelations "Direct link to queryrelations")
+### `queryRelations`[​](#queryrelations 'Direct link to queryrelations')
 
 Query for relations
 
-#### Arguments[​](#arguments-11 "Direct link to Arguments")
+#### Arguments[​](#arguments-11 'Direct link to Arguments')
 
-* `RelationClass: Class<Relation>` - The `Class` type of the relation
-* `relationName: string` - The name of the relation
-* `dto: DTO | DTO[]` - The dto(s) to find the relations for.
-* `query: Query<Relation>` - Additional query to use when querying for relations.
+- `RelationClass: Class<Relation>` - The `Class` type of the relation
+- `relationName: string` - The name of the relation
+- `dto: DTO | DTO[]` - The dto(s) to find the relations for.
+- `query: Query<Relation>` - Additional query to use when querying for relations.
 
-#### Returns[​](#returns-11 "Direct link to Returns")
+#### Returns[​](#returns-11 'Direct link to Returns')
 
 If querying for relations for a single `DTO` an array of relations will be returned. If querying for relations for multiple `DTOs` a map where the key is the `DTO` and the value is the relations for the `DTO`.
 
-### `aggregateRelations`[​](#aggregaterelations "Direct link to aggregaterelations")
+### `aggregateRelations`[​](#aggregaterelations 'Direct link to aggregaterelations')
 
 Performs an aggregate query for the relations of a `DTO`.
 
-#### Arguments[​](#arguments-12 "Direct link to Arguments")
+#### Arguments[​](#arguments-12 'Direct link to Arguments')
 
-* `RelationClass: Class<Relation>` - The `Class` type of the relation
-* `relationName: string` - The name of the relation
-* `dto: DTO | DTO[]` - The dto(s) to aggregate the relations for.
-* `filter: Filter<Relation>` - A `filter` to apply when aggregating relations
-* `aggregate: AggregateQuery<Relation>` - The `aggregateQuery` for the relations
+- `RelationClass: Class<Relation>` - The `Class` type of the relation
+- `relationName: string` - The name of the relation
+- `dto: DTO | DTO[]` - The dto(s) to aggregate the relations for.
+- `filter: Filter<Relation>` - A `filter` to apply when aggregating relations
+- `aggregate: AggregateQuery<Relation>` - The `aggregateQuery` for the relations
 
-#### Returns[​](#returns-12 "Direct link to Returns")
+#### Returns[​](#returns-12 'Direct link to Returns')
 
 If aggregating relations for a single `DTO` an `AggregateResponse` for the dtos relations will be returned If aggregating relations for multiple `DTOs` a map where the key is the `DTO` and the value is the `AggregateResponse` for the dtos relations.
 
-### `countRelations`[​](#countrelations "Direct link to countrelations")
+### `countRelations`[​](#countrelations 'Direct link to countrelations')
 
 Counts the number of relations.
 
-#### Arguments[​](#arguments-13 "Direct link to Arguments")
+#### Arguments[​](#arguments-13 'Direct link to Arguments')
 
-* `RelationClass: Class<Relation>` - The `Class` type of the relation
-* `relationName: string` - The name of the relation
-* `dto: DTO | DTO[]` - The dto(s) to count the relations for.
-* `filter: Filter<Relation>`- A `filter` to apply when counting relations
+- `RelationClass: Class<Relation>` - The `Class` type of the relation
+- `relationName: string` - The name of the relation
+- `dto: DTO | DTO[]` - The dto(s) to count the relations for.
+- `filter: Filter<Relation>`- A `filter` to apply when counting relations
 
-#### Returns[​](#returns-13 "Direct link to Returns")
+#### Returns[​](#returns-13 'Direct link to Returns')
 
 If counting relations for a single `DTO` the relation count will be returned If counting relations for multiple `DTOs` a map where the key is the `DTO` and the value is relation count for the dtos relations.
 
-### `findRelation`[​](#findrelation "Direct link to findrelation")
+### `findRelation`[​](#findrelation 'Direct link to findrelation')
 
 Find a single relation for the `DTO`(s).
 
-#### Arguments[​](#arguments-14 "Direct link to Arguments")
+#### Arguments[​](#arguments-14 'Direct link to Arguments')
 
-* `RelationClass: Class<Relation>` - The `Class` type of the relation
-* `relationName: string` - The name of the relation
-* `dto: DTO | DTO[]` - The dto(s) to find the relation for.
-* `opts?: FindRelationOptions<Relation>` - Additional options to find a relation by.
+- `RelationClass: Class<Relation>` - The `Class` type of the relation
+- `relationName: string` - The name of the relation
+- `dto: DTO | DTO[]` - The dto(s) to find the relation for.
+- `opts?: FindRelationOptions<Relation>` - Additional options to find a relation by.
 
-#### Returns[​](#returns-14 "Direct link to Returns")
+#### Returns[​](#returns-14 'Direct link to Returns')
 
 If finding a relation for a single `DTO` the relation or undefineding returned If finding a relation for multiple `DTOs` a map where the key is the `DTO` and the value is the relation or undefined.
 
-### `addRelations`[​](#addrelations "Direct link to addrelations")
+### `addRelations`[​](#addrelations 'Direct link to addrelations')
 
 Adds relations to a `DTO`
 
-#### Arguments[​](#arguments-15 "Direct link to Arguments")
+#### Arguments[​](#arguments-15 'Direct link to Arguments')
 
-* `relationName: string` - The name of the relation
-* `id: string | number` - The id of the DTO to add the relations to
-* `relationIds: (string | number)[]` - The ids of the relations to add
-* `opts?: ModifyRelationOptions<DTO, Relation>` - Additional options apply when adding relations
+- `relationName: string` - The name of the relation
+- `id: string | number` - The id of the DTO to add the relations to
+- `relationIds: (string | number)[]` - The ids of the relations to add
+- `opts?: ModifyRelationOptions<DTO, Relation>` - Additional options apply when adding relations
 
-#### Returns[​](#returns-15 "Direct link to Returns")
+#### Returns[​](#returns-15 'Direct link to Returns')
 
 The DTO the relations were added to.
 
-### `setRelations`[​](#setrelations "Direct link to setrelations")
+### `setRelations`[​](#setrelations 'Direct link to setrelations')
 
 Sets relations on a `DTO`
 
-#### Arguments[​](#arguments-16 "Direct link to Arguments")
+#### Arguments[​](#arguments-16 'Direct link to Arguments')
 
-* `relationName: string` - The name of the relation
-* `id: string | number` - The id of the DTO to add the relations to
-* `relationIds: (string | number)[]` - The ids of the relations to set. If the relationIds is empty the all relations will be removed.
-* `opts?: ModifyRelationOptions<DTO, Relation>` - Additional options apply when adding relations
+- `relationName: string` - The name of the relation
+- `id: string | number` - The id of the DTO to add the relations to
+- `relationIds: (string | number)[]` - The ids of the relations to set. If the relationIds is empty the all relations will be removed.
+- `opts?: ModifyRelationOptions<DTO, Relation>` - Additional options apply when adding relations
 
-#### Returns[​](#returns-16 "Direct link to Returns")
+#### Returns[​](#returns-16 'Direct link to Returns')
 
 The DTO the relations were added to.
 
-### `setRelation`[​](#setrelation "Direct link to setrelation")
+### `setRelation`[​](#setrelation 'Direct link to setrelation')
 
 Set a relation on a DTO
 
-#### Arguments[​](#arguments-17 "Direct link to Arguments")
+#### Arguments[​](#arguments-17 'Direct link to Arguments')
 
-* `relationName: string` - The name of the relation
-* `id: string | number` - The id of the DTO to add the relations to
-* `relationId: string | number` - The id of the relation to set on the DTO
-* `opts?: ModifyRelationOptions<DTO, Relation>` - Additional options apply when setting the relation
+- `relationName: string` - The name of the relation
+- `id: string | number` - The id of the DTO to add the relations to
+- `relationId: string | number` - The id of the relation to set on the DTO
+- `opts?: ModifyRelationOptions<DTO, Relation>` - Additional options apply when setting the relation
 
-#### Returns[​](#returns-17 "Direct link to Returns")
+#### Returns[​](#returns-17 'Direct link to Returns')
 
 The DTO the relation was set on.
 
-### `removeRelations`[​](#removerelations "Direct link to removerelations")
+### `removeRelations`[​](#removerelations 'Direct link to removerelations')
 
 Removes multiple relations from a DTO
 
-#### Arguments[​](#arguments-18 "Direct link to Arguments")
+#### Arguments[​](#arguments-18 'Direct link to Arguments')
 
-* `relationName: string` - The name of the relation
-* `id: string | number` - The id of the DTO to remove the relations from.
-* `relationIds: (string | number)[]` - The ids of the relations to remove
-* `opts?: ModifyRelationOptions<DTO, Relation>` - Additional options to apply when removing relations
+- `relationName: string` - The name of the relation
+- `id: string | number` - The id of the DTO to remove the relations from.
+- `relationIds: (string | number)[]` - The ids of the relations to remove
+- `opts?: ModifyRelationOptions<DTO, Relation>` - Additional options to apply when removing relations
 
-#### Returns[​](#returns-18 "Direct link to Returns")
+#### Returns[​](#returns-18 'Direct link to Returns')
 
 The DTO the relations were removed from
 
-### `removeRelation`[​](#removerelation "Direct link to removerelation")
+### `removeRelation`[​](#removerelation 'Direct link to removerelation')
 
 Remove a relation from a DTO
 
-#### Arguments[​](#arguments-19 "Direct link to Arguments")
+#### Arguments[​](#arguments-19 'Direct link to Arguments')
 
-* `relationName: string` - The name of the relation
-* `id: string | number` - The id of the DTO to remove the relation from.
-* `relationId: string | number` - The id of the relation to remove
-* `opts?: ModifyRelationOptions<DTO, Relation>` - Additional options to apply when removing the relation.
+- `relationName: string` - The name of the relation
+- `id: string | number` - The id of the DTO to remove the relation from.
+- `relationId: string | number` - The id of the relation to remove
+- `opts?: ModifyRelationOptions<DTO, Relation>` - Additional options to apply when removing the relation.
 
-#### Returns[​](#returns-19 "Direct link to Returns")
+#### Returns[​](#returns-19 'Direct link to Returns')
 
 The DTO the relation was removed from.
 
-## Service Helpers[​](#service-helpers "Direct link to Service Helpers")
+## Service Helpers[​](#service-helpers 'Direct link to Service Helpers')
 
 You can create your own service to use with the `CRUDResolver` as long as it implements the `QueryService` interface.
 
 There are a number of persistence `QueryServices` that are provided out of the box.
 
-* [@ptc-org/nestjs-query-typeorm](/persistence/typeorm/getting-started)
-* [@ptc-org/nestjs-query-sequelize](/persistence/sequelize/getting-started)
-* [@ptc-org/nestjs-query-mongoose](/persistence/mongoose/getting-started)
+- [@ptc-org/nestjs-query-typeorm](/persistence/typeorm/getting-started)
+- [@ptc-org/nestjs-query-sequelize](/persistence/sequelize/getting-started)
+- [@ptc-org/nestjs-query-mongoose](/persistence/mongoose/getting-started)
 
 In addition to the persistence `QueryServices` `@ptc-org/nestjs-query-core` provides a few helper services that can be used for more complex use cases.
 
 When designing the base services we have chosen composition over inheritance. This approach lends itself well to modeling complex services without repeating yourself.
 
-### RelationQueryService[​](#relationqueryservice "Direct link to RelationQueryService")
+### RelationQueryService[​](#relationqueryservice 'Direct link to RelationQueryService')
 
 The RelationQueryService was originally designed for [federation](/graphql/federation), but has proven itself useful in representing virtual relations. A virtual relation(s) is anything that can be queried through a query service.
 
 To create additional relations through a RelationQueryService you need to provide the following
 
-* A `QueryService` that can be used to fetch the relation
-* A `query` function that accepts the parent DTO to fetch the relation for and returns a `Query` to fetch the relations.
+- A `QueryService` that can be used to fetch the relation
+- A `query` function that accepts the parent DTO to fetch the relation for and returns a `Query` to fetch the relations.
 
-<Info>
-  Relations defined using the `RelationQueryService` are readonly!
-</Info>
+<Info>Relations defined using the `RelationQueryService` are readonly!</Info>
 
 When a relation query method is called it will:
 
-* First check if the relation is a virtual relation, if `true` it will invoke the `query` option to generate a query that will be passed to the `queryService` to fetch the relations.
-* If the relation is not a `virtual` relation it will proxy to the original query service to query for the relation.
+- First check if the relation is a virtual relation, if `true` it will invoke the `query` option to generate a query that will be passed to the `queryService` to fetch the relations.
+- If the relation is not a `virtual` relation it will proxy to the original query service to query for the relation.
 
 For example, we could wrap the `TodoItem` query service and add a `completedSubTasks` relation.
 
 todo-item/todo-item.service.ts
 
 ```ts
-import { InjectQueryService, QueryService, RelationQueryService } from '@ptc-org/nestjs-query-core';
-import { TodoItemEntity } from './todo-item.entity';
-import { SubTaskEntity } from '../sub-task/sub-task.entity';
+import { InjectQueryService, QueryService, RelationQueryService } from '@ptc-org/nestjs-query-core'
+import { TodoItemEntity } from './todo-item.entity'
+import { SubTaskEntity } from '../sub-task/sub-task.entity'
+
 export class TodoItemService extends RelationQueryService<TodoItemEntity> {
+
   constructor(
     @InjectQueryService(TodoItemEntity) queryService: QueryService<TodoItemEntity>,
-    @InjectQueryService(SubTaskEntity) subTaskQueryService: QueryService<SubTaskEntity>,
+    @InjectQueryService(SubTaskEntity) subTaskQueryService: QueryService<SubTaskEntity>
   ) {
     // provide the original query service so all relations defined in the ORM work
     super(queryService, {
@@ -366,10 +362,10 @@ export class TodoItemService extends RelationQueryService<TodoItemEntity> {
         // the query method accepts a todoItem that can be used to filter the relations
         query(todoItem) {
           // filter for all relations that belong to the todoItem and are completed
-          return { filter: { todoItemId: { eq: todoItem.id }, completed: { is: true } } };
-        },
-      },
-    });
+          return { filter: { todoItemId: { eq: todoItem.id }, completed: { is: true } } }
+        }
+      }
+    })
   }
 }
 ```
@@ -379,26 +375,33 @@ Once the `relation` is defined in the query service we can add it to our `DTO` t
 todo-item/todo-item.dto.ts
 
 ```ts
-import { FilterableField, IDField, FilterableConnection, KeySet } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql';
-import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto';
+import { FilterableField, IDField, FilterableConnection, KeySet } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
+import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'
+
 @ObjectType('TodoItem')
 @KeySet(['id'])
 @FilterableConnection('subTasks', () => SubTaskDTO)
 @FilterableConnection('completedSubTasks', () => SubTaskDTO)
 export class TodoItemDTO {
+
   @IDField(() => ID)
-  id!: number;
+  id!: number
+
   @FilterableField()
-  title!: string;
+  title!: string
+
   @FilterableField({ nullable: true })
-  description?: string;
+  description?: string
+
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
+
   @FilterableField(() => GraphQLISODateTime)
-  created!: Date;
+  created!: Date
+
   @FilterableField(() => GraphQLISODateTime)
-  updated!: Date;
+  updated!: Date
 }
 ```
 
@@ -407,13 +410,15 @@ Next we need to export the `SubTask` query service from the `SubTaskModule` so w
 sub-task/sub-task.module.ts
 
 ```ts
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
-import { Module } from '@nestjs/common';
-import { SubTaskDTO } from './dto/sub-task.dto';
-import { SubTaskEntity } from './sub-task.entity';
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
+import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
+import { Module } from '@nestjs/common'
+import { SubTaskDTO } from './dto/sub-task.dto'
+import { SubTaskEntity } from './sub-task.entity'
+
 // define the persistence module so it can be exported
-const nestjsQueryTypeOrmModule = NestjsQueryTypeOrmModule.forFeature([SubTaskEntity]);
+const nestjsQueryTypeOrmModule = NestjsQueryTypeOrmModule.forFeature([SubTaskEntity])
+
 @Module({
   imports: [
     NestjsQueryGraphQLModule.forFeature({
@@ -422,15 +427,15 @@ const nestjsQueryTypeOrmModule = NestjsQueryTypeOrmModule.forFeature([SubTaskEnt
       resolvers: [
         {
           DTOClass: SubTaskDTO,
-          EntityClass: SubTaskEntity,
-        },
-      ],
+          EntityClass: SubTaskEntity
+        }
+      ]
     }),
     // import it into the subTaskModule so it can be exported
-    nestjsQueryTypeOrmModule,
+    nestjsQueryTypeOrmModule
   ],
   // export the persistence module so it can be used by the TodoItemService
-  exports: [nestjsQueryTypeOrmModule],
+  exports: [nestjsQueryTypeOrmModule]
 })
 export class SubTaskModule {}
 ```
@@ -440,15 +445,16 @@ Now we can import the `SubTaskModule` into the `TodoItemModule` so the `SubTask`
 todo-item/todo-item.module.ts
 
 ```ts
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
-import { Module } from '@nestjs/common';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoItemAssembler } from './todo-item.assembler';
-import { TodoItemEntity } from './todo-item.entity';
-import { TodoItemResolver } from './todo-item.resolver';
-import { TodoItemService } from './todo-item.service';
-import { SubTaskModule } from '../sub-task/sub-task.module';
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
+import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
+import { Module } from '@nestjs/common'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoItemAssembler } from './todo-item.assembler'
+import { TodoItemEntity } from './todo-item.entity'
+import { TodoItemResolver } from './todo-item.resolver'
+import { TodoItemService } from './todo-item.service'
+import { SubTaskModule } from '../sub-task/sub-task.module'
+
 @Module({
   providers: [TodoItemResolver],
   imports: [
@@ -460,18 +466,18 @@ import { SubTaskModule } from '../sub-task/sub-task.module';
       resolvers: [
         {
           DTOClass: TodoItemDTO,
-          ServiceClass: TodoItemService,
-        },
-      ],
-    }),
-  ],
+          ServiceClass: TodoItemService
+        }
+      ]
+    })
+  ]
 })
 export class TodoItemModule {}
 ```
 
 The `completedSubTasks` relation is now available in your graphql schema.
 
-### ProxyQueryService[​](#proxyqueryservice "Direct link to ProxyQueryService")
+### ProxyQueryService[​](#proxyqueryservice 'Direct link to ProxyQueryService')
 
 The `ProxyQueryService` is a query service that delegates to another query service. The `ProxyQueryService` can be used when you want to override certain methods of a query service without extending it.
 
@@ -484,48 +490,46 @@ To start lets define a `MutationLoggerQueryService`.
 utilities/mutation-logger-query.service.ts
 
 ```ts
-import { Logger, LoggerService } from '@nestjs/common';
-import { DeepPartial } from '../common';
-import { Filter, DeleteManyResponse, DeleteOneOptions, UpdateManyResponse, UpdateOneOptions } from '../interfaces';
-import { ProxyQueryService } from './proxy-query.service';
-import { QueryService } from './query.service';
-export class MutationLoggerQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> extends ProxyQueryService<
-  DTO,
-  C,
-  U
-> {
-  private readonly logger: LoggerService;
+import { Logger, LoggerService } from '@nestjs/common'
+import { DeepPartial } from '../common'
+import { Filter, DeleteManyResponse, DeleteOneOptions, UpdateManyResponse, UpdateOneOptions } from '../interfaces'
+import { ProxyQueryService } from './proxy-query.service'
+import { QueryService } from './query.service'
+
+export class MutationLoggerQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> extends ProxyQueryService<DTO, C, U> {
+
+  private readonly logger: LoggerService
   constructor(label: string, queryService: QueryService<DTO, C, U>) {
     // call super witht the QueryService we will delegate to
-    super(queryService);
+    super(queryService)
     // create our logger
-    this.logger = new Logger(label);
+    this.logger = new Logger(label)
   }
   // Override all the create, update, and delete methods to add the timed logging functionality
   createMany(items: C[]): Promise<DTO[]> {
-    return this.timedLog(`create many [itemCount=${items.length}]`, () => super.createMany(items));
+    return this.timedLog(`create many [itemCount=${items.length}]`, () => super.createMany(items))
   }
   createOne(item: C): Promise<DTO> {
-    return this.timedLog(`create one`, () => super.createOne(item));
+    return this.timedLog(`create one`, () => super.createOne(item))
   }
   deleteMany(filter: Filter<DTO>): Promise<DeleteManyResponse> {
-    return this.timedLog(`delete many`, () => super.deleteMany(filter));
+    return this.timedLog(`delete many`, () => super.deleteMany(filter))
   }
   deleteOne(id: number | string, opts?: DeleteOneOptions<DTO>): Promise<DTO> {
-    return this.timedLog(`delete one [id=${id}]`, () => super.deleteOne(id, opts));
+    return this.timedLog(`delete one [id=${id}]`, () => super.deleteOne(id, opts))
   }
   updateMany(update: U, filter: Filter<DTO>): Promise<UpdateManyResponse> {
-    return this.timedLog('update many', () => super.updateMany(update, filter));
+    return this.timedLog('update many', () => super.updateMany(update, filter))
   }
   updateOne(id: string | number, update: U, opts?: UpdateOneOptions<DTO>): Promise<DTO> {
-    return this.timedLog(`update one [id=${id}]`, () => super.updateOne(id, update, opts));
+    return this.timedLog(`update one [id=${id}]`, () => super.updateOne(id, update, opts))
   }
   private async timedLog<T>(message, fn: () => Promise<T>): Promise<T> {
-    const start = new Date();
-    const result = await fn();
-    const duration = start.getTime() - new Date().getTime();
-    this.logger.log(`${message} [duration=${duration}]`);
-    return result;
+    const start = new Date()
+    const result = await fn()
+    const duration = start.getTime() - new Date().getTime()
+    this.logger.log(`${message} [duration=${duration}]`)
+    return result
   }
 }
 ```
@@ -537,14 +541,16 @@ Lets add it to our `TodoItemQueryService`
 todo-item/todo-item.service.ts
 
 ```ts
-import { InjectQueryService, QueryService } from '@ptc-org/nestjs-query-core';
-import { MutationLoggerQueryService } from '../utilities/mutation-logger-query.service';
-import { TodoItemEntity } from './todo-item.entity';
+import { InjectQueryService, QueryService } from '@ptc-org/nestjs-query-core'
+import { MutationLoggerQueryService } from '../utilities/mutation-logger-query.service'
+import { TodoItemEntity } from './todo-item.entity'
+
 @QueryService(TodoItemEntity)
 export class TodoItemService extends MutationLoggerQueryService<TodoItemEntity> {
+
   constructor(@InjectQueryService(TodoItemEntity) service: QueryService<TodoItemEntity>) {
     // provide the logger name and the service
-    super(TodoItemService.name, service);
+    super(TodoItemService.name, service)
   }
 }
 ```
@@ -554,12 +560,13 @@ Don't forget to use your custom query service in your module
 todo-item/todo-item.module.ts
 
 ```ts
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
-import { Module } from '@nestjs/common';
-import { TodoItemDTO } from './dto/todo-item.dto';
-import { TodoItemEntity } from './todo-item.entity';
-import { TodoItemService } from './todo-item.service';
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
+import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
+import { Module } from '@nestjs/common'
+import { TodoItemDTO } from './dto/todo-item.dto'
+import { TodoItemEntity } from './todo-item.entity'
+import { TodoItemService } from './todo-item.service'
+
 @Module({
   imports: [
     NestjsQueryGraphQLModule.forFeature({
@@ -568,16 +575,16 @@ import { TodoItemService } from './todo-item.service';
       resolvers: [
         {
           DTOClass: TodoItemDTO,
-          ServiceClass: TodoItemService,
-        },
-      ],
-    }),
-  ],
+          ServiceClass: TodoItemService
+        }
+      ]
+    })
+  ]
 })
 export class TodoItemModule {}
 ```
 
-### NoOpQueryService[​](#noopqueryservice "Direct link to NoOpQueryService")
+### NoOpQueryService[​](#noopqueryservice 'Direct link to NoOpQueryService')
 
 The no-op query service is one that will throw a `NotImplementedException` for every method.
 
@@ -600,65 +607,67 @@ import {
   Query,
   QueryService,
   UpdateManyResponse,
-  UpdateOneOptions,
-} from '@ptc-org/nestjs-query-core';
-import { NotFoundException } from '@nestjs/common';
-import { TodoItemEntity } from './todo-item.entity';
+  UpdateOneOptions
+} from '@ptc-org/nestjs-query-core'
+import { NotFoundException } from '@nestjs/common'
+import { TodoItemEntity } from './todo-item.entity'
+
 @QueryService(TodoItemEntity)
 export class TodoItemService extends NoOpQueryService<TodoItemEntity> {
-  private records: TodoItemEntity[];
+
+  private records: TodoItemEntity[]
   constructor() {
-    super();
-    this.records = [];
+    super()
+    this.records = []
   }
   createMany(items: TodoItemEntity[]): Promise<TodoItemEntity[]> {
-    this.records.push(...items);
-    return Promise.resolve(items);
+    this.records.push(...items)
+    return Promise.resolve(items)
   }
   createOne(item: TodoItemEntity): Promise<TodoItemEntity> {
-    this.records.push(item);
-    return Promise.resolve(item);
+    this.records.push(item)
+    return Promise.resolve(item)
   }
   async updateMany(update: Partial<TodoItemEntity>, filter: Filter<TodoItemEntity>): Promise<UpdateManyResponse> {
-    const recordsToUpdate = await this.query({ filter });
-    recordsToUpdate.forEach((r) => Object.assign(r, update));
-    return { updatedCount: recordsToUpdate.length };
+    const recordsToUpdate = await this.query({ filter })
+    recordsToUpdate.forEach((r) => Object.assign(r, update))
+    return { updatedCount: recordsToUpdate.length }
   }
   async updateOne(
     id: string | number,
     update: Partial<TodoItemEntity>,
-    opts?: UpdateOneOptions<TodoItemEntity>,
+    opts?: UpdateOneOptions<TodoItemEntity>
   ): Promise<TodoItemEntity> {
-    const record = await this.getById(id, opts);
-    return Object.assign(record, update);
+    const record = await this.getById(id, opts)
+    return Object.assign(record, update)
   }
   async deleteMany(filter: Filter<TodoItemEntity>): Promise<DeleteManyResponse> {
-    const recordIds = (await this.query({ filter })).map((r) => r.id);
-    this.records = this.records.filter((r) => !recordIds.includes(r.id));
-    return Promise.resolve({ deletedCount: recordIds.length });
+    const recordIds = (await this.query({ filter })).map((r) => r.id)
+    this.records = this.records.filter((r) => !recordIds.includes(r.id))
+    return Promise.resolve({ deletedCount: recordIds.length })
   }
   async deleteOne(id: number | string, opts?: DeleteOneOptions<TodoItemEntity>): Promise<TodoItemEntity> {
-    const record = await this.getById(id, opts);
-    this.records = this.records.filter((r) => r.id !== record.id);
-    return Promise.resolve(record);
+    const record = await this.getById(id, opts)
+    this.records = this.records.filter((r) => r.id !== record.id)
+    return Promise.resolve(record)
   }
   findById(id: string | number, opts?: FindByIdOptions<TodoItemEntity>): Promise<TodoItemEntity | undefined> {
-    const record = applyFilter(this.records, opts?.filter ?? {}).find((r) => r.id === id);
-    return Promise.resolve(record);
+    const record = applyFilter(this.records, opts?.filter ?? {}).find((r) => r.id === id)
+    return Promise.resolve(record)
   }
   async getById(id: string | number, opts?: GetByIdOptions<TodoItemEntity>): Promise<TodoItemEntity> {
-    const record = await this.findById(id, opts);
+    const record = await this.findById(id, opts)
     if (!record) {
-      throw new NotFoundException(`Unable to find TodoItem with id ${id}`);
+      throw new NotFoundException(`Unable to find TodoItem with id ${id}`)
     }
-    return record;
+    return record
   }
   query(query: Query<TodoItemEntity>): Promise<TodoItemEntity[]> {
-    return Promise.resolve(applyQuery(this.records, query));
+    return Promise.resolve(applyQuery(this.records, query))
   }
   async count(filter: Filter<TodoItemEntity>): Promise<number> {
-    const found = await this.query({ filter });
-    return found.length;
+    const found = await this.query({ filter })
+    return found.length
   }
 }
 ```

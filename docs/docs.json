@@ -64,6 +64,7 @@
             ]
           },
           { "group": "Utilities", "pages": ["utilities/query-helpers"] },
+          { "group": "Project", "pages": ["faq", "contributing"] },
           {
             "group": "Migration Guides",
             "pages": [
@@ -78,8 +79,7 @@
               "migration-guides/v0.10.x-to-v0.11.x",
               "migration-guides/v0.5.x-to-v0.6.x"
             ]
-          },
-          { "group": "Project", "pages": ["faq", "contributing"] }
+          }
         ]
       },
       {

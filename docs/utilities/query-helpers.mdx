@@ -1,6 +1,6 @@
 ---
-title: "Query Helpers"
-description: "The  package provides a number of helper functions to transform or apply queries to a list of items."
+title: 'Query Helpers'
+description: 'The  package provides a number of helper functions to transform or apply queries to a list of items.'
 ---
 
 An example use case for these helpers would be to write a `QueryService` that wraps a store that does not support the query options natively (e.g. An in memory collection of objects such as a static array of objects).
@@ -9,31 +9,33 @@ All examples will be based on the following DTO definition.
 
 ```ts
 interface TestDTO {
-  first?: string | null;
-  last?: string | null;
-  age?: number | null;
-  isVerified?: boolean | null;
-  created?: Date | null;
+
+  first?: string | null
+  last?: string | null
+  age?: number | null
+  isVerified?: boolean | null
+  created?: Date | null
 }
 ```
 
-## applyFilter[​](#applyfilter "Direct link to applyFilter")
+## applyFilter[​](#applyfilter 'Direct link to applyFilter')
 
 The `applyFilter` helper applies a `Filter` to a single object or an array of objects.
 
-### Arguments[​](#arguments "Direct link to Arguments")
+### Arguments[​](#arguments 'Direct link to Arguments')
 
-* `dto: DTO|DTO[]`
+- `dto: DTO|DTO[]`
 
-  * If a single object a function that will test the dto against the filter, returning `true` when if it matches the filter.
-  * If an array of objects is provided the array will be filtered returning a new array with all elements that match the filter.
+  - If a single object a function that will test the dto against the filter, returning `true` when if it matches the filter.
+  - If an array of objects is provided the array will be filtered returning a new array with all elements that match the filter.
 
-* `filter: Filter<DTO>` - The filter to check the object\[s] against. See [`Filtering`](/concepts/queries#filtering)
+- `filter: Filter<DTO>` - The filter to check the object\[s] against. See [`Filtering`](/concepts/queries#filtering)
 
-### Example[​](#example "Direct link to Example")
+### Example[​](#example 'Direct link to Example')
 
 ```ts
 import { applyFilter } from `@ptc-org/nestjs-query-core`;
+
 const dtos: TestDTO[] = [
   {first: 'Bob', last: 'Yukon'}
   {first: 'Alice', last: 'Yukon'}
@@ -49,7 +51,7 @@ applyFilter<TestDTO>(dto, {first: {in: ['Bob', 'Sally']}) // true
 applyFilter<TestDTO>(dto, {first: {eq: ['Alice', 'Zane']}) // false
 ```
 
-## applySort[​](#applysort "Direct link to applySort")
+## applySort[​](#applysort 'Direct link to applySort')
 
 The `applySort` will sort an array of dtos.
 
@@ -58,18 +60,20 @@ The `applySort` will sort an array of dtos.
 </Info>
 
 <Warning>
-  It is expected that your data types all match. For example if you have a number field that also has some numbers represented as strings the applySort method may not work as expected.
+  It is expected that your data types all match. For example if you have a number field that also has some numbers represented as
+  strings the applySort method may not work as expected.
 </Warning>
 
-### Arguments[​](#arguments-1 "Direct link to Arguments")
+### Arguments[​](#arguments-1 'Direct link to Arguments')
 
-* `dto: DTO[]` - The array of DTOs to sort.
-* `sortFields: SortField<DTO>[]` - The sorting criteria. See [`Sorting`](/concepts/queries#sorting)
+- `dto: DTO[]` - The array of DTOs to sort.
+- `sortFields: SortField<DTO>[]` - The sorting criteria. See [`Sorting`](/concepts/queries#sorting)
 
-### Example[​](#example-1 "Direct link to Example")
+### Example[​](#example-1 'Direct link to Example')
 
 ```ts
 import { applySort, SortDirection, SortNulls } from `@ptc-org/nestjs-query-core`;
+
 const dtos: TestDTO[] = [
   {first: 'Bob', last: 'Yukon'}
   {first: 'Alice', last: 'Yukon'}
@@ -96,19 +100,20 @@ The resulting sorted array would be.
 ]
 ```
 
-## applyPaging[​](#applypaging "Direct link to applyPaging")
+## applyPaging[​](#applypaging 'Direct link to applyPaging')
 
 The `applyPaging` method will apply a `limit` and/or `offset` to an array of dtos.
 
-### Arguments[​](#arguments-2 "Direct link to Arguments")
+### Arguments[​](#arguments-2 'Direct link to Arguments')
 
-* `dto: DTO[]` - The array of DTOs to page.
-* `paging: Paging` - The paging arguments to apply. See [`Paging`](/concepts/queries#paging)
+- `dto: DTO[]` - The array of DTOs to page.
+- `paging: Paging` - The paging arguments to apply. See [`Paging`](/concepts/queries#paging)
 
-### Example[​](#example-2 "Direct link to Example")
+### Example[​](#example-2 'Direct link to Example')
 
 ```ts
 import { applyPaging } from `@ptc-org/nestjs-query-core`;
+
 const dtos: TestDTO[] = [
   {first: 'Bob', last: 'Yukon'}
   {first: 'Alice', last: 'Yukon'}
@@ -127,19 +132,20 @@ The resulting paged dtos would be.
 ]
 ```
 
-## applyQuery[​](#applyquery "Direct link to applyQuery")
+## applyQuery[​](#applyquery 'Direct link to applyQuery')
 
 The `applyQuery` uses the `applyFilter`, `applySorting`, and `applyPaging` methods to apply a `Query` to an array of DTOs.
 
-### Arguments[​](#arguments-3 "Direct link to Arguments")
+### Arguments[​](#arguments-3 'Direct link to Arguments')
 
-* `dto: DTO[]` - The array of DTOs to page.
-* `query: Query<DTO>` - The query to apply to the array of dtos. See [`Queries`](/concepts/queries)
+- `dto: DTO[]` - The array of DTOs to page.
+- `query: Query<DTO>` - The query to apply to the array of dtos. See [`Queries`](/concepts/queries)
 
-### Example[​](#example-3 "Direct link to Example")
+### Example[​](#example-3 'Direct link to Example')
 
 ```ts
 import { applyQuery, SortDirection } from `@ptc-org/nestjs-query-core`;
+
 const dtos: TestDTO[] = [
   {first: 'Bob', last: 'Yukon', isVerified: true}
   {first: 'Alice', last: 'Yukon', isVerified: false}
@@ -162,20 +168,22 @@ The resulting array of dtos would be.
 ]
 ```
 
-## transformFilter[​](#transformfilter "Direct link to transformFilter")
+## transformFilter[​](#transformfilter 'Direct link to transformFilter')
 
 The transformFilter is used to remap fields in a `Filter`. This method is commonly used when defining a custom [Assembler](/concepts/advanced/assemblers).
 
-### Arguments[​](#arguments-4 "Direct link to Arguments")
+### Arguments[​](#arguments-4 'Direct link to Arguments')
 
-* `filter: Filter<From>` - The filter you want to transform.
-* `fieldMap: QueryFieldMap<From, To>` - A map of fields where the key is a key in the From type, and the value is a key in the to type.
+- `filter: Filter<From>` - The filter you want to transform.
+- `fieldMap: QueryFieldMap<From, To>` - A map of fields where the key is a key in the From type, and the value is a key in the to type.
 
-### Example[​](#example-4 "Direct link to Example")
+### Example[​](#example-4 'Direct link to Example')
 
 ```ts
 import { transformFilter, QueryFieldMap, Filter } from `@ptc-org/nestjs-query-core`;
+
 class TestEntity {
+
   firstName!: string;
   lastName!: string;
 }
@@ -199,20 +207,22 @@ The new filter would be
 }
 ```
 
-## transformSort[​](#transformsort "Direct link to transformSort")
+## transformSort[​](#transformsort 'Direct link to transformSort')
 
 The `transformSort` is used to remap fields in an array of `SortField<DTO>[]`. This method is commonly used when defining a custom [Assembler](/concepts/advanced/assemblers).
 
-### Arguments[​](#arguments-5 "Direct link to Arguments")
+### Arguments[​](#arguments-5 'Direct link to Arguments')
 
-* `sortFields: SortField<From>[]` - The array of sorting criteria to transform.
-* `fieldMap: QueryFieldMap<From, To>` - A map of fields where the key is a key in the From type, and the value is a key in the to type.
+- `sortFields: SortField<From>[]` - The array of sorting criteria to transform.
+- `fieldMap: QueryFieldMap<From, To>` - A map of fields where the key is a key in the From type, and the value is a key in the to type.
 
-### Example[​](#example-5 "Direct link to Example")
+### Example[​](#example-5 'Direct link to Example')
 
 ```ts
 import { transformSort, QueryFieldMap, SortField, SortDirection } from `@ptc-org/nestjs-query-core`;
+
 class TestEntity {
+
   firstName!: string;
   lastName!: string;
 }
@@ -228,26 +238,28 @@ const transformed = transformSort(dtoSort, fieldMap);
 ```
 
 ```ts
-[
+;[
   { field: 'firstName', direction: SortDirection.DESC },
-  { field: 'lastName', direction: SortDirection.ASC },
-];
+  { field: 'lastName', direction: SortDirection.ASC }
+]
 ```
 
-## transformQuery[​](#transformquery "Direct link to transformQuery")
+## transformQuery[​](#transformquery 'Direct link to transformQuery')
 
 The `transformQuery` method uses the `transformFilter` and `transformSort` methods to remap a `Query`. This method is commonly used when defining a custom [Assembler](/concepts/advanced/assemblers).
 
-### Arguments[​](#arguments-6 "Direct link to Arguments")
+### Arguments[​](#arguments-6 'Direct link to Arguments')
 
-* `sortFields: Query<From>` - The query to transform.
-* `fieldMap: QueryFieldMap<From, To>` - A map of fields where the key is a key in the From type, and the value is a key in the to type.
+- `sortFields: Query<From>` - The query to transform.
+- `fieldMap: QueryFieldMap<From, To>` - A map of fields where the key is a key in the From type, and the value is a key in the to type.
 
-### Example[​](#example-6 "Direct link to Example")
+### Example[​](#example-6 'Direct link to Example')
 
 ```ts
 import { transformQuery, QueryFieldMap, Query, SortDirection } from `@ptc-org/nestjs-query-core`;
+
 class TestEntity {
+
   firstName!: string;
   lastName!: string;
 }
@@ -277,20 +289,22 @@ The resulting query would be.
 }
 ```
 
-## getFilterComparisons[​](#getfiltercomparisons "Direct link to getFilterComparisons")
+## getFilterComparisons[​](#getfiltercomparisons 'Direct link to getFilterComparisons')
 
 Used to search a filter get a list of comparison objects for a given key.
 
-### Arguments[​](#arguments-7 "Direct link to Arguments")
+### Arguments[​](#arguments-7 'Direct link to Arguments')
 
-* `filter: Filter<DTO>` - The filter to search.
-* `key: keyof DTO` - The key in the DTO object to search for in the filter object.
+- `filter: Filter<DTO>` - The filter to search.
+- `key: keyof DTO` - The key in the DTO object to search for in the filter object.
 
-### Example[​](#example-7 "Direct link to Example")
+### Example[​](#example-7 'Direct link to Example')
 
 ```ts
 import { Filter, getFilterComparisons } from `@ptc-org/nestjs-query-core`;
+
 class TestDTO {
+
   age!: number;
   title!: string;
 }
@@ -304,23 +318,25 @@ const comparisons = getFilterComparisons(filter, 'title');
 The resulting array would be
 
 ```ts
-[{ like: '%bar' }, { eq: 'foobar' }];
+;[{ like: '%bar' }, { eq: 'foobar' }]
 ```
 
-## getFilterOmitting[​](#getfilteromitting "Direct link to getFilterOmitting")
+## getFilterOmitting[​](#getfilteromitting 'Direct link to getFilterOmitting')
 
 Used to get a filter with a given key removed.
 
-### Arguments[​](#arguments-8 "Direct link to Arguments")
+### Arguments[​](#arguments-8 'Direct link to Arguments')
 
-* `filter: Filter<DTO>` - The filter containing the unwanted key.
-* `key: keyof DTO` - The key in the DTO object to remove in the filter object.
+- `filter: Filter<DTO>` - The filter containing the unwanted key.
+- `key: keyof DTO` - The key in the DTO object to remove in the filter object.
 
-### Example[​](#example-8 "Direct link to Example")
+### Example[​](#example-8 'Direct link to Example')
 
 ```ts
 import { Filter, getFilterOmitting } from `@ptc-org/nestjs-query-core`;
+
 class TestDTO {
+
   age!: number;
   title!: string;
 }

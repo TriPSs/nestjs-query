@@ -1,6 +1,6 @@
 ---
-title: "Mutations"
-description: "The  automatically exposes six mutation endpoints. The endpoints names will be derived from name provided to  or the class name."
+title: 'Mutations'
+description: 'The  automatically exposes six mutation endpoints. The endpoints names will be derived from name provided to  or the class name.'
 ---
 
 The following examples are based on the following `TodoItemDTO`
@@ -8,38 +8,44 @@ The following examples are based on the following `TodoItemDTO`
 todo-item.dto.ts
 
 ```ts
-import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
+import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
+
 @ObjectType('TodoItem')
 export class TodoItemDTO {
+
   @IDField(() => ID)
-  id!: string;
+  id!: string
+
   @FilterableField()
-  title!: string;
+  title!: string
+
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
+
   @FilterableField(() => GraphQLISODateTime)
-  created!: Date;
+  created!: Date
+
   @FilterableField(() => GraphQLISODateTime)
-  updated!: Date;
+  updated!: Date
 }
 ```
 
 In the following examples you will see the following endpoints referenced
 
-* `createOneTodoItem` - graphql endpoint to create a single record.
+- `createOneTodoItem` - graphql endpoint to create a single record.
 
-* `createManyTodoItems` - graphql endpoint to create multiple records,
+- `createManyTodoItems` - graphql endpoint to create multiple records,
 
-* `updateOneTodoItem` - graphql endpoint to update a single record by id.
+- `updateOneTodoItem` - graphql endpoint to update a single record by id.
 
-* `updateManyTodoItems` - graphql endpoint update multiple records with a filter,
+- `updateManyTodoItems` - graphql endpoint update multiple records with a filter,
 
-* `deleteOneTodoItem` - graphql endpoint to delete one record by id.
+- `deleteOneTodoItem` - graphql endpoint to delete one record by id.
 
-* `deleteManyTodoItems` - graphql endpoint to delete multiple records with a filter.
+- `deleteManyTodoItems` - graphql endpoint to delete multiple records with a filter.
 
-### Create One[​](#create-one "Direct link to Create One")
+### Create One[​](#create-one 'Direct link to Create One')
 
 The `CRUDResolver` will by default expose a `createOne` mutation using the name of the DTO to name the mutation.
 
@@ -79,15 +85,15 @@ In this example we create a single `TodoItem`, the input by default will be a `P
   </Tab>
 </Tabs>
 
-***
+---
 
-### Create Many[​](#create-many "Direct link to Create Many")
+### Create Many[​](#create-many 'Direct link to Create Many')
 
 The `CRUDResolver` will by default expose a `createMany` mutation using the name of the DTO to name the mutation.
 
 In this example we create multiple `TodoItems`, the each record is a `Partial` of the DTO.
 
-#### Examples[​](#examples "Direct link to Examples")
+#### Examples[​](#examples 'Direct link to Examples')
 
 The following example creates two `TodoItems`.
 
@@ -139,16 +145,16 @@ The following example creates two `TodoItems`.
   </Tab>
 </Tabs>
 
-***
+---
 
-### Update One[​](#update-one "Direct link to Update One")
+### Update One[​](#update-one 'Direct link to Update One')
 
 The `CRUDResolver` will by default expose an `updateOne` mutation that takes two fields:
 
-* `id`: The id of the record to update.
-* `update`: The values to update on the record. This is a partial so you only have to pass in the values you want to change.
+- `id`: The id of the record to update.
+- `update`: The values to update on the record. This is a partial so you only have to pass in the values you want to change.
 
-#### Examples[​](#examples-1 "Direct link to Examples")
+#### Examples[​](#examples-1 'Direct link to Examples')
 
 The following example updates the record with `id` equal to `1` to `completed=true`
 
@@ -184,19 +190,19 @@ The following example updates the record with `id` equal to `1` to `completed=tr
   </Tab>
 </Tabs>
 
-***
+---
 
-### Update Many[​](#update-many "Direct link to Update Many")
+### Update Many[​](#update-many 'Direct link to Update Many')
 
 The `CRUDResolver` will by default expose an `updateMany` mutation that takes two fields:
 
-* `filter`: The filter to use to find the records to update.
-  * **NOTE** The filter **CANNOT** be an empty object. This prevents accidental updating of all records.
-* `update`: The values to update on the record. This is a partial so you only have to pass in the values you want to change.
+- `filter`: The filter to use to find the records to update.
+  - **NOTE** The filter **CANNOT** be an empty object. This prevents accidental updating of all records.
+- `update`: The values to update on the record. This is a partial so you only have to pass in the values you want to change.
 
 The response contains the number of records updated.
 
-#### Examples[​](#examples-2 "Direct link to Examples")
+#### Examples[​](#examples-2 'Direct link to Examples')
 
 The following example updates records with an `id` equal to 1 or 2 to `completed=true`.
 
@@ -226,13 +232,13 @@ The following example updates records with an `id` equal to 1 or 2 to `completed
   </Tab>
 </Tabs>
 
-***
+---
 
-### Delete One[​](#delete-one "Direct link to Delete One")
+### Delete One[​](#delete-one 'Direct link to Delete One')
 
 The `CRUDResolver` will by default expose a `deleteOne` mutation that allows you to delete a record by id:
 
-#### Examples[​](#examples-3 "Direct link to Examples")
+#### Examples[​](#examples-3 'Direct link to Examples')
 
 The following example deletes the record with an id equal to 1.
 
@@ -267,15 +273,15 @@ The following example deletes the record with an id equal to 1.
   </Tab>
 </Tabs>
 
-***
+---
 
-### Delete Many[​](#delete-many "Direct link to Delete Many")
+### Delete Many[​](#delete-many 'Direct link to Delete Many')
 
 The CRUDResolver will by default expose a `deleteMany` mutation that takes a `filter`:
 
 **NOTE** The filter **CANNOT** be an empty object. This prevents accidental deletion of all records.
 
-#### Examples[​](#examples-4 "Direct link to Examples")
+#### Examples[​](#examples-4 'Direct link to Examples')
 
 The following example deletes all records that start with `Create Many Todo Items`.
 

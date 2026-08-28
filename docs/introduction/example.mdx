@@ -1,22 +1,20 @@
 ---
-title: "Example"
+title: 'Example'
 description: "Let's create a simple todo-item graphql example."
 ---
 
-## Set up a new nest app[​](#set-up-a-new-nest-app "Direct link to Set up a new nest app")
+## Set up a new nest app[​](#set-up-a-new-nest-app 'Direct link to Set up a new nest app')
 
 ```bash
 npm i -g @nestjs/cli
 nest new nestjs-query-getting-started
 ```
 
-## Install Dependencies[​](#install-dependencies "Direct link to Install Dependencies")
+## Install Dependencies[​](#install-dependencies 'Direct link to Install Dependencies')
 
 [Install your packages](/introduction/install).
 
-<Note>
-  Be sure to install the correct ORM package!
-</Note>
+<Note>Be sure to install the correct ORM package!</Note>
 
 Install extra dependencies for the example.
 
@@ -24,7 +22,7 @@ Install extra dependencies for the example.
 npm i pg apollo-server-express
 ```
 
-## Generate the Module[​](#generate-the-module "Direct link to Generate the Module")
+## Generate the Module[​](#generate-the-module 'Direct link to Generate the Module')
 
 From the root of your project run:
 
@@ -32,7 +30,7 @@ From the root of your project run:
 npx nest g mo todo-item
 ```
 
-## Create the Entity[​](#create-the-entity "Direct link to Create the Entity")
+## Create the Entity[​](#create-the-entity 'Direct link to Create the Entity')
 
 From the root of your project run:
 
@@ -46,10 +44,6 @@ Add the following to `src/todo-item/todo-item.entity.ts`.
 
 <Tabs>
   <Tab title="TypeOrm">
-    todo-item/todo-item.entity.ts
-  </Tab>
-
-  <Tab title="Sequelize">
     ```ts
     import {
       Column,
@@ -57,28 +51,30 @@ Add the following to `src/todo-item/todo-item.entity.ts`.
       Entity,
       PrimaryGeneratedColumn,
       UpdateDateColumn,
-    } from 'typeorm';
+    } from 'typeorm'
+
     @Entity()
     export class TodoItemEntity {
+
       @PrimaryGeneratedColumn()
       id!: string;
+
       @Column()
       title!: string;
+
       @Column()
       completed!: boolean;
+
       @CreateDateColumn()
       created!: Date;
+
       @UpdateDateColumn()
       updated!: Date;
     }
     ```
   </Tab>
 
-  <Tab title="Mongoose">
-    todo-item/todo-item.entity.ts
-  </Tab>
-
-  <Tab title="Typegoose">
+  <Tab title="Sequelize">
     ```ts
     import {
       Table,
@@ -88,62 +84,69 @@ Add the following to `src/todo-item/todo-item.entity.ts`.
       UpdatedAt,
       PrimaryKey,
       AutoIncrement,
-    } from 'sequelize-typescript';
+    } from 'sequelize-typescript'
+
     @Table
     export class TodoItemEntity extends Model<TodoItemEntity, Partial<TodoItemEntity>> {
+
       @PrimaryKey
       @AutoIncrement
       @Column
       id!: number;
+
       @Column
       title!: string;
+
       @Column
       completed!: boolean;
+
       @CreatedAt
       created!: Date;
+
       @UpdatedAt
       updated!: Date;
     }
     ```
+
   </Tab>
 
-  <Tab title="Example">
-    todo-item/todo-item.entity.ts
-  </Tab>
-
-  <Tab title="Example">
+  <Tab title="Mongoose">
     ```ts
-    import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-    import { Document } from 'mongoose';
+    import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+    import { Document } from 'mongoose'
+
     @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
     export class TodoItemEntity extends Document {
+
       @Prop({ required: true })
       title!: string;
+
       @Prop()
       description?: string;
+
       @Prop({ required: true })
       completed!: boolean;
+
       @Prop({ default: Date.now })
       created!: Date;
+
       @Prop({ default: Date.now })
       updated!: Date;
     }
-    export const TodoItemEntitySchema = SchemaFactory.createForClass(TodoItemEntity);
+    export const TodoItemEntitySchema = SchemaFactory.createForClass(TodoItemEntity)
     ```
+
   </Tab>
 
-  <Tab title="Example">
-    todo-item/todo-item.entity.ts
-  </Tab>
-
-  <Tab title="Example">
+  <Tab title="Typegoose">
     ```ts
     import { ObjectId } from '@ptc-org/nestjs-query-graphql'
-    import { Base } from '@typegoose/typegoose/lib/defaultClasses';
-    import { Prop, modelOptions, Ref } from '@typegoose/typegoose';
-    import { Types } from 'mongoose';
-    import { SubTaskEntity } from '../sub-task/sub-task.entity';
-    import { TagEntity } from '../tag/tag.entity';
+    import { Base } from '@typegoose/typegoose/lib/defaultClasses'
+    import { Prop, modelOptions, Ref } from '@typegoose/typegoose'
+    import { Types } from 'mongoose'
+    import { SubTaskEntity } from '../sub-task/sub-task.entity'
+    import { TagEntity } from '../tag/tag.entity'
+
     @modelOptions({
       schemaOptions: {
         timestamps: { createdAt: 'created', updatedAt: 'updated' },
@@ -152,33 +155,40 @@ Add the following to `src/todo-item/todo-item.entity.ts`.
       },
     })
     export class TodoItemEntity implements Base {
+
       @ObjectId()
       _id!: Types.ObjectId
-      id!: string  
+      id!: string
+
       @Prop({ required: true })
       title!: string;
+
       @Prop()
       description?: string;
+
       @Prop({ required: true })
       completed!: boolean;
+
       @Prop({ default: Date.now })
       created!: Date;
+
       @Prop({ default: Date.now })
       updated!: Date;
     }
     ```
+
   </Tab>
 </Tabs>
 
-## Create the DTO[​](#create-the-dto "Direct link to Create the DTO")
+## Create the DTO[​](#create-the-dto 'Direct link to Create the DTO')
 
 The DTO (Data Transfer Object) is used by the resolver to represent incoming requests and outgoing responses.
 
 The DTO is where you can:
 
-* Define fields that should be rendered by graphql.
-* Define fields that should be filterable using the `@FilterableField` decorator.
-* Define validation that will be used by mutations.
+- Define fields that should be rendered by graphql.
+- Define fields that should be filterable using the `@FilterableField` decorator.
+- Define validation that will be used by mutations.
 
 In this example the DTO and entity are two different classes to clearly demonstrate what is required for `graphql` vs the persistence layer. However, you can combine the two into a single class.
 
@@ -193,26 +203,32 @@ Now lets fill out the DTO. Add the following to `src/todo-item/todo-item.dto.ts`
 todo-item/todo-item.dto.ts
 
 ```ts
-import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql';
-import { ObjectType, GraphQLISODateTime, Field, ID } from '@nestjs/graphql';
+import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
+import { ObjectType, GraphQLISODateTime, Field, ID } from '@nestjs/graphql'
+
 @ObjectType('TodoItem')
 export class TodoItemDTO {
+
   @IDField(() => ID)
-  id!: number;
+  id!: number
+
   @FilterableField()
-  title!: string;
+  title!: string
+
   @FilterableField()
-  completed!: boolean;
+  completed!: boolean
+
   @Field(() => GraphQLISODateTime)
-  created!: Date;
+  created!: Date
+
   @Field(() => GraphQLISODateTime)
-  updated!: Date;
+  updated!: Date
 }
 ```
 
 Notice the use of `@FilterableField` this will let `@ptc-org/nestjs-query-graphql` know to allow filtering on the corresponding field. If you just use `@Field` then you will not be able to filter on the corresponding field.
 
-## Create the create DTO class.[​](#create-the-create-dto-class "Direct link to Create the create DTO class.")
+## Create the create DTO class.[​](#create-the-create-dto-class 'Direct link to Create the create DTO class.')
 
 From the previously created DTO, `@ptc-org/nestjs-query-graphql` will automatically create a `CreateTodoItem` graphql type:
 
@@ -235,20 +251,23 @@ npx nest g cl todo-item.create.dto todo-item --flat
 todo-item/todo-item.create.dto.ts
 
 ```ts
-import { Field, InputType } from '@nestjs/graphql';
-import { IsBoolean, IsString } from 'class-validator';
+import { Field, InputType } from '@nestjs/graphql'
+import { IsBoolean, IsString } from 'class-validator'
+
 @InputType('CreateTodoItem')
 export class TodoItemCreateDTO {
+
   @IsString()
   @Field()
-  title!: string;
+  title!: string
+
   @IsBoolean()
   @Field()
-  completed!: boolean;
+  completed!: boolean
 }
 ```
 
-## Wire everything up.[​](#wire-everything-up "Direct link to Wire everything up.")
+## Wire everything up.[​](#wire-everything-up 'Direct link to Wire everything up.')
 
 Update the `todo-item.module` to set up the `NestjsQueryGraphQLModule` and the entities to provide a `QueryService`.
 
@@ -256,17 +275,17 @@ The `NestjsQueryGraphQLModule` will automatically create a Resolver that will ex
 
 **Queries**
 
-* `todoItems` - find multiple `TodoItem`s.
-* `todoItem` - find one `TodoItem`.
+- `todoItems` - find multiple `TodoItem`s.
+- `todoItem` - find one `TodoItem`.
 
 **Mutations**
 
-* `createManyTodoItems` - create multiple `TodoItem`s.
-* `createOneTodoItems` - create one `TodoItem`.
-* `updateManyTodoItems` - update multiple `TodoItems`.
-* `updateOneTodoItems` - update one `TodoItem`.
-* `deleteManyTodoItems` - delete multiple `TodoItems`s.
-* `deleteOneTodoItems` - delete one `TodoItem`.
+- `createManyTodoItems` - create multiple `TodoItem`s.
+- `createOneTodoItems` - create one `TodoItem`.
+- `updateManyTodoItems` - update multiple `TodoItems`.
+- `updateOneTodoItems` - update one `TodoItem`.
+- `deleteManyTodoItems` - delete multiple `TodoItems`s.
+- `deleteOneTodoItems` - delete one `TodoItem`.
 
 <Tabs>
   <Tab title="TypeOrm">
@@ -277,6 +296,7 @@ The `NestjsQueryGraphQLModule` will automatically create a Resolver that will ex
     import { TodoItemCreateDTO } from './todo-item.create.dto';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -296,6 +316,7 @@ The `NestjsQueryGraphQLModule` will automatically create a Resolver that will ex
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
   <Tab title="Sequelize">
@@ -305,6 +326,7 @@ The `NestjsQueryGraphQLModule` will automatically create a Resolver that will ex
     import { Module } from '@nestjs/common';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -318,6 +340,7 @@ The `NestjsQueryGraphQLModule` will automatically create a Resolver that will ex
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
   <Tab title="Mongoose">
@@ -327,6 +350,7 @@ The `NestjsQueryGraphQLModule` will automatically create a Resolver that will ex
     import { Module } from '@nestjs/common';
     import { TodoItemDTO } from './todo-item.dto';
     import { TodoItemEntity, TodoItemEntitySchema } from './todo-item.entity';
+
     @Module({
       imports: [
         NestjsQueryGraphQLModule.forFeature({
@@ -344,6 +368,7 @@ The `NestjsQueryGraphQLModule` will automatically create a Resolver that will ex
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 
   <Tab title="Typegoose">
@@ -353,7 +378,9 @@ The `NestjsQueryGraphQLModule` will automatically create a Resolver that will ex
     import { NestjsQueryTypegooseModule } from '@ptc-org/nestjs-query-typegoose';
     import { TodoItemDTO } from './dto/todo-item.dto';
     import { TodoItemEntity } from './todo-item.entity';
+
     const guards = [AuthGuard];
+
     @Module({
       providers: [TodoItemResolver],
       imports: [
@@ -365,6 +392,7 @@ The `NestjsQueryGraphQLModule` will automatically create a Resolver that will ex
     })
     export class TodoItemModule {}
     ```
+
   </Tab>
 </Tabs>
 
@@ -380,6 +408,7 @@ Next update `app.module` to set up your db connection and the `graphql` nest mod
     import { AppController } from './app.controller';
     import { AppService } from './app.service';
     import { TodoItemModule } from './todo-item/todo-item.module';
+
     @Module({
       imports: [
         TypeOrmModule.forRoot({
@@ -403,6 +432,7 @@ Next update `app.module` to set up your db connection and the `graphql` nest mod
     })
     export class AppModule {}
     ```
+
   </Tab>
 
   <Tab title="Sequelize">
@@ -414,6 +444,7 @@ Next update `app.module` to set up your db connection and the `graphql` nest mod
     import { AppController } from './app.controller';
     import { AppService } from './app.service';
     import { TodoItemModule } from './todo-item/todo-item.module';
+
     @Module({
       imports: [
         TodoItemModule,
@@ -436,6 +467,7 @@ Next update `app.module` to set up your db connection and the `graphql` nest mod
     })
     export class AppModule {}
     ```
+
   </Tab>
 
   <Tab title="Mongoose">
@@ -447,6 +479,7 @@ Next update `app.module` to set up your db connection and the `graphql` nest mod
     import { AppController } from './app.controller';
     import { AppService } from './app.service';
     import { TodoItemModule } from './todo-item/todo-item.module';
+
     @Module({
       imports: [
         MongooseModule.forRoot('mongodb://localhost/nest', options),
@@ -462,6 +495,7 @@ Next update `app.module` to set up your db connection and the `graphql` nest mod
     })
     export class AppModule {}
     ```
+
   </Tab>
 
   <Tab title="Typegoose">
@@ -471,6 +505,7 @@ Next update `app.module` to set up your db connection and the `graphql` nest mod
     import { GraphQLModule } from '@nestjs/graphql';
     import { TypegooseModule } from '@m8a/nestjs-typegoose';
     import { TodoItemModule } from './todo-item/todo-item.module';
+
     @Module({
       imports: [
         TypegooseModule.forRoot('mongodb://localhost/nest', options),
@@ -484,6 +519,7 @@ Next update `app.module` to set up your db connection and the `graphql` nest mod
     })
     export class AppModule {}
     ```
+
   </Tab>
 
   <Tab title="Example">
@@ -496,29 +532,29 @@ Create a `compose.yml` file in the root of the project
 ```yaml
 services:
   postgres:
-    image: "postgres:17"
+    image: 'postgres:17'
     environment:
-      - "POSTGRES_USER=gettingstarted"
-      - "POSTGRES_DB=gettingstarted"
-      - "POSTGRES_PASSWORD=gettingstarted"
+      - 'POSTGRES_USER=gettingstarted'
+      - 'POSTGRES_DB=gettingstarted'
+      - 'POSTGRES_PASSWORD=gettingstarted'
     expose:
-      - "5432"
+      - '5432'
     ports:
-      - "5432:5432"
+      - '5432:5432'
   # only needed if using mongoose
   mongo:
-    image: "mongo:4.4"
+    image: 'mongo:4.4'
     restart: always
     ports:
-      - "27017:27017"
+      - '27017:27017'
   mongo-express:
-    image: "mongo-express:latest"
+    image: 'mongo-express:latest'
     restart: always
     ports:
       - 8081:8081
 ```
 
-## Running the Example[​](#running-the-example "Direct link to Running the Example")
+## Running the Example[​](#running-the-example 'Direct link to Running the Example')
 
 Start the backing services
 
@@ -536,9 +572,9 @@ Visit [http://localhost:3000/graphql](http://localhost:3000/graphql) where you s
 
 ![Example playground](/images/introduction/getting-started-playground.png)
 
-## Exploring The GraphQL Endpoint[​](#exploring-the-graphql-endpoint "Direct link to Exploring The GraphQL Endpoint")
+## Exploring The GraphQL Endpoint[​](#exploring-the-graphql-endpoint 'Direct link to Exploring The GraphQL Endpoint')
 
-### Create a TodoItem[​](#create-a-todoitem "Direct link to Create a TodoItem")
+### Create a TodoItem[​](#create-a-todoitem 'Direct link to Create a TodoItem')
 
 <Tabs>
   <Tab title="GraphQL">
@@ -574,7 +610,7 @@ Visit [http://localhost:3000/graphql](http://localhost:3000/graphql) where you s
   </Tab>
 </Tabs>
 
-### Create Multiple TodoItems[​](#create-multiple-todoitems "Direct link to Create Multiple TodoItems")
+### Create Multiple TodoItems[​](#create-multiple-todoitems 'Direct link to Create Multiple TodoItems')
 
 <Tabs>
   <Tab title="GraphQL">
@@ -624,9 +660,9 @@ Visit [http://localhost:3000/graphql](http://localhost:3000/graphql) where you s
   </Tab>
 </Tabs>
 
-### Query For Multiple TodoItems[​](#query-for-multiple-todoitems "Direct link to Query For Multiple TodoItems")
+### Query For Multiple TodoItems[​](#query-for-multiple-todoitems 'Direct link to Query For Multiple TodoItems')
 
-#### Query for all todo items[​](#query-for-all-todo-items "Direct link to Query for all todo items")
+#### Query for all todo items[​](#query-for-all-todo-items 'Direct link to Query for all todo items')
 
 <Tabs>
   <Tab title="GraphQL">
@@ -704,7 +740,7 @@ Visit [http://localhost:3000/graphql](http://localhost:3000/graphql) where you s
   </Tab>
 </Tabs>
 
-#### Query for completed todo items[​](#query-for-completed-todo-items "Direct link to Query for completed todo items")
+#### Query for completed todo items[​](#query-for-completed-todo-items 'Direct link to Query for completed todo items')
 
 <Tabs>
   <Tab title="GraphQL">
@@ -762,9 +798,9 @@ Visit [http://localhost:3000/graphql](http://localhost:3000/graphql) where you s
   </Tab>
 </Tabs>
 
-### Query For One TodoItem[​](#query-for-one-todoitem "Direct link to Query For One TodoItem")
+### Query For One TodoItem[​](#query-for-one-todoitem 'Direct link to Query For One TodoItem')
 
-#### Query by id[​](#query-by-id "Direct link to Query by id")
+#### Query by id[​](#query-by-id 'Direct link to Query by id')
 
 <Tabs>
   <Tab title="GraphQL">
@@ -798,7 +834,7 @@ Visit [http://localhost:3000/graphql](http://localhost:3000/graphql) where you s
   </Tab>
 </Tabs>
 
-### Update a TodoItem[​](#update-a-todoitem "Direct link to Update a TodoItem")
+### Update a TodoItem[​](#update-a-todoitem 'Direct link to Update a TodoItem')
 
 Lets update the completed `TodoItem` we created earlier to not be completed.
 
@@ -834,7 +870,7 @@ Lets update the completed `TodoItem` we created earlier to not be completed.
   </Tab>
 </Tabs>
 
-### Update Multiple TodoItems[​](#update-multiple-todoitems "Direct link to Update Multiple TodoItems")
+### Update Multiple TodoItems[​](#update-multiple-todoitems 'Direct link to Update Multiple TodoItems')
 
 Lets update the completed `TodoItem` we created earlier to not be completed.
 
@@ -866,7 +902,7 @@ Lets update the completed `TodoItem` we created earlier to not be completed.
 
 You can check this by running the completed query from above.
 
-### Delete One TodoItem[​](#delete-one-todoitem "Direct link to Delete One TodoItem")
+### Delete One TodoItem[​](#delete-one-todoitem 'Direct link to Delete One TodoItem')
 
 Lets update delete the first `TodoItem`.
 
@@ -902,7 +938,7 @@ Lets update delete the first `TodoItem`.
   </Tab>
 </Tabs>
 
-### Delete Many TodoItems[​](#delete-many-todoitems "Direct link to Delete Many TodoItems")
+### Delete Many TodoItems[​](#delete-many-todoitems 'Direct link to Delete Many TodoItems')
 
 Lets update delete the create many todo items `TodoItem` using a filter.
 
