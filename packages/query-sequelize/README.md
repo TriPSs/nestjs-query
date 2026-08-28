@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://tripss.github.io/nestjs-query" target="blank"><img src="https://tripss.github.io/nestjs-query/img/logo.svg" width="120" alt="Nestjs-query Logo" /></a>
+  <a href="https://nestjs-query.mintlify.site/" target="blank"><img src="https://nestjs-query.mintlify.site/images/logo.svg" width="120" alt="Nestjs-query Logo" /></a>
 </p>
 
 [![npm version](https://img.shields.io/npm/v/@ptc-org/nestjs-query-sequelize.svg)](https://www.npmjs.org/package/@ptc-org/nestjs-query-sequelize)
@@ -9,15 +9,12 @@
 
 # `@ptc-org/nestjs-query-sequelize`
 
-The `query-sequelize` package that provides an implementation of `@ptc-org/nestjs-query-core` `QueryService`, built on
-top of of [nestjs](https://nestjs.com/) and [sequelize](https://sequelize.org/).
+The `query-sequelize` package provides an implementation of the `@ptc-org/nestjs-query-core` `QueryService`, built on [NestJS](https://nestjs.com/) and [Sequelize](https://sequelize.org/).
 
 ## Installation
 
-[Install Guide](https://tripss.github.io/nestjs-query/docs/introduction/install)
+[Install Guide](https://nestjs-query.mintlify.site/introduction/install)
 
 ## Getting Started
 
-The get started with the `@ptc-org/nestjs-query-sequelize` package checkout
-the [Getting Started](https://tripss.github.io/nestjs-query/docs/sequelize/getting-started) docs.
-
+To get started with `@ptc-org/nestjs-query-sequelize`, check out the [Getting Started](https://nestjs-query.mintlify.site/persistence/sequelize/getting-started) guide.

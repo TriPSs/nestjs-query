@@ -1,9 +1,13 @@
 # Contributor Covenant Code of Conduct
 
+## Our Community
+
+Nestjs-Query is committed to providing a welcoming, inclusive, and harassment-free community for everyone. This Code of Conduct applies to all project spaces, including issues, pull requests, discussions, chat, and events.
+
 ## Our Pledge
 
 In the interest of fostering an open and welcoming environment, we as
-contributors and maintainers pledge to making participation in our project and
+contributors and maintainers pledge to make participation in our project and
 our community a harassment-free experience for everyone, regardless of age, body
 size, disability, ethnicity, sex characteristics, gender identity and expression,
 level of experience, education, socio-economic status, nationality, personal
@@ -67,10 +71,10 @@ members of the project's leadership.
 
 ## Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
-available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
+This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 2.1,
+available at https://www.contributor-covenant.org/version/2/1/code_of_conduct.html
 
 [homepage]: https://www.contributor-covenant.org
 
-For answers to common questions about this code of conduct, see
-https://www.contributor-covenant.org/faq
+For answers to common questions about this Code of Conduct, see
+[the Contributor Covenant FAQ](https://www.contributor-covenant.org/faq).
