@@ -17,12 +17,9 @@ export interface NestjsQueryRestModuleFeatureOpts {
   assemblers?: Class<Assembler<any, any, any, any, any, any>>[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   endpoints?: AutoControllerOpts<any, any, unknown, unknown, ReadControllerOpts<any>, PagingStrategies>[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // resolvers?: AutoResolverOpts<any, any, unknown, unknown, ReadResolverOpts<any>, PagingStrategies>[]
   dtos?: DTOModuleOpts<unknown>[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   controllers?: Array<Class<any>>
-  // pubSub?: Provider<GraphQLPubSub>
 }
 
 export class NestjsQueryRestModule {

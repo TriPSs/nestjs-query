@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common'
 import { Class } from '@ptc-org/nestjs-query-core'
 
-export interface BaseResolverOptions {
+export interface BaseMethodOptions {
   /** An array of `nestjs` guards to apply to a endpoint */
   guards?: (Class<CanActivate> | CanActivate)[]
   /** An array of `nestjs` interceptors to apply to a endpoint */
@@ -30,17 +30,17 @@ export interface BaseResolverOptions {
 }
 
 /**
- * Options for resolver methods.
+ * Options for controller methods.
  */
-export interface ResolverMethodOpts extends BaseResolverOptions {
+export interface MethodOpts extends BaseMethodOptions {
   /** Set to true to disable the endpoint */
   disabled?: boolean
 }
 
 /**
- * Options for relation resolver methods.
+ * Options for relation methods.
  */
-export interface ResolverRelationMethodOpts extends BaseResolverOptions {
+export interface RelationMethodOpts extends BaseMethodOptions {
   /** Set to true to enable the endpoint */
   enabled?: boolean
 }
@@ -58,29 +58,29 @@ function createSetArray<T>(...arrs: T[][]): T[] {
 
 /**
  * @internal
- * Returns true if any of the [[ResolverMethodOpts]] are disabled.
- * @param opts - The array of [[ResolverMethodOpts]] to check.
+ * Returns true if any of the [[MethodOpts]] are disabled.
+ * @param opts - The array of [[MethodOpts]] to check.
  */
-export function isDisabled(opts: ResolverMethodOpts[]): boolean {
+export function isDisabled(opts: MethodOpts[]): boolean {
   return !!opts.find((o) => o.disabled)
 }
 
 /**
  * @internal
- * Returns true if any of the [[ResolverRelationMethodOpts]] are disabled.
- * @param opts - The array of [[ResolverRelationMethodOpts]] to check.
+ * Returns true if any of the [[RelationMethodOpts]] are enabled.
+ * @param opts - The array of [[RelationMethodOpts]] to check.
  */
-export function isEnabled(opts: ResolverRelationMethodOpts[]): boolean {
+export function isEnabled(opts: RelationMethodOpts[]): boolean {
   return opts.some((o) => o.enabled)
 }
 
 /**
  * @internal
- * Decorator for all ResolverMethods
+ * Decorator for controller methods.
  *
- * @param opts - the [[ResolverMethodOpts]] to apply.
+ * @param opts - the [[MethodOpts]] to apply.
  */
-export function ResolverMethod(...opts: ResolverMethodOpts[]): MethodDecorator {
+export function Method(...opts: MethodOpts[]): MethodDecorator {
   return applyDecorators(
     UseGuards(...createSetArray<Class<CanActivate> | CanActivate>(...opts.map((o) => o.guards ?? []))),
     UseInterceptors(...createSetArray<Class<NestInterceptor>>(...opts.map((o) => o.interceptors ?? []))),

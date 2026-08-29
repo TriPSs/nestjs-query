@@ -11,7 +11,7 @@ import { ParamArgs } from '../decorators/param-args.decorator'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import { ParamArgsType, UpdateOneInputType } from '../types'
-import { BaseServiceResolver, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
+import { BaseServiceController, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
 
 export interface UpdateControllerOpts<DTO, U = DeepPartial<DTO>> extends MutationOpts {
   UpdateDTOClass?: Class<U>
@@ -53,7 +53,7 @@ export const Updateable =
       UpdateOneInput = defaultUpdateOneInput(dtoNames, UpdateDTOClass)
     } = opts
 
-    const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'UpdateDTOClass', 'UpdateOneInput', 'UpdateManyInput')
+    const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'UpdateDTOClass', 'UpdateOneInput', 'UpdateManyInput')
 
     @ApiSchema({ name: `Update${DTOClass.name}` })
     class UOI extends MutationArgsType(UpdateOneInput) {}
@@ -61,7 +61,7 @@ export const Updateable =
     @ApiSchema({ name: `FindUpdate${DTOClass.name}Args` })
     class UOP extends ParamArgsType(DTOClass) {}
 
-    class UpdateResolverBase extends BaseClass {
+    class UpdateControllerBase extends BaseClass {
       @Put(
         () => DTOClass,
         {
@@ -79,7 +79,7 @@ export const Updateable =
         {
           interceptors: [HookInterceptor(HookTypes.BEFORE_UPDATE_ONE, UpdateDTOClass, DTOClass), AuthorizerInterceptor(DTOClass)]
         },
-        commonResolverOpts,
+        commonControllerOpts,
         opts?.one ?? {}
       )
       public updateOne(
@@ -95,7 +95,7 @@ export const Updateable =
       }
     }
 
-    return UpdateResolverBase
+    return UpdateControllerBase
   }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
@@ -106,4 +106,4 @@ export const UpdateController = <
 >(
   DTOClass: Class<DTO>,
   opts: UpdateControllerOpts<DTO, U> = {}
-): ControllerClass<DTO, QS, UpdateController<DTO, U, QS>> => Updateable(DTOClass, opts)(BaseServiceResolver)
+): ControllerClass<DTO, QS, UpdateController<DTO, U, QS>> => Updateable(DTOClass, opts)(BaseServiceController)

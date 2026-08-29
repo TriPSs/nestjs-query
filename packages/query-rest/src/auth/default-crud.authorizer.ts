@@ -2,8 +2,6 @@ import { Inject, Injectable, Optional } from '@nestjs/common'
 import { ModuleRef } from '@nestjs/core'
 import { Class, Filter } from '@ptc-org/nestjs-query-core'
 
-// import { getAuthorizer } from '../decorators'
-// import { ResolverRelation } from '../resolvers/relations'
 import { AuthorizationContext, Authorizer, CustomAuthorizer } from './authorizer'
 import { getCustomAuthorizerToken } from './tokens'
 
@@ -31,8 +29,6 @@ export function createDefaultAuthorizer<DTO>(
     readonly authOptions?: AuthorizerOptions<DTO> | CustomAuthorizer<DTO> = opts
 
     readonly relationsAuthorizers: Map<string, Authorizer<unknown> | undefined>
-
-    // private readonly relations: Map<string, ResolverRelation<unknown>>
 
     constructor(
       private readonly moduleRef: ModuleRef,
@@ -85,14 +81,6 @@ export function createDefaultAuthorizer<DTO>(
         // }
       }
     }
-
-    // private getRelations(): Map<string, ResolverRelation<unknown>> {
-    //   const { many = {}, one = {} } = {}// getRelations(DTOClass)
-    //   const relationsMap = new Map<string, ResolverRelation<unknown>>()
-    //   Object.keys(many).forEach((relation) => relationsMap.set(relation, many[relation]))
-    //   Object.keys(one).forEach((relation) => relationsMap.set(relation, one[relation]))
-    //   return relationsMap
-    // }
   }
 
   return DefaultAuthorizer
