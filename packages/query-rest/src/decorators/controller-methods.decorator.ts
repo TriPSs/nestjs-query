@@ -17,10 +17,12 @@ import { isArray } from 'class-validator'
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
 import { isDisabled, Method, MethodOpts } from './method.decorator'
 
+export type MethodDecoratorResponse = Omit<ApiResponseOptions, 'status' | 'isArray' | 'type'> & { status: number }
+
 interface MethodDecoratorArg extends MethodOpts {
   path?: string | string[]
   operation?: ApiOperationOptions
-  response?: Omit<ApiResponseOptions, 'status' | 'isArray' | 'type'> & { status: number }
+  response?: MethodDecoratorResponse
 }
 
 interface MutationMethodDecoratorArg extends MethodDecoratorArg {
