@@ -91,6 +91,7 @@
     "class-transformer": "0.5.1",
     "class-validator": "0.15.1",
     "clsx": "^2.1.1",
+    "csv-stringify": "^6.8.3",
     "dataloader": "2.2.3",
     "eslint": "8.57.1",
     "eslint-config-airbnb": "19.0.4",
