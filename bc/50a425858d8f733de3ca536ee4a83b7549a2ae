@@ -1,0 +1,18 @@
+packages/query-mikro-orm/project.json
+  h_b13471b77746e9 18-19
+packages/query-sequelize/project.json
+  h_b13471b77746e9 29-30
+packages/query-mongoose/project.json
+  h_b13471b77746e9 29-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "bc50a425858d8f733de3ca536ee4a83b7549a2ae",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
