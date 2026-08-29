@@ -1,6 +1,6 @@
 {
   "name": "tag-service",
-  "version": "10.0.0",
+  "version": "10.0.1",
   "main": "dist/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
