@@ -1,0 +1,14 @@
+packages/query-rest/src/common/enum.utils.ts
+  h_b13471b77746e9 1-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "3fd794ee2b8f8d44bc78b6c219366e688792a07a",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
