@@ -42,6 +42,6 @@
     "@nestjs/core": "^10.0.0 || ^11.0.0",
     "@nestjs/swagger": "^10.0.0 || ^11.0.0",
     "class-transformer": "^0.5",
-    "class-validator": "^0.14.0"
+    "class-validator": "^0.14.0 || ^0.15.0"
   }
 }
