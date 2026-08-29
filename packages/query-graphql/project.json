@@ -25,7 +25,9 @@
         "tsConfig": "packages/query-graphql/tsconfig.lib.json",
         "packageJson": "packages/query-graphql/package.json",
         "main": "packages/query-graphql/src/index.ts",
-        "assets": ["packages/query-graphql/*.md"]
+        "assets": ["packages/query-graphql/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true,
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
     "version": {

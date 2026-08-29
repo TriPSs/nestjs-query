@@ -25,7 +25,9 @@
         "tsConfig": "packages/query-sequelize/tsconfig.lib.json",
         "packageJson": "packages/query-sequelize/package.json",
         "main": "packages/query-sequelize/src/index.ts",
-        "assets": ["packages/query-sequelize/*.md"]
+        "assets": ["packages/query-sequelize/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true,
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
     "version": {
