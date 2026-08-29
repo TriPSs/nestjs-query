@@ -15,7 +15,8 @@
         "packageJson": "packages/query-mikro-orm/package.json",
         "main": "packages/query-mikro-orm/src/index.ts",
         "assets": ["packages/query-mikro-orm/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true
+        "updateBuildableProjectDepsInPackageJson": true,
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
     "lint": {
