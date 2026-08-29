@@ -4331,7 +4331,7 @@ __metadata:
     "@nestjs/core": ^10.0.0 || ^11.0.0
     "@nestjs/graphql": ^11.0.0 || ^12.0.0 || ^13.0.0
     class-transformer: ^0.5
-    class-validator: ^0.14.0
+    class-validator: ^0.14.0 || ^0.15.0
     graphql: ^16.0.0
     graphql-subscriptions: ^3.0.0
     ts-morph: ^19.0.0 || ^20.0.0 || ^21.0.0 || ^24.0.0 || ^25.0.0
@@ -4384,7 +4384,7 @@ __metadata:
     "@nestjs/core": ^10.0.0 || ^11.0.0
     "@nestjs/swagger": ^10.0.0 || ^11.0.0
     class-transformer: ^0.5
-    class-validator: ^0.14.0
+    class-validator: ^0.14.0 || ^0.15.0
   languageName: unknown
   linkType: soft
 
@@ -7095,17 +7095,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"class-validator@npm:^0.14.3":
-  version: 0.14.4
-  resolution: "class-validator@npm:0.14.4"
-  dependencies:
-    "@types/validator": "npm:^13.15.3"
-    libphonenumber-js: "npm:^1.11.1"
-    validator: "npm:^13.15.22"
-  checksum: 10/a7b9c0c3bbe2f693a6eb1f6e379010fe46f1088184a94eca2247c8535c019ea7e4b11af4f7e841b051c723ebaa88ce61065e66624f4e3429a346138885969758
-  languageName: node
-  linkType: hard
-
 "clean-stack@npm:^2.0.0":
   version: 2.2.0
   resolution: "clean-stack@npm:2.2.0"
@@ -9354,7 +9343,7 @@ __metadata:
     "@nestjs/schematics": "npm:^11.0.9"
     "@types/node": "npm:^24.10.1"
     class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.14.3"
+    class-validator: "npm:0.15.1"
     graphql: "npm:^16.13.2"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"
@@ -15169,7 +15158,7 @@ __metadata:
     "@nestjs/typeorm": "npm:^11.0.0"
     "@types/node": "npm:^24.10.1"
     class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.14.3"
+    class-validator: "npm:0.15.1"
     graphql: "npm:^16.13.2"
     pg: "npm:^8.23.0"
     reflect-metadata: "npm:^0.2.2"
@@ -15445,7 +15434,7 @@ __metadata:
     "@nestjs/typeorm": "npm:^11.0.0"
     "@types/node": "npm:^24.10.1"
     class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.14.3"
+    class-validator: "npm:0.15.1"
     graphql: "npm:^16.13.2"
     pg: "npm:^8.23.0"
     reflect-metadata: "npm:^0.2.2"
@@ -16303,7 +16292,7 @@ __metadata:
     "@nestjs/typeorm": "npm:^11.0.0"
     "@types/node": "npm:^24.10.1"
     class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.14.3"
+    class-validator: "npm:0.15.1"
     graphql: "npm:^16.13.2"
     pg: "npm:^8.23.0"
     reflect-metadata: "npm:^0.2.2"
