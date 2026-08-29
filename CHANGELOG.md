@@ -1,4 +1,11 @@
  
+## [10.0.2](https://github.com/TriPSs/nestjs-query/compare/v10.0.1...v10.0.2) (2026-08-29)
+
+
+### Bug Fixes
+
+* support class-validator 0.15 ([ce65b6b](https://github.com/TriPSs/nestjs-query/commit/ce65b6bbc73d40e2b3360f31f7e320469e368c4b))
+
 ## [10.0.1](https://github.com/TriPSs/nestjs-query/compare/v10.0.0...v10.0.1) (2026-08-29)
 
 
