@@ -1,4 +1,29 @@
  
+## [10.0.3](https://github.com/TriPSs/nestjs-query/compare/v10.0.2...v10.0.3) (2026-08-29)
+
+
+### Bug Fixes
+
+* **query-rest:** declare csv stringify dependency ([c5d9a2e](https://github.com/TriPSs/nestjs-query/commit/c5d9a2e2354ad805b06ed4862b6822a488ba37da))
+
+## [10.0.2](https://github.com/TriPSs/nestjs-query/compare/v10.0.1...v10.0.2) (2026-08-29)
+
+
+### Bug Fixes
+
+* support class-validator 0.15 ([ce65b6b](https://github.com/TriPSs/nestjs-query/commit/ce65b6bbc73d40e2b3360f31f7e320469e368c4b))
+
+## [10.0.1](https://github.com/TriPSs/nestjs-query/compare/v10.0.0...v10.0.1) (2026-08-29)
+
+
+### Bug Fixes
+
+* **query-rest:** constrain response metadata options ([07d1e82](https://github.com/TriPSs/nestjs-query/commit/07d1e820bb36fe2ddfa9799c7edc638618fd1c8d))
+* **query-rest:** document enum filter fields as primitives ([918359b](https://github.com/TriPSs/nestjs-query/commit/918359bbef74368307620bf85131a1899def2a5e))
+* **query-rest:** handle enum value transformation ([3fd794e](https://github.com/TriPSs/nestjs-query/commit/3fd794ee2b8f8d44bc78b6c219366e688792a07a))
+* **query-rest:** infer types from enum arrays ([b0cd28e](https://github.com/TriPSs/nestjs-query/commit/b0cd28e23f38944183389a64473eebfbfcc5933f))
+* **query-rest:** preserve named enum blanks ([2dc17ad](https://github.com/TriPSs/nestjs-query/commit/2dc17ad2cdb069c8c094f692eeb2ce8876e4f131))
+
 ## [10.0.0](https://github.com/TriPSs/nestjs-query/compare/v9.5.0...v10.0.0) (2026-08-28)
 
 
