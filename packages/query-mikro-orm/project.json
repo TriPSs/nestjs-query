@@ -14,8 +14,7 @@
         "tsConfig": "packages/query-mikro-orm/tsconfig.lib.json",
         "packageJson": "packages/query-mikro-orm/package.json",
         "main": "packages/query-mikro-orm/src/index.ts",
-        "assets": ["packages/query-mikro-orm/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true
+        "assets": ["packages/query-mikro-orm/*.md"]
       }
     },
     "lint": {

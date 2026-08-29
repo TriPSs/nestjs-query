@@ -27,9 +27,7 @@
         "tsConfig": "packages/query-rest/tsconfig.lib.json",
         "packageJson": "packages/query-rest/package.json",
         "main": "packages/query-rest/src/index.ts",
-        "assets": ["packages/query-rest/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true,
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+        "assets": ["packages/query-rest/*.md"]
       }
     },
     "version": {

@@ -25,9 +25,7 @@
         "tsConfig": "packages/query-typegoose/tsconfig.lib.json",
         "packageJson": "packages/query-typegoose/package.json",
         "main": "packages/query-typegoose/src/index.ts",
-        "assets": ["packages/query-typegoose/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true,
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+        "assets": ["packages/query-typegoose/*.md"]
       }
     },
     "version": {

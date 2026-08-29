@@ -14,8 +14,7 @@
         "tsConfig": "packages/query-typeorm/tsconfig.lib.json",
         "packageJson": "packages/query-typeorm/package.json",
         "main": "packages/query-typeorm/src/index.ts",
-        "assets": ["packages/query-typeorm/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true
+        "assets": ["packages/query-typeorm/*.md"]
       }
     },
     "lint": {

@@ -25,8 +25,7 @@
         "tsConfig": "packages/query-mongoose/tsconfig.lib.json",
         "packageJson": "packages/query-mongoose/package.json",
         "main": "packages/query-mongoose/src/index.ts",
-        "assets": ["packages/query-mongoose/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true
+        "assets": ["packages/query-mongoose/*.md"]
       }
     },
     "version": {
