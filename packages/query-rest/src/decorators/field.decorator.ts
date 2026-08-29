@@ -91,6 +91,18 @@ export function Field(
       ...advancedOptions
     }
 
+    // TypeScript emits Object as the design type for enum properties. Infer the
+    // primitive type from the enum so Swagger does not generate an Object schema.
+    const enumValues = options.enum ? Object.values(options.enum) : []
+    const resolvedType =
+      type === Object
+        ? enumValues.some((value) => typeof value === 'number')
+          ? Number
+          : enumValues.length > 0
+            ? String
+            : type
+        : type
+
     // Remove non-valid options
     delete options.forceArray
     delete options.skipIsEnum
@@ -99,7 +111,7 @@ export function Field(
     const decorators: Array<PropertyDecorator> = [
       Expose({ name: advancedOptions?.name }),
       ApiProperty({
-        type: metadataType ?? type,
+        type: metadataType ?? resolvedType,
         isArray: metadataType ? undefined : isArray,
         ...(options as ApiPropertyOptions)
       })
@@ -145,23 +157,23 @@ export function Field(
       decorators.push(Max(options.maximum))
     }
 
-    if (type && type !== Boolean) {
-      decorators.push(Type(() => type as never))
+    if (resolvedType && resolvedType !== Boolean) {
+      decorators.push(Type(() => resolvedType as never))
     }
 
-    if (type === String) {
+    if (resolvedType === String) {
       decorators.push(IsString({ each: isArray }))
-    } else if (type === Number) {
+    } else if (resolvedType === Number) {
       decorators.push(IsNumber({}, { each: isArray }))
-    } else if (type === Date) {
+    } else if (resolvedType === Date) {
       decorators.push(IsDate({ each: isArray }))
-    } else if (type === Boolean) {
+    } else if (resolvedType === Boolean) {
       // Boolean('false') is true, so parse HTTP query parameter values explicitly.
       decorators.push(
         Transform(({ value }: { value: unknown }): unknown => (value === 'true' ? true : value === 'false' ? false : value)),
         IsBoolean({ each: isArray })
       )
-    } else if ((returnTypeFunc || metadataType) && typeof type === 'function') {
+    } else if ((returnTypeFunc || metadataType) && typeof resolvedType === 'function') {
       decorators.push(ValidateNested({ each: isArray }))
 
       if (!isArray) {
