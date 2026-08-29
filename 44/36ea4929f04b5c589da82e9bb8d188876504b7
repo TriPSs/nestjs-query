@@ -1,0 +1,14 @@
+packages/query-rest/src/decorators/controller-methods.decorator.ts
+  h_b13471b77746e9 13,23,58,68,70-71,85-87,92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "4436ea4929f04b5c589da82e9bb8d188876504b7",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
