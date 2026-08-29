@@ -10,7 +10,7 @@ import {
   SerializeOptions,
   UseInterceptors
 } from '@nestjs/common'
-import { ApiBody, ApiConsumes, ApiOperation, ApiOperationOptions, ApiResponse } from '@nestjs/swagger'
+import { ApiBody, ApiConsumes, ApiOperation, ApiOperationOptions, ApiResponse, ApiResponseOptions } from '@nestjs/swagger'
 import { ApiBodyOptions } from '@nestjs/swagger/dist/decorators/api-body.decorator'
 import { isArray } from 'class-validator'
 
@@ -20,8 +20,7 @@ import { isDisabled, Method, MethodOpts } from './method.decorator'
 interface MethodDecoratorArg extends MethodOpts {
   path?: string | string[]
   operation?: ApiOperationOptions
-  // Support custom response decorators
-  response?: MethodDecorator[]
+  response?: Omit<ApiResponseOptions, 'status' | 'isArray' | 'type'> & { status: number }
 }
 
 interface MutationMethodDecoratorArg extends MethodDecoratorArg {
@@ -56,6 +55,7 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
     const paths: string[] = options.path && !isArray(options.path) ? ([options.path] as string[]) : (options.path as string[])
 
     const decorators = [method(paths), Method(options, ...methodOpts)]
+    const status = options.response?.status ?? (returnTypeFunc ? successStatus : HttpStatus.NO_CONTENT)
 
     if (returnTypeFunc) {
       const returnedType = returnTypeFunc()
@@ -64,10 +64,11 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
 
       decorators.push(
         ApiResponse({
-          status: successStatus,
           description: 'Successful response.',
+          ...options.response,
           type,
-          isArray: isReturnTypeArray
+          isArray: isReturnTypeArray,
+          status
         })
       )
 
@@ -78,19 +79,17 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
         }),
         UseInterceptors(ClassSerializerInterceptor)
       )
-    } else if (!options.response || options.response.length === 0) {
+    } else {
       decorators.push(
-        HttpCode(HttpStatus.NO_CONTENT),
         ApiResponse({
-          status: HttpStatus.NO_CONTENT,
-          description: 'Request completed successfully.'
+          description: 'Request completed successfully.',
+          ...options.response,
+          status
         })
       )
     }
 
-    if (options.response) {
-      decorators.push(...options.response)
-    }
+    decorators.push(HttpCode(status))
 
     if (options.operation) {
       decorators.push(ApiOperation(options.operation))
