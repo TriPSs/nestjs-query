@@ -80,6 +80,23 @@ describe('Field', () => {
     expect(validateSync(array)).toHaveLength(1)
   })
 
+  it('preserves blank values for numeric enums with a custom name', () => {
+    enum Status {
+      None,
+      Active
+    }
+
+    class NamedNumericEnumDTO {
+      @Field({ enum: Status, name: 'state' })
+      status!: Status
+    }
+
+    const dto = plainToInstance(NamedNumericEnumDTO, { state: '' })
+
+    expect(dto.status).toBe('')
+    expect(validateSync(dto)).toHaveLength(1)
+  })
+
   it('resolves boolean enum types', () => {
     const BooleanEnum = { No: false, Yes: true }
 

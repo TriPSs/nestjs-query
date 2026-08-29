@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
-import { Expose, Transform, Type } from 'class-transformer'
+import { Expose, Transform, TransformationType, Type } from 'class-transformer'
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -156,7 +156,10 @@ export function Field(
 
       if (resolvedType === Number && options.enum) {
         decorators.push(
-          Transform(({ value, obj, key }): unknown => restoreEnumBlankValues((obj as Record<string, unknown>)[key], value))
+          Transform(({ value, obj, key, type: transformationType }): unknown => {
+            const originalKey = transformationType === TransformationType.PLAIN_TO_CLASS ? (advancedOptions?.name ?? key) : key
+            return restoreEnumBlankValues((obj as Record<string, unknown>)[originalKey], value)
+          })
         )
       }
     }
