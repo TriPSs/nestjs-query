@@ -1,0 +1,24 @@
+examples/federation-v2-e2e/gateway/package.json
+  h_b13471b77746e9 24
+packages/query-graphql/package.json
+  h_b13471b77746e9 44
+examples/federation-v2-e2e/tag-service/package.json
+  h_b13471b77746e9 26
+packages/query-rest/package.json
+  h_b13471b77746e9 45
+examples/federation-v2-e2e/user-service/package.json
+  h_b13471b77746e9 25
+examples/federation-v2-e2e/todo-service/package.json
+  h_b13471b77746e9 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "ce65b6bbc73d40e2b3360f31f7e320469e368c4b",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
