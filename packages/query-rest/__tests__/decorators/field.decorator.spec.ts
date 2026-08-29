@@ -129,4 +129,18 @@ describe('Field', () => {
     expect(dto.value).toBe('text')
     expect(validateSync(dto)).toHaveLength(0)
   })
+
+  it('resolves primitive types from enum value arrays', () => {
+    class EnumArrayDTO {
+      @Field({ enum: ['draft', 'open'] })
+      value!: object
+    }
+
+    const dto = plainToInstance(EnumArrayDTO, { value: 123 })
+    const apiProperty = Reflect.getMetadata('swagger/apiModelProperties', EnumArrayDTO.prototype, 'value')
+
+    expect(dto.value).toBe('123')
+    expect(validateSync(dto)).toHaveLength(1)
+    expect(apiProperty.type).toBe(String)
+  })
 })

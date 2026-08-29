@@ -4,9 +4,14 @@ export const getEnumType = (enumOption: unknown): BooleanConstructor | NumberCon
     return undefined
   }
 
-  const enumValues = Object.entries(enumOption as Record<string, unknown>)
-    .filter(([key]) => Number.isNaN(Number(key)))
-    .map(([, value]) => value)
+  let enumValues: unknown[]
+  if (Array.isArray(enumOption)) {
+    enumValues = enumOption
+  } else {
+    enumValues = Object.entries(enumOption as Record<string, unknown>)
+      .filter(([key]) => Number.isNaN(Number(key)))
+      .map(([, value]) => value)
+  }
 
   const enumValueTypes = new Set(enumValues.map((value) => typeof value))
 
