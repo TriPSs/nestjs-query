@@ -11,7 +11,7 @@ import { QueryHookArgs } from '../decorators'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import { PagingStrategies, StaticQueryType } from '../types/query'
 import { createExportQueryArgs } from '../types/query/query-args/export-paging-query-args.type'
-import { BaseServiceResolver, ControllerClass, ControllerOpts, ServiceController } from './controller.interface'
+import { BaseServiceController, ControllerClass, ControllerOpts, ServiceController } from './controller.interface'
 
 export type ExportControllerOpts<DTO, ExportDTO = DeepPartial<DTO>> = {
   QueryArgs?: StaticQueryType<DTO, PagingStrategies>
@@ -61,7 +61,7 @@ export const Exportable =
       ExportDTOClass = DTOClass
     } = opts
 
-    const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'FindDTOClass', 'Connection', 'withDeleted')
+    const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'FindDTOClass', 'Connection', 'withDeleted')
 
     class EQA extends QueryArgs {}
 
@@ -71,7 +71,7 @@ export const Exportable =
       value: `Export${DTOClass.name}Args`
     })
 
-    class ExportResolverBase extends BaseClass {
+    class ExportControllerBase extends BaseClass {
       // Returns CSV
       @Get(
         () => String,
@@ -85,7 +85,7 @@ export const Exportable =
           }
         },
         { interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)] },
-        commonResolverOpts,
+        commonControllerOpts,
         opts.many ?? {}
       )
       @Header('content-type', 'text/csv')
@@ -115,7 +115,7 @@ export const Exportable =
       }
     }
 
-    return ExportResolverBase as Class<ExportController<DTO, QS>> & B
+    return ExportControllerBase as Class<ExportController<DTO, QS>> & B
   }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
@@ -126,4 +126,4 @@ export const ExportController = <
 >(
   DTOClass: Class<DTO>,
   opts: ExportControllerOpts<DTO, ExportDTO> = {}
-): ControllerClass<DTO, QS, ExportController<DTO, QS>> => Exportable<DTO, ExportDTO, QS>(DTOClass, opts)(BaseServiceResolver)
+): ControllerClass<DTO, QS, ExportController<DTO, QS>> => Exportable<DTO, ExportDTO, QS>(DTOClass, opts)(BaseServiceController)

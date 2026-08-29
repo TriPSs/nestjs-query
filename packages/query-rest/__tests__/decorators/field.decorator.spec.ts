@@ -54,4 +54,93 @@ describe('Field', () => {
     expect(validateSync(dto)).toHaveLength(1)
     expect(apiProperty.type).toBe(metadataType)
   })
+
+  it('rejects blank values for numeric enums', () => {
+    enum Status {
+      None,
+      Active
+    }
+
+    class NumericEnumDTO {
+      @Field({ enum: Status })
+      status!: Status
+    }
+
+    class NumericEnumArrayDTO {
+      @Field(() => [Status], { enum: Status })
+      statuses!: Status[]
+    }
+
+    const scalar = plainToInstance(NumericEnumDTO, { status: '' })
+    const array = plainToInstance(NumericEnumArrayDTO, { statuses: [''] })
+
+    expect(scalar.status).toBe('')
+    expect(array.statuses).toEqual([''])
+    expect(validateSync(scalar)).toHaveLength(1)
+    expect(validateSync(array)).toHaveLength(1)
+  })
+
+  it('preserves blank values for numeric enums with a custom name', () => {
+    enum Status {
+      None,
+      Active
+    }
+
+    class NamedNumericEnumDTO {
+      @Field({ enum: Status, name: 'state' })
+      status!: Status
+    }
+
+    const dto = plainToInstance(NamedNumericEnumDTO, { state: '' })
+
+    expect(dto.status).toBe('')
+    expect(validateSync(dto)).toHaveLength(1)
+  })
+
+  it('resolves boolean enum types', () => {
+    const BooleanEnum = { No: false, Yes: true }
+
+    class BooleanEnumDTO {
+      @Field({ enum: BooleanEnum })
+      value!: boolean
+    }
+
+    const dto = plainToInstance(BooleanEnumDTO, { value: 'false' })
+    const apiProperty = Reflect.getMetadata('swagger/apiModelProperties', BooleanEnumDTO.prototype, 'value')
+
+    expect(dto.value).toBe(false)
+    expect(validateSync(dto)).toHaveLength(0)
+    expect(apiProperty.type).toBe(Boolean)
+  })
+
+  it('does not coerce heterogeneous enum values to a single primitive type', () => {
+    enum Mixed {
+      Zero,
+      Text = 'text'
+    }
+
+    class MixedEnumDTO {
+      @Field({ enum: Mixed })
+      value!: Mixed
+    }
+
+    const dto = plainToInstance(MixedEnumDTO, { value: 'text' })
+
+    expect(dto.value).toBe('text')
+    expect(validateSync(dto)).toHaveLength(0)
+  })
+
+  it('resolves primitive types from enum value arrays', () => {
+    class EnumArrayDTO {
+      @Field({ enum: ['draft', 'open'] })
+      value!: object
+    }
+
+    const dto = plainToInstance(EnumArrayDTO, { value: 123 })
+    const apiProperty = Reflect.getMetadata('swagger/apiModelProperties', EnumArrayDTO.prototype, 'value')
+
+    expect(dto.value).toBe('123')
+    expect(validateSync(dto)).toHaveLength(1)
+    expect(apiProperty.type).toBe(String)
+  })
 })

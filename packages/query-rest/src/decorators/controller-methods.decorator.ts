@@ -10,16 +10,17 @@ import {
   SerializeOptions,
   UseInterceptors
 } from '@nestjs/common'
-import { ApiBody, ApiConsumes, ApiOperation, ApiOperationOptions, ApiResponse } from '@nestjs/swagger'
+import { ApiBody, ApiConsumes, ApiOperation, ApiOperationOptions, ApiResponse, ApiResponseOptions } from '@nestjs/swagger'
 import { ApiBodyOptions } from '@nestjs/swagger/dist/decorators/api-body.decorator'
 import { isArray } from 'class-validator'
 
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
-import { isDisabled, ResolverMethod, ResolverMethodOpts } from './resolver-method.decorator'
+import { isDisabled, Method, MethodOpts } from './method.decorator'
 
-interface MethodDecoratorArg extends ResolverMethodOpts {
+interface MethodDecoratorArg extends MethodOpts {
   path?: string | string[]
   operation?: ApiOperationOptions
+  response?: Omit<ApiResponseOptions, 'status' | 'isArray' | 'type'> & { status: number }
 }
 
 interface MutationMethodDecoratorArg extends MethodDecoratorArg {
@@ -31,7 +32,7 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
   return (
     returnTypeFuncOrOptions?: ReturnTypeFunc | MethodDecoratorArg | MutationMethodDecoratorArg,
     maybeOptions: MethodDecoratorArg | MutationMethodDecoratorArg = {},
-    ...resolverOpts: (MethodDecoratorArg | MutationMethodDecoratorArg)[]
+    ...methodOpts: (MethodDecoratorArg | MutationMethodDecoratorArg)[]
   ): MethodDecorator | PropertyDecorator => {
     let returnTypeFunc: ReturnTypeFunc | undefined
     let options = maybeOptions
@@ -43,7 +44,7 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
       returnTypeFunc = returnTypeFuncOrOptions
     }
 
-    if (isDisabled([options, ...resolverOpts])) {
+    if (isDisabled([options, ...methodOpts])) {
       return (): void => {}
     }
 
@@ -53,7 +54,8 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
 
     const paths: string[] = options.path && !isArray(options.path) ? ([options.path] as string[]) : (options.path as string[])
 
-    const decorators = [method(paths), ResolverMethod(options, ...resolverOpts)]
+    const decorators = [method(paths), Method(options, ...methodOpts)]
+    const status = options.response?.status ?? (returnTypeFunc ? successStatus : HttpStatus.NO_CONTENT)
 
     if (returnTypeFunc) {
       const returnedType = returnTypeFunc()
@@ -62,10 +64,11 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
 
       decorators.push(
         ApiResponse({
-          status: successStatus,
           description: 'Successful response.',
+          ...options.response,
           type,
-          isArray: isReturnTypeArray
+          isArray: isReturnTypeArray,
+          status
         })
       )
 
@@ -78,13 +81,15 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
       )
     } else {
       decorators.push(
-        HttpCode(HttpStatus.NO_CONTENT),
         ApiResponse({
-          status: HttpStatus.NO_CONTENT,
-          description: 'Request completed successfully.'
+          description: 'Request completed successfully.',
+          ...options.response,
+          status
         })
       )
     }
+
+    decorators.push(HttpCode(status))
 
     if (options.operation) {
       decorators.push(ApiOperation(options.operation))
@@ -102,71 +107,62 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
   }
 }
 
-export function Get(options: MethodDecoratorArg, ...resolverOpts: ResolverMethodOpts[]): PropertyDecorator & MethodDecorator
+export function Get(options: MethodDecoratorArg, ...methodOpts: MethodOpts[]): PropertyDecorator & MethodDecorator
 export function Get(
   returnTypeFunction?: ReturnTypeFunc,
   options?: MethodDecoratorArg,
-  ...resolverOpts: ResolverMethodOpts[]
+  ...methodOpts: MethodOpts[]
 ): PropertyDecorator & MethodDecorator
 
 export function Get(
   returnTypeFuncOrOptions?: ReturnTypeFunc | MethodDecoratorArg,
   maybeOptions?: MethodDecoratorArg,
-  ...resolverOpts: ResolverMethodOpts[]
+  ...methodOpts: MethodOpts[]
 ): MethodDecorator | PropertyDecorator {
-  return methodDecorator(NestGet, HttpStatus.OK)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
+  return methodDecorator(NestGet, HttpStatus.OK)(returnTypeFuncOrOptions, maybeOptions, ...methodOpts)
 }
 
-export function Post(
-  options: MutationMethodDecoratorArg,
-  ...resolverOpts: ResolverMethodOpts[]
-): PropertyDecorator & MethodDecorator
+export function Post(options: MutationMethodDecoratorArg, ...methodOpts: MethodOpts[]): PropertyDecorator & MethodDecorator
 export function Post(
   returnTypeFunction?: ReturnTypeFunc,
   options?: MutationMethodDecoratorArg,
-  ...resolverOpts: ResolverMethodOpts[]
+  ...methodOpts: MethodOpts[]
 ): PropertyDecorator & MethodDecorator
 
 export function Post(
   returnTypeFuncOrOptions?: ReturnTypeFunc | MutationMethodDecoratorArg,
   maybeOptions?: MutationMethodDecoratorArg,
-  ...resolverOpts: ResolverMethodOpts[]
+  ...methodOpts: MethodOpts[]
 ): MethodDecorator | PropertyDecorator {
-  return methodDecorator(NestPost, HttpStatus.CREATED)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
+  return methodDecorator(NestPost, HttpStatus.CREATED)(returnTypeFuncOrOptions, maybeOptions, ...methodOpts)
 }
 
-export function Put(
-  options: MutationMethodDecoratorArg,
-  ...resolverOpts: ResolverMethodOpts[]
-): PropertyDecorator & MethodDecorator
+export function Put(options: MutationMethodDecoratorArg, ...methodOpts: MethodOpts[]): PropertyDecorator & MethodDecorator
 export function Put(
   returnTypeFunction?: ReturnTypeFunc,
   options?: MutationMethodDecoratorArg,
-  ...resolverOpts: ResolverMethodOpts[]
+  ...methodOpts: MethodOpts[]
 ): PropertyDecorator & MethodDecorator
 
 export function Put(
   returnTypeFuncOrOptions?: ReturnTypeFunc | MutationMethodDecoratorArg,
   maybeOptions?: MutationMethodDecoratorArg,
-  ...resolverOpts: ResolverMethodOpts[]
+  ...methodOpts: MethodOpts[]
 ): MethodDecorator | PropertyDecorator {
-  return methodDecorator(NestPut, HttpStatus.OK)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
+  return methodDecorator(NestPut, HttpStatus.OK)(returnTypeFuncOrOptions, maybeOptions, ...methodOpts)
 }
 
-export function Delete(
-  options: MutationMethodDecoratorArg,
-  ...resolverOpts: ResolverMethodOpts[]
-): PropertyDecorator & MethodDecorator
+export function Delete(options: MutationMethodDecoratorArg, ...methodOpts: MethodOpts[]): PropertyDecorator & MethodDecorator
 export function Delete(
   returnTypeFunction?: ReturnTypeFunc,
   options?: MutationMethodDecoratorArg,
-  ...resolverOpts: ResolverMethodOpts[]
+  ...methodOpts: MethodOpts[]
 ): PropertyDecorator & MethodDecorator
 
 export function Delete(
   returnTypeFuncOrOptions?: ReturnTypeFunc | MutationMethodDecoratorArg,
   maybeOptions?: MutationMethodDecoratorArg,
-  ...resolverOpts: ResolverMethodOpts[]
+  ...methodOpts: MethodOpts[]
 ): MethodDecorator | PropertyDecorator {
-  return methodDecorator(NestDelete, HttpStatus.OK)(returnTypeFuncOrOptions, maybeOptions, ...resolverOpts)
+  return methodDecorator(NestDelete, HttpStatus.OK)(returnTypeFuncOrOptions, maybeOptions, ...methodOpts)
 }

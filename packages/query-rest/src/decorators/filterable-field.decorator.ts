@@ -15,7 +15,6 @@ export type FilterableFieldOptions = {
 export interface FilterableFieldDescriptor {
   propertyName: string
   schemaName: string
-  target: Class<unknown>
   returnTypeFunc?: ReturnTypeFunc<ReturnTypeFuncValue>
   advancedOptions?: FilterableFieldOptions
 }
@@ -82,10 +81,10 @@ export function FilterableField(
   ): TypedPropertyDescriptor<D> | void => {
     const Ctx = Reflect.getMetadata('design:type', target, propertyName) as Class<unknown>
     const rt = returnTypeFunc ?? (() => Ctx)
-    reflector.append(target.constructor as Class<unknown>, {
+
+    reflector.append<D, FilterableFieldDescriptor>(target.constructor as Class<D>, {
       propertyName: propertyName.toString(),
       schemaName: propertyName.toString(),
-      target: Ctx,
       returnTypeFunc: rt,
       advancedOptions
     })
