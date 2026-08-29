@@ -1,4 +1,11 @@
  
+## [10.0.3](https://github.com/TriPSs/nestjs-query/compare/v10.0.2...v10.0.3) (2026-08-29)
+
+
+### Bug Fixes
+
+* **query-rest:** declare csv stringify dependency ([c5d9a2e](https://github.com/TriPSs/nestjs-query/commit/c5d9a2e2354ad805b06ed4862b6822a488ba37da))
+
 ## [10.0.2](https://github.com/TriPSs/nestjs-query/compare/v10.0.1...v10.0.2) (2026-08-29)
 
 
