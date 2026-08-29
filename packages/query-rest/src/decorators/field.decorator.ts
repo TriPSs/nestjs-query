@@ -20,6 +20,7 @@ import {
   ValidateNested
 } from 'class-validator'
 
+import { getEnumType, restoreEnumBlankValues } from '../common'
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
 
 const OPENAPI_METADATA_FACTORY = '_OPENAPI_METADATA_FACTORY'
@@ -93,15 +94,8 @@ export function Field(
 
     // TypeScript emits Object as the design type for enum properties. Infer the
     // primitive type from the enum so Swagger does not generate an Object schema.
-    const enumValues = options.enum ? Object.values(options.enum) : []
-    const resolvedType =
-      type === Object
-        ? enumValues.some((value) => typeof value === 'number')
-          ? Number
-          : enumValues.length > 0
-            ? String
-            : type
-        : type
+    const enumType = getEnumType(options.enum)
+    const resolvedType = type === Object ? (enumType ?? type) : type
 
     // Remove non-valid options
     delete options.forceArray
@@ -159,6 +153,12 @@ export function Field(
 
     if (resolvedType && resolvedType !== Boolean) {
       decorators.push(Type(() => resolvedType as never))
+
+      if (resolvedType === Number && options.enum) {
+        decorators.push(
+          Transform(({ value, obj, key }): unknown => restoreEnumBlankValues((obj as Record<string, unknown>)[key], value))
+        )
+      }
     }
 
     if (resolvedType === String) {
