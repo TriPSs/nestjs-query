@@ -444,11 +444,9 @@ describe('TagResolver (typeorm - e2e)', () => {
             const res: AggregateResponse<TodoItemDTO>[] = body.data.tagAggregate
             expect(res).toHaveLength(2)
 
-            // First of the month we switched the days so they stay in the same month
-            const isFirstOfMonth = new Date().getDate() === 1
-
-            expect(res[isFirstOfMonth ? 1 : 0].sum).toEqual({ id: 1 })
-            expect(res[isFirstOfMonth ? 0 : 1].sum).toEqual({ id: 14 })
+            // The groups come back ordered by the grouped column, and `Urgent` is the day before.
+            expect(res[0].sum).toEqual({ id: 1 })
+            expect(res[1].sum).toEqual({ id: 14 })
           }))
     })
   })

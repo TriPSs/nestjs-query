@@ -250,8 +250,9 @@ automatically too.
 ## Custom relation services
 
 A pivot resolves through **its own service**, independent of how the relation itself is loaded. That
-makes it work unchanged with a [`RelationQueryService`](../concepts/services.mdx) that swaps the
-service of a relation:
+makes it work unchanged with a
+[`RelationQueryService`](../concepts/services.md#relationqueryservice) that swaps the service of a
+relation:
 
 ```ts
 @QueryService(UserDTO)

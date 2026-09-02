@@ -5,6 +5,22 @@ import { SubTaskEntity } from '../src/sub-task/sub-task.entity'
 import { TagEntity } from '../src/tag/tag.entity'
 import { TodoItemEntity } from '../src/todo-item/todo-item.entity'
 
+/**
+ * The `fakeDate` of the tags, pinned so the `groupBy` aggregate tests are not at the mercy of the
+ * calendar. `Urgent` sits one day before the others, which is what lets grouping by `DAY` return two
+ * groups while `WEEK` and `MONTH` return one.
+ *
+ * Tue 7 and Wed 8 of January 2020 share an ISO week (Mon 6 - Sun 12) and a month, so both hold no
+ * matter when the suite runs. Deriving them from "today" does not: a run on a Monday puts
+ * "yesterday" in the previous ISO week, which is what used to break the `WEEK` test. They are built
+ * from local parts because `fakeDate` is a `timestamp without time zone`, so the wall clock written
+ * is the one asserted on, whatever the zone of the runner.
+ */
+const TAG_FAKE_DATES = {
+  urgent: new Date(2020, 0, 7, 12),
+  rest: new Date(2020, 0, 8, 12)
+}
+
 const tables = ['todo_item', 'sub_task', 'tag']
 export const truncate = async (dataSource: DataSource): Promise<void> => executeTruncate(dataSource, tables)
 
@@ -15,18 +31,11 @@ export const refresh = async (dataSource: DataSource): Promise<void> => {
   const subTaskRepo = dataSource.getRepository(SubTaskEntity)
   const tagsRepo = dataSource.getRepository(TagEntity)
 
-  const yesterdayOrTomorrow = new Date()
-  if (yesterdayOrTomorrow.getDate() === 1) {
-    yesterdayOrTomorrow.setDate(yesterdayOrTomorrow.getDate() + 1)
-  } else {
-    yesterdayOrTomorrow.setDate(yesterdayOrTomorrow.getDate() - 1)
-  }
-
-  const urgentTag = await tagsRepo.save({ name: 'Urgent', fakeDate: yesterdayOrTomorrow })
-  const homeTag = await tagsRepo.save({ name: 'Home' })
-  const workTag = await tagsRepo.save({ name: 'Work' })
-  const questionTag = await tagsRepo.save({ name: 'Question' })
-  const blockedTag = await tagsRepo.save({ name: 'Blocked' })
+  const urgentTag = await tagsRepo.save({ name: 'Urgent', fakeDate: TAG_FAKE_DATES.urgent })
+  const homeTag = await tagsRepo.save({ name: 'Home', fakeDate: TAG_FAKE_DATES.rest })
+  const workTag = await tagsRepo.save({ name: 'Work', fakeDate: TAG_FAKE_DATES.rest })
+  const questionTag = await tagsRepo.save({ name: 'Question', fakeDate: TAG_FAKE_DATES.rest })
+  const blockedTag = await tagsRepo.save({ name: 'Blocked', fakeDate: TAG_FAKE_DATES.rest })
 
   const todoItems = await todoRepo.save([
     { title: 'Create Nest App', completed: true, priority: 0, tags: [urgentTag, homeTag] },
