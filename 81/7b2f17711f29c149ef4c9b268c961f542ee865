@@ -1,0 +1,14 @@
+packages/query-graphql/src/resolvers/relations/relations.resolver.ts
+  h_b13471b77746e9 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "817b2f17711f29c149ef4c9b268c961f542ee865",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
