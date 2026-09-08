@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ReadRelationsResolver - many - 3 should use the object type name 1`] = `
 "type TestResolverDTO {

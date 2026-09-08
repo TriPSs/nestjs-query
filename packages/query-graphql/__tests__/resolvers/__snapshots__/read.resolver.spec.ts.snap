@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ReadResolver #findById should not expose findById method if disabled 1`] = `
 "type TestResolverDTO {

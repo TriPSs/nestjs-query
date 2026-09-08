@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ReadRelationsResolver - basics one should not add read one methods if disableRead is true 1`] = `
 "type TestResolverDTO {

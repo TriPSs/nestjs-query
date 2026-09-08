@@ -31,10 +31,18 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
   /**
    * Query for multiple records of type `T`.
    * @param query - the query used to filer, page or sort records.
-   * @param selectRelations - additional relation to select and fetch in the same query.
+   * @param opts - Additional options to apply to the query.
    * @returns a promise with an array of records that match the query.
    */
   query(query: Query<DTO>, opts?: QueryOptions<DTO>): Promise<DTO[]>
+
+  /**
+   * Query for records to export.
+   *
+   * Services can override this to apply export-specific behavior while preserving
+   * the same filtering, paging, and authorization options as {@link query}.
+   */
+  exportMany(query: Query<DTO>, opts?: QueryOptions<DTO>): Promise<DTO[]>
 
   /**
    * Perform an aggregate query

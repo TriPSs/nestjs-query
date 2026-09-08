@@ -3,14 +3,12 @@ import { EntityRepository, MikroORM } from '@mikro-orm/core'
 import { SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 
 import { MikroOrmQueryService } from '../../src'
-import { createTestConnection, refresh, TEST_ENTITIES, TEST_RELATIONS, TestEntity, TestRelation } from '../__fixtures__'
+import { createTestConnection, refresh, TEST_ENTITIES, TestEntity, TestRelation } from '../__fixtures__'
 
 describe('MikroOrmQueryService', () => {
   let orm: MikroORM<BetterSqliteDriver>
   let testEntityRepo: EntityRepository<TestEntity>
-  let testRelationRepo: EntityRepository<TestRelation>
   let queryService: MikroOrmQueryService<TestEntity>
-  let relationQueryService: MikroOrmQueryService<TestRelation>
 
   beforeAll(async () => {
     orm = await createTestConnection()
@@ -24,9 +22,7 @@ describe('MikroOrmQueryService', () => {
     await refresh(orm)
     const em = orm.em.fork()
     testEntityRepo = em.getRepository(TestEntity)
-    testRelationRepo = em.getRepository(TestRelation)
     queryService = new MikroOrmQueryService(testEntityRepo)
-    relationQueryService = new MikroOrmQueryService(testRelationRepo)
   })
 
   describe('#query', () => {

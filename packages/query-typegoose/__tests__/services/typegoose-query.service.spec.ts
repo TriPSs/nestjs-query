@@ -49,7 +49,7 @@ describe('TypegooseQueryService', () => {
       ],
       providers: [TestReferenceService, TestEntityService]
     }).compile()
-  })
+  }, 120000)
 
   function convertDocument<Doc>(doc: DocumentType<Doc>): Doc {
     return doc.toObject({ virtuals: true }) as Doc
@@ -85,7 +85,7 @@ describe('TypegooseQueryService', () => {
 
   beforeEach(async () => mongo.prepareDb())
 
-  afterEach(async () => mongo.dropDatabase())
+  afterEach(async () => mongo.clearDatabase())
 
   describe('#query', () => {
     it('call find and return the result', async () => {

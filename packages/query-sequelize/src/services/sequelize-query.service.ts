@@ -9,6 +9,7 @@ import {
   FindByIdOptions,
   GetByIdOptions,
   Query,
+  QueryOptions,
   QueryService,
   UpdateManyResponse,
   UpdateOneOptions
@@ -64,6 +65,15 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
   public async query(query: Query<Entity>): Promise<Entity[]> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return this.model.findAll<Entity>(this.filterQueryBuilder.findOptions(query))
+  }
+
+  /**
+   * Unlike the TypeORM adapter, Sequelize's `query` does not accept {@link QueryOptions}, so `withDeleted` is not
+   * supported here. `_opts` is kept in the signature so subclasses can add support without widening it.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public exportMany(query: Query<Entity>, _opts?: QueryOptions<Entity>): Promise<Entity[]> {
+    return this.query(query)
   }
 
   public async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {

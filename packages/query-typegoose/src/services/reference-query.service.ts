@@ -26,6 +26,10 @@ import {
   VirtualTypeWithOptions
 } from '../typegoose-types.helper'
 
+const getReferenceModelWithString = <Ref>(name: string): ReturnModelType<Class<Ref>> | undefined =>
+  // Typegoose's string lookup cannot retain the class associated with the runtime model name.
+  getModelWithString<Class<Ref>>(name) as unknown as ReturnModelType<Class<Ref>> | undefined
+
 export abstract class ReferenceQueryService<Entity extends Base> {
   abstract readonly filterQueryBuilder: FilterQueryBuilder<Entity>
 
@@ -354,15 +358,15 @@ export abstract class ReferenceQueryService<Entity extends Base> {
       if (isEmbeddedSchemaTypeOptions(schemaType)) {
         const embedded = getEmbeddedSchemaType(schemaType)
         if (embedded) {
-          refModel = getModelWithString(embedded.options.ref) as ReturnModelType<Class<Ref>>
+          refModel = getReferenceModelWithString<Ref>(embedded.options.ref)
         }
       } else if (isSchemaTypeWithReferenceOptions(schemaType)) {
-        refModel = getModelWithString(schemaType.options.ref) as ReturnModelType<Class<Ref>>
+        refModel = getReferenceModelWithString<Ref>(schemaType.options.ref)
       }
     } else if (this.isVirtualPath(refName)) {
       const schemaType = this.Model.schema.virtualpath(refName)
       if (isVirtualTypeWithReferenceOptions(schemaType)) {
-        refModel = getModelWithString(schemaType.options.ref) as ReturnModelType<Class<Ref>>
+        refModel = getReferenceModelWithString<Ref>(schemaType.options.ref)
       }
     }
     if (!refModel) {

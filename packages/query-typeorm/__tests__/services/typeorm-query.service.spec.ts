@@ -739,19 +739,6 @@ describe('TypeOrmQueryService', (): void => {
         ])
       })
 
-      // it('call select and return the result for many to many', async () => {
-      //   const queryService = moduleRef.get(TestEntityService);
-      //   const queryResult = await queryService.queryRelations(TestEntity, 'manyTestRelations', TEST_ENTITIES[0], {});
-      //   expect(queryResult.map((r) => r.manyTestRelations)).toEqual([]);
-      //
-      //   const queryResult2 = await queryService.queryRelations(TestEntity, 'manyTestRelations', TEST_ENTITIES[1], {});
-      //   expect(queryResult2.map((r) => r.manyTestRelations)).toEqual([
-      //     TEST_RELATIONS[0],
-      //     TEST_RELATIONS[1],
-      //     TEST_RELATIONS[2]
-      //   ]);
-      // });
-
       it('should apply a filter', async () => {
         const queryService = moduleRef.get(TestEntityService)
         const queryResult = await queryService.queryRelations(TestRelation, 'testRelations', TEST_ENTITIES[0], {

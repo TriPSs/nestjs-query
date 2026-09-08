@@ -200,6 +200,10 @@ export class ProxyQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> 
     return this.proxied.query(query, opts)
   }
 
+  public exportMany(query: Query<DTO>, opts?: QueryOptions<DTO>): Promise<DTO[]> {
+    return this.proxied.exportMany(query, opts)
+  }
+
   public aggregate(filter: Filter<DTO>, query: AggregateQuery<DTO>, opts?: AggregateOptions): Promise<AggregateResponse<DTO>[]> {
     return this.proxied.aggregate(filter, query, opts)
   }

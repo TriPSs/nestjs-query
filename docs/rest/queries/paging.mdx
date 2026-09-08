@@ -1,0 +1,78 @@
+---
+title: Paging and Sorting
+---
+
+## Offset paging
+
+Offset paging is the default REST strategy. The endpoint accepts:
+
+- `limit`: maximum number of records to return. The default is `25` and the default maximum is `50`.
+- `offset`: zero-based number of records to skip. The default is `0`.
+
+```http
+GET /todo-items?limit=25&offset=50
+```
+
+```json
+{
+  "pageInfo": {
+    "hasNextPage": false,
+    "hasPreviousPage": true
+  },
+  "nodes": []
+}
+```
+
+Configure paging on the DTO or endpoint:
+
+```ts
+import { SortDirection } from '@ptc-org/nestjs-query-core'
+import { PagingStrategies, QueryOptions } from '@ptc-org/nestjs-query-rest'
+
+@QueryOptions({
+  pagingStrategy: PagingStrategies.OFFSET,
+  defaultResultSize: 20,
+  maxResultsSize: 100,
+  enableTotalCount: true
+})
+export class TodoItemDTO {}
+```
+
+When `enableTotalCount` is `true`, the connection also contains `totalCount`. Counting may add a database query, so enable it only when clients need it.
+
+## No paging
+
+Use `PagingStrategies.NONE` to return all matching records as a JSON array:
+
+```ts
+{
+  DTOClass: TodoItemDTO,
+  EntityClass: TodoItemEntity,
+  pagingStrategy: PagingStrategies.NONE
+}
+```
+
+```json
+[
+  { "id": 1, "title": "Write docs", "completed": false },
+  { "id": 2, "title": "Review docs", "completed": true }
+]
+```
+
+Use this strategy only for bounded collections.
+
+## Sorting
+
+REST sorting is currently configured on the server through `defaultSort`; generated endpoints do not expose a client-controlled sort parameter.
+
+```ts
+@QueryOptions({
+  defaultSort: [
+    { field: 'completed', direction: SortDirection.ASC },
+    { field: 'created', direction: SortDirection.DESC }
+  ]
+})
+export class TodoItemDTO {}
+```
+
+Always add a stable tie-breaker (commonly the ID) when records can share the same sort value, especially when using offset paging.

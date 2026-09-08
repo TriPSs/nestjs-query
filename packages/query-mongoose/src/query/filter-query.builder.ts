@@ -1,5 +1,5 @@
 import { AggregateQuery, Filter, Query, SortDirection, SortField } from '@ptc-org/nestjs-query-core'
-import { Document, QueryFilter, Model as MongooseModel } from 'mongoose'
+import { Document, Model as MongooseModel, QueryFilter } from 'mongoose'
 
 import { AggregateBuilder, MongooseGroupAndAggregate } from './aggregate.builder'
 import { getSchemaKey } from './helpers'
@@ -11,12 +11,12 @@ const MONGOOSE_SORT_DIRECTION: Record<SortDirection, 1 | -1> = {
 }
 
 type MongooseSort = Record<string, 1 | -1>
-type MongooseQuery<Entity extends Document<any>> = {
+type MongooseQuery<Entity extends Document> = {
   filterQuery: QueryFilter<Entity>
   options: { limit?: number; skip?: number; sort?: MongooseSort }
 }
 
-type MongooseAggregateQuery<Entity extends Document<any>> = MongooseQuery<Entity> & {
+type MongooseAggregateQuery<Entity extends Document> = MongooseQuery<Entity> & {
   aggregate: MongooseGroupAndAggregate
 }
 
@@ -25,7 +25,7 @@ type MongooseAggregateQuery<Entity extends Document<any>> = MongooseQuery<Entity
  *
  * Class that will convert a Query into a `typeorm` Query Builder.
  */
-export class FilterQueryBuilder<Entity extends Document<any>> {
+export class FilterQueryBuilder<Entity extends Document> {
   constructor(
     readonly Model: MongooseModel<Entity>,
     readonly whereBuilder: WhereBuilder<Entity> = new WhereBuilder<Entity>(Model),

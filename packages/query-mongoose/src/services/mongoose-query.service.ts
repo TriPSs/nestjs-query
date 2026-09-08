@@ -10,6 +10,7 @@ import {
   FindByIdOptions,
   GetByIdOptions,
   Query,
+  QueryOptions,
   QueryService,
   UpdateManyResponse,
   UpdateOneOptions
@@ -39,7 +40,7 @@ type MongoDBDeletedOutput = {
  * }
  * ```
  */
-export class MongooseQueryService<Entity extends Document<any>>
+export class MongooseQueryService<Entity extends Document>
   extends ReferenceQueryService<Entity>
   implements QueryService<Entity, DeepPartial<Entity>, DeepPartial<Entity>>
 {
@@ -66,6 +67,15 @@ export class MongooseQueryService<Entity extends Document<any>>
   public async query(query: Query<Entity>): Promise<Entity[]> {
     const { filterQuery, options } = this.filterQueryBuilder.buildQuery(query)
     return this.Model.find(filterQuery, {}, options).exec()
+  }
+
+  /**
+   * Unlike the TypeORM adapter, Mongoose's `query` does not accept {@link QueryOptions}, so `withDeleted` is not
+   * supported here. `_opts` is kept in the signature so subclasses can add support without widening it.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public exportMany(query: Query<Entity>, _opts?: QueryOptions<Entity>): Promise<Entity[]> {
+    return this.query(query)
   }
 
   public async aggregate(filter: Filter<Entity>, aggregateQuery: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {

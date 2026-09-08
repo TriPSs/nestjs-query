@@ -12,7 +12,6 @@ import {
   GetByIdOptions,
   NoOpQueryService,
   Query,
-  QueryOptions,
   QueryRelationsOptions,
   SortDirection,
   SortField,
@@ -59,7 +58,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     return entity as unknown as DTO
   }
 
-  async query(query: Query<DTO>, _opts?: QueryOptions<DTO>): Promise<DTO[]> {
+  async query(query: Query<DTO>): Promise<DTO[]> {
     const convertedQuery = this.assembler?.convertQuery?.(query) ?? query
     const orderBy = this.convertSorting(convertedQuery.sorting as SortField<unknown>[] | undefined)
     const { limit, offset } = convertedQuery.paging ?? {}

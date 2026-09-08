@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Filter } from '@ptc-org/nestjs-query-core'
 import { FilterableField, FilterType } from '@ptc-org/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
-import { Document, QueryFilter, model } from 'mongoose'
+import { Document, model, QueryFilter } from 'mongoose'
 
 import { WhereBuilder } from '../../src/query'
 import { TestEntity, TestEntitySchema } from '../__fixtures__/test.entity'

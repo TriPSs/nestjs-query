@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://tripss.github.io/nestjs-query" target="blank"><img src="https://tripss.github.io/nestjs-query/img/logo.svg" width="120" alt="Nestjs-query Logo" /></a>
+  <a href="https://nestjs-query.mintlify.site/" target="blank"><img src="https://nestjs-query.mintlify.site/images/logo.svg" width="120" alt="Nestjs-query Logo" /></a>
 </p>
 
 [![npm version](https://img.shields.io/npm/v/@ptc-org/nestjs-query-core.svg)](https://www.npmjs.org/package/@ptc-org/nestjs-query-core)
@@ -9,14 +9,12 @@
 
 # `@ptc-org/nestjs-query-core`
 
-Core package that contains interfaces for types used by [`@ptc-org/nestjs-query-graphql`](../query-graphql)
-and [`@ptc-org/nestjs-query-typeorm`](../query-typeorm)
+Core package containing the query, service, DTO, and utility types used by the Nestjs-Query integrations.
 
 ## Installation
 
-[Install Guide](https://tripss.github.io/nestjs-query/docs/introduction/install)
+[Install Guide](https://nestjs-query.mintlify.site/introduction/install)
 
 ## Docs
 
-* [Nestjs-query Docs](https://tripss.github.io/nestjs-query/docs/introduction/getting-started)
-
+* [Nestjs-query Docs](https://nestjs-query.mintlify.site/introduction/getting-started)
