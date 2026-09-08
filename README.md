@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://tripss.github.io/nestjs-query" target="blank"><img src="https://tripss.github.io/nestjs-query/img/logo.svg" width="120" alt="Nestjs-query Logo" /></a>
+  <a href="https://nestjs-query.mintlify.site/" target="blank"><img src="https://nestjs-query.mintlify.site/images/logo.svg" width="120" alt="Nestjs-query Logo" /></a>
 </p>
 
 [![Test](https://github.com/TriPSs/nestjs-query/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/TriPSs/nestjs-query/actions/workflows/test.yml)
@@ -9,40 +9,42 @@
 
 # nestjs-query
 
-Nestjs-Query is collection of packages to make crud for `graphql` easier.
+Nestjs-Query is a collection of packages for building queryable CRUD APIs with NestJS. It provides reusable query, filtering, sorting, paging, authorization, and persistence-service primitives for GraphQL and REST applications.
 
 ## Why?
 
-While working on projects in nestjs it was very easy to get up and running with graphql however, there were many patterns that were common between the resolvers. In particular querying, sorting and paging.  
+While working on projects in NestJS it was easy to get up and running with GraphQL, but many resolver patterns were repeated across applications—especially querying, sorting, and paging. Nestjs-Query packages those patterns so they can be configured and reused.
 
 ## Installation
 
-[Install Guide](https://tripss.github.io/nestjs-query/docs/introduction/install).
+[Install Guide](https://nestjs-query.mintlify.site/introduction/install).
 
 ## Docs
 
-* [Getting Started](https://tripss.github.io/nestjs-query/docs/introduction/getting-started)
-* [Install Guide](https://tripss.github.io/nestjs-query/docs/introduction/install).
-* [Concepts](https://tripss.github.io/nestjs-query/docs/introduction/concepts)
-* [Example](https://tripss.github.io/nestjs-query/docs/introduction/example)
-* [Typeorm](https://tripss.github.io/nestjs-query/docs/persistence/typeorm/getting-started)
-* [Sequelize](https://tripss.github.io/nestjs-query/docs/persistence/sequelize/getting-started)
-* [GraphQL](https://tripss.github.io/nestjs-query/docs/graphql/resolvers)
+* [Getting Started](https://nestjs-query.mintlify.site/introduction/getting-started)
+* [Install Guide](https://nestjs-query.mintlify.site/introduction/install)
+* [Concepts](https://nestjs-query.mintlify.site/concepts/queries)
+* [Example](https://nestjs-query.mintlify.site/introduction/example)
+* [TypeORM](https://nestjs-query.mintlify.site/persistence/typeorm/getting-started)
+* [Sequelize](https://nestjs-query.mintlify.site/persistence/sequelize/getting-started)
+* [GraphQL](https://nestjs-query.mintlify.site/graphql/getting-started)
 
 ## Packages
 
 Nestjs-query is composed of multiple packages
 
-* [`@ptc-org/nestjs-query-core`](https://github.com/tripss/nestjs-query/tree/master/packages/core) - Defines all interfaces and utility types implemented by the other packages.
-* [`@ptc-org/nestjs-query-graphql`](https://github.com/tripss/nestjs-query/tree/master/packages/query-graphql) - Package that provides the graphql resolver and decorators for crud endpoints.
-* [`@ptc-org/nestjs-query-mongoose`](https://github.com/tripss/nestjs-query/tree/master/packages/query-typeorm) - Package that implements a Mongoose service that can be used by itself or with the graphql resolver provided by `@ptc-org/nestjs-query-graphql`.
-* [`@ptc-org/nestjs-query-sequelize`](https://github.com/tripss/nestjs-query/tree/master/packages/query-sequelize) - Package that implements a Sequelize service that can be used by itself or with the graphql resolver provided by `@ptc-org/nestjs-query-graphql`.
-* [`@ptc-org/nestjs-query-typegoose`](https://github.com/tripss/nestjs-query/tree/master/packages/query-typegoose) - Package that implements a Typegoose service that can be used by itself or with the graphql resolver provided by `@ptc-org/nestjs-query-graphql`.
-* [`@ptc-org/nestjs-query-typeorm`](https://github.com/tripss/nestjs-query/tree/master/packages/query-typeorm) - Package that implements a Typeorm service that can be used by itself or with the graphql resolver provided by `@ptc-org/nestjs-query-graphql`.
+* [`@ptc-org/nestjs-query-core`](https://github.com/TriPSs/nestjs-query/tree/master/packages/core) - Framework-independent query, service, DTO, and utility primitives.
+* [`@ptc-org/nestjs-query-graphql`](https://github.com/TriPSs/nestjs-query/tree/master/packages/query-graphql) - GraphQL resolvers, decorators, and CRUD endpoints.
+* [`@ptc-org/nestjs-query-rest`](https://github.com/TriPSs/nestjs-query/tree/master/packages/query-rest) - REST controllers, decorators, and CRUD endpoints.
+* [`@ptc-org/nestjs-query-mikro-orm`](https://github.com/TriPSs/nestjs-query/tree/master/packages/query-mikro-orm) - MikroORM persistence service.
+* [`@ptc-org/nestjs-query-mongoose`](https://github.com/TriPSs/nestjs-query/tree/master/packages/query-mongoose) - Mongoose persistence service.
+* [`@ptc-org/nestjs-query-sequelize`](https://github.com/TriPSs/nestjs-query/tree/master/packages/query-sequelize) - Sequelize persistence service.
+* [`@ptc-org/nestjs-query-typegoose`](https://github.com/TriPSs/nestjs-query/tree/master/packages/query-typegoose) - Typegoose persistence service.
+* [`@ptc-org/nestjs-query-typeorm`](https://github.com/TriPSs/nestjs-query/tree/master/packages/query-typeorm) - TypeORM persistence service.
 
 ## Development
 
-If you'd like to contribute to this project, all you need to do is clone this project and run:
+For local development, clone the repository and install dependencies with Yarn 4:
 
 ```bash
 $ yarn
@@ -53,7 +55,7 @@ $ yarn nx run-many --target=build --all
 # To run all tests
 $ yarn nx run-many --target=test --all
 
-# To run the E2E tests
+# To run the standard E2E tests (requires Docker)
 $ yarn docker up -d
 $ yarn nx e2e examples
 
@@ -61,6 +63,8 @@ $ yarn nx e2e examples
 $ yarn nx build query-graphql
 ```
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the complete development and pull-request guide. Please also review our [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## Collaboration
 
-If you have questions or [issues](https://github.com/TriPSs/nestjs-query/issues), please [open an issue](https://github.com/TriPSs/nestjs-query/issues/new)!
+If you have questions or [issues](https://github.com/TriPSs/nestjs-query/issues), please [open an issue](https://github.com/TriPSs/nestjs-query/issues/new). For community discussion, join the [NestJS Query Slack](https://join.slack.com/t/nestjsquery/shared_invite/zt-27dvu0tye-tOcAmeQ0PRSCEInW6P3h9g).

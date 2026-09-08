@@ -21,7 +21,7 @@ import { ParamArgs } from '../decorators/param-args.decorator'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import { PagingStrategies, QueryArgsTypeOpts, StaticQueryType } from '../types/query'
 import {
-  BaseServiceResolver,
+  BaseServiceController,
   ControllerClass,
   ControllerOpts,
   ExtractPagingStrategy,
@@ -78,7 +78,7 @@ export const Readable =
       FindDTOClass = DTOClass
     } = opts
 
-    const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'FindDTOClass', 'Connection', 'withDeleted')
+    const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'FindDTOClass', 'Connection', 'withDeleted')
 
     class QA extends QueryArgs {}
 
@@ -94,7 +94,7 @@ export const Readable =
       value: `Query${DTOClass.name}Args`
     })
 
-    class ReadResolverBase extends BaseClass {
+    class ReadControllerBase extends BaseClass {
       @Get(
         () => FindDTOClass,
         {
@@ -107,7 +107,7 @@ export const Readable =
           }
         },
         { interceptors: [HookInterceptor(HookTypes.BEFORE_FIND_ONE, DTOClass), AuthorizerInterceptor(DTOClass)] },
-        commonResolverOpts,
+        commonControllerOpts,
         opts.one ?? {}
       )
       public async findById(
@@ -136,7 +136,7 @@ export const Readable =
           }
         },
         { interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)] },
-        commonResolverOpts,
+        commonControllerOpts,
         opts.many ?? {}
       )
       public async queryMany(
@@ -162,7 +162,7 @@ export const Readable =
       }
     }
 
-    return ReadResolverBase as Class<ReadControllerFromOpts<DTO, ReadOpts, QS>> & B
+    return ReadControllerBase as Class<ReadControllerFromOpts<DTO, ReadOpts, QS>> & B
   }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
@@ -173,4 +173,4 @@ export const ReadController = <
 >(
   DTOClass: Class<DTO>,
   opts: ReadOpts = {} as ReadOpts
-): ControllerClass<DTO, QS, ReadControllerFromOpts<DTO, ReadOpts, QS>> => Readable(DTOClass, opts)(BaseServiceResolver)
+): ControllerClass<DTO, QS, ReadControllerFromOpts<DTO, ReadOpts, QS>> => Readable(DTOClass, opts)(BaseServiceController)

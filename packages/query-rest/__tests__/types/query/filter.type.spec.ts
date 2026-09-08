@@ -41,4 +41,24 @@ describe('FilterType', () => {
 
     expect(query.filter).toEqual({ [field]: { eq: value } })
   })
+
+  it('uses the enum primitive type in generated filter metadata', () => {
+    enum State {
+      Draft = 'draft',
+      Open = 'open'
+    }
+
+    class TestDto {
+      @FilterableField({ enum: State })
+      state!: State
+    }
+
+    const QueryFilter = FilterType(TestDto, QueryArgs)
+    const apiProperty = Reflect.getMetadata('swagger/apiModelProperties', QueryFilter.prototype, 'state')
+
+    expect(apiProperty).toMatchObject({
+      type: String,
+      enum: ['draft', 'open']
+    })
+  })
 })

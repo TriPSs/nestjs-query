@@ -126,7 +126,15 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
   private getSortFields(query: Query<DTO>, opts: KeySetPagingOpts<DTO>): SortField<DTO>[] {
     const { sorting = [] } = query
     const defaultSort = opts.defaultSort.filter((dsf) => !sorting.some((sf) => dsf.field === sf.field))
-    const sortFields = [...sorting, ...defaultSort]
+    // a repeated sort field cannot change the order, and would misalign the cursor's one-entry-per-field payload
+    const seenFields = new Set<keyof DTO>()
+    const sortFields = [...sorting, ...defaultSort].filter(({ field }) => {
+      if (seenFields.has(field)) {
+        return false
+      }
+      seenFields.add(field)
+      return true
+    })
     return opts.isForward ? sortFields : invertSort(sortFields)
   }
 

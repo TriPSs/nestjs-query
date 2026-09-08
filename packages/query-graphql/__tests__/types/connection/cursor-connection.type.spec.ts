@@ -662,6 +662,37 @@ describe('CursorConnectionType', (): void => {
         })
       })
 
+      it('should ignore a duplicate sort field so the cursor round-trips', async () => {
+        const duplicatedSorting = [
+          { field: 'stringField' as const, direction: SortDirection.ASC },
+          { field: 'stringField' as const, direction: SortDirection.DESC }
+        ]
+        const queryMany = jest.fn()
+        const dtos = [createTestDTO(1), createTestDTO(2), createTestDTO(3)]
+        queryMany.mockResolvedValueOnce([...dtos])
+        const response = await getConnectionType().createFromPromise(queryMany, {
+          sorting: duplicatedSorting,
+          paging: createPage({ first: 2 })
+        })
+        expect(queryMany).toHaveBeenCalledWith({
+          filter: {},
+          paging: { limit: 3 },
+          sorting: [{ field: 'stringField', direction: SortDirection.ASC }]
+        })
+
+        const queryManyNextPage = jest.fn()
+        queryManyNextPage.mockResolvedValueOnce([])
+        await getConnectionType().createFromPromise(queryManyNextPage, {
+          sorting: duplicatedSorting,
+          paging: createPage({ first: 2, after: response.pageInfo.endCursor })
+        })
+        expect(queryManyNextPage).toHaveBeenCalledWith({
+          filter: { or: [{ and: [{ stringField: { gt: 'foo2' } }] }] },
+          paging: { limit: 3 },
+          sorting: [{ field: 'stringField', direction: SortDirection.ASC }]
+        })
+      })
+
       it('should create an empty connection', async () => {
         const queryMany = jest.fn()
         queryMany.mockResolvedValueOnce([])

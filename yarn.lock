@@ -4331,7 +4331,7 @@ __metadata:
     "@nestjs/core": ^10.0.0 || ^11.0.0
     "@nestjs/graphql": ^11.0.0 || ^12.0.0 || ^13.0.0
     class-transformer: ^0.5
-    class-validator: ^0.14.0
+    class-validator: ^0.14.0 || ^0.15.0
     graphql: ^16.0.0
     graphql-subscriptions: ^3.0.0
     ts-morph: ^19.0.0 || ^20.0.0 || ^21.0.0 || ^24.0.0 || ^25.0.0
@@ -4374,17 +4374,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-rest@workspace:packages/query-rest"
   dependencies:
+    csv-stringify: "npm:^6.8.3"
     lodash.omit: "npm:^4.18.0"
-    lower-case-first: "npm:^2.0.2"
     pluralize: "npm:^8.0.0"
     tslib: "npm:^2.8.1"
-    upper-case-first: "npm:^2.0.2"
   peerDependencies:
     "@nestjs/common": ^10.0.0 || ^11.0.0
     "@nestjs/core": ^10.0.0 || ^11.0.0
     "@nestjs/swagger": ^10.0.0 || ^11.0.0
     class-transformer: ^0.5
-    class-validator: ^0.14.0
+    class-validator: ^0.14.0 || ^0.15.0
   languageName: unknown
   linkType: soft
 
@@ -6691,14 +6690,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"better-sqlite3@npm:^12.10.0":
-  version: 12.11.1
-  resolution: "better-sqlite3@npm:12.11.1"
+"better-sqlite3@npm:^13.0.3":
+  version: 13.0.3
+  resolution: "better-sqlite3@npm:13.0.3"
   dependencies:
-    bindings: "npm:^1.5.0"
+    node-addon-api: "npm:^8.0.0"
     node-gyp: "npm:latest"
-    prebuild-install: "npm:^7.1.1"
-  checksum: 10/a516421fda128dd25e36dd9c8c8857e6fd94b27ab7da644af939109bd57540c58bad8ed784ef0fdfe03d094deabed5733c33dabed4f91b57a89543deab9b28d6
+  checksum: 10/035f8fa70784762fd73e1dbeb6f157186abb97705ff759b312cfb0dc1c675fd1c6b5378d2c036758000ce9da1d49bf61689531aa2718a7e32dc272c114a4c71f
   languageName: node
   linkType: hard
 
@@ -7086,17 +7084,6 @@ __metadata:
     libphonenumber-js: "npm:^1.11.1"
     validator: "npm:^13.15.22"
   checksum: 10/ff2f1678313ee9b64fdf4e522922cc05da9fe1156fab57e161dcfddd9e851042ccdb340408dc897524c9c7464b2b58176f57cce77503e86850032451d7472156
-  languageName: node
-  linkType: hard
-
-"class-validator@npm:^0.14.3":
-  version: 0.14.4
-  resolution: "class-validator@npm:0.14.4"
-  dependencies:
-    "@types/validator": "npm:^13.15.3"
-    libphonenumber-js: "npm:^1.11.1"
-    validator: "npm:^13.15.22"
-  checksum: 10/a7b9c0c3bbe2f693a6eb1f6e379010fe46f1088184a94eca2247c8535c019ea7e4b11af4f7e841b051c723ebaa88ce61065e66624f4e3429a346138885969758
   languageName: node
   linkType: hard
 
@@ -9348,7 +9335,7 @@ __metadata:
     "@nestjs/schematics": "npm:^11.0.9"
     "@types/node": "npm:^24.10.1"
     class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.14.3"
+    class-validator: "npm:0.15.1"
     graphql: "npm:^16.13.2"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"
@@ -11723,15 +11710,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lower-case-first@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "lower-case-first@npm:2.0.2"
-  dependencies:
-    tslib: "npm:^2.0.3"
-  checksum: 10/33e3da1098ddda219ce125d4ab7a78a944972c0ee8872e95b6ccc35df8ad405284ab233b0ba4d72315ad1a06fe2f0d418ee4cba9ec1ef1c386dea78899fc8958
-  languageName: node
-  linkType: hard
-
 "lower-case@npm:^2.0.2":
   version: 2.0.2
   resolution: "lower-case@npm:2.0.2"
@@ -12563,7 +12541,7 @@ __metadata:
     "@types/ws": "npm:8.18.1"
     "@typescript-eslint/eslint-plugin": "npm:7.18.0"
     "@typescript-eslint/parser": "npm:7.18.0"
-    better-sqlite3: "npm:^12.10.0"
+    better-sqlite3: "npm:^13.0.3"
     class-transformer: "npm:0.5.1"
     class-validator: "npm:0.15.1"
     clsx: "npm:^2.1.1"
@@ -12597,8 +12575,6 @@ __metadata:
     passport-local: "npm:1.0.0"
     pg: "npm:8.23.0"
     prettier: "npm:3.8.4"
-    react: "npm:^19.2.7"
-    react-dom: "npm:^19.2.7"
     reflect-metadata: "npm:^0.2.2"
     sequelize: "npm:6.37.8"
     sequelize-typescript: "npm:2.1.6"
@@ -12663,6 +12639,15 @@ __metadata:
   dependencies:
     node-gyp: "npm:latest"
   checksum: 10/ee1e1ed6284a2f8cd1d59ac6175ecbabf8978dcf570345e9a8095a9d0a2b9ced591074ae77f9009287b00c402352b38aa9322a34f2199cdc9f567b842a636b94
+  languageName: node
+  linkType: hard
+
+"node-addon-api@npm:^8.0.0":
+  version: 8.9.2
+  resolution: "node-addon-api@npm:8.9.2"
+  dependencies:
+    node-gyp: "npm:latest"
+  checksum: 10/5354f9b53631d99a952408112d795f36782fd41c0ac073bd91814805fe931b619c743689d0cedcc310c0ae8392fc9b104b2852d28cce294236407ca57d01743e
   languageName: node
   linkType: hard
 
@@ -13788,12 +13773,12 @@ __metadata:
   linkType: hard
 
 "qs@npm:^6.14.0, qs@npm:^6.14.1, qs@npm:^6.15.2":
-  version: 6.15.3
-  resolution: "qs@npm:6.15.3"
+  version: 6.16.0
+  resolution: "qs@npm:6.16.0"
   dependencies:
     es-define-property: "npm:^1.0.1"
     side-channel: "npm:^1.1.1"
-  checksum: 10/1cbb4b050872a19ba8a311445be29babb8f66ea5d6462b3c48c6efb2c95187cd286b69734cd4caea1878cca3b9d1f0e9b49335336be9e999a7d8d7cf137ba60d
+  checksum: 10/7fbf9c2eb9c9bbd8997700caecc4b057ac259635873deefd5027fb26d06d79426cf468da55da87ffd147a24e93d3641352d8ac6664bd84688ad5b2f0b8d04828
   languageName: node
   linkType: hard
 
@@ -13854,17 +13839,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^19.2.7":
-  version: 19.2.8
-  resolution: "react-dom@npm:19.2.8"
-  dependencies:
-    scheduler: "npm:^0.27.0"
-  peerDependencies:
-    react: ^19.2.8
-  checksum: 10/fb45d500a8615a36d71a821213a3d4bfe32a70aa1d04ce17d8791dd10c4ef0281e7fdd46694e1112f0f2dcf58df89d12043a13228be9788458aa82f4885a9cdc
-  languageName: node
-  linkType: hard
-
 "react-is-18@npm:react-is@^18.3.1, react-is@npm:^18.0.0":
   version: 18.3.1
   resolution: "react-is@npm:18.3.1"
@@ -13876,13 +13850,6 @@ __metadata:
   version: 19.2.8
   resolution: "react-is@npm:19.2.8"
   checksum: 10/09d053ff36e0ba4d47164baf9eab1c7772791f0371aa92281f0e547e0f6a5a5c8a1eb939aadd1a08b3c565958dd63ee59c746b6ac0d5ccb14ad742ac0314ab15
-  languageName: node
-  linkType: hard
-
-"react@npm:^19.2.7":
-  version: 19.2.8
-  resolution: "react@npm:19.2.8"
-  checksum: 10/a3c697798035e295ca9e51591d3a8700824535cb8c070fac1f8abbe69717ceb99108cbc4ba7b31a606806f336b1eba705705f63b9d39ace198fe51e8990ac843
   languageName: node
   linkType: hard
 
@@ -14280,13 +14247,6 @@ __metadata:
   version: 2.1.2
   resolution: "safer-buffer@npm:2.1.2"
   checksum: 10/7eaf7a0cf37cc27b42fb3ef6a9b1df6e93a1c6d98c6c6702b02fe262d5fcbd89db63320793b99b21cb5348097d0a53de81bd5f4e8b86e20cc9412e3f1cfb4e83
-  languageName: node
-  linkType: hard
-
-"scheduler@npm:^0.27.0":
-  version: 0.27.0
-  resolution: "scheduler@npm:0.27.0"
-  checksum: 10/eab3c3a8373195173e59c147224fc30dabe6dd453f248f5e610e8458512a5a2ee3a06465dc400ebfe6d35c9f5b7f3bb6b2e41c88c86fd177c25a73e7286a1e06
   languageName: node
   linkType: hard
 
@@ -15180,7 +15140,7 @@ __metadata:
     "@nestjs/typeorm": "npm:^11.0.0"
     "@types/node": "npm:^24.10.1"
     class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.14.3"
+    class-validator: "npm:0.15.1"
     graphql: "npm:^16.13.2"
     pg: "npm:^8.23.0"
     reflect-metadata: "npm:^0.2.2"
@@ -15456,7 +15416,7 @@ __metadata:
     "@nestjs/typeorm": "npm:^11.0.0"
     "@types/node": "npm:^24.10.1"
     class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.14.3"
+    class-validator: "npm:0.15.1"
     graphql: "npm:^16.13.2"
     pg: "npm:^8.23.0"
     reflect-metadata: "npm:^0.2.2"
@@ -16279,15 +16239,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"upper-case-first@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "upper-case-first@npm:2.0.2"
-  dependencies:
-    tslib: "npm:^2.0.3"
-  checksum: 10/4487db4701effe3b54ced4b3e4aa4d9ab06c548f97244d04aafb642eedf96a76d5a03cf5f38f10f415531d5792d1ac6e1b50f2a76984dc6964ad530f12876409
-  languageName: node
-  linkType: hard
-
 "uri-js@npm:^4.2.2":
   version: 4.4.1
   resolution: "uri-js@npm:4.4.1"
@@ -16314,7 +16265,7 @@ __metadata:
     "@nestjs/typeorm": "npm:^11.0.0"
     "@types/node": "npm:^24.10.1"
     class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.14.3"
+    class-validator: "npm:0.15.1"
     graphql: "npm:^16.13.2"
     pg: "npm:^8.23.0"
     reflect-metadata: "npm:^0.2.2"

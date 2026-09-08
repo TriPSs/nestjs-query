@@ -13,9 +13,9 @@ import { HookInterceptor } from '../interceptors'
 import { AuthorizerInterceptor } from '../interceptors/authorizer.interceptor'
 import { CreateOneInputType } from '../types'
 import { ParamArgsType } from '../types/param-args.type'
-import { BaseServiceResolver, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
+import { BaseServiceController, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
 
-export interface CreateResolverOpts<DTO, C = DeepPartial<DTO>> extends MutationOpts {
+export interface CreateControllerOpts<DTO, C = DeepPartial<DTO>> extends MutationOpts {
   /**
    * The Input DTO that should be used to create records.
    */
@@ -49,7 +49,7 @@ const defaultCreateOneInput = <C>(dtoNames: DTONames, InputDTO: Class<C>): Class
  * Mixin to add `create` REST endpoints.
  */
 export const Creatable =
-  <DTO, C, QS extends QueryService<DTO, C, unknown>>(DTOClass: Class<DTO>, opts: CreateResolverOpts<DTO, C>) =>
+  <DTO, C, QS extends QueryService<DTO, C, unknown>>(DTOClass: Class<DTO>, opts: CreateControllerOpts<DTO, C>) =>
   <B extends Class<ServiceController<DTO, QS>>>(BaseClass: B): Class<CreateController<DTO, C, QS>> & B => {
     if (opts.disabled) {
       return BaseClass as never
@@ -62,7 +62,7 @@ export const Creatable =
       CreateOneInput = defaultCreateOneInput(dtoNames, CreateDTOClass)
     } = opts
 
-    const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'CreateDTOClass', 'CreateOneInput', 'CreateManyInput')
+    const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'CreateDTOClass', 'CreateOneInput', 'CreateManyInput')
 
     @ApiSchema({ name: `Create${DTOClass.name}` })
     class COI extends MutationArgsType(CreateOneInput) {}
@@ -89,7 +89,7 @@ export const Creatable =
         {
           interceptors: [HookInterceptor(HookTypes.BEFORE_CREATE_ONE, CreateDTOClass, DTOClass), AuthorizerInterceptor(DTOClass)]
         },
-        commonResolverOpts,
+        commonControllerOpts,
         opts.one ?? {}
       )
       public async createOne(
@@ -142,5 +142,5 @@ export const CreateController = <
   QS extends QueryService<DTO, C, unknown> = QueryService<DTO, C, unknown>
 >(
   DTOClass: Class<DTO>,
-  opts: CreateResolverOpts<DTO, C> = {}
-): ControllerClass<DTO, QS, CreateController<DTO, C, QS>> => Creatable(DTOClass, opts)(BaseServiceResolver)
+  opts: CreateControllerOpts<DTO, C> = {}
+): ControllerClass<DTO, QS, CreateController<DTO, C, QS>> => Creatable(DTOClass, opts)(BaseServiceController)

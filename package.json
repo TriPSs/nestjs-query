@@ -1,6 +1,6 @@
 {
   "name": "nestjs-query",
-  "version": "9.5.0",
+  "version": "10.0.3",
   "private": true,
   "workspaces": [
     "examples/**",
@@ -18,7 +18,7 @@
     "@apollo/gateway": "2.14.1",
     "@apollo/server": "^5.5.1",
     "@apollo/subgraph": "2.14.1",
-    "better-sqlite3": "^12.10.0"
+    "better-sqlite3": "^13.0.3"
   },
   "dependenciesMeta": {
     "better-sqlite3": {
@@ -41,7 +41,6 @@
     "@nestjs/swagger": "^11.2.6",
     "@nestjs/typeorm": "^11.0.1",
     "class-validator": "0.15.1",
-    "csv-stringify": "^6.8.3",
     "mongoose": "9.9.4",
     "reflect-metadata": "^0.2.2",
     "sequelize": "6.37.8",
@@ -88,10 +87,11 @@
     "@types/ws": "8.18.1",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
-    "better-sqlite3": "^12.10.0",
+    "better-sqlite3": "^13.0.3",
     "class-transformer": "0.5.1",
     "class-validator": "0.15.1",
     "clsx": "^2.1.1",
+    "csv-stringify": "^6.8.3",
     "dataloader": "2.2.3",
     "eslint": "8.57.1",
     "eslint-config-airbnb": "19.0.4",
@@ -120,8 +120,6 @@
     "passport-local": "1.0.0",
     "pg": "8.23.0",
     "prettier": "3.8.4",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
     "sql-formatter": "^15.8.1",
     "supertest": "7.2.2",
     "ts-jest": "29.4.9",

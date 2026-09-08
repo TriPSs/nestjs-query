@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://tripss.github.io/nestjs-query" target="blank"><img src="https://tripss.github.io/nestjs-query/img/logo.svg" width="120" alt="Nestjs-query Logo" /></a>
+  <a href="https://nestjs-query.mintlify.site/" target="blank"><img src="https://nestjs-query.mintlify.site/images/logo.svg" width="120" alt="Nestjs-query Logo" /></a>
 </p>
 
 [![npm version](https://img.shields.io/npm/v/@ptc-org/nestjs-query-rest.svg)](https://www.npmjs.org/package/@ptc-org/nestjs-query-rest)
@@ -9,15 +9,12 @@
 
 # `@ptc-org/nestjs-query-rest`
 
-This package provides a code first implementation of rest CRUD endpoints. It is built on top of
-of [nestjs](https://nestjs.com/).
+This package provides a code-first implementation of REST CRUD endpoints built on [NestJS](https://nestjs.com/).
 
 ## Installation
 
-[Install Guide](https://tripss.github.io/nestjs-query/docs/introduction/install)
+[Install Guide](https://nestjs-query.mintlify.site/introduction/install)
 
 ## Getting Started
 
-The get started with the `@ptc-org/nestjs-query-rest` package checkout
-the [Getting Started](https://tripss.github.io/nestjs-query/docs/rest/getting-started) docs.
-
+To get started with `@ptc-org/nestjs-query-rest`, check out the [Getting Started](https://nestjs-query.mintlify.site/rest/getting-started) guide.

@@ -2,7 +2,7 @@ import { ApiOperationOptions } from '@nestjs/swagger'
 import { QueryService } from '@ptc-org/nestjs-query-core'
 
 import { DTONamesOpts } from '../common'
-import { QueryOptionsDecoratorOpts, QueryResolverMethodOpts } from '../decorators'
+import { QueryMethodOpts, QueryOptionsDecoratorOpts } from '../decorators'
 import { PagingStrategies, QueryArgsTypeOpts } from '../types/query'
 
 export type NamedEndpoint = {
@@ -13,15 +13,15 @@ export type NamedEndpoint = {
   operationOptions?: ApiOperationOptions
 }
 
-export interface ControllerOpts extends QueryResolverMethodOpts, DTONamesOpts {
+export interface ControllerOpts extends QueryMethodOpts, DTONamesOpts {
   /**
    * Options for single-record REST endpoints.
    */
-  one?: QueryResolverMethodOpts & NamedEndpoint
+  one?: QueryMethodOpts & NamedEndpoint
   /**
    * Options for multiple-record REST endpoints.
    */
-  many?: QueryResolverMethodOpts & NamedEndpoint
+  many?: QueryMethodOpts & NamedEndpoint
 }
 
 export type MutationOpts = Omit<ControllerOpts, 'many'>
@@ -35,17 +35,17 @@ export interface ServiceController<DTO, QS extends QueryService<DTO, unknown, un
 export interface ControllerClass<
   DTO,
   QS extends QueryService<DTO, unknown, unknown>,
-  Resolver extends ServiceController<DTO, QS>
+  Controller extends ServiceController<DTO, QS>
 > {
-  new (service: QS): Resolver
+  new (service: QS): Controller
 }
 
 /**
  * @internal
- * Base Resolver that takes in a service as a constructor argument.
+ * Base controller that takes in a service as a constructor argument.
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export class BaseServiceResolver<DTO, QS> {
+export class BaseServiceController<DTO, QS> {
   constructor(readonly service: QS) {}
 }
 

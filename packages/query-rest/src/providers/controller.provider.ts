@@ -63,10 +63,10 @@ export const isAssemblerCRUDAutoControllerOpts = <DTO, MaybeAssembler, C, U, R, 
 
 const getEndpointToken = <DTO>(DTOClass: Class<DTO>): string => `${DTOClass.name}AutoEndpoint`
 
-function createEntityAutoResolver<DTO, Entity extends DeepPartial<Entity>, C, U, R, PS extends PagingStrategies>(
-  resolverOpts: EntityCRUDAutoControllerOpts<DTO, Entity, C, U, R, PS>
+function createEntityAutoController<DTO, Entity extends DeepPartial<Entity>, C, U, R, PS extends PagingStrategies>(
+  controllerOpts: EntityCRUDAutoControllerOpts<DTO, Entity, C, U, R, PS>
 ): Type {
-  const { DTOClass, EntityClass, basePath } = resolverOpts
+  const { DTOClass, EntityClass, basePath } = controllerOpts
   const { endpointName } = getDTONames(DTOClass)
 
   const assembler = AssemblerFactory.getAssembler<DTO, Entity, C, C, U, U>(DTOClass, EntityClass)
@@ -78,7 +78,7 @@ function createEntityAutoResolver<DTO, Entity extends DeepPartial<Entity>, C, U,
   }
 
   @Controller(basePath || endpointName)
-  class AutoController extends CRUDController(DTOClass, resolverOpts) {
+  class AutoController extends CRUDController(DTOClass, controllerOpts) {
     constructor(@InjectQueryService(EntityClass) service: QueryService<Entity, C, U>) {
       super(new Service(service))
     }
@@ -89,14 +89,14 @@ function createEntityAutoResolver<DTO, Entity extends DeepPartial<Entity>, C, U,
   return AutoController
 }
 
-function createAssemblerAutoResolver<DTO, Asmblr, C, U, R, PS extends PagingStrategies>(
-  resolverOpts: AssemblerCRUDAutoControllerOpts<DTO, Asmblr, C, U, R, PS>
+function createAssemblerAutoController<DTO, Asmblr, C, U, R, PS extends PagingStrategies>(
+  controllerOpts: AssemblerCRUDAutoControllerOpts<DTO, Asmblr, C, U, R, PS>
 ): Type {
-  const { DTOClass, AssemblerClass, basePath } = resolverOpts
+  const { DTOClass, AssemblerClass, basePath } = controllerOpts
   const { endpointName } = getDTONames(DTOClass)
 
   @Controller(basePath || endpointName)
-  class AutoController extends CRUDController(DTOClass, resolverOpts) {
+  class AutoController extends CRUDController(DTOClass, controllerOpts) {
     constructor(
       @InjectAssemblerQueryService(AssemblerClass as unknown as Class<Assembler<DTO, unknown, C, unknown, U, unknown>>)
       service: QueryService<DTO, C, U>
@@ -110,14 +110,14 @@ function createAssemblerAutoResolver<DTO, Asmblr, C, U, R, PS extends PagingStra
   return AutoController
 }
 
-function createServiceAutoResolver<DTO, Service, C, U, R, PS extends PagingStrategies>(
-  resolverOpts: ServiceCRUDAutoControllerOpts<DTO, Service, C, U, R, PS>
+function createServiceAutoController<DTO, Service, C, U, R, PS extends PagingStrategies>(
+  controllerOpts: ServiceCRUDAutoControllerOpts<DTO, Service, C, U, R, PS>
 ): Type {
-  const { DTOClass, ServiceClass, basePath } = resolverOpts
+  const { DTOClass, ServiceClass, basePath } = controllerOpts
   const { endpointName } = getDTONames(DTOClass)
 
   @Controller(basePath || endpointName)
-  class AutoController extends CRUDController(DTOClass, resolverOpts) {
+  class AutoController extends CRUDController(DTOClass, controllerOpts) {
     constructor(@Inject(ServiceClass) service: QueryService<DTO, C, U>) {
       super(service)
     }
@@ -135,14 +135,14 @@ function createEndpoint<
   U,
   R,
   PS extends PagingStrategies
->(resolverOpts: AutoControllerOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>): Type {
-  if (isAssemblerCRUDAutoControllerOpts(resolverOpts)) {
-    return createAssemblerAutoResolver(resolverOpts)
-  } else if (isServiceCRUDAutoControllerOpts(resolverOpts)) {
-    return createServiceAutoResolver(resolverOpts)
+>(controllerOpts: AutoControllerOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>): Type {
+  if (isAssemblerCRUDAutoControllerOpts(controllerOpts)) {
+    return createAssemblerAutoController(controllerOpts)
+  } else if (isServiceCRUDAutoControllerOpts(controllerOpts)) {
+    return createServiceAutoController(controllerOpts)
   }
 
-  return createEntityAutoResolver(resolverOpts)
+  return createEntityAutoController(controllerOpts)
 }
 
 export const createEndpoints = (

@@ -5,9 +5,9 @@ import omit from 'lodash.omit'
 import { AuthorizerFilter, AuthorizerInterceptor, Delete, OperationGroup, ParamArgsType } from '../'
 import { getDTONames } from '../common'
 import { ParamArgs } from '../decorators/param-args.decorator'
-import { BaseServiceResolver, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
+import { BaseServiceController, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
 
-export interface DeleteResolverOpts extends MutationOpts {
+export interface DeleteControllerOpts extends MutationOpts {
   /**
    * Use soft delete when doing delete mutation
    */
@@ -23,7 +23,7 @@ export interface DeleteController<DTO, QS extends QueryService<DTO, unknown, unk
  * Mixin to add `delete` REST endpoints.
  */
 export const Deletable =
-  <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts: DeleteResolverOpts) =>
+  <DTO, QS extends QueryService<DTO, unknown, unknown>>(DTOClass: Class<DTO>, opts: DeleteControllerOpts) =>
   <B extends Class<ServiceController<DTO, QS>>>(BaseClass: B): Class<DeleteController<DTO, QS>> & B => {
     if (opts.disabled) {
       return BaseClass as never
@@ -31,7 +31,7 @@ export const Deletable =
 
     const dtoNames = getDTONames(DTOClass, opts)
 
-    const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'DeleteOneInput', 'DeleteManyInput', 'useSoftDelete')
+    const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'DeleteOneInput', 'DeleteManyInput', 'useSoftDelete')
 
     class DOP extends ParamArgsType(DTOClass) {}
 
@@ -41,7 +41,7 @@ export const Deletable =
       value: `FindDelete${DTOClass.name}Args`
     })
 
-    class DeleteResolverBase extends BaseClass {
+    class DeleteControllerBase extends BaseClass {
       @Delete(
         () => DTOClass,
         {
@@ -54,7 +54,7 @@ export const Deletable =
           }
         },
         { interceptors: [AuthorizerInterceptor(DTOClass)] },
-        commonResolverOpts,
+        commonControllerOpts,
         opts.one ?? {}
       )
       async deleteOne(
@@ -72,10 +72,10 @@ export const Deletable =
       }
     }
 
-    return DeleteResolverBase
+    return DeleteControllerBase
   }
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const DeleteController = <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(
   DTOClass: Class<DTO>,
-  opts: DeleteResolverOpts = {}
-): ControllerClass<DTO, QS, DeleteController<DTO, QS>> => Deletable<DTO, QS>(DTOClass, opts)(BaseServiceResolver)
+  opts: DeleteControllerOpts = {}
+): ControllerClass<DTO, QS, DeleteController<DTO, QS>> => Deletable<DTO, QS>(DTOClass, opts)(BaseServiceController)

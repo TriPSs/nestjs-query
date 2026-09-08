@@ -26,7 +26,8 @@
         "packageJson": "packages/query-mongoose/package.json",
         "main": "packages/query-mongoose/src/index.ts",
         "assets": ["packages/query-mongoose/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true
+        "updateBuildableProjectDepsInPackageJson": true,
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
     "version": {

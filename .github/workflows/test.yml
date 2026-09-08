@@ -51,7 +51,7 @@ jobs:
         run: yarn nx run-many --target=${{ matrix.target }} --all
 
       - name: Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v7
         if: matrix.target == 'test'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

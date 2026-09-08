@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
-import { Expose, Transform, Type } from 'class-transformer'
+import { Expose, Transform, TransformationType, Type } from 'class-transformer'
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -20,6 +20,7 @@ import {
   ValidateNested
 } from 'class-validator'
 
+import { getEnumType, restoreEnumBlankValues } from '../common'
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
 
 const OPENAPI_METADATA_FACTORY = '_OPENAPI_METADATA_FACTORY'
@@ -91,6 +92,11 @@ export function Field(
       ...advancedOptions
     }
 
+    // TypeScript emits Object as the design type for enum properties. Infer the
+    // primitive type from the enum so Swagger does not generate an Object schema.
+    const enumType = getEnumType(options.enum)
+    const resolvedType = type === Object ? (enumType ?? type) : type
+
     // Remove non-valid options
     delete options.forceArray
     delete options.skipIsEnum
@@ -99,7 +105,7 @@ export function Field(
     const decorators: Array<PropertyDecorator> = [
       Expose({ name: advancedOptions?.name }),
       ApiProperty({
-        type: metadataType ?? type,
+        type: metadataType ?? resolvedType,
         isArray: metadataType ? undefined : isArray,
         ...(options as ApiPropertyOptions)
       })
@@ -145,23 +151,32 @@ export function Field(
       decorators.push(Max(options.maximum))
     }
 
-    if (type && type !== Boolean) {
-      decorators.push(Type(() => type as never))
+    if (resolvedType && resolvedType !== Boolean) {
+      decorators.push(Type(() => resolvedType as never))
+
+      if (resolvedType === Number && options.enum) {
+        decorators.push(
+          Transform(({ value, obj, key, type: transformationType }): unknown => {
+            const originalKey = transformationType === TransformationType.PLAIN_TO_CLASS ? (advancedOptions?.name ?? key) : key
+            return restoreEnumBlankValues((obj as Record<string, unknown>)[originalKey], value)
+          })
+        )
+      }
     }
 
-    if (type === String) {
+    if (resolvedType === String) {
       decorators.push(IsString({ each: isArray }))
-    } else if (type === Number) {
+    } else if (resolvedType === Number) {
       decorators.push(IsNumber({}, { each: isArray }))
-    } else if (type === Date) {
+    } else if (resolvedType === Date) {
       decorators.push(IsDate({ each: isArray }))
-    } else if (type === Boolean) {
+    } else if (resolvedType === Boolean) {
       // Boolean('false') is true, so parse HTTP query parameter values explicitly.
       decorators.push(
         Transform(({ value }: { value: unknown }): unknown => (value === 'true' ? true : value === 'false' ? false : value)),
         IsBoolean({ each: isArray })
       )
-    } else if ((returnTypeFunc || metadataType) && typeof type === 'function') {
+    } else if ((returnTypeFunc || metadataType) && typeof resolvedType === 'function') {
       decorators.push(ValidateNested({ each: isArray }))
 
       if (!isArray) {

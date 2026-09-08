@@ -85,7 +85,7 @@ describe('TypegooseQueryService', () => {
 
   beforeEach(async () => mongo.prepareDb())
 
-  afterEach(async () => mongo.dropDatabase())
+  afterEach(async () => mongo.clearDatabase())
 
   describe('#query', () => {
     it('call find and return the result', async () => {

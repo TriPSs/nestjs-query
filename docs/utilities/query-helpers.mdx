@@ -9,7 +9,6 @@ All examples will be based on the following DTO definition.
 
 ```ts
 interface TestDTO {
-
   first?: string | null
   last?: string | null
   age?: number | null
@@ -42,6 +41,7 @@ const dtos: TestDTO[] = [
   {first: 'Sally', last: 'Yukon'}
   {first: 'Zane', last: 'Yukon'}
 ]
+
 const filtered = applyFilter(dtos, {first: {in: ['Bob', 'Sally']})
 ```
 
@@ -152,6 +152,7 @@ const dtos: TestDTO[] = [
   {first: 'Sally', last: 'Yukon', isVerified: true}
   {first: 'Zane', last: 'Yukon', isVerified: true}
 ]
+
 const queryResult = applyQuery(dtos, {
   filter: { isVerified: { is: true } },
   sorting: [{ field: 'first', direction: SortDirection.DESC }],
@@ -222,10 +223,10 @@ The `transformSort` is used to remap fields in an array of `SortField<DTO>[]`. T
 import { transformSort, QueryFieldMap, SortField, SortDirection } from `@ptc-org/nestjs-query-core`;
 
 class TestEntity {
-
   firstName!: string;
   lastName!: string;
 }
+
 const fieldMap: QueryFieldMap<TestDTO, TestEntity> = {
   first: 'firstName',
   last: 'lastName',
@@ -238,7 +239,7 @@ const transformed = transformSort(dtoSort, fieldMap);
 ```
 
 ```ts
-;[
+[
   { field: 'firstName', direction: SortDirection.DESC },
   { field: 'lastName', direction: SortDirection.ASC }
 ]
@@ -259,10 +260,10 @@ The `transformQuery` method uses the `transformFilter` and `transformSort` metho
 import { transformQuery, QueryFieldMap, Query, SortDirection } from `@ptc-org/nestjs-query-core`;
 
 class TestEntity {
-
   firstName!: string;
   lastName!: string;
 }
+
 const fieldMap: QueryFieldMap<TestDTO, TestEntity> = {
   first: 'firstName',
   last: 'lastName',
@@ -304,7 +305,6 @@ Used to search a filter get a list of comparison objects for a given key.
 import { Filter, getFilterComparisons } from `@ptc-org/nestjs-query-core`;
 
 class TestDTO {
-
   age!: number;
   title!: string;
 }
@@ -336,7 +336,6 @@ Used to get a filter with a given key removed.
 import { Filter, getFilterOmitting } from `@ptc-org/nestjs-query-core`;
 
 class TestDTO {
-
   age!: number;
   title!: string;
 }
@@ -354,5 +353,3 @@ The resulting filter would be
   age: { gte: 10 },
 }
 ```
-
-[Edit this page](https://github.com/tripss/nestjs-query/edit/master/docs/utilities/query-helpers)
