@@ -8,6 +8,8 @@ import { TestEntityRelationEntity } from './test-entity-relation.entity'
 import { TestRelation } from './test-relation.entity'
 import { TestSoftDeleteEntity } from './test-soft-delete.entity'
 import { TestSoftDeleteRelation } from './test-soft-delete.relation'
+import { TestVirtualColumnEntity } from './test-virtual-column.entity'
+import { TestVirtualColumnRelation } from './test-virtual-column.relation'
 
 export const CONNECTION_OPTIONS: DataSourceOptions = {
   type: 'better-sqlite3',
@@ -19,7 +21,9 @@ export const CONNECTION_OPTIONS: DataSourceOptions = {
     TestRelation,
     TestEntityRelationEntity,
     RelationOfTestRelationEntity,
-    TestSoftDeleteRelation
+    TestSoftDeleteRelation,
+    TestVirtualColumnEntity,
+    TestVirtualColumnRelation
   ],
   synchronize: true,
   logging: false
