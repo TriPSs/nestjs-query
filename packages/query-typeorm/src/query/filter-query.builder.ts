@@ -6,7 +6,9 @@ import {
   Paging,
   Query,
   SelectRelation,
-  SortField
+  SortDirection,
+  SortField,
+  SortNulls
 } from '@ptc-org/nestjs-query-core'
 import merge from 'lodash.merge'
 import {
@@ -60,6 +62,23 @@ interface Pageable<Entity> extends QueryBuilder<Entity> {
  */
 export interface NestedRecord<E = unknown> {
   [keys: string]: NestedRecord<E>
+}
+
+/**
+ * @internal
+ *
+ * Drivers that do not understand the `NULLS FIRST` / `NULLS LAST` order by syntax.
+ */
+const DRIVERS_WITHOUT_NULL_ORDERING = ['mysql', 'mariadb', 'aurora-mysql']
+
+/**
+ * @internal
+ *
+ * `col IS NULL` is 1 for nulls and 0 for everything else, so nulls come first when that key is sorted descending.
+ */
+const NULL_ORDERING_DIRECTION: Record<SortNulls, SortDirection> = {
+  [SortNulls.NULLS_FIRST]: SortDirection.DESC,
+  [SortNulls.NULLS_LAST]: SortDirection.ASC
 }
 
 /**
@@ -224,6 +243,10 @@ export class FilterQueryBuilder<Entity> {
 
       if (this.virtualColumns.includes(stringifiedField)) {
         col = prevQb.escape(alias ? `${alias}_${stringifiedField}` : `${stringifiedField}`)
+      }
+
+      if (nulls && this.emulatesNullOrdering) {
+        return prevQb.addOrderBy(`${col} IS NULL`, NULL_ORDERING_DIRECTION[nulls]).addOrderBy(col, direction)
       }
 
       return prevQb.addOrderBy(col, direction, nulls)
@@ -429,5 +452,12 @@ export class FilterQueryBuilder<Entity> {
 
   private get relationNames(): string[] {
     return this.repo.metadata.relations.map((r) => r.propertyName)
+  }
+
+  /**
+   * @description Whether null ordering has to be expressed as an extra sort key because the driver lacks the syntax.
+   */
+  private get emulatesNullOrdering(): boolean {
+    return DRIVERS_WITHOUT_NULL_ORDERING.includes(this.repo?.manager?.connection?.options?.type)
   }
 }

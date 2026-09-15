@@ -8,7 +8,7 @@ The `sorting` parameter is an array where each item has the following options.
 
 - `field!` - The name of the field to sort by.
 - `direction!` - The direction to sort either `ASC` or `DESC`.
-- `nulls?` - Optional field to set nulls sort order `NULLS_FIRST` or `NULLS_last`
+- `nulls?` - Optional field to set nulls sort order `NULLS_FIRST` or `NULLS_LAST`
 
 In this example we sort by title descending.
 
@@ -211,6 +211,14 @@ In this example we sort by completed and title.
 
 </Tab>
 </Tabs>
+
+## Null ordering
+
+If you leave `nulls` unset, where nulls end up is decided by your database rather than by `nestjs-query`. Postgres and Oracle treat NULL as larger than any value, so an ascending sort puts nulls last, while MySQL and SQLite treat it as smaller and put them first. Set `nulls` explicitly when you want the same placement on every engine, or when your ordering needs to be deterministic (paging over a nullable field is the common case).
+
+MySQL has no `NULLS FIRST` / `NULLS LAST` syntax, and the adapters emulate null ordering for all MariaDB versions so that the generated SQL never depends on the server version. The TypeORM adapter treats Aurora MySQL the same way. On those engines the adapter expresses your requested placement as an extra leading sort key that tests the column for null (`col IS NULL` in the TypeORM adapter, `ISNULL(col)` in the Sequelize one) instead of a keyword. The rows come back in the order you asked for, and the only visible difference is that extra key in the generated SQL. Engines with native support (Postgres, Oracle, CockroachDB, and SQLite from 3.30) get the keyword as before.
+
+Two things to know when you set `nulls` on MySQL. The emulated sort key is an expression rather than a column, so it conflicts with `SELECT DISTINCT`, which means sorting a one-to-many relation by a field with an explicit `nulls` value can fail. SQL Server needs a different form again and is not handled, so `nulls` remains unsupported there.
 
 ## Setting a default sort
 

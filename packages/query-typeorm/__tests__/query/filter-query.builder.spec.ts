@@ -1,7 +1,7 @@
 import { Class, Filter, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { anything, deepEqual, instance, mock, verify, when } from 'ts-mockito'
-import { DataSource, QueryBuilder, WhereExpressionBuilder } from 'typeorm'
+import { DataSource, DataSourceOptions, QueryBuilder, WhereExpressionBuilder } from 'typeorm'
 
 import { FilterQueryBuilder, WhereBuilder } from '../../src/query'
 import { createTestConnection } from '../__fixtures__/connection.fixture'
@@ -485,6 +485,68 @@ describe('FilterQueryBuilder', (): void => {
         )
         verify(mockWhereBuilder.build(anything(), anything(), {}, 'TestEntity')).never()
       })
+
+      describe('on a driver without NULLS FIRST/LAST support (snapshots keep SQLite quoting)', () => {
+        beforeEach(() => connection.setOptions({ type: 'mysql' } as Partial<DataSourceOptions>))
+
+        it('should order by an IS NULL key before the column for NULLS_FIRST', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectSelectSQLSnapshot(
+            { sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }] },
+            instance(mockWhereBuilder)
+          )
+        })
+
+        it('should order by an IS NULL key before the column for NULLS_LAST', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectSelectSQLSnapshot(
+            { sorting: [{ field: 'numberType', direction: SortDirection.DESC, nulls: SortNulls.NULLS_LAST }] },
+            instance(mockWhereBuilder)
+          )
+        })
+
+        it('should not add an IS NULL key when nulls is not specified', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectSelectSQLSnapshot(
+            { sorting: [{ field: 'numberType', direction: SortDirection.ASC }] },
+            instance(mockWhereBuilder)
+          )
+        })
+
+        it('should keep each IS NULL key next to its own field in a multiple sort', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectSelectSQLSnapshot(
+            {
+              sorting: [
+                { field: 'numberType', direction: SortDirection.ASC },
+                { field: 'stringType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST },
+                { field: 'dateType', direction: SortDirection.DESC, nulls: SortNulls.NULLS_LAST }
+              ]
+            },
+            instance(mockWhereBuilder)
+          )
+        })
+      })
+
+      describe('on a driver with native NULLS FIRST/LAST support', () => {
+        beforeEach(() => connection.setOptions({ type: 'postgres' } as Partial<DataSourceOptions>))
+
+        it('should pass NULLS_FIRST through to the driver', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectSelectSQLSnapshot(
+            { sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }] },
+            instance(mockWhereBuilder)
+          )
+        })
+
+        it('should pass NULLS_LAST through to the driver', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectSelectSQLSnapshot(
+            { sorting: [{ field: 'numberType', direction: SortDirection.DESC, nulls: SortNulls.NULLS_LAST }] },
+            instance(mockWhereBuilder)
+          )
+        })
+      })
     })
 
     describe('with relation', () => {
@@ -604,6 +666,18 @@ describe('FilterQueryBuilder', (): void => {
           instance(mockWhereBuilder)
         )
         verify(mockWhereBuilder.build(anything(), anything(), anything())).never()
+      })
+
+      describe('on a driver without NULLS FIRST/LAST support (snapshots keep SQLite quoting)', () => {
+        beforeEach(() => connection.setOptions({ type: 'mysql' } as Partial<DataSourceOptions>))
+
+        it('should order by an IS NULL key before the unaliased column', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectUpdateSQLSnapshot(
+            { sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }] },
+            instance(mockWhereBuilder)
+          )
+        })
       })
     })
   })

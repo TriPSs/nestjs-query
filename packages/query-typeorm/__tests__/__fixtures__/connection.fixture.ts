@@ -26,7 +26,7 @@ export const CONNECTION_OPTIONS: DataSourceOptions = {
 }
 
 export async function createTestConnection(): Promise<DataSource> {
-  const dataSource = new DataSource(CONNECTION_OPTIONS)
+  const dataSource = new DataSource({ ...CONNECTION_OPTIONS })
   await dataSource.initialize()
   return dataSource
 }

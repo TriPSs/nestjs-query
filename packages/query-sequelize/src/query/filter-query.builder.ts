@@ -5,7 +5,9 @@ import {
   getFilterFields,
   Paging,
   Query,
-  SortField
+  SortDirection,
+  SortField,
+  SortNulls
 } from '@ptc-org/nestjs-query-core'
 import sequelize, {
   Association,
@@ -23,6 +25,30 @@ import { Model, ModelCtor } from 'sequelize-typescript'
 
 import { AggregateBuilder } from './aggregate.builder'
 import { WhereBuilder } from './where.builder'
+
+/**
+ * @internal
+ *
+ * Dialects that do not understand the `NULLS FIRST` / `NULLS LAST` order by syntax.
+ */
+const DIALECTS_WITHOUT_NULL_ORDERING = ['mysql', 'mariadb']
+
+/**
+ * @internal
+ *
+ * MySQL and MariaDB function returning 1 when its argument is null, letting null placement be expressed as a sort key.
+ */
+const NULL_ORDERING_FUNCTION = 'ISNULL'
+
+/**
+ * @internal
+ *
+ * `ISNULL(col)` is 1 for nulls and 0 for everything else, so nulls come first when that key is sorted descending.
+ */
+const NULL_ORDERING_DIRECTION: Record<SortNulls, SortDirection> = {
+  [SortNulls.NULLS_FIRST]: SortDirection.DESC,
+  [SortNulls.NULLS_LAST]: SortDirection.ASC
+}
 
 /**
  * @internal
@@ -190,13 +216,18 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
       return qb
     }
     // eslint-disable-next-line no-param-reassign
-    qb.order = sorts.map(({ field, direction, nulls }): OrderItem => {
+    qb.order = sorts.flatMap(({ field, direction, nulls }): OrderItem[] => {
       const col = `${field as string}`
+
+      if (nulls && this.emulatesNullOrdering) {
+        return [this.nullOrderingItem(col, nulls), [col, direction]]
+      }
+
       const dir: string[] = [direction]
       if (nulls) {
         dir.push(nulls)
       }
-      return [col, dir.join(' ')]
+      return [[col, dir.join(' ')]]
     })
     return qb
   }
@@ -257,5 +288,18 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
 
   private get relationNames(): string[] {
     return Object.keys(this.model.associations || {})
+  }
+
+  /**
+   * @description Whether null ordering has to be expressed as an extra sort key because the dialect lacks the syntax.
+   */
+  private get emulatesNullOrdering(): boolean {
+    return DIALECTS_WITHOUT_NULL_ORDERING.includes(this.model.sequelize?.getDialect())
+  }
+
+  private nullOrderingItem(field: string, nulls: SortNulls): OrderItem {
+    const columnName = this.model.rawAttributes[field].field ?? field
+    const columnQualifiedByTableAlias = sequelize.col(`${this.model.name}.${columnName}`)
+    return [sequelize.fn(NULL_ORDERING_FUNCTION, columnQualifiedByTableAlias), NULL_ORDERING_DIRECTION[nulls]]
   }
 }
