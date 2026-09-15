@@ -470,11 +470,25 @@ describe('AssemblerQueryService', () => {
     it('should transform the results for a single entity', () => {
       const mockQueryService = mock<QueryService<TestEntity>>()
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
-      when(mockQueryService.createOne(objectContaining({ bar: 'baz' }))).thenResolve({
+      when(mockQueryService.createOne(objectContaining({ bar: 'baz' }), undefined)).thenResolve({
         bar: 'baz'
       })
 
       return expect(assemblerService.createOne({ foo: 'baz' })).resolves.toEqual({ foo: 'baz' })
+    })
+
+    it('should transform the opts filter and results for a single entity', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      when(
+        mockQueryService.createOne(objectContaining({ bar: 'baz' }), deepEqual({ filter: { bar: { eq: 'baz' } } }))
+      ).thenResolve({
+        bar: 'baz'
+      })
+
+      return expect(assemblerService.createOne({ foo: 'baz' }, { filter: { foo: { eq: 'baz' } } })).resolves.toEqual({
+        foo: 'baz'
+      })
     })
   })
 
@@ -482,9 +496,21 @@ describe('AssemblerQueryService', () => {
     it('should transform the results for a single entity', () => {
       const mockQueryService = mock<QueryService<TestEntity>>()
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
-      when(mockQueryService.createMany(deepEqual([{ bar: 'baz' }]))).thenResolve([{ bar: 'baz' }])
+      when(mockQueryService.createMany(deepEqual([{ bar: 'baz' }]), undefined)).thenResolve([{ bar: 'baz' }])
 
       return expect(assemblerService.createMany([{ foo: 'baz' }])).resolves.toEqual([{ foo: 'baz' }])
+    })
+
+    it('should transform the opts filter and results for multiple entities', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      when(mockQueryService.createMany(deepEqual([{ bar: 'baz' }]), deepEqual({ filter: { bar: { eq: 'baz' } } }))).thenResolve([
+        { bar: 'baz' }
+      ])
+
+      return expect(assemblerService.createMany([{ foo: 'baz' }], { filter: { foo: { eq: 'baz' } } })).resolves.toEqual([
+        { foo: 'baz' }
+      ])
     })
   })
 

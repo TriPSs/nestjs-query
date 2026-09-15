@@ -5,12 +5,16 @@ import {
   AggregateResponse,
   Class,
   CountOptions,
+  CreateManyOptions,
+  CreateOneOptions,
   DeepPartial,
   DeleteManyOptions,
   DeleteManyResponse,
   DeleteOneOptions,
+  ensureMatchesCreationFilter,
   Filter,
   Filterable,
+  filterCreatableRecords,
   FindByIdOptions,
   GetByIdOptions,
   NullOrdering,
@@ -199,12 +203,12 @@ export class TypeOrmQueryService<Entity>
    * const todoItem = await this.service.createOne({title: 'Todo Item', completed: false });
    * ```
    * @param record - The entity to create.
+   * @param opts - Additional options.
    */
-  public async createOne(record: DeepPartial<Entity>): Promise<Entity> {
+  public async createOne(record: DeepPartial<Entity>, opts?: CreateOneOptions<Entity>): Promise<Entity> {
+    ensureMatchesCreationFilter(record as Entity, opts?.filter)
     const entity = await this.ensureIsEntityAndDoesNotExist(record)
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return this.repo.save(entity)
   }
 
@@ -219,11 +223,13 @@ export class TypeOrmQueryService<Entity>
    * ]);
    * ```
    * @param records - The entities to create.
+   * @param opts - Additional options.
    */
-  public async createMany(records: DeepPartial<Entity>[]): Promise<Entity[]> {
-    const entities = await Promise.all(records.map((r) => this.ensureIsEntityAndDoesNotExist(r)))
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+  public async createMany(records: DeepPartial<Entity>[], opts?: CreateManyOptions<Entity>): Promise<Entity[]> {
+    const creatableRecords = filterCreatableRecords(records as Entity[], opts?.filter)
+    const entities = await Promise.all(
+      creatableRecords.map((creatableRecord) => this.ensureIsEntityAndDoesNotExist(creatableRecord as DeepPartial<Entity>))
+    )
     return this.repo.save(entities)
   }
 

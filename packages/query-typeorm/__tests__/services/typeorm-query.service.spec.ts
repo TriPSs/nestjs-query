@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { getDataSourceToken, InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
 import { Filter, NullOrdering, SortDirection } from '@ptc-org/nestjs-query-core'
@@ -1960,6 +1961,16 @@ describe('TypeOrmQueryService', (): void => {
       const queryService = moduleRef.get(TestEntityService)
       return expect(queryService.createMany(TEST_ENTITIES)).rejects.toThrow('Entity already exists')
     })
+
+    it('should only create entities that match the provided filter', async () => {
+      await truncate(moduleRef.get(getDataSourceToken()))
+      const queryService = moduleRef.get(TestEntityService)
+      const matchingEntities = TEST_ENTITIES.filter((entity) => entity.numberType > 5)
+      const created = await queryService.createMany(TEST_ENTITIES, { filter: { numberType: { gt: 5 } } })
+      expect(created).toEqual(matchingEntities)
+      const allCount = await queryService.count({})
+      expect(allCount).toBe(matchingEntities.length)
+    })
   })
 
   describe('#createOne', () => {
@@ -1983,6 +1994,23 @@ describe('TypeOrmQueryService', (): void => {
       const entity = TEST_ENTITIES[0]
       const queryService = moduleRef.get(TestEntityService)
       return expect(queryService.createOne(entity)).rejects.toThrow('Entity already exists')
+    })
+
+    it('should reject an entity that does not match the provided filter', async () => {
+      await truncate(moduleRef.get(getDataSourceToken()))
+      const entity = TEST_ENTITIES[0]
+      const queryService = moduleRef.get(TestEntityService)
+      const createOnePromise = queryService.createOne(entity, { filter: { stringType: { eq: TEST_ENTITIES[1].stringType } } })
+      await expect(createOnePromise).rejects.toThrow('Entity does not meet creation constraints')
+      return expect(createOnePromise).rejects.toBeInstanceOf(BadRequestException)
+    })
+
+    it('should create an entity that matches the provided filter', async () => {
+      await truncate(moduleRef.get(getDataSourceToken()))
+      const entity = TEST_ENTITIES[0]
+      const queryService = moduleRef.get(TestEntityService)
+      const created = await queryService.createOne(entity, { filter: { stringType: { eq: entity.stringType } } })
+      expect(created).toEqual(entity)
     })
   })
 

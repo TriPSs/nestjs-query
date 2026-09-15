@@ -1,11 +1,12 @@
 import { Class, Filter, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { anything, deepEqual, instance, mock, verify, when } from 'ts-mockito'
-import { DataSource, QueryBuilder, WhereExpressionBuilder } from 'typeorm'
+import { DataSource, EntityMetadata, QueryBuilder, WhereExpressionBuilder } from 'typeorm'
 
 import { FilterQueryBuilder, WhereBuilder } from '../../src/query'
 import { createTestConnection } from '../__fixtures__/connection.fixture'
 import { TestEntity } from '../__fixtures__/test.entity'
+import { TestRelation } from '../__fixtures__/test-relation.entity'
 import { TestSoftDeleteEntity } from '../__fixtures__/test-soft-delete.entity'
 
 describe('FilterQueryBuilder', (): void => {
@@ -65,15 +66,19 @@ describe('FilterQueryBuilder', (): void => {
       expect(qb.getReferencedRelationsWithAliasRecursive(qb.repo.metadata, complexQuery)).toEqual({
         oneTestRelation: {
           alias: 'oneTestRelation',
+          metadata: expect.any(EntityMetadata),
           relations: {
             manyTestEntities: {
               alias: 'manyTestEntities',
+              metadata: expect.any(EntityMetadata),
               relations: {
                 oneTestRelation: {
                   alias: 'oneTestRelation_1',
+                  metadata: expect.any(EntityMetadata),
                   relations: {
                     manyTestEntities: {
                       alias: 'manyTestEntities_1',
+                      metadata: expect.any(EntityMetadata),
                       relations: {}
                     }
                   }
@@ -83,6 +88,7 @@ describe('FilterQueryBuilder', (): void => {
 
             relationOfTestRelation: {
               alias: 'relationOfTestRelation',
+              metadata: expect.any(EntityMetadata),
               relations: {}
             }
           }
@@ -137,22 +143,27 @@ describe('FilterQueryBuilder', (): void => {
       expect(qb.getReferencedRelationsWithAliasRecursive(qb.repo.metadata, query)).toEqual({
         testRelations: {
           alias: 'testRelations',
+          metadata: expect.any(EntityMetadata),
           relations: {}
         },
 
         oneTestRelation: {
           alias: 'oneTestRelation',
+          metadata: expect.any(EntityMetadata),
           relations: {
             relationsOfTestRelation: {
               alias: 'relationsOfTestRelation',
+              metadata: expect.any(EntityMetadata),
               relations: {}
             },
 
             testEntity: {
               alias: 'testEntity',
+              metadata: expect.any(EntityMetadata),
               relations: {
                 testRelations: {
                   alias: 'testRelations_1',
+                  metadata: expect.any(EntityMetadata),
                   relations: {}
                 }
               }
@@ -160,6 +171,17 @@ describe('FilterQueryBuilder', (): void => {
           }
         }
       })
+    })
+
+    it('carries the entity metadata of every referenced relation', () => {
+      const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+      const qb = getEntityQueryBuilder(TestEntity, instance(mockWhereBuilder))
+
+      const nestedRelationQuery: Filter<TestEntity> = { oneTestRelation: { testEntity: { stringType: { eq: '123' } } } }
+      const relations = qb.getReferencedRelationsWithAliasRecursive(qb.repo.metadata, nestedRelationQuery)
+
+      expect(relations.oneTestRelation.metadata.target).toBe(TestRelation)
+      expect(relations.oneTestRelation.relations.testEntity.metadata.target).toBe(TestEntity)
     })
   })
 

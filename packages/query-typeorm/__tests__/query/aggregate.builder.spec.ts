@@ -2,6 +2,7 @@
 import { AggregateQuery, GroupBy } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { DataSource } from 'typeorm'
+import { DriverUtils } from 'typeorm/driver/DriverUtils'
 
 import { AggregateBuilder } from '../../src/query'
 import { createTestConnection } from '../__fixtures__/connection.fixture'
@@ -23,6 +24,15 @@ describe('AggregateBuilder', (): void => {
     const [sql, params] = selectQueryBuilder.getQueryAndParameters()
 
     expect(formatSql(sql, { params })).toMatchSnapshot()
+  }
+
+  const expectPostgresSQLSnapshot = (agg: AggregateQuery<TestEntity>): void => {
+    const isPostgresFamily = jest.spyOn(DriverUtils, 'isPostgresFamily').mockReturnValue(true)
+    try {
+      expectSQLSnapshot(agg)
+    } finally {
+      isPostgresFamily.mockRestore()
+    }
   }
 
   it('should throw an error if no selects are generated', (): void => {
@@ -58,24 +68,42 @@ describe('AggregateBuilder', (): void => {
   })
 
   describe('date type', () => {
+    const groupOnDateType = (by?: GroupBy): AggregateQuery<TestEntity> => ({
+      groupBy: [{ field: 'dateType', args: by === undefined ? {} : { by } }],
+      count: [{ field: 'testEntityPk', args: {} }]
+    })
+
     it('should default group by day', (): void => {
-      expectSQLSnapshot({
-        groupBy: [{ field: 'dateType', args: {} }],
-        count: [{ field: 'testEntityPk', args: {} }]
-      })
+      expectSQLSnapshot(groupOnDateType())
     })
 
     it('should default group by week', (): void => {
-      expectSQLSnapshot({
-        groupBy: [{ field: 'dateType', args: { by: GroupBy.WEEK } }],
-        count: [{ field: 'testEntityPk', args: {} }]
-      })
+      expectSQLSnapshot(groupOnDateType(GroupBy.WEEK))
     })
 
     it('should default group by month', (): void => {
-      expectSQLSnapshot({
-        groupBy: [{ field: 'dateType', args: { by: GroupBy.MONTH } }],
-        count: [{ field: 'testEntityPk', args: {} }]
+      expectSQLSnapshot(groupOnDateType(GroupBy.MONTH))
+    })
+
+    it('should default group by year', (): void => {
+      expectSQLSnapshot(groupOnDateType(GroupBy.YEAR))
+    })
+
+    describe('on postgres', () => {
+      it('should group by day', (): void => {
+        expectPostgresSQLSnapshot(groupOnDateType())
+      })
+
+      it('should group by week', (): void => {
+        expectPostgresSQLSnapshot(groupOnDateType(GroupBy.WEEK))
+      })
+
+      it('should group by month', (): void => {
+        expectPostgresSQLSnapshot(groupOnDateType(GroupBy.MONTH))
+      })
+
+      it('should group by year', (): void => {
+        expectPostgresSQLSnapshot(groupOnDateType(GroupBy.YEAR))
       })
     })
   })

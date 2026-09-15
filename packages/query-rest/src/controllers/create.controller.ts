@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import { OmitType } from '@nestjs/swagger'
-import { Class, DeepPartial, Filter, QueryService } from '@ptc-org/nestjs-query-core'
+import { AuthValidationOpts, Class, DeepPartial, Filter, QueryService } from '@ptc-org/nestjs-query-core'
 import omit from 'lodash.omit'
 
 import { ApiSchema, HookTypes, MutationArgsType, Post } from '../'
@@ -15,7 +15,7 @@ import { CreateOneInputType } from '../types'
 import { ParamArgsType } from '../types/param-args.type'
 import { BaseServiceController, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
 
-export interface CreateControllerOpts<DTO, C = DeepPartial<DTO>> extends MutationOpts {
+export interface CreateControllerOpts<DTO, C = DeepPartial<DTO>> extends MutationOpts, AuthValidationOpts {
   /**
    * The Input DTO that should be used to create records.
    */
@@ -24,6 +24,8 @@ export interface CreateControllerOpts<DTO, C = DeepPartial<DTO>> extends Mutatio
    * The class to be used for `createOne` input.
    */
   CreateOneInput?: Class<CreateOneInputType<C>>
+
+  one?: MutationOpts['one'] & AuthValidationOpts
 }
 
 export interface CreateController<DTO, C, QS extends QueryService<DTO, C, unknown>> extends ServiceController<DTO, QS> {
@@ -63,6 +65,7 @@ export const Creatable =
     } = opts
 
     const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'CreateDTOClass', 'CreateOneInput', 'CreateManyInput')
+    const validateCreateOneWithAuthFilter = opts.one?.validateWithAuthFilter ?? opts.validateWithAuthFilter ?? false
 
     @ApiSchema({ name: `Create${DTOClass.name}` })
     class COI extends MutationArgsType(CreateOneInput) {}
@@ -98,15 +101,17 @@ export const Creatable =
         @AuthorizerFilter({
           operationGroup: OperationGroup.CREATE,
           many: false
-        }) // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        })
         authorizeFilter?: Filter<DTO>
       ): Promise<DTO> {
+        const createOneOpts = validateCreateOneWithAuthFilter && authorizeFilter ? { filter: authorizeFilter } : undefined
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return this.service.createOne({
+        const createOneInput: C = {
           ...params,
           ...input
-        })
+        }
+        return this.service.createOne(createOneInput, createOneOpts)
       }
     }
 
