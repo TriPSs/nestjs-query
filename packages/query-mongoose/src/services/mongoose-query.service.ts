@@ -3,10 +3,14 @@ import { NotFoundException } from '@nestjs/common'
 import {
   AggregateQuery,
   AggregateResponse,
+  CreateManyOptions,
+  CreateOneOptions,
   DeepPartial,
   DeleteManyResponse,
   DeleteOneOptions,
+  ensureMatchesCreationFilter,
   Filter,
+  filterCreatableRecords,
   FindByIdOptions,
   GetByIdOptions,
   Query,
@@ -142,8 +146,10 @@ export class MongooseQueryService<Entity extends Document>
    * const todoItem = await this.service.createOne({title: 'Todo Item', completed: false });
    * ```
    * @param record - The entity to create.
+   * @param opts - Additional options.
    */
-  async createOne(record: DeepPartial<Entity>): Promise<Entity> {
+  async createOne(record: DeepPartial<Entity>, opts?: CreateOneOptions<Entity>): Promise<Entity> {
+    ensureMatchesCreationFilter(record as Entity, opts?.filter)
     this.ensureIdIsNotPresent(record)
     return this.Model.create(record as Partial<Entity>)
   }
@@ -159,10 +165,12 @@ export class MongooseQueryService<Entity extends Document>
    * ]);
    * ```
    * @param records - The entities to create.
+   * @param opts - Additional options.
    */
-  public async createMany(records: DeepPartial<Entity>[]): Promise<Entity[]> {
-    records.forEach((r) => this.ensureIdIsNotPresent(r))
-    return this.Model.create(records as Partial<Entity>[])
+  public async createMany(records: DeepPartial<Entity>[], opts?: CreateManyOptions<Entity>): Promise<Entity[]> {
+    const recordsToCreate = filterCreatableRecords(records as Entity[], opts?.filter)
+    recordsToCreate.forEach((recordToCreate) => this.ensureIdIsNotPresent(recordToCreate as DeepPartial<Entity>))
+    return this.Model.create(recordsToCreate as Partial<Entity>[])
   }
 
   /**
