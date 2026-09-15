@@ -70,6 +70,7 @@ export interface NestedRecord<E = unknown> {
 export interface NestedRelationsAliased {
   [keys: string]: {
     alias: string
+    metadata: EntityMetadata
     relations: NestedRelationsAliased
   }
 }
@@ -355,11 +356,21 @@ export class FilterQueryBuilder<Entity> {
     selectRelations: SelectRelation<Entity>[] = []
   ): NestedRelationsAliased {
     const referencedRelations = this.getReferencedRelationsRecursive(metadata, filter, selectRelations)
-    return this.injectRelationsAliasRecursive(referencedRelations)
+    return this.injectRelationsAliasRecursive(metadata, referencedRelations)
   }
 
-  private injectRelationsAliasRecursive(relations: NestedRecord, counter = new Map<string, number>()): NestedRelationsAliased {
+  private injectRelationsAliasRecursive(
+    metadata: EntityMetadata,
+    relations: NestedRecord,
+    counter = new Map<string, number>()
+  ): NestedRelationsAliased {
     return Object.entries(relations).reduce((prev, [name, children]) => {
+      const relationMetadata = metadata.relations.find(({ propertyName }) => propertyName === name)?.inverseEntityMetadata
+
+      if (!relationMetadata) {
+        return prev
+      }
+
       const count = (counter.get(name) ?? -1) + 1
       const alias = count === 0 ? name : `${name}_${count}`
       counter.set(name, count)
@@ -368,7 +379,8 @@ export class FilterQueryBuilder<Entity> {
         ...prev,
         [name]: {
           alias,
-          relations: this.injectRelationsAliasRecursive(children, counter)
+          metadata: relationMetadata,
+          relations: this.injectRelationsAliasRecursive(relationMetadata, children, counter)
         }
       }
     }, {})

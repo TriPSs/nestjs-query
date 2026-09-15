@@ -1,10 +1,13 @@
+import { BadRequestException } from '@nestjs/common'
 import {
   AggregateResponse,
   applyFilter,
   applyPaging,
   applyQuery,
   applySort,
+  ensureMatchesCreationFilter,
   Filter,
+  filterCreatableRecords,
   getFilterComparisons,
   getFilterFields,
   getFilterOmitting,
@@ -254,6 +257,38 @@ describe('applyFilter', () => {
     expect(applyFilter({ first: 'FOO', last: 'bar' }, filter)).toBe(true)
     expect(applyFilter({ first: 'Foo Bar', last: 'foo' }, filter)).toBe(true)
     expect(applyFilter({ first: 'o bar', last: 'bar' }, filter)).toBe(true)
+  })
+
+  it('should return every record matching a like filter when filtering an array', () => {
+    const filter: Filter<TestDTO> = {
+      first: { like: 'foo%' }
+    }
+    const records: TestDTO[] = [{ first: 'foo1' }, { first: 'foo2' }, { first: 'foo3' }]
+    expect(applyFilter(records, filter)).toEqual(records)
+  })
+
+  it('should exclude every record matching a notLike filter when filtering an array', () => {
+    const filter: Filter<TestDTO> = {
+      first: { notLike: 'foo%' }
+    }
+    const records: TestDTO[] = [{ first: 'foo1' }, { first: 'foo2' }, { first: 'foo3' }]
+    expect(applyFilter(records, filter)).toEqual([])
+  })
+
+  it('should return every record matching an iLike filter when filtering an array', () => {
+    const filter: Filter<TestDTO> = {
+      first: { iLike: 'foo%' }
+    }
+    const records: TestDTO[] = [{ first: 'FOO1' }, { first: 'Foo2' }, { first: 'foo3' }]
+    expect(applyFilter(records, filter)).toEqual(records)
+  })
+
+  it('should exclude every record matching a notILike filter when filtering an array', () => {
+    const filter: Filter<TestDTO> = {
+      first: { notILike: 'foo%' }
+    }
+    const records: TestDTO[] = [{ first: 'FOO1' }, { first: 'Foo2' }, { first: 'foo3' }]
+    expect(applyFilter(records, filter)).toEqual([])
   })
 
   it('should handle iLike comparisons', () => {
@@ -1597,5 +1632,43 @@ describe('mergeFilters', () => {
     }
     expect(mergeFilters(filter, {})).toEqual({ and: [filter] })
     expect(mergeFilters({}, filter)).toEqual({ and: [filter] })
+  })
+})
+
+describe('ensureMatchesCreationFilter', () => {
+  const filter: Filter<TestDTO> = { first: { eq: 'foo' } }
+
+  it('should do nothing when the filter is undefined', () => {
+    expect(() => ensureMatchesCreationFilter({ first: 'bar' }, undefined)).not.toThrow()
+  })
+
+  it('should do nothing when the record matches the filter', () => {
+    expect(() => ensureMatchesCreationFilter({ first: 'foo' }, filter)).not.toThrow()
+  })
+
+  it('should throw a BadRequestException when the record does not match the filter', () => {
+    expect(() => ensureMatchesCreationFilter({ first: 'bar' }, filter)).toThrow(
+      new BadRequestException('Entity does not meet creation constraints')
+    )
+  })
+})
+
+describe('filterCreatableRecords', () => {
+  const filter: Filter<TestDTO> = { first: { eq: 'foo' } }
+
+  it('should return the records unchanged when the filter is undefined', () => {
+    const records: TestDTO[] = [{ first: 'foo' }, { first: 'bar' }]
+    expect(filterCreatableRecords(records, undefined)).toBe(records)
+  })
+
+  it('should return only the records matching the filter', () => {
+    const matchingRecord: TestDTO = { first: 'foo' }
+    const nonMatchingRecord: TestDTO = { first: 'bar' }
+    expect(filterCreatableRecords([matchingRecord, nonMatchingRecord], filter)).toEqual([matchingRecord])
+  })
+
+  it('should return all records when every record matches the filter', () => {
+    const records: TestDTO[] = [{ first: 'foo' }, { first: 'foo' }, { first: 'foo' }]
+    expect(filterCreatableRecords(records, filter)).toEqual(records)
   })
 })
