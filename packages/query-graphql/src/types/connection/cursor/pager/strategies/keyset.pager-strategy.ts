@@ -1,12 +1,26 @@
 import { BadRequestException } from '@nestjs/common'
-import { Class, Filter, invertSort, mergeFilter, Query, SortDirection, SortField } from '@ptc-org/nestjs-query-core'
+import {
+  Class,
+  Filter,
+  invertSort,
+  mergeFilter,
+  NullOrdering,
+  Query,
+  SortDirection,
+  SortField,
+  SortNulls
+} from '@ptc-org/nestjs-query-core'
 import { plainToClass } from 'class-transformer'
 
+import { getFilterableFields } from '../../../../../decorators/filterable-field.decorator'
 import { CursorPagingType } from '../../../../query'
+import { PageOptions } from '../../../interfaces'
 import { decodeBase64, encodeBase64, hasBeforeCursor, isBackwardPaging, isForwardPaging } from './helpers'
-import { KeySetCursorPayload, KeySetPagingOpts, PagerStrategy } from './pager-strategy'
+import { KeySetCursorPayload, KeySetField, KeySetPagingOpts, PagerStrategy } from './pager-strategy'
 
 export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
+  private nonNullableFields?: Set<string>
+
   constructor(
     readonly DTOClass: Class<DTO>,
     readonly pageFields: (keyof DTO)[],
@@ -40,7 +54,7 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     return !opts.payload || !opts.payload.fields.length
   }
 
-  createQuery<Q extends Query<DTO>>(query: Q, opts: KeySetPagingOpts<DTO>, includeExtraNode: boolean): Q {
+  createQuery<Q extends Query<DTO>>(query: Q, opts: KeySetPagingOpts<DTO>, includeExtraNode: boolean, pageOpts?: PageOptions): Q {
     const paging = { limit: opts.limit }
     if (includeExtraNode && (!this.enableFetchAllWithNegative || opts.limit !== -1)) {
       // Add 1 to the limit so we will fetch an additional node
@@ -48,7 +62,7 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     }
     const { payload } = opts
     const sorting = this.getSortFields(query, opts)
-    const filter = mergeFilter(query.filter ?? {}, this.createFieldsFilter(sorting, payload))
+    const filter = mergeFilter(query.filter ?? {}, this.createFieldsFilter(sorting, payload, pageOpts?.nullOrdering))
     const createdQuery = { ...query, filter, sorting, paging }
     if (this.enableFetchAllWithNegative && opts.limit === -1) delete createdQuery.paging
     return createdQuery
@@ -92,7 +106,11 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     }
   }
 
-  private createFieldsFilter(sortFields: SortField<DTO>[], payload: KeySetCursorPayload<DTO> | undefined): Filter<DTO> {
+  private createFieldsFilter(
+    sortFields: SortField<DTO>[],
+    payload: KeySetCursorPayload<DTO> | undefined,
+    nullOrdering: NullOrdering | undefined
+  ): Filter<DTO> {
     if (!payload) {
       return {}
     }
@@ -100,23 +118,76 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     const equalities: Filter<DTO>[] = []
     const oredFilter = sortFields.reduce((dtoFilters, sortField, index) => {
       const keySetField = fields[index]
+      // A cursor created for a shorter sort, or a tampered cursor, would dereference undefined here.
+      if (!keySetField || typeof keySetField.field !== 'string') {
+        throw new BadRequestException('Invalid cursor')
+      }
       if (keySetField.field !== sortField.field) {
-        throw new Error(
-          `Cursor Payload does not match query sort expected ${keySetField.field as string} found ${sortField.field as string}`
+        throw new BadRequestException(
+          `Cursor Payload does not match query sort expected ${keySetField.field} found ${sortField.field as string}`
         )
       }
       const isAsc = sortField.direction === SortDirection.ASC
-      const subFilter = {
-        and: [...equalities, { [keySetField.field]: { [isAsc ? 'gt' : 'lt']: keySetField.value } }]
-      } as Filter<DTO>
+      // an explicit SortNulls is emitted into the ORDER BY, otherwise the engine's own placement decides
+      const nullsSortLargest = nullOrdering !== NullOrdering.NULLS_SMALLEST
+      const nullsLast = sortField.nulls ? sortField.nulls === SortNulls.NULLS_LAST : nullsSortLargest === isAsc
+      const afterFilter = this.createAfterFilter(keySetField, isAsc, nullsLast)
+      const precedingEqualities = [...equalities]
       if (keySetField.value === null) {
         equalities.push({ [keySetField.field]: { is: null } } as Filter<DTO>)
       } else {
         equalities.push({ [keySetField.field]: { eq: keySetField.value } } as Filter<DTO>)
       }
-      return [...dtoFilters, subFilter]
+      // Nothing sorts after a null boundary when nulls are placed last.
+      if (!afterFilter) {
+        return dtoFilters
+      }
+      return [...dtoFilters, { and: [...precedingEqualities, afterFilter] } as Filter<DTO>]
     }, [] as Filter<DTO>[])
+    if (oredFilter.length === 0) {
+      // every arm was dropped (all-null nulls-last boundary); an empty `or` is ignored by the adapters and would re-serve page one
+      const { field } = sortFields[0]
+      return { and: [{ [field]: { is: null } }, { [field]: { isNot: null } }] } as Filter<DTO>
+    }
     return { or: oredFilter } as Filter<DTO>
+  }
+
+  /**
+   * @description
+   * Builds "strictly after the cursor" for one sort field. A `gt`/`lt` comparison against NULL
+   * matches nothing, so a null boundary uses `is`/`isNot` instead, and a non-null boundary
+   * includes the null block when nulls sort after values.
+   */
+  private createAfterFilter(
+    keySetField: KeySetField<DTO, keyof DTO>,
+    isAsc: boolean,
+    nullsLast: boolean
+  ): Filter<DTO> | undefined {
+    const { field, value } = keySetField
+    if (value === null) {
+      return nullsLast ? undefined : ({ [field]: { isNot: null } } as Filter<DTO>)
+    }
+    const comparison = { [field]: { [isAsc ? 'gt' : 'lt']: value } } as unknown as Filter<DTO>
+    if (!nullsLast || !this.isNullableField(field)) {
+      return comparison
+    }
+    return { or: [comparison, { [field]: { is: null } }] } as Filter<DTO>
+  }
+
+  /**
+   * @description
+   * Whether a sort field can hold NULL, from `@FilterableField` metadata. A field that cannot
+   * never needs the `is: null` arm of the boundary. A DTO with no filterable metadata at all is
+   * treated as all-nullable so a metadata gap can never drop rows.
+   */
+  private isNullableField(field: keyof DTO): boolean {
+    if (!this.nonNullableFields) {
+      const filterableFields = getFilterableFields(this.DTOClass)
+      this.nonNullableFields = new Set(
+        filterableFields.filter((f) => f.advancedOptions?.nullable !== true).map((f) => f.propertyName)
+      )
+    }
+    return !this.nonNullableFields.has(field as string)
   }
 
   /**

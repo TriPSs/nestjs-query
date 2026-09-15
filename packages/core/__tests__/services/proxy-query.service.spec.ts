@@ -1,4 +1,4 @@
-import { AggregateQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { AggregateQuery, NullOrdering, QueryService } from '@ptc-org/nestjs-query-core'
 import { instance, mock, reset, when } from 'ts-mockito'
 
 import { ProxyQueryService } from '../../src/services/proxy-query.service'
@@ -13,6 +13,10 @@ describe('ProxyQueryService', () => {
   afterEach(() => reset(mockQueryService))
 
   const queryService: QueryService<TestType> = new ProxyQueryService(instance(mockQueryService))
+  it('should proxy to the underlying service when reading nullOrdering', () => {
+    when(mockQueryService.nullOrdering).thenReturn(NullOrdering.NULLS_SMALLEST)
+    expect(queryService.nullOrdering).toBe(NullOrdering.NULLS_SMALLEST)
+  })
   it('should proxy to the underlying service when calling addRelations', () => {
     const relationName = 'test'
     const id = 1
