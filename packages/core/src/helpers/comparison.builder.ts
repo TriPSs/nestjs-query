@@ -119,6 +119,6 @@ export class ComparisonBuilder {
 
   private static likeSearchToRegexp(likeStr: string, caseInsensitive = false): RegExp {
     const replaced = likeStr.replace(/%/g, '.*')
-    return new RegExp(`^${replaced}$`, caseInsensitive ? 'ig' : 'g')
+    return new RegExp(`^${replaced}$`, caseInsensitive ? 'i' : undefined)
   }
 }
