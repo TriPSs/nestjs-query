@@ -1,5 +1,37 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`AggregateBuilder date type on postgres should group by day 1`] = `
+"SELECT
+  "TestEntity"."date_type" AS "GROUP_BY_dateType",
+  COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
+FROM
+  "test_entity" "TestEntity""
+`;
+
+exports[`AggregateBuilder date type on postgres should group by month 1`] = `
+"SELECT
+  DATE(TO_CHAR ("TestEntity"."date_type", 'YYYY-mm-01')) AS "GROUP_BY_dateType",
+  COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
+FROM
+  "test_entity" "TestEntity""
+`;
+
+exports[`AggregateBuilder date type on postgres should group by week 1`] = `
+"SELECT
+  DATE(DATE_TRUNC ('week', "TestEntity"."date_type")) AS "GROUP_BY_dateType",
+  COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
+FROM
+  "test_entity" "TestEntity""
+`;
+
+exports[`AggregateBuilder date type on postgres should group by year 1`] = `
+"SELECT
+  DATE(TO_CHAR ("TestEntity"."date_type", 'YYYY-01-01')) AS "GROUP_BY_dateType",
+  COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
+FROM
+  "test_entity" "TestEntity""
+`;
+
 exports[`AggregateBuilder date type should default group by day 1`] = `
 "SELECT
   "TestEntity"."date_type" AS "GROUP_BY_dateType",
@@ -20,9 +52,19 @@ FROM
 
 exports[`AggregateBuilder date type should default group by week 1`] = `
 "SELECT
-  STR_TO_DATE (
-    DATE_FORMAT ("TestEntity"."date_type", '%X-%V-01'),
-    '%X-%V-%w'
+  DATE_SUB (
+    DATE("TestEntity"."date_type"),
+    INTERVAL WEEKDAY ("TestEntity"."date_type") DAY
+  ) AS "GROUP_BY_dateType",
+  COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
+FROM
+  "test_entity" "TestEntity""
+`;
+
+exports[`AggregateBuilder date type should default group by year 1`] = `
+"SELECT
+  DATE(
+    DATE_FORMAT ("TestEntity"."date_type", '%Y-01-01')
   ) AS "GROUP_BY_dateType",
   COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
 FROM
