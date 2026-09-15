@@ -2,11 +2,22 @@ import { BadRequestException } from '@nestjs/common'
 import { Class, Filter, invertSort, mergeFilter, Query, SortDirection, SortField } from '@ptc-org/nestjs-query-core'
 import { plainToClass } from 'class-transformer'
 
+import { getFilterableFields } from '../../../../../decorators/filterable-field.decorator'
 import { CursorPagingType } from '../../../../query'
-import { decodeBase64, encodeBase64, hasBeforeCursor, isBackwardPaging, isForwardPaging } from './helpers'
+import {
+  decodeBase64,
+  encodeBase64,
+  hasBeforeCursor,
+  isBackwardPaging,
+  isForwardPaging,
+  reviveLegacyCursorDate,
+  serializeCursorDate
+} from './helpers'
 import { KeySetCursorPayload, KeySetPagingOpts, PagerStrategy } from './pager-strategy'
 
 export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
+  private dateFields?: Set<string>
+
   constructor(
     readonly DTOClass: Class<DTO>,
     readonly pageFields: (keyof DTO)[],
@@ -85,7 +96,10 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
         {}
       )
       const transformed = plainToClass(this.DTOClass, partial)
-      const typesafeFields = payload.fields.map(({ field }) => ({ field, value: transformed[field] }))
+      const typesafeFields = payload.fields.map(({ field, value }) => ({
+        field,
+        value: this.fromCursorValue(field, value, transformed[field])
+      }))
       return { ...payload, fields: typesafeFields }
     } catch (e) {
       throw new BadRequestException('Invalid cursor')
@@ -138,6 +152,30 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     return opts.isForward ? sortFields : invertSort(sortFields)
   }
 
+  // a Date boundary travels as the minting process's wall clock with its UTC offset embedded
+  private toCursorValue(value: DTO[keyof DTO]): DTO[keyof DTO] {
+    return value instanceof Date ? (serializeCursorDate(value) as unknown as DTO[keyof DTO]) : value
+  }
+
+  // legacy UTC ISO strings are revived to Dates; wall clock values pass through untouched
+  private fromCursorValue(field: keyof DTO, rawValue: unknown, transformedValue: DTO[keyof DTO]): DTO[keyof DTO] {
+    if (typeof rawValue === 'string' && this.isDateField(field)) {
+      return reviveLegacyCursorDate(rawValue) as unknown as DTO[keyof DTO]
+    }
+    return transformedValue
+  }
+
+  private isDateField(field: keyof DTO): boolean {
+    if (!this.dateFields) {
+      this.dateFields = new Set(
+        getFilterableFields(this.DTOClass)
+          .filter(({ target }) => target === Date)
+          .map(({ propertyName }) => propertyName)
+      )
+    }
+    return this.dateFields.has(field as string)
+  }
+
   private createKeySetPayload(dto: DTO, fields: (keyof DTO)[]): KeySetCursorPayload<DTO> {
     const fieldSet = new Set<keyof DTO>()
     return fields.reduce(
@@ -146,7 +184,7 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
           return payload
         }
         fieldSet.add(field)
-        payload.fields.push({ field, value: dto[field] })
+        payload.fields.push({ field, value: this.toCursorValue(dto[field]) })
         return payload
       },
       { type: 'keyset', fields: [] }
