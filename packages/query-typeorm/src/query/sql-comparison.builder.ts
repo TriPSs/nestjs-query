@@ -51,13 +51,25 @@ export class SQLComparisonBuilder<Entity> {
   ) {}
 
   /**
-   * Creates a builder for an entity that has no repository to hand, such as a relation reached
-   * through a filter.
+   * Creates a builder like this one bound to another entity's metadata, used when a filter
+   * descends into a relation.
    *
-   * @param entityMetadata - metadata of the entity the builder builds comparisons for.
+   * The derived builder keeps the prototype and the own properties of this builder, so a custom
+   * builder keeps its comparison behaviour inside relation filters without overriding anything.
+   *
+   * Override this method to construct the derived builder yourself when copying the own
+   * properties is not enough, for example when a subclass holds private class fields (which are
+   * not copied, and are unreadable on the derived builder) or state that is bound to the root
+   * entity and must not be reused for a relation.
+   *
+   * @param entityMetadata - metadata of the entity the derived builder builds comparisons for.
    */
-  public static forEntityMetadata<Entity>(entityMetadata: EntityMetadata): SQLComparisonBuilder<Entity> {
-    return new SQLComparisonBuilder<Entity>(SQLComparisonBuilder.DEFAULT_COMPARISON_MAP, undefined, entityMetadata)
+  public deriveForEntityMetadata<Relation>(entityMetadata: EntityMetadata): SQLComparisonBuilder<Relation> {
+    const derived = Object.create(Object.getPrototypeOf(this) as object) as SQLComparisonBuilder<Relation>
+
+    Object.assign(derived, this, { repo: undefined, entityMetadata })
+
+    return derived
   }
 
   private get paramName(): string {

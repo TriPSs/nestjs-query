@@ -1,12 +1,12 @@
 import { BadRequestException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { getDataSourceToken, InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
-import { Filter, SortDirection } from '@ptc-org/nestjs-query-core'
+import { Filter, FilterComparisonOperators, SortDirection } from '@ptc-org/nestjs-query-core'
 import { plainToClass } from 'class-transformer'
 import { Repository } from 'typeorm'
 
 import { TypeOrmQueryService } from '../../src'
-import { FilterQueryBuilder } from '../../src/query'
+import { EntityComparisonField, FilterQueryBuilder, SQLComparisonBuilder, WhereBuilder } from '../../src/query'
 import { CONNECTION_OPTIONS, refresh, truncate } from '../__fixtures__/connection.fixture'
 import {
   TEST_ENTITIES,
@@ -83,6 +83,53 @@ describe('TypeOrmQueryService', (): void => {
       const queriedPrimaryKeys = queryResult.map((e) => e.testEntityPk)
 
       return expect(primaryKeys).toEqual(queriedPrimaryKeys)
+    })
+
+    describe('with a custom SQLComparisonBuilder', () => {
+      class CaseInsensitiveComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+        public build<F extends keyof Entity>(
+          field: F,
+          cmp: FilterComparisonOperators<Entity[F]>,
+          val: EntityComparisonField<Entity, F>,
+          alias?: string
+        ) {
+          const { sql, params } = super.build(field, cmp, val, alias)
+
+          if ((cmp as string).toLowerCase() === 'eq' && typeof val === 'string') {
+            const [column, parameter] = sql.split(' = ')
+
+            return { sql: `LOWER(${column}) = LOWER(${parameter})`, params }
+          }
+
+          return { sql, params }
+        }
+      }
+
+      const createCaseInsensitiveQueryService = (): TypeOrmQueryService<TestEntity> => {
+        const { repo } = moduleRef.get(TestEntityService)
+        const sqlComparisonBuilder = new CaseInsensitiveComparisonBuilder<TestEntity>(
+          SQLComparisonBuilder.DEFAULT_COMPARISON_MAP,
+          repo
+        )
+
+        return new TypeOrmQueryService(repo, {
+          filterQueryBuilder: new FilterQueryBuilder(repo, new WhereBuilder(sqlComparisonBuilder))
+        })
+      }
+
+      it('should apply the custom builder to root filters', async () => {
+        const queryResult = await createCaseInsensitiveQueryService().query({ filter: { stringType: { eq: 'FOO1' } } })
+
+        expect(queryResult).toEqual([TEST_ENTITIES[0]])
+      })
+
+      it('should apply the custom builder inside relation filters', async () => {
+        const queryResult = await createCaseInsensitiveQueryService().query({
+          filter: { testRelations: { relationName: { eq: TEST_RELATIONS[0].relationName.toUpperCase() } } }
+        })
+
+        expect(queryResult).toEqual([TEST_ENTITIES[0]])
+      })
     })
 
     describe('filter on relations', () => {

@@ -124,6 +124,43 @@ describe('WhereBuilder', (): void => {
       return sql
     }
 
+    describe('descending into a relation', (): void => {
+      class CollatedComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+        public build<F extends keyof Entity>(
+          field: F,
+          cmp: FilterComparisonOperators<Entity[F]>,
+          val: EntityComparisonField<Entity, F>,
+          alias?: string
+        ) {
+          const { sql, params } = super.build(field, cmp, val, alias)
+
+          return { sql: `${sql} COLLATE NOCASE`, params }
+        }
+      }
+
+      const relationFilter = { testRelations: { relationName: { eq: 'foo' } } } as Filter<TestEntity>
+      const testRelationNames = (): NestedRelationsAliased => ({
+        testRelations: { alias: 'TestRelation', metadata: dataSource.getMetadata(TestRelation), relations: {} }
+      })
+
+      it('should keep the behaviour of a custom builder inside relation filters', (): void => {
+        const sql = buildFilterSql(new CollatedComparisonBuilder<TestEntity>(), relationFilter, testRelationNames())
+
+        expect(sql).toMatch(/TestRelation\.relationName = \S+ COLLATE NOCASE/)
+      })
+
+      it('should carry a custom comparison map into relation filters', (): void => {
+        const sqlComparisonBuilder = new SQLComparisonBuilder<TestEntity>({
+          ...SQLComparisonBuilder.DEFAULT_COMPARISON_MAP,
+          eq: '=='
+        })
+
+        expect(buildFilterSql(sqlComparisonBuilder, relationFilter, testRelationNames())).toContain(
+          'TestRelation.relationName =='
+        )
+      })
+    })
+
     it('should not resolve relation fields against the root entity metadata', (): void => {
       const sqlComparisonBuilder = new SQLComparisonBuilder<TestEntity>(
         SQLComparisonBuilder.DEFAULT_COMPARISON_MAP,
