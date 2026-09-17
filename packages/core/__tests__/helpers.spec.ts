@@ -387,6 +387,34 @@ describe('applyFilter', () => {
     expect(applyFilter({ child: { first: 'baz', last: 'bar' } }, filter)).toBe(false)
   })
 
+  it('should reject an unknown operator that wraps known operators rather than silently matching', () => {
+    const filter: Filter<TestDTO> = {
+      // @ts-ignore
+      first: { nin: { neq: 'baz' } }
+    }
+    expect(() => applyFilter({ first: 'foo', last: 'kaz' }, filter)).toThrow(
+      'unknown comparison "nin" for field "first". "first" holds a string, so those keys cannot be nested filter ' +
+        'fields. A filter value must either compare a field, where every key is an operator (e.g. { eq: 1 }), or nest ' +
+        'a filter, where every key is a field (e.g. { relation: { eq: 1 } }).'
+    )
+  })
+
+  it('should reject a filter that nests into a non-object field value', () => {
+    const filter: Filter<TestDTO> = {
+      // @ts-ignore
+      age: { unregistered: { eq: 1 } }
+    }
+    expect(() => applyFilter({ first: 'foo', age: 10 }, filter)).toThrow(
+      'unknown comparison "unregistered" for field "age". "age" holds a number, so those keys cannot be nested filter fields.'
+    )
+  })
+
+  it('should keep treating a null nested value as a nested filter', () => {
+    type ParentDTO = { child: TestDTO | null }
+    const filter: Filter<ParentDTO> = { child: { first: { is: null } } }
+    expect(applyFilter({ child: null }, filter)).toBe(true)
+  })
+
   it('should handle and grouping', () => {
     const filter: Filter<TestDTO> = {
       and: [{ first: { eq: 'foo' } }, { last: { like: '%bar' } }]
