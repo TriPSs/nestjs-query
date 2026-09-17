@@ -8,6 +8,8 @@ import { createTestConnection } from '../__fixtures__/connection.fixture'
 import { TestEntity } from '../__fixtures__/test.entity'
 import { TestRelation } from '../__fixtures__/test-relation.entity'
 import { TestSoftDeleteEntity } from '../__fixtures__/test-soft-delete.entity'
+import { TestVirtualColumnEntity } from '../__fixtures__/test-virtual-column.entity'
+import { TestVirtualColumnRelation } from '../__fixtures__/test-virtual-column.relation'
 
 describe('FilterQueryBuilder', (): void => {
   let connection: DataSource
@@ -24,6 +26,53 @@ describe('FilterQueryBuilder', (): void => {
 
     expect(formatSql(sql, { params })).toMatchSnapshot()
   }
+
+  describe('#deriveForRepository', () => {
+    class TaggedFilterQueryBuilder<Entity> extends FilterQueryBuilder<Entity> {
+      public readonly tag = 'tagged'
+    }
+
+    const deriveForVirtualColumnRelation = (
+      builder: FilterQueryBuilder<TestVirtualColumnEntity> = new FilterQueryBuilder(
+        connection.getRepository(TestVirtualColumnEntity)
+      )
+    ): FilterQueryBuilder<TestVirtualColumnRelation> =>
+      builder.deriveForRepository<TestVirtualColumnRelation>(connection.getRepository(TestVirtualColumnRelation))
+
+    it('should bind the derived builder to the given repository', () => {
+      const relationRepo = connection.getRepository(TestVirtualColumnRelation)
+      const derived = deriveForVirtualColumnRelation()
+
+      expect(derived.repo).toBe(relationRepo)
+      expect(derived.aggregateBuilder.repo).toBe(relationRepo)
+    })
+
+    it('should expand the virtual columns of the relation and not those of the root entity', () => {
+      const derived = deriveForVirtualColumnRelation()
+
+      const [sql] = derived.select({ filter: { siblingCount: { gt: 0 } } }).getQueryAndParameters()
+
+      expect(sql).toContain('SELECT COUNT(*) FROM test_virtual_column_relation')
+      expect(sql).not.toContain('"siblingCount" >')
+    })
+
+    it('should order by a virtual column of the relation through its select alias', () => {
+      const derived = deriveForVirtualColumnRelation()
+
+      const [sql] = derived.select({ sorting: [{ field: 'siblingCount', direction: SortDirection.ASC }] }).getQueryAndParameters()
+
+      expect(sql).toContain('ORDER BY "TestVirtualColumnRelation_siblingCount" ASC')
+    })
+
+    it('should keep the subclass and the state of the builder it is derived from', () => {
+      const derived = deriveForVirtualColumnRelation(
+        new TaggedFilterQueryBuilder(connection.getRepository(TestVirtualColumnEntity))
+      )
+
+      expect(derived).toBeInstanceOf(TaggedFilterQueryBuilder)
+      expect((derived as TaggedFilterQueryBuilder<TestVirtualColumnRelation>).tag).toBe('tagged')
+    })
+  })
 
   describe('#getReferencedRelationsWithAliasRecursive', () => {
     it('with deeply nested and / or', () => {

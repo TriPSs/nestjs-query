@@ -1,6 +1,6 @@
 import { Filter, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, Repository, WhereExpressionBuilder } from 'typeorm'
 
 import {
   EntityComparisonField,
@@ -13,6 +13,7 @@ import { createTestConnection } from '../__fixtures__/connection.fixture'
 import { TestEntity } from '../__fixtures__/test.entity'
 import { TestRelation } from '../__fixtures__/test-relation.entity'
 import { TestVirtualColumnEntity } from '../__fixtures__/test-virtual-column.entity'
+import { TestVirtualColumnRelation } from '../__fixtures__/test-virtual-column.relation'
 
 describe('WhereBuilder', (): void => {
   let dataSource: DataSource
@@ -101,6 +102,61 @@ describe('WhereBuilder', (): void => {
 
     it('should properly group OR with a sibling field comparison', (): void => {
       expectSQLSnapshot({ or: [{ numberType: { eq: 2 } }, { numberType: { gt: 10 } }], stringType: { eq: 'foo' } })
+    })
+  })
+
+  describe('#deriveForEntityMetadata', (): void => {
+    class RecordingWhereBuilder<Entity> extends WhereBuilder<Entity> {
+      constructor(
+        readonly aliasesBuiltFor: (string | undefined)[],
+        sqlComparisonBuilder?: SQLComparisonBuilder<Entity>
+      ) {
+        super(sqlComparisonBuilder)
+      }
+
+      public build<Where extends WhereExpressionBuilder>(
+        where: Where,
+        filter: Filter<Entity>,
+        relationNames: NestedRelationsAliased,
+        alias?: string
+      ): Where {
+        this.aliasesBuiltFor.push(alias)
+
+        return super.build(where, filter, relationNames, alias)
+      }
+    }
+
+    it('should keep the subclass of the builder it is derived from', (): void => {
+      const derived = new RecordingWhereBuilder<TestEntity>([]).deriveForEntityMetadata<TestRelation>(
+        dataSource.getMetadata(TestRelation)
+      )
+
+      expect(derived).toBeInstanceOf(RecordingWhereBuilder)
+    })
+
+    it('should expand the virtual columns of the given entity', (): void => {
+      const derived = new WhereBuilder<TestEntity>().deriveForEntityMetadata<TestVirtualColumnRelation>(
+        dataSource.getMetadata(TestVirtualColumnRelation)
+      )
+
+      const [sql] = derived
+        .build(getQueryBuilder(), { siblingCount: { gt: 1 } }, {}, 'TestVirtualColumnRelation')
+        .getQueryAndParameters()
+
+      expect(sql).toContain('SELECT COUNT(*) FROM test_virtual_column_relation')
+    })
+
+    it('should be used when a filter descends into a relation', (): void => {
+      const aliasesBuiltFor: (string | undefined)[] = []
+
+      new RecordingWhereBuilder<TestEntity>(aliasesBuiltFor).build(
+        getQueryBuilder(),
+        { testRelations: { relationName: { eq: 'foo' } } } as Filter<TestEntity>,
+        { testRelations: { alias: 'TestRelation', metadata: dataSource.getMetadata(TestRelation), relations: {} } },
+        'TestEntity'
+      )
+
+      expect(aliasesBuiltFor).toContain('TestRelation')
     })
   })
 
