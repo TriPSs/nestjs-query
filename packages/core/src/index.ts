@@ -16,6 +16,8 @@ export {
   applyPaging,
   applyQuery,
   applySort,
+  ensureMatchesCreationFilter,
+  filterCreatableRecords,
   getFilterComparisons,
   getFilterFields,
   getFilterOmitting,

@@ -444,7 +444,7 @@ describe('TagResolver (typeorm - e2e)', () => {
             const res: AggregateResponse<TodoItemDTO>[] = body.data.tagAggregate
             expect(res).toHaveLength(2)
 
-            // The groups come back ordered by the grouped column, and `Urgent` is the day before.
+            // The fixtures seed the Urgent tag one day before the other tags, within the same ISO week and month
             expect(res[0].sum).toEqual({ id: 1 })
             expect(res[1].sum).toEqual({ id: 14 })
           }))
