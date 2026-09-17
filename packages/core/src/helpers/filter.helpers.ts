@@ -24,6 +24,20 @@ export const isRangeComparisonOperators = (op: unknown): op is RangeComparisonOp
 export const isBooleanComparisonOperators = (op: unknown): op is BooleanComparisonOperators =>
   op === 'eq' || op === 'neq' || op === 'is' || op === 'isNot'
 
+export type ComparisonOperators =
+  | LikeComparisonOperators
+  | InComparisonOperators
+  | BetweenComparisonOperators
+  | RangeComparisonOperators
+  | BooleanComparisonOperators
+
+export const isComparisonOperator = (op: unknown): op is ComparisonOperators =>
+  isLikeComparisonOperator(op) ||
+  isInComparisonOperators(op) ||
+  isBetweenComparisonOperators(op) ||
+  isRangeComparisonOperators(op) ||
+  isBooleanComparisonOperators(op)
+
 export const isComparison = <DTO, K extends keyof DTO>(
   maybeComparison?: FilterFieldComparison<DTO[K]> | Filter<DTO[K]>
 ): maybeComparison is FilterFieldComparison<DTO[K]> => {
@@ -32,14 +46,24 @@ export const isComparison = <DTO, K extends keyof DTO>(
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return Object.keys(maybeComparison as Record<string, unknown>).every(
-    (op) =>
-      isLikeComparisonOperator(op) ||
-      isInComparisonOperators(op) ||
-      isBetweenComparisonOperators(op) ||
-      isRangeComparisonOperators(op) ||
-      isBooleanComparisonOperators(op)
-  )
+  return Object.keys(maybeComparison as Record<string, unknown>).every(isComparisonOperator)
+}
+
+/**
+ * Returns the unrecognised keys of a value that mixes recognised comparison operators with keys that are not
+ * comparison operators, for example `{ eq: 'a', unregistered: 'b' }`.
+ *
+ * A value whose keys are *all* unrecognised is a valid nested filter keyed by field name, so it yields no keys.
+ */
+export const getUnknownComparisonOperators = (maybeComparison?: object): string[] => {
+  if (!maybeComparison) {
+    return []
+  }
+
+  const keys = Object.keys(maybeComparison)
+  const unknownKeys = keys.filter((key) => !isComparisonOperator(key))
+
+  return unknownKeys.length === keys.length ? [] : unknownKeys
 }
 
 // TODO: test

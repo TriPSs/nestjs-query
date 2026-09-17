@@ -1,6 +1,6 @@
 import { Filter, FilterComparisons, FilterFieldComparison } from '../interfaces'
 import { ComparisonBuilder } from './comparison.builder'
-import { getFilterFieldComparison, isComparison } from './filter.helpers'
+import { getFilterFieldComparison, getUnknownComparisonOperators, isComparison } from './filter.helpers'
 import { ComparisonField, FilterFn } from './types'
 
 export class FilterBuilder {
@@ -51,6 +51,14 @@ export class FilterBuilder {
     }
     if (typeof value !== 'object') {
       throw new Error(`unknown comparison ${JSON.stringify(fieldOrNested)}`)
+    }
+    const unknownOperators = getUnknownComparisonOperators(value)
+    if (unknownOperators.length) {
+      throw new Error(
+        `unknown comparison ${unknownOperators.map((operator) => JSON.stringify(operator)).join(', ')} for field ` +
+          `${JSON.stringify(fieldOrNested)}. A filter value must either compare a field, where every key is an operator ` +
+          `(e.g. { eq: 1 }), or nest a filter, where every key is a field (e.g. { relation: { eq: 1 } }).`
+      )
     }
     const nestedFilterFn = this.build(value)
     return (dto?: DTO) => nestedFilterFn(dto ? dto[fieldOrNested] : null)

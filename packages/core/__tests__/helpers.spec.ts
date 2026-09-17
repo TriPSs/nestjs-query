@@ -361,6 +361,32 @@ describe('applyFilter', () => {
     expect(() => applyFilter({ first: 'baz', last: 'kaz' }, filter)).toThrow('unknown comparison "foo"')
   })
 
+  it('should name the unknown operator when it is mixed with a known one', () => {
+    const filter: Filter<TestDTO> = {
+      // @ts-ignore
+      first: { eq: 'baz', foo: 'bar' }
+    }
+    expect(() => applyFilter({ first: 'baz', last: 'kaz' }, filter)).toThrow(
+      'unknown comparison "foo" for field "first". A filter value must either compare a field, where every key is an ' +
+        'operator (e.g. { eq: 1 }), or nest a filter, where every key is a field (e.g. { relation: { eq: 1 } }).'
+    )
+  })
+
+  it('should name every unknown operator that is mixed with a known one', () => {
+    const filter: Filter<TestDTO> = {
+      // @ts-ignore
+      first: { eq: 'baz', foo: 'bar', baz: 'boo' }
+    }
+    expect(() => applyFilter({ first: 'baz', last: 'kaz' }, filter)).toThrow('unknown comparison "foo", "baz" for field "first"')
+  })
+
+  it('should still treat an object of unknown keys as a nested filter', () => {
+    type ParentDTO = { child: TestDTO }
+    const filter: Filter<ParentDTO> = { child: { first: { eq: 'foo' } } }
+    expect(applyFilter({ child: { first: 'foo', last: 'bar' } }, filter)).toBe(true)
+    expect(applyFilter({ child: { first: 'baz', last: 'bar' } }, filter)).toBe(false)
+  })
+
   it('should handle and grouping', () => {
     const filter: Filter<TestDTO> = {
       and: [{ first: { eq: 'foo' } }, { last: { like: '%bar' } }]
