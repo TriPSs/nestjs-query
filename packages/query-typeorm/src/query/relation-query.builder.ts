@@ -82,12 +82,20 @@ export class RelationQueryBuilder<Entity, Relation> {
    */
   private existingAlias: Alias
 
+  /**
+   * @param repo - repository of the entity the relation is queried from.
+   * @param relation - the name of the relation to query.
+   * @param entityFilterQueryBuilder - the builder used for queries on `repo`. The builder used for
+   * the relation is derived from it, so that a builder configured through
+   * `TypeOrmQueryServiceOpts.filterQueryBuilder` also applies to relation queries.
+   */
   constructor(
     readonly repo: Repository<Entity>,
-    readonly relation: string
+    readonly relation: string,
+    entityFilterQueryBuilder: FilterQueryBuilder<Entity> = new FilterQueryBuilder<Entity>(repo)
   ) {
     this.relationRepo = this.repo.manager.getRepository<Relation>(this.relationMeta.from)
-    this.filterQueryBuilder = new FilterQueryBuilder<Relation>(this.relationRepo)
+    this.filterQueryBuilder = entityFilterQueryBuilder.deriveForRepository<Relation>(this.relationRepo)
     this.paramCount = 0
   }
 

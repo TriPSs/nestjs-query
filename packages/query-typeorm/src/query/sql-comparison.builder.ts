@@ -2,6 +2,7 @@ import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@pt
 import { EntityMetadata, ObjectLiteral, Repository } from 'typeorm'
 
 import { randomString } from '../common'
+import { deriveBuilder } from './derive-builder'
 
 /**
  * @internal
@@ -51,12 +52,13 @@ export class SQLComparisonBuilder<Entity> {
   ) {}
 
   /**
-   * Creates a builder like this one bound to another entity's metadata, used when a filter
-   * descends into a relation.
+   * Creates a builder like this one bound to another entity's metadata, used when a query descends
+   * into a relation.
    *
    * The derived builder keeps the prototype and the own property descriptors of this builder, so a
-   * custom builder keeps its comparison behaviour inside relation filters without overriding
-   * anything.
+   * custom builder keeps its comparison behaviour inside relation queries without overriding
+   * anything. The repository of the root entity is not carried over, because it describes the
+   * entity this builder was built for rather than the relation.
    *
    * Override this method to construct the derived builder yourself when copying the own property
    * descriptors is not enough, for example when a subclass holds private class fields (which are
@@ -66,11 +68,7 @@ export class SQLComparisonBuilder<Entity> {
    * @param entityMetadata - metadata of the entity the derived builder builds comparisons for.
    */
   public deriveForEntityMetadata<Relation>(entityMetadata: EntityMetadata): SQLComparisonBuilder<Relation> {
-    return Object.create(Object.getPrototypeOf(this) as object, {
-      ...Object.getOwnPropertyDescriptors(this),
-      repo: { value: undefined, writable: true, enumerable: true, configurable: true },
-      entityMetadata: { value: entityMetadata, writable: true, enumerable: true, configurable: true }
-    }) as SQLComparisonBuilder<Relation>
+    return deriveBuilder<SQLComparisonBuilder<Relation>>(this, { repo: undefined, entityMetadata })
   }
 
   private get paramName(): string {

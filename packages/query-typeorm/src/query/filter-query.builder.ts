@@ -22,6 +22,7 @@ import { RelationMetadata } from 'typeorm/metadata/RelationMetadata'
 import { SoftDeleteQueryBuilder } from 'typeorm/query-builder/SoftDeleteQueryBuilder'
 
 import { AggregateBuilder } from './aggregate.builder'
+import { deriveBuilder } from './derive-builder'
 import { SQLComparisonBuilder } from './sql-comparison.builder'
 import { WhereBuilder } from './where.builder'
 
@@ -65,15 +66,31 @@ export interface NestedRecord<E = unknown> {
 /**
  * @internal
  *
+ * A relation referenced by a query, with the alias it is joined under.
+ */
+export interface NestedRelationAliased {
+  alias: string
+  metadata: EntityMetadata
+  relations: NestedRelationsAliased
+}
+
+/**
+ * @internal
+ *
  * Nested aliased type
  */
 export interface NestedRelationsAliased {
-  [keys: string]: {
-    alias: string
-    metadata: EntityMetadata
-    relations: NestedRelationsAliased
-  }
+  [keys: string]: NestedRelationAliased
 }
+
+/**
+ * @internal
+ *
+ * The names of the virtual columns of an entity, which have to be expanded into their queries
+ * rather than referenced by name.
+ */
+const virtualColumnNames = (metadata: EntityMetadata): string[] =>
+  metadata.columns.filter(({ isVirtualProperty }) => isVirtualProperty).map(({ propertyName }) => propertyName)
 
 /**
  * @internal
@@ -90,9 +107,32 @@ export class FilterQueryBuilder<Entity> {
     ),
     readonly aggregateBuilder: AggregateBuilder<Entity> = new AggregateBuilder<Entity>(repo)
   ) {
-    this.virtualColumns = repo.metadata.columns
-      .filter(({ isVirtualProperty }) => isVirtualProperty)
-      .map(({ propertyName }) => propertyName)
+    this.virtualColumns = virtualColumnNames(repo.metadata)
+  }
+
+  /**
+   * Creates a builder like this one bound to another entity's repository, used when a query
+   * descends into a relation that has a repository of its own.
+   *
+   * The derived builder keeps the prototype and the own property descriptors of this builder, and
+   * its where and aggregate builders are derived for the relation, so a builder configured through
+   * `TypeOrmQueryServiceOpts.filterQueryBuilder` keeps applying to relation queries instead of
+   * being replaced by a default one.
+   *
+   * Override this method to construct the derived builder yourself when copying the own property
+   * descriptors is not enough, for example when a subclass holds private class fields (which are
+   * not copied, and are unreadable on the derived builder) or state that is bound to the root
+   * entity and must not be reused for a relation.
+   *
+   * @param repo - repository of the entity the derived builder builds queries for.
+   */
+  public deriveForRepository<Relation>(repo: Repository<Relation>): FilterQueryBuilder<Relation> {
+    return deriveBuilder<FilterQueryBuilder<Relation>>(this, {
+      repo,
+      whereBuilder: this.whereBuilder.deriveForEntityMetadata<Relation>(repo.metadata),
+      aggregateBuilder: this.aggregateBuilder.deriveForRepository<Relation>(repo),
+      virtualColumns: virtualColumnNames(repo.metadata)
+    })
   }
 
   /**
@@ -301,7 +341,7 @@ export class FilterQueryBuilder<Entity> {
       if (selectRelation) {
         rqb = rqb.leftJoinAndSelect(`${alias ?? rqb.alias}.${relationKey}`, relationAlias)
         // Apply filter for the current relation
-        rqb = this.applyFilter(rqb, selectRelation.query.filter, relationAlias)
+        rqb = this.applySelectedRelationFilter(rqb, relation, selectRelation.query.filter)
         return this.applyRelationJoinsRecursive(rqb, relationChildren, selectRelation.query.relations, relationAlias)
       }
 
@@ -312,6 +352,31 @@ export class FilterQueryBuilder<Entity> {
         relationAlias
       )
     }, qb)
+  }
+
+  /**
+   * Applies the filter of a selected relation to a `typeorm` QueryBuilder.
+   *
+   * The filter is built by a where builder derived for the relation, against the relation's own
+   * metadata and the relations already joined under it, so that the fields of the relation, its
+   * virtual columns among them, resolve against the relation rather than against the root entity.
+   *
+   * @param qb - the `typeorm` QueryBuilder.
+   * @param relation - the selected relation, with the alias it is joined under.
+   * @param filter - the filter of the selected relation.
+   */
+  private applySelectedRelationFilter<Relation>(
+    qb: SelectQueryBuilder<Entity>,
+    relation: NestedRelationAliased,
+    filter?: Filter<Relation>
+  ): SelectQueryBuilder<Entity> {
+    if (!filter) {
+      return qb
+    }
+
+    return this.whereBuilder
+      .deriveForEntityMetadata<Relation>(relation.metadata)
+      .build(qb, filter, relation.relations, relation.alias)
   }
 
   /**
