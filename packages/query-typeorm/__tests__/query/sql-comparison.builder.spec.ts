@@ -333,6 +333,72 @@ describe('SQLComparisonBuilder', (): void => {
       })
     })
 
+    it('should carry an own accessor property of a subclass as an accessor', (): void => {
+      class CountingComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+        constructor() {
+          super()
+
+          let count = 0
+
+          Object.defineProperty(this, 'suffix', {
+            configurable: true,
+            enumerable: true,
+            get: () => `COMPARISON_${(count += 1)}`
+          })
+        }
+      }
+
+      const derived = new CountingComparisonBuilder<TestEntity>().deriveForEntityMetadata<TestEntity>(plainColumnMetadata)
+      const readSuffix = () => (derived as unknown as { suffix: string }).suffix
+
+      expect([readSuffix(), readSuffix()]).toEqual(['COMPARISON_1', 'COMPARISON_2'])
+    })
+
+    it('should carry a non enumerable own property of a subclass', (): void => {
+      class HiddenStateComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+        constructor() {
+          super()
+
+          Object.defineProperty(this, 'suffix', { enumerable: false, value: 'COLLATE NOCASE' })
+        }
+
+        public build<F extends keyof Entity>(
+          field: F,
+          cmp: FilterComparisonOperators<Entity[F]>,
+          val: EntityComparisonField<Entity, F>,
+          alias?: string
+        ) {
+          const { sql, params } = super.build(field, cmp, val, alias)
+
+          return { sql: `${sql} ${(this as unknown as { suffix: string }).suffix}`, params }
+        }
+      }
+
+      const derived = new HiddenStateComparisonBuilder<TestEntity>().deriveForEntityMetadata<TestEntity>(plainColumnMetadata)
+
+      expect(derived.build('stringType', 'eq', 'foo', 'TestEntity')).toEqual({
+        sql: 'TestEntity.stringType = :param0 COLLATE NOCASE',
+        params: { param0: 'foo' }
+      })
+    })
+
+    it('should derive from a frozen builder', (): void => {
+      class FrozenComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+        constructor() {
+          super()
+
+          Object.freeze(this)
+        }
+      }
+
+      const derived = new FrozenComparisonBuilder<TestEntity>().deriveForEntityMetadata<TestEntity>(virtualColumnMetadata)
+
+      expect(derived.build('stringType', 'eq', 'foo', 'TestEntity')).toEqual({
+        sql: '(SELECT 1 FROM TestEntity) = :param0',
+        params: { param0: 'foo' }
+      })
+    })
+
     it('should let a subclass derive the builder itself', (): void => {
       class ExplicitlyDerivingComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
         public deriveForEntityMetadata<Relation>(entityMetadata: EntityMetadata): SQLComparisonBuilder<Relation> {
