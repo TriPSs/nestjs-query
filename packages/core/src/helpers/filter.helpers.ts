@@ -31,6 +31,8 @@ export type ComparisonOperators =
   | RangeComparisonOperators
   | BooleanComparisonOperators
 
+export const isGroupingKey = (key: unknown): key is 'and' | 'or' => key === 'and' || key === 'or'
+
 export const isComparisonOperator = (op: unknown): op is ComparisonOperators =>
   isLikeComparisonOperator(op) ||
   isInComparisonOperators(op) ||
@@ -54,13 +56,15 @@ export const isComparison = <DTO, K extends keyof DTO>(
  * comparison operators, for example `{ eq: 'a', unregistered: 'b' }`.
  *
  * A value whose keys are *all* unrecognised is a valid nested filter keyed by field name, so it yields no keys.
+ * The `and` and `or` grouping keys are neither operators nor field names and are grouped before the remaining
+ * keys are read, so they take no part in this.
  */
 export const getUnknownComparisonOperators = (maybeComparison?: object): string[] => {
   if (!maybeComparison) {
     return []
   }
 
-  const keys = Object.keys(maybeComparison)
+  const keys = Object.keys(maybeComparison).filter((key) => !isGroupingKey(key))
   const unknownKeys = keys.filter((key) => !isComparisonOperator(key))
 
   return unknownKeys.length === keys.length ? [] : unknownKeys

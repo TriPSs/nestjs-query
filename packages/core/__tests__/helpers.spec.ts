@@ -372,6 +372,15 @@ describe('applyFilter', () => {
     )
   })
 
+  it('should not treat and or or as an unknown operator beside a comparison named field', () => {
+    const filter: Filter<TestDTO> = {
+      // @ts-ignore
+      nested: { and: [{ first: { eq: 'baz' } }], is: { eq: 'yes' } }
+    }
+    // @ts-ignore
+    expect(applyFilter({ nested: { first: 'baz', is: 'yes' } }, filter)).toBe(true)
+  })
+
   it('should name every unknown operator that is mixed with a known one', () => {
     const filter: Filter<TestDTO> = {
       // @ts-ignore
