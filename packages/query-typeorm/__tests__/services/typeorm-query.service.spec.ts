@@ -320,6 +320,19 @@ describe('TypeOrmQueryService', (): void => {
       expect(queryResult).toHaveLength(entityWithThreeRelations.relationCount)
     })
 
+    it('should be sorted on in a relation query', async () => {
+      const queryService = moduleRef.get(TestVirtualColumnEntityService)
+
+      const queryResult = await queryService.queryRelations(
+        TestVirtualColumnRelation,
+        'virtualColumnRelations',
+        entityWithThreeRelations,
+        { sorting: [{ field: 'siblingCount', direction: SortDirection.DESC }] }
+      )
+
+      expect(queryResult).toHaveLength(entityWithThreeRelations.relationCount)
+    })
+
     it('should expand against the relation in the filter of a selected relation', async () => {
       const queryService = moduleRef.get(TestVirtualColumnEntityService)
 
