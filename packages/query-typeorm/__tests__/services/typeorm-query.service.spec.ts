@@ -25,6 +25,7 @@ import { CONNECTION_OPTIONS, refresh, truncate } from '../__fixtures__/connectio
 import {
   TEST_ENTITIES,
   TEST_RELATIONS,
+  TEST_RELATIONS_OF_RELATION,
   TEST_SOFT_DELETE_ENTITIES,
   TEST_SOFT_DELETE_RELATION_ENTITIES,
   TEST_VIRTUAL_COLUMN_ENTITIES
@@ -199,6 +200,23 @@ describe('TypeOrmQueryService', (): void => {
           relations: [
             selectRelation<TestRelation, TestEntity>('testRelations', {
               filter: { relationName: { eq: upperCasedRelationName } }
+            })
+          ]
+        })
+
+        expect(queryResult.map(({ testRelations }) => testRelations?.map(({ testRelationPk }) => testRelationPk))).toEqual([
+          [TEST_RELATIONS[0].testRelationPk]
+        ])
+      })
+
+      it('should be used for a selected relation filter that references a further relation', async () => {
+        const queryResult = await queryService.query({
+          filter: { testEntityPk: { eq: TEST_ENTITIES[0].testEntityPk } },
+          relations: [
+            selectRelation<TestRelation, TestEntity>('testRelations', {
+              filter: {
+                relationsOfTestRelation: { relationName: { eq: TEST_RELATIONS_OF_RELATION[0].relationName.toUpperCase() } }
+              } as Filter<TestRelation>
             })
           ]
         })

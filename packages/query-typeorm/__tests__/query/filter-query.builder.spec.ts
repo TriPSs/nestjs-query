@@ -1,4 +1,4 @@
-import { Class, Filter, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, Query, SelectRelation, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { anything, deepEqual, instance, mock, verify, when } from 'ts-mockito'
 import { DataSource, EntityMetadata, QueryBuilder, WhereExpressionBuilder } from 'typeorm'
@@ -20,6 +20,13 @@ describe('FilterQueryBuilder', (): void => {
 
   const getEntityQueryBuilder = <Entity>(entity: Class<Entity>, whereBuilder: WhereBuilder<Entity>): FilterQueryBuilder<Entity> =>
     new FilterQueryBuilder(connection.getRepository(entity), whereBuilder)
+
+  /**
+   * `SelectRelation.query` is typed as a query of the entity the relation is selected from rather
+   * than of the relation itself, so a filter on the relation's own fields has to be built here.
+   */
+  const selectRelation = <Relation, Entity>(name: string, query: Query<Relation>): SelectRelation<Entity> =>
+    ({ name, query }) as unknown as SelectRelation<Entity>
 
   const expectSQLSnapshot = <Entity>(query: QueryBuilder<Entity>): void => {
     const [sql, params] = query.getQueryAndParameters()
@@ -584,6 +591,26 @@ describe('FilterQueryBuilder', (): void => {
           },
           instance(mockWhereBuilder)
         )
+      })
+
+      it('should join a relation that only the filter of a selected relation references', () => {
+        const builder = new FilterQueryBuilder(connection.getRepository(TestEntity))
+
+        const [sql] = builder
+          .select({
+            relations: [
+              selectRelation<TestRelation, TestEntity>('testRelations', {
+                filter: { relationsOfTestRelation: { relationName: { eq: 'foo' } } } as Filter<TestRelation>
+              })
+            ]
+          })
+          .getQueryAndParameters()
+
+        expect(sql).toContain(
+          'LEFT JOIN "relation_of_test_relation_entity" "relationsOfTestRelation" ON "relationsOfTestRelation"."test_relation_id"="testRelations"."test_relation_pk"'
+        )
+        expect(sql).toContain('"relationsOfTestRelation"."relation_name" = ?')
+        expect(sql).not.toContain('relationsOfTestRelation_relation_name')
       })
     })
   })

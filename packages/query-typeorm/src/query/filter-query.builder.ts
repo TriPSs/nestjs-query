@@ -465,16 +465,12 @@ export class FilterQueryBuilder<Entity> {
         return relations
       }
 
-      relations[selectRelation.name] = {}
-
-      if (selectRelation.query.relations) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        relations[selectRelation.name] = this.getReferencedRelationsRecursive(
-          referencedRelation.inverseEntityMetadata,
-          {},
-          selectRelation.query.relations
-        )
-      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      relations[selectRelation.name] = this.getReferencedRelationsRecursive(
+        referencedRelation.inverseEntityMetadata,
+        selectRelation.query.filter ?? {},
+        selectRelation.query.relations
+      )
 
       return relations
     }, {})
