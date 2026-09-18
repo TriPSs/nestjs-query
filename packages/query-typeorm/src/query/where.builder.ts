@@ -1,8 +1,9 @@
 import { Filter, FilterComparisons, FilterFieldComparison } from '@ptc-org/nestjs-query-core'
-import { Brackets } from 'typeorm'
+import { Brackets, EntityMetadata } from 'typeorm'
 
 import type { WhereExpressionBuilder } from 'typeorm'
 
+import { deriveBuilder } from './derive-builder'
 import { NestedRelationsAliased } from './filter-query.builder'
 import { EntityComparisonField, SQLComparisonBuilder } from './sql-comparison.builder'
 
@@ -12,6 +13,27 @@ import { EntityComparisonField, SQLComparisonBuilder } from './sql-comparison.bu
  */
 export class WhereBuilder<Entity> {
   constructor(private readonly sqlComparisonBuilder: SQLComparisonBuilder<Entity> = new SQLComparisonBuilder<Entity>()) {}
+
+  /**
+   * Creates a builder like this one bound to another entity's metadata, used when a query descends
+   * into a relation.
+   *
+   * The derived builder keeps the prototype and the own property descriptors of this builder, and
+   * its comparison builder is derived for the same metadata, so a custom builder is neither
+   * dropped nor left resolving fields against the root entity.
+   *
+   * Override this method to construct the derived builder yourself when copying the own property
+   * descriptors is not enough, for example when a subclass holds private class fields (which are
+   * not copied, and are unreadable on the derived builder) or state that is derived from the root
+   * entity's metadata and must not be reused for a relation.
+   *
+   * @param entityMetadata - metadata of the entity the derived builder builds WHERE clauses for.
+   */
+  public deriveForEntityMetadata<Relation>(entityMetadata: EntityMetadata): WhereBuilder<Relation> {
+    return deriveBuilder<WhereBuilder<Relation>>(this, {
+      sqlComparisonBuilder: this.sqlComparisonBuilder.deriveForEntityMetadata<Relation>(entityMetadata)
+    })
+  }
 
   /**
    * Builds a WHERE clause from a Filter.
@@ -157,9 +179,7 @@ export class WhereBuilder<Entity> {
     return where.andWhere(
       new Brackets((qb) => {
         const nestedRelationAliased = relationNames[field as string]
-        const relationWhere = new WhereBuilder<Entity[T]>(
-          SQLComparisonBuilder.forEntityMetadata<Entity[T]>(nestedRelationAliased.metadata)
-        )
+        const relationWhere = this.deriveForEntityMetadata<Entity[T]>(nestedRelationAliased.metadata)
         const nestedRelationAliasedAlias = nestedRelationAliased.alias
         const nestedRelationAliasedRelationNames = nestedRelationAliased.relations
 

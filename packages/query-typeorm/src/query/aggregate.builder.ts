@@ -10,6 +10,8 @@ import { camelCase } from 'camel-case'
 import { Repository, SelectQueryBuilder } from 'typeorm'
 import { DriverUtils } from 'typeorm/driver/DriverUtils'
 
+import { deriveBuilder } from './derive-builder'
+
 enum AggregateFuncs {
   AVG = 'AVG',
   SUM = 'SUM',
@@ -29,6 +31,29 @@ export class AggregateBuilder<Entity> {
 
   constructor(readonly repo: Repository<Entity>) {
     this.isPostgres = DriverUtils.isPostgresFamily(repo.manager.connection.driver)
+  }
+
+  /**
+   * Creates a builder like this one bound to another entity's repository, used when a query
+   * descends into a relation that has a repository of its own.
+   *
+   * The derived builder keeps the prototype and the own property descriptors of this builder, so a
+   * custom builder keeps its aggregate behaviour inside relation queries without overriding
+   * anything. It takes a repository rather than metadata because it needs the driver the relation
+   * is queried through.
+   *
+   * Override this method to construct the derived builder yourself when copying the own property
+   * descriptors is not enough, for example when a subclass holds private class fields (which are
+   * not copied, and are unreadable on the derived builder) or state that is bound to the root
+   * entity and must not be reused for a relation.
+   *
+   * @param repo - repository of the entity the derived builder builds aggregates for.
+   */
+  public deriveForRepository<Relation>(repo: Repository<Relation>): AggregateBuilder<Relation> {
+    return deriveBuilder<AggregateBuilder<Relation>>(this, {
+      repo,
+      isPostgres: DriverUtils.isPostgresFamily(repo.manager.connection.driver)
+    })
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow

@@ -1,24 +1,42 @@
 import { BadRequestException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { getDataSourceToken, InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
-import { Filter, SortDirection } from '@ptc-org/nestjs-query-core'
+import {
+  AggregateQuery,
+  Filter,
+  FilterComparisonOperators,
+  Query,
+  SelectRelation,
+  SortDirection
+} from '@ptc-org/nestjs-query-core'
 import { plainToClass } from 'class-transformer'
-import { Repository } from 'typeorm'
+import { Repository, SelectQueryBuilder, WhereExpressionBuilder } from 'typeorm'
 
 import { TypeOrmQueryService } from '../../src'
-import { FilterQueryBuilder } from '../../src/query'
+import {
+  AggregateBuilder,
+  EntityComparisonField,
+  FilterQueryBuilder,
+  NestedRelationsAliased,
+  SQLComparisonBuilder,
+  WhereBuilder
+} from '../../src/query'
 import { CONNECTION_OPTIONS, refresh, truncate } from '../__fixtures__/connection.fixture'
 import {
   TEST_ENTITIES,
   TEST_RELATIONS,
+  TEST_RELATIONS_OF_RELATION,
   TEST_SOFT_DELETE_ENTITIES,
-  TEST_SOFT_DELETE_RELATION_ENTITIES
+  TEST_SOFT_DELETE_RELATION_ENTITIES,
+  TEST_VIRTUAL_COLUMN_ENTITIES
 } from '../__fixtures__/seeds'
 import { TestEntity } from '../__fixtures__/test.entity'
 import { TestEntityRelationEntity } from '../__fixtures__/test-entity-relation.entity'
 import { TestRelation } from '../__fixtures__/test-relation.entity'
 import { TestSoftDeleteEntity } from '../__fixtures__/test-soft-delete.entity'
 import { TestSoftDeleteRelation } from '../__fixtures__/test-soft-delete.relation'
+import { TestVirtualColumnEntity } from '../__fixtures__/test-virtual-column.entity'
+import { TestVirtualColumnRelation } from '../__fixtures__/test-virtual-column.relation'
 
 describe('TypeOrmQueryService', (): void => {
   let moduleRef: TestingModule
@@ -41,6 +59,19 @@ describe('TypeOrmQueryService', (): void => {
     }
   }
 
+  class TestVirtualColumnEntityService extends TypeOrmQueryService<TestVirtualColumnEntity> {
+    constructor(@InjectRepository(TestVirtualColumnEntity) readonly repo: Repository<TestVirtualColumnEntity>) {
+      super(repo)
+    }
+  }
+
+  /**
+   * `SelectRelation.query` is typed as a query of the entity the relation is selected from rather
+   * than of the relation itself, so a filter on the relation's own fields has to be built here.
+   */
+  const selectRelation = <Relation, Entity>(name: string, query: Query<Relation>): SelectRelation<Entity> =>
+    ({ name, query }) as unknown as SelectRelation<Entity>
+
   afterEach(() => {
     const dataSource = moduleRef.get(getDataSourceToken())
     return dataSource.destroy()
@@ -50,9 +81,15 @@ describe('TypeOrmQueryService', (): void => {
     moduleRef = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot(CONNECTION_OPTIONS),
-        TypeOrmModule.forFeature([TestEntity, TestRelation, TestEntityRelationEntity, TestSoftDeleteEntity])
+        TypeOrmModule.forFeature([
+          TestEntity,
+          TestRelation,
+          TestEntityRelationEntity,
+          TestSoftDeleteEntity,
+          TestVirtualColumnEntity
+        ])
       ],
-      providers: [TestEntityService, TestRelationService, TestSoftDeleteEntityService]
+      providers: [TestEntityService, TestRelationService, TestSoftDeleteEntityService, TestVirtualColumnEntityService]
     }).compile()
 
     const dataSource = moduleRef.get(getDataSourceToken())
@@ -64,6 +101,259 @@ describe('TypeOrmQueryService', (): void => {
     const queryService = moduleRef.get(TestEntityService)
     expect(queryService.filterQueryBuilder).toBeInstanceOf(FilterQueryBuilder)
     expect(queryService.filterQueryBuilder.repo.target).toBe(TestEntity)
+  })
+
+  describe('with builders configured through the filterQueryBuilder option', () => {
+    class CaseInsensitiveComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+      public build<F extends keyof Entity>(
+        field: F,
+        cmp: FilterComparisonOperators<Entity[F]>,
+        val: EntityComparisonField<Entity, F>,
+        alias?: string
+      ) {
+        const { sql, params } = super.build(field, cmp, val, alias)
+
+        if ((cmp as string).toLowerCase() === 'eq' && typeof val === 'string') {
+          const [column, parameter] = sql.split(' = ')
+
+          return { sql: `LOWER(${column}) = LOWER(${parameter})`, params }
+        }
+
+        return { sql, params }
+      }
+    }
+
+    class RecordingWhereBuilder<Entity> extends WhereBuilder<Entity> {
+      constructor(
+        readonly aliasesBuiltFor: (string | undefined)[],
+        sqlComparisonBuilder?: SQLComparisonBuilder<Entity>
+      ) {
+        super(sqlComparisonBuilder)
+      }
+
+      public build<Where extends WhereExpressionBuilder>(
+        where: Where,
+        filter: Filter<Entity>,
+        relationNames: NestedRelationsAliased,
+        alias?: string
+      ): Where {
+        this.aliasesBuiltFor.push(alias)
+
+        return super.build(where, filter, relationNames, alias)
+      }
+    }
+
+    class RecordingAggregateBuilder<Entity> extends AggregateBuilder<Entity> {
+      constructor(
+        repo: Repository<Entity>,
+        readonly aggregatesBuilt: AggregateQuery<unknown>[]
+      ) {
+        super(repo)
+      }
+
+      public build<Qb extends SelectQueryBuilder<Entity>>(qb: Qb, aggregate: AggregateQuery<Entity>, alias?: string): Qb {
+        this.aggregatesBuilt.push(aggregate as AggregateQuery<unknown>)
+
+        return super.build(qb, aggregate, alias)
+      }
+    }
+
+    const upperCasedRelationName = TEST_RELATIONS[0].relationName.toUpperCase()
+
+    let aliasesBuiltFor: (string | undefined)[]
+    let aggregatesBuilt: AggregateQuery<unknown>[]
+    let queryService: TypeOrmQueryService<TestEntity>
+
+    beforeEach(() => {
+      aliasesBuiltFor = []
+      aggregatesBuilt = []
+
+      const { repo } = moduleRef.get(TestEntityService)
+      const whereBuilder = new RecordingWhereBuilder<TestEntity>(
+        aliasesBuiltFor,
+        new CaseInsensitiveComparisonBuilder<TestEntity>(SQLComparisonBuilder.DEFAULT_COMPARISON_MAP, repo)
+      )
+
+      queryService = new TypeOrmQueryService(repo, {
+        filterQueryBuilder: new FilterQueryBuilder(repo, whereBuilder, new RecordingAggregateBuilder(repo, aggregatesBuilt))
+      })
+    })
+
+    describe('the configured SQLComparisonBuilder', () => {
+      it('should be used for root filters', async () => {
+        const queryResult = await queryService.query({ filter: { stringType: { eq: 'FOO1' } } })
+
+        expect(queryResult).toEqual([TEST_ENTITIES[0]])
+      })
+
+      it('should be used for filters that descend into a relation', async () => {
+        const queryResult = await queryService.query({
+          filter: { testRelations: { relationName: { eq: upperCasedRelationName } } }
+        })
+
+        expect(queryResult).toEqual([TEST_ENTITIES[0]])
+      })
+
+      it('should be used for the filter of a selected relation', async () => {
+        const queryResult = await queryService.query({
+          filter: { testEntityPk: { eq: TEST_ENTITIES[0].testEntityPk } },
+          relations: [
+            selectRelation<TestRelation, TestEntity>('testRelations', {
+              filter: { relationName: { eq: upperCasedRelationName } }
+            })
+          ]
+        })
+
+        expect(queryResult.map(({ testRelations }) => testRelations?.map(({ testRelationPk }) => testRelationPk))).toEqual([
+          [TEST_RELATIONS[0].testRelationPk]
+        ])
+      })
+
+      it('should be used for a selected relation filter that references a further relation', async () => {
+        const queryResult = await queryService.query({
+          filter: { testEntityPk: { eq: TEST_ENTITIES[0].testEntityPk } },
+          relations: [
+            selectRelation<TestRelation, TestEntity>('testRelations', {
+              filter: {
+                relationsOfTestRelation: { relationName: { eq: TEST_RELATIONS_OF_RELATION[0].relationName.toUpperCase() } }
+              } as Filter<TestRelation>
+            })
+          ]
+        })
+
+        expect(queryResult.map(({ testRelations }) => testRelations?.map(({ testRelationPk }) => testRelationPk))).toEqual([
+          [TEST_RELATIONS[0].testRelationPk]
+        ])
+      })
+
+      it('should be used in queryRelations', async () => {
+        const queryResult = await queryService.queryRelations(TestRelation, 'testRelations', TEST_ENTITIES[0], {
+          filter: { relationName: { eq: upperCasedRelationName } }
+        })
+
+        expect(queryResult.map(({ testRelationPk }) => testRelationPk)).toEqual([TEST_RELATIONS[0].testRelationPk])
+      })
+
+      it('should be used in countRelations', async () => {
+        const countResult = await queryService.countRelations(TestRelation, 'testRelations', TEST_ENTITIES[0], {
+          relationName: { eq: upperCasedRelationName }
+        })
+
+        expect(countResult).toBe(1)
+      })
+
+      it('should be used in aggregateRelations', async () => {
+        const aggregateResult = await queryService.aggregateRelations(
+          TestRelation,
+          'testRelations',
+          TEST_ENTITIES[0],
+          { relationName: { eq: upperCasedRelationName } },
+          { count: [{ field: 'testRelationPk', args: {} }] }
+        )
+
+        expect(aggregateResult).toEqual([{ count: { testRelationPk: 1 } }])
+      })
+
+      it('should be used in findRelation', async () => {
+        const queryResult = await queryService.findRelation(TestRelation, 'oneTestRelation', TEST_ENTITIES[0], {
+          filter: { relationName: { eq: upperCasedRelationName } }
+        })
+
+        expect(queryResult).toMatchObject(TEST_RELATIONS[0])
+      })
+    })
+
+    describe('the configured WhereBuilder', () => {
+      it('should be used in queryRelations', async () => {
+        await queryService.queryRelations(TestRelation, 'testRelations', TEST_ENTITIES[0], {
+          filter: { relationName: { eq: upperCasedRelationName } }
+        })
+
+        expect(aliasesBuiltFor).not.toHaveLength(0)
+      })
+    })
+
+    describe('the configured AggregateBuilder', () => {
+      it('should be used in aggregateRelations', async () => {
+        const aggregateQuery = { count: [{ field: 'testRelationPk' as const, args: {} }] }
+
+        await queryService.aggregateRelations(TestRelation, 'testRelations', TEST_ENTITIES[0], {}, aggregateQuery)
+
+        expect(aggregatesBuilt).toContainEqual(aggregateQuery)
+      })
+    })
+  })
+
+  describe('virtual columns', () => {
+    const [entityWithThreeRelations, entityWithOneRelation] = TEST_VIRTUAL_COLUMN_ENTITIES
+
+    it('should expand against the root entity', async () => {
+      const queryService = moduleRef.get(TestVirtualColumnEntityService)
+
+      const queryResult = await queryService.query({ filter: { relationCount: { gt: 1 } } })
+
+      expect(queryResult.map(({ testVirtualColumnPk }) => testVirtualColumnPk)).toEqual([
+        entityWithThreeRelations.testVirtualColumnPk
+      ])
+    })
+
+    it('should expand against a relation a filter descends into', async () => {
+      const queryService = moduleRef.get(TestVirtualColumnEntityService)
+
+      const queryResult = await queryService.query({ filter: { virtualColumnRelations: { siblingCount: { gt: 1 } } } })
+
+      expect(queryResult.map(({ testVirtualColumnPk }) => testVirtualColumnPk)).toEqual([
+        entityWithThreeRelations.testVirtualColumnPk
+      ])
+    })
+
+    it('should expand against the relation in a relation query', async () => {
+      const queryService = moduleRef.get(TestVirtualColumnEntityService)
+
+      const queryResult = await queryService.queryRelations(
+        TestVirtualColumnRelation,
+        'virtualColumnRelations',
+        entityWithThreeRelations,
+        { filter: { siblingCount: { gt: 1 } } }
+      )
+
+      expect(queryResult).toHaveLength(entityWithThreeRelations.relationCount)
+    })
+
+    it('should be sorted on in a relation query', async () => {
+      const queryService = moduleRef.get(TestVirtualColumnEntityService)
+
+      const queryResult = await queryService.queryRelations(
+        TestVirtualColumnRelation,
+        'virtualColumnRelations',
+        entityWithThreeRelations,
+        { sorting: [{ field: 'siblingCount', direction: SortDirection.DESC }] }
+      )
+
+      expect(queryResult).toHaveLength(entityWithThreeRelations.relationCount)
+    })
+
+    it('should expand against the relation in the filter of a selected relation', async () => {
+      const queryService = moduleRef.get(TestVirtualColumnEntityService)
+
+      const queryResult = await queryService.query({
+        relations: [
+          selectRelation<TestVirtualColumnRelation, TestVirtualColumnEntity>('virtualColumnRelations', {
+            filter: { siblingCount: { gt: 1 } }
+          })
+        ]
+      })
+
+      expect(
+        queryResult.map(({ testVirtualColumnPk, virtualColumnRelations }) => [
+          testVirtualColumnPk,
+          virtualColumnRelations?.length
+        ])
+      ).toEqual([[entityWithThreeRelations.testVirtualColumnPk, entityWithThreeRelations.relationCount]])
+      expect(queryResult.map(({ testVirtualColumnPk }) => testVirtualColumnPk)).not.toContain(
+        entityWithOneRelation.testVirtualColumnPk
+      )
+    })
   })
 
   describe('#query', () => {

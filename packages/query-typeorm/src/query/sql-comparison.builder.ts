@@ -2,6 +2,7 @@ import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@pt
 import { EntityMetadata, ObjectLiteral, Repository } from 'typeorm'
 
 import { randomString } from '../common'
+import { deriveBuilder } from './derive-builder'
 
 /**
  * @internal
@@ -51,13 +52,23 @@ export class SQLComparisonBuilder<Entity> {
   ) {}
 
   /**
-   * Creates a builder for an entity that has no repository to hand, such as a relation reached
-   * through a filter.
+   * Creates a builder like this one bound to another entity's metadata, used when a query descends
+   * into a relation.
    *
-   * @param entityMetadata - metadata of the entity the builder builds comparisons for.
+   * The derived builder keeps the prototype and the own property descriptors of this builder, so a
+   * custom builder keeps its comparison behaviour inside relation queries without overriding
+   * anything. The repository of the root entity is not carried over, because it describes the
+   * entity this builder was built for rather than the relation.
+   *
+   * Override this method to construct the derived builder yourself when copying the own property
+   * descriptors is not enough, for example when a subclass holds private class fields (which are
+   * not copied, and are unreadable on the derived builder) or state that is derived from the root
+   * entity's metadata and must not be reused for a relation.
+   *
+   * @param entityMetadata - metadata of the entity the derived builder builds comparisons for.
    */
-  public static forEntityMetadata<Entity>(entityMetadata: EntityMetadata): SQLComparisonBuilder<Entity> {
-    return new SQLComparisonBuilder<Entity>(SQLComparisonBuilder.DEFAULT_COMPARISON_MAP, undefined, entityMetadata)
+  public deriveForEntityMetadata<Relation>(entityMetadata: EntityMetadata): SQLComparisonBuilder<Relation> {
+    return deriveBuilder<SQLComparisonBuilder<Relation>>(this, { repo: undefined, entityMetadata })
   }
 
   private get paramName(): string {
