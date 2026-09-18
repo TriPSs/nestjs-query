@@ -1,3 +1,5 @@
+import { BadRequestException } from '@nestjs/common'
+
 import { Filter, FilterComparisons, FilterFieldComparison } from '../interfaces'
 import { ComparisonBuilder } from './comparison.builder'
 import { getFilterFieldComparison, getUnknownComparisonOperators, isComparison } from './filter.helpers'
@@ -58,7 +60,7 @@ export class FilterBuilder {
     }
     const unknownOperators = getUnknownComparisonOperators(value)
     if (unknownOperators.length) {
-      throw new Error(
+      throw new BadRequestException(
         `unknown comparison ${unknownOperators.map((operator) => JSON.stringify(operator)).join(', ')} for field ` +
           `${JSON.stringify(fieldOrNested)}. ${FILTER_VALUE_SHAPE}`
       )
@@ -73,7 +75,7 @@ export class FilterBuilder {
       const keys = Object.keys(nestedFilter)
         .map((key) => JSON.stringify(key))
         .join(', ')
-      throw new Error(
+      throw new BadRequestException(
         `unknown comparison ${keys} for field ${JSON.stringify(fieldOrNested)}. ` +
           `${JSON.stringify(fieldOrNested)} holds a ${typeof nested}, so those keys cannot be nested filter fields. ` +
           FILTER_VALUE_SHAPE
