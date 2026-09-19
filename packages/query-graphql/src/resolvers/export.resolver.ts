@@ -1,5 +1,13 @@
 import { Args, ArgsType, Resolver } from '@nestjs/graphql'
-import { Class, DeepPartial, Filter, mergeQuery, QueryService, SelectRelation } from '@ptc-org/nestjs-query-core'
+import {
+  Class,
+  DeepPartial,
+  EXPORT_TRANSFORM_GROUP,
+  Filter,
+  mergeQuery,
+  QueryService,
+  SelectRelation
+} from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
 import { stringify as stringifyCsv } from 'csv-stringify/sync'
 import omit from 'lodash.omit'
@@ -157,7 +165,9 @@ export const Exportable =
           }
         )
 
-        const exportItems = opts.ExportDTOClass ? plainToInstance(opts.ExportDTOClass, items) : items
+        const exportItems = plainToInstance<DTO | ExportDTO, DTO>(opts.ExportDTOClass ?? DTOClass, items, {
+          groups: [EXPORT_TRANSFORM_GROUP]
+        })
 
         return stringifyExportCsv<DTO | ExportDTO>(exportItems, fields)
       }

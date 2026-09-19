@@ -123,6 +123,24 @@ For relation columns, declare `@Relation('owner', () => OwnerExportDTO)` on the 
 
 Filters and authorization still use the main GraphQL DTO. Labels and formula escaping are applied after transformation. `ExportDTOClass` does not enable exports by itself; `enabled: true` is still required.
 
+## Export-only transformations
+
+Use `@ExportTransform()` from `@ptc-org/nestjs-query-graphql` to format a property only for CSV export. It accepts the same callback parameters as class-transformer's `@Transform()`, including `value`, `obj`, and `key`. Normal DTO conversion and API serialization do not run it.
+
+```ts
+import { Field, ObjectType } from '@nestjs/graphql'
+import { ExportTransform } from '@ptc-org/nestjs-query-graphql'
+
+@ObjectType()
+export class TodoItemDTO {
+  @Field()
+  @ExportTransform(({ value }: { value: Date }) => value.toISOString().slice(0, 10))
+  createdAt!: Date
+}
+```
+
+The decorator works on the main DTO or `ExportDTOClass`, including inherited properties. Use `@Type(() => RelatedDTO)` for nested DTO transformations. The callback runs during export DTO conversion, before column selection and CSV formula escaping. It does not change the source records or make a property an allowed export column; declare the GraphQL field as usual. Existing `@Transform()` decorators also run during this conversion.
+
 ## Standalone export resolver
 
 The standalone `ExportResolver` is also opt-in. Pass `enabled: true` when extending it:

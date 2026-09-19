@@ -1,7 +1,8 @@
 import { QueryService } from '@ptc-org/nestjs-query-core'
-import { Expose } from 'class-transformer'
+import { Expose, plainToInstance } from 'class-transformer'
 import { anything, instance, mock, verify, when } from 'ts-mockito'
 
+import { ExportTransform } from '../../src'
 import { CRUDControllerOpts } from '../../src/controllers/crud.controller'
 import { ExportController, stringifyExportCsv } from '../../src/controllers/export.controller'
 
@@ -25,6 +26,19 @@ describe('stringifyExportCsv', () => {
     expect(
       stringifyExportCsv(ExportDTO, [{ value: new Date('2026-09-20T14:30:00+02:00') }, { value: '20/09/2026' }, { value: null }])
     ).toBe('"value"\n2026-09-20T12:30:00.000Z\n"20/09/2026"\n\n')
+  })
+
+  it('applies export-only transforms without affecting ordinary DTO conversion', () => {
+    class ItemExportDTO {
+      @Expose()
+      @ExportTransform(({ value }: { value: string }) => value.toUpperCase())
+      title!: string
+    }
+
+    const item = plainToInstance(ItemExportDTO, { title: 'hello' })
+
+    expect(stringifyExportCsv(ItemExportDTO, [item])).toBe('"title"\n"HELLO"\n')
+    expect(item.title).toBe('hello')
   })
 
   it('projects items through a distinct export DTO', () => {

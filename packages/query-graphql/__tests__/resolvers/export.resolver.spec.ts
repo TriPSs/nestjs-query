@@ -1,9 +1,9 @@
 import { Field, ObjectType, Query, Resolver } from '@nestjs/graphql'
 import { applyQuery, Query as ServiceQuery, QueryService, SortDirection } from '@ptc-org/nestjs-query-core'
-import { Transform, Type } from 'class-transformer'
+import { plainToInstance, Transform, Type } from 'class-transformer'
 import { anything, deepEqual, instance, mock, objectContaining, verify, when } from 'ts-mockito'
 
-import { ExportResolver, ExportResolverOpts, FilterableField, Relation } from '../../src'
+import { ExportResolver, ExportResolverOpts, ExportTransform, FilterableField, Relation } from '../../src'
 import { stringifyExportCsv } from '../../src/resolvers/export.resolver'
 import { generateSchema, TestResolverDTO } from '../__fixtures__'
 
@@ -233,6 +233,26 @@ describe('ExportResolver', () => {
         { id: { lte: '7' } }
       )
     ).resolves.toBe('"id"\n"5"\n"4"\n')
+  })
+
+  it.each([false, true])('applies export-only transforms with a separate DTO: %s', async (separate) => {
+    @ObjectType()
+    class ExportOnlyDTO {
+      @FilterableField()
+      @ExportTransform(({ value }: { value: string }) => `=${value.toUpperCase()}`)
+      stringField!: string
+    }
+
+    const item = plainToInstance(ExportOnlyDTO, { stringField: 'test' })
+    const service = mock<QueryService<ExportOnlyDTO>>()
+    when(service.exportMany(anything(), anything())).thenResolve([item])
+    const resolver = new (ExportResolver<ExportOnlyDTO>(separate ? TestResolverDTO : ExportOnlyDTO, {
+      enabled: true,
+      ExportDTOClass: separate ? ExportOnlyDTO : undefined
+    }))(instance(service))
+
+    await expect(resolver.exportMany({}, { fields: [{ field: 'stringField' }] })).resolves.toBe('"stringField"\n"\'=TEST"\n')
+    expect(item.stringField).toBe('test')
   })
 
   it('transforms GraphQL fields without Expose decorators or mutating service records', async () => {
