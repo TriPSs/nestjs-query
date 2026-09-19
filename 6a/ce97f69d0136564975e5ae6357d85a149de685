@@ -1,0 +1,34 @@
+examples/federation-v2-e2e/README.md
+  s_e0b87fbc29d1aa::t_306808d781067f 56-61
+examples/federation-v2-e2e/gateway/package.json
+  s_e0b87fbc29d1aa::t_981bd378778e79 15
+examples/federation-v2-e2e/tag-service/package.json
+  s_e0b87fbc29d1aa::t_7912b791342b6a 17
+examples/federation-v2-e2e/todo-service/package.json
+  s_e0b87fbc29d1aa::t_08434055915c04 16
+examples/federation-v2-e2e/user-service/package.json
+  s_e0b87fbc29d1aa::t_56cb42aad21a5e 16
+yarn.lock
+  s_e0b87fbc29d1aa::t_3e988860504553 9334,15140,15416,16265
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6ace97f69d0136564975e5ae6357d85a149de685",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_e0b87fbc29d1aa": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0bb9b-6779-7bd3-8885-e67590df2092",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
