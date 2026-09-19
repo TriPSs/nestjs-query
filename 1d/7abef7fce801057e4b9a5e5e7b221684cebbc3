@@ -1,0 +1,34 @@
+docs/graphql/export.mdx
+  s_ad1c5a62d6a30d::t_defa35d0b1ed2f 35
+docs/rest/controllers.mdx
+  s_ad1c5a62d6a30d::t_283d878ed8d64f 116-117
+packages/query-graphql/__tests__/resolvers/export.resolver.spec.ts
+  s_ad1c5a62d6a30d::t_d7c09ed248ce24 17-29
+packages/query-graphql/src/resolvers/export.resolver.ts
+  s_ad1c5a62d6a30d::t_7501227c1370ac 80
+packages/query-rest/__tests__/controllers/export.controller.spec.ts
+  s_ad1c5a62d6a30d::t_37297dd2c225c7 24-29
+packages/query-rest/src/controllers/export.controller.ts
+  s_ad1c5a62d6a30d::t_4836c16caee11f 38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1d7abef7fce801057e4b9a5e5e7b221684cebbc3",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_ad1c5a62d6a30d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0bbce-371d-7a92-b35f-9e2ba3195626",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
