@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common'
 import { Args, ArgsType, Resolver } from '@nestjs/graphql'
 import { Class, DeepPartial, Filter, mergeQuery, QueryService, SelectRelation } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
@@ -9,7 +10,8 @@ import { getDTONames } from '../common'
 import { AuthorizerFilter, GraphQLResolveInfoResult, GraphQLResultInfo, HookArgs, ResolverQuery } from '../decorators'
 import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
-import { ExportArgsType, ExportFieldInput } from '../types/export'
+import { ExportArgsType, ExportFieldInput } from '../types'
+import { getDTOFieldPaths } from '../types/export/export-args.helpers'
 import { NonePagingQueryArgsTypeOpts, PagingStrategies, QueryArgsType, QueryType, StaticQueryType } from '../types/query'
 import { BaseServiceResolver, ResolverClass, ResolverOpts, ServiceResolver } from './resolver.interface'
 
@@ -18,6 +20,7 @@ export type ExportResolverOpts<DTO, ExportDTO = DeepPartial<DTO>> = {
 
   QueryArgs?: StaticQueryType<DTO, PagingStrategies.NONE>
 
+  /** Maximum number of records to export, starting at offset 0. Defaults to 1000; additional records are omitted. */
   limit?: number
 
   /**
@@ -39,7 +42,10 @@ export interface ExportResolver<DTO, QS extends QueryService<DTO, unknown, unkno
 
 const getPathValue = (item: unknown, path: string): unknown =>
   path.split('.').reduce<unknown>((value, segment) => {
-    if (typeof value !== 'object' || value === null || !Object.prototype.hasOwnProperty.call(value, segment)) {
+    if (Array.isArray(value)) {
+      return value.map((entry: unknown) => getPathValue(entry, segment))
+    }
+    if (typeof value !== 'object' || value === null || !(segment in value)) {
       return undefined
     }
     return (value as Record<string, unknown>)[segment]
@@ -90,6 +96,8 @@ export const Exportable =
       return BaseClass as never
     }
 
+    const fieldPaths = getDTOFieldPaths<DTO | ExportDTO>(opts.ExportDTOClass ?? DTOClass)
+
     const { pluralBaseName } = getDTONames(DTOClass, opts)
     const exportManyQueryName = opts.many?.name ?? `export${pluralBaseName}`
     const {
@@ -131,6 +139,11 @@ export const Exportable =
         @GraphQLResultInfo(DTOClass)
         resolveInfo?: GraphQLResolveInfoResult<DTO, DTO>
       ): Promise<string> {
+        const fields = args.fields.map(({ field, label }) => ({
+          field: fieldPaths.get(field) ?? field,
+          label: label || field
+        }))
+
         const items = await this.service.exportMany(
           mergeQuery(query, {
             filter: authorizeFilter,
@@ -138,7 +151,7 @@ export const Exportable =
               limit: opts.limit ?? 1000,
               offset: 0
             },
-            relations: createExportRelations<DTO>(args.fields)
+            relations: createExportRelations<DTO>(fields)
           }),
           {
             withDeleted: opts.many?.withDeleted,
@@ -148,7 +161,7 @@ export const Exportable =
 
         const exportItems = opts.ExportDTOClass ? plainToInstance(opts.ExportDTOClass, items) : items
 
-        return stringifyExportCsv<DTO | ExportDTO>(exportItems, args.fields)
+        return stringifyExportCsv<DTO | ExportDTO>(exportItems, fields)
       }
     }
 

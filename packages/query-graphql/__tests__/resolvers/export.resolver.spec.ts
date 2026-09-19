@@ -3,7 +3,7 @@ import { QueryService } from '@ptc-org/nestjs-query-core'
 import { Transform, Type } from 'class-transformer'
 import { anything, deepEqual, instance, mock, objectContaining, verify, when } from 'ts-mockito'
 
-import { ExportResolver, ExportResolverOpts, Relation } from '../../src'
+import { ExportResolver, ExportResolverOpts, FilterableField, Relation } from '../../src'
 import { stringifyExportCsv } from '../../src/resolvers/export.resolver'
 import { generateSchema, TestResolverDTO } from '../__fixtures__'
 
@@ -37,6 +37,20 @@ describe('stringifyExportCsv', () => {
     expect(stringifyExportCsv([{ id: 1, owner: { name: 'Ada' } }], fields)).toBe('"Identifier","Owner"\n1,"Ada"\n')
   })
 
+  it('reads prototype getters and values from collection relations', () => {
+    class Item {
+      get title(): string {
+        return 'Computed'
+      }
+
+      owners = [{ name: 'Ada' }, { name: 'Grace' }]
+    }
+
+    expect(stringifyExportCsv([new Item()], [{ field: 'title' }, { field: 'owners.name' }])).toBe(
+      '"title","owners.name"\n"Computed","[""Ada"",""Grace""]"\n'
+    )
+  })
+
   it('includes the requested headers when no records are returned', () => {
     expect(stringifyExportCsv([], [{ field: 'id' }, { field: 'owner.name', label: 'Owner' }])).toBe('"id","Owner"\n')
   })
@@ -45,7 +59,7 @@ describe('stringifyExportCsv', () => {
 describe('ExportResolver', () => {
   @ObjectType()
   class ExportOwnerDTO {
-    @Field()
+    @FilterableField()
     name!: string
   }
 
@@ -97,6 +111,76 @@ describe('ExportResolver', () => {
     const schema = await expectResolverSDL({ enabled: true, ExportDTOClass: ExportDTO })
 
     expect(schema).toContain('fields: [ExportExportDTOField!]!')
+  })
+
+  it('builds a schema when multiple resolvers share a custom export DTO', async () => {
+    @Resolver(() => TestResolverDTO)
+    class FirstResolver extends ExportResolver(TestResolverDTO, {
+      enabled: true,
+      ExportDTOClass: ExportDTO,
+      many: { name: 'exportFirst' }
+    }) {}
+
+    @Resolver(() => ExportOwnerDTO)
+    class SecondResolver extends ExportResolver(ExportOwnerDTO, {
+      enabled: true,
+      ExportDTOClass: ExportDTO,
+      many: { name: 'exportSecond' }
+    }) {}
+
+    const schema = await generateSchema([FirstResolver, SecondResolver])
+    expect(schema).toContain('exportFirst(')
+    expect(schema).toContain('exportSecond(')
+    expect(schema.match(/input ExportExportDTOField/g)).toHaveLength(1)
+  })
+
+  it('maps renamed schema fields to properties after transformation, including relation fields and getters', async () => {
+    @ObjectType()
+    class NamedOwner {
+      @Field({ name: 'displayName' })
+      name!: string
+    }
+
+    @ObjectType()
+    @Relation('owner', () => NamedOwner)
+    class NamedExport {
+      @Field({ name: 'displayTitle' })
+      @Transform(({ value }: { value: string }) => value.toUpperCase())
+      title!: string
+
+      @Field()
+      get summary(): string {
+        return `${this.title}!`
+      }
+    }
+
+    const service = mock<QueryService<TestResolverDTO>>()
+    when(service.exportMany(anything(), anything())).thenResolve([
+      { id: '1', stringField: 'test', title: 'hello', owner: { name: 'Ada' } } as TestResolverDTO
+    ])
+    const resolver = new (ExportResolver(TestResolverDTO, { enabled: true, ExportDTOClass: NamedExport }))(instance(service))
+
+    await expect(
+      resolver.exportMany({}, { fields: [{ field: 'displayTitle' }, { field: 'owner.displayName' }, { field: 'summary' }] })
+    ).resolves.toBe('"displayTitle","owner.displayName","summary"\n"HELLO","Ada","HELLO!"\n')
+    verify(service.exportMany(objectContaining({ relations: [{ name: 'owner', query: {} }] }), anything())).once()
+  })
+
+  it.each([undefined, 25])('rejects exports above the limit %s and accepts the exact limit', async (limit) => {
+    const maxRecords = limit ?? 1000
+    const items = Array.from({ length: maxRecords }, (_, id) => ({ id: String(id), stringField: 'test' }))
+    const service = mock<QueryService<TestResolverDTO>>()
+    when(service.exportMany(anything(), anything())).thenResolve(items)
+    const resolver = new (ExportResolver(TestResolverDTO, { enabled: true, limit }))(instance(service))
+
+    const csv = await resolver.exportMany({}, { fields: [{ field: 'id' }] })
+    expect(csv.trim().split('\n')).toHaveLength(maxRecords + 1)
+    verify(service.exportMany(objectContaining({ paging: { limit: maxRecords + 1, offset: 0 } }), anything())).once()
+
+    when(service.exportMany(anything(), anything())).thenResolve([...items, { id: 'overflow', stringField: 'test' }])
+    await expect(resolver.exportMany({}, { fields: [{ field: 'id' }] })).rejects.toThrow(
+      `Export exceeds the maximum of ${maxRecords} records`
+    )
   })
 
   it('transforms GraphQL fields without Expose decorators or mutating service records', async () => {
@@ -170,7 +254,7 @@ describe('ExportResolver', () => {
       service.exportMany(
         objectContaining({
           filter: { and: [query.filter, authorizeFilter] },
-          paging: { limit: 25, offset: 0 },
+          paging: { limit: 26, offset: 0 },
           relations: [
             {
               name: 'owner',

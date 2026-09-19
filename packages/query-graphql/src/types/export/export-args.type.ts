@@ -1,7 +1,7 @@
 import { ArgsType, Field } from '@nestjs/graphql'
 import { Class } from '@ptc-org/nestjs-query-core'
 import { Type } from 'class-transformer'
-import { ArrayMinSize, IsArray, ValidateNested } from 'class-validator'
+import { ArrayMinSize, ArrayUnique, IsArray, ValidateNested } from 'class-validator'
 
 import { ExportFieldInput, getOrCreateExportFieldInputType } from './export-field-input.type'
 
@@ -21,8 +21,10 @@ export function ExportArgsType<DTO, ExportDTO = DTO>(
     @Type(() => EFI)
     @ValidateNested({ each: true })
     @Field(() => [EFI], {
-      description: 'Fields to include in the export. You can assign labels to fields using the label property.'
+      description:
+        'CSV columns in the requested order. Select at least one field using its GraphQL schema name; duplicate fields are not allowed. Relation fields support one level of dot notation (e.g. owner.name). Set label to customize a column header; otherwise, the field name is used.'
     })
+    @ArrayUnique((value: ExportFieldInput) => value?.field)
     @ArrayMinSize(1)
     @IsArray()
     fields!: ExportFieldInput[]

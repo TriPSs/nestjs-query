@@ -23,7 +23,7 @@ export function getOrCreateExportFieldInputType<DTO, ExportDTO = DTO>(
   const className = getObjectTypeName<DTO | ExportDTO>(ExportDTOClass ?? TClass)
   const typeName = `Export${className}Field`
 
-  return reflector.memoize(TClass, ExportDTOClass ?? 'default', () => {
+  return reflector.memoize<DTO | ExportDTO, Class<ExportFieldInput>>(ExportDTOClass ?? TClass, typeName, () => {
     const fields = getDTOFields<DTO | ExportDTO>(ExportDTOClass ?? TClass)
 
     @InputType(typeName)

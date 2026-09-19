@@ -32,15 +32,17 @@ query {
 }
 ```
 
-The required `fields` argument controls the columns and their order and must contain at least one field. Set a nonempty `label` to override a CSV header. Use the TypeScript property name for fields with a GraphQL alias. The returned string contains the CSV header and rows; string values are quoted and spreadsheet formulas are escaped. Requested headers are returned even when no records match.
+The required `fields` argument controls the columns and their order and must contain at least one field. Set a nonempty `label` to override a CSV header. Use GraphQL schema field names: for `@Field({ name: 'displayTitle' }) title`, select `displayTitle`; the exporter reads the underlying `title` property. The returned string contains the CSV header and rows; string values are quoted and spreadsheet formulas are escaped. Requested headers are returned even when no records match.
 
-With Nest's `ValidationPipe` enabled, empty field lists are rejected. By default, field names are validated against the DTO's GraphQL fields, including inherited fields. When `ExportDTOClass` is supplied, its GraphQL fields determine the allowed field names instead.
+With Nest's `ValidationPipe` enabled, empty field lists and duplicate field names are rejected. By default, field names are validated against the DTO's GraphQL fields, including inherited fields. When `ExportDTOClass` is supplied, its GraphQL fields determine the allowed field names instead.
 
-Use dot notation for fields on declared relations, such as `owner.name`, where `owner` is registered with `@Relation('owner', () => OwnerDTO)` and `name` is a GraphQL field on `OwnerDTO`. Inherited relations and inherited fields on relation DTOs are also supported. These relations are included in the service query. Field validation supports one relation level; deeper paths such as `owner.company.name` are not accepted. Collection relations are not flattened into CSV rows.
+Use dot notation for fields on declared relations, such as `owner.name`, where `owner` is registered with `@Relation('owner', () => OwnerDTO)` and `name` is a GraphQL field on `OwnerDTO`. Inherited relations and inherited fields on relation DTOs are also supported. These relations are included in the service query. Field validation supports one relation level; deeper paths such as `owner.company.name` are not accepted. Collection relation values are serialized as JSON arrays in a single CSV cell, rather than flattened into rows. Computed getters on DTO instances are supported.
 
 ## Configure exports
 
-After enabling export, you can change its default limit of `1000` or rename the query:
+Exports return at most `1000` matching records by default, starting at offset `0` and using the requested sorting. If more records match, only the first `limit` records are included. The CSV response does not report whether additional records were omitted. Narrow the filter or configure a larger limit to include more records.
+
+After enabling export, you can change the limit or rename the query:
 
 ```ts
 {
@@ -97,7 +99,7 @@ import { ObjectType, PickType } from '@nestjs/graphql'
 export class TodoItemExportDTO extends PickType(TodoItemDTO, ['id', 'title'] as const) {}
 ```
 
-Properties without GraphQL field metadata are rejected by validation, even if decorated with `@Expose()`. Export-only GraphQL fields can be selected. Use TypeScript property names, not GraphQL aliases. Transformation decorators affect values, not the list of allowed fields.
+Properties without GraphQL field metadata are rejected by validation, even if decorated with `@Expose()`. Export-only GraphQL fields can be selected. Transformation decorators affect values, not the list of allowed fields.
 
 For relation columns, declare `@Relation('owner', () => OwnerExportDTO)` on the export DTO and GraphQL fields on `OwnerExportDTO`. This makes paths such as `owner.name` selectable. Add `@Type(() => OwnerExportDTO)` to the `owner` property if its values need nested class-transformer transformations. Relation names must match the query service's relations.
 

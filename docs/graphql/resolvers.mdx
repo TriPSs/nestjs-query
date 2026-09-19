@@ -202,6 +202,7 @@ When using the auto-generated resolver or extending `CRUDResolver` the methods t
 
 - `todoItem` - Find a single `TodoItem` by id.
 - `todoItems` - Filter, sort, and page `TodoItems`
+- `exportTodoItems` - Export filtered `TodoItems` as CSV, only when `export.enabled` is `true`. The query name follows `export<PluralName>`.
 - `createOneTodoItem` - Create a single `TodoItem`
 - `createManyTodoItems` - Create multiple `TodoItems`.
 - `updateOneTodoItem` - Update a single `TodoItem` by id.
@@ -253,7 +254,7 @@ When using `NestjsQueryGraphQLModule` or `CRUDResolver` you can define a number 
 - `export` - Configure CSV export. See [CSV Export](/graphql/export).
 
   - `enabled` - Export is disabled by default. This must be explicitly set to `true` to add the export query to the GraphQL schema.
-  - `limit` - Set the maximum number of exported records. Defaults to `1000`.
+  - `limit` - Set the maximum number of exported records. Defaults to `1000`. Only the first `limit` matching records are exported; additional records are omitted without an error or truncation indicator.
   - `ExportDTOClass` - Use a separate `@ObjectType()` DTO whose GraphQL fields define the allowed export columns, including inherited fields. Supports `class-transformer` transformations without requiring `@Expose()`.
   - Select CSV columns and headers using the query's required `fields` argument.
 

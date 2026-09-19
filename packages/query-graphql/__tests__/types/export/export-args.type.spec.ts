@@ -30,7 +30,7 @@ describe('ExportArgsType', () => {
 
   it('loads fields before schema compilation, including inherited and relation fields', () => {
     expect(TypeMetadataStorage.getObjectTypeMetadataByTarget(ExportItemDTO)?.properties).toBeUndefined()
-    expect(getDTOFields(ExportItemDTO)).toEqual(['id', 'title', 'owner.id', 'owner.name'])
+    expect(getDTOFields(ExportItemDTO)).toEqual(['id', 'displayTitle', 'owner.id', 'owner.name'])
   })
 
   it('reuses the input type for the same DTO', () => {
@@ -39,7 +39,7 @@ describe('ExportArgsType', () => {
 
   it('validates and transforms inherited, ordinary and relation fields and preserves labels', async () => {
     const args = plainToInstance(ExportArgsType(ExportItemDTO), {
-      fields: [{ field: 'id' }, { field: 'title', label: 'Title' }, { field: 'owner.name' }]
+      fields: [{ field: 'id' }, { field: 'displayTitle', label: 'Title' }, { field: 'owner.name' }]
     })
 
     expect(await validate(args, { whitelist: true })).toEqual([])
@@ -47,11 +47,11 @@ describe('ExportArgsType', () => {
     expect(args.fields[0]).toBeInstanceOf(getOrCreateExportFieldInputType(ExportItemDTO))
   })
 
-  it.each(['secret', 'displayTitle', 'owner.secret', 'missing'])('rejects unknown field %s', async (field) => {
+  it.each(['secret', 'title', 'owner.secret', 'owner.company.name', 'missing'])('rejects unknown field %s', async (field) => {
     const args = plainToInstance(ExportArgsType(ExportItemDTO), { fields: [{ field }] })
 
     const errors = await validate(args)
-    expect(errors[0].children?.[0].children?.[0].constraints).toHaveProperty('isIn')
+    expect(errors[0]?.children?.[0]?.children?.[0]?.constraints).toHaveProperty('isIn')
   })
 
   it.each([undefined, null, [], { field: 'id' }])('rejects missing, empty or non-array fields: %j', async (fields) => {
@@ -60,11 +60,22 @@ describe('ExportArgsType', () => {
     expect(await validate(args)).not.toHaveLength(0)
   })
 
+  it('rejects duplicate fields even with different labels', async () => {
+    const args = plainToInstance(ExportArgsType(ExportItemDTO), {
+      fields: [
+        { field: 'id', label: 'First' },
+        { field: 'id', label: 'Second' }
+      ]
+    })
+
+    expect((await validate(args))[0]?.constraints).toHaveProperty('arrayUnique')
+  })
+
   it('rejects non-string labels', async () => {
     const args = plainToInstance(ExportArgsType(ExportItemDTO), { fields: [{ field: 'id', label: 123 }] })
 
     const errors = await validate(args)
-    expect(errors[0].children?.[0].children?.[0].constraints).toHaveProperty('isString')
+    expect(errors[0]?.children?.[0]?.children?.[0]?.constraints).toHaveProperty('isString')
   })
 
   describe('with a separate export DTO', () => {
@@ -88,21 +99,21 @@ describe('ExportArgsType', () => {
     }
 
     it('uses inherited GraphQL fields, mapped types and relations from the export DTO', async () => {
-      expect(getDTOFields(ItemExport)).toEqual(['id', 'heading', 'owner.id', 'owner.name'])
+      expect(getDTOFields(ItemExport)).toEqual(['id', 'displayHeading', 'owner.id', 'owner.name'])
       const args = plainToInstance(ExportArgsType(ExportItemDTO, ItemExport), {
-        fields: [{ field: 'id' }, { field: 'heading' }, { field: 'owner.name' }]
+        fields: [{ field: 'id' }, { field: 'displayHeading' }, { field: 'owner.name' }]
       })
 
       expect(await validate(args)).toEqual([])
     })
 
-    it.each(['title', 'secret', 'displayHeading', 'owner.secret'])(
+    it.each(['title', 'secret', 'heading', 'owner.secret'])(
       'rejects fields not declared as GraphQL fields on the export DTO: %s',
       async (field) => {
         const args = plainToInstance(ExportArgsType(ExportItemDTO, ItemExport), { fields: [{ field }] })
 
         const errors = await validate(args)
-        expect(errors[0].children?.[0].children?.[0].constraints).toHaveProperty('isIn')
+        expect(errors[0]?.children?.[0]?.children?.[0]?.constraints).toHaveProperty('isIn')
       }
     )
 
@@ -112,6 +123,8 @@ describe('ExportArgsType', () => {
       const defaultType = getOrCreateExportFieldInputType(ExportItemDTO)
 
       expect(first).toBe(getOrCreateExportFieldInputType(ExportItemDTO, ItemExport))
+      expect(first).toBe(getOrCreateExportFieldInputType(ExportOwnerDTO, ItemExport))
+      expect(first).toBe(getOrCreateExportFieldInputType(ItemExport))
       expect(first).not.toBe(second)
       expect(first).not.toBe(defaultType)
       expect(second).not.toBe(defaultType)
