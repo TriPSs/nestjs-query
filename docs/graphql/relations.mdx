@@ -386,7 +386,7 @@ The `@FilterableUnPagedRelation` extends the `@UnPagedRelation` decorator exposi
 
 In this example we'll use the same Entities defined above to create a graphql endpoint that allows filtering `TodoItems` by `SubTasks`.
 
-```ts sub-task/sub-task.dto.ts
+```ts todo-item/todo-item.dto.ts
 import { FilterableField, IDField, FilterableUnPagedRelation } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
@@ -416,7 +416,7 @@ Notice the use of `@FilterableUnPagedRelation` instead of `@UnPagedRelation`, by
 
 The module definition remains the same.
 
-```ts sub-task/sub-task.module.ts
+```ts todo-item/todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'
