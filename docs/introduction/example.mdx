@@ -200,9 +200,7 @@ npx nest g cl todo-item.dto todo-item --flat
 
 Now lets fill out the DTO. Add the following to `src/todo-item/todo-item.dto.ts`.
 
-todo-item/todo-item.dto.ts
-
-```ts
+```ts todo-item/todo-item.dto.ts
 import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, GraphQLISODateTime, Field, ID } from '@nestjs/graphql'
 
@@ -248,9 +246,7 @@ But in our case, the fields `id`, `created` and `updated` are actually not requi
 npx nest g cl todo-item.create.dto todo-item --flat
 ```
 
-todo-item/todo-item.create.dto.ts
-
-```ts
+```ts todo-item/todo-item.create.dto.ts
 import { Field, InputType } from '@nestjs/graphql'
 import { IsBoolean, IsString } from 'class-validator'
 

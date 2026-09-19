@@ -1,15 +1,13 @@
 ---
 title: 'Hooks'
-description: 'Hooks transform generated endpoint arguments before the query service is called. REST currently exposes , , and . A hook can be an inline function or an injectable class.'
+description: 'Hooks transform generated endpoint arguments before the query service is called. REST currently exposes BeforeCreateOne, BeforeUpdateOne, and BeforeQueryMany hooks. A hook can be an inline function or an injectable class.'
 ---
 
 ## Mutation hooks[​](#mutation-hooks 'Direct link to Mutation hooks')
 
 Decorate the create or update DTO when a value should be derived from the HTTP request rather than accepted from the client.
 
-todo-item-input.dto.ts
-
-```ts
+```ts todo-item-input.dto.ts
 import { Request } from 'express'
 import { BeforeCreateOne, CreateOneInputType, Field } from '@ptc-org/nestjs-query-rest'
 
@@ -33,9 +31,7 @@ export class TodoItemInputDTO {
 
 The function must return the complete wrapper (`{ input }` for create and `{ update }` for update), not only the inner DTO.
 
-todo-item-update.dto.ts
-
-```ts
+```ts todo-item-update.dto.ts
 import { BeforeUpdateOne, UpdateOneInputType } from '@ptc-org/nestjs-query-rest'
 
 @BeforeUpdateOne((args: UpdateOneInputType<TodoItemUpdateDTO>, request: AuthenticatedRequest) => ({
@@ -54,9 +50,7 @@ export class TodoItemUpdateDTO {
 
 `BeforeQueryMany` receives the built core query and can add filters, sorting, or other query properties. It is also the place to interpret the optional search term enabled by `enableSearch`.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { mergeFilter } from '@ptc-org/nestjs-query-core'
 import { BeforeQueryMany, FilterableField, RestQuery } from '@ptc-org/nestjs-query-rest'
 
