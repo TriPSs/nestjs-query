@@ -1,5 +1,5 @@
 import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
-import { ObjectLiteral, Repository } from 'typeorm'
+import { EntityMetadata, ObjectLiteral, Repository } from 'typeorm'
 
 import { randomString } from '../common'
 
@@ -37,10 +37,28 @@ export class SQLComparisonBuilder<Entity> {
     notilike: 'NOT ILIKE'
   }
 
+  /**
+   * @param comparisonMap - the comparison operators this builder understands.
+   * @param repo - repository of the entity this builder builds comparisons for.
+   * @param entityMetadata - metadata of the entity this builder builds comparisons for, used to
+   * expand virtual columns into their queries. Defaults to the metadata of `repo`, and can be
+   * supplied on its own when there is no repository for the entity, as is the case for a relation.
+   */
   constructor(
     readonly comparisonMap: Record<string, string> = SQLComparisonBuilder.DEFAULT_COMPARISON_MAP,
-    readonly repo?: Repository<Entity>
+    readonly repo?: Repository<Entity>,
+    readonly entityMetadata: EntityMetadata | undefined = repo?.metadata
   ) {}
+
+  /**
+   * Creates a builder for an entity that has no repository to hand, such as a relation reached
+   * through a filter.
+   *
+   * @param entityMetadata - metadata of the entity the builder builds comparisons for.
+   */
+  public static forEntityMetadata<Entity>(entityMetadata: EntityMetadata): SQLComparisonBuilder<Entity> {
+    return new SQLComparisonBuilder<Entity>(SQLComparisonBuilder.DEFAULT_COMPARISON_MAP, undefined, entityMetadata)
+  }
 
   private get paramName(): string {
     return `param${randomString()}`
@@ -193,12 +211,10 @@ export class SQLComparisonBuilder<Entity> {
   }
 
   private getCol(field: string, alias?: string): string {
-    if (this.repo) {
-      const column = this.repo.metadata.columns.find(({ databasePath }) => databasePath === field)
+    const column = this.entityMetadata?.columns.find(({ databasePath }) => databasePath === field)
 
-      if (column && column.isVirtualProperty) {
-        return `(${column.query(alias)})`
-      }
+    if (column && column.isVirtualProperty) {
+      return `(${column.query(alias)})`
     }
 
     return alias ? `${alias}.${field}` : `${field}`
