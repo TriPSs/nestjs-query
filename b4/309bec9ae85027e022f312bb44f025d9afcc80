@@ -1,0 +1,75 @@
+docs/graphql/resolvers.mdx
+  h_b13471b77746e9 13,33-34,54-55,92,100,122,144-145,167-168,306,329,355-356,394,418-419,451,477-478,514,538,567-568,603,632-633,674,698-699,740,764,788,812,843,857,931
+  s_d7582d0678fa29::t_12a5929e01dcb8 732
+docs/concepts/services.mdx
+  s_d8bf4b22410f5a::t_4737a8d88957e0 343,373,406,439,482,531,548
+docs/graphql/aggregations.mdx
+  s_d8bf4b22410f5a::t_530e5a656e5e60 10,47
+docs/graphql/authorization.mdx
+  s_d8bf4b22410f5a::t_e77018dbb070c2 46,100,167,235,259,311,351,387,479
+docs/graphql/dataloaders.mdx
+  s_d8bf4b22410f5a::t_c0dff397254371 8
+docs/graphql/dtos.mdx
+  s_d8bf4b22410f5a::t_a63cac92ed6960 31,63,91,119,191,220,232,266,306,341,376,416,443,482,597,626,646,675,708,745
+docs/graphql/federation.mdx
+  s_d8bf4b22410f5a::t_1062f24394407d 37,55,87,106,131,158,217,236-237,267,310,335-336,338,370-371,373-374,376
+docs/graphql/hooks.mdx
+  s_d8bf4b22410f5a::t_0a322dbddecae5 396,415
+docs/graphql/mutations.mdx
+  s_d8bf4b22410f5a::t_77837cc58494de 8
+docs/graphql/relations.mdx
+  s_d8bf4b22410f5a::t_3814d8c8a97a7d 28,60-61,118,156,218,251,290,327,389,419,474,511,573,634,665,718,755,817,878,908,1238,1310
+docs/graphql/subscriptions.mdx
+  s_d8bf4b22410f5a::t_5dff01a0df9dc8 34,61-63,65,102,134-135,193,215
+docs/introduction/example.mdx
+  s_d8bf4b22410f5a::t_ac022fd76392e0 203,249
+docs/migration-guides/v0.14.x-to-v0.15.x.mdx
+  s_d8bf4b22410f5a::t_eb2cf980974255 12,46-47
+docs/migration-guides/v0.22.x-to-v0.23.x.mdx
+  s_d8bf4b22410f5a::t_2647cfaf668883 309,327
+docs/migration-guides/v0.23.x-to-v0.24.x.mdx
+  s_d8bf4b22410f5a::t_a4a05f3c4c56ef 42,73
+docs/persistence/services.mdx
+  s_d8bf4b22410f5a::t_5048b3fd509aa1 19,44-45,86-87,114-115,166,181-182,197-198,217-218,238,502,554-555,609,654,715-716
+docs/rest/authorization.mdx
+  s_d8bf4b22410f5a::t_0ad27dbb4e375e 15,44,61
+docs/rest/controllers.mdx
+  s_d8bf4b22410f5a::t_2c0b8a261e502d 9,46,67
+docs/rest/dtos.mdx
+  s_d8bf4b22410f5a::t_9d567a6c3bb23d 3,10,44
+docs/rest/getting-started.mdx
+  s_d8bf4b22410f5a::t_798065a365b6f7 3,20,36,49,64,66,109
+docs/rest/hooks.mdx
+  s_d8bf4b22410f5a::t_1d1a843efa6493 3,10,34,53
+docs/rest/openapi.mdx
+  s_d8bf4b22410f5a::t_577b263819372b 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b4309bec9ae85027e022f312bb44f025d9afcc80",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_d7582d0678fa29": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0baa7-c02a-7820-83aa-6862571a7d82",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    },
+    "s_d8bf4b22410f5a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0ba42-273e-74d0-8ae7-1028dcfb3ec9",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
