@@ -310,8 +310,10 @@ For multi-instance deployments, provide a Redis-backed pubsub through the existi
 Error formatting also differs between the drivers: Apollo exposes `formatError` (called once per error), while Mercurius exposes `errorFormatter`, which receives the whole execution result and must return `{ statusCode, response }`. Mercurius's default formatter already returns the standard shape — `data` next to a flat, serializable `errors` array — so no configuration is needed; customize `errorFormatter` only if you need bespoke handling.
 
 <Warning>
-  Apollo Federation resolvers (`@ResolveReference`) are not supported with the Mercurius driver. Federation requires the Apollo
-  drivers.
+  The plain Mercurius driver cannot serve as a federation subgraph. Use `MercuriusFederationDriver` (also exported by
+  `@nestjs/mercurius`) instead: it builds the subgraph schema through `@apollo/subgraph`, supports `@ResolveReference`, and
+  patches subscriptions so they keep working. Note that the Mercurius gateway only composes federation v1 SDL, so subgraphs should
+  not be configured with a federation v2 `autoSchemaFile`.
 </Warning>
 
 A complete runnable example lives in [`examples/subscriptions-mercurius`](https://github.com/tripss/nestjs-query/tree/master/examples/subscriptions-mercurius).
