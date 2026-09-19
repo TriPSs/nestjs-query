@@ -1,0 +1,14 @@
+packages/query-graphql/src/types/query/query-args/constants.ts
+  h_b13471b77746e9 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b6c2014d3d1ba65216aebd85d5d87b4368c0c713",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
