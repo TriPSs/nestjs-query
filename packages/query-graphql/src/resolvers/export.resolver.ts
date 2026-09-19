@@ -1,4 +1,3 @@
-import { BadRequestException } from '@nestjs/common'
 import { Args, ArgsType, Resolver } from '@nestjs/graphql'
 import { Class, DeepPartial, Filter, mergeQuery, QueryService, SelectRelation } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
