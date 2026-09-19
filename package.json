@@ -63,6 +63,8 @@
     "@mikro-orm/nestjs": "^6.1.2",
     "@nestjs/apollo": "^13.4.2",
     "@nestjs/cli": "11.0.23",
+    "@nestjs/mercurius": "^13.4.5",
+    "@nestjs/platform-fastify": "^11.1.0",
     "@nestjs/schematics": "11.1.0",
     "@nestjs/testing": "^11.1.26",
     "@nx/eslint": "22.7.8",
@@ -112,6 +114,7 @@
     "jest": "30.4.2",
     "jest-extended": "7.0.0",
     "jest-util": "30.4.1",
+    "mercurius": "^16.10.0",
     "mongodb-memory-server": "11.2.0",
     "mysql2": "3.24.2",
     "nx": "22.7.8",
@@ -129,7 +132,8 @@
     "ts-node": "10.9.2",
     "tsconfig-extends": "1.0.1",
     "tsconfig-paths": "4.2.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "ws": "^8.18.0"
   },
   "packageManager": "yarn@4.18.0"
 }
