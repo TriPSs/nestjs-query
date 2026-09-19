@@ -1,0 +1,24 @@
+docs/graphql/relations.mdx
+  s_50d85e1e0d4936::t_9fb9e38ef86fd2 389,419
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "838c99fa317b3c306e14d309c562f1714ba18541",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_50d85e1e0d4936": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0bb7c-f8af-70e1-b1eb-c3f26261b756",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
