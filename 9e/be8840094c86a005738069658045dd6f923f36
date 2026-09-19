@@ -1,0 +1,41 @@
+packages/query-graphql/src/types/export/export-field-input.type.ts
+  h_b13471b77746e9 8,19-21,23-27
+  h_b13471b77746e9 22
+packages/query-graphql/src/types/export/export-args.type.ts
+  h_b13471b77746e9 13-15,17
+  h_b13471b77746e9 16
+packages/query-graphql/src/resolvers/export.resolver.ts
+  h_b13471b77746e9 3,24-25,108,149-151
+packages/query-graphql/__tests__/types/export/export-args.type.spec.ts
+  h_b13471b77746e9 1-2,69-127
+  h_b13471b77746e9 128
+docs/graphql/export.mdx
+  s_d7582d0678fa29::t_3f8495775bb24e 37,62-104
+docs/graphql/resolvers.mdx
+  s_d7582d0678fa29::t_01f6227f167410 257-258
+packages/query-graphql/__tests__/resolvers/crud.resolver.spec.ts
+  s_d7582d0678fa29::t_eb18368541de57 46,48
+packages/query-graphql/__tests__/resolvers/export.resolver.spec.ts
+  h_b13471b77746e9 1,3,6,46-62,96-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9ebe8840094c86a005738069658045dd6f923f36",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_d7582d0678fa29": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0baa7-c02a-7820-83aa-6862571a7d82",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
