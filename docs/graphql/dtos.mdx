@@ -365,7 +365,7 @@ export class TodoItemDTO {
 
 ### Limiting Results Size[​](#limiting-results-size 'Direct link to Limiting Results Size')
 
-By default the max number records that can be returned is `50`.
+By default, GraphQL offset and cursor queries allow at most `100` records per page. Use `maxResultsSize` to override this maximum. CSV exports use their own `limit` option.
 
 To override the default you can override the following options specifying the `maxResultSize` option.
 
