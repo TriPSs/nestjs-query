@@ -1,0 +1,14 @@
+docs/migration-guides/v10.x.x-to-v11.x.x.mdx
+  h_b13471b77746e9 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ce2c09b3c43047098da5977ba89f67ba8c53fd49",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
