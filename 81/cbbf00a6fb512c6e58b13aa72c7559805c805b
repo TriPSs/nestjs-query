@@ -1,0 +1,15 @@
+packages/query-graphql/src/resolvers/export.resolver.ts
+  h_b13471b77746e9 89-90
+  h_b13471b77746e9 88,91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "81cbbf00a6fb512c6e58b13aa72c7559805c805b",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
