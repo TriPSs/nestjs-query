@@ -307,6 +307,8 @@ await app.listen(3000)
 
 For multi-instance deployments, provide a Redis-backed pubsub through the existing `pubSub` option, the same way as with the Apollo driver (see [the custom pubsub section](#custom-pubsub-provider)).
 
+Error formatting also differs between the drivers: Apollo exposes `formatError` (called once per error), while Mercurius exposes `errorFormatter`, which receives the whole execution result and must return `{ statusCode, response }`. Mercurius's default formatter already returns the standard shape — `data` next to a flat, serializable `errors` array — so no configuration is needed; customize `errorFormatter` only if you need bespoke handling.
+
 <Warning>
   Apollo Federation resolvers (`@ResolveReference`) are not supported with the Mercurius driver. Federation requires the Apollo
   drivers.
