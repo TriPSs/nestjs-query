@@ -9,11 +9,7 @@ For example, suppose the following DTOS.
 
 <Tabs>
   <Tab title="todo-item.dto.ts">
-    todo-item.dto.ts
-  </Tab>
-
-  <Tab title="sub-task.dto.ts">
-    ```ts
+    ```ts todo-item.dto.ts
     import { FilterableField, Connection } from '@ptc-org/nestjs-query-graphql';
     import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
     import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto';
@@ -47,10 +43,8 @@ For example, suppose the following DTOS.
 
   </Tab>
 
-<Tab title="Example">sub-task.dto.ts</Tab>
-
-  <Tab title="Example">
-    ```ts
+  <Tab title="sub-task.dto.ts">
+    ```ts sub-task.dto.ts
     import { FilterableField, Relation } from '@ptc-org/nestjs-query-graphql';
     import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
     import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto';

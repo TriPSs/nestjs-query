@@ -16,11 +16,7 @@ All examples assume the following entity.
 
 <Tabs>
   <Tab title="TypeOrm">
-    todo-item.entity.ts
-  </Tab>
-
-  <Tab title="Sequelize">
-    ```ts
+    ```ts todo-item.entity.ts
     import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
     @Entity()
@@ -45,10 +41,8 @@ All examples assume the following entity.
 
   </Tab>
 
-<Tab title="Mongoose">todo-item.entity.ts</Tab>
-
-  <Tab title="Typegoose">
-    ```ts
+  <Tab title="Sequelize">
+    ```ts todo-item.entity.ts
     import {
 
       Table,
@@ -89,10 +83,8 @@ All examples assume the following entity.
 
   </Tab>
 
-<Tab title="Example">todo-item.entity.ts</Tab>
-
-  <Tab title="Example">
-    ```ts
+  <Tab title="Mongoose">
+    ```ts todo-item.entity.ts
     import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
     import { Document } from 'mongoose';
 
@@ -119,10 +111,8 @@ All examples assume the following entity.
 
   </Tab>
 
-<Tab title="Example">todo-item.entity.ts</Tab>
-
-  <Tab title="Example">
-    ```ts
+  <Tab title="Typegoose">
+    ```ts todo-item.entity.ts
     import { ObjectId } from '@ptc-org/nestjs-query-graphql'
     import { Base } from '@typegoose/typegoose/lib/defaultClasses';
     import { Prop, modelOptions, Ref } from '@typegoose/typegoose';
@@ -173,11 +163,7 @@ In order to use the decorator you will need to use the module that comes with th
 
 <Tabs>
   <Tab title="TypeOrm">
-    todo-item.module.ts
-  </Tab>
-
-  <Tab title="Sequelize">
-    ```ts
+    ```ts todo-item.module.ts
     import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
     import { Module } from '@nestjs/common';
     import { TodoItemEntity } from './todo-item.entity';
@@ -192,10 +178,8 @@ In order to use the decorator you will need to use the module that comes with th
 
   </Tab>
 
-<Tab title="Mongoose">todo-item.module.ts</Tab>
-
-  <Tab title="Typegoose">
-    ```ts
+  <Tab title="Sequelize">
+    ```ts todo-item.module.ts
     import { NestjsQuerySequelizeModule } from '@ptc-org/nestjs-query-sequelize';
     import { Module } from '@nestjs/common';
     import { TodoItemEntity } from './todo-item.entity';
@@ -210,10 +194,8 @@ In order to use the decorator you will need to use the module that comes with th
 
   </Tab>
 
-<Tab title="Example">todo-item.module.ts</Tab>
-
-  <Tab title="Example">
-    ```ts
+  <Tab title="Mongoose">
+    ```ts todo-item.module.ts
     import { NestjsQueryMongooseModule } from '@ptc-org/nestjs-query-mongoose';
     import { Module } from '@nestjs/common';
     import { TodoItemEntity } from './todo-item.entity';
@@ -232,10 +214,8 @@ In order to use the decorator you will need to use the module that comes with th
 
   </Tab>
 
-<Tab title="Example">todo-item.module.ts</Tab>
-
-  <Tab title="Example">
-    ```ts
+  <Tab title="Typegoose">
+    ```ts todo-item.module.ts
     import { NestjsQueryTypegooseModule } from '@ptc-org/nestjs-query-typegoose';
     import { Module } from '@nestjs/common';
     import { TodoItemEntity } from './todo-item.entity';
@@ -255,9 +235,7 @@ In order to use the decorator you will need to use the module that comes with th
 
 Once you have imported the correct module, use `@InjectQueryService` decorator to inject a `QueryService` into your class or resolver.
 
-todo-item.resolver.ts
-
-```ts
+```ts todo-item.resolver.ts
 import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core'
 import { CRUDResolver } from '@ptc-org/nestjs-query-graphql'
 import { Resolver } from '@nestjs/graphql'
@@ -521,11 +499,7 @@ Assume TodoItems can have SubTasks we would set up our SubTaskEntity using the f
 
 <Tabs>
   <Tab title="TypeOrm">
-    sub-task.entity.ts
-  </Tab>
-
-  <Tab title="Sequelize">
-    ```ts
+    ```ts sub-task.entity.ts
     import {
 
       Entity,
@@ -577,10 +551,8 @@ Assume TodoItems can have SubTasks we would set up our SubTaskEntity using the f
 
   </Tab>
 
-<Tab title="Example">sub-task.entity.ts</Tab>
-
-  <Tab title="Example">
-    ```ts
+  <Tab title="Sequelize">
+    ```ts sub-task.entity.ts
     import {
 
       Table,
@@ -634,9 +606,7 @@ Assume TodoItems can have SubTasks we would set up our SubTaskEntity using the f
 
 Then we could add the `todoItemId` to the SubTaskDTO.
 
-sub-task.dto.ts
-
-```ts
+```ts sub-task.dto.ts
 import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 
@@ -681,11 +651,7 @@ Assume you have the following subtask definition.
 
 <Tabs>
   <Tab title="TypeOrm">
-    sub-task.ts
-  </Tab>
-
-  <Tab title="Sequelize">
-    ```ts
+    ```ts sub-task.ts
     import {
 
       Entity,
@@ -746,10 +712,8 @@ Assume you have the following subtask definition.
 
   </Tab>
 
-<Tab title="Example">sub-task.ts</Tab>
-
-  <Tab title="Example">
-    ```ts
+  <Tab title="Sequelize">
+    ```ts sub-task.ts
     import {
 
       Table,

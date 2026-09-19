@@ -1,6 +1,7 @@
 export { CreateResolver, CreateResolverOpts } from './create.resolver'
 export { CRUDResolver, CRUDResolverOpts } from './crud.resolver'
 export { DeleteResolver, DeleteResolverOpts } from './delete.resolver'
+export { ExportResolver, ExportResolverOpts } from './export.resolver'
 export { FederationResolver } from './federation'
 export { ReadResolver, ReadResolverOpts } from './read.resolver'
 export { ReferenceResolver, ReferenceResolverOpts } from './reference.resolver'

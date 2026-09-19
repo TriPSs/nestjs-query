@@ -1,7 +1,11 @@
 ---
 title: 'CSV Export'
-description: 'Every  includes a CSV endpoint at . It supports the same generated filters, search hook, authorization filter, default sorting, and soft-delete visibility options as collection reads.'
+description: 'Export filtered and authorized REST query results as CSV.'
 ---
+
+Every generated CRUD controller includes a `GET /<basePath>/export` endpoint unless export is disabled. The endpoint accepts the generated filters and, when search is enabled, the optional `query` search term. It uses the configured default sorting, runs the collection query hook, applies the authorization filter, and respects the configured soft-delete visibility.
+
+For an endpoint with `basePath: 'todo-items'`, request matching records with:
 
 ```http
 GET /todo-items/export?completed=false
@@ -14,11 +18,11 @@ Accept: text/csv
 2,"Review examples",false
 ```
 
-The response content type is `text/csv`. String fields are quoted and spreadsheet formulas are escaped.
+The response uses the `text/csv` content type and includes a header row when records are returned. An empty result produces an empty response body. String values are quoted, and values that could be interpreted as spreadsheet formulas are escaped.
 
 ## Configure exports[​](#configure-exports 'Direct link to Configure exports')
 
-The default export limit is `1000`. Change it or disable export independently:
+By default, an export returns at most `1000` records. You can change this limit and customize the generated route without affecting the collection endpoint:
 
 ```ts
 {
@@ -35,7 +39,9 @@ The default export limit is `1000`. Change it or disable export independently:
 }
 ```
 
-The generated path appends `/export` to `many.path`, so the example above is served at `/todo-items/reports/todo-items/export`.
+The controller appends `/export` to `many.path`. Combined with `basePath`, the example above is available at `/todo-items/reports/todo-items/export`.
+
+Disable the export endpoint while keeping the other CRUD endpoints enabled with:
 
 ```ts
 {
@@ -48,15 +54,12 @@ The generated path appends `/export` to `many.path`, so the example above is ser
 
 ## Export a different shape[​](#export-a-different-shape 'Direct link to Export a different shape')
 
-Use `ExportDTOClass` to select CSV columns without changing the normal response DTO. Decorated fields are serialized in the export, and their property names become the CSV headers.
+By default, the controller serializes the decorated fields from `DTOClass`. Set `ExportDTOClass` to choose a different set of CSV columns without changing the DTO used by the other CRUD endpoints. Each decorated property becomes a column, and its property name becomes the CSV header.
 
-todo-item-export.dto.ts
-
-```ts
+```ts todo-item-export.dto.ts
 import { Field } from '@ptc-org/nestjs-query-rest'
 
 export class TodoItemExportDTO {
-
   @Field()
   id!: number
 
@@ -77,4 +80,4 @@ export class TodoItemExportDTO {
 }
 ```
 
-For very large datasets, keep the export limit bounded or implement a custom streaming controller.
+The generated controller loads the selected records and builds the CSV response in memory. Keep the export limit bounded; for very large datasets, implement a custom controller that streams the response.

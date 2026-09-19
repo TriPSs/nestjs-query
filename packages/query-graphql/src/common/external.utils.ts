@@ -18,7 +18,7 @@ export function findGraphqlObjectMetadata<T>(objType: Class<T>): ObjectTypeMetad
   return TypeMetadataStorage.getObjectTypesMetadata().find((o) => o.target === objType)
 }
 
-export function getGraphqlObjectMetadata<T>(objType: Class<T>, notFoundMsg: string): ObjectTypeMetadata {
+function getGraphqlObjectMetadata<T>(objType: Class<T>, notFoundMsg: string): ObjectTypeMetadata {
   const metadata = findGraphqlObjectMetadata(objType)
   if (!metadata) {
     throw new UnregisteredObjectType(objType, notFoundMsg)
