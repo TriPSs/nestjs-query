@@ -254,7 +254,8 @@ When using `NestjsQueryGraphQLModule` or `CRUDResolver` you can define a number 
 
   - `enabled` - Export is disabled by default. This must be explicitly set to `true` to add the export query to the GraphQL schema.
   - `limit` - Set the maximum number of exported records. Defaults to `1000`.
-  - Select CSV columns and headers using the query's required `fields` argument. `ExportDTOClass` currently has no effect on GraphQL exports.
+  - `ExportDTOClass` - Use a separate `@ObjectType()` DTO whose GraphQL fields define the allowed export columns, including inherited fields. Supports `class-transformer` transformations without requiring `@Expose()`.
+  - Select CSV columns and headers using the query's required `fields` argument.
 
 #### `ResolverOptions`[​](#resolveroptions 'Direct link to resolveroptions')
 

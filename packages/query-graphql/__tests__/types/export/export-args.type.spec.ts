@@ -1,5 +1,5 @@
-import { Field, ObjectType, TypeMetadataStorage } from '@nestjs/graphql'
-import { plainToInstance } from 'class-transformer'
+import { Field, ObjectType, PickType, TypeMetadataStorage } from '@nestjs/graphql'
+import { Expose, plainToInstance } from 'class-transformer'
 import { validate } from 'class-validator'
 
 import { ExportArgsType, FilterableField, Relation } from '../../../src'
@@ -65,5 +65,65 @@ describe('ExportArgsType', () => {
 
     const errors = await validate(args)
     expect(errors[0].children?.[0].children?.[0].constraints).toHaveProperty('isString')
+  })
+
+  describe('with a separate export DTO', () => {
+    @ObjectType()
+    class ExportBase extends PickType(ExportBaseDTO, ['id']) {}
+
+    @ObjectType()
+    class OwnerExport extends ExportBase {
+      @Field()
+      name!: string
+    }
+
+    @ObjectType()
+    @Relation('owner', () => OwnerExport)
+    class ItemExport extends ExportBase {
+      @Field({ name: 'displayHeading' })
+      heading!: string
+
+      @Expose()
+      secret!: string
+    }
+
+    it('uses inherited GraphQL fields, mapped types and relations from the export DTO', async () => {
+      expect(getDTOFields(ItemExport)).toEqual(['id', 'heading', 'owner.id', 'owner.name'])
+      const args = plainToInstance(ExportArgsType(ExportItemDTO, ItemExport), {
+        fields: [{ field: 'id' }, { field: 'heading' }, { field: 'owner.name' }]
+      })
+
+      expect(await validate(args)).toEqual([])
+    })
+
+    it.each(['title', 'secret', 'displayHeading', 'owner.secret'])(
+      'rejects fields not declared as GraphQL fields on the export DTO: %s',
+      async (field) => {
+        const args = plainToInstance(ExportArgsType(ExportItemDTO, ItemExport), { fields: [{ field }] })
+
+        const errors = await validate(args)
+        expect(errors[0].children?.[0].children?.[0].constraints).toHaveProperty('isIn')
+      }
+    )
+
+    it('caches each export DTO separately from the default fields', () => {
+      const first = getOrCreateExportFieldInputType(ExportItemDTO, ItemExport)
+      const second = getOrCreateExportFieldInputType(ExportItemDTO, ExportBase)
+      const defaultType = getOrCreateExportFieldInputType(ExportItemDTO)
+
+      expect(first).toBe(getOrCreateExportFieldInputType(ExportItemDTO, ItemExport))
+      expect(first).not.toBe(second)
+      expect(first).not.toBe(defaultType)
+      expect(second).not.toBe(defaultType)
+    })
+
+    it('rejects export DTOs without GraphQL object metadata', () => {
+      class UndecoratedExport {
+        @Expose()
+        name!: string
+      }
+
+      expect(() => ExportArgsType(ExportItemDTO, UndecoratedExport)).toThrow()
+    })
   })
 })

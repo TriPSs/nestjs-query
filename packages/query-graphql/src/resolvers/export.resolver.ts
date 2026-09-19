@@ -1,5 +1,6 @@
 import { Args, ArgsType, Resolver } from '@nestjs/graphql'
 import { Class, DeepPartial, Filter, mergeQuery, QueryService, SelectRelation } from '@ptc-org/nestjs-query-core'
+import { plainToInstance } from 'class-transformer'
 import { stringify as stringifyCsv } from 'csv-stringify/sync'
 import omit from 'lodash.omit'
 
@@ -20,7 +21,8 @@ export type ExportResolverOpts<DTO, ExportDTO = DeepPartial<DTO>> = {
   limit?: number
 
   /**
-   * DTO used to select fields for CSV serialization.
+   * DTO used to transform records before CSV field selection.
+   * Must be a GraphQL object type; its GraphQL fields define the allowed columns.
    */
   ExportDTOClass?: Class<ExportDTO>
 } & ResolverOpts &
@@ -103,7 +105,7 @@ export const Exportable =
     class EQA extends QueryArgs {}
 
     @ArgsType()
-    class EF extends ExportArgsType(DTOClass) {}
+    class EF extends ExportArgsType(DTOClass, opts.ExportDTOClass) {}
 
     @Resolver(() => DTOClass, { isAbstract: true })
     class ExportResolverBase extends BaseClass {
@@ -144,7 +146,9 @@ export const Exportable =
           }
         )
 
-        return stringifyExportCsv<DTO>(items, args.fields)
+        const exportItems = opts.ExportDTOClass ? plainToInstance(opts.ExportDTOClass, items) : items
+
+        return stringifyExportCsv<DTO | ExportDTO>(exportItems, args.fields)
       }
     }
 

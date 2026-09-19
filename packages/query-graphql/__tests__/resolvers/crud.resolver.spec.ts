@@ -43,7 +43,9 @@ describe('CrudResolver', () => {
     otherField!: string
   }
 
+  @ObjectType()
   class ExportTestResolverDTO {
+    @FilterableField()
     stringField!: string
   }
 

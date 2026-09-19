@@ -1,8 +1,9 @@
-import { Query, Resolver } from '@nestjs/graphql'
+import { Field, ObjectType, Query, Resolver } from '@nestjs/graphql'
 import { QueryService } from '@ptc-org/nestjs-query-core'
+import { Transform, Type } from 'class-transformer'
 import { anything, deepEqual, instance, mock, objectContaining, verify, when } from 'ts-mockito'
 
-import { ExportResolver, ExportResolverOpts } from '../../src'
+import { ExportResolver, ExportResolverOpts, Relation } from '../../src'
 import { stringifyExportCsv } from '../../src/resolvers/export.resolver'
 import { generateSchema, TestResolverDTO } from '../__fixtures__'
 
@@ -42,6 +43,23 @@ describe('stringifyExportCsv', () => {
 })
 
 describe('ExportResolver', () => {
+  @ObjectType()
+  class ExportOwnerDTO {
+    @Field()
+    name!: string
+  }
+
+  @ObjectType()
+  @Relation('owner', () => ExportOwnerDTO)
+  class ExportDTO {
+    @Field()
+    @Transform(({ value }: { value: string }) => value.toUpperCase())
+    stringField!: string
+
+    @Type(() => ExportOwnerDTO)
+    owner?: ExportOwnerDTO
+  }
+
   const expectResolverSDL = async (opts?: ExportResolverOpts<TestResolverDTO>) => {
     @Resolver(() => TestResolverDTO)
     class TestSDLResolver extends ExportResolver(TestResolverDTO, opts) {
@@ -73,6 +91,55 @@ describe('ExportResolver', () => {
 
     expect(schema).toContain('downloadTests(')
     expect(schema).not.toContain('exportTestResolverDTOS(')
+  })
+
+  it('uses the separate GraphQL export DTO for the export input', async () => {
+    const schema = await expectResolverSDL({ enabled: true, ExportDTOClass: ExportDTO })
+
+    expect(schema).toContain('fields: [ExportExportDTOField!]!')
+  })
+
+  it('transforms GraphQL fields without Expose decorators or mutating service records', async () => {
+    const items = [{ id: '1', stringField: 'test', owner: { name: 'Ada', secret: 'hidden' } }]
+    const service = mock<QueryService<TestResolverDTO>>()
+    when(service.exportMany(anything(), anything())).thenResolve(items)
+    const resolver = new (ExportResolver(TestResolverDTO, { enabled: true, ExportDTOClass: ExportDTO }))(instance(service))
+
+    await expect(
+      resolver.exportMany(
+        {},
+        {
+          fields: [
+            { field: 'stringField', label: 'Value' },
+            { field: 'owner.name', label: 'Owner' }
+          ]
+        }
+      )
+    ).resolves.toBe('"Value","Owner"\n"TEST","Ada"\n')
+    expect(items).toEqual([{ id: '1', stringField: 'test', owner: { name: 'Ada', secret: 'hidden' } }])
+  })
+
+  it('escapes formulas produced by export DTO transformations', async () => {
+    @ObjectType()
+    class FormulaExportDTO {
+      @Field()
+      @Transform(() => '=1+1')
+      stringField!: string
+    }
+
+    const service = mock<QueryService<TestResolverDTO>>()
+    when(service.exportMany(anything(), anything())).thenResolve([{ id: '1', stringField: 'test' }])
+    const resolver = new (ExportResolver(TestResolverDTO, { enabled: true, ExportDTOClass: FormulaExportDTO }))(instance(service))
+
+    await expect(resolver.exportMany({}, { fields: [{ field: 'stringField' }] })).resolves.toBe('"stringField"\n"\'=1+1"\n')
+  })
+
+  it('preserves selected headers for an empty export with a separate DTO', async () => {
+    const service = mock<QueryService<TestResolverDTO>>()
+    when(service.exportMany(anything(), anything())).thenResolve([])
+    const resolver = new (ExportResolver(TestResolverDTO, { enabled: true, ExportDTOClass: ExportDTO }))(instance(service))
+
+    await expect(resolver.exportMany({}, { fields: [{ field: 'stringField', label: 'Value' }] })).resolves.toBe('"Value"\n')
   })
 
   it('does not expose the export query when disabled', async () => {

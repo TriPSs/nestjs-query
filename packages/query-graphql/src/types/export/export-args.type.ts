@@ -10,8 +10,11 @@ export interface ExportArgsType {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
-export function ExportArgsType<DTO>(DTOClass: Class<DTO>): Class<ExportArgsType> {
-  const EFI = getOrCreateExportFieldInputType(DTOClass)
+export function ExportArgsType<DTO, ExportDTO = DTO>(
+  DTOClass: Class<DTO>,
+  ExportDTOClass?: Class<ExportDTO>
+): Class<ExportArgsType> {
+  const EFI = getOrCreateExportFieldInputType(DTOClass, ExportDTOClass)
 
   @ArgsType()
   class ExportArgs implements ExportArgsType {

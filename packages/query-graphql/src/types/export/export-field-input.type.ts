@@ -5,7 +5,7 @@ import { IsIn, IsOptional, IsString } from 'class-validator'
 import { getGraphqlObjectName } from '../../common'
 import { getDTOFields } from './export-args.helpers'
 
-const reflector = new MapReflector('nestjs-query:export-field-type')
+const reflector = new MapReflector<Class<unknown> | string>('nestjs-query:export-field-type')
 
 function getObjectTypeName<DTO>(DTOClass: Class<DTO>): string {
   return getGraphqlObjectName(DTOClass, 'No fields found to create ExportFieldInputType.')
@@ -16,10 +16,15 @@ export interface ExportFieldInput {
   label?: string
 }
 
-export function getOrCreateExportFieldInputType<DTO>(TClass: Class<DTO>): Class<ExportFieldInput> {
-  const typeName = `Export${getObjectTypeName(TClass)}Field`
-  return reflector.memoize(TClass, typeName, () => {
-    const fields = getDTOFields(TClass)
+export function getOrCreateExportFieldInputType<DTO, ExportDTO = DTO>(
+  TClass: Class<DTO>,
+  ExportDTOClass?: Class<ExportDTO>
+): Class<ExportFieldInput> {
+  const className = getObjectTypeName<DTO | ExportDTO>(ExportDTOClass ?? TClass)
+  const typeName = `Export${className}Field`
+
+  return reflector.memoize(TClass, ExportDTOClass ?? 'default', () => {
+    const fields = getDTOFields<DTO | ExportDTO>(ExportDTOClass ?? TClass)
 
     @InputType(typeName)
     class ExportFieldInput implements ExportFieldInput {
