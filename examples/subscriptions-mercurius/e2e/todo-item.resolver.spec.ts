@@ -125,4 +125,16 @@ describe('TodoItemResolver subscriptions (mercurius - e2e)', () => {
 
     await client.close()
   })
+
+  it('should return a standard error payload', () =>
+    request(app.getHttpServer())
+      .post('/graphql')
+      .send({ operationName: null, variables: {}, query: '{ todoItems { id ' })
+      .expect(400)
+      .then(({ body }) => {
+        expect(Array.isArray(body.errors)).toBe(true)
+        expect(body.errors.length).toBeGreaterThan(0)
+        expect(typeof body.errors[0].message).toBe('string')
+        expect(body.data).toBeNull()
+      }))
 })
