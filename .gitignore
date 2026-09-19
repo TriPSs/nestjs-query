@@ -95,5 +95,6 @@ tsconfig.tsbuildinfo
 
 .npmrc
 .claude/worktrees
+.worktrees
 .nx/polygraph
 .nx/self-healing

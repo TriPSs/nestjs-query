@@ -259,3 +259,61 @@ import { RedisPubSubProvider } from '../redis-pub-sub.provider'
 })
 export class TodoItemModule {}
 ```
+
+## Subscriptions with Mercurius[​](#subscriptions-with-mercurius 'Direct link to Subscriptions with Mercurius')
+
+The library's subscriptions work with the [Mercurius](https://mercurius.dev/) driver without any changes. Mercurius consumes the async iterable returned by the subscription resolvers directly, so the same publish/subscribe flow used with Apollo applies.
+
+Enable subscriptions on the Mercurius driver:
+
+```ts
+import { Module } from '@nestjs/common'
+import { GraphQLModule } from '@nestjs/graphql'
+import { MercuriusDriver, MercuriusDriverConfig } from '@nestjs/mercurius'
+
+@Module({
+  imports: [
+    GraphQLModule.forRoot<MercuriusDriverConfig>({
+      driver: MercuriusDriver,
+      subscription: true, // required to enable the WebSocket endpoint
+      autoSchemaFile: 'schema.gql'
+    }),
+    NestjsQueryGraphQLModule.forFeature({
+      /* ... */
+      resolvers: [{ DTOClass: TodoItemDTO, EntityClass: TodoItemEntity, enableSubscriptions: true }]
+    })
+  ]
+})
+export class AppModule {}
+```
+
+Run your app with the Fastify adapter:
+
+```ts
+import { NestFactory } from '@nestjs/core'
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
+
+const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter())
+await app.listen(3000)
+```
+
+<Warning>
+  Do not inject Mercurius's own pubsub (`@Context('pubsub')`) into the module's `pubSub` option. Its API differs from
+  `graphql-subscriptions` (`publish({ topic, payload })`, `subscribe(topic)` returning a queue, no
+  `asyncIterableIterator`), which causes runtime exceptions. The library's default in-memory pubsub — or any
+  `GraphQLPubSub`-compatible implementation such as `graphql-redis-subscriptions` — works as is, because the library
+  publishes and subscribes on its own bus.
+</Warning>
+
+For multi-instance deployments, provide a Redis-backed pubsub through the existing `pubSub` option, the same way as with the Apollo driver (see [the custom pubsub section](#custom-pubsub-provider)).
+
+Error formatting also differs between the drivers: Apollo exposes `formatError` (called once per error), while Mercurius exposes `errorFormatter`, which receives the whole execution result and must return `{ statusCode, response }`. Mercurius's default formatter already returns the standard shape — `data` next to a flat, serializable `errors` array — so no configuration is needed; customize `errorFormatter` only if you need bespoke handling.
+
+<Warning>
+  The plain Mercurius driver cannot serve as a federation subgraph. Use `MercuriusFederationDriver` (also exported by
+  `@nestjs/mercurius`) instead: it builds the subgraph schema through `@apollo/subgraph`, supports `@ResolveReference`, and
+  patches subscriptions so they keep working. Note that the Mercurius gateway only composes federation v1 SDL, so subgraphs should
+  not be configured with a federation v2 `autoSchemaFile`.
+</Warning>
+
+A complete runnable example lives in [`examples/subscriptions-mercurius`](https://github.com/tripss/nestjs-query/tree/master/examples/subscriptions-mercurius).
