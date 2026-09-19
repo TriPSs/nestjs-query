@@ -59,6 +59,24 @@ After enabling export, you can change the limit or rename the query:
 }
 ```
 
+## Export a specific page
+
+Use the existing offset `paging` argument to export fewer records or a specific page. The default page size and maximum are the configured `export.limit` (default `1000`), and `offset` defaults to `0`. With Nest's `ValidationPipe`, limits above this maximum are rejected. The resolver also caps the service query at this maximum. Omitting `paging` or `paging.limit` uses the configured export limit.
+
+For example, export the third page of 25 records:
+
+```graphql
+query {
+  exportTodoItems(
+    paging: { limit: 25, offset: 50 }
+    sorting: [{ field: id, direction: ASC }]
+    fields: [{ field: "id" }, { field: "title" }]
+  )
+}
+```
+
+Use the same filter and sorting as the displayed page, with a unique sort field to keep page boundaries deterministic. The offset counts matching, authorized records.
+
 ## Select the export shape
 
 Use `fields` to select columns and `label` to set their headers. By default, the GraphQL exporter reads these property paths directly from the records returned by `QueryService.exportMany`.

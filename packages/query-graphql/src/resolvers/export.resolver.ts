@@ -11,15 +11,15 @@ import { HookTypes } from '../hooks'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import { ExportArgsType, ExportFieldInput } from '../types'
 import { getDTOFieldPaths } from '../types/export/export-args.helpers'
-import { NonePagingQueryArgsTypeOpts, PagingStrategies, QueryArgsType, QueryType, StaticQueryType } from '../types/query'
+import { OffsetQueryArgsTypeOpts, PagingStrategies, QueryArgsType, QueryType, StaticQueryType } from '../types/query'
 import { BaseServiceResolver, ResolverClass, ResolverOpts, ServiceResolver } from './resolver.interface'
 
 export type ExportResolverOpts<DTO, ExportDTO = DeepPartial<DTO>> = {
   enabled?: boolean
 
-  QueryArgs?: StaticQueryType<DTO, PagingStrategies.NONE>
+  QueryArgs?: StaticQueryType<DTO, PagingStrategies.OFFSET>
 
-  /** Maximum number of records to export, starting at offset 0. Defaults to 1000; additional records are omitted. */
+  /** Maximum number of records per export. Defaults to 1000; additional records are omitted. */
   limit?: number
 
   /**
@@ -28,11 +28,11 @@ export type ExportResolverOpts<DTO, ExportDTO = DeepPartial<DTO>> = {
    */
   ExportDTOClass?: Class<ExportDTO>
 } & ResolverOpts &
-  NonePagingQueryArgsTypeOpts<DTO>
+  OffsetQueryArgsTypeOpts<DTO>
 
 export interface ExportResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceResolver<DTO, QS> {
   exportMany(
-    query: QueryType<DTO, PagingStrategies.NONE>,
+    query: QueryType<DTO, PagingStrategies.OFFSET>,
     args: ExportArgsType,
     authorizeFilter?: Filter<DTO>,
     resolveInfo?: GraphQLResolveInfoResult<DTO, DTO>
@@ -103,7 +103,9 @@ export const Exportable =
     const {
       QueryArgs = QueryArgsType(DTOClass, {
         ...opts,
-        pagingStrategy: PagingStrategies.NONE
+        pagingStrategy: PagingStrategies.OFFSET,
+        defaultResultSize: opts.limit ?? 1000,
+        maxResultsSize: opts.limit ?? 1000
       })
     } = opts
 
@@ -147,10 +149,6 @@ export const Exportable =
         const items = await this.service.exportMany(
           mergeQuery(query, {
             filter: authorizeFilter,
-            paging: {
-              limit: opts.limit ?? 1000,
-              offset: 0
-            },
             relations: createExportRelations<DTO>(fields)
           }),
           {
