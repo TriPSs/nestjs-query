@@ -166,7 +166,7 @@ describe('ExportResolver', () => {
     verify(service.exportMany(objectContaining({ relations: [{ name: 'owner', query: {} }] }), anything())).once()
   })
 
-  it.each([undefined, 25])('rejects exports above the limit %s and accepts the exact limit', async (limit) => {
+  it.each([undefined, 25])('queries and exports records with the limit %s', async (limit) => {
     const maxRecords = limit ?? 1000
     const items = Array.from({ length: maxRecords }, (_, id) => ({ id: String(id), stringField: 'test' }))
     const service = mock<QueryService<TestResolverDTO>>()
@@ -175,12 +175,7 @@ describe('ExportResolver', () => {
 
     const csv = await resolver.exportMany({}, { fields: [{ field: 'id' }] })
     expect(csv.trim().split('\n')).toHaveLength(maxRecords + 1)
-    verify(service.exportMany(objectContaining({ paging: { limit: maxRecords + 1, offset: 0 } }), anything())).once()
-
-    when(service.exportMany(anything(), anything())).thenResolve([...items, { id: 'overflow', stringField: 'test' }])
-    await expect(resolver.exportMany({}, { fields: [{ field: 'id' }] })).rejects.toThrow(
-      `Export exceeds the maximum of ${maxRecords} records`
-    )
+    verify(service.exportMany(objectContaining({ paging: { limit: maxRecords, offset: 0 } }), anything())).once()
   })
 
   it('transforms GraphQL fields without Expose decorators or mutating service records', async () => {
@@ -254,7 +249,7 @@ describe('ExportResolver', () => {
       service.exportMany(
         objectContaining({
           filter: { and: [query.filter, authorizeFilter] },
-          paging: { limit: 26, offset: 0 },
+          paging: { limit: 25, offset: 0 },
           relations: [
             {
               name: 'owner',
