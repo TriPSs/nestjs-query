@@ -1,7 +1,6 @@
-Ch---
+---
 title: 'v10.x.x to v11.x.x'
 description: 'Adopt the 100-record maximum for GraphQL and REST queries or retain the previous limit.'
-
 ---
 
 In v11, the default `maxResultsSize` is `100` for both GraphQL and REST, up from `50` in v10. This affects endpoints that use the generated paging arguments without an explicit maximum.
