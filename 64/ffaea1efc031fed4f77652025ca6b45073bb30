@@ -1,0 +1,24 @@
+packages/query-graphql/__tests__/resolvers/export.resolver.spec.ts
+  s_e0b87fbc29d1aa::t_ab46b2adf3219b 169,178,252
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "64ffaea1efc031fed4f77652025ca6b45073bb30",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_e0b87fbc29d1aa": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0bb9b-6779-7bd3-8885-e67590df2092",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
