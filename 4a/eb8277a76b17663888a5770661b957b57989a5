@@ -1,0 +1,15 @@
+packages/query-rest/src/controllers/export.controller.ts
+  h_b13471b77746e9 39-40
+  h_b13471b77746e9 38,41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4aeb8277a76b17663888a5770661b957b57989a5",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
