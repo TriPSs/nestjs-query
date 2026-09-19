@@ -99,6 +99,7 @@
               "graphql/mutations",
               "graphql/hooks",
               "graphql/authorization",
+              "graphql/export",
               "graphql/aggregations",
               "graphql/subscriptions",
               "graphql/relations",

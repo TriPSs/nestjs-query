@@ -1,0 +1,162 @@
+import { Args, ArgsType, Resolver } from '@nestjs/graphql'
+import { Class, DeepPartial, Filter, mergeQuery, QueryService, SelectRelation } from '@ptc-org/nestjs-query-core'
+import { stringify as stringifyCsv } from 'csv-stringify/sync'
+import omit from 'lodash.omit'
+
+import { OperationGroup } from '../auth'
+import { getDTONames } from '../common'
+import { AuthorizerFilter, GraphQLResolveInfoResult, GraphQLResultInfo, HookArgs, ResolverQuery } from '../decorators'
+import { HookTypes } from '../hooks'
+import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
+import { ExportArgsType, ExportFieldInput } from '../types/export'
+import { NonePagingQueryArgsTypeOpts, PagingStrategies, QueryArgsType, QueryType, StaticQueryType } from '../types/query'
+import { BaseServiceResolver, ResolverClass, ResolverOpts, ServiceResolver } from './resolver.interface'
+
+export type ExportResolverOpts<DTO, ExportDTO = DeepPartial<DTO>> = {
+  enabled?: boolean
+
+  QueryArgs?: StaticQueryType<DTO, PagingStrategies.NONE>
+
+  limit?: number
+
+  /**
+   * DTO used to select fields for CSV serialization.
+   */
+  ExportDTOClass?: Class<ExportDTO>
+} & ResolverOpts &
+  NonePagingQueryArgsTypeOpts<DTO>
+
+export interface ExportResolver<DTO, QS extends QueryService<DTO, unknown, unknown>> extends ServiceResolver<DTO, QS> {
+  exportMany(
+    query: QueryType<DTO, PagingStrategies.NONE>,
+    args: ExportArgsType,
+    authorizeFilter?: Filter<DTO>,
+    resolveInfo?: GraphQLResolveInfoResult<DTO, DTO>
+  ): Promise<string>
+}
+
+const getPathValue = (item: unknown, path: string): unknown =>
+  path.split('.').reduce<unknown>((value, segment) => {
+    if (typeof value !== 'object' || value === null || !Object.prototype.hasOwnProperty.call(value, segment)) {
+      return undefined
+    }
+    return (value as Record<string, unknown>)[segment]
+  }, item)
+
+const createExportRelations = <DTO>(fields: ExportFieldInput[]): SelectRelation<DTO>[] => {
+  const relationPaths = fields.map(({ field }) => field.split('.').slice(0, -1)).filter((path) => path.length > 0)
+
+  const createRelations = (paths: string[][]): SelectRelation<unknown>[] => {
+    const names = [...new Set(paths.map(([name]) => name))]
+    return names.map((name) => {
+      const childPaths = paths.filter(([parent]) => parent === name).map(([, ...children]) => children)
+      const nestedPaths = childPaths.filter((path) => path.length > 0)
+      return {
+        name,
+        query: nestedPaths.length > 0 ? { relations: createRelations(nestedPaths) } : {}
+      }
+    })
+  }
+
+  return createRelations(relationPaths) as SelectRelation<DTO>[]
+}
+
+export const stringifyExportCsv = <DTO>(items: DTO[], fields: ExportFieldInput[]): string => {
+  const rows = items.map((item) => Object.fromEntries<unknown>(fields.map(({ field }) => [field, getPathValue(item, field)])))
+
+  return stringifyCsv(rows, {
+    header: true,
+    columns: Object.fromEntries(fields.map(({ field, label }) => [field, label || field])),
+    delimiter: ',',
+    defaultEncoding: 'utf8',
+    quoted_string: true,
+    escape_formulas: true
+  })
+}
+
+/**
+ * @internal
+ * Mixin to add an `export` GraphQL query.
+ */
+export const Exportable =
+  <DTO, ExportDTO, QS extends QueryService<DTO, unknown, unknown>>(
+    DTOClass: Class<DTO>,
+    opts: ExportResolverOpts<DTO, ExportDTO>
+  ) =>
+  <B extends Class<ServiceResolver<DTO, QS>>>(BaseClass: B): Class<ExportResolver<DTO, QS>> & B => {
+    if (!opts.enabled) {
+      return BaseClass as never
+    }
+
+    const { pluralBaseName } = getDTONames(DTOClass, opts)
+    const exportManyQueryName = opts.many?.name ?? `export${pluralBaseName}`
+    const {
+      QueryArgs = QueryArgsType(DTOClass, {
+        ...opts,
+        pagingStrategy: PagingStrategies.NONE
+      })
+    } = opts
+
+    const commonResolverOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection', 'withDeleted')
+
+    @ArgsType()
+    class EQA extends QueryArgs {}
+
+    @ArgsType()
+    class EF extends ExportArgsType(DTOClass) {}
+
+    @Resolver(() => DTOClass, { isAbstract: true })
+    class ExportResolverBase extends BaseClass {
+      @ResolverQuery(
+        () => String,
+        {
+          name: exportManyQueryName,
+          description: opts.many?.description,
+          complexity: opts.many?.complexity
+        },
+        commonResolverOpts,
+        { interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)] },
+        opts.many ?? {}
+      )
+      async exportMany(
+        @HookArgs() query: EQA,
+        @Args() args: EF,
+        @AuthorizerFilter({
+          operationGroup: OperationGroup.EXPORT,
+          many: true
+        })
+        authorizeFilter?: Filter<DTO>,
+        @GraphQLResultInfo(DTOClass)
+        resolveInfo?: GraphQLResolveInfoResult<DTO, DTO>
+      ): Promise<string> {
+        const items = await this.service.exportMany(
+          mergeQuery(query, {
+            filter: authorizeFilter,
+            paging: {
+              limit: opts.limit ?? 1000,
+              offset: 0
+            },
+            relations: createExportRelations<DTO>(args.fields)
+          }),
+          {
+            withDeleted: opts.many?.withDeleted,
+            resolveInfo: resolveInfo?.info
+          }
+        )
+
+        return stringifyExportCsv<DTO>(items, args.fields)
+      }
+    }
+
+    return ExportResolverBase as Class<ExportResolver<DTO, QS>> & B
+  }
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
+export const ExportResolver = <
+  DTO,
+  ExportDTO = DeepPartial<DTO>,
+  QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>
+>(
+  DTOClass: Class<DTO>,
+  opts: ExportResolverOpts<DTO, ExportDTO> = {}
+): ResolverClass<DTO, QS, ExportResolver<DTO, QS>> => Exportable<DTO, ExportDTO, QS>(DTOClass, opts)(BaseServiceResolver)

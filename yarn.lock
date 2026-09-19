@@ -4320,6 +4320,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-graphql@workspace:packages/query-graphql"
   dependencies:
+    csv-stringify: "npm:^6.8.3"
     dataloader: "npm:^2.2.3"
     graphql-fields: "npm:^2.0.3"
     lodash.omit: "npm:^4.18.0"

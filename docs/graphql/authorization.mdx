@@ -427,12 +427,11 @@ export class SubTaskAuthorizer implements CustomAuthorizer<SubTaskDTO> {
 
 The `AuthorizationContext` has the following shape:
 
-authorizer.ts
-
-```ts
+```ts authorizer.ts
 export enum OperationGroup {
 
   READ = 'read',
+  EXPORT = 'export',
   AGGREGATE = 'aggregate',
   CREATE = 'create',
   UPDATE = 'update',
@@ -468,6 +467,7 @@ The `operationNames` of the generated CRUD resolver methods are similar to the o
 
 - `queryMany`
 - `findById`
+- `exportMany`
 - `aggregate`
 - `createOne`
 - `createMany`

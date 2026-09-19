@@ -271,9 +271,15 @@ When using `NestjsQueryGraphQLModule` or `CRUDResolver` you can define a number 
 
   - `enabled` - Set to true to enable aggregations. If this is used in place of the root `enableAggregate` option relations will not have aggregate queries exposed.
 
+- `export` - Configure CSV export. See [CSV Export](/graphql/export).
+
+  - `enabled` - Export is disabled by default. This must be explicitly set to `true` to add the export query to the GraphQL schema.
+  - `limit` - Set the maximum number of exported records. Defaults to `1000`.
+  - Select CSV columns and headers using the query's required `fields` argument. `ExportDTOClass` currently has no effect on GraphQL exports.
+
 #### `ResolverOptions`[​](#resolveroptions 'Direct link to resolveroptions')
 
-The `create`, `read`, `update`, and `delete` options above all accept the following options.
+The `create`, `read`, `update`, `delete`, and `export` options above all accept the following options.
 
 - `dtoName` - Set to override the default name (the name passed to `@ObjectType` or the name of the class).
 

@@ -1,0 +1,79 @@
+---
+title: 'CSV Export'
+description: 'Export filtered and authorized GraphQL query results as CSV.'
+---
+
+CSV export is opt-in. `CRUDResolver` and `NestjsQueryGraphQLModule` do not add an export query unless `export.enabled` is explicitly set to `true`.
+
+<Note>
+  Configuring `limit` or other export options does not enable export by itself. Always include `enabled: true`.
+</Note>
+
+## Enable CSV export
+
+Add the `export` option to a resolver entry in `NestjsQueryGraphQLModule.forFeature`:
+
+```ts
+{
+  DTOClass: TodoItemDTO,
+  EntityClass: TodoItemEntity,
+  export: { enabled: true }
+}
+```
+
+This adds an `export<PluralDTOName>` query that accepts the generated filter and sorting arguments. The query returns CSV text, runs the collection query hook, and applies the authorizer filter with `OperationGroup.EXPORT`.
+
+```graphql
+query {
+  exportTodoItems(
+    filter: { completed: { is: false } }
+    fields: [{ field: "id", label: "Identifier" }, { field: "title" }, { field: "owner.name", label: "Owner" }]
+  )
+}
+```
+
+The required `fields` argument controls the columns and their order and must contain at least one field. Set a nonempty `label` to override a CSV header. Use the TypeScript property name for fields with a GraphQL alias. The returned string contains the CSV header and rows; string values are quoted and spreadsheet formulas are escaped. Requested headers are returned even when no records match.
+
+With Nest's `ValidationPipe` enabled, field names are validated against the DTO's GraphQL fields, including inherited fields, and empty field lists are rejected. Undecorated properties are not valid export fields.
+
+Use dot notation for fields on declared relations, such as `owner.name`, where `owner` is registered with `@Relation('owner', () => OwnerDTO)` and `name` is a GraphQL field on `OwnerDTO`. Inherited relations and inherited fields on relation DTOs are also supported. These relations are included in the service query. Field validation supports one relation level; deeper paths such as `owner.company.name` are not accepted. Collection relations are not flattened into CSV rows.
+
+## Configure exports
+
+After enabling export, you can change its default limit of `1000` or rename the query:
+
+```ts
+{
+  DTOClass: TodoItemDTO,
+  EntityClass: TodoItemEntity,
+  export: {
+    enabled: true,
+    limit: 5000,
+    many: {
+      name: 'downloadTodoItems',
+      description: 'Export visible todo items as CSV'
+    }
+  }
+}
+```
+
+## Select the export shape
+
+Use `fields` to select columns and `label` to set their headers. The GraphQL exporter reads these property paths directly from the records returned by `QueryService.exportMany`; it does not apply `class-transformer` decorators. Although `ExportDTOClass` remains in the options type, it currently has no effect on GraphQL exports.
+
+## Standalone export resolver
+
+The standalone `ExportResolver` is also opt-in. Pass `enabled: true` when extending it:
+
+```ts
+@Resolver(() => TodoItemDTO)
+export class TodoItemExportResolver extends ExportResolver(TodoItemDTO, { enabled: true }) {
+  constructor(readonly service: TodoItemService) {
+    super(service)
+  }
+}
+```
+
+Omitting `enabled`, or setting it to `false`, leaves the export query out of the generated GraphQL schema.
+
+For a manual CRUD resolver, use `CRUDResolver(TodoItemDTO, { export: { enabled: true } })`.
