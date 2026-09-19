@@ -35,6 +35,7 @@ export const stringifyExportCsv = <DTO, ExportDTO>(ExportDTOClass: Class<ExportD
     delimiter: ',',
     defaultEncoding: 'utf8',
     quoted_string: true,
+    cast: { date: (value) => value.toISOString() },
     escape_formulas: true
   })
 

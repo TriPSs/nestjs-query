@@ -21,6 +21,12 @@ describe('stringifyExportCsv', () => {
     expect(stringifyExportCsv(ExportDTO, [{ value }])).toContain(`"'${value}"`)
   })
 
+  it('serializes dates as ISO strings and preserves formatted strings and nulls', () => {
+    expect(
+      stringifyExportCsv(ExportDTO, [{ value: new Date('2026-09-20T14:30:00+02:00') }, { value: '20/09/2026' }, { value: null }])
+    ).toBe('"value"\n2026-09-20T12:30:00.000Z\n"20/09/2026"\n\n')
+  })
+
   it('projects items through a distinct export DTO', () => {
     class ItemDTO {
       id!: number

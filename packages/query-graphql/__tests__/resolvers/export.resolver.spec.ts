@@ -14,6 +14,19 @@ describe('stringifyExportCsv', () => {
     expect(stringifyExportCsv([{ value }], [{ field: 'value' }])).toContain(`"'${value}"`)
   })
 
+  it('serializes dates as ISO strings, including selected relation dates', () => {
+    const date = new Date('2026-09-20T14:30:00+02:00')
+    const items = [{ createdAt: date, owner: { createdAt: date }, missing: null }]
+
+    expect(stringifyExportCsv(items, [{ field: 'createdAt' }, { field: 'owner.createdAt' }, { field: 'missing' }])).toBe(
+      '"createdAt","owner.createdAt","missing"\n2026-09-20T12:30:00.000Z,2026-09-20T12:30:00.000Z,\n'
+    )
+  })
+
+  it('preserves formatted date strings', () => {
+    expect(stringifyExportCsv([{ date: '20/09/2026' }], [{ field: 'date' }])).toBe('"date"\n"20/09/2026"\n')
+  })
+
   it('serializes only selected fields', () => {
     expect(stringifyExportCsv([{ id: 1, title: 'Write GraphQL documentation' }], [{ field: 'title' }])).toBe(
       '"title"\n"Write GraphQL documentation"\n'
