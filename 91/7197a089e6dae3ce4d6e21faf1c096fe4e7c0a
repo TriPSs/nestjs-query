@@ -1,0 +1,48 @@
+docs/graphql/export.mdx
+  s_ad1c5a62d6a30d::t_fa341bae663c49 126-143
+docs/rest/controllers.mdx
+  s_ad1c5a62d6a30d::t_0565f4e71aecea 116
+packages/core/__tests__/decorators/export-transform.decorator.spec.ts
+  s_ad1c5a62d6a30d::t_3f5ef91808d668 1-45
+packages/core/src/decorators/export-transform.decorator.ts
+  s_ad1c5a62d6a30d::t_fedbbfeaba9c08 1-9
+packages/core/src/decorators/index.ts
+  s_ad1c5a62d6a30d::t_947537b279d8b6 1
+packages/core/src/index.ts
+  s_ad1c5a62d6a30d::t_fed7a35b817a89 12-18
+packages/query-graphql/__tests__/resolvers/export.resolver.spec.ts
+  s_ad1c5a62d6a30d::t_bf076808180942 3,6,238-257
+packages/query-graphql/src/decorators/index.ts
+  s_ad1c5a62d6a30d::t_a894307c7a2d01 41
+packages/query-graphql/src/index.ts
+  s_ad1c5a62d6a30d::t_7116f3c36b3416 15
+packages/query-graphql/src/resolvers/export.resolver.ts
+  s_ad1c5a62d6a30d::t_45e3127e994e2c 2-10,168-170
+packages/query-rest/__tests__/controllers/export.controller.spec.ts
+  s_ad1c5a62d6a30d::t_7505964b6e149f 2,5,31-43
+packages/query-rest/src/controllers/export.controller.ts
+  s_ad1c5a62d6a30d::t_84f9ed0c2ee776 3,33
+packages/query-rest/src/decorators/index.ts
+  s_ad1c5a62d6a30d::t_9b464283f5bcdc 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "917197a089e6dae3ce4d6e21faf1c096fe4e7c0a",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_ad1c5a62d6a30d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0bbce-371d-7a92-b35f-9e2ba3195626",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
