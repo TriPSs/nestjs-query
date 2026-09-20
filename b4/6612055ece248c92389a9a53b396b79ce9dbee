@@ -1,0 +1,52 @@
+docs/migration-guides/v10.x.x-to-v11.x.x.mdx
+  s_4373f71c250162::t_8bbfff0066794c 3,55-68
+package.json
+  s_b54ddd3b146f5f::t_2d12d78118e4b1 95
+packages/query-graphql/__tests__/resolvers/export.optional-dependency.spec.ts
+  s_4373f71c250162::t_ce7ae601a5303b 1-27
+packages/query-graphql/__tests__/resolvers/export.resolver.spec.ts
+  s_4373f71c250162::t_5a146d1d6805ed 13,16,19,23-25,28-29,32-33,38,41,46,52,55,64,69-72
+packages/query-graphql/package.json
+  s_4373f71c250162::t_736455d1279152 45-50
+packages/query-graphql/src/resolvers/export.resolver.ts
+  s_4373f71c250162::t_8597c66c3587b2 78-86
+packages/query-rest/__tests__/controllers/export.controller.spec.ts
+  s_4373f71c250162::t_6b52aa1ac84b68 19,22,25-26,28,31,37-39,42,51,55,72-74
+packages/query-rest/__tests__/controllers/export.optional-dependency.spec.ts
+  s_4373f71c250162::t_819fc0a2d337c0 1-26
+packages/query-rest/package.json
+  s_4373f71c250162::t_20b86fb9f25748 43-47
+packages/query-rest/src/controllers/export.controller.ts
+  s_4373f71c250162::t_05a99a2e7d54ac 31-54
+yarn.lock
+  s_b54ddd3b146f5f::t_ba09336ce34d7a 2257,4320-4322,4371-4373,5139,5188,5794,11507,12020,12958,13063-13065,13068,13432,13462,13684,14707,14830,15402
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b46612055ece248c92389a9a53b396b79ce9dbee",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_4373f71c250162": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0bedf-5958-7742-acda-a948309c5134",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    },
+    "s_b54ddd3b146f5f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0bedc-9f62-76f2-b220-d8485d962d0a",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
