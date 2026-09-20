@@ -1,6 +1,8 @@
 import { Field, ObjectType, Query, Resolver } from '@nestjs/graphql'
-import { applyQuery, Query as ServiceQuery, QueryService, SortDirection } from '@ptc-org/nestjs-query-core'
+import { applyQuery, Class, Query as ServiceQuery, QueryService, SortDirection } from '@ptc-org/nestjs-query-core'
 import { plainToInstance, Transform, Type } from 'class-transformer'
+import { validateSync } from 'class-validator'
+import { buildSchema, graphql } from 'graphql'
 import { anything, deepEqual, instance, mock, objectContaining, verify, when } from 'ts-mockito'
 
 import { ExportResolver, ExportResolverOpts, ExportTransform, FilterableField, Relation } from '../../src'
@@ -186,32 +188,57 @@ describe('ExportResolver', () => {
     verify(service.exportMany(objectContaining({ relations: [{ name: 'owner', query: {} }] }), anything())).once()
   })
 
-  it.each([undefined, 25])('queries and exports records with the limit %s', async (limit) => {
+  it.each([undefined, 25])('applies the GraphQL paging default for export limit %s', async (limit) => {
     const maxRecords = limit ?? 1000
     const items = Array.from({ length: maxRecords }, (_, id) => ({ id: String(id), stringField: 'test' }))
     const service = mock<QueryService<TestResolverDTO>>()
     when(service.exportMany(anything(), anything())).thenResolve(items)
     const resolver = new (ExportResolver(TestResolverDTO, { enabled: true, limit }))(instance(service))
 
-    const csv = await resolver.exportMany({}, { fields: [{ field: 'id' }] })
-    expect(csv.trim().split('\n')).toHaveLength(maxRecords + 1)
-    verify(service.exportMany(objectContaining({ paging: { limit: maxRecords, offset: 0 } }), anything())).once()
+    const schema = buildSchema(await expectResolverSDL({ enabled: true, limit }))
+    const result = await graphql({
+      schema,
+      source: '{ exportTestResolverDTOS(fields: [{ field: "id" }]) }',
+      rootValue: {
+        exportTestResolverDTOS: ({ fields, ...query }: ServiceQuery<TestResolverDTO> & { fields: { field: string }[] }) =>
+          resolver.exportMany(query, { fields })
+      }
+    })
+
+    expect(result.errors).toBeUndefined()
+    expect(result.data?.exportTestResolverDTOS).toBe(items.reduce((csv, item) => `${csv}"${item.id}"\n`, '"id"\n'))
+    verify(service.exportMany(objectContaining({ paging: { limit: maxRecords } }), anything())).once()
   })
 
   it.each([
-    { maximum: undefined, limit: 10, offset: undefined, expectedLimit: 10 },
-    { maximum: 25, limit: 10, offset: 20, expectedLimit: 10 },
-    { maximum: 25, limit: 100, offset: 50, expectedLimit: 25 },
-    { maximum: undefined, limit: 2000, offset: 100, expectedLimit: 1000 },
-    { maximum: 25, limit: undefined, offset: 50, expectedLimit: 25 }
-  ])('applies requested export paging %j', async ({ maximum, limit, offset, expectedLimit }) => {
+    { maximum: undefined, paging: { limit: 10 } },
+    { maximum: 25, paging: { limit: 10, offset: 20 } },
+    { maximum: 25, paging: { limit: 25, offset: 50 } },
+    { maximum: undefined, paging: { limit: 1000, offset: 100 } }
+  ])('passes requested export paging to the service %j', async ({ maximum, paging }) => {
     const service = mock<QueryService<TestResolverDTO>>()
     when(service.exportMany(anything(), anything())).thenResolve([])
     const resolver = new (ExportResolver(TestResolverDTO, { enabled: true, limit: maximum }))(instance(service))
 
-    await resolver.exportMany({ paging: { limit, offset } }, { fields: [{ field: 'id' }] })
+    await resolver.exportMany({ paging }, { fields: [{ field: 'id' }] })
 
-    verify(service.exportMany(objectContaining({ paging: { limit: expectedLimit, offset: offset ?? 0 } }), anything())).once()
+    verify(service.exportMany(objectContaining({ paging }), anything())).once()
+  })
+
+  it.each([undefined, 25])('validates the configured export maximum %s', (limit) => {
+    const ResolverClass = ExportResolver(TestResolverDTO, { enabled: true, limit })
+    const [QueryArgs] = Reflect.getMetadata('design:paramtypes', ResolverClass.prototype, 'exportMany') as [
+      Class<ServiceQuery<TestResolverDTO>>
+    ]
+    const maximum = limit ?? 1000
+
+    expect(validateSync(plainToInstance(QueryArgs, { paging: { limit: maximum, offset: 0 } }))).toHaveLength(0)
+    expect(validateSync(plainToInstance(QueryArgs, { paging: { limit: maximum + 1, offset: 0 } }))).toEqual([
+      expect.objectContaining({
+        property: 'paging',
+        constraints: { PropertyMax: `Field paging.limit max allowed value is \`${maximum}\`.` }
+      })
+    ])
   })
 
   it('exports a page of filtered and authorized records in the requested order', async () => {
@@ -312,7 +339,7 @@ describe('ExportResolver', () => {
       limit: 25,
       many: { withDeleted: true }
     }))(instance(service))
-    const query = { filter: { stringField: { eq: 'test' } } }
+    const query = { filter: { stringField: { eq: 'test' } }, paging: { limit: 25, offset: 0 } }
     const authorizeFilter = { id: { eq: '1' } }
     const fields = [{ field: 'stringField', label: 'Value' }, { field: 'owner.company.name' }]
     const resolveInfo = {
