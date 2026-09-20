@@ -4320,6 +4320,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-graphql@workspace:packages/query-graphql"
   dependencies:
+    csv-stringify: "npm:^6.8.3"
     dataloader: "npm:^2.2.3"
     graphql-fields: "npm:^2.0.3"
     lodash.omit: "npm:^4.18.0"
@@ -9330,7 +9331,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gateway@workspace:examples/federation-v2-e2e/gateway"
   dependencies:
-    "@apollo/gateway": "npm:^2.13.3"
+    "@apollo/gateway": "npm:2.14.1"
     "@apollo/server": "npm:^5.5.0"
     "@as-integrations/express5": "npm:^1.1.2"
     "@nestjs/apollo": "npm:^13.2.4"
@@ -15136,7 +15137,7 @@ __metadata:
   resolution: "tag-service@workspace:examples/federation-v2-e2e/tag-service"
   dependencies:
     "@apollo/server": "npm:^5.5.0"
-    "@apollo/subgraph": "npm:^2.13.3"
+    "@apollo/subgraph": "npm:2.14.1"
     "@as-integrations/express5": "npm:^1.1.2"
     "@nestjs/apollo": "npm:^13.2.4"
     "@nestjs/cli": "npm:^11.0.16"
@@ -15412,7 +15413,7 @@ __metadata:
   resolution: "todo-service@workspace:examples/federation-v2-e2e/todo-service"
   dependencies:
     "@apollo/server": "npm:^5.5.0"
-    "@apollo/subgraph": "npm:^2.13.3"
+    "@apollo/subgraph": "npm:2.14.1"
     "@as-integrations/express5": "npm:^1.1.2"
     "@nestjs/apollo": "npm:^13.2.4"
     "@nestjs/cli": "npm:^11.0.16"
@@ -16261,7 +16262,7 @@ __metadata:
   resolution: "user-service@workspace:examples/federation-v2-e2e/user-service"
   dependencies:
     "@apollo/server": "npm:^5.5.0"
-    "@apollo/subgraph": "npm:^2.13.3"
+    "@apollo/subgraph": "npm:2.14.1"
     "@as-integrations/express5": "npm:^1.1.2"
     "@nestjs/apollo": "npm:^13.2.4"
     "@nestjs/cli": "npm:^11.0.16"

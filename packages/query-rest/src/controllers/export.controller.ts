@@ -1,6 +1,6 @@
 import { Header } from '@nestjs/common'
 import { ApiProduces } from '@nestjs/swagger'
-import { Class, DeepPartial, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, DeepPartial, EXPORT_TRANSFORM_GROUP, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
 import { stringify as stringifyCsv } from 'csv-stringify/sync'
 import omit from 'lodash.omit'
@@ -30,11 +30,15 @@ export interface ExportController<DTO, QS extends QueryService<DTO, unknown, unk
 }
 
 export const stringifyExportCsv = <DTO, ExportDTO>(ExportDTOClass: Class<ExportDTO>, items: DTO[]): string =>
-  stringifyCsv(plainToInstance(ExportDTOClass, items, { excludeExtraneousValues: true }), {
+  stringifyCsv(plainToInstance(ExportDTOClass, items, { excludeExtraneousValues: true, groups: [EXPORT_TRANSFORM_GROUP] }), {
     header: true,
     delimiter: ',',
     defaultEncoding: 'utf8',
     quoted_string: true,
+    cast: {
+      date: (value) => value.toISOString(),
+      boolean: (value) => value.toString()
+    },
     escape_formulas: true
   })
 

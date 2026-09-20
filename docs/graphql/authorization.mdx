@@ -43,9 +43,7 @@ To enable the guard on your resolver endpoints you use the `guards` option when 
 
 The `guards` option will ensure that all queries and mutations will have the `guard` added so the user is added to the request.
 
-todo-item/todo-item.module.ts
-
-```ts
+```ts todo-item/todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'
@@ -99,9 +97,7 @@ The `@Authorize` decorator does not return an unauthorized error instead the fol
 
 In the following example the `authorize` function returns a `Filter` that includes the `ownerId` to ensure that only `TodoItems` that belong to the authenticated user are returned.
 
-todo-item/dto/todo-item.dto.ts
-
-```ts
+```ts todo-item/dto/todo-item.dto.ts
 import { FilterableField, IDField, FilterableConnection, FilterableRelation, Authorize } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'
@@ -168,9 +164,7 @@ When mutating relations
 
 For example given the following `SubTaskDTO` definition whenever the `subTasks` connection is queried through a `todoItem`, only `subTasks` that belong to the user will be returned.
 
-sub-task/dto/sub-task.dto.ts
-
-```ts
+```ts sub-task/dto/sub-task.dto.ts
 import { FilterableField, IDField, FilterableRelation, Authorize } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
@@ -238,9 +232,7 @@ The `CustomAuthorizer` interface ensures two methods:
 
 In this example we'll create a simple authorizer for `SubTasks`. You can use this as a base to create a more complex authorizers that depends on other services.
 
-sub-task/sub-task.authorizer.ts
-
-```ts
+```ts sub-task/sub-task.authorizer.ts
 import { Injectable } from '@nestjs/common'
 import { Authorizer } from '@ptc-org/nestjs-query-graphql'
 import { Filter } from '@ptc-org/nestjs-query-core'
@@ -264,9 +256,7 @@ export class SubTaskAuthorizer implements CustomAuthorizer<SubTaskDTO> {
 
 To use the `SubTaskAuthorizer` you only need to provide it as an argument to the `@Authorize` decorator
 
-sub-task/sub-task.dto.ts
-
-```ts
+```ts sub-task/sub-task.dto.ts
 import { Authorize, FilterableField, IDField, FilterableRelation } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
@@ -318,9 +308,7 @@ In this example there are two important additions:
 1. The `AuthorizerInterceptor` is added to the `TodoItemResolver` as an interceptor, this interceptor will add the authorizer to the context so it can be used down stream
 2. The `AuthorizerFilter` param decorator uses the authorizer added by the interceptor to create an authorizer filter.
 
-todo-item/todo-item.resolver.ts
-
-```ts
+```ts todo-item/todo-item.resolver.ts
 import { Filter, InjectQueryService, mergeFilter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
 import { AuthorizerInterceptor, AuthorizerFilter, ConnectionType } from '@ptc-org/nestjs-query-graphql'
 import { Args, Query, Resolver } from '@nestjs/graphql'
@@ -360,9 +348,7 @@ The most common use case for using the `@InjectAuthorizer` decorator is when you
 
 In this example the `Authorizer` is injected as a `readonly` property you can then use it for any custom methods.
 
-todo-item/todo-item.resolver.ts
-
-```ts
+```ts todo-item/todo-item.resolver.ts
 import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core'
 import { CRUDResolver, InjectAuthorizer } from '@ptc-org/nestjs-query-graphql'
 import { Resolver, Query, Args } from '@nestjs/graphql'
@@ -398,9 +384,7 @@ Sometimes it might be necessary to perform different authorization based on the 
 
 In this case we can make use of the second parameter of the `authorize` function in our `CustomAuthorizer` or the one passed to the `@Authorizer` decorator which gets passed additional `AuthorizationContext` such as the name of the operation that should be authorized:
 
-sub-task/sub-task.authorizer.ts
-
-```ts
+```ts sub-task/sub-task.authorizer.ts
 import { Injectable } from '@nestjs/common'
 import { CustomAuthorizer } from '@ptc-org/nestjs-query-graphql'
 import { Filter } from '@ptc-org/nestjs-query-core'
@@ -427,12 +411,11 @@ export class SubTaskAuthorizer implements CustomAuthorizer<SubTaskDTO> {
 
 The `AuthorizationContext` has the following shape:
 
-authorizer.ts
-
-```ts
+```ts authorizer.ts
 export enum OperationGroup {
 
   READ = 'read',
+  EXPORT = 'export',
   AGGREGATE = 'aggregate',
   CREATE = 'create',
   UPDATE = 'update',
@@ -468,6 +451,7 @@ The `operationNames` of the generated CRUD resolver methods are similar to the o
 
 - `queryMany`
 - `findById`
+- `exportMany` (only when `export.enabled` is `true`)
 - `aggregate`
 - `createOne`
 - `createMany`
@@ -492,9 +476,7 @@ By default the authorizer is invoked for `createOne` and `createMany` (with the 
 
 To enforce the auth filter on create mutations, set the `validateWithAuthFilter` option in the resolver's `create` options. The filter is then passed to the `QueryService`, which evaluates it in JS against each input before saving. The option only takes effect when the authorizer resolves a filter for the `CREATE` operation group; if no authorizer is registered for the DTO, or it returns no filter for create operations, the option is a no-op.
 
-todo-item/todo-item.module.ts
-
-```ts
+```ts todo-item/todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'

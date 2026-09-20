@@ -1,0 +1,169 @@
+---
+title: 'CSV Export'
+description: 'Export filtered and authorized GraphQL query results as CSV.'
+---
+
+CSV export is opt-in. `CRUDResolver` and `NestjsQueryGraphQLModule` do not add an export query unless `export.enabled` is explicitly set to `true`.
+
+<Note>Configuring `limit` or other export options does not enable export by itself. Always include `enabled: true`.</Note>
+
+## Enable CSV export
+
+Add the `export` option to a resolver entry in `NestjsQueryGraphQLModule.forFeature`:
+
+```ts
+{
+  DTOClass: TodoItemDTO,
+  EntityClass: TodoItemEntity,
+  export: { enabled: true }
+}
+```
+
+This adds an `export<PluralDTOName>` query that accepts the generated filter and sorting arguments. The query returns CSV text, runs the collection query hook, and applies the authorizer filter with `OperationGroup.EXPORT`.
+
+```graphql
+query {
+  exportTodoItems(
+    filter: { completed: { is: false } }
+    fields: [{ field: "id", label: "Identifier" }, { field: "title" }, { field: "owner.name", label: "Owner" }]
+  )
+}
+```
+
+The required `fields` argument controls the columns and their order and must contain at least one field. Set a nonempty `label` to override a CSV header. Use GraphQL schema field names: for `@Field({ name: 'displayTitle' }) title`, select `displayTitle`; the exporter reads the underlying `title` property.
+
+With Nest's `ValidationPipe` enabled, empty field lists and duplicate field names are rejected. By default, field names are validated against the DTO's GraphQL fields, including inherited fields. When `ExportDTOClass` is supplied, its GraphQL fields determine the allowed field names instead.
+
+Use dot notation for fields on declared relations, such as `owner.name`, where `owner` is registered with `@Relation('owner', () => OwnerDTO)` and `name` is a GraphQL field on `OwnerDTO`. Inherited relations and inherited fields on relation DTOs are also supported. These relations are included in the service query. Field validation supports one relation level; deeper paths such as `owner.company.name` are not accepted. Collection relation values are serialized as JSON arrays in a single CSV cell, rather than flattened into rows. Computed getters on DTO instances are supported.
+
+## CSV serialization
+
+The query returns CSV text as a GraphQL string, including the requested headers even when no records match.
+
+String values are quoted, and values that could be interpreted as spreadsheet formulas are escaped. `Date` values are serialized as UTC ISO 8601 strings (for example, `2026-09-20T12:30:00.000Z`). Boolean values are serialized as the unquoted literals `true` and `false`. Null and undefined values produce empty fields.
+
+To use a different format, return a string from `@ExportTransform()` as shown below. Formatted strings are preserved.
+
+## Configure exports
+
+Exports return at most `1000` matching records by default, starting at offset `0` and using the requested sorting. If more records match, only the first `limit` records are included. The CSV response does not report whether additional records were omitted. Narrow the filter or configure a larger limit to include more records.
+
+After enabling export, you can change the limit or rename the query:
+
+```ts
+{
+  DTOClass: TodoItemDTO,
+  EntityClass: TodoItemEntity,
+  export: {
+    enabled: true,
+    limit: 5000,
+    many: {
+      name: 'downloadTodoItems',
+      description: 'Export visible todo items as CSV'
+    }
+  }
+}
+```
+
+## Export a specific page
+
+The default page size and maximum are the configured `export.limit` (default `1000`), and `offset` defaults to `0`. With Nest's `ValidationPipe`, limits above this maximum are rejected. Omitting the whole `paging` argument uses the configured export limit; when providing a custom `paging.offset`, set `paging.limit` explicitly.
+
+For example, export the third page of 25 records:
+
+```graphql
+query {
+  exportTodoItems(
+    paging: { limit: 25, offset: 50 }
+    sorting: [{ field: id, direction: ASC }]
+    fields: [{ field: "id" }, { field: "title" }]
+  )
+}
+```
+
+Use the same filter and sorting as the displayed page, with a unique sort field to keep page boundaries deterministic. The offset counts matching, authorized records.
+
+## Select the export shape
+
+Use `fields` to select columns and `label` to set their headers. By default, the GraphQL exporter converts records returned by `QueryService.exportMany` to `DTOClass` instances before selecting the requested property paths.
+
+Set `ExportDTOClass` to define the allowed export fields and transform records before selecting CSV columns. Decorate the class with `@ObjectType()` and its fields with Nest's `@Field()` (or `@FilterableField()`). Inherited GraphQL fields are included, so an export DTO can extend an existing DTO. Use Nest GraphQL's `PickType` or `OmitType` to select a subset of inherited fields.
+
+`@Expose()` is not required. Use `@Transform()` from `class-transformer` to customize values and `@Type()` to transform related objects.
+
+```ts
+import { Field, Int, ObjectType } from '@nestjs/graphql'
+import { Transform } from 'class-transformer'
+
+@ObjectType()
+export class TodoItemExportDTO {
+  @Field(() => Int)
+  id!: number
+
+  @Field()
+  @Transform(({ value }: { value: string }) => value.toUpperCase())
+  title!: string
+}
+```
+
+```ts
+{
+  DTOClass: TodoItemDTO,
+  EntityClass: TodoItemEntity,
+  export: { enabled: true, ExportDTOClass: TodoItemExportDTO }
+}
+```
+
+Alternatively, reuse fields from an existing GraphQL DTO:
+
+```ts
+import { ObjectType, PickType } from '@nestjs/graphql'
+
+@ObjectType()
+export class TodoItemExportDTO extends PickType(TodoItemDTO, ['id', 'title'] as const) {}
+```
+
+Properties without GraphQL field metadata are rejected by validation, even if decorated with `@Expose()`. Export-only GraphQL fields can be selected. Transformation decorators affect values, not the list of allowed fields.
+
+For relation columns, declare `@Relation('owner', () => OwnerExportDTO)` on the export DTO and GraphQL fields on `OwnerExportDTO`. This makes paths such as `owner.name` selectable. Add `@Type(() => OwnerExportDTO)` to the `owner` property if its values need nested class-transformer transformations. Relation names must match the query service's relations.
+
+Filters and authorization still use the main GraphQL DTO. Labels and formula escaping are applied after transformation. `ExportDTOClass` does not enable exports by itself; `enabled: true` is still required.
+
+## Export-only transformations
+
+Use `@ExportTransform()` from `@ptc-org/nestjs-query-graphql` to format a property only for CSV export. It accepts the same callback parameters as class-transformer's `@Transform()`, including `value`, `obj`, and `key`. Normal DTO conversion and API serialization do not run it.
+
+```ts
+import { Field, ObjectType } from '@nestjs/graphql'
+import { ExportTransform } from '@ptc-org/nestjs-query-graphql'
+
+@ObjectType()
+export class TodoItemDTO {
+  @Field()
+  @ExportTransform(({ value }: { value: Date }) => value.toISOString().slice(0, 10))
+  createdAt!: Date
+}
+```
+
+The decorator works on the main DTO or `ExportDTOClass`, including inherited properties. Use `@Type(() => RelatedDTO)` for nested DTO transformations. The callback runs during export DTO conversion, before column selection and CSV formula escaping. It does not change the source records or make a property an allowed export column; declare the GraphQL field as usual. Existing `@Transform()` decorators also run during this conversion.
+
+## Standalone export resolver
+
+The standalone `ExportResolver` is also opt-in. Pass `enabled: true` when extending it:
+
+```ts
+@Resolver(() => TodoItemDTO)
+export class TodoItemExportResolver extends ExportResolver(TodoItemDTO, { enabled: true }) {
+  constructor(readonly service: TodoItemService) {
+    super(service)
+  }
+}
+```
+
+Omitting `enabled`, or setting it to `false`, leaves the export query out of the generated GraphQL schema.
+
+For a manual CRUD resolver, use `CRUDResolver(TodoItemDTO, { export: { enabled: true } })`.
+
+## Large exports
+
+The generated resolver loads the selected records and builds the CSV response in memory. Keep the export limit bounded; for very large datasets, implement a custom endpoint that streams the response.

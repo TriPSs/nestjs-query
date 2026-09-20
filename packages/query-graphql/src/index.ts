@@ -12,6 +12,7 @@ export {
   BeforeUpdateMany,
   BeforeUpdateOne,
   CursorConnection,
+  ExportTransform,
   FilterableCursorConnection,
   FilterableField,
   FilterableFieldOptions,
