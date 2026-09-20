@@ -213,7 +213,6 @@ import Redis from 'ioredis'
 import { Provider } from '@nestjs/common'
 
 export class RedisPubSubProvider {
-
   static provider(): Provider {
     return {
       provide: pubSubToken(),
@@ -259,3 +258,66 @@ import { RedisPubSubProvider } from '../redis-pub-sub.provider'
 })
 export class TodoItemModule {}
 ```
+
+## Federated Subscriptions[​](#federated-subscriptions 'Direct link to Federated Subscriptions')
+
+Subscriptions work across federated subgraphs. A complete runnable example mixing a mercurius gateway with one mercurius
+subgraph and one apollo subgraph is available under `examples/federation-mercurius`.
+
+The gateway needs `subscription` enabled and each subgraph advertised with a `wsUrl` so the gateway can forward
+subscription operations over WebSocket:
+
+gateway/app.module.ts
+
+```ts
+@Module({
+  imports: [
+    GraphQLModule.forRoot({
+      driver: MercuriusGatewayDriver,
+      subscription: true,
+      gateway: {
+        services: [
+          {
+            name: 'todo-items',
+            url: 'http://localhost:3011/graphql',
+            wsUrl: 'ws://localhost:3011/graphql'
+          },
+          {
+            name: 'users',
+            url: 'http://localhost:3012/graphql',
+            wsUrl: 'ws://localhost:3012/graphql'
+          }
+        ]
+      }
+    })
+  ]
+})
+export class AppModule {}
+```
+
+On the subgraph side, enable `enableSubscriptions` on the `NestjsQueryGraphQLModule` resolver options as usual, and turn
+on the WebSocket server of the underlying driver:
+
+todo-item subgraph (mercurius federation driver)
+
+```ts
+GraphQLModule.forRoot({
+  driver: MercuriusFederationDriver,
+  autoSchemaFile: { federation: 2 },
+  subscription: true
+})
+```
+
+user subgraph (apollo federation driver, using the `graphql-ws` package protocol)
+
+```ts
+GraphQLModule.forRoot({
+  driver: ApolloFederationDriver,
+  autoSchemaFile: { federation: 2 },
+  subscriptions: { 'graphql-ws': {} }
+})
+```
+
+Subscribing clients connect to the gateway's `/graphql` endpoint and receive events published by any subgraph, including
+entities owned by other subgraphs resolved through federation (for example an `assignee` reference inside a `TodoItem`
+event payload).
