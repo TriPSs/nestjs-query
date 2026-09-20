@@ -1,0 +1,14 @@
+yarn.lock
+  h_b13471b77746e9 10926-10929,11739,11773-11809,11812-11813,11818,12048
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4cf1fd7d0821d38fb2af956bb96d2016a5a477f6",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
