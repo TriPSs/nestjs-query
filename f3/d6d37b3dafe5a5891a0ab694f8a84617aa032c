@@ -1,0 +1,32 @@
+docs/migration-guides/v10.x.x-to-v11.x.x.mdx
+  h_b13471b77746e9 3,51-54
+docs/graphql/export.mdx
+  s_469f777d6a64d6::t_d8f60b98a5a9f8 8,33,39-46,88,166-169
+docs/rest/controllers.mdx
+  s_469f777d6a64d6::t_51505ef30522a5 115
+docs/rest/export.mdx
+  s_469f777d6a64d6::t_1bb60822a6281a 21,23,25-33,63,67-68,93-126
+packages/query-rest/__tests__/controllers/export.controller.spec.ts
+  s_469f777d6a64d6::t_cea2bd8840fdb0 31-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f3d6d37b3dafe5a5891a0ab694f8a84617aa032c",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_469f777d6a64d6": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0be71-1cf9-7c70-a563-0cb74c7dd030",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
