@@ -9,7 +9,6 @@ import {
   SelectRelation
 } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
-import { stringify as stringifyCsv } from 'csv-stringify/sync'
 import omit from 'lodash.omit'
 
 import { OperationGroup } from '../auth'
@@ -76,7 +75,15 @@ const createExportRelations = <DTO>(fields: ExportFieldInput[]): SelectRelation<
   return createRelations(relationPaths) as SelectRelation<DTO>[]
 }
 
-export const stringifyExportCsv = <DTO>(items: DTO[], fields: ExportFieldInput[]): string => {
+export const stringifyExportCsv = async <DTO>(items: DTO[], fields: ExportFieldInput[]): Promise<string> => {
+  let stringifyCsv: typeof import('csv-stringify/sync').stringify
+  try {
+    const { stringify } = await import('csv-stringify/sync')
+    stringifyCsv = stringify
+  } catch {
+    throw new Error('csv-stringify is required for CSV export; install it with `npm install csv-stringify`')
+  }
+
   const rows = items.map((item) => Object.fromEntries<unknown>(fields.map(({ field }) => [field, getPathValue(item, field)])))
 
   return stringifyCsv(rows, {

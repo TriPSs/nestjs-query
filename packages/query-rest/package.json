@@ -40,6 +40,11 @@
     "class-validator": "^0.14.0 || ^0.15.0",
     "csv-stringify": "^6.8.3"
   },
+  "peerDependenciesMeta": {
+    "csv-stringify": {
+      "optional": true
+    }
+  },
   "publishConfig": {
     "access": "public"
   }

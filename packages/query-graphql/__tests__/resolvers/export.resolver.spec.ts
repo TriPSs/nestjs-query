@@ -10,49 +10,49 @@ import { stringifyExportCsv } from '../../src/resolvers/export.resolver'
 import { generateSchema, TestResolverDTO } from '../__fixtures__'
 
 describe('stringifyExportCsv', () => {
-  it.each(['=', '+', '-', '@', '\t', '\r', '\uFF1D', '\uFF0B'])('escapes values beginning with %j', (prefix) => {
+  it.each(['=', '+', '-', '@', '\t', '\r', '\uFF1D', '\uFF0B'])('escapes values beginning with %j', async (prefix) => {
     const value = `${prefix}formula()`
 
-    expect(stringifyExportCsv([{ value }], [{ field: 'value' }])).toContain(`"'${value}"`)
+    await expect(stringifyExportCsv([{ value }], [{ field: 'value' }])).resolves.toContain(`"'${value}"`)
   })
 
-  it('serializes dates as ISO strings, including selected relation dates', () => {
+  it('serializes dates as ISO strings, including selected relation dates', async () => {
     const date = new Date('2026-09-20T14:30:00+02:00')
     const items = [{ createdAt: date, owner: { createdAt: date }, missing: null }]
 
-    expect(stringifyExportCsv(items, [{ field: 'createdAt' }, { field: 'owner.createdAt' }, { field: 'missing' }])).toBe(
-      '"createdAt","owner.createdAt","missing"\n2026-09-20T12:30:00.000Z,2026-09-20T12:30:00.000Z,\n'
-    )
+    await expect(
+      stringifyExportCsv(items, [{ field: 'createdAt' }, { field: 'owner.createdAt' }, { field: 'missing' }])
+    ).resolves.toBe('"createdAt","owner.createdAt","missing"\n2026-09-20T12:30:00.000Z,2026-09-20T12:30:00.000Z,\n')
   })
 
-  it('preserves formatted date strings', () => {
-    expect(stringifyExportCsv([{ date: '20/09/2026' }], [{ field: 'date' }])).toBe('"date"\n"20/09/2026"\n')
+  it('preserves formatted date strings', async () => {
+    await expect(stringifyExportCsv([{ date: '20/09/2026' }], [{ field: 'date' }])).resolves.toBe('"date"\n"20/09/2026"\n')
   })
 
-  it('serializes only selected fields', () => {
-    expect(stringifyExportCsv([{ id: 1, title: 'Write GraphQL documentation' }], [{ field: 'title' }])).toBe(
+  it('serializes only selected fields', async () => {
+    await expect(stringifyExportCsv([{ id: 1, title: 'Write GraphQL documentation' }], [{ field: 'title' }])).resolves.toBe(
       '"title"\n"Write GraphQL documentation"\n'
     )
   })
 
-  it('uses property names when labels are omitted or empty', () => {
+  it('uses property names when labels are omitted or empty', async () => {
     const fields = [{ field: 'id' }, { field: 'title', label: '' }]
 
-    expect(stringifyExportCsv([{ id: 1, title: 'Write GraphQL documentation' }], fields)).toBe(
+    await expect(stringifyExportCsv([{ id: 1, title: 'Write GraphQL documentation' }], fields)).resolves.toBe(
       '"id","title"\n1,"Write GraphQL documentation"\n'
     )
   })
 
-  it('selects nested fields and applies column labels', () => {
+  it('selects nested fields and applies column labels', async () => {
     const fields = [
       { field: 'id', label: 'Identifier' },
       { field: 'owner.name', label: 'Owner' }
     ]
 
-    expect(stringifyExportCsv([{ id: 1, owner: { name: 'Ada' } }], fields)).toBe('"Identifier","Owner"\n1,"Ada"\n')
+    await expect(stringifyExportCsv([{ id: 1, owner: { name: 'Ada' } }], fields)).resolves.toBe('"Identifier","Owner"\n1,"Ada"\n')
   })
 
-  it('reads prototype getters and values from collection relations', () => {
+  it('reads prototype getters and values from collection relations', async () => {
     class Item {
       get title(): string {
         return 'Computed'
@@ -61,13 +61,15 @@ describe('stringifyExportCsv', () => {
       owners = [{ name: 'Ada' }, { name: 'Grace' }]
     }
 
-    expect(stringifyExportCsv([new Item()], [{ field: 'title' }, { field: 'owners.name' }])).toBe(
+    await expect(stringifyExportCsv([new Item()], [{ field: 'title' }, { field: 'owners.name' }])).resolves.toBe(
       '"title","owners.name"\n"Computed","[""Ada"",""Grace""]"\n'
     )
   })
 
-  it('includes the requested headers when no records are returned', () => {
-    expect(stringifyExportCsv([], [{ field: 'id' }, { field: 'owner.name', label: 'Owner' }])).toBe('"id","Owner"\n')
+  it('includes the requested headers when no records are returned', async () => {
+    await expect(stringifyExportCsv([], [{ field: 'id' }, { field: 'owner.name', label: 'Owner' }])).resolves.toBe(
+      '"id","Owner"\n'
+    )
   })
 })
 

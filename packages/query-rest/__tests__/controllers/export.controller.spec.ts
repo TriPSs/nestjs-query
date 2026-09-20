@@ -16,28 +16,30 @@ describe('stringifyExportCsv', () => {
     value!: string
   }
 
-  it.each(['=', '+', '-', '@', '\t', '\r', '\uFF1D', '\uFF0B'])('escapes values beginning with %j', (prefix) => {
+  it.each(['=', '+', '-', '@', '\t', '\r', '\uFF1D', '\uFF0B'])('escapes values beginning with %j', async (prefix) => {
     const value = `${prefix}formula()`
 
-    expect(stringifyExportCsv(ExportDTO, [{ value }])).toContain(`"'${value}"`)
+    await expect(stringifyExportCsv(ExportDTO, [{ value }])).resolves.toContain(`"'${value}"`)
   })
 
-  it('serializes dates as ISO strings and preserves formatted strings and nulls', () => {
-    expect(
+  it('serializes dates as ISO strings and preserves formatted strings and nulls', async () => {
+    await expect(
       stringifyExportCsv(ExportDTO, [{ value: new Date('2026-09-20T14:30:00+02:00') }, { value: '20/09/2026' }, { value: null }])
-    ).toBe('"value"\n2026-09-20T12:30:00.000Z\n"20/09/2026"\n\n')
+    ).resolves.toBe('"value"\n2026-09-20T12:30:00.000Z\n"20/09/2026"\n\n')
   })
 
-  it('serializes both boolean values as literal true and false', () => {
+  it('serializes both boolean values as literal true and false', async () => {
     class BooleanExportDTO {
       @Expose()
       completed!: boolean
     }
 
-    expect(stringifyExportCsv(BooleanExportDTO, [{ completed: true }, { completed: false }])).toBe('"completed"\ntrue\nfalse\n')
+    await expect(stringifyExportCsv(BooleanExportDTO, [{ completed: true }, { completed: false }])).resolves.toBe(
+      '"completed"\ntrue\nfalse\n'
+    )
   })
 
-  it('applies export-only transforms without affecting ordinary DTO conversion', () => {
+  it('applies export-only transforms without affecting ordinary DTO conversion', async () => {
     class ItemExportDTO {
       @Expose()
       @ExportTransform(({ value }: { value: string }) => value.toUpperCase())
@@ -46,11 +48,11 @@ describe('stringifyExportCsv', () => {
 
     const item = plainToInstance(ItemExportDTO, { title: 'hello' })
 
-    expect(stringifyExportCsv(ItemExportDTO, [item])).toBe('"title"\n"HELLO"\n')
+    await expect(stringifyExportCsv(ItemExportDTO, [item])).resolves.toBe('"title"\n"HELLO"\n')
     expect(item.title).toBe('hello')
   })
 
-  it('projects items through a distinct export DTO', () => {
+  it('projects items through a distinct export DTO', async () => {
     class ItemDTO {
       id!: number
 
@@ -67,9 +69,9 @@ describe('stringifyExportCsv', () => {
     const opts: CRUDControllerOpts<ItemDTO> = { export: { ExportDTOClass: ItemExportDTO } }
 
     expect(opts.export?.ExportDTOClass).toBe(ItemExportDTO)
-    expect(stringifyExportCsv(ItemExportDTO, [{ id: 1, title: 'Write REST documentation', completed: false }])).toBe(
-      '"title"\n"Write REST documentation"\n'
-    )
+    await expect(
+      stringifyExportCsv(ItemExportDTO, [{ id: 1, title: 'Write REST documentation', completed: false }])
+    ).resolves.toBe('"title"\n"Write REST documentation"\n')
   })
 })
 
