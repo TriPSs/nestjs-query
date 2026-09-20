@@ -61,7 +61,7 @@ After enabling export, you can change the limit or rename the query:
 
 ## Export a specific page
 
-Use the existing offset `paging` argument to export fewer records or a specific page. The default page size and maximum are the configured `export.limit` (default `1000`), and `offset` defaults to `0`. With Nest's `ValidationPipe`, limits above this maximum are rejected. The resolver also caps the service query at this maximum. Omitting `paging` or `paging.limit` uses the configured export limit.
+The default page size and maximum are the configured `export.limit` (default `1000`), and `offset` defaults to `0`. With Nest's `ValidationPipe`, limits above this maximum are rejected. Omitting the whole `paging` argument uses the configured export limit; when providing a custom `paging.offset`, set `paging.limit` explicitly.
 
 For example, export the third page of 25 records:
 
