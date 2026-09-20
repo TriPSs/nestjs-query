@@ -28,6 +28,15 @@ describe('stringifyExportCsv', () => {
     ).toBe('"value"\n2026-09-20T12:30:00.000Z\n"20/09/2026"\n\n')
   })
 
+  it('serializes both boolean values as literal true and false', () => {
+    class BooleanExportDTO {
+      @Expose()
+      completed!: boolean
+    }
+
+    expect(stringifyExportCsv(BooleanExportDTO, [{ completed: true }, { completed: false }])).toBe('"completed"\ntrue\nfalse\n')
+  })
+
   it('applies export-only transforms without affecting ordinary DTO conversion', () => {
     class ItemExportDTO {
       @Expose()

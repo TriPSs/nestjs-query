@@ -1,6 +1,6 @@
 ---
 title: 'v10.x.x to v11.x.x'
-description: 'Adopt the 100-record maximum for GraphQL and REST queries or retain the previous limit.'
+description: 'Migrate GraphQL and REST query limits and REST CSV boolean serialization.'
 ---
 
 In v11, the default `maxResultsSize` is `100` for both GraphQL and REST, up from `50` in v10. This affects endpoints that use the generated paging arguments without an explicit maximum.
@@ -48,3 +48,7 @@ export class TodoItemDTO {
 Check endpoint-level query options as well: explicit resolver or controller settings override the DTO defaults. Set any applicable `maxResultsSize` override to `50` to keep that endpoint's previous maximum.
 
 See [GraphQL query options](/graphql/dtos#queryoptions) and [REST paging](/rest/queries/paging) for further configuration.
+
+## REST CSV boolean serialization
+
+In v11, REST CSV exports serialize boolean values as the unquoted literals `true` and `false`. In v10, they emitted `1` for `true` and an empty field for `false`.
