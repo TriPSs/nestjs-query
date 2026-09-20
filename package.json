@@ -49,6 +49,8 @@
     "@mikro-orm/core": "^6.6.14",
     "@mikro-orm/nestjs": "^6.1.2",
     "@nestjs/apollo": "^13.4.2",
+    "@nestjs/mercurius": "^13.4.5",
+    "@nestjs/platform-fastify": "^11.1.0",
     "@nestjs/schematics": "11.1.0",
     "@nestjs/testing": "^11.1.26",
     "@nx/eslint": "22.7.8",
@@ -66,6 +68,7 @@
     "@types/passport-jwt": "4.0.1",
     "@types/pluralize": "0.0.33",
     "@types/supertest": "7.2.0",
+    "@types/ws": "^8",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
     "better-sqlite3": "^13.0.3",
@@ -86,6 +89,7 @@
     "husky": "9.1.7",
     "jest": "30.5.1",
     "jest-extended": "7.0.0",
+    "mercurius": "^16.10.0",
     "mongodb-memory-server": "11.2.0",
     "mysql2": "3.24.4",
     "nx": "22.7.8",
@@ -98,7 +102,8 @@
     "ts-jest": "29.4.12",
     "ts-mockito": "2.6.1",
     "ts-node": "10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "ws": "^8.18.0"
   },
   "dependenciesMeta": {
     "better-sqlite3": {

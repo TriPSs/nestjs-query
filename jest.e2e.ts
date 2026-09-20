@@ -16,6 +16,11 @@ export default {
   moduleFileExtensions: ['ts', 'js', 'html'],
   testMatch: ['**/examples/**/e2e/**/*.spec.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/federation-v2-e2e/'],
+  // mercurius and its transitive deps (@fastify/static -> ESM-only content-disposition,
+  // dynamic import of ESM-only quick-lru) must be transpiled by ts-jest to CJS
+  transformIgnorePatterns: [
+    'node_modules/(?!(mercurius|quick-lru|@fastify/static|@fastify/static/node_modules/content-disposition|content-disposition|uuid)/)'
+  ],
   setupFilesAfterEnv: ['jest-extended'],
   coverageDirectory: './coverage/examples'
 } satisfies Config
