@@ -11,22 +11,11 @@
     "prepare": "husky install",
     "test:e2e": "nx e2e examples"
   },
-  "//resolutions": {
-    "better-sqlite3": "@mikro-orm/better-sqlite pins better-sqlite3 to 11.x, which crashes on Node.js 24 due to a stricter assertion in RemoveEnvironmentCleanupHook; v12 fixes this"
-  },
   "resolutions": {
     "@apollo/gateway": "2.14.1",
     "@apollo/server": "^5.5.1",
     "@apollo/subgraph": "2.14.1",
     "better-sqlite3": "^13.0.3"
-  },
-  "dependenciesMeta": {
-    "better-sqlite3": {
-      "built": true
-    },
-    "sqlite3": {
-      "built": true
-    }
   },
   "dependencies": {
     "@m8a/nestjs-typegoose": "13.0.0",
@@ -131,5 +120,16 @@
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.9.3"
   },
-  "packageManager": "yarn@4.18.0"
+  "dependenciesMeta": {
+    "better-sqlite3": {
+      "built": true
+    },
+    "sqlite3": {
+      "built": true
+    }
+  },
+  "packageManager": "yarn@4.18.0",
+  "//resolutions": {
+    "better-sqlite3": "@mikro-orm/better-sqlite pins better-sqlite3 to 11.x, which crashes on Node.js 24 due to a stricter assertion in RemoveEnvironmentCleanupHook; v12 fixes this"
+  }
 }
