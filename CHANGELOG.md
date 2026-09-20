@@ -1,4 +1,11 @@
  
+## [11.0.0-alpha.1](https://github.com/TriPSs/nestjs-query/compare/v11.0.0-alpha.0...v11.0.0-alpha.1) (2026-09-20)
+
+### Bug Fixes
+
+* **deps:** Make CSV export optional and prune unused dependencies ([b466120](https://github.com/TriPSs/nestjs-query/commit/b46612055ece248c92389a9a53b396b79ce9dbee)), closes [TriPSs/nestjs-query#305](https://github.com/TriPSs/nestjs-query/issues/305)
+* **query-typeorm:** Allow optional metadata and nested relations ([ab55ffc](https://github.com/TriPSs/nestjs-query/commit/ab55ffc316f5e88462a4fd42bb996e736d43650f))
+
 ## [10.0.3](https://github.com/TriPSs/nestjs-query/compare/v10.0.2...v10.0.3) (2026-08-29)
 
 
