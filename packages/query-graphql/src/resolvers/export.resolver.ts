@@ -80,7 +80,11 @@ export const stringifyExportCsv = async <DTO>(items: DTO[], fields: ExportFieldI
   try {
     const { stringify } = await import('csv-stringify/sync')
     stringifyCsv = stringify
-  } catch {
+  } catch (error) {
+    const code = (error as NodeJS.ErrnoException | undefined)?.code
+    if (code && code !== 'MODULE_NOT_FOUND' && code !== 'ERR_MODULE_NOT_FOUND') {
+      throw error
+    }
     throw new Error('csv-stringify is required for CSV export; install it with `npm install csv-stringify`')
   }
 
