@@ -1,0 +1,28 @@
+packages/query-typeorm/src/query/filter-query.builder.ts
+  h_b13471b77746e9 73-74
+packages/query-typeorm/src/query/where.builder.ts
+  h_b13471b77746e9 164
+packages/query-typeorm/__tests__/query/where.builder.spec.ts
+  s_ec3330d3876373::t_d3e41ea02fb0e4 39-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ab55ffc316f5e88462a4fd42bb996e736d43650f",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_ec3330d3876373": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0beb8-c883-7dd3-b76b-d62aada9172f",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
