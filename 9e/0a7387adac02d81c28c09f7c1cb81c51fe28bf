@@ -1,0 +1,25 @@
+packages/query-typegoose/src/services/typegoose-query-service.ts
+  s_a3684122e9955d::t_bbe3474a775c7e 56
+  s_a3684122e9955d::t_1c4b88f8047e49 251-253,260
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9e0a7387adac02d81c28c09f7c1cb81c51fe28bf",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_a3684122e9955d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0beed-2563-7700-be55-09931fa78333",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
