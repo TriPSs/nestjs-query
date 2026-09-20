@@ -5,6 +5,8 @@ import {
   AggregateQuery,
   AggregateResponse,
   CountOptions,
+  CreateManyOptions,
+  CreateOneOptions,
   DeleteManyResponse,
   DeleteOneOptions,
   Filter,
@@ -20,9 +22,14 @@ import {
 } from '../interfaces'
 import { QueryService } from './query.service'
 
-export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepPartial<Entity>, U = C, UE = CE>
-  implements QueryService<DTO, C, U>
-{
+export class AssemblerQueryService<
+  DTO,
+  Entity,
+  C = DeepPartial<DTO>,
+  CE = DeepPartial<Entity>,
+  U = C,
+  UE = CE
+> implements QueryService<DTO, C, U> {
   constructor(
     readonly assembler: Assembler<DTO, Entity, C, CE, U, UE>,
     readonly queryService: QueryService<Entity, CE, UE>
@@ -39,15 +46,15 @@ export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepP
     )
   }
 
-  public async createMany(items: C[]): Promise<DTO[]> {
+  public async createMany(items: C[], opts?: CreateManyOptions<DTO>): Promise<DTO[]> {
     const { assembler } = this
     const converted = await assembler.convertToCreateEntities(items)
-    return this.assembler.convertToDTOs(await this.queryService.createMany(converted))
+    return this.assembler.convertToDTOs(await this.queryService.createMany(converted, this.convertFilterable(opts)))
   }
 
-  public async createOne(item: C): Promise<DTO> {
+  public async createOne(item: C, opts?: CreateOneOptions<DTO>): Promise<DTO> {
     const c = await this.assembler.convertToCreateEntity(item)
-    return this.assembler.convertToDTO(await this.queryService.createOne(c))
+    return this.assembler.convertToDTO(await this.queryService.createOne(c, this.convertFilterable(opts)))
   }
 
   public async deleteMany(filter: Filter<DTO>): Promise<DeleteManyResponse> {
@@ -73,6 +80,10 @@ export class AssemblerQueryService<DTO, Entity, C = DeepPartial<DTO>, CE = DeepP
 
   public async query(query: Query<DTO>, opts?: QueryOptions<DTO>): Promise<DTO[]> {
     return this.assembler.convertToDTOs(await this.queryService.query(this.assembler.convertQuery(query), opts as never))
+  }
+
+  public async exportMany(query: Query<DTO>, opts?: QueryOptions<DTO>): Promise<DTO[]> {
+    return this.assembler.convertToDTOs(await this.queryService.exportMany(this.assembler.convertQuery(query), opts as never))
   }
 
   public async aggregate(

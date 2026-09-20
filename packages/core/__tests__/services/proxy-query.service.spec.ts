@@ -23,13 +23,25 @@ describe('ProxyQueryService', () => {
   })
   it('should proxy to the underlying service when calling createMany', () => {
     const entities = [{ foo: 'bar' }]
-    when(mockQueryService.createMany(entities)).thenResolve(entities)
+    when(mockQueryService.createMany(entities, undefined)).thenResolve(entities)
     return expect(queryService.createMany(entities)).resolves.toBe(entities)
+  })
+  it('should proxy to the underlying service when calling createMany with opts', () => {
+    const entities = [{ foo: 'bar' }]
+    const createManyOpts = { filter: { foo: { eq: 'bar' } } }
+    when(mockQueryService.createMany(entities, createManyOpts)).thenResolve(entities)
+    return expect(queryService.createMany(entities, createManyOpts)).resolves.toBe(entities)
   })
   it('should proxy to the underlying service when calling createOne', () => {
     const entity = { foo: 'bar' }
-    when(mockQueryService.createOne(entity)).thenResolve(entity)
+    when(mockQueryService.createOne(entity, undefined)).thenResolve(entity)
     return expect(queryService.createOne(entity)).resolves.toBe(entity)
+  })
+  it('should proxy to the underlying service when calling createOne with opts', () => {
+    const entity = { foo: 'bar' }
+    const createOneOpts = { filter: { foo: { eq: 'bar' } } }
+    when(mockQueryService.createOne(entity, createOneOpts)).thenResolve(entity)
+    return expect(queryService.createOne(entity, createOneOpts)).resolves.toBe(entity)
   })
   it('should proxy to the underlying service when calling deleteMany', () => {
     const filter = {}
@@ -46,6 +58,12 @@ describe('ProxyQueryService', () => {
     const result = { foo: 'bar' }
     when(mockQueryService.findById(1, undefined)).thenResolve(result)
     return expect(queryService.findById(1)).resolves.toBe(result)
+  })
+  it('should proxy to the underlying service when calling exportMany', () => {
+    const query = { filter: { foo: { eq: 'bar' } } }
+    const result = [{ foo: 'bar' }]
+    when(mockQueryService.exportMany(query, undefined)).thenResolve(result)
+    return expect(queryService.exportMany(query)).resolves.toBe(result)
   })
   it('should proxy to the underlying service when calling findRelation with one dto', () => {
     const relationName = 'test'

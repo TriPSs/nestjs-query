@@ -7,6 +7,8 @@ export class TagEntity extends Document {
   @ObjectId()
   _id: mongoose.Types.ObjectId
 
+  id!: string
+
   @Prop({ required: true })
   name!: string
 

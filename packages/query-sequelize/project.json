@@ -3,6 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/query-sequelize/src",
   "projectType": "library",
+  "tags": [],
+  "implicitDependencies": ["core"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -24,7 +26,8 @@
         "packageJson": "packages/query-sequelize/package.json",
         "main": "packages/query-sequelize/src/index.ts",
         "assets": ["packages/query-sequelize/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true
+        "updateBuildableProjectDepsInPackageJson": true,
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
     "version": {
@@ -37,7 +40,5 @@
         "command": "npm publish ./dist/packages/query-sequelize --access public"
       }
     }
-  },
-  "tags": [],
-  "implicitDependencies": ["core"]
+  }
 }

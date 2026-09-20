@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`DeleteResolver #deleteMany should not create a new delete type if the DeleteManyArgs is supplied 1`] = `
 "type TestResolverDTO {

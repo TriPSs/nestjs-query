@@ -1,0 +1,127 @@
+# Federation V2 E2E Test Environment
+# Reproduces issue #410: Federation referenceBy broken since v9.2.0
+# Tests both numeric ID (User) and UUID string ID (Tag) types
+#
+# Usage: docker compose up -d --build
+# Note: Run from project root directory to access packages/ for building
+
+services:
+  # PostgreSQL database
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initdb.d/
+    ports:
+      - "5436:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # User subgraph service (numeric ID)
+  user-service:
+    build:
+      context: ../..
+      dockerfile: examples/federation-v2-e2e/user-service/Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: federation_user
+      DB_NAME: federation_user
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "-X", "POST", "-H", "Content-Type: application/json", "-d", "{\"query\":\"{__typename}\"}", "http://localhost:3000/graphql"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # Tag subgraph service (UUID string ID)
+  tag-service:
+    build:
+      context: ../..
+      dockerfile: examples/federation-v2-e2e/tag-service/Dockerfile
+    ports:
+      - "3003:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: federation_tag
+      DB_NAME: federation_tag
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "-X", "POST", "-H", "Content-Type: application/json", "-d", "{\"query\":\"{__typename}\"}", "http://localhost:3000/graphql"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # TodoItem subgraph service
+  todo-service:
+    build:
+      context: ../..
+      dockerfile: examples/federation-v2-e2e/todo-service/Dockerfile
+    ports:
+      - "3002:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: federation_todo
+      DB_NAME: federation_todo
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "-X", "POST", "-H", "Content-Type: application/json", "-d", "{\"query\":\"{__typename}\"}", "http://localhost:3000/graphql"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # Apollo Gateway
+  gateway:
+    build:
+      context: ../..
+      dockerfile: examples/federation-v2-e2e/gateway/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      USER_SERVICE_URL: http://user-service:3000/graphql
+      TODO_SERVICE_URL: http://todo-service:3000/graphql
+      TAG_SERVICE_URL: http://tag-service:3000/graphql
+    depends_on:
+      user-service:
+        condition: service_healthy
+      todo-service:
+        condition: service_healthy
+      tag-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "-X", "POST", "-H", "Content-Type: application/json", "-d", "{\"query\":\"{__typename}\"}", "http://localhost:3000/graphql"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # E2E Test Runner
+  e2e-test:
+    build:
+      context: ../..
+      dockerfile: examples/federation-v2-e2e/e2e-test/Dockerfile
+    environment:
+      GATEWAY_URL: http://gateway:3000/graphql
+    depends_on:
+      gateway:
+        condition: service_healthy
+    profiles:
+      - test

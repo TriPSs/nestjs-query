@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle,@typescript-eslint/no-unsafe-return */
+import { BadRequestException } from '@nestjs/common'
 import { InjectModel, MongooseModule } from '@nestjs/mongoose'
 import { Test, TestingModule } from '@nestjs/testing'
 import { SortDirection } from '@ptc-org/nestjs-query-core'
@@ -53,12 +54,12 @@ describe('MongooseQueryService', () => {
     }).compile()
   })
 
-  function convertDocument<Doc extends Document>(doc: Doc): Doc {
+  function convertDocument<Doc extends Document<any>>(doc: Doc): Doc {
     return doc.toObject({ virtuals: true })
     // return doc.toObject({ virtuals: true });
   }
 
-  function convertDocuments<Doc extends Document>(docs: Doc[]): Doc[] {
+  function convertDocuments<Doc extends Document<any>>(docs: Doc[]): Doc[] {
     return docs.map((doc) => convertDocument(doc))
   }
 
@@ -478,6 +479,16 @@ describe('MongooseQueryService', () => {
       const queryService = moduleRef.get(TestEntityService)
       return expect(queryService.createMany(TEST_ENTITIES)).rejects.toThrow('Id cannot be specified when updating or creating')
     })
+
+    describe('with filter', () => {
+      it('should create only the entities that match the filter', async () => {
+        const queryService = moduleRef.get(TestEntityService)
+        const created = await queryService.createMany(TEST_ENTITIES.map(testEntityToCreate), {
+          filter: { numberType: { gt: 5 } }
+        })
+        expectEqualCreate(created, TEST_ENTITIES.slice(5))
+      })
+    })
   })
 
   describe('#createOne', () => {
@@ -499,6 +510,27 @@ describe('MongooseQueryService', () => {
       const entity = TEST_ENTITIES[0]
       const queryService = moduleRef.get(TestEntityService)
       return expect(queryService.createOne({ ...entity })).rejects.toThrow('Id cannot be specified when updating or creating')
+    })
+
+    describe('with filter', () => {
+      it('should create the entity if it matches the filter', async () => {
+        const entity = testEntityToCreate(TEST_ENTITIES[0])
+        const queryService = moduleRef.get(TestEntityService)
+        const created = await queryService.createOne(entity, {
+          filter: { stringType: { eq: entity.stringType } }
+        })
+        expect(convertDocument(created)).toEqual(expect.objectContaining(entity))
+      })
+
+      it('should reject if the entity does not match the filter', async () => {
+        const entity = testEntityToCreate(TEST_ENTITIES[0])
+        const queryService = moduleRef.get(TestEntityService)
+        const createOnePromise = queryService.createOne(entity, {
+          filter: { stringType: { eq: TEST_ENTITIES[1].stringType } }
+        })
+        await expect(createOnePromise).rejects.toThrow('Entity does not meet creation constraints')
+        return expect(createOnePromise).rejects.toBeInstanceOf(BadRequestException)
+      })
     })
   })
 
@@ -660,15 +692,6 @@ describe('MongooseQueryService', () => {
         expect(queryResult2).toBeUndefined()
       })
 
-      // it('should return undefined select if no results are found.', async () => {
-      //   const entity = TEST_ENTITIES[0];
-      //   await TestEntityModel.updateOne({ _id: entity._id }, { $set: { testReference: undefined } });
-      //   const queryService = moduleRef.get(TestEntityService);
-      //   const queryResult = await queryService.findRelation(TestReference, 'testReference', entity);
-      //
-      //   expect(queryResult).toBeUndefined();
-      // });
-
       it('throw an error if a relation with that name is not found.', async () => {
         const queryService = moduleRef.get(TestEntityService)
         const entity = TEST_ENTITIES[0]
@@ -699,14 +722,6 @@ describe('MongooseQueryService', () => {
           })
           expect(queryResult2).toBeUndefined()
         })
-
-        // it('should return undefined select if no results are found.', async () => {
-        //   const entity = TEST_REFERENCES[0];
-        //   await TestReferenceModel.updateOne({ _id: entity._id }, { $set: { testEntity: undefined } });
-        //   const queryService = moduleRef.get(TestReferenceService);
-        //   const queryResult = await queryService.findRelation(TestEntity, 'virtualTestEntity', entity);
-        //   expect(queryResult).toBeUndefined();
-        // });
 
         it('throw an error if a relation with that name is not found.', async () => {
           const entity = TEST_REFERENCES[0]
@@ -861,7 +876,7 @@ describe('MongooseQueryService', () => {
       })
 
       it('should return an empty array if no results are found.', async () => {
-        const entities: TestEntity[] = [TEST_ENTITIES[0], { id: new Types.ObjectId() } as TestEntity]
+        const entities: TestEntity[] = [TEST_ENTITIES[0], { id: new Types.ObjectId() as never as string } as TestEntity]
         const queryService = moduleRef.get(TestEntityService)
         const queryResult = await queryService.queryRelations(TestReference, 'testReferences', entities, {
           filter: { referenceName: { isNot: null } }

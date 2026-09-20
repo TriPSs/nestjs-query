@@ -3,6 +3,7 @@ import { CRUDResolver, FilterableField, PagingStrategies } from '@ptc-org/nestjs
 
 import * as createResolver from '../../src/resolvers/create.resolver'
 import * as deleteResolver from '../../src/resolvers/delete.resolver'
+import * as exportResolver from '../../src/resolvers/export.resolver'
 import * as readResolver from '../../src/resolvers/read.resolver'
 import * as updateResolver from '../../src/resolvers/update.resolver'
 
@@ -11,6 +12,7 @@ describe('CrudResolver', () => {
   const readableSpy = jest.spyOn(readResolver, 'Readable')
   const updatableSpy = jest.spyOn(updateResolver, 'Updatable')
   const deleteResolverSpy = jest.spyOn(deleteResolver, 'DeleteResolver')
+  const exportableSpy = jest.spyOn(exportResolver, 'Exportable')
 
   beforeEach(() => jest.clearAllMocks())
 
@@ -41,6 +43,12 @@ describe('CrudResolver', () => {
     otherField!: string
   }
 
+  @ObjectType()
+  class ExportTestResolverDTO {
+    @FilterableField()
+    stringField!: string
+  }
+
   it('should create an crud resolver for the DTO class', () => {
     CRUDResolver(TestResolverDTO)
     expect(creatableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
@@ -54,6 +62,9 @@ describe('CrudResolver', () => {
 
     expect(deleteResolverSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(deleteResolverSpy).toHaveBeenCalledTimes(1)
+
+    expect(exportableSpy).toHaveBeenCalledWith(TestResolverDTO, {})
+    expect(exportableSpy).toHaveBeenCalledTimes(1)
   })
 
   it('should pass the provided CreateDTOClass to the CreateResolver', () => {
@@ -132,5 +143,16 @@ describe('CrudResolver', () => {
 
     expect(deleteResolverSpy).toHaveBeenCalledWith(TestResolverDTO, {})
     expect(deleteResolverSpy).toHaveBeenCalledTimes(1)
+  })
+
+  it('should pass the provided export options to the ExportResolver', () => {
+    CRUDResolver(TestResolverDTO, { export: { enabled: true, ExportDTOClass: ExportTestResolverDTO, limit: 25 } })
+
+    expect(exportableSpy).toHaveBeenCalledWith(TestResolverDTO, {
+      enabled: true,
+      ExportDTOClass: ExportTestResolverDTO,
+      limit: 25
+    })
+    expect(exportableSpy).toHaveBeenCalledTimes(1)
   })
 })

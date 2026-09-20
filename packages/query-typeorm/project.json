@@ -3,6 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/query-typeorm/src",
   "projectType": "library",
+  "tags": [],
+  "implicitDependencies": ["core"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -12,8 +14,7 @@
         "tsConfig": "packages/query-typeorm/tsconfig.lib.json",
         "packageJson": "packages/query-typeorm/package.json",
         "main": "packages/query-typeorm/src/index.ts",
-        "assets": ["packages/query-typeorm/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true
+        "assets": ["packages/query-typeorm/*.md"]
       }
     },
     "lint": {
@@ -37,7 +38,5 @@
         "command": "npm publish ./dist/packages/query-typeorm --access public"
       }
     }
-  },
-  "tags": [],
-  "implicitDependencies": ["core"]
+  }
 }

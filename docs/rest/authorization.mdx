@@ -1,0 +1,113 @@
+---
+title: 'Authorization'
+description: 'Authorization filters restrict records before generated read, update, delete, and export operations reach the query service. Create authorization also runs, allowing the authorizer to reject a request.'
+---
+
+<Note>
+  Authorization filters complement Nest guards. Use a guard for authentication and coarse endpoint access; use an authorizer for
+  record-level visibility.
+</Note>
+
+## Inline authorizer[​](#inline-authorizer 'Direct link to Inline authorizer')
+
+Decorate the response DTO with `@Authorize`. The first argument is the HTTP request and the second describes the generated operation.
+
+```ts todo-item.dto.ts
+import { Request } from 'express'
+import { Authorize, FilterableField, IDField } from '@ptc-org/nestjs-query-rest'
+
+type AuthenticatedRequest = Request & {
+  user: { id: string }
+}
+
+@Authorize<TodoItemDTO>({
+  authorize: (request: AuthenticatedRequest) => ({
+    ownerId: { eq: request.user.id }
+  })
+})
+export class TodoItemDTO {
+
+  @IDField()
+  id!: number
+
+  @FilterableField({ filterOnly: true })
+  ownerId!: string
+}
+```
+
+For collection requests, the authorization filter is merged with the client filter. For single-record, update, and delete requests it is passed as an additional service filter, preventing access to records owned by another user.
+
+## Authorizer class[​](#authorizer-class 'Direct link to Authorizer class')
+
+Use an injectable class for more involved rules:
+
+```ts todo-item.authorizer.ts
+import { ForbiddenException, Injectable } from '@nestjs/common'
+import { Filter } from '@ptc-org/nestjs-query-core'
+import { AuthorizationContext, CustomAuthorizer, OperationGroup } from '@ptc-org/nestjs-query-rest'
+
+@Injectable()
+export class TodoItemAuthorizer implements CustomAuthorizer<TodoItemDTO> {
+
+  async authorize(request: AuthenticatedRequest, context: AuthorizationContext): Promise<Filter<TodoItemDTO>> {
+    if (context.operationGroup === OperationGroup.CREATE && !request.user) {
+      throw new ForbiddenException()
+    }
+    return { ownerId: { eq: request.user.id } }
+  }
+}
+```
+
+```ts todo-item.dto.ts
+@Authorize(TodoItemAuthorizer)
+export class TodoItemDTO {}
+```
+
+`AuthorizationContext` contains:
+
+- `operationName`: generated controller method name, such as `queryMany` or `updateOne`.
+- `operationGroup`: `read`, `create`, `update`, `delete`, or `export`.
+- `readonly`: whether the operation does not modify data.
+- `many`: whether the operation can affect multiple records.
+
+The module registers authorizer providers for DTOs listed in either `endpoints` or `dtos`.
+
+## Add a guard[​](#add-a-guard 'Direct link to Add a guard')
+
+Ensure the request has a user before the authorizer runs:
+
+```ts
+{
+  DTOClass: TodoItemDTO,
+  EntityClass: TodoItemEntity,
+  guards: [JwtAuthGuard]
+}
+```
+
+Guards and authorizers can also be scoped through the `read`, `create`, `update`, `delete`, and `export` operation options.
+
+## Applying auth filters on creation[​](#applying-auth-filters-on-creation 'Direct link to Applying auth filters on creation')
+
+The authorizer runs for `createOne`, but by default the filter it returns is not enforced against the request body; the authorizer can only reject a create by throwing, as shown above. Set `validateWithAuthFilter` in the `create` options to also enforce the filter:
+
+```ts
+{
+  DTOClass: TodoItemDTO,
+  EntityClass: TodoItemEntity,
+  create: { validateWithAuthFilter: true }
+}
+```
+
+The filter is passed to the query service, which evaluates it in JS against the request body before saving. A body that does not match the filter, for example an `ownerId` different from `request.user.id`, is rejected with a `BadRequestException` (HTTP 400) and the message `Entity does not meet creation constraints`. The option only takes effect when the authorizer resolves a filter for the `create` operation group; if no authorizer is registered for the DTO, or it returns no filter for create operations, the option is a no-op.
+
+<Warning>
+  The filter is evaluated in JS against the flat request body. This has a few limitations:
+
+  - Filter clauses on relations, or on fields populated by the database (such as `createdAt`, generated ids, or column
+    defaults), cannot be checked and will not match.
+  - The filter is evaluated against the fields present on the body: a field that is missing from the body fails positive
+    operators (`eq`, `in`, `like`) but passes negated operators (`neq`, `notIn`, `notLike`), so negated filters cannot reliably
+    constrain fields the client omits.
+  - Enforcement happens in the query service, so a custom service that overrides `createOne(item)` or `createMany(items)`
+    without accepting and forwarding the new `opts` parameter will silently skip the check.
+</Warning>

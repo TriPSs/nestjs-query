@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ReferenceResolver should create a new resolver with a resolveReference method 1`] = `
 "type TestResolverDTO {

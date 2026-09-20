@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ReadRelationsResolver - many - 5 should set the field to nullable if set to true 1`] = `
 "type TestResolverDTO {

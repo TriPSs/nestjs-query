@@ -1,5 +1,7 @@
 const nxPreset = require('@nx/jest/preset').default
 
+const esmPackages = ['uuid']
+
 module.exports = {
   ...nxPreset,
   collectCoverage: true,
@@ -19,9 +21,11 @@ module.exports = {
     '@ptc-org/nestjs-query-typeorm': process.cwd() + '/packages/query-typeorm/src',
     '@ptc-org/nestjs-query-sequelize': process.cwd() + '/packages/query-sequelize/src',
     '@ptc-org/nestjs-query-typegoose': process.cwd() + '/packages/query-typegoose/src',
-    '@ptc-org/nestjs-query-mongoose': process.cwd() + '/packages/query-mongoose/src'
+    '@ptc-org/nestjs-query-mongoose': process.cwd() + '/packages/query-mongoose/src',
+    '@ptc-org/nestjs-query-rest': process.cwd() + '/packages/query-rest/src'
   },
   testEnvironment: 'node',
   setupFilesAfterEnv: ['jest-extended'],
-  testTimeout: 10000
+  testTimeout: 10000,
+  transformIgnorePatterns: [`node_modules/(?!(${esmPackages.join('|')})/)`]
 }

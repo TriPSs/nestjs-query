@@ -30,8 +30,11 @@ export type ReadResolverOpts<DTO> = {
   QueryArgsTypeOpts<DTO> &
   Pick<ConnectionOptions, 'enableTotalCount'>
 
-export interface ReadResolver<DTO, PS extends PagingStrategies, QS extends QueryService<DTO, unknown, unknown>>
-  extends ServiceResolver<DTO, QS> {
+export interface ReadResolver<
+  DTO,
+  PS extends PagingStrategies,
+  QS extends QueryService<DTO, unknown, unknown>
+> extends ServiceResolver<DTO, QS> {
   queryMany(
     query: QueryType<DTO, PagingStrategies>,
     authorizeFilter?: Filter<DTO>,

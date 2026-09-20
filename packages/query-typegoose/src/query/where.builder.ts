@@ -18,12 +18,12 @@ export class WhereBuilder<Entity> {
    * Builds a WHERE clause from a Filter.
    * @param filter - the filter to build the WHERE clause from.
    */
-  public build(filter: Filter<Entity>): mongoose.FilterQuery<new () => Entity> {
+  public build(filter: Filter<Entity>): mongoose.QueryFilter<Entity> {
     const normalizedFilter = this.getNormalizedFilter(filter)
     const { and, or } = normalizedFilter
-    let ands: mongoose.FilterQuery<Entity>[] = []
-    let ors: mongoose.FilterQuery<Entity>[] = []
-    let filterQuery: mongoose.FilterQuery<Entity> = {}
+    let ands: mongoose.QueryFilter<Entity>[] = []
+    let ors: mongoose.QueryFilter<Entity>[] = []
+    let filterQuery: mongoose.QueryFilter<Entity> = {}
 
     if (and && and.length) {
       ands = and.map((f) => this.build(f))
@@ -84,7 +84,7 @@ export class WhereBuilder<Entity> {
    * Creates field comparisons from a filter. This method will ignore and/or properties.
    * @param filter - the filter with fields to create comparisons for.
    */
-  private filterFields(filter: Filter<Entity>): mongoose.FilterQuery<Entity> | undefined {
+  private filterFields(filter: Filter<Entity>): mongoose.QueryFilter<Entity> | undefined {
     const ands = Object.keys(filter)
       .filter((f) => f !== 'and' && f !== 'or')
       .map((field) => this.withFilterComparison(field as keyof Entity, this.getField(filter, field as keyof Entity)))
@@ -94,7 +94,7 @@ export class WhereBuilder<Entity> {
     }
 
     if (ands.length) {
-      return { $and: ands } as mongoose.FilterQuery<Entity>
+      return { $and: ands } as mongoose.QueryFilter<Entity>
     }
 
     return undefined
@@ -110,7 +110,7 @@ export class WhereBuilder<Entity> {
   private withFilterComparison<T extends keyof Entity>(
     field: T,
     cmp: FilterFieldComparison<Entity[T]>
-  ): mongoose.FilterQuery<Entity> {
+  ): mongoose.QueryFilter<Entity> {
     const opts = Object.keys(cmp) as (keyof FilterFieldComparison<Entity[T]>)[]
     if (opts.length === 1) {
       const cmpType = opts[0]
@@ -118,6 +118,6 @@ export class WhereBuilder<Entity> {
     }
     return {
       $or: opts.map((cmpType) => this.comparisonBuilder.build(field, cmpType, cmp[cmpType] as EntityComparisonField<Entity, T>))
-    } as mongoose.FilterQuery<Entity>
+    } as mongoose.QueryFilter<Entity>
   }
 }

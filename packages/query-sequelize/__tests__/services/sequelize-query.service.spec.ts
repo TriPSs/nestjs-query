@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common'
 import { InjectModel, SequelizeModule } from '@nestjs/sequelize'
 import { Test, TestingModule } from '@nestjs/testing'
 import { DeepPartial } from '@ptc-org/nestjs-query-core'
@@ -1302,7 +1303,7 @@ describe('SequelizeQueryService', (): void => {
       await truncate(moduleRef.get(Sequelize))
       const queryService = moduleRef.get(TestEntityService)
       const created = await queryService.createMany(PLAIN_TEST_ENTITIES)
-      expect(created.map((c) => c.get({ plain: true }))).toEqual(expect.objectContaining(PLAIN_TEST_ENTITIES))
+      expect(created.map((c) => c.get({ plain: true }))).toEqual(expect.arrayContaining(PLAIN_TEST_ENTITIES))
     })
 
     it('call save on the repo with instances of entities when passed instances', async () => {
@@ -1316,6 +1317,15 @@ describe('SequelizeQueryService', (): void => {
     it('should reject if the entities already exist', async () => {
       const queryService = moduleRef.get(TestEntityService)
       return expect(queryService.createMany(PLAIN_TEST_ENTITIES)).rejects.toThrow('Entity already exists')
+    })
+
+    it('should only create entities that match the provided filter', async () => {
+      await truncate(moduleRef.get(Sequelize))
+      const queryService = moduleRef.get(TestEntityService)
+      const matchingEntities = PLAIN_TEST_ENTITIES.filter((entity) => entity.numberType > 5)
+      const created = await queryService.createMany(PLAIN_TEST_ENTITIES, { filter: { numberType: { gt: 5 } } })
+      expect(created.map((c) => c.get({ plain: true }))).toEqual(expect.arrayContaining(matchingEntities))
+      expect(created).toHaveLength(matchingEntities.length)
     })
   })
 
@@ -1340,6 +1350,25 @@ describe('SequelizeQueryService', (): void => {
       const entity = PLAIN_TEST_ENTITIES[0]
       const queryService = moduleRef.get(TestEntityService)
       return expect(queryService.createOne(entity)).rejects.toThrow('Entity already exists')
+    })
+
+    it('should reject an entity that does not match the provided filter', async () => {
+      await truncate(moduleRef.get(Sequelize))
+      const entity = PLAIN_TEST_ENTITIES[0]
+      const queryService = moduleRef.get(TestEntityService)
+      const createOnePromise = queryService.createOne(entity, {
+        filter: { stringType: { eq: PLAIN_TEST_ENTITIES[1].stringType } }
+      })
+      await expect(createOnePromise).rejects.toThrow('Entity does not meet creation constraints')
+      return expect(createOnePromise).rejects.toBeInstanceOf(BadRequestException)
+    })
+
+    it('should create an entity that matches the provided filter', async () => {
+      await truncate(moduleRef.get(Sequelize))
+      const entity = PLAIN_TEST_ENTITIES[0]
+      const queryService = moduleRef.get(TestEntityService)
+      const created = await queryService.createOne(entity, { filter: { stringType: { eq: entity.stringType } } })
+      expect(created).toEqual(expect.objectContaining(entity))
     })
   })
 

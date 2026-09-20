@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle,@typescript-eslint/no-unsafe-return */
 import { InjectModel, TypegooseModule } from '@m8a/nestjs-typegoose'
+import { BadRequestException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { FindRelationOptions, SortDirection } from '@ptc-org/nestjs-query-core'
 import { DocumentType, getModelForClass, mongoose } from '@typegoose/typegoose'
@@ -49,7 +50,7 @@ describe('TypegooseQueryService', () => {
       ],
       providers: [TestReferenceService, TestEntityService]
     }).compile()
-  })
+  }, 120000)
 
   function convertDocument<Doc>(doc: DocumentType<Doc>): Doc {
     return doc.toObject({ virtuals: true }) as Doc
@@ -85,7 +86,7 @@ describe('TypegooseQueryService', () => {
 
   beforeEach(async () => mongo.prepareDb())
 
-  afterEach(async () => mongo.dropDatabase())
+  afterEach(async () => mongo.clearDatabase())
 
   describe('#query', () => {
     it('call find and return the result', async () => {
@@ -481,6 +482,16 @@ describe('TypegooseQueryService', () => {
       const queryService = moduleRef.get(TestEntityService)
       return expect(queryService.createMany(TEST_ENTITIES)).rejects.toThrow('Id cannot be specified when updating or creating')
     })
+
+    describe('with filter', () => {
+      it('should create only the entities that match the filter', async () => {
+        const queryService = moduleRef.get(TestEntityService)
+        const created = await queryService.createMany(TEST_ENTITIES.map(testEntityToCreate), {
+          filter: { numberType: { gt: 5 } }
+        })
+        expectEqualCreate(created, TEST_ENTITIES.slice(5))
+      })
+    })
   })
 
   describe('#createOne', () => {
@@ -518,6 +529,27 @@ describe('TypegooseQueryService', () => {
       const queryService = moduleRef.get(TestEntityService)
       const created = await queryService.createOne({ ...entity, _id: undefined })
       expect(convertDocument(created)).toEqual(expect.objectContaining(entity))
+    })
+
+    describe('with filter', () => {
+      it('should create the entity if it matches the filter', async () => {
+        const entity = testEntityToCreate(TEST_ENTITIES[0])
+        const queryService = moduleRef.get(TestEntityService)
+        const created = await queryService.createOne(entity, {
+          filter: { stringType: { eq: entity.stringType } }
+        })
+        expect(convertDocument(created)).toEqual(expect.objectContaining(entity))
+      })
+
+      it('should reject if the entity does not match the filter', async () => {
+        const entity = testEntityToCreate(TEST_ENTITIES[0])
+        const queryService = moduleRef.get(TestEntityService)
+        const createOnePromise = queryService.createOne(entity, {
+          filter: { stringType: { eq: TEST_ENTITIES[1].stringType } }
+        })
+        await expect(createOnePromise).rejects.toThrow('Entity does not meet creation constraints')
+        return expect(createOnePromise).rejects.toBeInstanceOf(BadRequestException)
+      })
     })
   })
 

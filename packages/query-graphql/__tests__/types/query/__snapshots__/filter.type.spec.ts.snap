@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`filter types DeleteFilterType should create the correct filter graphql schema 1`] = `
 "type TestFilterDto {

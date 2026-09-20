@@ -11,9 +11,10 @@ import {
   ModifyRelationOptions,
   Query
 } from '@ptc-org/nestjs-query-core'
-import { Document, Model as MongooseModel, PipelineStage, Types, UpdateQuery } from 'mongoose'
+import { Document, Model as MongooseModel, PipelineStage, Schema, UpdateQuery } from 'mongoose'
 
 import {
+  getEmbeddedSchemaType,
   isEmbeddedSchemaTypeOptions,
   isSchemaTypeWithReferenceOptions,
   isVirtualTypeWithReferenceOptions,
@@ -131,7 +132,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
       return this.batchFindRelations(RelationClass, relationName, dto, opts)
     }
 
-    const foundEntity = await this.Model.findById(dto._id ?? dto.id)
+    const foundEntity = await this.Model.findById(dto._id ?? (dto as { id?: unknown }).id)
     if (!foundEntity) {
       return undefined
     }
@@ -151,14 +152,12 @@ export abstract class ReferenceQueryService<Entity extends Document> {
    * @param dtos - The entities to query relations for.
    * @param relationName - The name of relation to query for.
    * @param opts - A query to filter, page or sort relations.
-   * @param withDeleted - Also query the soft deleted records
    */
   private async batchQueryRelations<Relation extends Document>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: Entity[],
-    opts: Query<Relation>,
-    withDeleted?: boolean
+    opts: Query<Relation>
   ): Promise<Map<Entity, Relation[]>> {
     const assembler = AssemblerFactory.getAssembler(RelationClass, Document)
     const referenceQueryBuilder = this.getReferenceQueryBuilder(relationName)
@@ -265,15 +264,9 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     dtos: Entity[],
     opts?: FindRelationOptions<Relation>
   ): Promise<Map<Entity, Relation | undefined>> {
-    const batchResults = await this.batchQueryRelations(
-      RelationClass,
-      relationName,
-      dtos,
-      {
-        filter: opts?.filter
-      },
-      opts?.withDeleted
-    )
+    const batchResults = await this.batchQueryRelations(RelationClass, relationName, dtos, {
+      filter: opts?.filter
+    })
 
     const results = new Map<Entity, Relation>()
     batchResults.forEach((relation, dto) => {
@@ -308,7 +301,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     if (Array.isArray(dto)) {
       return this.batchQueryRelations(RelationClass, relationName, dto, query)
     }
-    const foundEntity = await this.Model.findById(dto._id ?? dto.id)
+    const foundEntity = await this.Model.findById(dto._id ?? (dto as { id?: unknown }).id)
     if (!foundEntity) {
       return []
     }
@@ -428,12 +421,16 @@ export abstract class ReferenceQueryService<Entity extends Document> {
     throw new Error(`Unable to find reference ${refName} on ${this.Model.modelName}`)
   }
 
+  private get schema(): Schema<Entity> {
+    return this.Model.schema as Schema<Entity>
+  }
+
   private isReferencePath(refName: string): boolean {
-    return !!this.Model.schema.path(refName)
+    return !!this.schema.path(refName)
   }
 
   private isVirtualPath(refName: string): boolean {
-    return !!this.Model.schema.virtualpath(refName)
+    return !!this.schema.virtualpath(refName)
   }
 
   private getReferenceQueryBuilder<Ref extends Document>(refName: string): FilterQueryBuilder<Ref> {
@@ -443,15 +440,18 @@ export abstract class ReferenceQueryService<Entity extends Document> {
   private getReferenceModel<Ref extends Document>(refName: string): MongooseModel<Ref> {
     const { db } = this.Model
     if (this.isReferencePath(refName)) {
-      const schemaType = this.Model.schema.path(refName)
+      const schemaType = this.schema.path(refName)
       if (isEmbeddedSchemaTypeOptions(schemaType)) {
-        return db.model<Ref>(schemaType.$embeddedSchemaType.options.ref)
+        const embedded = getEmbeddedSchemaType(schemaType)
+        if (embedded) {
+          return db.model<Ref>(embedded.options.ref)
+        }
       }
       if (isSchemaTypeWithReferenceOptions(schemaType)) {
         return db.model<Ref>(schemaType.options.ref)
       }
     } else if (this.isVirtualPath(refName)) {
-      const schemaType = this.Model.schema.virtualpath(refName)
+      const schemaType = this.schema.virtualpath(refName)
       if (isVirtualTypeWithReferenceOptions(schemaType)) {
         return db.model<Ref>(schemaType.options.ref)
       }
@@ -490,7 +490,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
       }
     }
     if (this.isVirtualPath(refName)) {
-      const virtualType = this.Model.schema.virtualpath(refName)
+      const virtualType = this.schema.virtualpath(refName)
       if (!isVirtualTypeWithReferenceOptions(virtualType)) {
         throw new Error(`Unable to lookup reference type for ${refName}`)
       }

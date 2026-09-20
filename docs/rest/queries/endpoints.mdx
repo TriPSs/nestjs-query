@@ -1,0 +1,61 @@
+---
+title: Endpoints
+---
+
+The generated REST controller exposes two read endpoints: one for a collection and one for a single record. It can also expose create, update, delete, and CSV export endpoints. These examples assume `basePath: 'todo-items'`.
+
+## Find by ID
+
+```http
+GET /todo-items/1
+```
+
+Successful requests return `200 OK` and the serialized DTO:
+
+```json
+{
+  "id": 1,
+  "title": "Write REST documentation",
+  "completed": false
+}
+```
+
+The route parameter type comes from the property decorated with `@IDField`.
+
+## Query a collection
+
+```http
+GET /todo-items?completed=false&limit=2&offset=0
+```
+
+Offset paging returns a connection object:
+
+```json
+{
+  "pageInfo": {
+    "hasNextPage": true,
+    "hasPreviousPage": false
+  },
+  "nodes": [
+    {
+      "id": 1,
+      "title": "Write REST documentation",
+      "completed": false
+    },
+    {
+      "id": 2,
+      "title": "Review examples",
+      "completed": false
+    }
+  ],
+  "totalCount": 7
+}
+```
+
+`totalCount` is present only when `enableTotalCount` is enabled. With `PagingStrategies.NONE`, the same endpoint returns a JSON array instead.
+
+```sh
+curl 'http://localhost:3000/todo-items?completed=false&limit=2&offset=0'
+```
+
+Read more about [filter query parameters](./filtering) and [paging strategies](./paging).

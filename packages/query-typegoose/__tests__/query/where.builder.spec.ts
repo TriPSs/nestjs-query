@@ -12,7 +12,7 @@ describe('WhereBuilder', (): void => {
 
   const expectFilterQuery = <T = TestEntity>(
     filter: Filter<T>,
-    expectedFilterQuery: mongoose.FilterQuery<T>,
+    expectedFilterQuery: mongoose.QueryFilter<T>,
     whereBuilder?: WhereBuilder<T>
   ): void => {
     const actual = (whereBuilder ?? createWhereBuilder()).build(filter)
@@ -24,7 +24,7 @@ describe('WhereBuilder', (): void => {
   })
 
   it('or multiple operators for a single field together', (): void => {
-    expectFilterQuery(
+    expectFilterQuery<TestEntity>(
       {
         numberType: { gt: 10, lt: 20, gte: 21, lte: 31 }
       },
@@ -62,7 +62,7 @@ describe('WhereBuilder', (): void => {
 
   describe('and', (): void => {
     it('and multiple expressions together', (): void => {
-      expectFilterQuery(
+      expectFilterQuery<TestEntity>(
         {
           and: [{ numberType: { gt: 10 } }, { numberType: { lt: 20 } }, { numberType: { gte: 30 } }, { numberType: { lte: 40 } }]
         },

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ReadRelationsResolver - many - 6 should use an offset connection if pagingStrategy is offset 1`] = `
 "type TestResolverDTO {

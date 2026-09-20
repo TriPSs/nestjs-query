@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle,@typescript-eslint/no-unsafe-return */
-import { Connection, Types } from 'mongoose'
+import { Connection } from 'mongoose'
 
 import { TestEntity } from './test.entity'
 import { TestReference } from './test-reference.entity'

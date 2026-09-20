@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { getDataSourceToken, InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
 import { Filter, SortDirection } from '@ptc-org/nestjs-query-core'
@@ -738,19 +739,6 @@ describe('TypeOrmQueryService', (): void => {
           TEST_ENTITIES[0].testEntityPk
         ])
       })
-
-      // it('call select and return the result for many to many', async () => {
-      //   const queryService = moduleRef.get(TestEntityService);
-      //   const queryResult = await queryService.queryRelations(TestEntity, 'manyTestRelations', TEST_ENTITIES[0], {});
-      //   expect(queryResult.map((r) => r.manyTestRelations)).toEqual([]);
-      //
-      //   const queryResult2 = await queryService.queryRelations(TestEntity, 'manyTestRelations', TEST_ENTITIES[1], {});
-      //   expect(queryResult2.map((r) => r.manyTestRelations)).toEqual([
-      //     TEST_RELATIONS[0],
-      //     TEST_RELATIONS[1],
-      //     TEST_RELATIONS[2]
-      //   ]);
-      // });
 
       it('should apply a filter', async () => {
         const queryService = moduleRef.get(TestEntityService)
@@ -1968,6 +1956,16 @@ describe('TypeOrmQueryService', (): void => {
       const queryService = moduleRef.get(TestEntityService)
       return expect(queryService.createMany(TEST_ENTITIES)).rejects.toThrow('Entity already exists')
     })
+
+    it('should only create entities that match the provided filter', async () => {
+      await truncate(moduleRef.get(getDataSourceToken()))
+      const queryService = moduleRef.get(TestEntityService)
+      const matchingEntities = TEST_ENTITIES.filter((entity) => entity.numberType > 5)
+      const created = await queryService.createMany(TEST_ENTITIES, { filter: { numberType: { gt: 5 } } })
+      expect(created).toEqual(matchingEntities)
+      const allCount = await queryService.count({})
+      expect(allCount).toBe(matchingEntities.length)
+    })
   })
 
   describe('#createOne', () => {
@@ -1991,6 +1989,23 @@ describe('TypeOrmQueryService', (): void => {
       const entity = TEST_ENTITIES[0]
       const queryService = moduleRef.get(TestEntityService)
       return expect(queryService.createOne(entity)).rejects.toThrow('Entity already exists')
+    })
+
+    it('should reject an entity that does not match the provided filter', async () => {
+      await truncate(moduleRef.get(getDataSourceToken()))
+      const entity = TEST_ENTITIES[0]
+      const queryService = moduleRef.get(TestEntityService)
+      const createOnePromise = queryService.createOne(entity, { filter: { stringType: { eq: TEST_ENTITIES[1].stringType } } })
+      await expect(createOnePromise).rejects.toThrow('Entity does not meet creation constraints')
+      return expect(createOnePromise).rejects.toBeInstanceOf(BadRequestException)
+    })
+
+    it('should create an entity that matches the provided filter', async () => {
+      await truncate(moduleRef.get(getDataSourceToken()))
+      const entity = TEST_ENTITIES[0]
+      const queryService = moduleRef.get(TestEntityService)
+      const created = await queryService.createOne(entity, { filter: { stringType: { eq: entity.stringType } } })
+      expect(created).toEqual(entity)
     })
   })
 

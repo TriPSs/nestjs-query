@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`RemoveRelationsResolver many should not add remove many methods if disableRemove is true 1`] = `
 "type TestResolverDTO {

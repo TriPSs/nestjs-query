@@ -1,16 +1,16 @@
-import { mongoose } from '@typegoose/typegoose'
+import type { types } from '@typegoose/typegoose'
 
-export interface TypegooseClass {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  new (...args: any[]): any
-}
+// These mirror the interfaces in `@m8a/nestjs-typegoose` so that the models passed to
+// `NestjsQueryTypegooseModule.forFeature` are assignable to `TypegooseModule.forFeature`.
+// Keep them in sync with `@m8a/nestjs-typegoose`'s `typegoose-class.interface`.
+export type TypegooseClass = types.AnyParamConstructor<unknown>
 
 export interface TypegooseClassWrapper {
   typegooseClass: TypegooseClass
 }
 
 export interface TypegooseClassWithOptions extends TypegooseClassWrapper {
-  schemaOptions?: mongoose.SchemaOptions
+  schemaOptions?: types.IModelOptions['schemaOptions']
   discriminators?: (TypegooseClass | TypegooseDiscriminator)[]
 }
 

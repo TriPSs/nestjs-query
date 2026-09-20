@@ -1,3 +1,5 @@
+import { BadRequestException } from '@nestjs/common'
+
 import { Filter, FilterComparisons, FilterFieldComparison } from '../interfaces'
 import { FilterBuilder } from './filter.builder'
 import { QueryFieldMap } from './query.helpers'
@@ -211,4 +213,25 @@ export function applyFilter<DTO>(dtoOrArray: DTO | DTO[], filter: Filter<DTO>): 
     return dtoOrArray.filter((dto) => filterFunc(dto))
   }
   return filterFunc(dtoOrArray)
+}
+
+/**
+ * Ensures a record that is about to be created matches the creation filter, throwing a BadRequestException otherwise.
+ * When no filter is provided the record is always allowed.
+ */
+export function ensureMatchesCreationFilter<DTO>(record: DTO, filter?: Filter<DTO>): void {
+  if (filter && !applyFilter(record, filter)) {
+    throw new BadRequestException('Entity does not meet creation constraints')
+  }
+}
+
+/**
+ * Returns the subset of records that match the creation filter and are therefore allowed to be created.
+ * When no filter is provided the records are returned unchanged.
+ */
+export function filterCreatableRecords<DTO>(records: DTO[], filter?: Filter<DTO>): DTO[] {
+  if (!filter) {
+    return records
+  }
+  return applyFilter(records, filter)
 }

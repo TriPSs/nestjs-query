@@ -3,6 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/query-mongoose/src",
   "projectType": "library",
+  "tags": [],
+  "implicitDependencies": ["core"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -24,7 +26,8 @@
         "packageJson": "packages/query-mongoose/package.json",
         "main": "packages/query-mongoose/src/index.ts",
         "assets": ["packages/query-mongoose/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true
+        "updateBuildableProjectDepsInPackageJson": true,
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
     "version": {
@@ -37,7 +40,5 @@
         "command": "npm publish ./dist/packages/query-mongoose --access public"
       }
     }
-  },
-  "tags": [],
-  "implicitDependencies": ["core"]
+  }
 }

@@ -1,0 +1,29 @@
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+
+@Entity({ name: 'todo_item' })
+export class TodoItemEntity {
+  @PrimaryGeneratedColumn()
+  id!: number
+
+  @Column()
+  title!: string
+
+  @Column({ nullable: true })
+  description?: string
+
+  @Column({ default: false })
+  completed!: boolean
+
+  @Column({ nullable: true })
+  assigneeId?: number
+
+  // UUID reference to Tag entity - tests string ID type in Federation
+  @Column({ type: 'uuid', nullable: true })
+  tagId?: string
+
+  @CreateDateColumn()
+  created!: Date
+
+  @UpdateDateColumn()
+  updated!: Date
+}

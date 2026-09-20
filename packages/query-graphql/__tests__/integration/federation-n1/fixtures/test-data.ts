@@ -5,7 +5,7 @@ import { TodoItem } from '../entities/todo-item.entity'
 import { TodoList } from '../entities/todo-list.entity'
 
 export const createTestData = async (dataSource: DataSource) => {
-  // Clear existing data
+  // Clear existing data (must delete items first due to foreign key)
   await dataSource.getRepository(TodoItem).deleteAll()
   await dataSource.getRepository(TodoList).deleteAll()
 

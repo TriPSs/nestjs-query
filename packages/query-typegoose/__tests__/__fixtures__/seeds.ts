@@ -79,37 +79,51 @@ export const seed = async (connection: mongoose.Connection): Promise<void> => {
     Object.assign(TEST_REFERENCES_FOR_DISCRIMINATES[index], trfd.toObject({ virtuals: true }))
   )
 
-  await Promise.all(
-    testEntities.map(async (te, index) => {
-      const references = testReferences.filter((tr: TestReference) => tr.referenceName.includes(`${te.stringType}-`))
-      TEST_ENTITIES[index].testReference = references[0]._id
-      TEST_ENTITIES[index].testReferences = references.map((r) => r._id)
-      await te.updateOne({ $set: { testReferences: references.map((r) => r._id), testReference: references[0]._id } })
-      await Promise.all(
-        references.map((r) => {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          TEST_REFERENCES.find((tr) => tr._id.toString() === r._id.toString()).testEntity = te._id
-          return r.updateOne({ $set: { testEntity: te._id } })
-        })
-      )
-    })
-  )
+  const entityUpdates = testEntities.map((te, index) => {
+    const references = testReferences.filter((tr: TestReference) => tr.referenceName.includes(`${te.stringType}-`))
+    TEST_ENTITIES[index].testReference = references[0]._id
+    TEST_ENTITIES[index].testReferences = references.map((r) => r._id)
+    return {
+      updateOne: {
+        filter: { _id: te._id },
+        update: { $set: { testReferences: references.map((r) => r._id), testReference: references[0]._id } }
+      }
+    }
+  })
 
-  await Promise.all(
-    testDiscriminatedEntities.map(async (tde, index) => {
-      const references = testReferencesForDiscriminates.filter((trfd: TestReference) =>
-        trfd.referenceName.includes(`${tde.stringType}-`)
-      )
-      TEST_DISCRIMINATED_ENTITIES[index].testReference = references[0]._id
-      TEST_DISCRIMINATED_ENTITIES[index].testReferences = references.map((r) => r._id)
-      await tde.updateOne({ $set: { testReferences: references.map((r) => r._id), testReference: references[0]._id } })
-      await Promise.all(
-        references.map((r) => {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          TEST_REFERENCES_FOR_DISCRIMINATES.find((tr) => tr._id.toString() === r._id.toString()).testEntity = tde._id
-          return r.updateOne({ $set: { testEntity: tde._id } })
-        })
-      )
+  const discriminatedEntityUpdates = testDiscriminatedEntities.map((tde, index) => {
+    const references = testReferencesForDiscriminates.filter((trfd: TestReference) =>
+      trfd.referenceName.includes(`${tde.stringType}-`)
+    )
+    TEST_DISCRIMINATED_ENTITIES[index].testReference = references[0]._id
+    TEST_DISCRIMINATED_ENTITIES[index].testReferences = references.map((r) => r._id)
+    return {
+      updateOne: {
+        filter: { _id: tde._id },
+        update: { $set: { testReferences: references.map((r) => r._id), testReference: references[0]._id } }
+      }
+    }
+  })
+
+  const referenceUpdates = [...testEntities, ...testDiscriminatedEntities].flatMap((entity) => {
+    const references = [...testReferences, ...testReferencesForDiscriminates].filter((reference: TestReference) =>
+      reference.referenceName.includes(`${entity.stringType}-`)
+    )
+    return references.map((reference) => {
+      const fixtureReferences = reference.referenceName.includes('descrim') ? TEST_REFERENCES_FOR_DISCRIMINATES : TEST_REFERENCES
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      fixtureReferences.find((tr) => tr._id.toString() === reference._id.toString()).testEntity = entity._id
+      return {
+        updateOne: {
+          filter: { _id: reference._id },
+          update: { $set: { testEntity: entity._id } }
+        }
+      }
     })
-  )
+  })
+
+  await Promise.all([
+    TestEntityModel.bulkWrite([...entityUpdates, ...discriminatedEntityUpdates]),
+    TestReferencesModel.bulkWrite(referenceUpdates)
+  ])
 }

@@ -15,18 +15,14 @@ export const refresh = async (dataSource: DataSource): Promise<void> => {
   const subTaskRepo = dataSource.getRepository(SubTaskEntity)
   const tagsRepo = dataSource.getRepository(TagEntity)
 
-  const yesterdayOrTomorrow = new Date()
-  if (yesterdayOrTomorrow.getDate() === 1) {
-    yesterdayOrTomorrow.setDate(yesterdayOrTomorrow.getDate() + 1)
-  } else {
-    yesterdayOrTomorrow.setDate(yesterdayOrTomorrow.getDate() - 1)
-  }
+  const tuesdayMidJune = new Date('2022-06-14T12:00:00.000Z')
+  const wednesdayMidJune = new Date('2022-06-15T12:00:00.000Z')
 
-  const urgentTag = await tagsRepo.save({ name: 'Urgent', fakeDate: yesterdayOrTomorrow })
-  const homeTag = await tagsRepo.save({ name: 'Home' })
-  const workTag = await tagsRepo.save({ name: 'Work' })
-  const questionTag = await tagsRepo.save({ name: 'Question' })
-  const blockedTag = await tagsRepo.save({ name: 'Blocked' })
+  const urgentTag = await tagsRepo.save({ name: 'Urgent', fakeDate: tuesdayMidJune })
+  const homeTag = await tagsRepo.save({ name: 'Home', fakeDate: wednesdayMidJune })
+  const workTag = await tagsRepo.save({ name: 'Work', fakeDate: wednesdayMidJune })
+  const questionTag = await tagsRepo.save({ name: 'Question', fakeDate: wednesdayMidJune })
+  const blockedTag = await tagsRepo.save({ name: 'Blocked', fakeDate: wednesdayMidJune })
 
   const todoItems = await todoRepo.save([
     { title: 'Create Nest App', completed: true, priority: 0, tags: [urgentTag, homeTag] },
