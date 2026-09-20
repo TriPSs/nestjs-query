@@ -1,15 +1,13 @@
 ---
 title: 'DTOs'
-description: 'REST DTOs describe response serialization, request validation, OpenAPI schemas, identifiers, and the fields accepted as filters. The decorators combine metadata from , , and .'
+description: 'REST DTOs describe response serialization, request validation, OpenAPI schemas, identifiers, and the fields accepted as filters. Their decorators combine metadata from class-transformer, class-validator, and @nestjs/swagger.'
 ---
 
 ## `@Field`[​](#field 'Direct link to field')
 
 Use `@Field` for properties exposed in request or response schemas. The decorator infers primitive types from TypeScript metadata and accepts Swagger property options such as `description`, `example`, `nullable`, `minLength`, `maxLength`, `minimum`, `maximum`, and `enum`.
 
-todo-item-input.dto.ts
-
-```ts
+```ts todo-item-input.dto.ts
 import { Field } from '@ptc-org/nestjs-query-rest'
 
 export class TodoItemInputDTO {
@@ -43,9 +41,7 @@ Set `nullable: true` on optional update properties. Required fields receive vali
 
 `@FilterableField` includes the property in the schema just like `@Field` and exposes it as an equality query parameter on collection and export endpoints.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { Field, FilterableField, IDField } from '@ptc-org/nestjs-query-rest'
 
 export class TodoItemDTO {

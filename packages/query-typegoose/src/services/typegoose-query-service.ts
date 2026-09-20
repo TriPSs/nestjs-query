@@ -53,8 +53,7 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
    */
   async query(query: Query<Entity>): Promise<DocumentType<Entity>[]> {
     const { filterQuery, options } = this.filterQueryBuilder.buildQuery(query)
-    const entities = await this.Model.find(filterQuery, {}, options).exec()
-    return entities
+    return this.Model.find(filterQuery).setOptions(options).exec()
   }
 
   /**
@@ -249,20 +248,16 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
 
   private getUpdateQuery(entity: DocumentType<Entity>): mongoose.UpdateQuery<DocumentType<Entity>> {
     if (entity instanceof this.Model) {
-      return entity.modifiedPaths().reduce(
-        (update: mongoose.UpdateQuery<DocumentType<Entity>>, k) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          ({ ...update, [k]: entity.get(k) }),
-        {}
-      )
+      return entity
+        .modifiedPaths()
+        .reduce((update: mongoose.UpdateQuery<DocumentType<Entity>>, k) => ({ ...update, [k]: entity.get(k) }), {})
     }
     const arrayUpdateQuery: mongoose.UpdateQuery<unknown> = this.buildArrayUpdateQuery(entity as DeepPartial<Entity>)
     return { ...entity, ...arrayUpdateQuery } as mongoose.UpdateQuery<DocumentType<Entity>>
   }
 
   private buildArrayUpdateQuery(entity: DeepPartial<Entity>) {
-    // eslint-disable-next-line prefer-const
-    let query = {
+    const query = {
       $addToSet: {},
       $pull: {}
     } as UpdateArrayQuery<Entity>
@@ -273,7 +268,6 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
         const convert = entity[key as keyof Entity] as unknown as { push: Entity[]; pull: Entity[] }
 
         if (Object.prototype.hasOwnProperty.call(convert, 'push')) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           query.$addToSet[key] = { $each: convert.push }
         }
 
@@ -294,7 +288,6 @@ export class TypegooseQueryService<Entity extends Base> extends ReferenceQuerySe
           Object.prototype.hasOwnProperty.call(entity[key as keyof Entity], 'push') ||
           Object.prototype.hasOwnProperty.call(entity[key as keyof Entity], 'pull')
         ) {
-          // eslint-disable-next-line no-param-reassign
           delete entity[key as keyof Entity]
         }
       }

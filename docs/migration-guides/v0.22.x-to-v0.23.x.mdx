@@ -306,9 +306,7 @@ In the latest version you now have the option to register your DTOs with `@ptc-o
 
 In this example we create a custom resolver that extends `CRUDResolver`.
 
-todo-item.resolver.ts
-
-```ts
+```ts todo-item.resolver.ts
 import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core'
 import { CRUDResolver } from '@ptc-org/nestjs-query-graphql'
 import { Resolver, Query, Args } from '@nestjs/graphql'
@@ -326,9 +324,7 @@ export class TodoItemResolver extends CRUDResolver(TodoItemDTO) {
 
 Because the `TodoItemResolver` extends `CRUDResolver` there is no need to have `nestjs-query` also create a resolver, instead you can specify the `dtos` option which just takes in `DTOClass`, `CreateDTOClass`, and `UpdateDTOClass` to set up all of additional providers to hooks, authorizers and other features.
 
-todo-item.module.ts
-
-```ts
+```ts todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'

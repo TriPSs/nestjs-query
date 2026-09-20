@@ -53,6 +53,12 @@ Each service uses a **multi-stage Docker build**:
 
 This approach allows testing the **local source code** instead of published npm packages.
 
+The standalone service manifests pin `@apollo/subgraph` and `@apollo/gateway` to 2.14.1,
+matching the root Yarn resolutions. Runtime Docker stages install with npm, so they do not
+inherit those resolutions. Subgraph 2.15.1 rejects the schema input passed by NestJS 13.4.5,
+causing startup to fail with `TypeError: doc.definitions is not iterable`. Keep these pins
+aligned when upgrading Apollo and verify the complete Docker E2E suite.
+
 ## Quick Start
 
 ```bash

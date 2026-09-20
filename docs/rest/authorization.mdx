@@ -12,9 +12,7 @@ description: 'Authorization filters restrict records before generated read, upda
 
 Decorate the response DTO with `@Authorize`. The first argument is the HTTP request and the second describes the generated operation.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { Request } from 'express'
 import { Authorize, FilterableField, IDField } from '@ptc-org/nestjs-query-rest'
 
@@ -43,9 +41,7 @@ For collection requests, the authorization filter is merged with the client filt
 
 Use an injectable class for more involved rules:
 
-todo-item.authorizer.ts
-
-```ts
+```ts todo-item.authorizer.ts
 import { ForbiddenException, Injectable } from '@nestjs/common'
 import { Filter } from '@ptc-org/nestjs-query-core'
 import { AuthorizationContext, CustomAuthorizer, OperationGroup } from '@ptc-org/nestjs-query-rest'
@@ -62,9 +58,7 @@ export class TodoItemAuthorizer implements CustomAuthorizer<TodoItemDTO> {
 }
 ```
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 @Authorize(TodoItemAuthorizer)
 export class TodoItemDTO {}
 ```
