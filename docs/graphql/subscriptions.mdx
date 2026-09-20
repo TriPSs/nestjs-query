@@ -31,11 +31,7 @@ In the below example the following subscriptions will be exposed.
 
 <Tabs>
   <Tab title="NestjsQueryGraphQLModule">
-    todo-item.module.ts
-  </Tab>
-
-  <Tab title="CRUDResolver">
-    ```ts
+    ```ts todo-item.module.ts
     import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
     import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
     import { Module } from '@nestjs/common';
@@ -62,15 +58,11 @@ In the below example the following subscriptions will be exposed.
 
   </Tab>
 
-<Tab title="Example">
-  When manually defining your resolver you must also provide a readonly `pubSub` property. In this the default `PubSub`
-  implementation is injected.
-</Tab>
+  <Tab title="CRUDResolver">
+    When manually defining your resolver you must also provide a readonly `pubSub` property. In this the default `PubSub`
+    implementation is injected.
 
-<Tab title="Example">todo-item.resolver.ts</Tab>
-
-  <Tab title="Example">
-    ```ts
+    ```ts todo-item.resolver.ts
     import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core';
     import { CRUDResolver, InjectPubSub } from '@ptc-org/nestjs-query-graphql';
     import { Resolver } from '@nestjs/graphql';
@@ -107,11 +99,7 @@ In this example the `updatedMany` and `deletedMany` subscriptions are disabled.
 
 <Tabs>
   <Tab title="NestjsQueryGraphQLModule">
-    todo-item.module.ts
-  </Tab>
-
-  <Tab title="CRUDResolver">
-    ```ts
+    ```ts todo-item.module.ts
     import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
     import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm';
     import { Module } from '@nestjs/common';
@@ -143,10 +131,8 @@ In this example the `updatedMany` and `deletedMany` subscriptions are disabled.
 
   </Tab>
 
-<Tab title="Example">todo-item.resolver.ts</Tab>
-
-  <Tab title="Example">
-    ```ts
+  <Tab title="CRUDResolver">
+    ```ts todo-item.resolver.ts
     import { QueryService, InjectQueryService } from '@ptc-org/nestjs-query-core';
     import { CRUDResolver, InjectPubSub } from '@ptc-org/nestjs-query-graphql';
     import { Resolver } from '@nestjs/graphql';
@@ -204,9 +190,7 @@ You can override the default `PubSub` implementation by creating your own provid
 
 Below is an example provider.
 
-redis-pub-sub.provider.ts
-
-```ts
+```ts redis-pub-sub.provider.ts
 import { pubSubToken } from '@ptc-org/nestjs-query-graphql'
 import { RedisPubSub } from 'graphql-redis-subscriptions'
 import Redis from 'ioredis'
@@ -228,9 +212,7 @@ export class RedisPubSubProvider {
 
 In order to let `nestjs-query` know about the provider you can set the `pubSub` option.
 
-todo-item/todo-item.module.ts
-
-```ts
+```ts todo-item/todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'

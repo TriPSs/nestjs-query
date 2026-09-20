@@ -39,9 +39,7 @@ In previous versions you had to specify options for querying and connections in 
 
 ### Old[​](#old-1 'Direct link to Old')
 
-todo-item.module.ts
-
-```ts
+```ts todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'
@@ -72,9 +70,7 @@ export class TodoItemModule {}
 
 ### New[​](#new-1 'Direct link to New')
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, QueryOptions, PagingStrategies } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 

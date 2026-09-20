@@ -1,7 +1,11 @@
 ---
 title: 'CSV Export'
-description: 'Every  includes a CSV endpoint at . It supports the same generated filters, search hook, authorization filter, default sorting, and soft-delete visibility options as collection reads.'
+description: 'Export filtered and authorized REST query results as CSV.'
 ---
+
+Every generated CRUD controller includes a `GET /<basePath>/export` endpoint unless export is disabled. The endpoint accepts the generated filters and, when search is enabled, the optional `query` search term. It uses the configured default sorting, runs the collection query hook, applies the authorization filter, and respects the configured soft-delete visibility.
+
+For an endpoint with `basePath: 'todo-items'`, request matching records with:
 
 ```http
 GET /todo-items/export?completed=false
@@ -14,11 +18,19 @@ Accept: text/csv
 2,"Review examples",false
 ```
 
-The response content type is `text/csv`. String fields are quoted and spreadsheet formulas are escaped.
+## CSV serialization
 
-## Configure exports[​](#configure-exports 'Direct link to Configure exports')
+The response uses the `text/csv` content type and includes a header row when records are returned. An empty result produces an empty response body.
 
-The default export limit is `1000`. Change it or disable export independently:
+String values are quoted, and values that could be interpreted as spreadsheet formulas are escaped. `Date` values are serialized as UTC ISO 8601 strings (for example, `2026-09-20T12:30:00.000Z`). Boolean values are serialized as the unquoted literals `true` and `false`. Null and undefined values produce empty fields.
+
+To use a different format, return a string from `@ExportTransform()` as shown below. Formatted strings are preserved.
+
+## Configure exports
+
+Exports return at most `1000` matching records by default, starting at offset `0` and using the configured default sorting. If more records match, only the first `limit` records are included. The CSV response does not report whether additional records were omitted. Narrow the filter or configure a larger limit to include more records.
+
+You can change the limit and customize the generated route without affecting the collection endpoint:
 
 ```ts
 {
@@ -35,7 +47,9 @@ The default export limit is `1000`. Change it or disable export independently:
 }
 ```
 
-The generated path appends `/export` to `many.path`, so the example above is served at `/todo-items/reports/todo-items/export`.
+The controller appends `/export` to `many.path`. Combined with `basePath`, the example above is available at `/todo-items/reports/todo-items/export`.
+
+Disable the export endpoint while keeping the other CRUD endpoints enabled with:
 
 ```ts
 {
@@ -46,17 +60,16 @@ The generated path appends `/export` to `many.path`, so the example above is ser
 }
 ```
 
-## Export a different shape[​](#export-a-different-shape 'Direct link to Export a different shape')
+## Select the export shape
 
-Use `ExportDTOClass` to select CSV columns without changing the normal response DTO. Decorated fields are serialized in the export, and their property names become the CSV headers.
+By default, the controller serializes the decorated fields from `DTOClass`. Set `ExportDTOClass` to choose a different set of CSV columns without changing the DTO used by the other CRUD endpoints. Each decorated property becomes a column, and its property name becomes the CSV header.
 
-todo-item-export.dto.ts
+Exported properties must have `@Expose()` from `class-transformer`. REST's `@Field()` and `@FilterableField()` include it automatically. Use `@Transform()` to customize values and `@Type()` to transform related objects.
 
-```ts
+```ts todo-item-export.dto.ts
 import { Field } from '@ptc-org/nestjs-query-rest'
 
 export class TodoItemExportDTO {
-
   @Field()
   id!: number
 
@@ -77,4 +90,37 @@ export class TodoItemExportDTO {
 }
 ```
 
-For very large datasets, keep the export limit bounded or implement a custom streaming controller.
+## Export-only transformations
+
+Use `@ExportTransform()` from `@ptc-org/nestjs-query-rest` to format a property only for CSV export. It accepts the same callback parameters as class-transformer's `@Transform()`, including `value`, `obj`, and `key`. Normal DTO conversion and API serialization do not run it.
+
+```ts
+import { ExportTransform, Field } from '@ptc-org/nestjs-query-rest'
+
+export class TodoItemDTO {
+  @Field()
+  @ExportTransform(({ value }: { value: Date }) => value.toISOString().slice(0, 10))
+  createdAt!: Date
+}
+```
+
+The decorator works on the main DTO or `ExportDTOClass`, including inherited properties. Use `@Type(() => RelatedDTO)` for nested DTO transformations. The callback runs during export DTO conversion, before CSV formula escaping. It does not change the source records or expose a property for export; keep `@Expose()` or a REST field decorator on exported properties. Existing `@Transform()` decorators also run during this conversion.
+
+## Standalone export controller
+
+Extend `ExportController` to expose only the CSV export endpoint:
+
+```ts
+@Controller('todo-items')
+export class TodoItemExportController extends ExportController(TodoItemDTO) {
+  constructor(readonly service: TodoItemService) {
+    super(service)
+  }
+}
+```
+
+For a manual CRUD controller, use `CRUDController(TodoItemDTO, { export: { limit: 5000 } })`. Export is enabled by default; setting `disabled: true` in its options removes the endpoint.
+
+## Large exports
+
+The generated controller loads the selected records and builds the CSV response in memory. Keep the export limit bounded; for very large datasets, implement a custom endpoint that streams the response.
