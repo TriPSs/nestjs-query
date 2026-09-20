@@ -1,0 +1,24 @@
+packages/query-typeorm/__tests__/query/__snapshots__/filter-query.builder.spec.ts.snap
+  s_a3684122e9955d::t_c68b9ba1324d6b 147-148,167-168,222-224,239-240,303-304
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e7b06351e088f3cbf51c51f44d30d76724aac767",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_a3684122e9955d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0beed-2563-7700-be55-09931fa78333",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
