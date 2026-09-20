@@ -1,0 +1,14 @@
+package.json
+  h_b13471b77746e9 33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cafc8ea3c9f1b7ec56ee217b4b9cff0a01ec9ff2",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
