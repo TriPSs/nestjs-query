@@ -1,0 +1,14 @@
+.github/workflows/test.yml
+  h_b13471b77746e9 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "985e3d5bf2d6218db275713e7d539c3e1fa7f623",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
