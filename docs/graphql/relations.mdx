@@ -25,11 +25,7 @@ In the following examples we are going to use the following entities.
 
 <Tabs>
   <Tab title="TodoItemEntity">
-    todo-item/todo-item.entity.ts
-  </Tab>
-
-  <Tab title="SubTaskEntity">
-    ```ts
+    ```ts todo-item/todo-item.entity.ts
     import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany } from 'typeorm';
     import { SubTaskEntity } from '../sub-task/sub-task.entity';
 
@@ -61,10 +57,8 @@ In the following examples we are going to use the following entities.
 
   </Tab>
 
-<Tab title="Example">sub-task/sub-task.entity.ts</Tab>
-
-  <Tab title="Example">
-    ```ts
+  <Tab title="SubTaskEntity">
+    ```ts sub-task/sub-task.entity.ts
     import {
 
       Entity,
@@ -121,9 +115,7 @@ A relation that is a single value (one-to-one, many-to-one)
 
 Based on the entities defined above we can add a `todoItem` relation to the `SubTask` by creating the following `SubTaskDTO` with a `@Relation` decorator.
 
-sub-task/sub-task.dto.ts
-
-```ts
+```ts sub-task/sub-task.dto.ts
 import { FilterableField, IDField, Relation } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { TodoItemDTO } from '../todo-item/todo-item.dto.ts'
@@ -161,9 +153,7 @@ The `@Relation` decorator lets `nestjs-query` know to expose the following endpo
 
 To set up the resolver you can use the `NestjsQueryGraphQLModule`.
 
-sub-task/sub-task.module.ts
-
-```ts
+```ts sub-task/sub-task.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'
@@ -225,9 +215,7 @@ The `@FilterableRelation` extends the `@Relation` decorator exposing the ability
 
 In this example we'll use the same Entities defined above to create a graphql endpoint that allows filtering `SubTasks` by `TodoItems`.
 
-sub-task/sub-task.dto.ts
-
-```ts
+```ts sub-task/sub-task.dto.ts
 import { FilterableField, IDField, FilterableRelation } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { TodoItemDTO } from '../todo-item/todo-item.dto.ts'
@@ -260,9 +248,7 @@ Notice the use of `@FilterableRelation` instead of `@Relation`, by using the `@F
 
 The module definition remains the same.
 
-sub-task/sub-task.module.ts
-
-```ts
+```ts sub-task/sub-task.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'
@@ -301,9 +287,7 @@ You can also use the `@UnPagedRelation` decorator to define a relation that does
 
 Based on the entity definition above we can define a `TodoItemDTO` with a `subTasks` relation.
 
-todo-item/todo-item.dto.ts
-
-```ts
+```ts todo-item/todo-item.dto.ts
 import { FilterableField, IDField, UnPagedRelation } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
@@ -340,9 +324,7 @@ When specifying a many relation a couple of endpoints will automatically be gene
 
 To set up the resolver you can use the `NestjsQueryGraphQLModule`.
 
-todo-item/todo-item.module.ts
-
-```ts
+```ts todo-item/todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'
@@ -404,9 +386,7 @@ The `@FilterableUnPagedRelation` extends the `@UnPagedRelation` decorator exposi
 
 In this example we'll use the same Entities defined above to create a graphql endpoint that allows filtering `TodoItems` by `SubTasks`.
 
-sub-task/sub-task.dto.ts
-
-```ts
+```ts todo-item/todo-item.dto.ts
 import { FilterableField, IDField, FilterableUnPagedRelation } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
@@ -436,9 +416,7 @@ Notice the use of `@FilterableUnPagedRelation` instead of `@UnPagedRelation`, by
 
 The module definition remains the same.
 
-sub-task/sub-task.module.ts
-
-```ts
+```ts todo-item/todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'
@@ -493,9 +471,7 @@ In this example we'll find all `todoItems` that are related to a `subTasks` that
 
 Based on the entity definitions above we can create a `TodoItemDTO` with a connection to the `subTasks`.
 
-todo-item/todo-item.dto.ts
-
-```ts
+```ts todo-item/todo-item.dto.ts
 import { FilterableField, IDField, OffsetConnection } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
@@ -532,9 +508,7 @@ When specifying a `@OffsetConnection` relation a couple of endpoints will automa
 
 To set up the resolver you can use the `NestjsQueryGraphQLModule`.
 
-todo-item/todo-item.module.ts
-
-```ts
+```ts todo-item/todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'
@@ -596,9 +570,7 @@ input RelationsInput {
 
 When using the `@OffsetConnection` decorator you can enable the `totalCount` field. The `totalCount` field will return the total number of records included in the connection.
 
-todo-item/todo-item.dto.ts
-
-```ts
+```ts todo-item/todo-item.dto.ts
 import { FilterableField, IDField, OffsetConnection } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
@@ -659,9 +631,7 @@ The `@FilterableOffsetConnection` extends the `@OffsetConnection` decorator expo
 
 In this example we'll use the same Entities defined above to create a graphql endpoint that allows filtering `TodoItems` by `subTasks`.
 
-todo-item/todo-item.dto.ts
-
-```ts
+```ts todo-item/todo-item.dto.ts
 import { FilterableField, IDField, FilterableOffsetConnection, QueryOptions } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
@@ -692,9 +662,7 @@ Notice the use of `@FilterableOffsetConnection` instead of `@OffsetConnection`, 
 
 The module definition remains the same.
 
-todo-item/todo-item.module.ts
-
-```ts
+```ts todo-item/todo-item.module.ts
 import { PagingStrategies } from '@ptc-org/nestjs-query-core'
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
@@ -747,9 +715,7 @@ In this example we'll find all `todoItems` that have `subTasks` that are complet
 
 Based on the entity definitions above we can create a `TodoItemDTO` with a connection to the `subTasks`.
 
-todo-item/todo-item.dto.ts
-
-```ts
+```ts todo-item/todo-item.dto.ts
 import { FilterableField, IDField, CursorConnection } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
@@ -786,9 +752,7 @@ When specifying a `@CursorConnection` relation a couple of endpoints will automa
 
 To set up the resolver you can use the `NestjsQueryGraphQLModule`.
 
-todo-item/todo-item.module.ts
-
-```ts
+```ts todo-item/todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'
@@ -850,9 +814,7 @@ input RelationsInput {
 
 When using the `@CursorConnection` decorator you can enable the `totalCount` field. The `totalCount` field will return the total number of records included in the connection.
 
-todo-item/todo-item.dto.ts
-
-```ts
+```ts todo-item/todo-item.dto.ts
 import { FilterableField, IDField, Connection } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
@@ -913,9 +875,7 @@ The `@FilterableCursorConnection` extends the `@CursorConnection` decorator expo
 
 In this example we'll use the same Entities defined above to create a graphql endpoint that allows filtering `TodoItems` by `subTasks`.
 
-todo-item/todo-item.dto.ts
-
-```ts
+```ts todo-item/todo-item.dto.ts
 import { FilterableField, IDField, FilterableCursorConnection } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql'
 import { SubTaskDTO } from '../sub-task/sub-task.dto'
@@ -945,9 +905,7 @@ Notice the use of `@FilterableCursorConnection` instead of `@CursorConnection`, 
 
 The module definition remains the same.
 
-todo-item/todo-item.module.ts
-
-```ts
+```ts todo-item/todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'
@@ -1277,9 +1235,7 @@ To set up a [guard](https://docs.nestjs.com/guards) for endpoint you can use the
 
 Assume we have the following auth guard that checks for a certain header and value.
 
-auth.guard.ts
-
-```ts
+```ts auth.guard.ts
 import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common'
 import { Observable } from 'rxjs'
 import { GqlExecutionContext } from '@nestjs/graphql'
@@ -1351,9 +1307,7 @@ When using The `Relatable` mixin adds all relations functionality to a resolver.
 
 In this example we expose on read endpoints for todo items with the relations defined on the `TodoItemDTO`.
 
-todo-item/todo-item.resolver.ts
-
-```ts
+```ts todo-item/todo-item.resolver.ts
 import { ReadResolver, Relatable } from '@ptc-org/nestjs-query-graphql'
 import { Resolver } from '@nestjs/graphql'
 import { AuthGuard } from '../auth.guard'

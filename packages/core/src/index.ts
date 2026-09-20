@@ -9,7 +9,13 @@ export {
   DefaultAssembler
 } from './assemblers'
 export * from './common'
-export { getQueryServiceToken, InjectAssemblerQueryService, InjectQueryService } from './decorators'
+export {
+  EXPORT_TRANSFORM_GROUP,
+  ExportTransform,
+  getQueryServiceToken,
+  InjectAssemblerQueryService,
+  InjectQueryService
+} from './decorators'
 export {
   applyFilter,
   applyPaging,
