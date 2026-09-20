@@ -36,7 +36,7 @@ export const stringifyExportCsv = <DTO, ExportDTO>(ExportDTOClass: Class<ExportD
     defaultEncoding: 'utf8',
     quoted_string: true,
     cast: {
-      date: (value) => (Number.isNaN(value.getTime()) ? '' : value.toISOString()),
+      date: (value) => value.toISOString(),
       boolean: (value) => value.toString()
     },
     escape_formulas: true
