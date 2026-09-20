@@ -6,9 +6,7 @@ title: 'Controllers'
 
 The simplest setup is the `endpoints` option of `NestjsQueryRestModule`. Each entry creates a Nest controller backed by an entity, assembler, or custom `QueryService`.
 
-todo-item.module.ts
-
-```ts
+```ts todo-item.module.ts
 import { Module } from '@nestjs/common'
 import { NestjsQueryRestModule, PagingStrategies } from '@ptc-org/nestjs-query-rest'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
@@ -45,9 +43,7 @@ Use `AssemblerClass` instead of `EntityClass` when an [assembler](/concepts/adva
 
 Extend `CRUDController` to override an endpoint or add ordinary Nest routes. Register the controller and DTO with `NestjsQueryRestModule` so authorizers and hooks are provided.
 
-todo-item.controller.ts
-
-```ts
+```ts todo-item.controller.ts
 import { Controller, Get } from '@nestjs/common'
 import { InjectQueryService, QueryService } from '@ptc-org/nestjs-query-core'
 import { CRUDController } from '@ptc-org/nestjs-query-rest'
@@ -56,7 +52,6 @@ import { TodoItemEntity } from './todo-item.entity'
 
 @Controller('todo-items')
 export class TodoItemController extends CRUDController(TodoItemDTO) {
-
   constructor(@InjectQueryService(TodoItemEntity) service: QueryService<TodoItemDTO>) {
     super(service)
   }
@@ -68,9 +63,7 @@ export class TodoItemController extends CRUDController(TodoItemDTO) {
 }
 ```
 
-todo-item.module.ts
-
-```ts
+```ts todo-item.module.ts
 @Module({
   imports: [
     NestjsQueryRestModule.forFeature({
@@ -118,6 +111,8 @@ Each operation group accepts `disabled`. The `one` and `many` nested options sup
   export: { limit: 5000 }
 }
 ```
+
+See [CSV Export](/rest/export) for export limits, CSV serialization, export DTOs, and export-only transformations.
 
 <Note>
   Static paths can conflict with the default `:id` route. The generated export route is registered as `/export`; avoid using

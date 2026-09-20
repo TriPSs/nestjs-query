@@ -1,0 +1,68 @@
+---
+title: 'v10.x.x to v11.x.x'
+description: 'Migrate query limits, CSV exports, and REST Swagger dependencies.'
+---
+
+In v11, the default `maxResultsSize` is `100` for both GraphQL and REST, up from `50` in v10. This affects endpoints that use the generated paging arguments without an explicit maximum.
+
+## What changes
+
+GraphQL offset queries accept a `limit` up to `100`, cursor queries accept `first` or `last` up to `100`, and REST offset queries accept a `limit` up to `100`. With request validation enabled, requests for 51–100 records that previously failed validation are now accepted. Requests above `100` still fail validation unless you configure a higher maximum.
+
+The default number of records returned when a client omits the page size remains `10` for GraphQL and `25` for REST. Existing `maxResultsSize` overrides continue to apply. CSV exports use their separate `limit` option.
+
+## Adopt the new maximum
+
+No configuration change is required to use the new maximum. Update any client-side page-size validation or tests that assume requests above `50` are rejected. REST's generated OpenAPI paging metadata also advertises a maximum of `100`.
+
+## Keep the previous maximum
+
+Set `maxResultsSize: 50` on each DTO whose endpoints should retain the previous limit.
+
+### GraphQL
+
+```ts
+import { ObjectType } from '@nestjs/graphql'
+import { FilterableField, QueryOptions } from '@ptc-org/nestjs-query-graphql'
+
+@ObjectType('TodoItem')
+@QueryOptions({ maxResultsSize: 50 })
+export class TodoItemDTO {
+  @FilterableField()
+  title!: string
+}
+```
+
+### REST
+
+```ts
+import { FilterableField, QueryOptions } from '@ptc-org/nestjs-query-rest'
+
+@QueryOptions({ maxResultsSize: 50 })
+export class TodoItemDTO {
+  @FilterableField()
+  title!: string
+}
+```
+
+Check endpoint-level query options as well: explicit resolver or controller settings override the DTO defaults. Set any applicable `maxResultsSize` override to `50` to keep that endpoint's previous maximum.
+
+See [GraphQL query options](/graphql/dtos#queryoptions) and [REST paging](/rest/queries/paging) for further configuration.
+
+## REST CSV boolean serialization
+
+In v11, REST CSV exports serialize boolean values as the unquoted literals `true` and `false`. In v10, they emitted `1` for `true` and an empty field for `false`.
+
+## CSV export dependency
+
+CSV export now loads `csv-stringify` only when an export endpoint is called. Applications that use CSV export must install it explicitly:
+
+```sh
+npm install csv-stringify
+```
+
+Applications that do not use CSV export can omit it.
+
+## REST Swagger runtime dependency
+
+`@ptc-org/nestjs-query-rest` requires `@nestjs/swagger` at runtime, even when an application does not generate OpenAPI documentation. Its `@ApiProperty` decorators run when REST DTO classes are defined, so the dependency cannot be loaded lazily. Keep `@nestjs/swagger` installed when upgrading.

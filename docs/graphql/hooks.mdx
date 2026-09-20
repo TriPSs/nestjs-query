@@ -393,9 +393,7 @@ There are two types that are created
 - The `UpdateManyTodoItemsInput` which extends the `UpdateManyInputType` this exposes an `update` and `filter` field just like the `updateMany` endpoints that are auto generated.
 - The `UpdateManyTodoItemsArgs` which extends `MutationArgsType`, this provides a uniform interface for all mutations ensuring that the argument provided to the mutation is named `input`.
 
-todo-item/types.ts
-
-```ts
+```ts todo-item/types.ts
 import { MutationArgsType, UpdateManyInputType } from '@ptc-org/nestjs-query-graphql'
 import { ArgsType, InputType } from '@nestjs/graphql'
 import { TodoItemDTO } from './dto/todo-item.dto'
@@ -414,9 +412,7 @@ export class MarkTodoItemsAsCompletedArgs extends MutationArgsType(UpdateManyTod
 
 Now we can use our new types in the resolver.
 
-todo-item/todo-item.resolver.ts
-
-```ts
+```ts todo-item/todo-item.resolver.ts
 import { InjectQueryService, mergeFilter, QueryService, UpdateManyResponse } from '@ptc-org/nestjs-query-core'
 import { HookTypes, HookInterceptor, MutationHookArgs, UpdateManyResponseType } from '@ptc-org/nestjs-query-graphql'
 import { UseInterceptors } from '@nestjs/common'

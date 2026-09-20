@@ -46,7 +46,9 @@ function getAuthorizationContext(
   return {
     operationName: methodName.toString(),
     readonly:
-      partialAuthContext.operationGroup === OperationGroup.READ || partialAuthContext.operationGroup === OperationGroup.AGGREGATE,
+      partialAuthContext.operationGroup === OperationGroup.READ ||
+      partialAuthContext.operationGroup === OperationGroup.EXPORT ||
+      partialAuthContext.operationGroup === OperationGroup.AGGREGATE,
     ...partialAuthContext
   }
 }

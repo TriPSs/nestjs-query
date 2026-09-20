@@ -70,8 +70,8 @@ export interface NestedRecord<E = unknown> {
 export interface NestedRelationsAliased {
   [keys: string]: {
     alias: string
-    metadata: EntityMetadata
-    relations: NestedRelationsAliased
+    metadata?: EntityMetadata
+    relations?: NestedRelationsAliased
   }
 }
 

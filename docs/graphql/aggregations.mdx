@@ -7,9 +7,7 @@ description: 'When aggregations are enabled  will expose a new query that enable
 
 All examples will be based on the following `TodoItem` DTO. All fields except `age`, because it is not decorated with `@FilterableField` or `@IDField`, will be exposed in aggregate queries.
 
-todo-item/dto/todo-item.dto.ts
-
-```ts
+```ts todo-item/dto/todo-item.dto.ts
 import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -46,9 +44,7 @@ export class TodoItemDTO {
 
 To enable aggregate queries you can set the `enableAggregate` option in your resolver
 
-todo-item/todo-item.module.ts
-
-```ts
+```ts todo-item/todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import { Module } from '@nestjs/common'
