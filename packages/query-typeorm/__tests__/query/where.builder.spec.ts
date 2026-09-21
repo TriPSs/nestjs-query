@@ -36,6 +36,31 @@ describe('WhereBuilder', (): void => {
     expectSQLSnapshot({})
   })
 
+  it.each(['metadata', 'relations', 'both'] as const)(
+    'should preserve relation joins and filters when %s is omitted',
+    (omitted): void => {
+      const filter: Filter<TestEntity> = {
+        testRelations: { or: [{ relationName: { eq: 'foo' } }, { relationName: { eq: 'bar' } }] }
+      }
+      const completeRelations: NestedRelationsAliased = {
+        testRelations: { alias: 'TestRelation', metadata: dataSource.getMetadata(TestRelation), relations: {} }
+      }
+      const optionalRelations: NestedRelationsAliased = {
+        testRelations: {
+          alias: 'TestRelation',
+          ...(omitted === 'relations' ? { metadata: dataSource.getMetadata(TestRelation) } : {}),
+          ...(omitted === 'metadata' ? { relations: {} } : {})
+        }
+      }
+      const buildQuery = (relations: NestedRelationsAliased) => {
+        const qb = new FilterQueryBuilder(getRepo()).applyRelationJoinsRecursive(getQueryBuilder(), relations)
+        return createWhereBuilder().build(qb, filter, relations, 'TestEntity').getQueryAndParameters()
+      }
+
+      expect(buildQuery(optionalRelations)).toEqual(buildQuery(completeRelations))
+    }
+  )
+
   it('or multiple operators for a single field together', (): void => {
     expectSQLSnapshot({ numberType: { gt: 10, lt: 20, gte: 21, lte: 31 } })
   })

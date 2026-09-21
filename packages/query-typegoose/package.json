@@ -26,7 +26,6 @@
     "camel-case": "^4.1.2",
     "is-class": "0.0.9",
     "lodash.escaperegexp": "^4.1.2",
-    "lodash.merge": "^4.6.2",
     "tslib": "^2.8.1"
   },
   "peerDependencies": {
