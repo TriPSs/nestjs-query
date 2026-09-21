@@ -68,6 +68,7 @@
           {
             "group": "Migration Guides",
             "pages": [
+              "migration-guides/v10.x.x-to-v11.x.x",
               "migration-guides/v2.x.x-to-v3.x.x",
               "migration-guides/v0.24.x-to-v0.25.x",
               "migration-guides/v0.23.x-to-v0.24.x",
@@ -99,6 +100,7 @@
               "graphql/mutations",
               "graphql/hooks",
               "graphql/authorization",
+              "graphql/export",
               "graphql/aggregations",
               "graphql/subscriptions",
               "graphql/relations",

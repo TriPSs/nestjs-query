@@ -28,9 +28,7 @@ In addition to the normal field options you can also specify the following optio
 
 In the following example we allow `id`, `title`, and `completed` to be used in queries.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -62,9 +60,7 @@ For the `id` field only `eq`, `neq`, `in`, and `notIn` comparisons will be expos
 
 The `title` field will only allow `eq`, `like`, and `notLike`.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -92,9 +88,7 @@ export class TodoItemDTO {
 
 In the following example the `filterRequired` option is applied to the `completed` field, ensuring that all endpoints that use a filter will require a comparison on the `completed` field.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -122,9 +116,7 @@ export class TodoItemDTO {
 
 In the following example the `filterOnly` option is applied to the `assigneeId` field, which makes a query filterable by the id of an assigned user but won't return the `assigneeId` as field.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -196,9 +188,7 @@ A common use case is to obscure an auto-incremented primary key.
 
 In this example we'll do a simple version of that by declaring a new `ID` scalar that will `base64` encode all ids.
 
-common/custom-id.scalar.ts
-
-```ts
+```ts common/custom-id.scalar.ts
 import { Scalar, CustomScalar } from '@nestjs/graphql'
 import { Kind, ValueNode } from 'graphql'
 
@@ -227,9 +217,7 @@ export class CustomIDScalar implements CustomScalar<string, number> {
 
 Now lets register our `CustomID` scalar with `nestjs`.
 
-common/common.module.ts
-
-```ts
+```ts common/common.module.ts
 import { Module } from '@nestjs/common'
 import { CustomIDScalar } from './custom-id.scalar'
 
@@ -241,9 +229,7 @@ export class CommonModule {}
 
 Once your `CustomIDScalar` is registered you can use it in your `DTOS`.
 
-todo-item/dto/todo-item.dto.ts
-
-```ts
+```ts todo-item/dto/todo-item.dto.ts
 import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, GraphQLISODateTime } from '@nestjs/graphql'
 import { CustomIDScalar } from '../../common/custom-id.scalar'
@@ -277,9 +263,7 @@ Now all `graphql` endpoints that need to use an `id` to query or mutate a `TodoI
 
 If you want to disable filtering and sorting on the `id` field you can use the `disableFilter` option.
 
-todo-item/dto/todo-item.dto.ts
-
-```ts
+```ts todo-item/dto/todo-item.dto.ts
 import { FilterableField, IDField } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, GraphQLISODateTime } from '@nestjs/graphql'
 import { CustomIDScalar } from '../../common/custom-id.scalar'
@@ -319,9 +303,7 @@ When querying the default `filter` is empty. You can specify a default filter by
 
 In this example we specify the default filter to be `completed IS TRUE`.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField, QueryOptions } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -356,9 +338,7 @@ To override the default you can override the default page size by setting the `d
 
 In this example we specify the `defaultResultSize` to 5 which means if a page size is not specified 5 results will be returned.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField, QueryOptions } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -385,7 +365,7 @@ export class TodoItemDTO {
 
 ### Limiting Results Size[​](#limiting-results-size 'Direct link to Limiting Results Size')
 
-By default the max number records that can be returned is `50`.
+By default, GraphQL offset and cursor queries allow at most `100` records per page. Use `maxResultsSize` to override this maximum. CSV exports use their own `limit` option.
 
 To override the default you can override the following options specifying the `maxResultSize` option.
 
@@ -393,9 +373,7 @@ To override the default you can override the following options specifying the `m
 
 In this example we specify limit the max number of records an end user can request to 20.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField, QueryOptions } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -435,9 +413,7 @@ You can override the default `pagingStrategy` to one of the following alternativ
 
 When using the `OFFSET` strategy your paging arguments for a many query will accept a `limit` and/or `offset`. This will also change the return type from a `CursorConnection` to an `OffsetConnection`.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField, QueryOptions, PagingStrategies } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -464,9 +440,7 @@ export class TodoItemDTO {
 
 To disable paging entirely you can use the `NONE` `pagingStrategy`. When using `NONE` an `ArrayConnection` will be returned.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField, QueryOptions, PagingStrategies } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -505,9 +479,7 @@ When using the `CURSOR` (the default) or `OFFSET` paging strategy you have the o
 
 To enable the `totalCount` field for connections set the `enableTotalCount` option to `true` using the `@QueryOptions` decorator.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField, QueryOptions, PagingStrategies } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -622,9 +594,7 @@ When querying the default is based on the persistence layer. You can override th
 
 In this example we specify the default sort to be by `title`.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField, QueryOptions, PagingStrategies } from '@ptc-org/nestjs-query-graphql'
 import { SortDirection } from '@ptc-org/nestjs-query-core'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
@@ -653,9 +623,7 @@ export class TodoItemDTO {
 <Info>
   When we use the `@Relation` decorator or other [relation decorators](/graphql/relations) you might want to define the default sorting criteria like this:
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { SortDirection } from '@ptc-org/nestjs-query-core';
 
 // ...
@@ -675,9 +643,7 @@ When filtering you can provide `and` and `or` expressions to provide advanced fi
 
 In this example we will only allow `and` expressions.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField, QueryOptions, PagingStrategies } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -706,9 +672,7 @@ To turn off all boolean expressions you can set `allowedBooleanExpressions` to a
 
 In this example we will only allow `eq` comparisons on the id field and disable all `and`/`or` boolean expressions.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField, QueryOptions, PagingStrategies } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 
@@ -741,9 +705,7 @@ When querying the default filter is one level deep. You can specify the generate
 
 To generate a filter-type that is `n`-levels deep you can set the `filterDepth` option to `n`. Each level will be generated as a new input type with the name from the previous level as a prefix. In the following example it would generate `TodoItemFilter`, `TodoItemFilterSubTaskFilter` and `TodoItemFilterTagFilter`.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField, QueryOptions } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'
@@ -780,9 +742,7 @@ To generate a filter-type with infinite depth you can set the `filterDepth` opti
 
 This will generate flat filter-types for each related entity. In the following example it would generate `TodoItemDeepFilter`, `SubTaskDeepFilter` and `TagDeepFilter`.
 
-todo-item.dto.ts
-
-```ts
+```ts todo-item.dto.ts
 import { FilterableField, IDField, QueryOptions } from '@ptc-org/nestjs-query-graphql'
 import { ObjectType, ID, GraphQLISODateTime, Field } from '@nestjs/graphql'
 import { SubTaskDTO } from '../../sub-task/dto/sub-task.dto'

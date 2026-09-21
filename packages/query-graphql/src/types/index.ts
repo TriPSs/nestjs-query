@@ -20,6 +20,7 @@ export { ConnectionCursorScalar, ConnectionCursorType } from './cursor.scalar'
 export { DeleteManyInputType } from './delete-many-input.type'
 export { DeleteManyResponseType } from './delete-many-reponse.type'
 export { DeleteOneInputType } from './delete-one-input.type'
+export { ExportArgsType, ExportFieldInput } from './export'
 export { FindOneArgsType } from './find-one-args.type'
 export { MutationArgsType } from './mutation-args.type'
 export {

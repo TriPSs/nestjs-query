@@ -34,6 +34,18 @@ describe('createOffsetQueryArgs', () => {
     expect(Reflect.getMetadata('swagger/apiModelProperties', QueryArgs.prototype, 'limit')?.maximum).toBe(maxResultsSize)
   })
 
+  it.each([undefined, {}])('defaults the maximum to 100 with options %j', (opts) => {
+    class PagingDTO {}
+
+    const QueryArgs = createOffsetQueryArgs(PagingDTO, opts)
+
+    expect(validateSync(plainToInstance(QueryArgs, { limit: 100 }))).toHaveLength(0)
+    expect(validateSync(plainToInstance(QueryArgs, { limit: 101 }))[0]?.constraints).toHaveProperty('max')
+    expect(Reflect.getMetadata('swagger/apiModelProperties', QueryArgs.prototype, 'limit')?.maximum).toBe(100)
+    const query = plainToInstance(QueryArgs, {}) as unknown as BuildableQueryType<PagingDTO>
+    expect(query.buildQuery().paging?.limit).toBe(25)
+  })
+
   it('uses the default result size when only a maximum is configured', () => {
     class PagingDTO {}
 

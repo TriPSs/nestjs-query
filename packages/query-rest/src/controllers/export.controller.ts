@@ -1,8 +1,7 @@
 import { Header } from '@nestjs/common'
 import { ApiProduces } from '@nestjs/swagger'
-import { Class, DeepPartial, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, DeepPartial, EXPORT_TRANSFORM_GROUP, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
-import { stringify as stringifyCsv } from 'csv-stringify/sync'
 import omit from 'lodash.omit'
 
 import { AuthorizerFilter, Get, HookTypes, NonePagingQueryArgsTypeOpts, OperationGroup, QueryType } from '../'
@@ -29,14 +28,30 @@ export interface ExportController<DTO, QS extends QueryService<DTO, unknown, unk
   exportMany(query: QueryType<DTO, PagingStrategies.NONE>, authorizeFilter?: Filter<DTO>): Promise<string>
 }
 
-export const stringifyExportCsv = <DTO, ExportDTO>(ExportDTOClass: Class<ExportDTO>, items: DTO[]): string =>
-  stringifyCsv(plainToInstance(ExportDTOClass, items, { excludeExtraneousValues: true }), {
-    header: true,
-    delimiter: ',',
-    defaultEncoding: 'utf8',
-    quoted_string: true,
-    escape_formulas: true
-  })
+export const stringifyExportCsv = async <DTO, ExportDTO>(ExportDTOClass: Class<ExportDTO>, items: DTO[]): Promise<string> => {
+  let stringifyCsv: typeof import('csv-stringify/sync').stringify
+  try {
+    const { stringify } = await import('csv-stringify/sync')
+    stringifyCsv = stringify
+  } catch {
+    throw new Error('csv-stringify is required for CSV export; install it with `npm install csv-stringify`')
+  }
+
+  return stringifyCsv(
+    plainToInstance(ExportDTOClass, items, { excludeExtraneousValues: true, groups: [EXPORT_TRANSFORM_GROUP] }),
+    {
+      header: true,
+      delimiter: ',',
+      defaultEncoding: 'utf8',
+      quoted_string: true,
+      cast: {
+        date: (value) => value.toISOString(),
+        boolean: (value) => value.toString()
+      },
+      escape_formulas: true
+    }
+  )
+}
 
 /**
  * @internal
