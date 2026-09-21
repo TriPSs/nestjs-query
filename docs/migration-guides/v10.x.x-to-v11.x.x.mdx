@@ -69,7 +69,7 @@ Applications that do not use CSV export can omit it.
 
 ## Malformed filters are rejected
 
-In v11, a filter that cannot be read as either a comparison or a nested filter raises a `BadRequestException` rather than being evaluated to a result. Two shapes are affected:
+In v11, a filter that cannot be read as either a comparison or a nested filter raises an `InvalidFilterError` rather than being evaluated to a result. Two shapes are affected:
 
 - nesting into a field that holds a value rather than an object, for example `{ role: { nin: { neq: 'admin' } } }` where `role` holds a string and `nin` is not an operator,
 - mixing recognised comparison operators with keys that are not operators, for example `{ role: { eq: 'admin', tenant: 'acme' } }`.
@@ -77,5 +77,7 @@ In v11, a filter that cannot be read as either a comparison or a nested filter r
 Both shapes were evaluated in v10, and the result was unreliable rather than merely wrong. The first read the unrecognised key as a relation name, compared `undefined` against the value, and for the negative operators (`neq`, `is`, `notLike`, `notIn`) returned a match. Where that filter was an authorization filter enforced on creation, a record was permitted that the filter was written to reject. The second reported the wrong key, naming the operator that was correct rather than the one that was not.
 
 No action is required for filters that are already well formed, and filters sent through the GraphQL API were never affected because the generated input types reject unknown keys before they are evaluated. Filters written in code are worth checking, authorization filters first, since those are the ones evaluated in memory.
+
+`InvalidFilterError` is not an HTTP exception, so a malformed filter surfaces as a server error rather than a `400`. That is deliberate: the GraphQL and REST layers reject unknown filter keys against their generated input types, so a filter that reaches evaluation malformed was written in server code, and reporting it as a client error hides the fault. `BadRequestException` keeps its existing meaning, that a record failed a filter that was evaluated successfully. A boundary that does accept filters written by a client can catch `InvalidFilterError` and rethrow whatever suits it.
 
 `and` and `or` are grouping keys rather than fields or operators, so a filter that combines a group with a field named after an operator, such as `{ owner: { and: [...], is: { eq: true } } }`, is unaffected.

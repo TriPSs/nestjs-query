@@ -25,6 +25,7 @@ export {
   filterCreatableRecords,
   getFilterComparisons,
   getFilterFields,
+  InvalidFilterError,
   getFilterOmitting,
   invertSort,
   mergeFilter,
