@@ -739,7 +739,7 @@ describe('CursorConnectionType', (): void => {
 
     const WALL_CLOCK_FORMAT = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}[+-]\d{2}:\d{2}$/
 
-    it('should revive a legacy UTC ISO cursor value into a date for the filter', async () => {
+    it('should revive a UTC ISO cursor value into a date for the filter', async () => {
       const instant = new Date(Date.UTC(2026, 0, 3, 11, 30, 0, 0))
       const queryMany = jest.fn()
       queryMany.mockResolvedValueOnce([])
@@ -824,7 +824,7 @@ describe('CursorConnectionType', (): void => {
       })
     })
 
-    it('should revive a legacy cursor on a backward page into an inverted date boundary', async () => {
+    it('should revive a UTC ISO cursor on a backward page into an inverted date boundary', async () => {
       const instant = new Date(Date.UTC(2026, 0, 3, 11, 30, 0, 0))
       const queryMany = jest.fn()
       queryMany.mockResolvedValueOnce([])

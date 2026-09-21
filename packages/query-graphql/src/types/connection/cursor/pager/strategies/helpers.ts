@@ -20,7 +20,7 @@ export function decodeBase64(str: string): string {
   return Buffer.from(str, 'base64').toString('utf8')
 }
 
-const LEGACY_UTC_CURSOR_DATE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+const UTC_ISO_CURSOR_DATE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
 
 const pad = (num: number): string => String(num).padStart(2, '0')
 
@@ -41,11 +41,12 @@ export function serializeCursorDate(value: Date): Date | string {
 }
 
 /**
- * Revives a `Date` boundary from a cursor minted by older versions, which serialized dates as
- * UTC ISO strings. Anything that is not exactly the legacy format is returned untouched.
+ * Revives a `Date` boundary from a cursor that carries a UTC ISO string, the format cursor dates
+ * were serialized as before the wall clock format above. The two formats are told apart by shape,
+ * so a value that is not exactly a UTC ISO string is returned untouched.
  */
-export function reviveLegacyCursorDate(value: string): Date | string {
-  if (!LEGACY_UTC_CURSOR_DATE.test(value)) {
+export function reviveUtcIsoCursorDate(value: string): Date | string {
+  if (!UTC_ISO_CURSOR_DATE.test(value)) {
     return value
   }
   const revived = new Date(value)

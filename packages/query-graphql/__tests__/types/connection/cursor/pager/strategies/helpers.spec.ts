@@ -1,5 +1,5 @@
 import {
-  reviveLegacyCursorDate,
+  reviveUtcIsoCursorDate,
   serializeCursorDate
 } from '../../../../../../src/types/connection/cursor/pager/strategies/helpers'
 
@@ -54,30 +54,30 @@ describe('keyset cursor date helpers', () => {
     })
   })
 
-  describe('reviveLegacyCursorDate', () => {
-    it('revives a legacy UTC ISO value to the exact instant', () => {
-      const revived = reviveLegacyCursorDate('2026-01-03T11:30:00.000Z')
+  describe('reviveUtcIsoCursorDate', () => {
+    it('revives a UTC ISO value to the exact instant', () => {
+      const revived = reviveUtcIsoCursorDate('2026-01-03T11:30:00.000Z')
       expect(revived).toBeInstanceOf(Date)
       expect((revived as Date).getTime()).toBe(Date.UTC(2026, 0, 3, 11, 30, 0, 0))
     })
 
     it('leaves a wall clock value untouched', () => {
-      expect(reviveLegacyCursorDate('2026-01-03 11:30:00.000+11:00')).toBe('2026-01-03 11:30:00.000+11:00')
+      expect(reviveUtcIsoCursorDate('2026-01-03 11:30:00.000+11:00')).toBe('2026-01-03 11:30:00.000+11:00')
     })
 
-    it('leaves a legacy shaped string that is not a real date untouched', () => {
-      expect(reviveLegacyCursorDate('2026-99-99T99:99:99.000Z')).toBe('2026-99-99T99:99:99.000Z')
+    it('leaves a UTC ISO shaped string that is not a real date untouched', () => {
+      expect(reviveUtcIsoCursorDate('2026-99-99T99:99:99.000Z')).toBe('2026-99-99T99:99:99.000Z')
     })
 
     it('leaves a calendar invalid string untouched rather than letting the parser roll it over', () => {
-      expect(reviveLegacyCursorDate('2026-02-30T10:20:30.000Z')).toBe('2026-02-30T10:20:30.000Z')
-      expect(reviveLegacyCursorDate('2025-02-29T10:20:30.000Z')).toBe('2025-02-29T10:20:30.000Z')
-      expect(reviveLegacyCursorDate('2026-01-15T24:00:00.000Z')).toBe('2026-01-15T24:00:00.000Z')
+      expect(reviveUtcIsoCursorDate('2026-02-30T10:20:30.000Z')).toBe('2026-02-30T10:20:30.000Z')
+      expect(reviveUtcIsoCursorDate('2025-02-29T10:20:30.000Z')).toBe('2025-02-29T10:20:30.000Z')
+      expect(reviveUtcIsoCursorDate('2026-01-15T24:00:00.000Z')).toBe('2026-01-15T24:00:00.000Z')
     })
 
-    it('leaves values that are not legacy date strings untouched', () => {
-      expect(reviveLegacyCursorDate('foo')).toBe('foo')
-      expect(reviveLegacyCursorDate('2026-01-03')).toBe('2026-01-03')
+    it('leaves values that are not UTC ISO date strings untouched', () => {
+      expect(reviveUtcIsoCursorDate('foo')).toBe('foo')
+      expect(reviveUtcIsoCursorDate('2026-01-03')).toBe('2026-01-03')
     })
   })
 })

@@ -10,7 +10,7 @@ import {
   hasBeforeCursor,
   isBackwardPaging,
   isForwardPaging,
-  reviveLegacyCursorDate,
+  reviveUtcIsoCursorDate,
   serializeCursorDate
 } from './helpers'
 import { KeySetCursorPayload, KeySetPagingOpts, PagerStrategy } from './pager-strategy'
@@ -157,10 +157,10 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     return value instanceof Date ? (serializeCursorDate(value) as unknown as DTO[keyof DTO]) : value
   }
 
-  // legacy UTC ISO strings are revived to Dates; wall clock values pass through untouched
+  // UTC ISO strings are revived to Dates; wall clock values pass through untouched
   private fromCursorValue(field: keyof DTO, rawValue: unknown, transformedValue: DTO[keyof DTO]): DTO[keyof DTO] {
     if (typeof rawValue === 'string' && this.isDateField(field)) {
-      return reviveLegacyCursorDate(rawValue) as unknown as DTO[keyof DTO]
+      return reviveUtcIsoCursorDate(rawValue) as unknown as DTO[keyof DTO]
     }
     return transformedValue
   }

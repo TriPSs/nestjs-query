@@ -52,3 +52,13 @@ See [GraphQL query options](/graphql/dtos#queryoptions) and [REST paging](/rest/
 ## REST CSV boolean serialization
 
 In v11, REST CSV exports serialize boolean values as the unquoted literals `true` and `false`. In v10, they emitted `1` for `true` and an empty field for `false`.
+
+## Keyset cursor date values
+
+In v11, a cursor built from a `Date` field carries the minting process's wall clock with its UTC offset, for example `2026-01-03 11:30:00.000+11:00`. In v10 it carried a UTC ISO string, for example `2026-01-03T11:30:00.000Z`.
+
+The offset is part of the value, so the boundary describes the same instant wherever it is read. Under the previous format a `timestamp` column could be compared against a boundary re-serialized in the consuming process's timezone, which shifted the page boundary and could repeat or skip records either side of it.
+
+No action is required. Cursors are opaque base64 payloads and both formats round-trip through the same API, so this only matters if you decode a cursor and parse the values inside it yourself, in which case accept the offset form as well.
+
+Cursors minted by v10 keep working. A UTC ISO value is still recognised and read as UTC, so pagination continues across an upgrade rather than breaking for clients holding a cursor issued before it.
