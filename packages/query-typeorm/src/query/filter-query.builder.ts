@@ -119,12 +119,11 @@ export class FilterQueryBuilder<Entity> {
   }
 
   public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>): SelectQueryBuilder<Entity> {
-    const hasFilterRelations = this.filterHasRelations(query.filter)
     let qb = this.createQueryBuilder()
 
     const relationsMap = this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, query.filter)
 
-    qb = hasFilterRelations ? this.applyRelationJoinsRecursive(qb, relationsMap) : qb
+    qb = this.applyRelationJoinsRecursive(qb, relationsMap)
 
     qb = this.applyAggregate(qb, aggregate, qb.alias)
     qb = this.applyFilter(qb, query.filter, qb.alias, relationsMap)

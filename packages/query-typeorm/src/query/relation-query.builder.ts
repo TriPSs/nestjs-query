@@ -92,17 +92,13 @@ export class RelationQueryBuilder<Entity, Relation> {
   }
 
   public select(entity: Entity, query: Query<Relation>, withDeleted?: boolean): SelectQueryBuilder<Relation> {
-    const hasRelations = this.filterQueryBuilder.filterHasRelations(query.filter)
-
     let relationBuilder = this.createRelationQueryBuilder(entity)
     const relationsMap = this.filterQueryBuilder.getReferencedRelationsWithAliasRecursive(
       this.relationRepo.metadata,
       query.filter
     )
 
-    relationBuilder = hasRelations
-      ? this.filterQueryBuilder.applyRelationJoinsRecursive(relationBuilder, relationsMap)
-      : relationBuilder
+    relationBuilder = this.filterQueryBuilder.applyRelationJoinsRecursive(relationBuilder, relationsMap)
 
     relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, query.filter, relationBuilder.alias, relationsMap)
     relationBuilder = this.filterQueryBuilder.applyPaging(relationBuilder, query.paging)

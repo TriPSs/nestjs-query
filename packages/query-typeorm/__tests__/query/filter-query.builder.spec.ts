@@ -563,6 +563,26 @@ describe('FilterQueryBuilder', (): void => {
         expect(sql.match(/LEFT JOIN "test_relation" "manyTestRelations"/g)).toHaveLength(1)
         expect(formatSql(sql, { params })).toMatchSnapshot()
       })
+
+      it('should bind the filter to the top level relation when a deeper selected relation shares its name', () => {
+        const selectQueryBuilder = new FilterQueryBuilder(connection.getRepository(TestEntity)).select({
+          filter: { manyTestRelations: { relationName: { eq: 'foo' } } },
+          relations: [
+            {
+              name: 'testRelations',
+              query: { relations: [{ name: 'testEntity', query: { relations: [{ name: 'manyTestRelations', query: {} }] } }] }
+            }
+          ]
+        })
+        const [sql, params] = selectQueryBuilder.getQueryAndParameters()
+
+        expect(sql).toContain(
+          'LEFT JOIN "test_relation" "manyTestRelations_1" ON "manyTestRelations_1"."test_relation_pk"="TestEntity_manyTestRelations_1"."testRelationTestRelationPk"'
+        )
+        expect(sql).toContain('"manyTestRelations_1"."relation_name" =')
+        expect(sql).not.toContain('"manyTestRelations"."relation_name" =')
+        expect(formatSql(sql, { params })).toMatchSnapshot()
+      })
     })
   })
 
