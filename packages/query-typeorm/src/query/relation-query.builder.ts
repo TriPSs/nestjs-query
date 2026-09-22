@@ -92,17 +92,15 @@ export class RelationQueryBuilder<Entity, Relation> {
   }
 
   public select(entity: Entity, query: Query<Relation>, withDeleted?: boolean): SelectQueryBuilder<Relation> {
-    const hasRelations = this.filterQueryBuilder.filterHasRelations(query.filter)
-
     let relationBuilder = this.createRelationQueryBuilder(entity)
-    relationBuilder = hasRelations
-      ? this.filterQueryBuilder.applyRelationJoinsRecursive(
-          relationBuilder,
-          this.filterQueryBuilder.getReferencedRelationsWithAliasRecursive(this.relationRepo.metadata, query.filter)
-        )
-      : relationBuilder
+    const relationsMap = this.filterQueryBuilder.getReferencedRelationsWithAliasRecursive(
+      this.relationRepo.metadata,
+      query.filter
+    )
 
-    relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, query.filter, relationBuilder.alias)
+    relationBuilder = this.filterQueryBuilder.applyRelationJoinsRecursive(relationBuilder, relationsMap)
+
+    relationBuilder = this.filterQueryBuilder.applyFilter(relationBuilder, query.filter, relationBuilder.alias, relationsMap)
     relationBuilder = this.filterQueryBuilder.applyPaging(relationBuilder, query.paging)
     if (withDeleted) relationBuilder = relationBuilder.withDeleted()
 
@@ -113,12 +111,14 @@ export class RelationQueryBuilder<Entity, Relation> {
     let qb = this.relationRepo.createQueryBuilder(this.relationMeta.fromAlias)
 
     qb.withDeleted()
-    qb = this.filterQueryBuilder.applyRelationJoinsRecursive(
-      qb,
-      this.filterQueryBuilder.getReferencedRelationsWithAliasRecursive(this.relationRepo.metadata, query.filter, query.relations),
+    const relationsMap = this.filterQueryBuilder.getReferencedRelationsWithAliasRecursive(
+      this.relationRepo.metadata,
+      query.filter,
       query.relations
     )
-    qb = this.filterQueryBuilder.applyFilter(qb, query.filter, qb.alias)
+
+    qb = this.filterQueryBuilder.applyRelationJoinsRecursive(qb, relationsMap, query.relations)
+    qb = this.filterQueryBuilder.applyFilter(qb, query.filter, qb.alias, relationsMap)
     qb = this.filterQueryBuilder.applySorting(qb, query.sorting, qb.alias)
     qb = this.filterQueryBuilder.applyPaging(qb, query.paging)
 

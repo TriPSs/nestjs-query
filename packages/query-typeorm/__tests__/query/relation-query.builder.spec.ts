@@ -208,6 +208,30 @@ describe('RelationQueryBuilder', (): void => {
       expectBatchSQLSnapshot(TestEntity, entities, 'manyToOneRelation', query)
     })
 
+    it('should bind the filter to the alias the filtered relation was joined under', () => {
+      const query: Query<TestRelation> = {
+        filter: { testEntity: { stringType: { eq: 'foo' } } },
+        relations: [
+          {
+            name: 'testEntityUniDirectional',
+            query: { relations: [{ name: 'testRelations', query: { relations: [{ name: 'testEntity', query: {} }] } }] }
+          }
+        ]
+      }
+      const selectQueryBuilder = getRelationQueryBuilder<TestEntity, TestRelation>(TestEntity, 'testRelations').batchSelect(
+        TEST_ENTITIES.slice(0, 1),
+        query
+      )
+      const [sql, params] = selectQueryBuilder.getQueryAndParameters()
+
+      expect(sql).toContain(
+        'LEFT JOIN "test_entity" "testEntity_1" ON "testEntity_1"."test_entity_pk"="testRelations"."test_entity_id"'
+      )
+      expect(sql).toContain('"testEntity_1"."string_type" =')
+      expect(sql).not.toContain('"testEntity"."string_type" =')
+      expect(formatSql(sql, { params })).toMatchSnapshot()
+    })
+
     describe('many to one', () => {
       it('should query with with multiple entities', () => {
         expectBatchSQLSnapshot(TestEntity, testEntities, 'manyToOneRelation', {})
