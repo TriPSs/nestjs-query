@@ -255,6 +255,33 @@ FROM
   LEFT JOIN "test_relation" "testRelations" ON "testRelations"."test_entity_id" = "TestEntity"."test_entity_pk""
 `;
 
+exports[`FilterQueryBuilder #select with relation should bind the filter to the alias the filtered relation was joined under 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
+  "manyTestRelations"."test_relation_pk" AS "manyTestRelations_test_relation_pk",
+  "manyTestRelations"."relation_name" AS "manyTestRelations_relation_name",
+  "manyTestRelations"."test_entity_id" AS "manyTestRelations_test_entity_id",
+  "manyTestRelations"."uni_directional_test_entity_id" AS "manyTestRelations_uni_directional_test_entity_id",
+  "manyTestRelations"."uni_directional_relation_test_entity_id" AS "manyTestRelations_uni_directional_relation_test_entity_id"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_entity_many_test_relations_test_relation" "TestEntity_manyTestRelations" ON "TestEntity_manyTestRelations"."testEntityTestEntityPk" = "TestEntity"."test_entity_pk"
+  LEFT JOIN "test_relation" "manyTestRelations" ON "manyTestRelations"."test_relation_pk" = "TestEntity_manyTestRelations"."testRelationTestRelationPk"
+  LEFT JOIN "test_relation" "testRelations" ON "testRelations"."test_entity_id" = "TestEntity"."test_entity_pk"
+  LEFT JOIN "test_entity" "testEntity" ON "testEntity"."test_entity_pk" = "testRelations"."test_entity_id"
+  LEFT JOIN "test_entity_many_test_relations_test_relation" "testEntity_manyTestRelations_1" ON "testEntity_manyTestRelations_1"."testEntityTestEntityPk" = "testEntity"."test_entity_pk"
+  LEFT JOIN "test_relation" "manyTestRelations_1" ON "manyTestRelations_1"."test_relation_pk" = "testEntity_manyTestRelations_1"."testRelationTestRelationPk"
+WHERE
+  (((("manyTestRelations_1"."relation_name" = foo))))"
+`;
+
 exports[`FilterQueryBuilder #select with relation should select and map relation 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
@@ -302,6 +329,29 @@ FROM
   "test_entity" "TestEntity"
   LEFT JOIN "test_relation" "oneTestRelation" ON "oneTestRelation"."test_relation_pk" = "TestEntity"."oneTestRelationTestRelationPk"
   LEFT JOIN "test_entity" "testEntityUniDirectional" ON "testEntityUniDirectional"."test_entity_pk" = "oneTestRelation"."uni_directional_test_entity_id""
+`;
+
+exports[`FilterQueryBuilder #select with relation should share a single alias and join when a filter and a selected relation name the same relation 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
+  "manyTestRelations"."test_relation_pk" AS "manyTestRelations_test_relation_pk",
+  "manyTestRelations"."relation_name" AS "manyTestRelations_relation_name",
+  "manyTestRelations"."test_entity_id" AS "manyTestRelations_test_entity_id",
+  "manyTestRelations"."uni_directional_test_entity_id" AS "manyTestRelations_uni_directional_test_entity_id",
+  "manyTestRelations"."uni_directional_relation_test_entity_id" AS "manyTestRelations_uni_directional_relation_test_entity_id"
+FROM
+  "test_entity" "TestEntity"
+  LEFT JOIN "test_entity_many_test_relations_test_relation" "TestEntity_manyTestRelations" ON "TestEntity_manyTestRelations"."testEntityTestEntityPk" = "TestEntity"."test_entity_pk"
+  LEFT JOIN "test_relation" "manyTestRelations" ON "manyTestRelations"."test_relation_pk" = "TestEntity_manyTestRelations"."testRelationTestRelationPk"
+WHERE
+  (("manyTestRelations"."relation_name" = foo))"
 `;
 
 exports[`FilterQueryBuilder #select with sorting should apply ASC NULLS_FIRST sorting 1`] = `
