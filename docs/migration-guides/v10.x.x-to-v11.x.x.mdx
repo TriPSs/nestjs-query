@@ -66,3 +66,9 @@ Applications that do not use CSV export can omit it.
 ## REST Swagger runtime dependency
 
 `@ptc-org/nestjs-query-rest` requires `@nestjs/swagger` at runtime, even when an application does not generate OpenAPI documentation. Its `@ApiProperty` decorators run when REST DTO classes are defined, so the dependency cannot be loaded lazily. Keep `@nestjs/swagger` installed when upgrading.
+
+## Relation filter aliases
+
+If you subclass `FilterQueryBuilder` and override `applyFilter`, accept and forward its new optional fourth argument. An override that drops it recomputes the relation alias map and can qualify a filter with the wrong relation's alias.
+
+Otherwise no action is required. Queries where a selected relation shared a name with a filtered one previously returned the wrong rows and now return the right ones.
