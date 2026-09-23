@@ -93,9 +93,17 @@ An error still cannot catch a mistyped operator when the input omits the field i
 These filters are well formed and still evaluate, but now match the way the database does. They affect GraphQL subscription filters as well as authorizer filters.
 
 - `eq`, `neq`, `in` and `notIn` compare two `Date`s by the instant they hold. In v10 `eq` never matched a `Date` and `neq` always did.
-- `like`, `notLike`, `iLike` and `notILike` read the pattern as Postgres and MySQL do rather than as a regular expression. `_` matches any single character, `%` matches line breaks too, a backslash makes the next character match itself, and every other character matches itself. In v10 `{ email: { like: '%@example.com' } }` matched `user@exampleXcom`, and `x|` matched every value. SQLite has no default escape character, so a pattern containing a backslash matches differently there. `iLike` and `notILike` compare the lower-cased value with the lower-cased pattern, as Postgres does, so `k` matches the Kelvin sign `K`, which it did not in v10.
+- `like`, `notLike`, `iLike` and `notILike` read the pattern as Postgres and MySQL do rather than as a regular expression. `_` matches any single character, `%` matches line breaks too, a backslash makes the next character match itself, and every other character matches itself. In v10 `{ email: { like: '%@example.com' } }` matched `user@exampleXcom`, and `x|` matched every value. SQLite has no default escape character, so a pattern containing a backslash matches differently there. `iLike` and `notILike` compare the lower-cased value with the lower-cased pattern, as Postgres does, so `k` matches the Kelvin sign `K`, which it did not in v10. Postgres lower-cases `İ` and a word-final `Σ` differently under ICU and libc collations, so `iLike` matches only where both would and `notILike` only where neither would. The `C` collation and the Turkish ICU collation lower-case fewer or different letters, so there `iLike` can still match in memory where Postgres does not.
 
 A class instance other than a `Date`, such as an `ObjectId` or a `Buffer`, is still compared by reference, as in v10.
+
+### What still differs from SQL
+
+These are unchanged from v10, and each can permit a create that the same filter would not return from a SQL read. The client chooses what a create input contains, so where a compared value may be `null` or an input may omit or retype a field, check that case in the authorizer rather than relying on the filter.
+
+- `null` compares as a JavaScript value, not as SQL `NULL`. `eq: null` matches a `null` field, and `neq`, `notIn` and `isNot` given a value other than `null` match a `null` or missing field, where SQL matches neither.
+- `like`, `notLike`, `iLike` and `notILike` read a `null` or missing field as the text `null` or `undefined`, so `notLike` matches it and `like: 'null'` matches `null`, where SQL matches neither.
+- `eq`, `neq`, `in` and `notIn` compare without type conversion. A GraphQL `ID` arrives as a string, so an input `ownerId` of `'1'` fails `{ ownerId: { eq: 1 } }` and passes `neq: 1` and `notIn: [1]`, where SQL converts `'1'` to `1` and does the opposite.
 
 ### Error type
 
