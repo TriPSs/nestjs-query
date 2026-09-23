@@ -716,14 +716,14 @@ describe('applyFilter', () => {
     expect(applyFilter({ first: matching }, { first: { like: pattern } })).toBe(true)
     expect(applyFilter({ first: matching }, { first: { notLike: pattern } })).toBe(false)
     expect(applyFilter({ first: notMatching }, { first: { like: pattern } })).toBe(false)
-    expect(applyFilter({ first: notMatching }, { first: { notILike: pattern } })).toBe(true)
+    expect(applyFilter({ first: notMatching }, { first: { notLike: pattern } })).toBe(true)
   })
 
   it('should match a trailing backslash in a like pattern literally, as MySQL and MariaDB do', () => {
     expect(applyFilter({ first: 'a\\' }, { first: { like: 'a\\' } })).toBe(true)
     expect(applyFilter({ first: 'a\\' }, { first: { notLike: 'a\\' } })).toBe(false)
     expect(applyFilter({ first: 'a' }, { first: { like: 'a\\' } })).toBe(false)
-    expect(applyFilter({ first: 'a' }, { first: { notILike: 'a\\' } })).toBe(true)
+    expect(applyFilter({ first: 'a' }, { first: { notLike: 'a\\' } })).toBe(true)
   })
 
   it('should reject undefined as a comparison value rather than matching an omitted field', () => {
