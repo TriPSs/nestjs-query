@@ -59,11 +59,12 @@ export const isFilterableObject = (value: unknown): value is object =>
   value !== null && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)
 
 /**
- * Whether a value is itself a non-empty comparison such as `{ eq: 'a' }`, which is never a value a comparison
- * operator can compare against.
+ * Whether a value is an object literal or an array, as opposed to a scalar, a `Date` or a class instance. Neither can
+ * be compared against a field in memory, because both are compared by reference.
  */
-export const isComparisonObject = (value: unknown): boolean =>
-  isFilterableObject(value) && Object.keys(value).length > 0 && Object.keys(value).every(isComparisonOperator)
+export const isObjectLiteralOrArray = (value: unknown): boolean =>
+  Array.isArray(value) ||
+  (isFilterableObject(value) && [Object.prototype, null].includes(Object.getPrototypeOf(value) as object | null))
 
 /**
  * Returns the unrecognised keys of a value that mixes recognised comparison operators with keys that are not
@@ -75,7 +76,7 @@ export const isComparisonObject = (value: unknown): boolean =>
  * The `and` and `or` grouping keys are neither operators nor field names and are grouped before the remaining
  * keys are read, so they take no part in this.
  */
-export const getUnknownComparisonOperators = (maybeComparison?: object): string[] => {
+export const getKeysMixedIntoComparison = (maybeComparison?: object): string[] => {
   if (!maybeComparison) {
     return []
   }

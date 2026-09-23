@@ -462,7 +462,9 @@ describe('applyFilter', () => {
       first: { neq: { eq: 'admin' } }
     }
     expect(() => applyFilter({ first: 'user' }, filter)).toThrow(InvalidFilterError)
-    expect(() => applyFilter({ first: 'user' }, filter)).toThrow('operator "neq" of field "first" is given a comparison')
+    expect(() => applyFilter({ first: 'user' }, filter)).toThrow(
+      'operator "neq" of field "first" requires a value to compare against'
+    )
   })
 
   it('should reject an in or notIn comparison whose value is not an array', () => {
@@ -485,6 +487,81 @@ describe('applyFilter', () => {
     type ParentDTO = { child: TestDTO | null }
     const filter: Filter<ParentDTO> = { child: { first: { is: null } } }
     expect(applyFilter({ child: null }, filter)).toBe(true)
+  })
+
+  it.each([
+    ['an empty object', {}],
+    ['an object that is not a comparison', { value: 'admin' }],
+    ['an array', ['admin']]
+  ])('should reject a comparison operator whose value is %s rather than silently matching', (_, value) => {
+    for (const operator of ['eq', 'neq', 'is', 'isNot', 'gt', 'gte', 'lt', 'lte']) {
+      // @ts-ignore
+      const filter: Filter<TestDTO> = { first: { [operator]: value } }
+      expect(() => applyFilter({ first: 'user' }, filter)).toThrow(InvalidFilterError)
+      expect(() => applyFilter({ first: null }, filter)).toThrow(`operator "${operator}" of field "first" requires a value`)
+    }
+  })
+
+  it('should not repeat the value of a rejected comparison in its message', () => {
+    // @ts-ignore
+    const filter: Filter<TestDTO> = { first: { in: { tenantId: 'tenant-secret' } } }
+    expect(() => applyFilter({ first: 'user' }, filter)).toThrow('operator "in" of field "first" requires an array')
+    expect(() => applyFilter({ first: 'user' }, filter)).not.toThrow('tenant-secret')
+  })
+
+  it('should reject an in or notIn comparison whose array holds an object or an array', () => {
+    // @ts-ignore
+    const nestedArrayFilter: Filter<TestDTO> = { first: { notIn: [['admin']] } }
+    // @ts-ignore
+    const objectFilter: Filter<TestDTO> = { first: { notIn: [{ eq: 'admin' }] } }
+    expect(() => applyFilter({ first: 'admin' }, nestedArrayFilter)).toThrow(InvalidFilterError)
+    expect(() => applyFilter({ first: 'admin' }, objectFilter)).toThrow('operator "notIn" of field "first" requires an array')
+  })
+
+  it.each([null, undefined, 5, { lower: 1 }, { upper: 10 }])(
+    'should reject a between or notBetween comparison given %p rather than two bounds',
+    (bounds) => {
+      for (const operator of ['between', 'notBetween']) {
+        // @ts-ignore
+        const filter: Filter<TestDTO> = { age: { [operator]: bounds } }
+        expect(() => applyFilter({ age: 5 }, filter)).toThrow(InvalidFilterError)
+        expect(() => applyFilter({ age: 5 }, filter)).toThrow(`operator "${operator}" of field "age" requires an object`)
+      }
+    }
+  )
+
+  it.each([null, undefined, 5, {}])('should reject a like comparison given %p rather than a string', (pattern) => {
+    for (const operator of ['like', 'notLike', 'iLike', 'notILike']) {
+      // @ts-ignore
+      const filter: Filter<TestDTO> = { first: { [operator]: pattern } }
+      expect(() => applyFilter({ first: 'user' }, filter)).toThrow(InvalidFilterError)
+      expect(() => applyFilter({ first: 'user' }, filter)).toThrow(`operator "${operator}" of field "first" requires a string`)
+    }
+  })
+
+  it.each([null, 5, true, [], new Date(0)])(
+    'should reject a field whose filter value is %p rather than a comparison',
+    (value) => {
+      // @ts-ignore
+      const filter: Filter<TestDTO> = { first: value }
+      expect(() => applyFilter({ first: 'user' }, filter)).toThrow(InvalidFilterError)
+      expect(() => applyFilter({ first: 'user' }, filter)).toThrow('unknown comparison "first"')
+    }
+  )
+
+  it('should keep comparing against Dates and class instances', () => {
+    class Money {
+      constructor(readonly cents: number) {}
+    }
+    const price = new Money(5)
+    type PricedDTO = { created: Date; price: Money }
+    const record = { created: new Date(5), price }
+    expect(applyFilter(record, { created: { gt: new Date(0) } } as Filter<PricedDTO>)).toBe(true)
+    expect(applyFilter(record, { created: { between: { lower: new Date(0), upper: new Date(10) } } } as Filter<PricedDTO>)).toBe(
+      true
+    )
+    expect(applyFilter(record, { price: { eq: price } } as Filter<PricedDTO>)).toBe(true)
+    expect(applyFilter(record, { price: { in: [price] } } as Filter<PricedDTO>)).toBe(true)
   })
 
   it('should handle and grouping', () => {

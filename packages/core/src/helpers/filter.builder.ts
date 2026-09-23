@@ -2,7 +2,7 @@ import { Filter, FilterComparisons, FilterFieldComparison } from '../interfaces'
 import { ComparisonBuilder } from './comparison.builder'
 import {
   getFilterFieldComparison,
-  getUnknownComparisonOperators,
+  getKeysMixedIntoComparison,
   isComparison,
   isFilterableObject,
   isGroupingKey
@@ -57,15 +57,15 @@ export class FilterBuilder {
 
   private static withComparison<DTO>(filter: FilterComparisons<DTO>, fieldOrNested: keyof DTO): FilterFn<DTO> {
     const value = getFilterFieldComparison(filter, fieldOrNested)
+    if (!isFilterableObject(value)) {
+      throw new InvalidFilterError(`unknown comparison ${JSON.stringify(fieldOrNested)}`)
+    }
     if (isComparison(value)) {
       return this.withFilterComparison(fieldOrNested, value)
     }
-    if (typeof value !== 'object') {
-      throw new InvalidFilterError(`unknown comparison ${JSON.stringify(fieldOrNested)}`)
-    }
-    const unknownOperators = getUnknownComparisonOperators(value)
-    if (unknownOperators.length) {
-      throw this.unreadableFieldError(fieldOrNested, unknownOperators)
+    const keysMixedIntoComparison = getKeysMixedIntoComparison(value)
+    if (keysMixedIntoComparison.length) {
+      throw this.unreadableFieldError(fieldOrNested, keysMixedIntoComparison)
     }
     const nestedFilterFn = this.build(value)
     return (dto?: DTO) => nestedFilterFn(this.nestedValue(dto, fieldOrNested, value))

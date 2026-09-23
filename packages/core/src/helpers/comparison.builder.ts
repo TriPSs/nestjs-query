@@ -5,9 +5,10 @@ import {
   InComparisonOperators,
   isBetweenComparisonOperators,
   isBooleanComparisonOperators,
-  isComparisonObject,
+  isFilterableObject,
   isInComparisonOperators,
   isLikeComparisonOperator,
+  isObjectLiteralOrArray,
   isRangeComparisonOperators,
   LikeComparisonOperators,
   RangeComparisonOperators
@@ -26,12 +27,7 @@ export class ComparisonBuilder {
     cmp: FilterComparisonOperators<DTO[F]>,
     val: ComparisonField<DTO, F>
   ): FilterFn<DTO> {
-    if (isComparisonObject(val)) {
-      throw new InvalidFilterError(
-        `operator ${JSON.stringify(cmp)} of field ${JSON.stringify(field)} is given a comparison ${JSON.stringify(val)} ` +
-          'rather than a value to compare against.'
-      )
-    }
+    this.assertComparableValue(cmp, field, val)
     if (isBooleanComparisonOperators(cmp)) {
       return this.booleanComparison(cmp, field, val as DTO[F])
     }
@@ -49,6 +45,38 @@ export class ComparisonBuilder {
       return this.betweenComparison(cmp, field, val as CommonFieldComparisonBetweenType<DTO[F]>)
     }
     throw new InvalidFilterError(`unknown operator ${JSON.stringify(cmp)}`)
+  }
+
+  private static assertComparableValue<DTO, F extends keyof DTO>(
+    cmp: FilterComparisonOperators<DTO[F]>,
+    field: F,
+    val: ComparisonField<DTO, F>
+  ): void {
+    const requirement = this.unmetValueRequirement(cmp, val)
+    if (requirement) {
+      throw new InvalidFilterError(`operator ${JSON.stringify(cmp)} of field ${JSON.stringify(field)} requires ${requirement}.`)
+    }
+  }
+
+  /**
+   * Returns what the operator requires of its value when `val` does not provide it, or `undefined` when it does.
+   * An object literal or an array is never a value a field can be compared against in memory, because it is
+   * compared by reference, so it would silently never match or, for the negative operators, always match.
+   */
+  private static unmetValueRequirement(cmp: unknown, val: unknown): string | undefined {
+    if (isLikeComparisonOperator(cmp)) {
+      return typeof val === 'string' ? undefined : 'a string'
+    }
+    if (isInComparisonOperators(cmp)) {
+      return Array.isArray(val) && !val.some(isObjectLiteralOrArray) ? undefined : 'an array of values to compare against'
+    }
+    if (isBetweenComparisonOperators(cmp)) {
+      return isFilterableObject(val) && 'lower' in val && 'upper' in val ? undefined : 'an object with a lower and an upper bound'
+    }
+    if (isBooleanComparisonOperators(cmp) || isRangeComparisonOperators(cmp)) {
+      return isObjectLiteralOrArray(val) ? 'a value to compare against rather than an object or an array' : undefined
+    }
+    return undefined
   }
 
   private static booleanComparison<DTO, F extends keyof DTO>(
@@ -101,11 +129,6 @@ export class ComparisonBuilder {
   }
 
   private static inComparison<DTO, F extends keyof DTO>(cmp: InComparisonOperators, field: F, val: DTO[F][]): FilterFn<DTO> {
-    if (!Array.isArray(val)) {
-      throw new InvalidFilterError(
-        `operator ${JSON.stringify(cmp)} of field ${JSON.stringify(field)} requires an array, but was given ${JSON.stringify(val)}.`
-      )
-    }
     if (cmp === 'notIn') {
       return compare((dto) => !val.includes(dto[field]), true)
     }
