@@ -68,8 +68,8 @@ export class ComparisonBuilder {
    * Returns what the operator requires of its value when `val` does not provide it, or `undefined` when it does.
    * An object literal, an array or a function is never a value a field can be compared against in memory, because
    * it is compared by reference, so it would silently never match or, for the negative operators, always match.
-   * The range operators and `between` also reject `null` and `undefined`, which JavaScript coerces rather than
-   * treating as absent the way SQL does, and `is` and `isNot` accept only the values their SQL counterparts do.
+   * Nor is `undefined` or an invalid `Date`, which SQL cannot compare against either. The range operators and `between`
+   * also reject `null`, which JavaScript coerces to `0` where SQL matches nothing.
    */
   private static unmetValueRequirement(cmp: unknown, val: unknown): string | undefined {
     if (isLikeComparisonOperator(cmp)) {
@@ -81,16 +81,15 @@ export class ComparisonBuilder {
     if (isBetweenComparisonOperators(cmp)) {
       return this.isBetweenBounds(val) ? undefined : 'an object with a lower and an upper bound'
     }
-    if (cmp === 'is' || cmp === 'isNot') {
-      return val === null || val === true || val === false ? undefined : 'true, false or null'
-    }
     if (isRangeComparisonOperators(cmp)) {
       return isOrderableValue(val)
         ? undefined
-        : 'a value to compare against rather than null, undefined, an object, an array or a function'
+        : 'a value to compare against rather than null, undefined, an invalid Date, an object, an array or a function'
     }
     if (isBooleanComparisonOperators(cmp)) {
-      return isComparableValue(val) ? undefined : 'a value to compare against rather than an object, an array or a function'
+      return isComparableValue(val)
+        ? undefined
+        : 'a value to compare against rather than undefined, an invalid Date, an object, an array or a function'
     }
     return undefined
   }

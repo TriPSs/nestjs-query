@@ -609,13 +609,22 @@ describe('applyFilter', () => {
     }
   })
 
-  it.each(['user', 1, 0, undefined, new Date(0)])('should reject an is or isNot comparison against %p', (value) => {
+  it.each([undefined, {}, ['admin']])('should reject an is or isNot comparison against %p', (value) => {
     for (const operator of ['is', 'isNot']) {
       // @ts-ignore
       const filter: Filter<TestDTO> = { first: { [operator]: value } }
       expect(() => applyFilter({ first: 'admin' }, filter)).toThrow(InvalidFilterError)
-      expect(() => applyFilter({ first: 'admin' }, filter)).toThrow(`operator "${operator}" of field "first" requires true`)
+      expect(() => applyFilter({ first: 'admin' }, filter)).toThrow(`operator "${operator}" of field "first" requires a value`)
     }
+  })
+
+  it('should compare is and isNot against a value other than true, false or null, as the Mongoose adapter does', () => {
+    // @ts-ignore
+    expect(applyFilter({ first: 'acme' }, { first: { is: 'acme' } })).toBe(true)
+    // @ts-ignore
+    expect(applyFilter({ first: 'other' }, { first: { is: 'acme' } })).toBe(false)
+    // @ts-ignore
+    expect(applyFilter({ first: 'acme' }, { first: { isNot: 'acme' } })).toBe(false)
   })
 
   it('should compare Dates by the instant they hold rather than by reference', () => {
@@ -678,6 +687,37 @@ describe('applyFilter', () => {
     expect(applyFilter({ first: matching }, { first: { notLike: pattern } })).toBe(false)
     expect(applyFilter({ first: notMatching }, { first: { like: pattern } })).toBe(false)
     expect(applyFilter({ first: notMatching }, { first: { notILike: pattern } })).toBe(true)
+  })
+
+  it('should reject undefined as a comparison value rather than matching an omitted field', () => {
+    for (const operator of ['eq', 'neq']) {
+      const filter: Filter<TestDTO> = { first: { [operator]: undefined } }
+      expect(() => applyFilter({} as TestDTO, filter)).toThrow(InvalidFilterError)
+      expect(() => applyFilter({ first: 'user' }, filter)).toThrow(`operator "${operator}" of field "first" requires a value`)
+    }
+    for (const operator of ['in', 'notIn']) {
+      const filter: Filter<TestDTO> = { first: { [operator]: ['user', undefined] } }
+      expect(() => applyFilter({} as TestDTO, filter)).toThrow(InvalidFilterError)
+    }
+  })
+
+  it('should still match null against a null or omitted field', () => {
+    expect(applyFilter({ first: null }, { first: { eq: null } })).toBe(true)
+    expect(applyFilter({ first: 'user' }, { first: { neq: null } })).toBe(true)
+    expect(applyFilter({ first: null }, { first: { in: [null] } })).toBe(true)
+    expect(applyFilter({} as TestDTO, { first: { is: null } })).toBe(true)
+  })
+
+  it('should reject an invalid Date as a comparison value', () => {
+    const invalidDate = new Date(Number.NaN)
+    for (const operator of ['eq', 'neq', 'gt', 'lte']) {
+      const filter: Filter<TestDTO> = { created: { [operator]: invalidDate } }
+      expect(() => applyFilter({ created: new Date(5) }, filter)).toThrow(InvalidFilterError)
+    }
+    expect(() => applyFilter({ created: new Date(5) }, { created: { notIn: [invalidDate] } })).toThrow(InvalidFilterError)
+    expect(() =>
+      applyFilter({ created: new Date(5) }, { created: { notBetween: { lower: invalidDate, upper: new Date(9) } } })
+    ).toThrow(InvalidFilterError)
   })
 
   it('should handle and grouping', () => {

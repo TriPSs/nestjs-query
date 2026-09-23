@@ -64,6 +64,8 @@ const isDate = (value: unknown): value is Date => {
   }
 }
 
+const isInvalidDate = (value: unknown): boolean => isDate(value) && Number.isNaN(value.getTime())
+
 const isObjectLiteralPrototype = (prototype: object | null): boolean =>
   prototype === null || Object.getPrototypeOf(prototype) === null
 
@@ -83,16 +85,19 @@ export const isObjectLiteralOrArray = (value: unknown): boolean =>
   Array.isArray(value) || (isFilterableObject(value) && isObjectLiteralPrototype(Object.getPrototypeOf(value) as object | null))
 
 /**
- * Whether a value can be compared against a field in memory: a scalar, `null`, `undefined`, a `Date` or a class
- * instance, as opposed to an object literal, an array or a function, which would be compared by reference.
+ * Whether a value can be compared against a field in memory: a scalar, `null`, a valid `Date` or a class instance, as
+ * opposed to an object literal, an array or a function, which would be compared by reference. `undefined` and an
+ * invalid `Date` are rejected too. SQL matches nothing against `undefined` and the engines disagree on an invalid
+ * `Date`, where in memory `eq: undefined` would match an omitted field and `neq` of either would match every value.
  */
-export const isComparableValue = (value: unknown): boolean => !isObjectLiteralOrArray(value) && typeof value !== 'function'
+export const isComparableValue = (value: unknown): boolean =>
+  value !== undefined && !isInvalidDate(value) && !isObjectLiteralOrArray(value) && typeof value !== 'function'
 
 /**
- * Whether a value can bound a range or `between` comparison in memory: a comparable value other than `null` or
- * `undefined`, which JavaScript would coerce where SQL would match nothing.
+ * Whether a value can bound a range or `between` comparison in memory: a comparable value other than `null`, which
+ * JavaScript would coerce to `0` where SQL would match nothing.
  */
-export const isOrderableValue = (value: unknown): boolean => value !== null && value !== undefined && isComparableValue(value)
+export const isOrderableValue = (value: unknown): boolean => value !== null && isComparableValue(value)
 
 /**
  * Whether two values are equal for an in-memory comparison: two `Date`s are equal when they hold the same instant,
