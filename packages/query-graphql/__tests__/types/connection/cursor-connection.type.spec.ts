@@ -792,6 +792,28 @@ describe('CursorConnectionType', (): void => {
       })
     })
 
+    it('should treat a sort field missing from the node as null so the walk cannot repeat the null block', async () => {
+      const queryMany = jest.fn()
+      queryMany.mockResolvedValueOnce([])
+      await createNullsLargestConnection(queryMany, {
+        sorting: [{ field: 'nullableField', direction: SortDirection.ASC }],
+        paging: createPage({
+          first: 2,
+          after: keysetCursor([{ field: 'nullableField' }, { field: 'id', value: 5 }] as { field: string; value: unknown }[])
+        })
+      })
+      expect(queryMany).toHaveBeenCalledWith({
+        filter: {
+          or: [{ and: [{ nullableField: { is: null } }, { id: { gt: 5 } }] }]
+        },
+        paging: { limit: 3 },
+        sorting: [
+          { field: 'nullableField', direction: SortDirection.ASC },
+          { field: 'id', direction: SortDirection.ASC }
+        ]
+      })
+    })
+
     it('should honour an explicit nulls placement over the direction default', async () => {
       const queryMany = jest.fn()
       queryMany.mockResolvedValueOnce([])

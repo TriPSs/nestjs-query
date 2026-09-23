@@ -97,7 +97,7 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
         throw new BadRequestException('Invalid cursor')
       }
       const partial: Partial<DTO> = payload.fields.reduce(
-        (dtoPartial: Partial<DTO>, { field, value }) => ({ ...dtoPartial, [field]: value }),
+        (dtoPartial: Partial<DTO>, { field, value }) => ({ ...dtoPartial, [field]: value ?? null }),
         {}
       )
       const transformed = plainToClass(this.DTOClass, partial)
