@@ -52,10 +52,26 @@ export const isComparison = <DTO, K extends keyof DTO>(
 }
 
 /**
+ * Whether a value can hold filter fields: a plain object or class instance, as opposed to a scalar, `null`, an array
+ * or a `Date`, none of which a nested filter or a comparison can be read against.
+ */
+export const isFilterableObject = (value: unknown): value is object =>
+  value !== null && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)
+
+/**
+ * Whether a value is itself a non-empty comparison such as `{ eq: 'a' }`, which is never a value a comparison
+ * operator can compare against.
+ */
+export const isComparisonObject = (value: unknown): boolean =>
+  isFilterableObject(value) && Object.keys(value).length > 0 && Object.keys(value).every(isComparisonOperator)
+
+/**
  * Returns the unrecognised keys of a value that mixes recognised comparison operators with keys that are not
  * comparison operators, for example `{ eq: 'a', unregistered: 'b' }`.
  *
- * A value whose keys are *all* unrecognised is a valid nested filter keyed by field name, so it yields no keys.
+ * A value whose keys are *all* unrecognised is a valid nested filter keyed by field name, so it yields no keys. So
+ * does a mixed value whose operator-named keys each hold an object, because that is a nested filter over a relation
+ * with fields named after operators, for example `{ is: { eq: true }, name: { eq: 'a' } }`.
  * The `and` and `or` grouping keys are neither operators nor field names and are grouped before the remaining
  * keys are read, so they take no part in this.
  */
@@ -65,9 +81,11 @@ export const getUnknownComparisonOperators = (maybeComparison?: object): string[
   }
 
   const keys = Object.keys(maybeComparison).filter((key) => !isGroupingKey(key))
+  const operatorKeys = keys.filter(isComparisonOperator)
   const unknownKeys = keys.filter((key) => !isComparisonOperator(key))
+  const readsAsNestedFilter = operatorKeys.every((key) => isFilterableObject(maybeComparison[key as keyof object]))
 
-  return unknownKeys.length === keys.length ? [] : unknownKeys
+  return readsAsNestedFilter ? [] : unknownKeys
 }
 
 // TODO: test

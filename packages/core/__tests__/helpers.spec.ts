@@ -11,6 +11,7 @@ import {
   getFilterComparisons,
   getFilterFields,
   getFilterOmitting,
+  InvalidFilterError,
   mergeFilter,
   mergeFilters,
   Paging,
@@ -416,6 +417,68 @@ describe('applyFilter', () => {
     expect(() => applyFilter({ first: 'foo', age: 10 }, filter)).toThrow(
       'unknown comparison "unregistered" for field "age". "age" holds a number, so those keys cannot be nested filter fields.'
     )
+  })
+
+  it('should read a relation with a field named after an operator beside another field as a nested filter', () => {
+    type OwnerDTO = { is: string; first: string }
+    type ParentDTO = { owner: OwnerDTO }
+    const filter: Filter<ParentDTO> = { owner: { is: { eq: 'yes' }, first: { eq: 'baz' } } }
+    expect(applyFilter({ owner: { is: 'yes', first: 'baz' } }, filter)).toBe(true)
+    expect(applyFilter({ owner: { is: 'no', first: 'baz' } }, filter)).toBe(false)
+  })
+
+  it('should reject a lone field named after an operator unless it is wrapped in and', () => {
+    type OwnerDTO = { is: string }
+    type ParentDTO = { owner: OwnerDTO }
+    const bareFilter: Filter<ParentDTO> = { owner: { is: { eq: 'yes' } } }
+    const groupedFilter: Filter<ParentDTO> = { owner: { and: [{ is: { eq: 'yes' } }] } }
+    expect(() => applyFilter({ owner: { is: 'yes' } }, bareFilter)).toThrow(InvalidFilterError)
+    expect(applyFilter({ owner: { is: 'yes' } }, groupedFilter)).toBe(true)
+    expect(applyFilter({ owner: { is: 'no' } }, groupedFilter)).toBe(false)
+  })
+
+  it('should reject a filter that nests into a Date field value', () => {
+    const filter: Filter<TestDTO> = {
+      // @ts-ignore
+      created: { nin: { neq: new Date(0) } }
+    }
+    expect(() => applyFilter({ created: new Date(1) }, filter)).toThrow(InvalidFilterError)
+    expect(() => applyFilter({ created: new Date(1) }, filter)).toThrow('"created" holds a Date')
+  })
+
+  it('should reject a filter that nests into an array field value', () => {
+    type TaggedDTO = { tags: string[] }
+    const filter: Filter<TaggedDTO> = {
+      // @ts-ignore
+      tags: { nin: { neq: 'admin' } }
+    }
+    expect(() => applyFilter({ tags: ['admin'] }, filter)).toThrow(InvalidFilterError)
+    expect(() => applyFilter({ tags: ['admin'] }, filter)).toThrow('"tags" holds an array')
+  })
+
+  it('should reject a comparison operator whose value is itself a comparison', () => {
+    const filter: Filter<TestDTO> = {
+      // @ts-ignore
+      first: { neq: { eq: 'admin' } }
+    }
+    expect(() => applyFilter({ first: 'user' }, filter)).toThrow(InvalidFilterError)
+    expect(() => applyFilter({ first: 'user' }, filter)).toThrow('operator "neq" of field "first" is given a comparison')
+  })
+
+  it('should reject an in or notIn comparison whose value is not an array', () => {
+    // @ts-ignore
+    const inFilter: Filter<TestDTO> = { first: { in: 'admin' } }
+    // @ts-ignore
+    const notInFilter: Filter<TestDTO> = { first: { notIn: 'admin' } }
+    expect(() => applyFilter({ first: 'dmin' }, inFilter)).toThrow(InvalidFilterError)
+    expect(() => applyFilter({ first: null }, notInFilter)).toThrow('operator "notIn" of field "first" requires an array')
+  })
+
+  it('should raise an InvalidFilterError for every filter it cannot read', () => {
+    // @ts-ignore
+    expect(() => applyFilter({ first: 'baz' }, { first: { foo: 'bar' } })).toThrow(InvalidFilterError)
+    // @ts-ignore
+    expect(() => applyFilter({ first: 'baz' }, { first: 'baz' })).toThrow(InvalidFilterError)
   })
 
   it('should keep treating a null nested value as a nested filter', () => {

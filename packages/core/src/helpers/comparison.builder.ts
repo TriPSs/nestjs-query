@@ -5,12 +5,14 @@ import {
   InComparisonOperators,
   isBetweenComparisonOperators,
   isBooleanComparisonOperators,
+  isComparisonObject,
   isInComparisonOperators,
   isLikeComparisonOperator,
   isRangeComparisonOperators,
   LikeComparisonOperators,
   RangeComparisonOperators
 } from './filter.helpers'
+import { InvalidFilterError } from './invalid-filter.error'
 import { ComparisonField, FilterFn } from './types'
 
 const compare =
@@ -24,6 +26,12 @@ export class ComparisonBuilder {
     cmp: FilterComparisonOperators<DTO[F]>,
     val: ComparisonField<DTO, F>
   ): FilterFn<DTO> {
+    if (isComparisonObject(val)) {
+      throw new InvalidFilterError(
+        `operator ${JSON.stringify(cmp)} of field ${JSON.stringify(field)} is given a comparison ${JSON.stringify(val)} ` +
+          'rather than a value to compare against.'
+      )
+    }
     if (isBooleanComparisonOperators(cmp)) {
       return this.booleanComparison(cmp, field, val as DTO[F])
     }
@@ -40,7 +48,7 @@ export class ComparisonBuilder {
     if (isBetweenComparisonOperators(cmp)) {
       return this.betweenComparison(cmp, field, val as CommonFieldComparisonBetweenType<DTO[F]>)
     }
-    throw new Error(`unknown operator ${JSON.stringify(cmp)}`)
+    throw new InvalidFilterError(`unknown operator ${JSON.stringify(cmp)}`)
   }
 
   private static booleanComparison<DTO, F extends keyof DTO>(
@@ -93,6 +101,11 @@ export class ComparisonBuilder {
   }
 
   private static inComparison<DTO, F extends keyof DTO>(cmp: InComparisonOperators, field: F, val: DTO[F][]): FilterFn<DTO> {
+    if (!Array.isArray(val)) {
+      throw new InvalidFilterError(
+        `operator ${JSON.stringify(cmp)} of field ${JSON.stringify(field)} requires an array, but was given ${JSON.stringify(val)}.`
+      )
+    }
     if (cmp === 'notIn') {
       return compare((dto) => !val.includes(dto[field]), true)
     }
