@@ -677,16 +677,38 @@ describe('applyFilter', () => {
   })
 
   it.each([
+    ['ascii letters of either case', 'Sales%', 'sALES team', 'sale'],
+    ['a letter whose case folding is ascii but whose lower case is not', 'sales', 'SALES', 'ſales'],
+    ['the kelvin sign, whose lower case is ascii', 'k', 'K', 'x']
+  ])('should match %s in an iLike pattern the way Postgres lower-cases both sides', (_, pattern, matching, notMatching) => {
+    expect(applyFilter({ first: matching }, { first: { iLike: pattern } })).toBe(true)
+    expect(applyFilter({ first: matching }, { first: { notILike: pattern } })).toBe(false)
+    expect(applyFilter({ first: notMatching }, { first: { iLike: pattern } })).toBe(false)
+    expect(applyFilter({ first: notMatching }, { first: { notILike: pattern } })).toBe(true)
+  })
+
+  it('should match an underscore in an iLike pattern against a character outside the Basic Multilingual Plane', () => {
+    expect(applyFilter({ first: '😀X' }, { first: { iLike: '_x' } })).toBe(true)
+    expect(applyFilter({ first: '😀X' }, { first: { notILike: '_x' } })).toBe(false)
+  })
+
+  it.each([
     ['an escaped underscore', 'user\\_admin', 'user_admin', 'userXadmin'],
     ['an escaped percent', '100\\%', '100%', '1000'],
     ['an escaped backslash', 'a\\\\b', 'a\\b', 'a\\\\b'],
-    ['an escaped ordinary character', 'a\\bc', 'abc', 'a\\bc'],
-    ['a trailing backslash', 'a\\', 'a\\', 'a']
+    ['an escaped ordinary character', 'a\\bc', 'abc', 'a\\bc']
   ])('should read %s in a like pattern the way Postgres and MySQL do', (_, pattern, matching, notMatching) => {
     expect(applyFilter({ first: matching }, { first: { like: pattern } })).toBe(true)
     expect(applyFilter({ first: matching }, { first: { notLike: pattern } })).toBe(false)
     expect(applyFilter({ first: notMatching }, { first: { like: pattern } })).toBe(false)
     expect(applyFilter({ first: notMatching }, { first: { notILike: pattern } })).toBe(true)
+  })
+
+  it('should match a trailing backslash in a like pattern literally, as MySQL and MariaDB do', () => {
+    expect(applyFilter({ first: 'a\\' }, { first: { like: 'a\\' } })).toBe(true)
+    expect(applyFilter({ first: 'a\\' }, { first: { notLike: 'a\\' } })).toBe(false)
+    expect(applyFilter({ first: 'a' }, { first: { like: 'a\\' } })).toBe(false)
+    expect(applyFilter({ first: 'a' }, { first: { notILike: 'a\\' } })).toBe(true)
   })
 
   it('should reject undefined as a comparison value rather than matching an omitted field', () => {

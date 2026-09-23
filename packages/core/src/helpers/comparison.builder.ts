@@ -146,11 +146,20 @@ export class ComparisonBuilder {
       return compare((dto) => !likeRegexp.test(dto[field] as unknown as string), true)
     }
     if (cmp === 'iLike') {
-      const likeRegexp = this.likeSearchToRegexp(val, true)
-      return compare((dto) => likeRegexp.test(dto[field] as unknown as string), false)
+      const likeRegexp = this.likeSearchToRegexp(val.toLowerCase())
+      return compare((dto) => likeRegexp.test(this.lowerCased(dto[field])), false)
     }
-    const likeRegexp = this.likeSearchToRegexp(val, true)
-    return compare((dto) => !likeRegexp.test(dto[field] as unknown as string), true)
+    const likeRegexp = this.likeSearchToRegexp(val.toLowerCase())
+    return compare((dto) => !likeRegexp.test(this.lowerCased(dto[field])), true)
+  }
+
+  /**
+   * Lower-cases a field value for `iLike` and `notILike`, which compare the lower-cased value against the lower-cased
+   * pattern, as Postgres does, rather than folding case the way a case-insensitive regular expression does. Folding
+   * would let an ASCII pattern such as `s` match `ſ`, which Postgres does not.
+   */
+  private static lowerCased(value: unknown): string {
+    return String(value).toLowerCase()
   }
 
   private static inComparison<DTO, F extends keyof DTO>(cmp: InComparisonOperators, field: F, val: DTO[F][]): FilterFn<DTO> {
@@ -181,14 +190,15 @@ export class ComparisonBuilder {
   /**
    * Translates a SQL `LIKE` pattern into a regular expression the way Postgres and MySQL read it: `%` matches any run
    * of characters, line breaks included, `_` matches any single character, a backslash makes the character after it,
-   * `%`, `_` and backslash included, match itself, and every other character, regular expression syntax and a
-   * trailing backslash included, matches itself. Characters are Unicode code points, so `_` matches an emoji.
+   * `%`, `_` and backslash included, match itself, and every other character, regular expression syntax included,
+   * matches itself. A trailing backslash matches itself, as it does on MySQL and MariaDB, where Postgres rejects the
+   * pattern. Characters are Unicode code points, so `_` matches an emoji.
    */
-  private static likeSearchToRegexp(likeStr: string, caseInsensitive = false): RegExp {
+  private static likeSearchToRegexp(likeStr: string): RegExp {
     const replaced = likeStr.replace(LIKE_PATTERN_TOKEN, (token, escaped?: string) =>
       escaped === undefined ? (LIKE_WILDCARD_PATTERNS[token] ?? this.matchLiterally(token)) : this.matchLiterally(escaped)
     )
-    return new RegExp(`^${replaced}$`, caseInsensitive ? 'siu' : 'su')
+    return new RegExp(`^${replaced}$`, 'su')
   }
 
   private static matchLiterally(character: string): string {
