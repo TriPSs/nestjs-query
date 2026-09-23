@@ -751,6 +751,16 @@ describe('applyFilter', () => {
     expect(() => applyFilter({ age: 5 }, { age: { notBetween: { lower: Number.NaN, upper: 9 } } })).toThrow(InvalidFilterError)
   })
 
+  it('should not match a null field in a range or between comparison, as SQL does not, rather than reading it as 0', () => {
+    const record: TestDTO = { age: null }
+    for (const operator of ['gt', 'gte', 'lt', 'lte']) {
+      const bound = operator.startsWith('g') ? -1 : 1
+      expect(applyFilter(record, { age: { [operator]: bound } })).toBe(false)
+    }
+    expect(applyFilter(record, { age: { between: { lower: -1, upper: 1 } } })).toBe(false)
+    expect(applyFilter(record, { age: { notBetween: { lower: 1, upper: 9 } } })).toBe(false)
+  })
+
   it('should still match null against a null or omitted field', () => {
     expect(applyFilter({ first: null }, { first: { eq: null } })).toBe(true)
     expect(applyFilter({ first: 'user' }, { first: { neq: null } })).toBe(true)

@@ -37,6 +37,16 @@ const compare =
   (dto?: DTO) =>
     dto ? filter(dto) : fallback
 
+/**
+ * Like `compare`, but a `null` field never matches, as `NULL` never satisfies an ordering comparison in SQL, rather
+ * than being coerced to `0` by JavaScript's relational operators.
+ */
+const compareOrdered = <DTO, F extends keyof DTO>(
+  field: F,
+  filter: (value: DTO[F]) => boolean,
+  fallback: boolean
+): FilterFn<DTO> => compare((dto: DTO) => dto[field] !== null && filter(dto[field]), fallback)
+
 export class ComparisonBuilder {
   static build<DTO, F extends keyof DTO>(
     field: F,
@@ -135,15 +145,15 @@ export class ComparisonBuilder {
 
   private static rangeComparison<DTO, F extends keyof DTO>(cmp: RangeComparisonOperators, field: F, val: DTO[F]): FilterFn<DTO> {
     if (cmp === 'gt') {
-      return compare((dto) => dto[field] > val, false)
+      return compareOrdered(field, (value) => value > val, false)
     }
     if (cmp === 'gte') {
-      return compare((dto) => dto[field] >= val, false)
+      return compareOrdered(field, (value) => value >= val, false)
     }
     if (cmp === 'lt') {
-      return compare((dto) => dto[field] < val, false)
+      return compareOrdered(field, (value) => value < val, false)
     }
-    return compare((dto) => dto[field] <= val, false)
+    return compareOrdered(field, (value) => value <= val, false)
   }
 
   private static likeComparison<DTO, F extends keyof DTO>(cmp: LikeComparisonOperators, field: F, val: string): FilterFn<DTO> {
@@ -190,15 +200,9 @@ export class ComparisonBuilder {
   ): FilterFn<DTO> {
     const { lower, upper } = val
     if (cmp === 'notBetween') {
-      return compare((dto) => {
-        const dtoVal = dto[field]
-        return dtoVal < lower || dtoVal > upper
-      }, true)
+      return compareOrdered(field, (dtoVal) => dtoVal < lower || dtoVal > upper, true)
     }
-    return compare((dto) => {
-      const dtoVal = dto[field]
-      return dtoVal >= lower && dtoVal <= upper
-    }, false)
+    return compareOrdered(field, (dtoVal) => dtoVal >= lower && dtoVal <= upper, false)
   }
 
   /**
