@@ -687,6 +687,21 @@ describe('applyFilter', () => {
     expect(applyFilter({ first: notMatching }, { first: { notILike: pattern } })).toBe(true)
   })
 
+  it.each([
+    ['a dotted capital I, which ICU lower-cases to two characters and libc to one', '%İ', 'xİ', 'i'],
+    ['an underscore against a dotted capital I', '_', 'x', 'İ'],
+    ['a word-final sigma, which ICU lower-cases to ς and libc to σ', 'ΑΣ', 'ΑΣ', 'ας'],
+    ['a sigma before a wildcard', 'ΑΣ%', 'ΑΣ', 'ΑΣΑ']
+  ])(
+    'should match %s in an iLike pattern only where both the ICU and the libc lower cases match',
+    (_, pattern, matching, matchingUnderOneLowerCaseOnly) => {
+      expect(applyFilter({ first: matching }, { first: { iLike: pattern } })).toBe(true)
+      expect(applyFilter({ first: matching }, { first: { notILike: pattern } })).toBe(false)
+      expect(applyFilter({ first: matchingUnderOneLowerCaseOnly }, { first: { iLike: pattern } })).toBe(false)
+      expect(applyFilter({ first: matchingUnderOneLowerCaseOnly }, { first: { notILike: pattern } })).toBe(false)
+    }
+  )
+
   it('should match an underscore in an iLike pattern against a character outside the Basic Multilingual Plane', () => {
     expect(applyFilter({ first: '😀X' }, { first: { iLike: '_x' } })).toBe(true)
     expect(applyFilter({ first: '😀X' }, { first: { notILike: '_x' } })).toBe(false)

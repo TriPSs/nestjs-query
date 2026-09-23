@@ -22,6 +22,16 @@ const LIKE_WILDCARD_PATTERNS: Record<string, string> = { '%': '.*', _: '.' }
 const LIKE_PATTERN_TOKEN = /\\([^])|[%_]|[.*+?^${}()|[\]\\/]/gu
 const REGEXP_SYNTAX_CHARACTER = /^[.*+?^${}()|[\]\\/]$/
 
+/**
+ * The two ways Postgres lower-cases text for `ILIKE`: ICU and the builtin `pg_unicode_fast` collation map the whole
+ * string, so `İ` becomes two characters and a word-final `Σ` becomes `ς`, while libc and the builtin `pg_c_utf8`
+ * collation map each character on its own, so `İ` becomes `i` and every `Σ` becomes `σ`.
+ */
+const POSTGRES_LOWER_CASINGS: ((text: string) => string)[] = [
+  (text) => text.toLowerCase(),
+  (text) => Array.from(text, (character) => String.fromCodePoint(character.toLowerCase().codePointAt(0))).join('')
+]
+
 const compare =
   <DTO>(filter: (dto: DTO) => boolean, fallback: boolean): FilterFn<DTO> =>
   (dto?: DTO) =>
@@ -145,21 +155,25 @@ export class ComparisonBuilder {
       const likeRegexp = this.likeSearchToRegexp(val)
       return compare((dto) => !likeRegexp.test(dto[field] as unknown as string), true)
     }
+    const lowerCasedMatchers = this.lowerCasedLikeMatchers(val)
     if (cmp === 'iLike') {
-      const likeRegexp = this.likeSearchToRegexp(val.toLowerCase())
-      return compare((dto) => likeRegexp.test(this.lowerCased(dto[field])), false)
+      return compare((dto) => lowerCasedMatchers.every((matches) => matches(dto[field])), false)
     }
-    const likeRegexp = this.likeSearchToRegexp(val.toLowerCase())
-    return compare((dto) => !likeRegexp.test(this.lowerCased(dto[field])), true)
+    return compare((dto) => !lowerCasedMatchers.some((matches) => matches(dto[field])), true)
   }
 
   /**
-   * Lower-cases a field value for `iLike` and `notILike`, which compare the lower-cased value against the lower-cased
-   * pattern, as Postgres does, rather than folding case the way a case-insensitive regular expression does. Folding
-   * would let an ASCII pattern such as `s` match `ſ`, which Postgres does not.
+   * Builds one matcher per way Postgres lower-cases text, each comparing the lower-cased value against the lower-cased
+   * pattern, as Postgres's `ILIKE` does, rather than folding case the way a case-insensitive regular expression does.
+   * Folding would let an ASCII pattern such as `s` match `ſ`, which Postgres does not. `iLike` matches only where every
+   * lower casing matches and `notILike` only where none does, so neither admits a value that Postgres, under an ICU or
+   * a libc collation, would not.
    */
-  private static lowerCased(value: unknown): string {
-    return String(value).toLowerCase()
+  private static lowerCasedLikeMatchers(pattern: string): ((value: unknown) => boolean)[] {
+    return POSTGRES_LOWER_CASINGS.map((lowerCase) => {
+      const likeRegexp = this.likeSearchToRegexp(lowerCase(pattern))
+      return (value: unknown) => likeRegexp.test(lowerCase(String(value)))
+    })
   }
 
   private static inComparison<DTO, F extends keyof DTO>(cmp: InComparisonOperators, field: F, val: DTO[F][]): FilterFn<DTO> {
