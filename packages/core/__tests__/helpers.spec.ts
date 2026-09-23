@@ -27,6 +27,7 @@ import {
   transformQuery,
   transformSort
 } from '@ptc-org/nestjs-query-core'
+import { runInNewContext } from 'vm'
 
 import { AggregateQuery } from '../src/interfaces/aggregate-query.interface'
 
@@ -498,7 +499,7 @@ describe('applyFilter', () => {
       // @ts-ignore
       const filter: Filter<TestDTO> = { first: { [operator]: value } }
       expect(() => applyFilter({ first: 'user' }, filter)).toThrow(InvalidFilterError)
-      expect(() => applyFilter({ first: null }, filter)).toThrow(`operator "${operator}" of field "first" requires a value`)
+      expect(() => applyFilter({ first: null }, filter)).toThrow(`operator "${operator}" of field "first" requires `)
     }
   })
 
@@ -562,6 +563,101 @@ describe('applyFilter', () => {
     )
     expect(applyFilter(record, { price: { eq: price } } as Filter<PricedDTO>)).toBe(true)
     expect(applyFilter(record, { price: { in: [price] } } as Filter<PricedDTO>)).toBe(true)
+  })
+
+  it('should reject an object literal from another realm as a comparison value', () => {
+    const foreignObjectLiteral = runInNewContext('({ tenantId: "acme" })') as object
+    for (const operator of ['eq', 'neq', 'isNot', 'gt']) {
+      // @ts-ignore
+      const filter: Filter<TestDTO> = { first: { [operator]: foreignObjectLiteral } }
+      expect(() => applyFilter({ first: 'user' }, filter)).toThrow(InvalidFilterError)
+    }
+    // @ts-ignore
+    expect(() => applyFilter({ first: 'user' }, { first: { notIn: [foreignObjectLiteral] } })).toThrow(InvalidFilterError)
+  })
+
+  it('should reject a function as a comparison value rather than comparing by reference', () => {
+    const getOwner = () => 'user'
+    for (const operator of ['eq', 'neq', 'gt', 'lte']) {
+      // @ts-ignore
+      const filter: Filter<TestDTO> = { first: { [operator]: getOwner } }
+      expect(() => applyFilter({ first: 'user' }, filter)).toThrow(InvalidFilterError)
+    }
+    // @ts-ignore
+    expect(() => applyFilter({ first: 'user' }, { first: { notIn: [getOwner] } })).toThrow(InvalidFilterError)
+  })
+
+  it.each([null, undefined])('should reject a range comparison against %p rather than coercing it', (bound) => {
+    for (const operator of ['gt', 'gte', 'lt', 'lte']) {
+      const filter: Filter<TestDTO> = { age: { [operator]: bound } }
+      expect(() => applyFilter({ age: -1 }, filter)).toThrow(InvalidFilterError)
+      expect(() => applyFilter({ age: null }, filter)).toThrow(`operator "${operator}" of field "age" requires a value`)
+    }
+  })
+
+  it.each([
+    ['a null bound', { lower: null, upper: 10 }],
+    ['an undefined bound', { lower: 0, upper: undefined }],
+    ['an object bound', { lower: {}, upper: 10 }],
+    ['an array bound', { lower: [0], upper: 10 }]
+  ])('should reject a between or notBetween comparison with %s', (_, bounds) => {
+    for (const operator of ['between', 'notBetween']) {
+      // @ts-ignore
+      const filter: Filter<TestDTO> = { age: { [operator]: bounds } }
+      expect(() => applyFilter({ age: null }, filter)).toThrow(InvalidFilterError)
+      expect(() => applyFilter({ age: -1 }, filter)).toThrow(`operator "${operator}" of field "age" requires an object`)
+    }
+  })
+
+  it.each(['user', 1, 0, undefined, new Date(0)])('should reject an is or isNot comparison against %p', (value) => {
+    for (const operator of ['is', 'isNot']) {
+      // @ts-ignore
+      const filter: Filter<TestDTO> = { first: { [operator]: value } }
+      expect(() => applyFilter({ first: 'admin' }, filter)).toThrow(InvalidFilterError)
+      expect(() => applyFilter({ first: 'admin' }, filter)).toThrow(`operator "${operator}" of field "first" requires true`)
+    }
+  })
+
+  it('should compare Dates by the instant they hold rather than by reference', () => {
+    const record: TestDTO = { created: new Date(5) }
+    expect(applyFilter(record, { created: { eq: new Date(5) } })).toBe(true)
+    expect(applyFilter(record, { created: { neq: new Date(5) } })).toBe(false)
+    expect(applyFilter(record, { created: { neq: new Date(6) } })).toBe(true)
+    expect(applyFilter(record, { created: { in: [new Date(5)] } })).toBe(true)
+    expect(applyFilter(record, { created: { notIn: [new Date(5)] } })).toBe(false)
+    expect(applyFilter(record, { created: { notIn: [new Date(6)] } })).toBe(true)
+  })
+
+  it.each([
+    ['a regular expression wildcard', 'a.c', 'abc'],
+    ['a regular expression alternation', 'x|', 'anything'],
+    ['a regular expression quantifier', 'a+', 'aaa']
+  ])('should match %s in a like pattern literally, as SQL does', (_, pattern, value) => {
+    const record: TestDTO = { first: value }
+    expect(applyFilter(record, { first: { like: pattern } })).toBe(false)
+    expect(applyFilter(record, { first: { iLike: pattern } })).toBe(false)
+    expect(applyFilter(record, { first: { notLike: pattern } })).toBe(true)
+    expect(applyFilter(record, { first: { notILike: pattern } })).toBe(true)
+  })
+
+  it('should not raise a SyntaxError that repeats a like pattern holding regular expression syntax', () => {
+    const record: TestDTO = { first: '(tenant-secret' }
+    expect(applyFilter(record, { first: { like: '(tenant-secret' } })).toBe(true)
+    expect(applyFilter(record, { first: { notILike: '[tenant-secret%' } })).toBe(true)
+  })
+
+  it('should match an underscore in a like pattern as any single character, as SQL does', () => {
+    const record: TestDTO = { first: 'abc' }
+    expect(applyFilter(record, { first: { like: 'a_c' } })).toBe(true)
+    expect(applyFilter(record, { first: { notLike: 'a_c' } })).toBe(false)
+    expect(applyFilter(record, { first: { like: 'a_' } })).toBe(false)
+  })
+
+  it('should match a percent in a like pattern across line breaks, as SQL does', () => {
+    const record: TestDTO = { first: 'public\nsecret' }
+    expect(applyFilter(record, { first: { like: '%secret%' } })).toBe(true)
+    expect(applyFilter(record, { first: { notLike: '%secret%' } })).toBe(false)
+    expect(applyFilter(record, { first: { notILike: '%SECRET' } })).toBe(false)
   })
 
   it('should handle and grouping', () => {

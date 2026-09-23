@@ -52,19 +52,54 @@ export const isComparison = <DTO, K extends keyof DTO>(
 }
 
 /**
+ * Whether a value is a `Date` from any realm, checked by the internal slot `getTime` reads rather than by
+ * `instanceof`, which fails across realms, or by `Symbol.toStringTag`, which any object can claim.
+ */
+const isDate = (value: unknown): value is Date => {
+  try {
+    Date.prototype.getTime.call(value)
+    return true
+  } catch {
+    return false
+  }
+}
+
+const isObjectLiteralPrototype = (prototype: object | null): boolean =>
+  prototype === null || Object.getPrototypeOf(prototype) === null
+
+/**
  * Whether a value can hold filter fields: a plain object or class instance, as opposed to a scalar, `null`, an array
  * or a `Date`, none of which a nested filter or a comparison can be read against.
  */
 export const isFilterableObject = (value: unknown): value is object =>
-  value !== null && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)
+  value !== null && typeof value === 'object' && !Array.isArray(value) && !isDate(value)
 
 /**
  * Whether a value is an object literal or an array, as opposed to a scalar, a `Date` or a class instance. Neither can
- * be compared against a field in memory, because both are compared by reference.
+ * be compared against a field in memory, because both are compared by reference. An object literal is recognised by
+ * its prototype being `null` or the `Object.prototype` of any realm, so one made in a `vm` context is recognised too.
  */
 export const isObjectLiteralOrArray = (value: unknown): boolean =>
-  Array.isArray(value) ||
-  (isFilterableObject(value) && [Object.prototype, null].includes(Object.getPrototypeOf(value) as object | null))
+  Array.isArray(value) || (isFilterableObject(value) && isObjectLiteralPrototype(Object.getPrototypeOf(value) as object | null))
+
+/**
+ * Whether a value can be compared against a field in memory: a scalar, `null`, `undefined`, a `Date` or a class
+ * instance, as opposed to an object literal, an array or a function, which would be compared by reference.
+ */
+export const isComparableValue = (value: unknown): boolean => !isObjectLiteralOrArray(value) && typeof value !== 'function'
+
+/**
+ * Whether a value can bound a range or `between` comparison in memory: a comparable value other than `null` or
+ * `undefined`, which JavaScript would coerce where SQL would match nothing.
+ */
+export const isOrderableValue = (value: unknown): boolean => value !== null && value !== undefined && isComparableValue(value)
+
+/**
+ * Whether two values are equal for an in-memory comparison: two `Date`s are equal when they hold the same instant,
+ * as they are in SQL, and every other value is compared strictly.
+ */
+export const isSameValue = (value: unknown, other: unknown): boolean =>
+  isDate(value) && isDate(other) ? value.getTime() === other.getTime() : value === other
 
 /**
  * Returns the unrecognised keys of a value that mixes recognised comparison operators with keys that are not

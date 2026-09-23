@@ -5,16 +5,20 @@ import {
   InComparisonOperators,
   isBetweenComparisonOperators,
   isBooleanComparisonOperators,
+  isComparableValue,
   isFilterableObject,
   isInComparisonOperators,
   isLikeComparisonOperator,
-  isObjectLiteralOrArray,
+  isOrderableValue,
   isRangeComparisonOperators,
+  isSameValue,
   LikeComparisonOperators,
   RangeComparisonOperators
 } from './filter.helpers'
 import { InvalidFilterError } from './invalid-filter.error'
 import { ComparisonField, FilterFn } from './types'
+
+const LIKE_WILDCARD_PATTERNS: Record<string, string> = { '%': '.*', _: '.' }
 
 const compare =
   <DTO>(filter: (dto: DTO) => boolean, fallback: boolean): FilterFn<DTO> =>
@@ -60,23 +64,43 @@ export class ComparisonBuilder {
 
   /**
    * Returns what the operator requires of its value when `val` does not provide it, or `undefined` when it does.
-   * An object literal or an array is never a value a field can be compared against in memory, because it is
-   * compared by reference, so it would silently never match or, for the negative operators, always match.
+   * An object literal, an array or a function is never a value a field can be compared against in memory, because
+   * it is compared by reference, so it would silently never match or, for the negative operators, always match.
+   * The range operators and `between` also reject `null` and `undefined`, which JavaScript coerces rather than
+   * treating as absent the way SQL does, and `is` and `isNot` accept only the values their SQL counterparts do.
    */
   private static unmetValueRequirement(cmp: unknown, val: unknown): string | undefined {
     if (isLikeComparisonOperator(cmp)) {
       return typeof val === 'string' ? undefined : 'a string'
     }
     if (isInComparisonOperators(cmp)) {
-      return Array.isArray(val) && !val.some(isObjectLiteralOrArray) ? undefined : 'an array of values to compare against'
+      return Array.isArray(val) && val.every(isComparableValue) ? undefined : 'an array of values to compare against'
     }
     if (isBetweenComparisonOperators(cmp)) {
-      return isFilterableObject(val) && 'lower' in val && 'upper' in val ? undefined : 'an object with a lower and an upper bound'
+      return this.isBetweenBounds(val) ? undefined : 'an object with a lower and an upper bound'
     }
-    if (isBooleanComparisonOperators(cmp) || isRangeComparisonOperators(cmp)) {
-      return isObjectLiteralOrArray(val) ? 'a value to compare against rather than an object or an array' : undefined
+    if (cmp === 'is' || cmp === 'isNot') {
+      return val === null || val === true || val === false ? undefined : 'true, false or null'
+    }
+    if (isRangeComparisonOperators(cmp)) {
+      return isOrderableValue(val)
+        ? undefined
+        : 'a value to compare against rather than null, undefined, an object, an array or a function'
+    }
+    if (isBooleanComparisonOperators(cmp)) {
+      return isComparableValue(val) ? undefined : 'a value to compare against rather than an object, an array or a function'
     }
     return undefined
+  }
+
+  private static isBetweenBounds(val: unknown): boolean {
+    return (
+      isFilterableObject(val) &&
+      'lower' in val &&
+      'upper' in val &&
+      isOrderableValue((val as CommonFieldComparisonBetweenType<unknown>).lower) &&
+      isOrderableValue((val as CommonFieldComparisonBetweenType<unknown>).upper)
+    )
   }
 
   private static booleanComparison<DTO, F extends keyof DTO>(
@@ -85,14 +109,14 @@ export class ComparisonBuilder {
     val: DTO[F]
   ): FilterFn<DTO> {
     if (cmp === 'neq') {
-      return (dto?: DTO): boolean => (dto ? dto[field] : null) !== val
+      return (dto?: DTO): boolean => !isSameValue(dto ? dto[field] : null, val)
     }
     if (cmp === 'isNot') {
       // eslint-disable-next-line eqeqeq
       return (dto?: DTO): boolean => (dto ? dto[field] : null) != val
     }
     if (cmp === 'eq') {
-      return (dto?: DTO): boolean => (dto ? dto[field] : null) === val
+      return (dto?: DTO): boolean => isSameValue(dto ? dto[field] : null, val)
     }
     // eslint-disable-next-line eqeqeq
     return (dto?: DTO): boolean => (dto ? dto[field] : null) == val
@@ -130,9 +154,9 @@ export class ComparisonBuilder {
 
   private static inComparison<DTO, F extends keyof DTO>(cmp: InComparisonOperators, field: F, val: DTO[F][]): FilterFn<DTO> {
     if (cmp === 'notIn') {
-      return compare((dto) => !val.includes(dto[field]), true)
+      return compare((dto) => !val.some((candidate) => isSameValue(dto[field], candidate)), true)
     }
-    return compare((dto) => val.includes(dto[field]), false)
+    return compare((dto) => val.some((candidate) => isSameValue(dto[field], candidate)), false)
   }
 
   private static betweenComparison<DTO, F extends keyof DTO>(
@@ -153,8 +177,16 @@ export class ComparisonBuilder {
     }, false)
   }
 
+  /**
+   * Translates a SQL `LIKE` pattern into a regular expression: `%` matches any run of characters, line breaks
+   * included, `_` matches any single character, and every other character, regular expression syntax included,
+   * matches itself.
+   */
   private static likeSearchToRegexp(likeStr: string, caseInsensitive = false): RegExp {
-    const replaced = likeStr.replace(/%/g, '.*')
-    return new RegExp(`^${replaced}$`, caseInsensitive ? 'i' : undefined)
+    const replaced = likeStr.replace(
+      /[%_]|[.*+?^${}()|[\]\\/]/g,
+      (character) => LIKE_WILDCARD_PATTERNS[character] ?? `\\${character}`
+    )
+    return new RegExp(`^${replaced}$`, caseInsensitive ? 'si' : 's')
   }
 }
