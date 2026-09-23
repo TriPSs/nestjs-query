@@ -1,11 +1,12 @@
 // eslint-disable-next-line max-classes-per-file
 import { Field, ObjectType, Query, Resolver } from '@nestjs/graphql'
-import { NullOrdering, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
+import { NullOrdering, Query as CoreQuery, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 import { CursorConnectionType, CursorPagingType, PagingStrategies, StaticConnectionType } from '@ptc-org/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
 
 import { FilterableField, KeySet } from '../../../src/decorators'
 import { getOrCreateCursorConnectionType } from '../../../src/types/connection'
+import { QueryMany } from '../../../src/types/connection/interfaces'
 import { getOrCreateCursorPagingType } from '../../../src/types/query/paging'
 import { generateSchema } from '../../__fixtures__'
 
@@ -366,7 +367,7 @@ describe('CursorConnectionType', (): void => {
           })
           expect(queryMany).toHaveBeenCalledTimes(1)
           expect(queryMany).toHaveBeenCalledWith({
-            filter: { or: [{ and: [{ or: [{ stringField: { gt: 'foo1' } }, { stringField: { is: null } }] }] }] },
+            filter: { or: [{ and: [{ stringField: { gt: 'foo1' } }] }] },
             paging: { limit: 3 },
             sorting: [{ field: 'stringField', direction: SortDirection.ASC }]
           })
@@ -405,12 +406,7 @@ describe('CursorConnectionType', (): void => {
             })
             expect(queryMany).toHaveBeenCalledTimes(1)
             expect(queryMany).toHaveBeenCalledWith({
-              filter: {
-                and: [
-                  { or: [{ and: [{ or: [{ stringField: { gt: 'foo1' } }, { stringField: { is: null } }] }] }] },
-                  { boolField: { is: true } }
-                ]
-              },
+              filter: { and: [{ or: [{ and: [{ stringField: { gt: 'foo1' } }] }] }, { boolField: { is: true } }] },
               paging: { limit: 3 },
               sorting: [{ field: 'stringField', direction: SortDirection.ASC }]
             })
@@ -457,12 +453,7 @@ describe('CursorConnectionType', (): void => {
                   {
                     or: [
                       { and: [{ boolField: { lt: false } }] },
-                      {
-                        and: [
-                          { boolField: { eq: false } },
-                          { or: [{ stringField: { gt: 'foo1' } }, { stringField: { is: null } }] }
-                        ]
-                      }
+                      { and: [{ boolField: { eq: false } }, { stringField: { gt: 'foo1' } }] }
                     ]
                   },
                   { boolField: { is: true } }
@@ -632,7 +623,7 @@ describe('CursorConnectionType', (): void => {
                 and: [
                   {
                     or: [
-                      { and: [{ or: [{ boolField: { gt: true } }, { boolField: { is: null } }] }] },
+                      { and: [{ boolField: { gt: true } }] },
                       { and: [{ boolField: { eq: true } }, { stringField: { lt: 'foo4' } }] }
                     ]
                   },
@@ -697,7 +688,7 @@ describe('CursorConnectionType', (): void => {
           paging: createPage({ first: 2, after: response.pageInfo.endCursor })
         })
         expect(queryManyNextPage).toHaveBeenCalledWith({
-          filter: { or: [{ and: [{ or: [{ stringField: { gt: 'foo2' } }, { stringField: { is: null } }] }] }] },
+          filter: { or: [{ and: [{ stringField: { gt: 'foo2' } }] }] },
           paging: { limit: 3 },
           sorting: [{ field: 'stringField', direction: SortDirection.ASC }]
         })
@@ -742,13 +733,16 @@ describe('CursorConnectionType', (): void => {
       return getOrCreateCursorConnectionType(TestNullableDTO, { pagingStrategy: PagingStrategies.CURSOR })
     }
 
+    const createNullsLargestConnection = <Q extends CoreQuery<TestNullableDTO>>(queryMany: QueryMany<TestNullableDTO, Q>, query: Q) =>
+      getNullableConnectionType().createFromPromise(queryMany, query, undefined, { nullOrdering: NullOrdering.NULLS_LARGEST })
+
     const keysetCursor = (fields: { field: string; value: unknown }[]): string =>
       Buffer.from(JSON.stringify({ type: 'keyset', fields })).toString('base64')
 
     it('should include the null block when paging past a non-null value on a nullable ascending sort', async () => {
       const queryMany = jest.fn()
       queryMany.mockResolvedValueOnce([])
-      await getNullableConnectionType().createFromPromise(queryMany, {
+      await createNullsLargestConnection(queryMany, {
         sorting: [{ field: 'nullableField', direction: SortDirection.ASC }],
         paging: createPage({
           first: 2,
@@ -776,7 +770,7 @@ describe('CursorConnectionType', (): void => {
     it('should continue inside the null block when the cursor value is null', async () => {
       const queryMany = jest.fn()
       queryMany.mockResolvedValueOnce([])
-      await getNullableConnectionType().createFromPromise(queryMany, {
+      await createNullsLargestConnection(queryMany, {
         sorting: [{ field: 'nullableField', direction: SortDirection.ASC }],
         paging: createPage({
           first: 2,
@@ -801,7 +795,7 @@ describe('CursorConnectionType', (): void => {
     it('should honour an explicit nulls placement over the direction default', async () => {
       const queryMany = jest.fn()
       queryMany.mockResolvedValueOnce([])
-      await getNullableConnectionType().createFromPromise(queryMany, {
+      await createNullsLargestConnection(queryMany, {
         sorting: [{ field: 'nullableField', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }],
         paging: createPage({
           first: 2,
@@ -826,7 +820,7 @@ describe('CursorConnectionType', (): void => {
     it('should follow the nulls to the other end of the sort when paging backwards', async () => {
       const queryMany = jest.fn()
       queryMany.mockResolvedValueOnce([])
-      await getNullableConnectionType().createFromPromise(queryMany, {
+      await createNullsLargestConnection(queryMany, {
         sorting: [{ field: 'nullableField', direction: SortDirection.ASC }],
         paging: createPage({
           last: 2,
@@ -851,7 +845,7 @@ describe('CursorConnectionType', (): void => {
     it('should not add a null arm for a field declared non-nullable', async () => {
       const queryMany = jest.fn()
       queryMany.mockResolvedValueOnce([])
-      await getNullableConnectionType().createFromPromise(queryMany, {
+      await createNullsLargestConnection(queryMany, {
         paging: createPage({
           first: 2,
           after: keysetCursor([{ field: 'id', value: 2 }])
@@ -867,7 +861,7 @@ describe('CursorConnectionType', (): void => {
     it('should reject a cursor carrying fewer fields than the sort', async () => {
       const queryMany = jest.fn()
       await expect(
-        getNullableConnectionType().createFromPromise(queryMany, {
+        createNullsLargestConnection(queryMany, {
           sorting: [{ field: 'nullableField', direction: SortDirection.ASC }],
           paging: createPage({
             first: 2,
@@ -881,7 +875,7 @@ describe('CursorConnectionType', (): void => {
     it('should reject a cursor created for a different sort', async () => {
       const queryMany = jest.fn()
       await expect(
-        getNullableConnectionType().createFromPromise(queryMany, {
+        createNullsLargestConnection(queryMany, {
           sorting: [{ field: 'nullableField', direction: SortDirection.ASC }],
           paging: createPage({
             first: 2,
@@ -1032,32 +1026,96 @@ describe('CursorConnectionType', (): void => {
         ]
       })
     })
+  })
 
-    it('should keep the nulls-largest boundary when the store reports nothing', async () => {
+  describe('keyset connection over a store that reports no null ordering', () => {
+    @ObjectType('TestUnknownNullOrdering')
+    @KeySet(['id'])
+    class TestUnknownNullOrderingDTO {
+      @FilterableField()
+      id!: number
+
+      @FilterableField({ nullable: true })
+      nullableField!: string
+    }
+
+    function getUnknownNullOrderingConnectionType(): StaticConnectionType<TestUnknownNullOrderingDTO, PagingStrategies.CURSOR> {
+      return getOrCreateCursorConnectionType(TestUnknownNullOrderingDTO, { pagingStrategy: PagingStrategies.CURSOR })
+    }
+
+    const keysetCursor = (fields: { field: string; value: unknown }[]): string =>
+      Buffer.from(JSON.stringify({ type: 'keyset', fields })).toString('base64')
+
+    it('should not reach into the null block past a non-null value, since the nulls may already have been served', async () => {
       const queryMany = jest.fn()
       queryMany.mockResolvedValueOnce([])
-      await getNullsSmallestConnectionType().createFromPromise(
-        queryMany,
-        {
-          sorting: [{ field: 'nullableField', direction: SortDirection.ASC }],
-          paging: createPage({
-            first: 2,
-            after: keysetCursor([
-              { field: 'nullableField', value: null },
-              { field: 'id', value: 5 }
-            ])
-          })
+      await getUnknownNullOrderingConnectionType().createFromPromise(queryMany, {
+        sorting: [{ field: 'nullableField', direction: SortDirection.ASC }],
+        paging: createPage({
+          first: 2,
+          after: keysetCursor([
+            { field: 'nullableField', value: 'foo1' },
+            { field: 'id', value: 2 }
+          ])
+        })
+      })
+      expect(queryMany).toHaveBeenCalledWith({
+        filter: {
+          or: [{ and: [{ nullableField: { gt: 'foo1' } }] }, { and: [{ nullableField: { eq: 'foo1' } }, { id: { gt: 2 } }] }]
         },
-        undefined,
-        {}
-      )
+        paging: { limit: 3 },
+        sorting: [
+          { field: 'nullableField', direction: SortDirection.ASC },
+          { field: 'id', direction: SortDirection.ASC }
+        ]
+      })
+    })
+
+    it('should stay inside the null block past a null, since the values may already have been served', async () => {
+      const queryMany = jest.fn()
+      queryMany.mockResolvedValueOnce([])
+      await getUnknownNullOrderingConnectionType().createFromPromise(queryMany, {
+        sorting: [{ field: 'nullableField', direction: SortDirection.DESC }],
+        paging: createPage({
+          first: 2,
+          after: keysetCursor([
+            { field: 'nullableField', value: null },
+            { field: 'id', value: 5 }
+          ])
+        })
+      })
       expect(queryMany).toHaveBeenCalledWith({
         filter: {
           or: [{ and: [{ nullableField: { is: null } }, { id: { gt: 5 } }] }]
         },
         paging: { limit: 3 },
         sorting: [
-          { field: 'nullableField', direction: SortDirection.ASC },
+          { field: 'nullableField', direction: SortDirection.DESC },
+          { field: 'id', direction: SortDirection.ASC }
+        ]
+      })
+    })
+
+    it('should not trust an explicit nulls placement the store may not honour', async () => {
+      const queryMany = jest.fn()
+      queryMany.mockResolvedValueOnce([])
+      await getUnknownNullOrderingConnectionType().createFromPromise(queryMany, {
+        sorting: [{ field: 'nullableField', direction: SortDirection.ASC, nulls: SortNulls.NULLS_LAST }],
+        paging: createPage({
+          first: 2,
+          after: keysetCursor([
+            { field: 'nullableField', value: 'foo1' },
+            { field: 'id', value: 2 }
+          ])
+        })
+      })
+      expect(queryMany).toHaveBeenCalledWith({
+        filter: {
+          or: [{ and: [{ nullableField: { gt: 'foo1' } }] }, { and: [{ nullableField: { eq: 'foo1' } }, { id: { gt: 2 } }] }]
+        },
+        paging: { limit: 3 },
+        sorting: [
+          { field: 'nullableField', direction: SortDirection.ASC, nulls: SortNulls.NULLS_LAST },
           { field: 'id', direction: SortDirection.ASC }
         ]
       })

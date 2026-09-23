@@ -18,6 +18,8 @@ import { PageOptions } from '../../../interfaces'
 import { decodeBase64, encodeBase64, hasBeforeCursor, isBackwardPaging, isForwardPaging } from './helpers'
 import { KeySetCursorPayload, KeySetField, KeySetPagingOpts, PagerStrategy } from './pager-strategy'
 
+type NullPlacement = 'first' | 'last' | 'unknown'
+
 export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
   private nonNullableFields?: Set<string>
 
@@ -128,24 +130,21 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
         )
       }
       const isAsc = sortField.direction === SortDirection.ASC
-      // an explicit SortNulls is emitted into the ORDER BY, otherwise the engine's own placement decides
-      const nullsSortLargest = nullOrdering !== NullOrdering.NULLS_SMALLEST
-      const nullsLast = sortField.nulls ? sortField.nulls === SortNulls.NULLS_LAST : nullsSortLargest === isAsc
-      const afterFilter = this.createAfterFilter(keySetField, isAsc, nullsLast)
+      const afterFilter = this.createAfterFilter(keySetField, isAsc, this.placeNulls(sortField, nullOrdering))
       const precedingEqualities = [...equalities]
       if (keySetField.value === null) {
         equalities.push({ [keySetField.field]: { is: null } } as Filter<DTO>)
       } else {
         equalities.push({ [keySetField.field]: { eq: keySetField.value } } as Filter<DTO>)
       }
-      // Nothing sorts after a null boundary when nulls are placed last.
+      // Nothing sorts after a null boundary when nulls are placed last, or may be.
       if (!afterFilter) {
         return dtoFilters
       }
       return [...dtoFilters, { and: [...precedingEqualities, afterFilter] } as Filter<DTO>]
     }, [] as Filter<DTO>[])
     if (oredFilter.length === 0) {
-      // every arm was dropped (all-null nulls-last boundary); an empty `or` is ignored by the adapters and would re-serve page one
+      // every arm was dropped (all-null boundary with nulls placed last, or maybe last); an empty `or` is ignored by the adapters and would re-serve page one
       const { field } = sortFields[0]
       return { and: [{ [field]: { is: null } }, { [field]: { isNot: null } }] } as Filter<DTO>
     }
@@ -157,21 +156,43 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
    * Builds "strictly after the cursor" for one sort field. A `gt`/`lt` comparison against NULL
    * matches nothing, so a null boundary uses `is`/`isNot` instead, and a non-null boundary
    * includes the null block when nulls sort after values.
+   *
+   * When the placement is unknown the boundary is the one that holds for both placements: it never
+   * crosses between the null block and the values, so it can end the walk early but can never
+   * serve a row twice.
    */
   private createAfterFilter(
     keySetField: KeySetField<DTO, keyof DTO>,
     isAsc: boolean,
-    nullsLast: boolean
+    nullPlacement: NullPlacement
   ): Filter<DTO> | undefined {
     const { field, value } = keySetField
     if (value === null) {
-      return nullsLast ? undefined : ({ [field]: { isNot: null } } as Filter<DTO>)
+      return nullPlacement === 'first' ? ({ [field]: { isNot: null } } as Filter<DTO>) : undefined
     }
     const comparison = { [field]: { [isAsc ? 'gt' : 'lt']: value } } as unknown as Filter<DTO>
-    if (!nullsLast || !this.isNullableField(field)) {
+    if (nullPlacement !== 'last' || !this.isNullableField(field)) {
       return comparison
     }
     return { or: [comparison, { [field]: { is: null } }] } as Filter<DTO>
+  }
+
+  /**
+   * @description
+   * Where the ORDER BY puts the nulls of one sort field. Without a reported null ordering the
+   * pager cannot tell whether the store honours an explicit `nulls` either, so the placement is
+   * unknown.
+   */
+  private placeNulls(sortField: SortField<DTO>, nullOrdering: NullOrdering | undefined): NullPlacement {
+    if (!nullOrdering) {
+      return 'unknown'
+    }
+    // an explicit SortNulls is emitted into the ORDER BY, otherwise the engine's own placement decides
+    if (sortField.nulls) {
+      return sortField.nulls === SortNulls.NULLS_LAST ? 'last' : 'first'
+    }
+    const nullsSortLargest = nullOrdering === NullOrdering.NULLS_LARGEST
+    return nullsSortLargest === (sortField.direction === SortDirection.ASC) ? 'last' : 'first'
   }
 
   /**

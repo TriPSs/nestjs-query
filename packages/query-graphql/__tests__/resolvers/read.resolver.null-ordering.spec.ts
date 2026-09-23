@@ -58,14 +58,25 @@ describe('ReadResolver keyset paging over a nullable sort', () => {
     )
   })
 
-  it('should assume nulls sort largest when the service reports nothing', async () => {
+  it('should keep to a boundary that is safe for either null placement when the service reports nothing', async () => {
     const { query, resolver } = resolverBackedByAServiceReporting()
+    const cursorAtAValue = Buffer.from(
+      JSON.stringify({
+        type: 'keyset',
+        fields: [
+          { field: 'nullableField', value: 'foo1' },
+          { field: 'id', value: 5 }
+        ]
+      })
+    ).toString('base64')
 
-    await resolver.queryMany(pageAfterANull as never)
+    await resolver.queryMany({ ...pageAfterANull, paging: { first: 1, after: cursorAtAValue } } as never)
 
     expect(query).toHaveBeenCalledWith(
       expect.objectContaining({
-        filter: { or: [{ and: [{ nullableField: { is: null } }, { id: { gt: 5 } }] }] }
+        filter: {
+          or: [{ and: [{ nullableField: { gt: 'foo1' } }] }, { and: [{ nullableField: { eq: 'foo1' } }, { id: { gt: 5 } }] }]
+        }
       }),
       expect.anything()
     )

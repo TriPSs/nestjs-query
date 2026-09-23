@@ -69,6 +69,6 @@ Applications that do not use CSV export can omit it.
 
 ## QueryService.nullOrdering
 
-If you implement `QueryService` directly rather than extending a provided service, add a `nullOrdering` member. Return `undefined` to keep the previous behaviour.
+If you implement `QueryService` directly rather than extending a provided service, you can add a `nullOrdering` member so keyset pagination walks nullable sort fields in full. Leave it `undefined` to keep the previous behaviour.
 
 Keyset pagination uses it to place boundaries over nullable sort fields, so cursors minted by v10 over such a sort return different rows at the boundary.

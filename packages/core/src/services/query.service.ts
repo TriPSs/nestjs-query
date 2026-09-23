@@ -35,7 +35,10 @@ export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
    * Where the underlying engine places NULL in a sort that does not ask for a placement.
    *
    * Optional, because a service backed by a store whose null ordering cannot be determined should
-   * leave it undefined. Consumers then fall back to treating NULL as the largest value.
+   * leave it undefined. Keyset paging then keeps to boundaries that hold for either placement, so
+   * a walk over a nullable sort field can stop at the edge of the null block but never repeats a row.
+   *
+   * Only report it when the store also honours an explicit `SortField.nulls`.
    */
   readonly nullOrdering?: NullOrdering
 
