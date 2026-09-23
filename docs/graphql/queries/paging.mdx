@@ -159,6 +159,24 @@ In the above example the filter from the cursor (when paging forward) would be s
 WHERE (completed > ? OR (completed = ? AND id > ?))
 ```
 
+#### Nullable sort fields
+
+A boundary on a sort field that can hold `null` depends on where the store puts the nulls. Keyset paging reads that from
+the query service's `nullOrdering`, which the TypeORM and Sequelize services report for the drivers they recognise.
+When a service leaves it undefined (Mongoose, Typegoose, or a custom service), paging over a nullable sort field never
+repeats a row, but it can stop at the edge of the null block.
+
+Every sort field must be loaded on the nodes the service returns, because the cursor is built from them. A field
+missing from a node is read as `null`, so if the stored value is not null, paging skips or repeats rows, or never
+ends. Watch for:
+
+- a TypeORM column with `select: false`
+- a Sequelize attribute left out by `attributes.exclude` or a scope
+- a lazily loaded property
+- an assembler that drops the field when it builds the DTO
+
+A field that is absent from a Mongoose or Typegoose document is `null` in the store, so that case is safe.
+
 ### Relation Connections
 
 Key set paging will not apply to relations because they are recursive by nature.
