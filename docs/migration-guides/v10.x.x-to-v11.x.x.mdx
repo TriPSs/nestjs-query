@@ -104,6 +104,7 @@ These are unchanged from v10, and each can permit a create that the same filter 
 - `null` compares as a JavaScript value, not as SQL `NULL`. `eq: null` matches a `null` field, and `neq`, `notIn` and `isNot` given a value other than `null` match a `null` or missing field, where SQL matches neither.
 - `like`, `notLike`, `iLike` and `notILike` read a `null` or missing field as the text `null` or `undefined`, so `notLike` matches it and `like: 'null'` matches `null`, where SQL matches neither.
 - `eq`, `neq`, `in` and `notIn` compare without type conversion. A GraphQL `ID` arrives as a string, so an input `ownerId` of `'1'` fails `{ ownerId: { eq: 1 } }` and passes `neq: 1` and `notIn: [1]`, where SQL converts `'1'` to `1` and does the opposite.
+- `iLike` and `notILike` follow Unicode lower-casing, which no single database collation matches exactly. Under the `C` collation, the Turkish ICU collation `tr-x-icu` or a macOS libc locale, a non-ASCII letter can match in memory where the database does not, so a creation authorizer should not rely on `iLike` or `notILike` to restrict non-ASCII text.
 
 ### Error type
 
