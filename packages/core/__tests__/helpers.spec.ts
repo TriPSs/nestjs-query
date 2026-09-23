@@ -738,6 +738,19 @@ describe('applyFilter', () => {
     }
   })
 
+  it('should reject NaN as a comparison value rather than matching every value', () => {
+    for (const operator of ['eq', 'neq', 'is', 'isNot', 'gt', 'lte']) {
+      const filter: Filter<TestDTO> = { age: { [operator]: Number.NaN } }
+      expect(() => applyFilter({ age: 5 }, filter)).toThrow(InvalidFilterError)
+      expect(() => applyFilter({ age: 5 }, filter)).toThrow(`operator "${operator}" of field "age" requires a value`)
+    }
+    for (const operator of ['in', 'notIn']) {
+      const filter: Filter<TestDTO> = { age: { [operator]: [1, Number.NaN] } }
+      expect(() => applyFilter({ age: 5 }, filter)).toThrow(InvalidFilterError)
+    }
+    expect(() => applyFilter({ age: 5 }, { age: { notBetween: { lower: Number.NaN, upper: 9 } } })).toThrow(InvalidFilterError)
+  })
+
   it('should still match null against a null or omitted field', () => {
     expect(applyFilter({ first: null }, { first: { eq: null } })).toBe(true)
     expect(applyFilter({ first: 'user' }, { first: { neq: null } })).toBe(true)

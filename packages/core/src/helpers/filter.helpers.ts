@@ -86,12 +86,17 @@ export const isObjectLiteralOrArray = (value: unknown): boolean =>
 
 /**
  * Whether a value can be compared against a field in memory: a scalar, `null`, a valid `Date` or a class instance, as
- * opposed to an object literal, an array or a function, which would be compared by reference. `undefined` and an
- * invalid `Date` are rejected too. SQL matches nothing against `undefined` and the engines disagree on an invalid
- * `Date`, where in memory `eq: undefined` would match an omitted field and `neq` of either would match every value.
+ * opposed to an object literal, an array or a function, which would be compared by reference. `undefined`, `NaN` and
+ * an invalid `Date` are rejected too. SQL matches nothing against `undefined` and the engines disagree on `NaN` and an
+ * invalid `Date`, where in memory `eq: undefined` would match an omitted field and `neq` of any of them would match
+ * every value.
  */
 export const isComparableValue = (value: unknown): boolean =>
-  value !== undefined && !isInvalidDate(value) && !isObjectLiteralOrArray(value) && typeof value !== 'function'
+  value !== undefined &&
+  !Number.isNaN(value) &&
+  !isInvalidDate(value) &&
+  !isObjectLiteralOrArray(value) &&
+  typeof value !== 'function'
 
 /**
  * Whether a value can bound a range or `between` comparison in memory: a comparable value other than `null`, which
