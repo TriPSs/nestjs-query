@@ -733,8 +733,10 @@ describe('CursorConnectionType', (): void => {
       return getOrCreateCursorConnectionType(TestNullableDTO, { pagingStrategy: PagingStrategies.CURSOR })
     }
 
-    const createNullsLargestConnection = <Q extends CoreQuery<TestNullableDTO>>(queryMany: QueryMany<TestNullableDTO, Q>, query: Q) =>
-      getNullableConnectionType().createFromPromise(queryMany, query, undefined, { nullOrdering: NullOrdering.NULLS_LARGEST })
+    const createNullsLargestConnection = <Q extends CoreQuery<TestNullableDTO>>(
+      queryMany: QueryMany<TestNullableDTO, Q>,
+      query: Q
+    ) => getNullableConnectionType().createFromPromise(queryMany, query, undefined, { nullOrdering: NullOrdering.NULLS_LARGEST })
 
     const keysetCursor = (fields: { field: string; value: unknown }[]): string =>
       Buffer.from(JSON.stringify({ type: 'keyset', fields })).toString('base64')
