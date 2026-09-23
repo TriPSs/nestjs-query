@@ -19,6 +19,8 @@ import { InvalidFilterError } from './invalid-filter.error'
 import { ComparisonField, FilterFn } from './types'
 
 const LIKE_WILDCARD_PATTERNS: Record<string, string> = { '%': '.*', _: '.' }
+const LIKE_PATTERN_TOKEN = /\\([^])|[%_]|[.*+?^${}()|[\]\\/]/gu
+const REGEXP_SYNTAX_CHARACTER = /^[.*+?^${}()|[\]\\/]$/
 
 const compare =
   <DTO>(filter: (dto: DTO) => boolean, fallback: boolean): FilterFn<DTO> =>
@@ -178,15 +180,19 @@ export class ComparisonBuilder {
   }
 
   /**
-   * Translates a SQL `LIKE` pattern into a regular expression: `%` matches any run of characters, line breaks
-   * included, `_` matches any single character, and every other character, regular expression syntax included,
-   * matches itself.
+   * Translates a SQL `LIKE` pattern into a regular expression the way Postgres and MySQL read it: `%` matches any run
+   * of characters, line breaks included, `_` matches any single character, a backslash makes the character after it,
+   * `%`, `_` and backslash included, match itself, and every other character, regular expression syntax and a
+   * trailing backslash included, matches itself. Characters are Unicode code points, so `_` matches an emoji.
    */
   private static likeSearchToRegexp(likeStr: string, caseInsensitive = false): RegExp {
-    const replaced = likeStr.replace(
-      /[%_]|[.*+?^${}()|[\]\\/]/g,
-      (character) => LIKE_WILDCARD_PATTERNS[character] ?? `\\${character}`
+    const replaced = likeStr.replace(LIKE_PATTERN_TOKEN, (token, escaped?: string) =>
+      escaped === undefined ? (LIKE_WILDCARD_PATTERNS[token] ?? this.matchLiterally(token)) : this.matchLiterally(escaped)
     )
-    return new RegExp(`^${replaced}$`, caseInsensitive ? 'si' : 's')
+    return new RegExp(`^${replaced}$`, caseInsensitive ? 'siu' : 'su')
+  }
+
+  private static matchLiterally(character: string): string {
+    return REGEXP_SYNTAX_CHARACTER.test(character) ? `\\${character}` : character
   }
 }

@@ -660,6 +660,26 @@ describe('applyFilter', () => {
     expect(applyFilter(record, { first: { notILike: '%SECRET' } })).toBe(false)
   })
 
+  it('should match an underscore in a like pattern against a character outside the Basic Multilingual Plane', () => {
+    const record: TestDTO = { first: '😀x' }
+    expect(applyFilter(record, { first: { like: '_x' } })).toBe(true)
+    expect(applyFilter(record, { first: { notLike: '_x' } })).toBe(false)
+    expect(applyFilter(record, { first: { like: '__x' } })).toBe(false)
+  })
+
+  it.each([
+    ['an escaped underscore', 'user\\_admin', 'user_admin', 'userXadmin'],
+    ['an escaped percent', '100\\%', '100%', '1000'],
+    ['an escaped backslash', 'a\\\\b', 'a\\b', 'a\\\\b'],
+    ['an escaped ordinary character', 'a\\bc', 'abc', 'a\\bc'],
+    ['a trailing backslash', 'a\\', 'a\\', 'a']
+  ])('should read %s in a like pattern the way Postgres and MySQL do', (_, pattern, matching, notMatching) => {
+    expect(applyFilter({ first: matching }, { first: { like: pattern } })).toBe(true)
+    expect(applyFilter({ first: matching }, { first: { notLike: pattern } })).toBe(false)
+    expect(applyFilter({ first: notMatching }, { first: { like: pattern } })).toBe(false)
+    expect(applyFilter({ first: notMatching }, { first: { notILike: pattern } })).toBe(true)
+  })
+
   it('should handle and grouping', () => {
     const filter: Filter<TestDTO> = {
       and: [{ first: { eq: 'foo' } }, { last: { like: '%bar' } }]
