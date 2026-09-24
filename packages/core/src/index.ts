@@ -26,6 +26,7 @@ export {
   getFilterComparisons,
   getFilterFields,
   getFilterOmitting,
+  InvalidFilterError,
   invertSort,
   mergeFilter,
   mergeFilters,

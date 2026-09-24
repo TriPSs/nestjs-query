@@ -1,7 +1,18 @@
 import { Filter, FilterComparisons, FilterFieldComparison } from '../interfaces'
 import { ComparisonBuilder } from './comparison.builder'
-import { getFilterFieldComparison, isComparison } from './filter.helpers'
+import {
+  getFilterFieldComparison,
+  getKeysMixedIntoComparison,
+  isComparison,
+  isFilterableObject,
+  isGroupingKey
+} from './filter.helpers'
+import { InvalidFilterError } from './invalid-filter.error'
 import { ComparisonField, FilterFn } from './types'
+
+const FILTER_VALUE_SHAPE =
+  'A filter value must either compare a field, where every key is an operator (e.g. { eq: 1 }), or nest a filter, ' +
+  'where every key is a field (e.g. { relation: { eq: 1 } }).'
 
 export class FilterBuilder {
   static build<DTO>(filter: Filter<DTO>): FilterFn<DTO> {
@@ -32,7 +43,7 @@ export class FilterBuilder {
   private static filterFieldsOrNested<DTO>(filter: Filter<DTO>): FilterFn<DTO> {
     return this.andFilterFn(
       ...Object.keys(filter)
-        .filter((k) => k !== 'and' && k !== 'or')
+        .filter((k) => !isGroupingKey(k))
         .map((fieldOrNested) => this.withComparison(filter, fieldOrNested as keyof DTO))
     )
   }
@@ -46,13 +57,48 @@ export class FilterBuilder {
 
   private static withComparison<DTO>(filter: FilterComparisons<DTO>, fieldOrNested: keyof DTO): FilterFn<DTO> {
     const value = getFilterFieldComparison(filter, fieldOrNested)
+    if (!isFilterableObject(value)) {
+      throw new InvalidFilterError(`unknown comparison ${JSON.stringify(fieldOrNested)}`)
+    }
     if (isComparison(value)) {
       return this.withFilterComparison(fieldOrNested, value)
     }
-    if (typeof value !== 'object') {
-      throw new Error(`unknown comparison ${JSON.stringify(fieldOrNested)}`)
+    const keysMixedIntoComparison = getKeysMixedIntoComparison(value)
+    if (keysMixedIntoComparison.length) {
+      throw this.unreadableFieldError(fieldOrNested, keysMixedIntoComparison)
     }
     const nestedFilterFn = this.build(value)
-    return (dto?: DTO) => nestedFilterFn(dto ? dto[fieldOrNested] : null)
+    return (dto?: DTO) => nestedFilterFn(this.nestedValue(dto, fieldOrNested, value))
+  }
+
+  private static nestedValue<DTO>(dto: DTO | undefined, fieldOrNested: keyof DTO, nestedFilter: Filter<DTO[keyof DTO]>) {
+    const nested = dto ? dto[fieldOrNested] : null
+    if (nested !== null && nested !== undefined && !isFilterableObject(nested)) {
+      throw this.unreadableFieldError(
+        fieldOrNested,
+        Object.keys(nestedFilter),
+        `${JSON.stringify(fieldOrNested)} holds ${this.describeValue(nested)}, so those keys cannot be nested filter fields.`
+      )
+    }
+    return nested
+  }
+
+  private static unreadableFieldError<DTO>(field: keyof DTO, keys: string[], reason?: string): InvalidFilterError {
+    const quotedKeys = keys.map((key) => JSON.stringify(key)).join(', ')
+    return new InvalidFilterError(
+      [`unknown comparison ${quotedKeys} for field ${JSON.stringify(field)}.`, reason, FILTER_VALUE_SHAPE]
+        .filter(Boolean)
+        .join(' ')
+    )
+  }
+
+  private static describeValue(value: unknown): string {
+    if (Array.isArray(value)) {
+      return 'an array'
+    }
+    if (value instanceof Date) {
+      return 'a Date'
+    }
+    return `a ${typeof value}`
   }
 }
