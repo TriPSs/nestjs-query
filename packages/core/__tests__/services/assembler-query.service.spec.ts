@@ -4,6 +4,7 @@ import {
   AggregateResponse,
   AssemblerQueryService,
   DeepPartial,
+  NullOrdering,
   Query,
   QueryService,
   transformAggregateQuery,
@@ -64,6 +65,17 @@ describe('AssemblerQueryService', () => {
       return { bar: update.foo }
     }
   }
+
+  describe('nullOrdering', () => {
+    it('reads through to the wrapped service', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+
+      when(mockQueryService.nullOrdering).thenReturn(NullOrdering.NULLS_SMALLEST)
+
+      expect(assemblerService.nullOrdering).toBe(NullOrdering.NULLS_SMALLEST)
+    })
+  })
 
   describe('query', () => {
     it('transform the query and results', () => {
