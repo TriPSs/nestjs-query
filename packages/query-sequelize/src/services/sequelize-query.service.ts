@@ -1,7 +1,9 @@
 import { NotFoundException } from '@nestjs/common'
 import {
+  AggregateOptions,
   AggregateQuery,
   AggregateResponse,
+  CountOptions,
   CreateManyOptions,
   CreateOneOptions,
   DeepPartial,
@@ -23,7 +25,7 @@ import { WhereOptions } from 'sequelize'
 import { MakeNullishOptional } from 'sequelize/types/utils'
 import { Model, ModelCtor } from 'sequelize-typescript'
 
-import { AggregateBuilder, FilterQueryBuilder } from '../query'
+import { AggregateBuilder, FilterQueryBuilder, paranoidOptions } from '../query'
 import { RelationQueryService } from './relation-query.service'
 
 /**
@@ -65,33 +67,36 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * });
    * ```
    * @param query - The Query used to filter, page, and sort rows.
+   * @param opts - Additional options.
    */
-  public async query(query: Query<Entity>): Promise<Entity[]> {
+  public async query(query: Query<Entity>, opts?: QueryOptions<Entity>): Promise<Entity[]> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    return this.model.findAll<Entity>(this.filterQueryBuilder.findOptions(query))
+    return this.model.findAll<Entity>({ ...this.filterQueryBuilder.findOptions(query), ...paranoidOptions(opts) })
   }
 
-  /**
-   * Unlike the TypeORM adapter, Sequelize's `query` does not accept {@link QueryOptions}, so `withDeleted` is not
-   * supported here. `_opts` is kept in the signature so subclasses can add support without widening it.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public exportMany(query: Query<Entity>, _opts?: QueryOptions<Entity>): Promise<Entity[]> {
-    return this.query(query)
+  public exportMany(query: Query<Entity>, opts?: QueryOptions<Entity>): Promise<Entity[]> {
+    return this.query(query, opts)
   }
 
-  public async aggregate(filter: Filter<Entity>, aggregate: AggregateQuery<Entity>): Promise<AggregateResponse<Entity>[]> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const result = await this.model.findAll(this.filterQueryBuilder.aggregateOptions({ filter }, aggregate))
+  public async aggregate(
+    filter: Filter<Entity>,
+    aggregate: AggregateQuery<Entity>,
+    opts?: AggregateOptions
+  ): Promise<AggregateResponse<Entity>[]> {
+    const result = await this.model.findAll({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      ...this.filterQueryBuilder.aggregateOptions({ filter }, aggregate),
+      ...paranoidOptions(opts)
+    })
     if (!result) {
       return [{}]
     }
     return AggregateBuilder.convertToAggregateResponse(result as unknown as Record<string, unknown>[])
   }
 
-  public async count(filter: Filter<Entity>): Promise<number> {
+  public async count(filter: Filter<Entity>, opts?: CountOptions): Promise<number> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    return this.model.count(this.filterQueryBuilder.countOptions({ filter }))
+    return this.model.count({ ...this.filterQueryBuilder.countOptions({ filter }), ...paranoidOptions(opts) })
   }
 
   /**
@@ -105,8 +110,11 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
    * @param opts - Additional options
    */
   public async findById(id: string | number, opts?: FindByIdOptions<Entity>): Promise<Entity | undefined> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const model = await this.model.findOne<Entity>(this.filterQueryBuilder.findByIdOptions(id, opts ?? {}))
+    const model = await this.model.findOne<Entity>({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      ...this.filterQueryBuilder.findByIdOptions(id, opts ?? {}),
+      ...paranoidOptions(opts)
+    })
     if (!model) {
       return undefined
     }

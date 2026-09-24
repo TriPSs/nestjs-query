@@ -166,6 +166,12 @@ describe('MikroOrmQueryService', () => {
       })
       expect(result[0].numberType).toBe(1)
     })
+
+    it('should throw error for withDeleted option', async () => {
+      await expect(queryService.query({}, { withDeleted: true })).rejects.toThrow(
+        'MikroOrmQueryService does not support withDeleted on query'
+      )
+    })
   })
 
   describe('#getById', () => {
@@ -186,6 +192,12 @@ describe('MikroOrmQueryService', () => {
         })
       ).rejects.toThrow()
     })
+
+    it('should throw error for withDeleted option', async () => {
+      await expect(queryService.getById('test-entity-1', { withDeleted: true })).rejects.toThrow(
+        'MikroOrmQueryService does not support withDeleted on getById'
+      )
+    })
   })
 
   describe('#findById', () => {
@@ -205,6 +217,12 @@ describe('MikroOrmQueryService', () => {
         filter: { numberType: { eq: 999 } }
       })
       expect(result).toBeUndefined()
+    })
+
+    it('should throw error for withDeleted option', async () => {
+      await expect(queryService.findById('test-entity-1', { withDeleted: true })).rejects.toThrow(
+        'MikroOrmQueryService does not support withDeleted on findById'
+      )
     })
   })
 
