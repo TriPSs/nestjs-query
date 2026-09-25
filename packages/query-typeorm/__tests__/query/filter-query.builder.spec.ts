@@ -640,6 +640,26 @@ describe('FilterQueryBuilder', (): void => {
         expect(formatSql(sql, { params })).toMatchSnapshot()
       })
 
+      it('should join a relation that only the filter of a selected relation references', () => {
+        const builder = new FilterQueryBuilder(connection.getRepository(TestEntity))
+
+        const [sql] = builder
+          .select({
+            relations: [
+              selectRelation<TestRelation, TestEntity>('testRelations', {
+                filter: { relationsOfTestRelation: { relationName: { eq: 'foo' } } } as Filter<TestRelation>
+              })
+            ]
+          })
+          .getQueryAndParameters()
+
+        expect(sql).toContain(
+          'LEFT JOIN "relation_of_test_relation_entity" "relationsOfTestRelation" ON "relationsOfTestRelation"."test_relation_id"="testRelations"."test_relation_pk"'
+        )
+        expect(sql).toContain('"relationsOfTestRelation"."relation_name" = ?')
+        expect(sql).not.toContain('relationsOfTestRelation_relation_name')
+      })
+
       it('should apply the filter of a selected relation through applyFilter', () => {
         const aliasesFilteredFor: (string | undefined)[] = []
 

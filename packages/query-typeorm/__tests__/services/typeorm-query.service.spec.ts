@@ -25,6 +25,7 @@ import { CONNECTION_OPTIONS, refresh, truncate } from '../__fixtures__/connectio
 import {
   TEST_ENTITIES,
   TEST_RELATIONS,
+  TEST_RELATIONS_OF_RELATION,
   TEST_SOFT_DELETE_ENTITIES,
   TEST_SOFT_DELETE_RELATION_ENTITIES,
   TEST_VIRTUAL_COLUMN_ENTITIES
@@ -199,6 +200,23 @@ describe('TypeOrmQueryService', (): void => {
           relations: [
             selectRelation<TestRelation, TestEntity>('testRelations', {
               filter: { relationName: { eq: upperCasedRelationName } }
+            })
+          ]
+        })
+
+        expect(queryResult.map(({ testRelations }) => testRelations?.map(({ testRelationPk }) => testRelationPk))).toEqual([
+          [TEST_RELATIONS[0].testRelationPk]
+        ])
+      })
+
+      it('should be used for a selected relation filter that references a further relation', async () => {
+        const queryResult = await queryService.query({
+          filter: { testEntityPk: { eq: TEST_ENTITIES[0].testEntityPk } },
+          relations: [
+            selectRelation<TestRelation, TestEntity>('testRelations', {
+              filter: {
+                relationsOfTestRelation: { relationName: { eq: TEST_RELATIONS_OF_RELATION[0].relationName.toUpperCase() } }
+              } as Filter<TestRelation>
             })
           ]
         })
@@ -585,6 +603,28 @@ describe('TypeOrmQueryService', (): void => {
       expect(withShadowing.map(({ testEntityPk }) => testEntityPk).sort()).toEqual(
         withoutShadowing.map(({ testEntityPk }) => testEntityPk).sort()
       )
+    })
+
+    describe('with a filter and a selected relation that both reference a relation of the same name', () => {
+      const relationOfSecondTestRelation = TEST_RELATIONS_OF_RELATION[1]
+      const filterThroughTestRelations = {
+        testRelations: { relationsOfTestRelation: { relationName: { eq: relationOfSecondTestRelation.relationName } } }
+      } as Filter<TestEntity>
+
+      it('should filter through the relation the filter references when the selected relation filters on it', async () => {
+        const queryService = moduleRef.get(TestEntityService)
+
+        const queryResult = await queryService.query({
+          filter: filterThroughTestRelations,
+          relations: [
+            selectRelation<TestRelation, TestEntity>('oneTestRelation', {
+              filter: { relationsOfTestRelation: { relationName: { like: 'test-relation-of-%' } } } as Filter<TestRelation>
+            })
+          ]
+        })
+
+        expect(queryResult.map(({ testEntityPk }) => testEntityPk)).toEqual([TEST_ENTITIES[0].testEntityPk])
+      })
     })
 
     describe('filter on relations', () => {
