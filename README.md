@@ -19,6 +19,8 @@ While working on projects in NestJS it was easy to get up and running with Graph
 
 [Install Guide](https://nestjs-query.mintlify.site/introduction/install).
 
+> **Note:** these packages support NestJS 10, 11 and 12. When using NestJS 12 in a CommonJS project, Node.js >= 20.19 is required (it loads the ESM-only `@nestjs/*` packages through native `require(esm)`). Running this repository's tests requires Node.js >= 24.9 with `--experimental-vm-modules` (see `.local.env`).
+
 ## Docs
 
 * [Getting Started](https://nestjs-query.mintlify.site/introduction/getting-started)
