@@ -1,9 +1,10 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common'
+import { ExecutionContext } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 
 import type { Class, QueryResolveTree, SelectRelation } from '@ptc-org/nestjs-query-core'
 import type { GraphQLResolveInfo as ResolveInfo } from 'graphql'
 
+import { createGqlParamDecorator } from './gql-param.decorator'
 import { createLookAheadInfo, simplifyResolveInfo } from './graphql-resolve-info.utils'
 import { getRelationsDescriptors } from './relation.decorator'
 
@@ -27,7 +28,7 @@ export const GraphQLResultInfo = <DTO>(DTOClass: Class<DTO>): ParameterDecorator
     (relation) => relation.relationOpts.enableLookAhead && !relation.isMany
   )
 
-  return createParamDecorator((data: unknown, ctx: ExecutionContext): GraphQLResolveInfoResult<DTO> => {
+  return createGqlParamDecorator((data: unknown, ctx: ExecutionContext): GraphQLResolveInfoResult<DTO> => {
     const info = GqlExecutionContext.create(ctx).getInfo<ResolveInfo>()
     const simplifiedInfo = simplifyResolveInfo<DTO>(info)
 

@@ -1,6 +1,9 @@
 const nxPreset = require('@nx/jest/preset').default
 
-const esmPackages = ['uuid']
+// ESM-only packages (uuid, @nestjs v12) are loaded via Node's native
+// require(esm); this requires running jest with --experimental-vm-modules
+// (see .local.env) on Node v24.9+
+const esmPackages = []
 
 module.exports = {
   ...nxPreset,

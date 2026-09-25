@@ -1,14 +1,15 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common'
+import { ExecutionContext } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { GraphQLResolveInfo } from 'graphql'
 
 import type { AggregateQuery, QueryResolveTree } from '@ptc-org/nestjs-query-core'
 
+import { createGqlParamDecorator } from './gql-param.decorator'
 import { removePagingFromSimplifiedInfo, simplifyResolveInfo } from './graphql-resolve-info.utils'
 
 const QUERY_OPERATORS: (keyof AggregateQuery<unknown>)[] = ['groupBy', 'count', 'avg', 'sum', 'min', 'max']
 
-export const AggregateQueryParam = createParamDecorator(<DTO>(data: unknown, ctx: ExecutionContext) => {
+export const AggregateQueryParam = createGqlParamDecorator(<DTO>(data: unknown, ctx: ExecutionContext) => {
   const info = GqlExecutionContext.create(ctx).getInfo<GraphQLResolveInfo>()
   const simpleResolverInfo = removePagingFromSimplifiedInfo(simplifyResolveInfo<DTO>(info))
 
