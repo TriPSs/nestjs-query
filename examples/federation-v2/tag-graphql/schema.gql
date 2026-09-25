@@ -2,15 +2,18 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type TodoItem {
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type TodoItem @key(fields: "id") {
   id: ID!
   tagTodoItems(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
-
     """Specify to filter the records returned."""
     filter: TagTodoItemFilter! = {}
-
     """Specify to sort results."""
     sorting: [TagTodoItemSort!]! = []
   ): TodoItemTagTodoItemsConnection!
@@ -19,13 +22,10 @@ type TodoItem {
 input CursorPaging {
   """Paginate before opaque cursor"""
   before: ConnectionCursor
-
   """Paginate after opaque cursor"""
   after: ConnectionCursor
-
   """Paginate first"""
   first: Int
-
   """Paginate last"""
   last: Int
 }
@@ -126,16 +126,14 @@ type Tag {
   tagTodoItems(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
-
     """Specify to filter the records returned."""
     filter: TagTodoItemFilter! = {}
-
     """Specify to sort results."""
     sorting: [TagTodoItemSort!]! = []
   ): TagTagTodoItemsConnection!
 }
 
-type DeleteManyResponse {
+type DeleteManyResponse @shareable {
   """The number of records deleted."""
   deletedCount: Int!
 }
@@ -147,7 +145,7 @@ type TagDeleteResponse {
   updated: DateTime
 }
 
-type UpdateManyResponse {
+type UpdateManyResponse @shareable {
   """The number of records updated."""
   updatedCount: Int!
 }
@@ -155,21 +153,17 @@ type UpdateManyResponse {
 type TagEdge {
   """The node containing the Tag"""
   node: Tag!
-
   """Cursor for this node."""
   cursor: ConnectionCursor!
 }
 
-type PageInfo {
+type PageInfo @shareable {
   """true if paging forward and there are more records."""
   hasNextPage: Boolean
-
   """true if paging backwards and there are more records."""
   hasPreviousPage: Boolean
-
   """The cursor of the first returned record."""
   startCursor: ConnectionCursor
-
   """The cursor of the last returned record."""
   endCursor: ConnectionCursor
 }
@@ -177,7 +171,6 @@ type PageInfo {
 type TagConnection {
   """Paging information"""
   pageInfo: PageInfo!
-
   """Array of edges."""
   edges: [TagEdge!]!
 }
@@ -185,7 +178,6 @@ type TagConnection {
 type TagTodoItemEdge {
   """The node containing the TagTodoItem"""
   node: TagTodoItem!
-
   """Cursor for this node."""
   cursor: ConnectionCursor!
 }
@@ -193,7 +185,6 @@ type TagTodoItemEdge {
 type TagTagTodoItemsConnection {
   """Paging information"""
   pageInfo: PageInfo!
-
   """Array of edges."""
   edges: [TagTodoItemEdge!]!
 }
@@ -208,7 +199,6 @@ type TagTodoItemDeleteResponse {
 type TagTodoItemConnection {
   """Paging information"""
   pageInfo: PageInfo!
-
   """Array of edges."""
   edges: [TagTodoItemEdge!]!
 }
@@ -216,7 +206,6 @@ type TagTodoItemConnection {
 type TodoItemTagTodoItemsConnection {
   """Paging information"""
   pageInfo: PageInfo!
-
   """Array of edges."""
   edges: [TagTodoItemEdge!]!
 }
@@ -229,10 +218,8 @@ type Query {
   tags(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
-
     """Specify to filter the records returned."""
     filter: TagFilter! = {}
-
     """Specify to sort results."""
     sorting: [TagSort!]! = []
   ): TagConnection!
@@ -243,10 +230,8 @@ type Query {
   tagTodoItems(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
-
     """Specify to filter the records returned."""
     filter: TagTodoItemFilter! = {}
-
     """Specify to sort results."""
     sorting: [TagTodoItemSort!]! = []
   ): TagTodoItemConnection!
@@ -323,7 +308,6 @@ input CreateManyTagsInput {
 input UpdateOneTagInput {
   """The id of the record to update"""
   id: ID!
-
   """The update to apply."""
   update: TagInput!
 }
@@ -331,7 +315,6 @@ input UpdateOneTagInput {
 input UpdateManyTagsInput {
   """Filter used to find fields to update"""
   filter: TagUpdateFilter!
-
   """The update to apply to all records found using the filter"""
   update: TagInput!
 }
@@ -382,7 +365,6 @@ input CreateManyTagTodoItemsInput {
 input UpdateOneTagTodoItemInput {
   """The id of the record to update"""
   id: ID!
-
   """The update to apply."""
   update: TagTodoItemInput!
 }
@@ -390,7 +372,6 @@ input UpdateOneTagTodoItemInput {
 input UpdateManyTagTodoItemsInput {
   """Filter used to find fields to update"""
   filter: TagTodoItemUpdateFilter!
-
   """The update to apply to all records found using the filter"""
   update: TagTodoItemInput!
 }

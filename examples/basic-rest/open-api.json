@@ -1,24 +1,93 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/sub-task-dtos/export": {
+      "get": {
+        "operationId": "subTaskDTOS.exportMany",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "name": "completed",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "todoItemId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": []
+      }
+    },
     "/sub-task-dtos/{id}": {
       "get": {
         "operationId": "subTaskDTOS.findById",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -27,25 +96,16 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       },
       "delete": {
         "operationId": "subTaskDTOS.deleteOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -54,35 +114,26 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       },
       "put": {
         "operationId": "subTaskDTOS.updateOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SubTaskUpdateDTO"
+                "$ref": "#/components/schemas/UpdateSubTaskDTO"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -91,21 +142,26 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       }
     },
     "/sub-task-dtos": {
       "get": {
         "operationId": "subTaskDTOS.queryMany",
-        "summary": "",
-        "tags": [],
         "parameters": [
           {
             "name": "limit",
             "required": false,
             "in": "query",
+            "description": "The maximum number of results to return.",
             "schema": {
+              "minimum": 1,
+              "maximum": 100,
               "nullable": true,
+              "default": 25,
+              "example": 25,
               "type": "number"
             }
           },
@@ -113,15 +169,78 @@
             "name": "offset",
             "required": false,
             "in": "query",
+            "description": "The offset to start returning results from.",
+            "schema": {
+              "minimum": 0,
+              "nullable": true,
+              "default": 0,
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "required": false,
+            "in": "query",
             "schema": {
               "nullable": true,
-              "type": "number"
+              "type": "string"
+            }
+          },
+          {
+            "name": "completed",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "todoItemId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -130,12 +249,12 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       },
       "post": {
         "operationId": "subTaskDTOS.createOne",
-        "summary": "",
-        "tags": [],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -148,8 +267,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "",
+          "201": {
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -158,27 +277,90 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
+      }
+    },
+    "/todo-item-dtos/export": {
+      "get": {
+        "operationId": "todoItemDTOS.exportMany",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "name": "isCompleted",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": []
       }
     },
     "/todo-item-dtos/{id}": {
       "get": {
         "operationId": "todoItemDTOS.findById",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -187,25 +369,16 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       },
       "delete": {
         "operationId": "todoItemDTOS.deleteOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -214,35 +387,26 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       },
       "put": {
         "operationId": "todoItemDTOS.updateOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TodoItemUpdateDTO"
+                "$ref": "#/components/schemas/UpdateTodoItemDTO"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -251,21 +415,26 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       }
     },
     "/todo-item-dtos": {
       "get": {
         "operationId": "todoItemDTOS.queryMany",
-        "summary": "",
-        "tags": [],
         "parameters": [
           {
             "name": "limit",
             "required": false,
             "in": "query",
+            "description": "The maximum number of results to return.",
             "schema": {
+              "minimum": 1,
+              "maximum": 100,
               "nullable": true,
+              "default": 25,
+              "example": 25,
               "type": "number"
             }
           },
@@ -273,15 +442,70 @@
             "name": "offset",
             "required": false,
             "in": "query",
+            "description": "The offset to start returning results from.",
+            "schema": {
+              "minimum": 0,
+              "nullable": true,
+              "default": 0,
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "required": false,
+            "in": "query",
             "schema": {
               "nullable": true,
-              "type": "number"
+              "type": "string"
+            }
+          },
+          {
+            "name": "isCompleted",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -290,12 +514,12 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       },
       "post": {
         "operationId": "todoItemDTOS.createOne",
-        "summary": "",
-        "tags": [],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -308,8 +532,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "",
+          "201": {
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -318,27 +542,73 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
+      }
+    },
+    "/tag-dtos/export": {
+      "get": {
+        "operationId": "tagDTOS.exportMany",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": []
       }
     },
     "/tag-dtos/{id}": {
       "get": {
         "operationId": "tagDTOS.findById",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -347,25 +617,16 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       },
       "delete": {
         "operationId": "tagDTOS.deleteOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -374,35 +635,26 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       },
       "put": {
         "operationId": "tagDTOS.updateOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateTagDTO"
+                "$ref": "#/components/schemas/UpdateTagDTO"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -411,21 +663,26 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       }
     },
     "/tag-dtos": {
       "get": {
         "operationId": "tagDTOS.queryMany",
-        "summary": "",
-        "tags": [],
         "parameters": [
           {
             "name": "limit",
             "required": false,
             "in": "query",
+            "description": "The maximum number of results to return.",
             "schema": {
+              "minimum": 1,
+              "maximum": 100,
               "nullable": true,
+              "default": 25,
+              "example": 25,
               "type": "number"
             }
           },
@@ -433,15 +690,53 @@
             "name": "offset",
             "required": false,
             "in": "query",
+            "description": "The offset to start returning results from.",
             "schema": {
+              "minimum": 0,
               "nullable": true,
+              "default": 0,
+              "example": 0,
               "type": "number"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -450,12 +745,12 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       },
       "post": {
         "operationId": "tagDTOS.createOne",
-        "summary": "",
-        "tags": [],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -468,8 +763,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "",
+          "201": {
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -478,7 +773,9 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": []
       }
     }
   },
@@ -534,15 +831,17 @@
         "properties": {
           "hasNextPage": {
             "type": "boolean",
-            "description": "true if paging forward and there are more records.",
-            "nullable": true
+            "description": "`true` if paging forward and there are more records."
           },
           "hasPreviousPage": {
             "type": "boolean",
-            "description": "true if paging backwards and there are more records.",
-            "nullable": true
+            "description": "`true` if paging backwards and there are more records."
           }
-        }
+        },
+        "required": [
+          "hasNextPage",
+          "hasPreviousPage"
+        ]
       },
       "SubTaskDTOConnection": {
         "type": "object",
@@ -555,10 +854,6 @@
               }
             ]
           },
-          "totalCount": {
-            "type": "number",
-            "description": "Total amount of records."
-          },
           "nodes": {
             "description": "Array of nodes.",
             "type": "array",
@@ -569,11 +864,10 @@
         },
         "required": [
           "pageInfo",
-          "totalCount",
           "nodes"
         ]
       },
-      "SubTaskUpdateDTO": {
+      "UpdateSubTaskDTO": {
         "type": "object",
         "properties": {
           "title": {
@@ -653,10 +947,6 @@
               }
             ]
           },
-          "totalCount": {
-            "type": "number",
-            "description": "Total amount of records."
-          },
           "nodes": {
             "description": "Array of nodes.",
             "type": "array",
@@ -667,11 +957,10 @@
         },
         "required": [
           "pageInfo",
-          "totalCount",
           "nodes"
         ]
       },
-      "TodoItemUpdateDTO": {
+      "UpdateTodoItemDTO": {
         "type": "object",
         "properties": {
           "title": {
@@ -735,10 +1024,6 @@
               }
             ]
           },
-          "totalCount": {
-            "type": "number",
-            "description": "Total amount of records."
-          },
           "nodes": {
             "description": "Array of nodes.",
             "type": "array",
@@ -749,8 +1034,18 @@
         },
         "required": [
           "pageInfo",
-          "totalCount",
           "nodes"
+        ]
+      },
+      "UpdateTagDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
         ]
       },
       "CreateTagDTO": {
