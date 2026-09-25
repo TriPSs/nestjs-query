@@ -65,6 +65,19 @@ export type EntityIndexRelation<Relation> = Relation & {
  * @internal
  *
  * Class that will convert a Query into a `typeorm` Query Builder.
+ *
+ * Everything this class builds from a user supplied query - the filter, the sorting, the paging
+ * and the aggregates - is built by {@link RelationQueryBuilder.filterQueryBuilder}, which is
+ * derived from the builder of the entity the relation is queried from, so a builder configured
+ * through `TypeOrmQueryServiceOpts.filterQueryBuilder` applies to relation queries too.
+ *
+ * The join predicates this class writes as raw SQL (`RelationQuery.whereCondition` and
+ * `RelationQuery.batchSelect`) are not built through a comparison builder. They are structural
+ * equalities between the primary key and join columns that `typeorm` metadata describes, they
+ * compare columns of the owning entity or of a junction table rather than fields of the queried
+ * entity, and the query being built is not a query the caller can express. Routing them through a
+ * comparison builder would let a custom operator change what relation an entity is joined to,
+ * which is a different thing from what the caller asked to filter on.
  */
 export class RelationQueryBuilder<Entity, Relation> {
   readonly filterQueryBuilder: FilterQueryBuilder<Relation>
@@ -82,12 +95,20 @@ export class RelationQueryBuilder<Entity, Relation> {
    */
   private existingAlias: Alias
 
+  /**
+   * @param repo - repository of the entity the relation is queried from.
+   * @param relation - the name of the relation to query.
+   * @param entityFilterQueryBuilder - the builder used for queries on `repo`. The builder used for
+   * the relation is derived from it, so that a builder configured through
+   * `TypeOrmQueryServiceOpts.filterQueryBuilder` also applies to relation queries.
+   */
   constructor(
     readonly repo: Repository<Entity>,
-    readonly relation: string
+    readonly relation: string,
+    entityFilterQueryBuilder: FilterQueryBuilder<Entity> = new FilterQueryBuilder<Entity>(repo)
   ) {
     this.relationRepo = this.repo.manager.getRepository<Relation>(this.relationMeta.from)
-    this.filterQueryBuilder = new FilterQueryBuilder<Relation>(this.relationRepo)
+    this.filterQueryBuilder = entityFilterQueryBuilder.deriveForRepository<Relation>(this.relationRepo)
     this.paramCount = 0
   }
 
