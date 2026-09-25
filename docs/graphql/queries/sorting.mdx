@@ -8,7 +8,7 @@ The `sorting` parameter is an array where each item has the following options.
 
 - `field!` - The name of the field to sort by.
 - `direction!` - The direction to sort either `ASC` or `DESC`.
-- `nulls?` - Optional field to set nulls sort order `NULLS_FIRST` or `NULLS_last`
+- `nulls?` - Optional field to set nulls sort order `NULLS_FIRST` or `NULLS_LAST`
 
 In this example we sort by title descending.
 
@@ -211,6 +211,14 @@ In this example we sort by completed and title.
 
 </Tab>
 </Tabs>
+
+## Null ordering
+
+If you leave `nulls` unset, where nulls end up is decided by your database rather than by `nestjs-query`. Postgres and Oracle treat NULL as larger than any value, so an ascending sort puts nulls last, while MySQL and SQLite treat it as smaller and put them first. Set `nulls` explicitly when you want the same placement on every engine, for example so that offset paging over a nullable field returns the same pages whichever database you run on.
+
+MySQL and MariaDB have no `NULLS FIRST` / `NULLS LAST` syntax, so on MySQL, MariaDB and (in the TypeORM adapter) Aurora MySQL the adapters express your requested placement as an extra sort key, placed directly before the field, that tests the column for null (`col IS NULL` in the TypeORM adapter, `ISNULL(col)` in the Sequelize one) instead of a keyword. The rows come back in the order the native keyword would give, including when the same field is sorted more than once. The one exception is re-sorting a field with TypeORM's own `addOrderBy` after the adapter has sorted it with `nulls`: on a native engine that drops the null placement, while the emulated key stays in place and keeps it. Likewise, on update queries and virtual-column sorts on MySQL, MariaDB and Aurora MySQL, an order by you add by hand on `(col IS NULL)`, parenthesised exactly like that, for a field that is also sorted with `nulls` shares an entry with the emulated key, so one overwrites the other's direction. In a select query the TypeORM adapter also selects the key under an alias starting with `__nestjsQuery__nullOrdering__`, so that it survives the `DISTINCT` subquery TypeORM pages in when a filter joins a to-many relation; it shows up in raw results but not in entities. A virtual column's key is ordered by directly instead, since a select expression cannot reference another select alias. Every other engine gets the keyword unchanged; Postgres, Oracle, CockroachDB and SQLite from 3.30 support it natively.
+
+SQL Server has no such keyword and the adapters do not emulate it there, so `nulls` is not supported on SQL Server. Setting it on a SQL Server connection throws, naming the sort field, rather than sending SQL the server cannot parse.
 
 ## Setting a default sort
 
