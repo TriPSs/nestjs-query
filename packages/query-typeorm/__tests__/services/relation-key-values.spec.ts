@@ -1,5 +1,16 @@
 import { SortDirection } from '@ptc-org/nestjs-query-core'
-import { Column, DataSource, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, ValueTransformer } from 'typeorm'
+import {
+  Column,
+  DataSource,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  ValueTransformer
+} from 'typeorm'
 
 import { TypeOrmQueryService } from '../../src'
 
@@ -194,6 +205,65 @@ describe('TypeOrmQueryService batch relations keyed by values the driver does no
   })
 })
 
+@Entity('key_crate')
+class Crate {
+  @PrimaryColumn()
+  id!: string
+
+  @ManyToOne(() => Bin)
+  @JoinColumn([
+    { name: 'bin_id', referencedColumnName: 'id' },
+    { name: 'bin_active', referencedColumnName: 'active' }
+  ])
+  bin?: Bin
+}
+
+describe('TypeOrmQueryService many-to-one relations with a composite foreign key', () => {
+  let dataSource: DataSource
+  let crates: Crate[]
+
+  beforeAll(async () => {
+    dataSource = new DataSource({
+      type: 'better-sqlite3',
+      database: ':memory:',
+      dropSchema: true,
+      entities: [Bin, Item, Crate],
+      synchronize: true,
+      logging: false
+    })
+    await dataSource.initialize()
+    await dataSource.getRepository(Bin).save([
+      { id: 1, active: true },
+      { id: 1, active: false },
+      { id: 2, active: true }
+    ])
+    crates = await dataSource.getRepository(Crate).save([
+      { id: 'crate-1', bin: { id: 1, active: false } },
+      { id: 'crate-2', bin: { id: 2, active: true } }
+    ] as Crate[])
+  })
+
+  afterAll(() => dataSource.destroy())
+
+  const binKey = (bin?: Bin) => (bin ? `${bin.id}-${String(bin.active)}` : undefined)
+
+  it('should find the relation of a single entity by every foreign key column', async () => {
+    const queryService = new TypeOrmQueryService(dataSource.getRepository(Crate))
+
+    const bins = await Promise.all(crates.map((crate) => queryService.findRelation(Bin, 'bin', crate)))
+
+    expect(bins.map(binKey)).toEqual(['1-false', '2-true'])
+  })
+
+  it('should find the relations of many entities by every foreign key column', async () => {
+    const queryService = new TypeOrmQueryService(dataSource.getRepository(Crate))
+
+    const bins = await queryService.findRelation(Bin, 'bin', crates)
+
+    expect(crates.map((crate) => binKey(bins.get(crate)))).toEqual(['1-false', '2-true'])
+  })
+})
+
 class SeatPart {
   @PrimaryColumn()
   id!: string
@@ -308,6 +378,92 @@ describe('TypeOrmQueryService relations of an owner whose key a transformer stor
     const aggregates = await queryService.aggregateRelations(Sock, 'socks', drawer, {}, { count: [{ field: 'id', args: {} }] })
 
     expect(aggregates).toEqual([{ count: { id: 2 } }])
+  })
+})
+
+@Entity('key_pew')
+class Pew {
+  @Column(() => SeatPart)
+  row!: SeatPart
+
+  @Column(() => SeatPart)
+  column!: SeatPart
+
+  @ManyToMany('Usher', 'pews')
+  ushers?: object[]
+
+  @ManyToMany('Choir', 'pews')
+  @JoinTable({ name: 'key_pew_choir' })
+  choirs?: object[]
+}
+
+@Entity('key_usher')
+class Usher {
+  @PrimaryColumn()
+  id!: string
+
+  @ManyToMany(() => Pew, (pew) => pew.ushers)
+  @JoinTable({ name: 'key_usher_pew' })
+  pews?: Pew[]
+}
+
+@Entity('key_choir')
+class Choir {
+  @PrimaryColumn()
+  id!: string
+
+  @ManyToMany(() => Pew, (pew) => pew.choirs)
+  pews?: Pew[]
+}
+
+describe('TypeOrmQueryService many-to-many relations keyed by embedded columns sharing a property name', () => {
+  let dataSource: DataSource
+  let ushers: Usher[]
+  let choirs: Choir[]
+
+  beforeAll(async () => {
+    dataSource = new DataSource({
+      type: 'better-sqlite3',
+      database: ':memory:',
+      dropSchema: true,
+      entities: [Pew, Usher, Choir],
+      synchronize: true,
+      logging: false
+    })
+    await dataSource.initialize()
+    choirs = await dataSource.getRepository(Choir).save([{ id: 'choir-1' }, { id: 'choir-2' }])
+    await dataSource.getRepository(Pew).save([
+      { row: { id: 'a' }, column: { id: 'b' }, choirs: [{ id: 'choir-1' }] },
+      { row: { id: 'b' }, column: { id: 'a' }, choirs: [{ id: 'choir-2' }] }
+    ] as Pew[])
+    ushers = await dataSource.getRepository(Usher).save([
+      { id: 'usher-1', pews: [{ row: { id: 'a' }, column: { id: 'b' } }] },
+      { id: 'usher-2', pews: [{ row: { id: 'b' }, column: { id: 'a' } }] }
+    ] as Usher[])
+  })
+
+  afterAll(() => dataSource.destroy())
+
+  const pewKeys = (pews: Pew[]) => pews.map((pew) => `${pew.row.id}-${pew.column.id}`)
+
+  it('should join the owning side by every column of the related key', async () => {
+    const queryService = new TypeOrmQueryService(dataSource.getRepository(Usher))
+
+    const single = await Promise.all(ushers.map((usher) => queryService.queryRelations(Pew, 'pews', usher, {})))
+    const batch = await queryService.queryRelations(Pew, 'pews', ushers, {})
+
+    expect(single.map(pewKeys)).toEqual([['a-b'], ['b-a']])
+    expect(ushers.map((usher) => pewKeys(batch.get(usher)))).toEqual([['a-b'], ['b-a']])
+  })
+
+  it('should join the inverse side by every column of the related key', async () => {
+    const queryService = new TypeOrmQueryService(dataSource.getRepository(Choir))
+
+    const single = await Promise.all(choirs.map((choir) => queryService.queryRelations(Pew, 'pews', choir, {})))
+    const batch = await queryService.queryRelations(Pew, 'pews', choirs, {})
+
+    expect(single.map(pewKeys)).toEqual([['a-b'], ['b-a']])
+    expect(choirs.map((choir) => pewKeys(batch.get(choir)))).toEqual([['a-b'], ['b-a']])
   })
 })
 

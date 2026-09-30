@@ -297,8 +297,8 @@ export class RelationQueryBuilder<Entity, Relation> {
         target: relation.entityMetadata.target as Class<unknown>,
         alias: aliasName,
         conditions: relation.joinColumns.map((joinColumn) => ({
-          leftHand: `${aliasName}.${joinColumn.propertyName}`,
-          rightHand: `${relation.propertyName}.${joinColumn.referencedColumn.propertyName}`
+          leftHand: `${aliasName}.${relation.propertyPath}.${joinColumn.referencedColumn.propertyPath}`,
+          rightHand: `${relation.propertyName}.${joinColumn.referencedColumn.propertyPath}`
         }))
       }
     ]
@@ -339,7 +339,7 @@ export class RelationQueryBuilder<Entity, Relation> {
         alias: joinAlias,
         conditions: relation.inverseJoinColumns.map((inverseJoinColumn) => ({
           leftHand: `${joinAlias}.${inverseJoinColumn.propertyName}`,
-          rightHand: `${mainAlias}.${inverseJoinColumn.referencedColumn.propertyName}`
+          rightHand: `${mainAlias}.${inverseJoinColumn.referencedColumn.propertyPath}`
         }))
       }
     ]
@@ -363,7 +363,7 @@ export class RelationQueryBuilder<Entity, Relation> {
         alias: joinAlias,
         conditions: relation.inverseRelation.joinColumns.map((joinColumn) => ({
           leftHand: `${joinAlias}.${joinColumn.propertyName}`,
-          rightHand: `${mainAlias}.${joinColumn.referencedColumn.propertyName}`
+          rightHand: `${mainAlias}.${joinColumn.referencedColumn.propertyPath}`
         }))
       }
     ]
