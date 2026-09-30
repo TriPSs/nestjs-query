@@ -3,10 +3,10 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { getDataSourceToken, InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
 import { Filter, SortDirection } from '@ptc-org/nestjs-query-core'
 import { plainToClass } from 'class-transformer'
-import { Repository } from 'typeorm'
+import { DataSource, Repository } from 'typeorm'
 
 import { TypeOrmQueryService } from '../../src'
-import { FilterQueryBuilder } from '../../src/query'
+import { FilterQueryBuilder, RelationQueryBuilder } from '../../src/query'
 import { CONNECTION_OPTIONS, refresh, truncate } from '../__fixtures__/connection.fixture'
 import {
   TEST_ENTITIES,
@@ -787,6 +787,17 @@ describe('TypeOrmQueryService', (): void => {
     })
 
     describe('with multiple entities', () => {
+      it('should return no relations for no entities without querying', async () => {
+        const queryService = moduleRef.get(TestEntityService)
+        const batchSelect = jest.spyOn(RelationQueryBuilder.prototype, 'batchSelect')
+
+        const queryResult = await queryService.queryRelations(TestRelation, 'testRelations', [], {})
+
+        expect(queryResult).toEqual(new Map())
+        expect(batchSelect).not.toHaveBeenCalled()
+        batchSelect.mockRestore()
+      })
+
       it('call select and return the result', async () => {
         const entities = TEST_ENTITIES.slice(0, 3)
         const queryService = moduleRef.get(TestEntityService)
@@ -866,6 +877,26 @@ describe('TypeOrmQueryService', (): void => {
           expect(queryResult.get(entities[1])).toHaveLength(expectRelations.length)
           expect(queryResult.get(entities[1])).toEqual(expect.arrayContaining(expectRelations))
         })
+      })
+
+      it('should match the single entity result for a relation whose primary key is also its owner key', async () => {
+        const owners = TEST_ENTITIES.slice(0, 2)
+        await moduleRef
+          .get<DataSource>(getDataSourceToken())
+          .getRepository(TestEntityRelationEntity)
+          .save([
+            { testEntityId: owners[0].testEntityPk, testRelationId: TEST_RELATIONS[0].testRelationPk },
+            { testEntityId: owners[0].testEntityPk, testRelationId: TEST_RELATIONS[1].testRelationPk },
+            { testEntityId: owners[1].testEntityPk, testRelationId: TEST_RELATIONS[0].testRelationPk }
+          ])
+        const queryService = moduleRef.get(TestEntityService)
+
+        const batch = await queryService.queryRelations(TestEntityRelationEntity, 'testEntityRelation', owners, {})
+
+        for (const owner of owners) {
+          const single = await queryService.queryRelations(TestEntityRelationEntity, 'testEntityRelation', owner, {})
+          expect(batch.get(owner)).toEqual(single)
+        }
       })
 
       describe('when the filter joins the owning entity type', () => {
@@ -952,6 +983,20 @@ describe('TypeOrmQueryService', (): void => {
     })
 
     describe('with multiple entities', () => {
+      it('should return no aggregates for no entities', async () => {
+        const queryService = moduleRef.get(TestEntityService)
+
+        const aggResult = await queryService.aggregateRelations(
+          TestRelation,
+          'testRelations',
+          [],
+          {},
+          { count: [{ field: 'testRelationPk', args: {} }] }
+        )
+
+        expect(aggResult).toEqual(new Map())
+      })
+
       it('aggregate for each entities relation', async () => {
         const entities = TEST_ENTITIES.slice(0, 3)
         const queryService = moduleRef.get(TestEntityService)
@@ -1480,6 +1525,17 @@ describe('TypeOrmQueryService', (): void => {
     })
 
     describe('with multiple entities', () => {
+      it('should find no relations for no entities without querying', async () => {
+        const queryService = moduleRef.get(TestEntityService)
+        const batchSelect = jest.spyOn(RelationQueryBuilder.prototype, 'batchSelect')
+
+        const queryResult = await queryService.findRelation(TestRelation, 'oneTestRelation', [])
+
+        expect(queryResult).toEqual(new Map())
+        expect(batchSelect).not.toHaveBeenCalled()
+        batchSelect.mockRestore()
+      })
+
       it('call select and return the result', async () => {
         const entities = TEST_ENTITIES.slice(0, 3)
         const queryService = moduleRef.get(TestEntityService)

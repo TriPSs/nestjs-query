@@ -7,7 +7,7 @@ exports[`RelationQueryBuilder #batchSelect many to one should query with with mu
   "manyToOneRelation"."test_entity_id" AS "manyToOneRelation_test_entity_id",
   "manyToOneRelation"."uni_directional_test_entity_id" AS "manyToOneRelation_uni_directional_test_entity_id",
   "manyToOneRelation"."uni_directional_relation_test_entity_id" AS "manyToOneRelation_uni_directional_relation_test_entity_id",
-  "__nestjsQuery__owner__"."test_entity_pk" AS "manyToOneRelation___nestjsQuery__owner___testEntityPk"
+  "__nestjsQuery__owner__"."test_entity_pk" AS "__nestjsQuery__ownerKey0__"
 FROM
   "test_relation" "manyToOneRelation"
   INNER JOIN "test_entity" "__nestjsQuery__owner__" ON "__nestjsQuery__owner__"."many_to_one_relation_id" = "manyToOneRelation"."test_relation_pk"
@@ -22,7 +22,7 @@ exports[`RelationQueryBuilder #batchSelect should add a dedicated owner join whe
   "manyToOneRelation"."test_entity_id" AS "manyToOneRelation_test_entity_id",
   "manyToOneRelation"."uni_directional_test_entity_id" AS "manyToOneRelation_uni_directional_test_entity_id",
   "manyToOneRelation"."uni_directional_relation_test_entity_id" AS "manyToOneRelation_uni_directional_relation_test_entity_id",
-  "__nestjsQuery__owner__"."test_entity_pk" AS "manyToOneRelation___nestjsQuery__owner___testEntityPk"
+  "__nestjsQuery__owner__"."test_entity_pk" AS "__nestjsQuery__ownerKey0__"
 FROM
   "test_relation" "manyToOneRelation"
   LEFT JOIN "test_entity" "testEntity" ON "testEntity"."test_entity_pk" = "manyToOneRelation"."test_entity_id"

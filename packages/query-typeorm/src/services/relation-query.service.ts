@@ -347,17 +347,18 @@ export abstract class RelationQueryService<Entity> {
     query: Query<Relation>,
     withDeleted?: boolean
   ): Promise<Map<Entity, Relation[]>> {
+    if (entities.length === 0) return new Map()
+
     const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
     const convertedQuery = assembler.convertQuery(query)
 
     const relationQueryBuilder = this.getRelationQueryBuilder(relationName)
     const entityRelations = await relationQueryBuilder.batchSelect(entities, convertedQuery, withDeleted).getRawAndEntities()
+    const relationsByOwner = relationQueryBuilder.mapRelationsToOwners(entities, entityRelations.entities, entityRelations.raw)
 
     const results = new Map<Entity, Relation[]>()
     for (const entity of entities) {
-      const relations = relationQueryBuilder.relationMeta.mapRelations(entity, entityRelations.entities, entityRelations.raw)
-
-      results.set(entity, await assembler.convertToDTOs(relations))
+      results.set(entity, await assembler.convertToDTOs(relationsByOwner.get(entity)))
     }
 
     return results
@@ -378,6 +379,8 @@ export abstract class RelationQueryService<Entity> {
     filter: Filter<Relation>,
     query: AggregateQuery<Relation>
   ): Promise<Map<Entity, AggregateResponse<Relation>[]>> {
+    if (entities.length === 0) return new Map()
+
     const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
     const relationQueryBuilder = this.getRelationQueryBuilder<Relation>(relationName)
     const convertedQuery = assembler.convertQuery({ filter })
