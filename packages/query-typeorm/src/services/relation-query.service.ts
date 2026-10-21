@@ -466,7 +466,6 @@ export abstract class RelationQueryService<Entity> {
       relationName,
       dtos,
       {
-        paging: { limit: dtos.length },
         filter: opts?.filter
       },
       opts?.withDeleted

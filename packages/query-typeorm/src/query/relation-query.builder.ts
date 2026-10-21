@@ -5,7 +5,6 @@ import { Brackets, ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm
 import { DriverUtils } from 'typeorm/driver/DriverUtils'
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata'
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata'
-import { Alias } from 'typeorm/query-builder/Alias'
 
 import { AggregateBuilder } from './aggregate.builder'
 import { FilterQueryBuilder } from './filter-query.builder'
@@ -45,6 +44,9 @@ interface RelationQuery<Relation, Entity> {
 
   mapRelations<RawRelation>(entity: Entity, relations: Relation[], rawRelations: RawRelation[]): Relation[]
 
+  /**
+   * TODO:: Do this different? Maybe cleanup the batchSelect / whereCondition as its almost the same
+   */
   batchSelect(qb: SelectQueryBuilder<Relation>, entities: Entity[]): SelectQueryBuilder<Relation>
 
   whereCondition(entity: Entity): SQLFragment
@@ -74,13 +76,6 @@ export class RelationQueryBuilder<Entity, Relation> {
   private relationMetadata: RelationQuery<Relation, Entity> | undefined
 
   private paramCount: number
-
-  /**
-   * Will be filled if the query builder already contains the join
-   *
-   * TODO:: Do this different? Maybe cleanup the batchSelect / whereCondition as its almost the same
-   */
-  private existingAlias: Alias
 
   constructor(
     readonly repo: Repository<Entity>,
@@ -236,7 +231,7 @@ export class RelationQueryBuilder<Entity, Relation> {
   }
 
   private getManyToOneOrOneToOneOwnerMeta(relation: RelationMetadata): RelationQuery<Relation, Entity> {
-    const aliasName = relation.entityMetadata.tableName
+    const aliasName = this.ownerAlias
 
     const joins: JoinColumn[] = [
       {
@@ -263,64 +258,39 @@ export class RelationQueryBuilder<Entity, Relation> {
       joins,
 
       mapRelations: <RawRelation>(entity: Entity, relations: Relation[], rawRelations: RawRelation[]): Relation[] => {
-        // Set the alias to use for the join
-        const joinAlias = this.existingAlias?.name || aliasName
-
         const rawFilter = relation.entityMetadata.primaryColumns.reduce(
           (columns, column) => ({
             ...columns,
 
-            [this.buildAlias(joinAlias, column.propertyName)]: column.getEntityValue(entity)
+            [this.buildAlias(aliasName, column.propertyName)]: column.getEntityValue(entity)
           }),
           {} as Partial<Entity>
         )
 
-        // First filter the raw relations with the PK of the entity, then filter the relations
-        // with the PK of the raw relation
-        return lodashFilter(rawRelations, rawFilter).reduce((entityRelations: Relation[], rawRelation: RawRelation) => {
-          const filter = this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
-            (columns: Partial<Entity>, column) => ({
-              ...columns,
-
-              [column.propertyName]: rawRelation[column.columnName]
-            }),
-            {} as Partial<Entity>
-          )
-
-          return entityRelations.concat(lodashFilter(relations, filter) as Relation[])
-        }, [] as Relation[])
+        return this.relationsOfOwner(rawFilter, relations, rawRelations)
       },
 
       batchSelect: (queryBuilder, entities) => {
-        this.existingAlias = queryBuilder.expressionMap.aliases.find((alias) => {
-          return alias.type === 'join' && alias.target === relation.entityMetadata.target
-        })
-
-        // Set the alias to use for the join
-        const joinAlias = this.existingAlias?.name || aliasName
-
         const whereParams: { [key: string]: unknown } = {}
         const whereCondition = relation.entityMetadata.primaryColumns
           .map((column) => {
-            const paramName = this.getParamName(joinAlias)
+            const paramName = this.getParamName(aliasName)
 
             whereParams[paramName] = entities.map((entity) => column.getEntityValue(entity) as unknown)
 
             // Also select the columns, so we can use them to map later
-            queryBuilder.addSelect(`${joinAlias}.${column.propertyPath}`, this.buildAlias(joinAlias, column.propertyName))
+            queryBuilder.addSelect(`${aliasName}.${column.propertyPath}`, this.buildAlias(aliasName, column.propertyName))
 
-            return `${joinAlias}.${column.propertyPath} IN (:...${paramName})`
+            return `${aliasName}.${column.propertyPath} IN (:...${paramName})`
           })
           .join(' AND ')
 
-        // Only add the joins if there was not an existing one yet for this relation
-        if (!this.existingAlias) {
-          queryBuilder = joins.reduce((qb, join) => {
-            const conditions = join.conditions.map(({ leftHand, rightHand }) => `${leftHand} = ${rightHand}`)
+        // Always add a dedicated owner join, a filter join to the same entity type can belong to another relation
+        queryBuilder = joins.reduce((qb, join) => {
+          const conditions = join.conditions.map(({ leftHand, rightHand }) => `${leftHand} = ${rightHand}`)
 
-            return qb.innerJoin(join.target, join.alias, conditions.join(' AND '))
-          }, queryBuilder)
-        }
+          return qb.innerJoin(join.target, join.alias, conditions.join(' AND '))
+        }, queryBuilder)
 
         return queryBuilder.andWhere(whereCondition, whereParams)
       },
@@ -369,19 +339,7 @@ export class RelationQueryBuilder<Entity, Relation> {
           {} as Partial<Entity>
         )
 
-        // First filter the raw relations with the PK of the entity, then filter the relations
-        // with the PK of the raw relation
-        return lodashFilter(rawRelations, rawFilter).reduce((entityRelations, rawRelation) => {
-          const filter = this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
-            (columnsFilter, column) => ({
-              ...columnsFilter,
-              [column.propertyName]: rawRelation[column.columnName]
-            }),
-            {} as Partial<Entity>
-          )
-
-          return entityRelations.concat(lodashFilter(relations, filter) as Relation[])
-        }, [] as Relation[])
+        return this.relationsOfOwner(rawFilter, relations, rawRelations)
       },
       batchSelect: (qb: SelectQueryBuilder<Relation>, entities: Entity[]) => {
         const params = {}
@@ -572,19 +530,34 @@ export class RelationQueryBuilder<Entity, Relation> {
       {} as Partial<Entity>
     )
 
+    return this.relationsOfOwner(rawFilter, relations, rawRelations)
+  }
+
+  /**
+   * Picks the relations of one owner. A filter join can repeat a raw row, so each relation is returned once.
+   */
+  private relationsOfOwner<RawRelation>(
+    ownerRawFilter: Partial<Entity>,
+    relations: Relation[],
+    rawRelations: RawRelation[]
+  ): Relation[] {
     // First filter the raw relations with the PK of the entity, then filter the relations
     // with the PK of the raw relation
-    return lodashFilter(rawRelations, rawFilter).reduce((entityRelations, rawRelation) => {
-      const filter = this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
-        (columnsFilter, column) => ({
-          ...columnsFilter,
-          [column.propertyName]: rawRelation[column.columnName]
-        }),
-        {} as Partial<Entity>
-      )
+    const ownerRelations = lodashFilter(rawRelations, ownerRawFilter).flatMap(
+      (rawRelation) => lodashFilter(relations, this.relationPrimaryKeyFilter(rawRelation)) as Relation[]
+    )
 
-      return entityRelations.concat(lodashFilter(relations, filter) as Relation[])
-    }, [] as Relation[])
+    return [...new Set(ownerRelations)]
+  }
+
+  private relationPrimaryKeyFilter<RawRelation>(rawRelation: RawRelation): Partial<Relation> {
+    return this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
+      (columnsFilter, column) => ({
+        ...columnsFilter,
+        [column.propertyName]: rawRelation[column.columnName]
+      }),
+      {} as Partial<Relation>
+    )
   }
 
   private getParamName(prefix: string): string {
@@ -599,6 +572,13 @@ export class RelationQueryBuilder<Entity, Relation> {
 
   private get unionAlias(): string {
     return 'unioned'
+  }
+
+  /**
+   * Alias of the owning entity join. It cannot be a relation property name, so it never collides with a filter join.
+   */
+  private get ownerAlias(): string {
+    return '__nestjsQuery__owner__'
   }
 
   private escapeName(str: string): string {
