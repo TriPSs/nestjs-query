@@ -3,10 +3,10 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { getDataSourceToken, InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
 import { Filter, SortDirection } from '@ptc-org/nestjs-query-core'
 import { plainToClass } from 'class-transformer'
-import { Repository } from 'typeorm'
+import { DataSource, Repository } from 'typeorm'
 
 import { TypeOrmQueryService } from '../../src'
-import { FilterQueryBuilder } from '../../src/query'
+import { FilterQueryBuilder, RelationQueryBuilder } from '../../src/query'
 import { CONNECTION_OPTIONS, refresh, truncate } from '../__fixtures__/connection.fixture'
 import {
   TEST_ENTITIES,
@@ -59,6 +59,12 @@ describe('TypeOrmQueryService', (): void => {
 
     await refresh(dataSource)
   })
+
+  const pointManyToOneRelationAt = async (testEntityPk: string, testRelationPk: string): Promise<TestEntity> => {
+    const testEntityRepo = moduleRef.get(TestEntityService).repo
+    await testEntityRepo.update({ testEntityPk }, { manyToOneRelation: { testRelationPk } as TestRelation })
+    return testEntityRepo.findOneByOrFail({ testEntityPk })
+  }
 
   it('should create a filterQueryBuilder and assemblerService based on the repo passed in if not provided', () => {
     const queryService = moduleRef.get(TestEntityService)
@@ -781,6 +787,17 @@ describe('TypeOrmQueryService', (): void => {
     })
 
     describe('with multiple entities', () => {
+      it('should return no relations for no entities without querying', async () => {
+        const queryService = moduleRef.get(TestEntityService)
+        const batchSelect = jest.spyOn(RelationQueryBuilder.prototype, 'batchSelect')
+
+        const queryResult = await queryService.queryRelations(TestRelation, 'testRelations', [], {})
+
+        expect(queryResult).toEqual(new Map())
+        expect(batchSelect).not.toHaveBeenCalled()
+        batchSelect.mockRestore()
+      })
+
       it('call select and return the result', async () => {
         const entities = TEST_ENTITIES.slice(0, 3)
         const queryService = moduleRef.get(TestEntityService)
@@ -861,6 +878,68 @@ describe('TypeOrmQueryService', (): void => {
           expect(queryResult.get(entities[1])).toEqual(expect.arrayContaining(expectRelations))
         })
       })
+
+      it('should match the single entity result for a relation whose primary key is also its owner key', async () => {
+        const owners = TEST_ENTITIES.slice(0, 2)
+        await moduleRef
+          .get<DataSource>(getDataSourceToken())
+          .getRepository(TestEntityRelationEntity)
+          .save([
+            { testEntityId: owners[0].testEntityPk, testRelationId: TEST_RELATIONS[0].testRelationPk },
+            { testEntityId: owners[0].testEntityPk, testRelationId: TEST_RELATIONS[1].testRelationPk },
+            { testEntityId: owners[1].testEntityPk, testRelationId: TEST_RELATIONS[0].testRelationPk }
+          ])
+        const queryService = moduleRef.get(TestEntityService)
+
+        const batch = await queryService.queryRelations(TestEntityRelationEntity, 'testEntityRelation', owners, {})
+
+        for (const owner of owners) {
+          const single = await queryService.queryRelations(TestEntityRelationEntity, 'testEntityRelation', owner, {})
+          expect(batch.get(owner)).toEqual(single)
+        }
+      })
+
+      describe('when the filter joins the owning entity type', () => {
+        it('should match the single entity result when the join is through a different relation', async () => {
+          const owner = await pointManyToOneRelationAt('test-entity-2', 'test-relations-test-entity-3-1')
+          const queryService = moduleRef.get(TestEntityService)
+          const query = { filter: { testEntity: { testEntityPk: { eq: 'test-entity-3' } } } }
+
+          const single = await queryService.queryRelations(TestRelation, 'manyToOneRelation', owner, query)
+          const batch = await queryService.queryRelations(TestRelation, 'manyToOneRelation', [owner], query)
+
+          expect(single.map(({ testRelationPk }) => testRelationPk)).toEqual(['test-relations-test-entity-3-1'])
+          expect(batch.get(owner)).toEqual(single)
+        })
+
+        it('should match the single entity result when the join is through the inverse relation', async () => {
+          const owner = TEST_RELATIONS[0]
+          const queryService = moduleRef.get(TestRelationService)
+          const query = { filter: { testRelations: { relationName: { like: '%two' } } } }
+
+          const single = await queryService.queryRelations(TestEntity, 'testEntity', owner, query)
+          const batch = await queryService.queryRelations(TestEntity, 'testEntity', [owner], query)
+
+          expect(single.map(({ testEntityPk }) => testEntityPk)).toEqual([TEST_ENTITIES[0].testEntityPk])
+          expect(batch.get(owner)).toEqual(single)
+        })
+
+        it('should return each relation once when the join through a to-many relation matches several rows', async () => {
+          const owners = [
+            await pointManyToOneRelationAt('test-entity-2', 'test-relations-test-entity-1-2'),
+            await pointManyToOneRelationAt('test-entity-4', 'test-relations-test-entity-1-2')
+          ]
+          const queryService = moduleRef.get(TestEntityService)
+          const query = { filter: { manyTestEntities: { numberType: { lte: 4 } } } }
+
+          const batch = await queryService.queryRelations(TestRelation, 'manyToOneRelation', owners, query)
+
+          expect(owners.map((owner) => batch.get(owner).map(({ testRelationPk }) => testRelationPk))).toEqual([
+            ['test-relations-test-entity-1-2'],
+            ['test-relations-test-entity-1-2']
+          ])
+        })
+      })
     })
   })
 
@@ -904,6 +983,20 @@ describe('TypeOrmQueryService', (): void => {
     })
 
     describe('with multiple entities', () => {
+      it('should return no aggregates for no entities', async () => {
+        const queryService = moduleRef.get(TestEntityService)
+
+        const aggResult = await queryService.aggregateRelations(
+          TestRelation,
+          'testRelations',
+          [],
+          {},
+          { count: [{ field: 'testRelationPk', args: {} }] }
+        )
+
+        expect(aggResult).toEqual(new Map())
+      })
+
       it('aggregate for each entities relation', async () => {
         const entities = TEST_ENTITIES.slice(0, 3)
         const queryService = moduleRef.get(TestEntityService)
@@ -1432,6 +1525,17 @@ describe('TypeOrmQueryService', (): void => {
     })
 
     describe('with multiple entities', () => {
+      it('should find no relations for no entities without querying', async () => {
+        const queryService = moduleRef.get(TestEntityService)
+        const batchSelect = jest.spyOn(RelationQueryBuilder.prototype, 'batchSelect')
+
+        const queryResult = await queryService.findRelation(TestRelation, 'oneTestRelation', [])
+
+        expect(queryResult).toEqual(new Map())
+        expect(batchSelect).not.toHaveBeenCalled()
+        batchSelect.mockRestore()
+      })
+
       it('call select and return the result', async () => {
         const entities = TEST_ENTITIES.slice(0, 3)
         const queryService = moduleRef.get(TestEntityService)
@@ -1470,6 +1574,36 @@ describe('TypeOrmQueryService', (): void => {
             [entities[2], TEST_RELATIONS[6]]
           ])
         )
+      })
+
+      it('should match the single entity result when the filter joins the owning entity type through a different relation', async () => {
+        const owner = await pointManyToOneRelationAt('test-entity-2', 'test-relations-test-entity-3-1')
+        const queryService = moduleRef.get(TestEntityService)
+        const filter = { testEntity: { testEntityPk: { eq: 'test-entity-3' } } }
+
+        const single = await queryService.findRelation(TestRelation, 'manyToOneRelation', owner, { filter })
+        const batch = await queryService.findRelation(TestRelation, 'manyToOneRelation', [owner], { filter })
+
+        expect(single?.testRelationPk).toBe('test-relations-test-entity-3-1')
+        expect(batch.get(owner)).toEqual(single)
+      })
+
+      it('should find the relation of every entity when the filter join matches several rows per entity', async () => {
+        const owners = [
+          await pointManyToOneRelationAt('test-entity-2', 'test-relations-test-entity-1-2'),
+          await pointManyToOneRelationAt('test-entity-4', 'test-relations-test-entity-1-2'),
+          await pointManyToOneRelationAt('test-entity-6', 'test-relations-test-entity-1-2')
+        ]
+        const queryService = moduleRef.get(TestEntityService)
+        const filter = { manyTestEntities: { numberType: { lte: 10 } } }
+
+        const batch = await queryService.findRelation(TestRelation, 'manyToOneRelation', owners, { filter })
+
+        expect(owners.map((owner) => batch.get(owner)?.testRelationPk)).toEqual([
+          'test-relations-test-entity-1-2',
+          'test-relations-test-entity-1-2',
+          'test-relations-test-entity-1-2'
+        ])
       })
 
       it('should return undefined select if no results are found.', async () => {
