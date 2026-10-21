@@ -2,15 +2,18 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type TodoItem {
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type TodoItem @key(fields: "id") {
   id: ID!
   subTasks(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
-
     """Specify to filter the records returned."""
     filter: SubTaskFilter! = {}
-
     """Specify to sort results."""
     sorting: [SubTaskSort!]! = []
   ): TodoItemSubTasksConnection!
@@ -19,13 +22,10 @@ type TodoItem {
 input CursorPaging {
   """Paginate before opaque cursor"""
   before: ConnectionCursor
-
   """Paginate after opaque cursor"""
   after: ConnectionCursor
-
   """Paginate first"""
   first: Int
-
   """Paginate last"""
   last: Int
 }
@@ -168,7 +168,7 @@ type SubTask {
   todoItem: TodoItem!
 }
 
-type DeleteManyResponse {
+type DeleteManyResponse @shareable {
   """The number of records deleted."""
   deletedCount: Int!
 }
@@ -183,7 +183,7 @@ type SubTaskDeleteResponse {
   todoItemId: Float
 }
 
-type UpdateManyResponse {
+type UpdateManyResponse @shareable {
   """The number of records updated."""
   updatedCount: Int!
 }
@@ -191,21 +191,17 @@ type UpdateManyResponse {
 type SubTaskEdge {
   """The node containing the SubTask"""
   node: SubTask!
-
   """Cursor for this node."""
   cursor: ConnectionCursor!
 }
 
-type PageInfo {
+type PageInfo @shareable {
   """true if paging forward and there are more records."""
   hasNextPage: Boolean
-
   """true if paging backwards and there are more records."""
   hasPreviousPage: Boolean
-
   """The cursor of the first returned record."""
   startCursor: ConnectionCursor
-
   """The cursor of the last returned record."""
   endCursor: ConnectionCursor
 }
@@ -213,7 +209,6 @@ type PageInfo {
 type SubTaskConnection {
   """Paging information"""
   pageInfo: PageInfo!
-
   """Array of edges."""
   edges: [SubTaskEdge!]!
 }
@@ -221,7 +216,6 @@ type SubTaskConnection {
 type TodoItemSubTasksConnection {
   """Paging information"""
   pageInfo: PageInfo!
-
   """Array of edges."""
   edges: [SubTaskEdge!]!
 }
@@ -234,10 +228,8 @@ type Query {
   subTasks(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
-
     """Specify to filter the records returned."""
     filter: SubTaskFilter! = {}
-
     """Specify to sort results."""
     sorting: [SubTaskSort!]! = []
   ): SubTaskConnection!
@@ -272,7 +264,6 @@ input CreateManySubTasksInput {
 input UpdateOneSubTaskInput {
   """The id of the record to update"""
   id: ID!
-
   """The update to apply."""
   update: SubTaskUpdate!
 }
@@ -287,7 +278,6 @@ input SubTaskUpdate {
 input UpdateManySubTasksInput {
   """Filter used to find fields to update"""
   filter: SubTaskUpdateFilter!
-
   """The update to apply to all records found using the filter"""
   update: SubTaskUpdate!
 }

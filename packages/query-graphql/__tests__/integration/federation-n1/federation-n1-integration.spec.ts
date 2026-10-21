@@ -62,7 +62,7 @@ describe('Federation N+1 Integration Test (Based on User Demo)', () => {
           driver: ApolloDriver,
           autoSchemaFile: true,
           debug: true,
-          playground: false
+          graphiql: false
         }),
         // Unified NestJS Query module to test ReferenceResolver without Federation conflicts
         NestjsQueryGraphQLModule.forFeature({

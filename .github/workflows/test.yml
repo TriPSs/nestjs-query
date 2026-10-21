@@ -65,7 +65,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [ 22.x, 24.x ]
+        # Jest 30 requires Node >= 24.9 to require ESM-only @nestjs packages
+        node-version: [ 24.x ]
         db-type: ['postgres', 'mysql']
     steps:
       - name: Use Node.js ${{ matrix.node-version }}

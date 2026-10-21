@@ -21,6 +21,14 @@ description: 'When using the  you can specify relations that should be exposed f
   prevents the n+1 problem.
 </Note>
 
+<Warning>
+  When upgrading to NestJS 12 (`@nestjs/graphql@14`), an explicitly declared field takes precedence over a relation with the
+  same name on the same DTO. In `@nestjs/graphql@13` the relation used to win instead. If a DTO declares both — for example a
+  class-level `@Relation('lender', () => LenderDto)` and a `@FilterableField(() => GraphQLObjectID, { nullable: true }) lender: string`
+  — the generated schema will silently change after the upgrade. Remove the duplicate declaration and keep only the one you
+  actually want exposed. See [issue #532](https://github.com/TriPSs/nestjs-query/issues/532) for details.
+</Warning>
+
 In the following examples we are going to use the following entities.
 
 <Tabs>
