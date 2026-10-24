@@ -131,7 +131,8 @@ export const Readable =
           (filter) =>
             this.service.count(filter, {
               withDeleted: opts?.many?.withDeleted
-            })
+            }),
+          { nullOrdering: this.service.nullOrdering }
         )
       }
     }

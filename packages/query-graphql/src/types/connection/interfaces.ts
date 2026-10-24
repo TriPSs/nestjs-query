@@ -1,5 +1,5 @@
 import { ReturnTypeFuncValue } from '@nestjs/graphql'
-import { Class, Filter, Query } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, NullOrdering, Query } from '@ptc-org/nestjs-query-core'
 
 import { ConnectionCursorType } from '../cursor.scalar'
 import { PagingStrategies } from '../query'
@@ -71,12 +71,19 @@ export type Count<DTO> = (filter: Filter<DTO>) => Promise<number>
 
 export type CountFn = () => Promise<number>
 
+/**
+ * Facts about the store behind a query that a connection needs in order to page it.
+ */
+export interface PageOptions {
+  nullOrdering?: NullOrdering
+}
+
 export type PagerResult = {
   totalCount: CountFn
 }
 
 export interface Pager<DTO, R extends PagerResult> {
-  page<Q extends Query<DTO>>(queryMany: QueryMany<DTO, Q>, query: Q, count: Count<DTO>): Promise<R>
+  page<Q extends Query<DTO>>(queryMany: QueryMany<DTO, Q>, query: Q, count: Count<DTO>, opts?: PageOptions): Promise<R>
 }
 
 export interface StaticConnectionType<DTO, S extends PagingStrategies> extends Class<InferConnectionTypeFromStrategy<DTO, S>> {
@@ -85,6 +92,7 @@ export interface StaticConnectionType<DTO, S extends PagingStrategies> extends C
   createFromPromise<Q extends Query<DTO>>(
     queryMany: QueryMany<DTO, Q>,
     query: Q,
-    count?: Count<DTO>
+    count?: Count<DTO>,
+    opts?: PageOptions
   ): Promise<InferConnectionTypeFromStrategy<DTO, S>>
 }

@@ -12,6 +12,7 @@ import {
   filterCreatableRecords,
   FindByIdOptions,
   GetByIdOptions,
+  NullOrdering,
   Query,
   QueryOptions,
   QueryService,
@@ -23,7 +24,7 @@ import { WhereOptions } from 'sequelize'
 import { MakeNullishOptional } from 'sequelize/types/utils'
 import { Model, ModelCtor } from 'sequelize-typescript'
 
-import { AggregateBuilder, FilterQueryBuilder } from '../query'
+import { AggregateBuilder, dialectNullOrdering, FilterQueryBuilder } from '../query'
 import { RelationQueryService } from './relation-query.service'
 
 /**
@@ -51,6 +52,10 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
   constructor(readonly model: ModelCtor<Entity>) {
     super()
     this.filterQueryBuilder = new FilterQueryBuilder<Entity>(model)
+  }
+
+  public get nullOrdering(): NullOrdering | undefined {
+    return dialectNullOrdering(this.model.sequelize?.getDialect())
   }
 
   /**

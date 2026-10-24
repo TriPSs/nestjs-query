@@ -12,6 +12,7 @@ export {
   OffsetConnectionType,
   OffsetPageInfoType,
   PageInfoType,
+  PageOptions,
   StaticConnectionType
 } from './connection'
 export { CreateManyInputType } from './create-many-input.type'

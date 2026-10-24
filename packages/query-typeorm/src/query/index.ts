@@ -1,5 +1,6 @@
 export * from './aggregate.builder'
 export * from './filter-query.builder'
+export * from './null-ordering'
 export * from './relation-query.builder'
 export * from './sql-comparison.builder'
 export * from './where.builder'
