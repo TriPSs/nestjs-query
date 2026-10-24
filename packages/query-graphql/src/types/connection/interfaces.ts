@@ -4,11 +4,43 @@ import { Class, Filter, Query } from '@ptc-org/nestjs-query-core'
 import { ConnectionCursorType } from '../cursor.scalar'
 import { PagingStrategies } from '../query'
 
+export const DEFAULT_PIVOT_FIELD_NAME = 'properties'
+
+/**
+ * Options used to expose the properties of a pivot (a.k.a. join/through) record on an edge.
+ */
+export interface EdgePivotOptions<Pivot> {
+  /**
+   * The class type of the pivot record.
+   */
+  DTO: Class<Pivot>
+  /**
+   * The name of the field to expose the pivot record on.
+   * [Default=properties]
+   */
+  fieldName?: string
+  /**
+   * Description of the pivot field.
+   */
+  description?: string
+  /**
+   * Allow filtering the connection by the properties of the relationship.
+   */
+  enableFilter?: boolean
+}
+
 interface BaseConnectionOptions {
   enableTotalCount?: boolean
   connectionName?: string
   disableKeySetPagination?: boolean
   enableFetchAllWithNegative?: boolean
+  /**
+   * Expose the properties of the pivot record that ties the parent to the node on each edge.
+   *
+   * Set by the relation resolver from its own `pivot` option, once everything has been resolved.
+   * Only supported by the cursor paging strategy, since it is the only one that creates edges.
+   */
+  edgePivot?: EdgePivotOptions<unknown>
 }
 
 export interface CursorConnectionOptions extends BaseConnectionOptions {
@@ -69,6 +101,18 @@ export type InferConnectionTypeFromStrategy<DTO, S extends PagingStrategies> = S
 export type QueryMany<DTO, Q extends Query<DTO>> = (query: Q) => Promise<DTO[]>
 export type Count<DTO> = (filter: Filter<DTO>) => Promise<number>
 
+/**
+ * Resolves the pivot record that ties the connection's parent to `node`.
+ */
+export type PivotFn<DTO, Pivot = unknown> = (node: DTO) => Promise<Pivot | undefined>
+
+export interface CreateConnectionOptions<DTO> {
+  /**
+   * Called lazily, once per edge, when the pivot field is selected.
+   */
+  pivot?: PivotFn<DTO>
+}
+
 export type CountFn = () => Promise<number>
 
 export type PagerResult = {
@@ -85,6 +129,7 @@ export interface StaticConnectionType<DTO, S extends PagingStrategies> extends C
   createFromPromise<Q extends Query<DTO>>(
     queryMany: QueryMany<DTO, Q>,
     query: Q,
-    count?: Count<DTO>
+    count?: Count<DTO>,
+    opts?: CreateConnectionOptions<DTO>
   ): Promise<InferConnectionTypeFromStrategy<DTO, S>>
 }

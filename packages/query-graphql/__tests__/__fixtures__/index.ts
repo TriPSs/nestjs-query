@@ -1,3 +1,4 @@
+import { Provider } from '@nestjs/common'
 import { GraphQLSchemaBuilderModule, GraphQLSchemaFactory } from '@nestjs/graphql'
 import { Test } from '@nestjs/testing'
 import { Class } from '@ptc-org/nestjs-query-core'
@@ -11,6 +12,8 @@ import { TestResolverAuthorizer } from './test-resolver.authorizer'
 import { TestResolverDTO } from './test-resolver.dto'
 import { TestService } from './test-resolver.service'
 
+export { TestPivotDTO, TestRelationKeyedPivotDTO, TestReversedPivotDTO } from './test-pivot.dto'
+export { TestPivotService } from './test-pivot.service'
 export { TestRelationDTO } from './test-relation.dto'
 export { TestResolverAuthorizer } from './test-resolver.authorizer'
 export { TestResolverDTO } from './test-resolver.dto'
@@ -40,7 +43,8 @@ interface ResolverMock<T> {
 
 export const createResolverFromNest = async <T>(
   ResolverClass: Class<T>,
-  DTOClass: Class<unknown> = TestResolverDTO
+  DTOClass: Class<unknown> = TestResolverDTO,
+  extraProviders: Provider[] = []
 ): Promise<ResolverMock<T>> => {
   const mockService = mock(TestService)
   const mockPubSub = mock(PubSub)
@@ -50,7 +54,8 @@ export const createResolverFromNest = async <T>(
       ResolverClass,
       TestService,
       { provide: getAuthorizerToken(DTOClass), useValue: instance(mockAuthorizer) },
-      { provide: pubSubToken(), useValue: instance(mockPubSub) }
+      { provide: pubSubToken(), useValue: instance(mockPubSub) },
+      ...extraProviders
     ]
   })
     .overrideProvider(TestService)
