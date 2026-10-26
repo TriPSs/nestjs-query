@@ -2,11 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type User @key(fields: "id") {
   id: ID!
 }
 
-type TodoItem {
+type TodoItem @key(fields: "id") {
   id: ID!
   title: String!
   description: String
@@ -22,7 +27,7 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type DeleteManyResponse {
+type DeleteManyResponse @shareable {
   """The number of records deleted."""
   deletedCount: Int!
 }
@@ -37,7 +42,7 @@ type TodoItemDeleteResponse {
   updated: DateTime
 }
 
-type UpdateManyResponse {
+type UpdateManyResponse @shareable {
   """The number of records updated."""
   updatedCount: Int!
 }
@@ -45,7 +50,6 @@ type UpdateManyResponse {
 type TodoItemEdge {
   """The node containing the TodoItem"""
   node: TodoItem!
-
   """Cursor for this node."""
   cursor: ConnectionCursor!
 }
@@ -53,16 +57,13 @@ type TodoItemEdge {
 """Cursor for paging through collections"""
 scalar ConnectionCursor
 
-type PageInfo {
+type PageInfo @shareable {
   """true if paging forward and there are more records."""
   hasNextPage: Boolean
-
   """true if paging backwards and there are more records."""
   hasPreviousPage: Boolean
-
   """The cursor of the first returned record."""
   startCursor: ConnectionCursor
-
   """The cursor of the last returned record."""
   endCursor: ConnectionCursor
 }
@@ -70,7 +71,6 @@ type PageInfo {
 type TodoItemConnection {
   """Paging information"""
   pageInfo: PageInfo!
-
   """Array of edges."""
   edges: [TodoItemEdge!]!
 }
@@ -83,10 +83,8 @@ type Query {
   todoItems(
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
-
     """Specify to filter the records returned."""
     filter: TodoItemFilter! = {}
-
     """Specify to sort results."""
     sorting: [TodoItemSort!]! = []
   ): TodoItemConnection!
@@ -95,13 +93,10 @@ type Query {
 input CursorPaging {
   """Paginate before opaque cursor"""
   before: ConnectionCursor
-
   """Paginate after opaque cursor"""
   after: ConnectionCursor
-
   """Paginate first"""
   first: Int
-
   """Paginate last"""
   last: Int
 }
@@ -233,7 +228,6 @@ input CreateManyTodoItemsInput {
 input UpdateOneTodoItemInput {
   """The id of the record to update"""
   id: ID!
-
   """The update to apply."""
   update: TodoItemUpdate!
 }
@@ -247,7 +241,6 @@ input TodoItemUpdate {
 input UpdateManyTodoItemsInput {
   """Filter used to find fields to update"""
   filter: TodoItemUpdateFilter!
-
   """The update to apply to all records found using the filter"""
   update: TodoItemUpdate!
 }

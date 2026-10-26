@@ -1,5 +1,4 @@
-import { createParamDecorator } from '@nestjs/common'
-
 import { InjectDataLoaderConfigPipe } from '../pipes/inject-data-loader-config.pipe'
+import { createGqlParamDecorator } from './gql-param.decorator'
 
-export const InjectDataLoaderConfig = () => createParamDecorator(() => null)(InjectDataLoaderConfigPipe)
+export const InjectDataLoaderConfig = () => createGqlParamDecorator(() => null)(InjectDataLoaderConfigPipe)

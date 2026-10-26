@@ -1,9 +1,10 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common'
+import { ExecutionContext } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { ModifyRelationOptions } from '@ptc-org/nestjs-query-core'
 
 import { AuthorizationContext, OperationGroup } from '../auth'
 import { AuthorizerContext } from '../interceptors'
+import { createGqlParamDecorator } from './gql-param.decorator'
 
 type PartialAuthorizationContext = Partial<AuthorizationContext> & Pick<AuthorizationContext, 'operationGroup' | 'many'>
 
@@ -57,7 +58,7 @@ export function AuthorizerFilter<DTO>(partialAuthContext?: PartialAuthorizationC
   // eslint-disable-next-line @typescript-eslint/ban-types
   return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
     const authorizationContext = getAuthorizationContext(propertyKey, partialAuthContext)
-    return createParamDecorator((data: unknown, executionContext: ExecutionContext) =>
+    return createGqlParamDecorator((data: unknown, executionContext: ExecutionContext) =>
       getAuthorizerFilter(getContext<AuthorizerContext<DTO>>(executionContext), authorizationContext)
     )()(target, propertyKey, parameterIndex)
   }
@@ -70,7 +71,7 @@ export function RelationAuthorizerFilter<DTO>(
   // eslint-disable-next-line @typescript-eslint/ban-types
   return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
     const authorizationContext = getAuthorizationContext(propertyKey, partialAuthContext)
-    return createParamDecorator((data: unknown, executionContext: ExecutionContext) =>
+    return createGqlParamDecorator((data: unknown, executionContext: ExecutionContext) =>
       getRelationAuthFilter(getContext<AuthorizerContext<DTO>>(executionContext), relationName, authorizationContext)
     )()(target, propertyKey, parameterIndex)
   }
@@ -83,7 +84,7 @@ export function ModifyRelationAuthorizerFilter<DTO>(
   // eslint-disable-next-line @typescript-eslint/ban-types
   return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
     const authorizationContext = getAuthorizationContext(propertyKey, partialAuthContext)
-    return createParamDecorator(
+    return createGqlParamDecorator(
       async (data: unknown, executionContext: ExecutionContext): Promise<ModifyRelationOptions<unknown, unknown>> => {
         const context = getContext<AuthorizerContext<DTO>>(executionContext)
         return {
