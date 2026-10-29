@@ -1,6 +1,6 @@
 import { Filter, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, EntityMetadata, Repository, WhereExpressionBuilder } from 'typeorm'
 
 import {
   EntityComparisonField,
@@ -13,6 +13,7 @@ import { createTestConnection } from '../__fixtures__/connection.fixture'
 import { TestEntity } from '../__fixtures__/test.entity'
 import { TestRelation } from '../__fixtures__/test-relation.entity'
 import { TestVirtualColumnEntity } from '../__fixtures__/test-virtual-column.entity'
+import { TestVirtualColumnRelation } from '../__fixtures__/test-virtual-column.relation'
 
 describe('WhereBuilder', (): void => {
   let dataSource: DataSource
@@ -129,6 +130,61 @@ describe('WhereBuilder', (): void => {
     })
   })
 
+  describe('#deriveForEntityMetadata', (): void => {
+    class RecordingWhereBuilder<Entity> extends WhereBuilder<Entity> {
+      constructor(
+        readonly aliasesBuiltFor: (string | undefined)[],
+        sqlComparisonBuilder?: SQLComparisonBuilder<Entity>
+      ) {
+        super(sqlComparisonBuilder)
+      }
+
+      public build<Where extends WhereExpressionBuilder>(
+        where: Where,
+        filter: Filter<Entity>,
+        relationNames: NestedRelationsAliased,
+        alias?: string
+      ): Where {
+        this.aliasesBuiltFor.push(alias)
+
+        return super.build(where, filter, relationNames, alias)
+      }
+    }
+
+    it('should keep the subclass of the builder it is derived from', (): void => {
+      const derived = new RecordingWhereBuilder<TestEntity>([]).deriveForEntityMetadata<TestRelation>(
+        dataSource.getMetadata(TestRelation)
+      )
+
+      expect(derived).toBeInstanceOf(RecordingWhereBuilder)
+    })
+
+    it('should expand the virtual columns of the given entity', (): void => {
+      const derived = new WhereBuilder<TestEntity>().deriveForEntityMetadata<TestVirtualColumnRelation>(
+        dataSource.getMetadata(TestVirtualColumnRelation)
+      )
+
+      const [sql] = derived
+        .build(getQueryBuilder(), { siblingCount: { gt: 1 } }, {}, 'TestVirtualColumnRelation')
+        .getQueryAndParameters()
+
+      expect(sql).toContain('SELECT COUNT(*) FROM test_virtual_column_relation')
+    })
+
+    it('should be used when a filter descends into a relation', (): void => {
+      const aliasesBuiltFor: (string | undefined)[] = []
+
+      new RecordingWhereBuilder<TestEntity>(aliasesBuiltFor).build(
+        getQueryBuilder(),
+        { testRelations: { relationName: { eq: 'foo' } } } as Filter<TestEntity>,
+        { testRelations: { alias: 'TestRelation', metadata: dataSource.getMetadata(TestRelation), relations: {} } },
+        'TestEntity'
+      )
+
+      expect(aliasesBuiltFor).toContain('TestRelation')
+    })
+  })
+
   describe('custom SQLComparisonBuilder', (): void => {
     const createRepoWithVirtualColumn = (databasePath: string) =>
       ({
@@ -148,6 +204,85 @@ describe('WhereBuilder', (): void => {
 
       return sql
     }
+
+    describe('descending into a relation', (): void => {
+      class CollatedComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+        public build<F extends keyof Entity>(
+          field: F,
+          cmp: FilterComparisonOperators<Entity[F]>,
+          val: EntityComparisonField<Entity, F>,
+          alias?: string
+        ) {
+          const { sql, params } = super.build(field, cmp, val, alias)
+
+          return { sql: `${sql} COLLATE NOCASE`, params }
+        }
+      }
+
+      const relationFilter = { testRelations: { relationName: { eq: 'foo' } } } as Filter<TestEntity>
+      const testRelationNames = (): NestedRelationsAliased => ({
+        testRelations: { alias: 'TestRelation', metadata: dataSource.getMetadata(TestRelation), relations: {} }
+      })
+
+      it('should keep the behaviour of a custom builder inside relation filters', (): void => {
+        const sql = buildFilterSql(new CollatedComparisonBuilder<TestEntity>(), relationFilter, testRelationNames())
+
+        expect(sql).toMatch(/TestRelation\.relationName = \S+ COLLATE NOCASE/)
+      })
+
+      it('should carry a custom comparison map into relation filters', (): void => {
+        const sqlComparisonBuilder = new SQLComparisonBuilder<TestEntity>({
+          ...SQLComparisonBuilder.DEFAULT_COMPARISON_MAP,
+          eq: '=='
+        })
+
+        expect(buildFilterSql(sqlComparisonBuilder, relationFilter, testRelationNames())).toContain(
+          'TestRelation.relationName =='
+        )
+      })
+
+      describe('into a relation given without metadata or nested relations', (): void => {
+        const bareRelationNames = (): NestedRelationsAliased => ({ testRelations: { alias: 'TestRelation' } })
+
+        it('should keep the behaviour of a custom builder', (): void => {
+          const sql = buildFilterSql(new CollatedComparisonBuilder<TestEntity>(), relationFilter, bareRelationNames())
+
+          expect(sql).toMatch(/TestRelation\.relationName = \S+ COLLATE NOCASE/)
+        })
+
+        it('should not expand the virtual columns of the root entity', (): void => {
+          const sqlComparisonBuilder = new CollatedComparisonBuilder<TestEntity>(
+            SQLComparisonBuilder.DEFAULT_COMPARISON_MAP,
+            createRepoWithVirtualColumn('relationName')
+          )
+
+          const sql = buildFilterSql(sqlComparisonBuilder, relationFilter, bareRelationNames())
+
+          expect(sql).toMatch(/TestRelation\.relationName = \S+ COLLATE NOCASE/)
+          expect(sql).not.toContain('SELECT 1 FROM')
+        })
+
+        it('should derive the comparison builder with no metadata rather than the root metadata', (): void => {
+          const metadataDerivedFor: unknown[] = []
+
+          class MetadataRecordingComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+            public deriveForEntityMetadata<Relation>(entityMetadata: EntityMetadata | undefined): SQLComparisonBuilder<Relation> {
+              metadataDerivedFor.push(entityMetadata)
+
+              return super.deriveForEntityMetadata<Relation>(entityMetadata)
+            }
+          }
+
+          buildFilterSql(
+            new MetadataRecordingComparisonBuilder<TestEntity>(SQLComparisonBuilder.DEFAULT_COMPARISON_MAP, getRepo()),
+            relationFilter,
+            bareRelationNames()
+          )
+
+          expect(metadataDerivedFor).toEqual([undefined])
+        })
+      })
+    })
 
     it('should not resolve relation fields against the root entity metadata', (): void => {
       const sqlComparisonBuilder = new SQLComparisonBuilder<TestEntity>(

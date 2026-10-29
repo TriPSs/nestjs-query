@@ -329,7 +329,7 @@ export abstract class RelationQueryService<Entity> {
   }
 
   public getRelationQueryBuilder<Relation>(name: string): RelationQueryBuilder<Entity, Relation> {
-    return new RelationQueryBuilder(this.repo, name)
+    return new RelationQueryBuilder(this.repo, name, this.filterQueryBuilder)
   }
 
   /**

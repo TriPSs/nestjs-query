@@ -22,6 +22,7 @@ import { RelationMetadata } from 'typeorm/metadata/RelationMetadata'
 import { SoftDeleteQueryBuilder } from 'typeorm/query-builder/SoftDeleteQueryBuilder'
 
 import { AggregateBuilder } from './aggregate.builder'
+import { deriveBuilder } from './derive-builder'
 import { SQLComparisonBuilder } from './sql-comparison.builder'
 import { WhereBuilder } from './where.builder'
 
@@ -65,15 +66,31 @@ export interface NestedRecord<E = unknown> {
 /**
  * @internal
  *
+ * A relation referenced by a query, with the alias it is joined under.
+ */
+export interface NestedRelationAliased {
+  alias: string
+  metadata?: EntityMetadata
+  relations?: NestedRelationsAliased
+}
+
+/**
+ * @internal
+ *
  * Nested aliased type
  */
 export interface NestedRelationsAliased {
-  [keys: string]: {
-    alias: string
-    metadata?: EntityMetadata
-    relations?: NestedRelationsAliased
-  }
+  [keys: string]: NestedRelationAliased
 }
+
+/**
+ * @internal
+ *
+ * The names of the virtual columns of an entity, which have to be expanded into their queries
+ * rather than referenced by name.
+ */
+const virtualColumnNames = (metadata: EntityMetadata): string[] =>
+  metadata.columns.filter(({ isVirtualProperty }) => isVirtualProperty).map(({ propertyName }) => propertyName)
 
 /**
  * @internal
@@ -90,9 +107,34 @@ export class FilterQueryBuilder<Entity> {
     ),
     readonly aggregateBuilder: AggregateBuilder<Entity> = new AggregateBuilder<Entity>(repo)
   ) {
-    this.virtualColumns = repo.metadata.columns
-      .filter(({ isVirtualProperty }) => isVirtualProperty)
-      .map(({ propertyName }) => propertyName)
+    this.virtualColumns = virtualColumnNames(repo.metadata)
+  }
+
+  /**
+   * Creates a builder like this one bound to another entity's repository, used when a query
+   * descends into a relation that has a repository of its own.
+   *
+   * The derived builder keeps the prototype and the own property descriptors of this builder, and
+   * its where and aggregate builders are derived for the relation, so a builder configured through
+   * `TypeOrmQueryServiceOpts.filterQueryBuilder` keeps applying to relation queries instead of
+   * being replaced by a default one.
+   *
+   * Override this method to construct the derived builder yourself when copying the own property
+   * descriptors is not enough, for example when a subclass holds private class fields (which are
+   * not copied, and are unreadable on the derived builder) or state that is bound to the root
+   * entity and must not be reused for a relation. An override should derive the where and
+   * aggregate builders too, with `this.whereBuilder.deriveForEntityMetadata(repo.metadata)` and
+   * `this.aggregateBuilder.deriveForRepository(repo)`, or the derived builder uses default ones.
+   *
+   * @param repo - repository of the entity the derived builder builds queries for.
+   */
+  public deriveForRepository<Relation>(repo: Repository<Relation>): FilterQueryBuilder<Relation> {
+    return deriveBuilder<FilterQueryBuilder<Relation>>(this, {
+      repo,
+      whereBuilder: this.whereBuilder.deriveForEntityMetadata<Relation>(repo.metadata),
+      aggregateBuilder: this.aggregateBuilder.deriveForRepository<Relation>(repo),
+      virtualColumns: virtualColumnNames(repo.metadata)
+    })
   }
 
   /**
@@ -103,13 +145,11 @@ export class FilterQueryBuilder<Entity> {
   public select(query: Query<Entity>): SelectQueryBuilder<Entity> {
     let qb = this.createQueryBuilder()
 
-    qb = this.applyRelationJoinsRecursive(
-      qb,
-      this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, query.filter, query.relations),
-      query.relations
-    )
+    const relationsMap = this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, query.filter, query.relations)
 
-    qb = this.applyFilter(qb, query.filter, qb.alias)
+    qb = this.applyRelationJoinsRecursive(qb, relationsMap, query.relations)
+
+    qb = this.applyFilter(qb, query.filter, qb.alias, relationsMap)
     qb = this.applySorting(qb, query.sorting, qb.alias)
     qb = this.applyPaging(qb, query.paging, this.shouldUseSkipTake(query.filter))
 
@@ -121,15 +161,14 @@ export class FilterQueryBuilder<Entity> {
   }
 
   public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>): SelectQueryBuilder<Entity> {
-    const hasFilterRelations = this.filterHasRelations(query.filter)
     let qb = this.createQueryBuilder()
 
-    qb = hasFilterRelations
-      ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, query.filter))
-      : qb
+    const relationsMap = this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, query.filter)
+
+    qb = this.applyRelationJoinsRecursive(qb, relationsMap)
 
     qb = this.applyAggregate(qb, aggregate, qb.alias)
-    qb = this.applyFilter(qb, query.filter, qb.alias)
+    qb = this.applyFilter(qb, query.filter, qb.alias, relationsMap)
     qb = this.applyAggregateSorting(qb, aggregate.groupBy, qb.alias)
     qb = this.applyAggregateGroupBy(qb, aggregate.groupBy, qb.alias)
 
@@ -199,13 +238,26 @@ export class FilterQueryBuilder<Entity> {
    * @param qb - the `typeorm` QueryBuilder.
    * @param filter - the filter.
    * @param alias - optional alias to use to qualify an identifier
+   * @param relationsMap - optional pre-computed relation alias map. Pass the same map that was used to create the joins so
+   * that the `WHERE` clause binds to the aliases the relations were actually joined under. Computed from the filter alone
+   * when omitted.
    */
-  public applyFilter<Where extends WhereExpressionBuilder>(qb: Where, filter?: Filter<Entity>, alias?: string): Where {
+  public applyFilter<Where extends WhereExpressionBuilder>(
+    qb: Where,
+    filter?: Filter<Entity>,
+    alias?: string,
+    relationsMap?: NestedRelationsAliased
+  ): Where {
     if (!filter) {
       return qb
     }
 
-    return this.whereBuilder.build(qb, filter, this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, filter), alias)
+    return this.whereBuilder.build(
+      qb,
+      filter,
+      relationsMap ?? this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, filter),
+      alias
+    )
   }
 
   /**
@@ -293,7 +345,7 @@ export class FilterQueryBuilder<Entity> {
     // TODO:: If relation is not nullable use inner join?
     return referencedRelations.reduce((rqb, [relationKey, relation]) => {
       const relationAlias = relation.alias
-      const relationChildren = relation.relations
+      const relationChildren = relation.relations ?? {}
 
       const selectRelation = selectRelations && selectRelations.find(({ name }) => name === relationKey)
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -301,7 +353,7 @@ export class FilterQueryBuilder<Entity> {
       if (selectRelation) {
         rqb = rqb.leftJoinAndSelect(`${alias ?? rqb.alias}.${relationKey}`, relationAlias)
         // Apply filter for the current relation
-        rqb = this.applyFilter(rqb, selectRelation.query.filter, relationAlias)
+        rqb = this.applySelectedRelationFilter(rqb, relation, selectRelation.query.filter)
         return this.applyRelationJoinsRecursive(rqb, relationChildren, selectRelation.query.relations, relationAlias)
       }
 
@@ -312,6 +364,59 @@ export class FilterQueryBuilder<Entity> {
         relationAlias
       )
     }, qb)
+  }
+
+  /**
+   * Applies the filter of a selected relation to a `typeorm` QueryBuilder.
+   *
+   * The filter is applied by a builder derived for the relation, against the relations already
+   * joined under it, so that the fields of the relation, its virtual columns among them, resolve
+   * against the relation rather than against the root entity. It is applied even when the selected
+   * relation has no filter, so that a subclass that overrides `applyFilter` applies to every
+   * selected relation.
+   *
+   * @param qb - the `typeorm` QueryBuilder.
+   * @param relation - the selected relation, with the alias it is joined under.
+   * @param filter - the filter of the selected relation.
+   */
+  private applySelectedRelationFilter<Relation>(
+    qb: SelectQueryBuilder<Entity>,
+    relation: NestedRelationAliased,
+    filter?: Filter<Relation>
+  ): SelectQueryBuilder<Entity> {
+    if (!relation.metadata) {
+      return this.applyFilterWithoutMetadata(qb, relation, filter)
+    }
+
+    return this.deriveForRepository<Relation>(this.repo.manager.getRepository<Relation>(relation.metadata.target)).applyFilter(
+      qb,
+      filter,
+      relation.alias,
+      relation.relations ?? {}
+    )
+  }
+
+  /**
+   * Applies the filter of a selected relation that was supplied without its metadata, which leaves
+   * no repository to derive a builder for, so it is built by a where builder that expands no
+   * virtual columns rather than one that resolves the relation's fields against the root entity.
+   *
+   * @param qb - the `typeorm` QueryBuilder.
+   * @param relation - the selected relation, with the alias it is joined under.
+   * @param filter - the filter of the selected relation.
+   */
+  private applyFilterWithoutMetadata<Relation>(
+    qb: SelectQueryBuilder<Entity>,
+    relation: NestedRelationAliased,
+    filter?: Filter<Relation>
+  ): SelectQueryBuilder<Entity> {
+    if (!filter) {
+      return qb
+    }
+
+    return this.whereBuilder
+      .deriveForEntityMetadata<Relation>(undefined)
+      .build(qb, filter, relation.relations ?? {}, relation.alias)
   }
 
   /**
@@ -400,16 +505,12 @@ export class FilterQueryBuilder<Entity> {
         return relations
       }
 
-      relations[selectRelation.name] = {}
-
-      if (selectRelation.query.relations) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        relations[selectRelation.name] = this.getReferencedRelationsRecursive(
-          referencedRelation.inverseEntityMetadata,
-          {},
-          selectRelation.query.relations
-        )
-      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      relations[selectRelation.name] = this.getReferencedRelationsRecursive(
+        referencedRelation.inverseEntityMetadata,
+        selectRelation.query.filter ?? {},
+        selectRelation.query.relations
+      )
 
       return relations
     }, {})
