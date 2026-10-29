@@ -1,6 +1,7 @@
 import { Query, SortField } from '@ptc-org/nestjs-query-core'
 
 import { CursorPagingType } from '../../../../query'
+import { PageOptions } from '../../../interfaces'
 
 export interface OffsetPagingOpts {
   offset: number
@@ -38,7 +39,7 @@ export interface PagerStrategy<DTO> {
 
   isEmptyCursor(opts: CursorPagingOpts<DTO>): boolean
 
-  createQuery<Q extends Query<DTO>>(query: Q, opts: CursorPagingOpts<DTO>, includeExtraNode: boolean): Q
+  createQuery<Q extends Query<DTO>>(query: Q, opts: CursorPagingOpts<DTO>, includeExtraNode: boolean, pageOpts?: PageOptions): Q
 
   checkForExtraNode(nodes: DTO[], opts: CursorPagingOpts<DTO>): DTO[]
 }

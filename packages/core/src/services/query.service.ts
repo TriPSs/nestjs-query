@@ -17,6 +17,7 @@ import {
   FindRelationOptions,
   GetByIdOptions,
   ModifyRelationOptions,
+  NullOrdering,
   Query,
   QueryOptions,
   QueryRelationsOptions,
@@ -30,6 +31,18 @@ import {
  * @typeparam T - The record type that the query service will operate on.
  */
 export interface QueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO>> {
+  /**
+   * Where the underlying engine places NULL in a sort that does not ask for a placement.
+   *
+   * Optional, because a service backed by a store whose null ordering cannot be determined should
+   * leave it undefined. Keyset paging then keeps to boundaries that hold for either placement, so
+   * a walk over a nullable sort field can stop at the edge of the null block but never repeats a row.
+   *
+   * Only report it when the store also honours an explicit `SortField.nulls`, or rejects it. A store
+   * that silently ignores an explicit placement would page from the wrong boundary.
+   */
+  readonly nullOrdering?: NullOrdering
+
   /**
    * Query for multiple records of type `T`.
    * @param query - the query used to filer, page or sort records.

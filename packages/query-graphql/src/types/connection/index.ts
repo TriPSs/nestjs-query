@@ -13,6 +13,7 @@ export {
   OffsetConnectionType,
   OffsetPageInfoType,
   PageInfoType,
+  PageOptions,
   StaticConnectionType
 } from './interfaces'
 export { getOrCreateOffsetConnectionType } from './offset'
