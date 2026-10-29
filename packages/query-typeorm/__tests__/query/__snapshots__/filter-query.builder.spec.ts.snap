@@ -304,6 +304,146 @@ FROM
   LEFT JOIN "test_entity" "testEntityUniDirectional" ON "testEntityUniDirectional"."test_entity_pk" = "oneTestRelation"."uni_directional_test_entity_id""
 `;
 
+exports[`FilterQueryBuilder #select with sorting on a driver that cannot express null ordering at all should still sort when nulls is not specified 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+ORDER BY
+  "TestEntity"."number_type" ASC"
+`;
+
+exports[`FilterQueryBuilder #select with sorting on a driver with native NULLS FIRST/LAST support should pass NULLS_FIRST through to the driver 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+ORDER BY
+  "TestEntity"."number_type" ASC NULLS FIRST"
+`;
+
+exports[`FilterQueryBuilder #select with sorting on a driver with native NULLS FIRST/LAST support should pass NULLS_LAST through to the driver 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+ORDER BY
+  "TestEntity"."number_type" DESC NULLS LAST"
+`;
+
+exports[`FilterQueryBuilder #select with sorting on a driver without NULLS FIRST/LAST support (snapshots keep SQLite quoting) should keep each IS NULL key next to its own field in a multiple sort 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
+  "TestEntity"."string_type" IS NULL AS "__nestjsQuery__nullOrdering__0",
+  "TestEntity"."date_type" IS NULL AS "__nestjsQuery__nullOrdering__1"
+FROM
+  "test_entity" "TestEntity"
+ORDER BY
+  "TestEntity"."number_type" ASC,
+  "__nestjsQuery__nullOrdering__0" DESC,
+  "TestEntity"."string_type" ASC,
+  "__nestjsQuery__nullOrdering__1" ASC,
+  "TestEntity"."date_type" DESC"
+`;
+
+exports[`FilterQueryBuilder #select with sorting on a driver without NULLS FIRST/LAST support (snapshots keep SQLite quoting) should not add an IS NULL key when nulls is not specified 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk"
+FROM
+  "test_entity" "TestEntity"
+ORDER BY
+  "TestEntity"."number_type" ASC"
+`;
+
+exports[`FilterQueryBuilder #select with sorting on a driver without NULLS FIRST/LAST support (snapshots keep SQLite quoting) should order a virtual column by an IS NULL expression, since a select expression cannot reference its alias 1`] = `
+"SELECT
+  "TestVirtualColumnEntity"."test_virtual_column_pk" AS "TestVirtualColumnEntity_test_virtual_column_pk",
+  (
+    SELECT
+      COUNT(*)
+    FROM
+      test_virtual_column_relation
+    WHERE
+      test_virtual_column_entity_id = "TestVirtualColumnEntity".test_virtual_column_pk
+  ) AS "TestVirtualColumnEntity_relationCount"
+FROM
+  "test_virtual_column_entity" "TestVirtualColumnEntity"
+ORDER BY
+  ("TestVirtualColumnEntity_relationCount" IS NULL) DESC,
+  "TestVirtualColumnEntity_relationCount" ASC"
+`;
+
+exports[`FilterQueryBuilder #select with sorting on a driver without NULLS FIRST/LAST support (snapshots keep SQLite quoting) should order by an IS NULL key before the column for NULLS_FIRST 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
+  "TestEntity"."number_type" IS NULL AS "__nestjsQuery__nullOrdering__0"
+FROM
+  "test_entity" "TestEntity"
+ORDER BY
+  "__nestjsQuery__nullOrdering__0" DESC,
+  "TestEntity"."number_type" ASC"
+`;
+
+exports[`FilterQueryBuilder #select with sorting on a driver without NULLS FIRST/LAST support (snapshots keep SQLite quoting) should order by an IS NULL key before the column for NULLS_LAST 1`] = `
+"SELECT
+  "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
+  "TestEntity"."string_type" AS "TestEntity_string_type",
+  "TestEntity"."bool_type" AS "TestEntity_bool_type",
+  "TestEntity"."number_type" AS "TestEntity_number_type",
+  "TestEntity"."date_type" AS "TestEntity_date_type",
+  "TestEntity"."many_to_one_relation_id" AS "TestEntity_many_to_one_relation_id",
+  "TestEntity"."many_to_one_soft_delete_relation_id" AS "TestEntity_many_to_one_soft_delete_relation_id",
+  "TestEntity"."oneTestRelationTestRelationPk" AS "TestEntity_oneTestRelationTestRelationPk",
+  "TestEntity"."number_type" IS NULL AS "__nestjsQuery__nullOrdering__0"
+FROM
+  "test_entity" "TestEntity"
+ORDER BY
+  "__nestjsQuery__nullOrdering__0" ASC,
+  "TestEntity"."number_type" DESC"
+`;
+
 exports[`FilterQueryBuilder #select with sorting should apply ASC NULLS_FIRST sorting 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
@@ -456,6 +596,15 @@ exports[`FilterQueryBuilder #update with paging should ignore paging args 1`] = 
 "UPDATE "test_entity"
 SET
   "string_type" = baz"
+`;
+
+exports[`FilterQueryBuilder #update with sorting on a driver without NULLS FIRST/LAST support (snapshots keep SQLite quoting) should order by an IS NULL key before the unaliased column 1`] = `
+"UPDATE "test_entity"
+SET
+  "string_type" = baz
+ORDER BY
+  ("number_type" IS NULL) DESC,
+  "number_type" ASC"
 `;
 
 exports[`FilterQueryBuilder #update with sorting should apply ASC NULLS_FIRST sorting 1`] = `

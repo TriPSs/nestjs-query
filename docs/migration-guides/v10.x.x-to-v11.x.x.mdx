@@ -66,3 +66,11 @@ Applications that do not use CSV export can omit it.
 ## REST Swagger runtime dependency
 
 `@ptc-org/nestjs-query-rest` requires `@nestjs/swagger` at runtime, even when an application does not generate OpenAPI documentation. Its `@ApiProperty` decorators run when REST DTO classes are defined, so the dependency cannot be loaded lazily. Keep `@nestjs/swagger` installed when upgrading.
+
+## Sorting by null placement on SQL Server
+
+Affects TypeORM and Sequelize applications on SQL Server that pass `nulls` (`NULLS_FIRST` or `NULLS_LAST`) in a sort field. SQL Server has no such keyword and the adapters do not emulate it there. Previous versions passed the `NULLS FIRST` / `NULLS LAST` keyword through to it, producing a syntax error from the database. Sorting now throws before the query is sent, naming the sort field.
+
+Remove `nulls` from those sorts. To keep a deterministic null placement on SQL Server, expose a non-null sort key instead — a computed column or a view column that already encodes the placement you want — and sort on that.
+
+Postgres, Oracle, CockroachDB and SQLite 3.30+ are unaffected and keep the native keyword. On MySQL, MariaDB and Aurora MySQL, where the keyword used to produce a syntax error, the adapters now express `nulls` as an extra sort key, placed directly before the field, testing the column for null, and row order matches the native keyword. In TypeORM select queries that key is also selected under a `__nestjsQuery__nullOrdering__` alias, so it appears as an extra column in raw results (`getRawMany`, `getRawAndEntities`).
