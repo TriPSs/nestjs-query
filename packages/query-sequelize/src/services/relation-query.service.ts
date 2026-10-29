@@ -7,12 +7,13 @@ import {
   FindRelationOptions,
   GetByIdOptions,
   ModifyRelationOptions,
-  Query
+  Query,
+  QueryRelationsOptions
 } from '@ptc-org/nestjs-query-core'
 import { ModelStatic as SequelizeModelCtor } from 'sequelize'
 import { Model, ModelCtor } from 'sequelize-typescript'
 
-import { AggregateBuilder, FilterQueryBuilder } from '../query'
+import { AggregateBuilder, FilterQueryBuilder, paranoidOptions } from '../query'
 
 interface SequelizeAssociation {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,12 +40,14 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
    * @param relationName - The name of the relation to load.
    * @param entities - the dtos to find relations for.
    * @param query - A query to use to filter, page, and sort relations.
+   * @param opts - Additional options.
    */
   async queryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<Entity, Relation[]>>
 
   /**
@@ -53,30 +56,33 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
    * @param dto - The dto to query relations for.
    * @param relationName - The name of relation to query for.
    * @param query - A query to filter, page and sort relations.
+   * @param opts - Additional options.
    */
   async queryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Relation[]>
 
   async queryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Relation[] | Map<Entity, Relation[]>> {
     if (Array.isArray(dto)) {
-      return this.batchQueryRelations(RelationClass, relationName, dto, query)
+      return this.batchQueryRelations(RelationClass, relationName, dto, query, opts)
     }
     const relationEntity = this.getRelationEntity(relationName)
     const assembler = AssemblerFactory.getAssembler(RelationClass, relationEntity)
     const relationQueryBuilder = this.getRelationQueryBuilder<Model>(relationEntity)
-    const relations = await this.ensureIsEntity(dto).$get(
-      relationName as keyof Entity,
-      relationQueryBuilder.findOptions(assembler.convertQuery(query))
-    )
+    const relations = await this.ensureIsEntity(dto).$get(relationName as keyof Entity, {
+      ...relationQueryBuilder.findOptions(assembler.convertQuery(query)),
+      ...paranoidOptions(opts)
+    })
     return assembler.convertToDTOs(relations as unknown as Model[])
   }
 
@@ -131,29 +137,35 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<Entity, number>>
 
   countRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<number>
 
   async countRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<number | Map<Entity, number>> {
     if (Array.isArray(dto)) {
-      return this.batchCountRelations(RelationClass, relationName, dto, filter)
+      return this.batchCountRelations(RelationClass, relationName, dto, filter, opts)
     }
     const relationEntity = this.getRelationEntity(relationName)
     const assembler = AssemblerFactory.getAssembler(RelationClass, relationEntity)
     const relationQueryBuilder = this.getRelationQueryBuilder<Model>(relationEntity)
-    return this.ensureIsEntity(dto).$count(relationName, relationQueryBuilder.countOptions(assembler.convertQuery({ filter })))
+    return this.ensureIsEntity(dto).$count(relationName, {
+      ...relationQueryBuilder.countOptions(assembler.convertQuery({ filter })),
+      ...paranoidOptions(opts)
+    })
   }
 
   /**
@@ -197,10 +209,10 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
     const relationEntity = this.getRelationEntity(relationName)
     const assembler = AssemblerFactory.getAssembler(RelationClass, relationEntity)
     const relationQueryBuilder = this.getRelationQueryBuilder(relationEntity)
-    const relation = await this.ensureIsEntity(dto).$get(
-      relationName as keyof Entity,
-      relationQueryBuilder.findOptions(opts ?? {})
-    )
+    const relation = await this.ensureIsEntity(dto).$get(relationName as keyof Entity, {
+      ...relationQueryBuilder.findOptions(opts ?? {}),
+      ...paranoidOptions(opts)
+    })
     if (!relation) {
       return undefined
     }
@@ -340,17 +352,19 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
    * @param entities - The entities to query relations for.
    * @param relationName - The name of relation to query for.
    * @param query - A query to filter, page or sort relations.
+   * @param opts - Additional options.
    */
   private async batchQueryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<Entity, Relation[]>> {
     const relationEntity = this.getRelationEntity(relationName)
     const assembler = AssemblerFactory.getAssembler(RelationClass, relationEntity)
     const relationQueryBuilder = this.getRelationQueryBuilder(relationEntity)
-    const findOptions = relationQueryBuilder.findOptions(assembler.convertQuery(query))
+    const findOptions = { ...relationQueryBuilder.findOptions(assembler.convertQuery(query)), ...paranoidOptions(opts) }
     return entities.reduce(async (mapPromise, e) => {
       const map = await mapPromise
       const relations = await this.ensureIsEntity(e).$get(relationName as keyof Entity, findOptions)
@@ -388,12 +402,13 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<Entity, number>> {
     const relationEntity = this.getRelationEntity(relationName)
     const assembler = AssemblerFactory.getAssembler(RelationClass, relationEntity)
     const relationQueryBuilder = this.getRelationQueryBuilder<Model>(relationEntity)
-    const findOptions = relationQueryBuilder.countOptions(assembler.convertQuery({ filter }))
+    const findOptions = { ...relationQueryBuilder.countOptions(assembler.convertQuery({ filter })), ...paranoidOptions(opts) }
     return entities.reduce(async (mapPromise, e) => {
       const map = await mapPromise
       const count = await this.ensureIsEntity(e).$count(relationName, findOptions)
@@ -413,10 +428,10 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
     const relationQueryBuilder = this.getRelationQueryBuilder(relationEntity)
     return dtos.reduce(async (mapPromise, e) => {
       const map = await mapPromise
-      const relation = await this.ensureIsEntity(e).$get(
-        relationName as keyof Entity,
-        relationQueryBuilder.findOptions(opts ?? {})
-      )
+      const relation = await this.ensureIsEntity(e).$get(relationName as keyof Entity, {
+        ...relationQueryBuilder.findOptions(opts ?? {}),
+        ...paranoidOptions(opts)
+      })
       if (relation) {
         map.set(e, await assembler.convertToDTO(relation as unknown as Model))
       }

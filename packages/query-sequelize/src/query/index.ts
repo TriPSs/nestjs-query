@@ -1,4 +1,5 @@
 export * from './aggregate.builder'
 export * from './filter-query.builder'
+export * from './paranoid.options'
 export * from './sql-comparison.builder'
 export * from './where.builder'

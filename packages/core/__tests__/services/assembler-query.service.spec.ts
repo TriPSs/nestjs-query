@@ -100,6 +100,18 @@ describe('AssemblerQueryService', () => {
   })
 
   describe('findById', () => {
+    it('should pass withDeleted through with the transformed filter', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      when(mockQueryService.findById(1, deepEqual({ filter: { bar: { eq: 'bar' } }, withDeleted: true }))).thenResolve({
+        bar: 'bar'
+      })
+
+      return expect(assemblerService.findById(1, { filter: { foo: { eq: 'bar' } }, withDeleted: true })).resolves.toEqual({
+        foo: 'bar'
+      })
+    })
+
     it('should transform the results', () => {
       const mockQueryService = mock<QueryService<TestEntity>>()
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
@@ -136,7 +148,8 @@ describe('AssemblerQueryService', () => {
           TestDTO,
           'test',
           objectContaining({ bar: 'bar' }),
-          objectContaining({ filter: { foo: { eq: 'bar' } } })
+          objectContaining({ filter: { foo: { eq: 'bar' } } }),
+          undefined
         )
       ).thenResolve([{ foo: 'bar' }])
 
@@ -156,7 +169,8 @@ describe('AssemblerQueryService', () => {
           TestDTO,
           'test',
           deepEqual([entity]),
-          objectContaining({ filter: { foo: { eq: 'bar' } } })
+          objectContaining({ filter: { foo: { eq: 'bar' } } }),
+          undefined
         )
       ).thenCall((relationClass, relation, entities) =>
         Promise.resolve(new Map<TestEntity, TestDTO[]>([[entities[0], [result]]]))
@@ -176,12 +190,55 @@ describe('AssemblerQueryService', () => {
           TestDTO,
           'test',
           deepEqual([entity]),
-          objectContaining({ filter: { foo: { eq: 'bar' } } })
+          objectContaining({ filter: { foo: { eq: 'bar' } } }),
+          undefined
         )
       ).thenResolve(new Map<TestEntity, TestDTO[]>())
       return expect(
         assemblerService.queryRelations(TestDTO, 'test', [{ foo: 'bar' }], { filter: { foo: { eq: 'bar' } } })
       ).resolves.toEqual(new Map([[dto, []]]))
+    })
+
+    it('should pass the opts through for a single entity', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      const opts = { withDeleted: true }
+      when(
+        mockQueryService.queryRelations(
+          TestDTO,
+          'test',
+          objectContaining({ bar: 'bar' }),
+          objectContaining({ filter: { foo: { eq: 'bar' } } }),
+          opts
+        )
+      ).thenResolve([{ foo: 'bar' }])
+
+      return expect(
+        assemblerService.queryRelations(TestDTO, 'test', { foo: 'bar' }, { filter: { foo: { eq: 'bar' } } }, opts)
+      ).resolves.toEqual([{ foo: 'bar' }])
+    })
+
+    it('should pass the opts through for multiple entities', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      const dto: TestDTO = { foo: 'bar' }
+      const entity: TestEntity = { bar: 'bar' }
+      const result: TestDTO = { foo: 'baz' }
+      const opts = { withDeleted: true }
+      when(
+        mockQueryService.queryRelations(
+          TestDTO,
+          'test',
+          deepEqual([entity]),
+          objectContaining({ filter: { foo: { eq: 'bar' } } }),
+          opts
+        )
+      ).thenCall((relationClass, relation, entities) =>
+        Promise.resolve(new Map<TestEntity, TestDTO[]>([[entities[0], [result]]]))
+      )
+      return expect(
+        assemblerService.queryRelations(TestDTO, 'test', [{ foo: 'bar' }], { filter: { foo: { eq: 'bar' } } }, opts)
+      ).resolves.toEqual(new Map([[dto, [result]]]))
     })
   })
 
@@ -259,7 +316,8 @@ describe('AssemblerQueryService', () => {
           TestDTO,
           'test',
           objectContaining({ bar: 'bar' }),
-          objectContaining({ foo: { eq: 'bar' } })
+          objectContaining({ foo: { eq: 'bar' } }),
+          undefined
         )
       ).thenResolve(1)
 
@@ -272,11 +330,44 @@ describe('AssemblerQueryService', () => {
       const dto: TestDTO = { foo: 'bar' }
       const entity: TestEntity = { bar: 'bar' }
       when(
-        mockQueryService.countRelations(TestDTO, 'test', deepEqual([entity]), objectContaining({ foo: { eq: 'bar' } }))
+        mockQueryService.countRelations(TestDTO, 'test', deepEqual([entity]), objectContaining({ foo: { eq: 'bar' } }), undefined)
       ).thenCall((relationClass, relation, entities) => Promise.resolve(new Map<TestEntity, number>([[entities[0], 1]])))
       return expect(assemblerService.countRelations(TestDTO, 'test', [{ foo: 'bar' }], { foo: { eq: 'bar' } })).resolves.toEqual(
         new Map([[dto, 1]])
       )
+    })
+
+    it('should pass the opts through for a single entity', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      const opts = { withDeleted: true }
+      when(
+        mockQueryService.countRelations(
+          TestDTO,
+          'test',
+          objectContaining({ bar: 'bar' }),
+          objectContaining({ foo: { eq: 'bar' } }),
+          opts
+        )
+      ).thenResolve(1)
+
+      return expect(assemblerService.countRelations(TestDTO, 'test', { foo: 'bar' }, { foo: { eq: 'bar' } }, opts)).resolves.toBe(
+        1
+      )
+    })
+
+    it('should pass the opts through for multiple entities', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      const dto: TestDTO = { foo: 'bar' }
+      const entity: TestEntity = { bar: 'bar' }
+      const opts = { withDeleted: true }
+      when(
+        mockQueryService.countRelations(TestDTO, 'test', deepEqual([entity]), objectContaining({ foo: { eq: 'bar' } }), opts)
+      ).thenCall((relationClass, relation, entities) => Promise.resolve(new Map<TestEntity, number>([[entities[0], 1]])))
+      return expect(
+        assemblerService.countRelations(TestDTO, 'test', [{ foo: 'bar' }], { foo: { eq: 'bar' } }, opts)
+      ).resolves.toEqual(new Map([[dto, 1]]))
     })
   })
 
@@ -285,7 +376,7 @@ describe('AssemblerQueryService', () => {
       const mockQueryService = mock<QueryService<TestEntity>>()
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
 
-      when(mockQueryService.findRelation(TestDTO, 'test', objectContaining({ bar: 'bar' }))).thenResolve({
+      when(mockQueryService.findRelation(TestDTO, 'test', objectContaining({ bar: 'bar' }), undefined)).thenResolve({
         foo: 'bar'
       })
 
@@ -302,6 +393,33 @@ describe('AssemblerQueryService', () => {
         (relationClass, relation, entities) => Promise.resolve(new Map<TestEntity, TestDTO>([[entities[0], result]]))
       )
       return expect(assemblerService.findRelation(TestDTO, 'test', [{ foo: 'bar' }])).resolves.toEqual(new Map([[dto, result]]))
+    })
+
+    it('should pass the opts through for a single entity', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      const opts = { withDeleted: true }
+
+      when(mockQueryService.findRelation(TestDTO, 'test', objectContaining({ bar: 'bar' }), opts)).thenResolve({
+        foo: 'bar'
+      })
+
+      return expect(assemblerService.findRelation(TestDTO, 'test', { foo: 'bar' }, opts)).resolves.toEqual({ foo: 'bar' })
+    })
+
+    it('should pass the opts through for multiple entities', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      const dto: TestDTO = { foo: 'bar' }
+      const entity: TestEntity = { bar: 'bar' }
+      const result: TestDTO = { foo: 'baz' }
+      const opts = { withDeleted: true }
+      when(mockQueryService.findRelation(TestDTO, 'test', deepEqual([entity]), opts)).thenCall(
+        (relationClass, relation, entities) => Promise.resolve(new Map<TestEntity, TestDTO>([[entities[0], result]]))
+      )
+      return expect(assemblerService.findRelation(TestDTO, 'test', [{ foo: 'bar' }], opts)).resolves.toEqual(
+        new Map([[dto, result]])
+      )
     })
   })
 
@@ -331,6 +449,23 @@ describe('AssemblerQueryService', () => {
     })
   })
   describe('setRelation', () => {
+    it('should pass the relation filter through with the transformed filter', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      when(
+        mockQueryService.setRelation(
+          'test',
+          1,
+          2,
+          deepEqual({ filter: { bar: { eq: 'bar' } }, relationFilter: { foo: { eq: 'baz' } } })
+        )
+      ).thenResolve({ bar: 'baz' })
+
+      return expect(
+        assemblerService.setRelation('test', 1, 2, { filter: { foo: { eq: 'bar' } }, relationFilter: { foo: { eq: 'baz' } } })
+      ).resolves.toEqual({ foo: 'baz' })
+    })
+
     it('should transform the results for a single entity', () => {
       const mockQueryService = mock<QueryService<TestEntity>>()
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
@@ -543,6 +678,18 @@ describe('AssemblerQueryService', () => {
   })
 
   describe('deleteOne', () => {
+    it('should pass useSoftDelete through with the transformed filter', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      when(mockQueryService.deleteOne(1, deepEqual({ filter: { bar: { eq: 'bar' } }, useSoftDelete: true }))).thenResolve({
+        bar: 'baz'
+      })
+
+      return expect(assemblerService.deleteOne(1, { filter: { foo: { eq: 'bar' } }, useSoftDelete: true })).resolves.toEqual({
+        foo: 'baz'
+      })
+    })
+
     it('should transform the results for a single entity', () => {
       const mockQueryService = mock<QueryService<TestEntity>>()
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
@@ -568,9 +715,21 @@ describe('AssemblerQueryService', () => {
     it('should transform the arguments', () => {
       const mockQueryService = mock<QueryService<TestEntity>>()
       const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
-      when(mockQueryService.deleteMany(objectContaining({ bar: { eq: 'bar' } }))).thenResolve({ deletedCount: 1 })
+      when(mockQueryService.deleteMany(objectContaining({ bar: { eq: 'bar' } }), undefined)).thenResolve({ deletedCount: 1 })
 
       return expect(assemblerService.deleteMany({ foo: { eq: 'bar' } })).resolves.toEqual({
+        deletedCount: 1
+      })
+    })
+
+    it('should pass the opts through', () => {
+      const mockQueryService = mock<QueryService<TestEntity>>()
+      const assemblerService = new AssemblerQueryService(new TestAssembler(), instance(mockQueryService))
+      when(
+        mockQueryService.deleteMany(objectContaining({ bar: { eq: 'bar' } }), objectContaining({ useSoftDelete: true }))
+      ).thenResolve({ deletedCount: 1 })
+
+      return expect(assemblerService.deleteMany({ foo: { eq: 'bar' } }, { useSoftDelete: true })).resolves.toEqual({
         deletedCount: 1
       })
     })

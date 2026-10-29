@@ -1,6 +1,6 @@
 ---
 title: 'v10.x.x to v11.x.x'
-description: 'Migrate query limits, CSV exports, and REST Swagger dependencies.'
+description: 'Migrate query limits, CSV exports, REST Swagger dependencies, and relation options.'
 ---
 
 In v11, the default `maxResultsSize` is `100` for both GraphQL and REST, up from `50` in v10. This affects endpoints that use the generated paging arguments without an explicit maximum.
@@ -66,3 +66,29 @@ Applications that do not use CSV export can omit it.
 ## REST Swagger runtime dependency
 
 `@ptc-org/nestjs-query-rest` requires `@nestjs/swagger` at runtime, even when an application does not generate OpenAPI documentation. Its `@ApiProperty` decorators run when REST DTO classes are defined, so the dependency cannot be loaded lazily. Keep `@nestjs/swagger` installed when upgrading.
+
+## Relation and delete options now reach the persistence layer
+
+`AssemblerQueryService`, `ProxyQueryService` and `RelationQueryService` discarded the options argument of `queryRelations`, `countRelations`, `findRelation` and `deleteMany`. Services wrapped by an assembler, a proxy or a relation service now receive those options.
+
+Options set through a to-many relation decorator or a delete resolver start taking effect: `withDeleted: true` on `@UnPagedRelation`, `@OffsetConnection`, `@CursorConnection` and their `Filterable` variants returns soft-deleted rows and counts them, and on typeorm `delete: { useSoftDelete: true }` soft deletes on the `deleteMany` mutation rather than hard deleting. `@Relation(..., { withDeleted: true })` already reached the service behind the assembler the GraphQL module creates, and now also reaches relations declared on a `RelationQueryService`. Remove the option where an application depended on it being ignored.
+
+Custom `QueryService` implementations that declared these methods with fewer parameters than the interface now receive an argument they did not before. Widen those signatures and decide what to do with the options.
+
+## `withDeleted` on mikro-orm and sequelize
+
+`MikroOrmQueryService.query`, `findById` and `getById` now throw when `withDeleted` is set, for example `MikroOrmQueryService does not support withDeleted on query`, matching `count`, `queryRelations`, `countRelations` and `findRelation`, which already did. They previously accepted the option and returned rows as though it had not been set.
+
+Together with the change above, `withDeleted: true` on a mikro-orm DTO's to-many relation decorator, or in the `one` or `many` options of a read resolver or controller, or the `many` options of an export, fails the request instead of quietly returning only live rows. Drop `withDeleted` from those options and from direct calls.
+
+`SequelizeQueryService` now applies the option instead of ignoring it. `query`, `exportMany`, `count`, `aggregate`, `findById`, `getById`, `queryRelations`, `countRelations` and `findRelation` add sequelize's `paranoid: false` to the query when `withDeleted` is set, so a `paranoid` model returns and counts its soft-deleted rows.
+
+An application that sets `withDeleted: true` against a `paranoid` model now sees those rows and higher counts where it previously saw only live ones. Drop the option where the old results were the intended ones. Models that are not `paranoid` are unaffected.
+
+`SequelizeQueryService.deleteMany` does not read `useSoftDelete`, so the delete resolver option above changes nothing on sequelize: a `paranoid` model is always soft deleted and any other model hard deleted.
+
+Three limits remain. The first two are shared with typeorm:
+
+- `aggregateRelations` takes no options in the `QueryService` interface, so a relation declared with both `withDeleted: true` and `enableAggregate` lists its soft-deleted rows while the aggregate counts only the live ones.
+- A filter *on* a relation still matches live relation rows only. `withDeleted` decides which rows come back, not which rows may be filtered on.
+- On a many-to-many relation the option reaches the relation itself, not the junction, so relations whose join row was soft deleted stay out of the result. Only sequelize can hit this, its junction is a model and can be `paranoid`.

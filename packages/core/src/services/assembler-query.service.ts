@@ -7,6 +7,7 @@ import {
   CountOptions,
   CreateManyOptions,
   CreateOneOptions,
+  DeleteManyOptions,
   DeleteManyResponse,
   DeleteOneOptions,
   Filter,
@@ -17,6 +18,7 @@ import {
   ModifyRelationOptions,
   Query,
   QueryOptions,
+  QueryRelationsOptions,
   UpdateManyResponse,
   UpdateOneOptions
 } from '../interfaces'
@@ -42,7 +44,7 @@ export class AssemblerQueryService<
     opts?: ModifyRelationOptions<DTO, Relation>
   ): Promise<DTO> {
     return this.assembler.convertToDTO(
-      await this.queryService.addRelations(relationName, id, relationIds, this.convertModifyRelationsOptions(opts))
+      await this.queryService.addRelations(relationName, id, relationIds, this.convertFilterable(opts))
     )
   }
 
@@ -57,9 +59,9 @@ export class AssemblerQueryService<
     return this.assembler.convertToDTO(await this.queryService.createOne(c, this.convertFilterable(opts)))
   }
 
-  public async deleteMany(filter: Filter<DTO>): Promise<DeleteManyResponse> {
+  public async deleteMany(filter: Filter<DTO>, opts?: DeleteManyOptions<DTO>): Promise<DeleteManyResponse> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.queryService.deleteMany(this.assembler.convertQuery({ filter }).filter)
+    return this.queryService.deleteMany(this.assembler.convertQuery({ filter }).filter, this.convertFilterable(opts))
   }
 
   public async deleteOne(id: number | string, opts?: DeleteOneOptions<DTO>): Promise<DTO> {
@@ -115,7 +117,8 @@ export class AssemblerQueryService<
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: DTO[],
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<DTO, Relation[]>>
 
   /**
@@ -129,18 +132,20 @@ export class AssemblerQueryService<
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO,
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Relation[]>
 
   public async queryRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO | DTO[],
-    query: Query<Relation>
+    query: Query<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Relation[] | Map<DTO, Relation[]>> {
     if (Array.isArray(dto)) {
       const entities = await this.assembler.convertToEntities(dto)
-      const relationMap = await this.queryService.queryRelations(RelationClass, relationName, entities, query)
+      const relationMap = await this.queryService.queryRelations(RelationClass, relationName, entities, query, opts)
 
       return entities.reduce((map, e, index) => {
         const entry = relationMap.get(e) ?? []
@@ -151,39 +156,42 @@ export class AssemblerQueryService<
       }, new Map<DTO, Relation[]>())
     }
 
-    return this.queryService.queryRelations(RelationClass, relationName, await this.assembler.convertToEntity(dto), query)
+    return this.queryService.queryRelations(RelationClass, relationName, await this.assembler.convertToEntity(dto), query, opts)
   }
 
   public countRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO,
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<number>
 
   public countRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO[],
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<Map<DTO, number>>
 
   public async countRelations<Relation>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: DTO | DTO[],
-    filter: Filter<Relation>
+    filter: Filter<Relation>,
+    opts?: QueryRelationsOptions
   ): Promise<number | Map<DTO, number>> {
     if (Array.isArray(dto)) {
       const entities = await this.assembler.convertToEntities(dto)
-      const relationMap = await this.queryService.countRelations(RelationClass, relationName, entities, filter)
+      const relationMap = await this.queryService.countRelations(RelationClass, relationName, entities, filter, opts)
       return entities.reduce((map, e, index) => {
         const entry = relationMap.get(e) ?? 0
         map.set(dto[index], entry)
         return map
       }, new Map<DTO, number>())
     }
-    return this.queryService.countRelations(RelationClass, relationName, await this.assembler.convertToEntity(dto), filter)
+    return this.queryService.countRelations(RelationClass, relationName, await this.assembler.convertToEntity(dto), filter, opts)
   }
 
   /**
@@ -228,7 +236,7 @@ export class AssemblerQueryService<
         return map
       }, new Map<DTO, Relation | undefined>())
     }
-    return this.queryService.findRelation(RelationClass, relationName, await this.assembler.convertToEntity(dto))
+    return this.queryService.findRelation(RelationClass, relationName, await this.assembler.convertToEntity(dto), opts)
   }
 
   public async removeRelation<Relation>(
@@ -238,7 +246,7 @@ export class AssemblerQueryService<
     opts?: ModifyRelationOptions<DTO, Relation>
   ): Promise<DTO> {
     return this.assembler.convertToDTO(
-      await this.queryService.removeRelation(relationName, id, relationId, this.convertModifyRelationsOptions(opts))
+      await this.queryService.removeRelation(relationName, id, relationId, this.convertFilterable(opts))
     )
   }
 
@@ -249,7 +257,7 @@ export class AssemblerQueryService<
     opts?: ModifyRelationOptions<DTO, Relation>
   ): Promise<DTO> {
     return this.assembler.convertToDTO(
-      await this.queryService.removeRelations(relationName, id, relationIds, this.convertModifyRelationsOptions(opts))
+      await this.queryService.removeRelations(relationName, id, relationIds, this.convertFilterable(opts))
     )
   }
 
@@ -260,7 +268,7 @@ export class AssemblerQueryService<
     opts?: ModifyRelationOptions<DTO, Relation>
   ): Promise<DTO> {
     return this.assembler.convertToDTO(
-      await this.queryService.setRelations(relationName, id, relationIds, this.convertModifyRelationsOptions(opts))
+      await this.queryService.setRelations(relationName, id, relationIds, this.convertFilterable(opts))
     )
   }
 
@@ -271,7 +279,7 @@ export class AssemblerQueryService<
     opts?: ModifyRelationOptions<DTO, Relation>
   ): Promise<DTO> {
     return this.assembler.convertToDTO(
-      await this.queryService.setRelation(relationName, id, relationId, this.convertModifyRelationsOptions(opts))
+      await this.queryService.setRelation(relationName, id, relationId, this.convertFilterable(opts))
     )
   }
 
@@ -328,23 +336,15 @@ export class AssemblerQueryService<
     )
   }
 
+  /**
+   * Converts the DTO filter of any options object into an entity filter and forwards every other member unchanged, so
+   * a member added to an options interface later reaches the wrapped service without being listed here.
+   */
   private convertFilterable(filterable?: Filterable<DTO>): Filterable<Entity> | undefined {
     if (!filterable) {
       return undefined
     }
 
     return { ...filterable, filter: this.assembler.convertQuery({ filter: filterable?.filter }).filter }
-  }
-
-  private convertModifyRelationsOptions<Relation>(
-    modifyRelationOptions?: ModifyRelationOptions<DTO, Relation>
-  ): ModifyRelationOptions<Entity, Relation> | undefined {
-    if (!modifyRelationOptions) {
-      return undefined
-    }
-    return {
-      filter: this.assembler.convertQuery({ filter: modifyRelationOptions?.filter }).filter,
-      relationFilter: modifyRelationOptions.relationFilter
-    }
   }
 }

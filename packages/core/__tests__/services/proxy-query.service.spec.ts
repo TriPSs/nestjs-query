@@ -12,7 +12,8 @@ describe('ProxyQueryService', () => {
 
   afterEach(() => reset(mockQueryService))
 
-  const queryService: QueryService<TestType> = new ProxyQueryService(instance(mockQueryService))
+  const proxyQueryService = new ProxyQueryService(instance(mockQueryService))
+  const queryService: QueryService<TestType> = proxyQueryService
   it('should proxy to the underlying service when calling addRelations', () => {
     const relationName = 'test'
     const id = 1
@@ -46,7 +47,7 @@ describe('ProxyQueryService', () => {
   it('should proxy to the underlying service when calling deleteMany', () => {
     const filter = {}
     const result = { deletedCount: 2 }
-    when(mockQueryService.deleteMany(filter)).thenResolve(result)
+    when(mockQueryService.deleteMany(filter, undefined)).thenResolve(result)
     return expect(queryService.deleteMany(filter)).resolves.toBe(result)
   })
   it('should proxy to the underlying service when calling deleteOne', () => {
@@ -111,7 +112,7 @@ describe('ProxyQueryService', () => {
     const dto = new TestType()
     const query = {}
     const result = [{ foo: 'bar' }]
-    when(mockQueryService.queryRelations(TestType, relationName, dto, query)).thenResolve(result)
+    when(mockQueryService.queryRelations(TestType, relationName, dto, query, undefined)).thenResolve(result)
     return expect(queryService.queryRelations(TestType, relationName, dto, query)).resolves.toBe(result)
   })
 
@@ -120,8 +121,28 @@ describe('ProxyQueryService', () => {
     const dtos = [new TestType()]
     const query = {}
     const result = new Map([[{ foo: 'bar' }, []]])
-    when(mockQueryService.queryRelations(TestType, relationName, dtos, query)).thenResolve(result)
+    when(mockQueryService.queryRelations(TestType, relationName, dtos, query, undefined)).thenResolve(result)
     return expect(queryService.queryRelations(TestType, relationName, dtos, query)).resolves.toBe(result)
+  })
+
+  it('should proxy the opts to the underlying service when calling queryRelations with one dto', () => {
+    const relationName = 'test'
+    const dto = new TestType()
+    const query = {}
+    const opts = { withDeleted: true }
+    const result = [{ foo: 'bar' }]
+    when(mockQueryService.queryRelations(TestType, relationName, dto, query, opts)).thenResolve(result)
+    return expect(proxyQueryService.queryRelations(TestType, relationName, dto, query, opts)).resolves.toBe(result)
+  })
+
+  it('should proxy the opts to the underlying service when calling queryRelations with many dtos', () => {
+    const relationName = 'test'
+    const dtos = [new TestType()]
+    const query = {}
+    const opts = { withDeleted: true }
+    const result = new Map([[{ foo: 'bar' }, []]])
+    when(mockQueryService.queryRelations(TestType, relationName, dtos, query, opts)).thenResolve(result)
+    return expect(proxyQueryService.queryRelations(TestType, relationName, dtos, query, opts)).resolves.toBe(result)
   })
 
   it('should proxy to the underlying service when calling aggregateRelations with one dto', () => {
@@ -149,7 +170,7 @@ describe('ProxyQueryService', () => {
     const dto = new TestType()
     const query = {}
     const result = 1
-    when(mockQueryService.countRelations(TestType, relationName, dto, query)).thenResolve(result)
+    when(mockQueryService.countRelations(TestType, relationName, dto, query, undefined)).thenResolve(result)
     return expect(queryService.countRelations(TestType, relationName, dto, query)).resolves.toBe(result)
   })
 
@@ -158,8 +179,54 @@ describe('ProxyQueryService', () => {
     const dtos = [new TestType()]
     const query = {}
     const result = new Map([[{ foo: 'bar' }, 1]])
-    when(mockQueryService.countRelations(TestType, relationName, dtos, query)).thenResolve(result)
+    when(mockQueryService.countRelations(TestType, relationName, dtos, query, undefined)).thenResolve(result)
     return expect(queryService.countRelations(TestType, relationName, dtos, query)).resolves.toBe(result)
+  })
+
+  it('should proxy the opts to the underlying service when calling countRelations with one dto', () => {
+    const relationName = 'test'
+    const dto = new TestType()
+    const query = {}
+    const opts = { withDeleted: true }
+    const result = 1
+    when(mockQueryService.countRelations(TestType, relationName, dto, query, opts)).thenResolve(result)
+    return expect(proxyQueryService.countRelations(TestType, relationName, dto, query, opts)).resolves.toBe(result)
+  })
+
+  it('should proxy the opts to the underlying service when calling countRelations with many dtos', () => {
+    const relationName = 'test'
+    const dtos = [new TestType()]
+    const query = {}
+    const opts = { withDeleted: true }
+    const result = new Map([[{ foo: 'bar' }, 1]])
+    when(mockQueryService.countRelations(TestType, relationName, dtos, query, opts)).thenResolve(result)
+    return expect(proxyQueryService.countRelations(TestType, relationName, dtos, query, opts)).resolves.toBe(result)
+  })
+
+  it('should proxy the opts to the underlying service when calling findRelation with one dto', () => {
+    const relationName = 'test'
+    const dto = new TestType()
+    const opts = { withDeleted: true }
+    const result = { foo: 'bar' }
+    when(mockQueryService.findRelation(TestType, relationName, dto, opts)).thenResolve(result)
+    return expect(proxyQueryService.findRelation(TestType, relationName, dto, opts)).resolves.toBe(result)
+  })
+
+  it('should proxy the opts to the underlying service when calling findRelation with many dtos', () => {
+    const relationName = 'test'
+    const dtos = [new TestType()]
+    const opts = { withDeleted: true }
+    const result = new Map([[dtos[0], { foo: 'bar' }]])
+    when(mockQueryService.findRelation(TestType, relationName, dtos, opts)).thenResolve(result)
+    return expect(proxyQueryService.findRelation(TestType, relationName, dtos, opts)).resolves.toBe(result)
+  })
+
+  it('should proxy the opts to the underlying service when calling deleteMany', () => {
+    const filter = {}
+    const opts = { useSoftDelete: true }
+    const result = { deletedCount: 2 }
+    when(mockQueryService.deleteMany(filter, opts)).thenResolve(result)
+    return expect(proxyQueryService.deleteMany(filter, opts)).resolves.toBe(result)
   })
 
   it('should proxy to the underlying service when calling removeRelation', () => {

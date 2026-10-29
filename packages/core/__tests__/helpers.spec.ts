@@ -13,6 +13,7 @@ import {
   getFilterOmitting,
   mergeFilter,
   mergeFilters,
+  mergeQuery,
   Paging,
   Query,
   QueryFieldMap,
@@ -1602,6 +1603,26 @@ describe('mergeFilter', () => {
     }
     expect(mergeFilter(filter, {})).toEqual(filter)
     expect(mergeFilter({}, filter)).toEqual(filter)
+  })
+})
+
+describe('mergeQuery', () => {
+  type Foo = {
+    bar: number
+    baz: number
+  }
+
+  it('should return an empty filter when neither query has one', () => {
+    expect(mergeQuery<Foo>({}, {}).filter).toEqual({})
+    expect(mergeQuery<Foo>({ paging: { limit: 1 } }, { sorting: [] }).filter).toEqual({})
+  })
+
+  it('should merge the filters of both queries', () => {
+    const baseFilter: Filter<Foo> = { bar: { gt: 0 } }
+    const sourceFilter: Filter<Foo> = { baz: { gt: 0 } }
+    expect(mergeQuery<Foo>({ filter: baseFilter }, { filter: sourceFilter }).filter).toEqual({
+      and: [sourceFilter, baseFilter]
+    })
   })
 })
 
