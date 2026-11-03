@@ -88,7 +88,7 @@
     "jest-extended": "7.0.0",
     "mongodb-memory-server": "11.2.0",
     "mysql2": "3.24.4",
-    "nx": "22.7.8",
+    "nx": "22.7.10",
     "passport": "0.7.0",
     "passport-jwt": "4.0.1",
     "pg": "8.23.0",
