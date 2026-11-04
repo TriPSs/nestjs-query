@@ -1,7 +1,8 @@
-import { CommonFieldComparisonBetweenType } from '@ptc-org/nestjs-query-core'
+import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
+import { EntityMetadata } from 'typeorm'
 
 import { randomString } from '../../src/common'
-import { SQLComparisonBuilder } from '../../src/query'
+import { EntityComparisonField, SQLComparisonBuilder } from '../../src/query'
 import { TestEntity } from '../__fixtures__/test.entity'
 
 jest.mock('../../src/common/randomString', () => ({ randomString: jest.fn() }))
@@ -257,6 +258,101 @@ describe('SQLComparisonBuilder', (): void => {
       expect(() => createSQLComparisonBuilder().build('numberType', 'notBetween', between)).toThrow(
         'Invalid value for not between expected {lower: val, upper: val} got [1,10]'
       )
+    })
+  })
+
+  describe('#deriveForEntityMetadata', () => {
+    const virtualColumnMetadata = {
+      columns: [{ databasePath: 'stringType', isVirtualProperty: true, query: (alias: string) => `SELECT 1 FROM ${alias}` }]
+    } as unknown as EntityMetadata
+
+    const plainColumnMetadata = { columns: [] } as unknown as EntityMetadata
+
+    it('should derive a builder bound to the given entity metadata', (): void => {
+      const derived = createSQLComparisonBuilder().deriveForEntityMetadata<TestEntity>(virtualColumnMetadata)
+
+      expect(derived).toBeInstanceOf(SQLComparisonBuilder)
+      expect(derived.build('stringType', 'eq', 'foo', 'TestEntity')).toEqual({
+        sql: '(SELECT 1 FROM TestEntity) = :param0',
+        params: { param0: 'foo' }
+      })
+    })
+
+    it('should carry the comparison map into the derived builder', (): void => {
+      const derived = new SQLComparisonBuilder<TestEntity>({ eq: '==' }).deriveForEntityMetadata<TestEntity>(plainColumnMetadata)
+
+      expect(derived.build('stringType', 'eq', 'foo', 'TestEntity')).toEqual({
+        sql: 'TestEntity.stringType == :param0',
+        params: { param0: 'foo' }
+      })
+    })
+
+    it('should keep the behaviour of a subclass that does not override it', (): void => {
+      class CollatedComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+        public build<F extends keyof Entity>(
+          field: F,
+          cmp: FilterComparisonOperators<Entity[F]>,
+          val: EntityComparisonField<Entity, F>,
+          alias?: string
+        ) {
+          const { sql, params } = super.build(field, cmp, val, alias)
+
+          return { sql: `${sql} COLLATE NOCASE`, params }
+        }
+      }
+
+      const derived = new CollatedComparisonBuilder<TestEntity>().deriveForEntityMetadata<TestEntity>(virtualColumnMetadata)
+
+      expect(derived).toBeInstanceOf(CollatedComparisonBuilder)
+      expect(derived.build('stringType', 'eq', 'foo', 'TestEntity')).toEqual({
+        sql: '(SELECT 1 FROM TestEntity) = :param0 COLLATE NOCASE',
+        params: { param0: 'foo' }
+      })
+    })
+
+    it('should let a subclass derive the builder itself', (): void => {
+      class ExplicitlyDerivingComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+        public deriveForEntityMetadata<Relation>(entityMetadata: EntityMetadata): SQLComparisonBuilder<Relation> {
+          return new SQLComparisonBuilder<Relation>({ eq: 'DERIVED' }, undefined, entityMetadata)
+        }
+      }
+
+      const derived = new ExplicitlyDerivingComparisonBuilder<TestEntity>().deriveForEntityMetadata<TestEntity>(
+        plainColumnMetadata
+      )
+
+      expect(derived.build('stringType', 'eq', 'foo', 'TestEntity')).toEqual({
+        sql: 'TestEntity.stringType DERIVED :param0',
+        params: { param0: 'foo' }
+      })
+    })
+
+    it('should let a subclass with private class fields derive the builder itself', (): void => {
+      class PrivateSuffixComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+        readonly #suffix = 'COLLATE NOCASE'
+
+        public deriveForEntityMetadata<Relation>(entityMetadata: EntityMetadata | undefined): SQLComparisonBuilder<Relation> {
+          return new PrivateSuffixComparisonBuilder<Relation>(this.comparisonMap, undefined, entityMetadata)
+        }
+
+        public build<F extends keyof Entity>(
+          field: F,
+          cmp: FilterComparisonOperators<Entity[F]>,
+          val: EntityComparisonField<Entity, F>,
+          alias?: string
+        ) {
+          const { sql, params } = super.build(field, cmp, val, alias)
+
+          return { sql: `${sql} ${this.#suffix}`, params }
+        }
+      }
+
+      const derived = new PrivateSuffixComparisonBuilder<TestEntity>().deriveForEntityMetadata<TestEntity>(virtualColumnMetadata)
+
+      expect(derived.build('stringType', 'eq', 'foo', 'TestEntity')).toEqual({
+        sql: '(SELECT 1 FROM TestEntity) = :param0 COLLATE NOCASE',
+        params: { param0: 'foo' }
+      })
     })
   })
 })

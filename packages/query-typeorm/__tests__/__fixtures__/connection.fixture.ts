@@ -42,7 +42,9 @@ const tables = [
   'test_entity_relation_entity',
   'test_soft_delete_entity',
   'test_soft_delete_relation',
-  'test_entity_many_test_relations_test_relation'
+  'test_entity_many_test_relations_test_relation',
+  'test_virtual_column_relation',
+  'test_virtual_column_entity'
 ]
 export const truncate = async (connection: DataSource): Promise<void> => {
   await tables.reduce(async (prev, table) => {
