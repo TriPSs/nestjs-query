@@ -201,7 +201,7 @@ describe('RelationQueryBuilder', (): void => {
       }
     ]
 
-    it('should reuse existing join alias if there is one', () => {
+    it('should add a dedicated owner join when a filter joins the owning entity type through another relation', () => {
       const query: Query<TestRelation> = { filter: { testEntity: { testEntityPk: { eq: 'test' } } } }
 
       const entities = TEST_ENTITIES.slice(0, 1)
