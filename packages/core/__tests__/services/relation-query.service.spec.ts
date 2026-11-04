@@ -1,5 +1,11 @@
-import { AggregateQuery, QueryService, QueryServiceRelation, RelationQueryService } from '@ptc-org/nestjs-query-core'
-import { deepEqual, instance, mock, reset, when } from 'ts-mockito'
+import {
+  AggregateQuery,
+  QueryResolveTree,
+  QueryService,
+  QueryServiceRelation,
+  RelationQueryService
+} from '@ptc-org/nestjs-query-core'
+import { anything, deepEqual, instance, mock, objectContaining, reset, when } from 'ts-mockito'
 
 describe('RelationQueryService', () => {
   const mockQueryService: QueryService<TestType> = mock<QueryService<TestType>>()
@@ -43,7 +49,7 @@ describe('RelationQueryService', () => {
       const result = { foo: 'bar' }
       const query = { filter: { foo: { eq: 'bar' } } }
       testRelationFn.mockReturnValue(query)
-      when(mockRelationService.query(deepEqual({ ...query, paging: { limit: 1 } }))).thenResolve([result])
+      when(mockRelationService.query(deepEqual({ ...query, paging: { limit: 1 } }), undefined)).thenResolve([result])
       const findResult = await queryService.findRelation(TestType, relationName, dto)
       expect(findResult).toBe(result)
       return expect(testRelationFn).toHaveBeenCalledWith(dto)
@@ -56,9 +62,56 @@ describe('RelationQueryService', () => {
       testRelationFn.mockReturnValue(query)
       const resultRelations = [{ foo: 'baz' }]
       const result = new Map([[dtos[0], resultRelations[0]]])
-      when(mockRelationService.query(deepEqual({ ...query, paging: { limit: 1 } }))).thenResolve(resultRelations)
+      when(mockRelationService.query(deepEqual({ ...query, paging: { limit: 1 } }), undefined)).thenResolve(resultRelations)
       await expect(queryService.findRelation(TestType, relationName, dtos, undefined)).resolves.toEqual(result)
       return expect(testRelationFn).toHaveBeenCalledWith(dtos[0])
+    })
+
+    it('should pass withDeleted to the relation service when calling findRelation', async () => {
+      const relationName = 'test'
+      const dto = new TestType()
+      const result = { foo: 'bar' }
+      const query = { filter: { foo: { eq: 'bar' } } }
+      testRelationFn.mockReturnValue(query)
+      when(
+        mockRelationService.query(deepEqual({ ...query, paging: { limit: 1 } }), objectContaining({ withDeleted: true }))
+      ).thenResolve([result])
+      return expect(queryService.findRelation(TestType, relationName, dto, { withDeleted: true })).resolves.toBe(result)
+    })
+
+    it('should pass resolveInfo to the relation service when calling findRelation', async () => {
+      const relationName = 'test'
+      const dto = new TestType()
+      const result = { foo: 'bar' }
+      const query = { filter: { foo: { eq: 'bar' } } }
+      const resolveInfo = { name: 'test', alias: 'test', args: {}, fields: {} } as QueryResolveTree<TestType>
+      testRelationFn.mockReturnValue(query)
+      when(
+        mockRelationService.query(deepEqual({ ...query, paging: { limit: 1 } }), objectContaining({ resolveInfo }))
+      ).thenResolve([result])
+      return expect(queryService.findRelation(TestType, relationName, dto, { resolveInfo })).resolves.toBe(result)
+    })
+
+    it('should forward neither the filter nor lookedAhead as query options', async () => {
+      const relationName = 'test'
+      const dto = new TestType()
+      const result = { foo: 'bar' }
+      const filter = { foo: { eq: 'baz' } }
+      testRelationFn.mockReturnValue({})
+      when(mockRelationService.query(anything(), deepEqual({ withDeleted: true }))).thenResolve([result])
+      return expect(
+        queryService.findRelation(TestType, relationName, dto, { filter, withDeleted: true, lookedAhead: true })
+      ).resolves.toBe(result)
+    })
+
+    it('should pass the opts to the underlying service for an unknown relation', async () => {
+      const relationName = 'otherRelation'
+      const dto = new TestType()
+      const result = { foo: 'baz' }
+      const opts = { withDeleted: true, lookedAhead: true }
+      when(mockQueryService.findRelation(TestType, relationName, dto, deepEqual(opts))).thenResolve(result)
+      await expect(queryService.findRelation(TestType, relationName, dto, opts)).resolves.toEqual(result)
+      return expect(testRelationFn).not.toHaveBeenCalled()
     })
 
     it('should call the original service if the relation is not in this relation query service', async () => {
@@ -88,7 +141,7 @@ describe('RelationQueryService', () => {
       const query = {}
       const relationQuery = { filter: {} }
       testRelationFn.mockReturnValue(relationQuery)
-      when(mockRelationService.query(deepEqual({ ...relationQuery }))).thenResolve(result)
+      when(mockRelationService.query(deepEqual({ ...relationQuery }), undefined)).thenResolve(result)
       await expect(queryService.queryRelations(TestType, relationName, dto, query)).resolves.toBe(result)
       return expect(testRelationFn).toHaveBeenCalledWith(dto)
     })
@@ -101,7 +154,7 @@ describe('RelationQueryService', () => {
       const relationResult: TestType[] = []
       const result = new Map([[dtos[0], relationResult]])
       testRelationFn.mockReturnValue(relationQuery)
-      when(mockRelationService.query(deepEqual({ ...relationQuery }))).thenResolve(relationResult)
+      when(mockRelationService.query(deepEqual({ ...relationQuery }), undefined)).thenResolve(relationResult)
       return expect(queryService.queryRelations(TestType, relationName, dtos, query)).resolves.toEqual(result)
     })
 
@@ -110,7 +163,7 @@ describe('RelationQueryService', () => {
       const dto = new TestType()
       const query = {}
       const result = [{ foo: 'bar' }]
-      when(mockQueryService.queryRelations(TestType, relationName, dto, query)).thenResolve(result)
+      when(mockQueryService.queryRelations(TestType, relationName, dto, query, undefined)).thenResolve(result)
       return expect(queryService.queryRelations(TestType, relationName, dto, query)).resolves.toBe(result)
     })
 
@@ -119,8 +172,30 @@ describe('RelationQueryService', () => {
       const dtos = [new TestType()]
       const query = {}
       const result = new Map([[{ foo: 'bar' }, []]])
-      when(mockQueryService.queryRelations(TestType, relationName, dtos, query)).thenResolve(result)
+      when(mockQueryService.queryRelations(TestType, relationName, dtos, query, undefined)).thenResolve(result)
       return expect(queryService.queryRelations(TestType, relationName, dtos, query)).resolves.toBe(result)
+    })
+
+    it('should pass the opts to the relation service when calling queryRelations', async () => {
+      const relationName = 'test'
+      const dto = new TestType()
+      const result = [{ foo: 'bar' }]
+      const query = {}
+      const opts = { withDeleted: true }
+      const relationQuery = { filter: {} }
+      testRelationFn.mockReturnValue(relationQuery)
+      when(mockRelationService.query(deepEqual({ ...relationQuery }), opts)).thenResolve(result)
+      return expect(queryService.queryRelations(TestType, relationName, dto, query, opts)).resolves.toBe(result)
+    })
+
+    it('should pass the opts to the underlying service for an unknown relation', () => {
+      const relationName = 'unknown'
+      const dto = new TestType()
+      const query = {}
+      const opts = { withDeleted: true }
+      const result = [{ foo: 'bar' }]
+      when(mockQueryService.queryRelations(TestType, relationName, dto, query, opts)).thenResolve(result)
+      return expect(queryService.queryRelations(TestType, relationName, dto, query, opts)).resolves.toBe(result)
     })
   })
 
@@ -184,7 +259,7 @@ describe('RelationQueryService', () => {
       const query = {}
       const relationQuery = {}
       testRelationFn.mockReturnValue(relationQuery)
-      when(mockRelationService.count(deepEqual({ ...relationQuery }))).thenResolve(result)
+      when(mockRelationService.count(deepEqual({ ...relationQuery }), undefined)).thenResolve(result)
       await expect(queryService.countRelations(TestType, relationName, dto, query)).resolves.toBe(result)
       return expect(testRelationFn).toHaveBeenCalledWith(dto)
     })
@@ -197,7 +272,7 @@ describe('RelationQueryService', () => {
       const relationResult = 1
       const result = new Map([[dtos[0], relationResult]])
       testRelationFn.mockReturnValue(relationQuery)
-      when(mockRelationService.count(deepEqual({ ...relationQuery }))).thenResolve(relationResult)
+      when(mockRelationService.count(deepEqual({ ...relationQuery }), undefined)).thenResolve(relationResult)
       return expect(queryService.countRelations(TestType, relationName, dtos, query)).resolves.toEqual(result)
     })
 
@@ -206,7 +281,7 @@ describe('RelationQueryService', () => {
       const dto = new TestType()
       const query = {}
       const result = 1
-      when(mockQueryService.countRelations(TestType, relationName, dto, query)).thenResolve(result)
+      when(mockQueryService.countRelations(TestType, relationName, dto, query, undefined)).thenResolve(result)
       return expect(queryService.countRelations(TestType, relationName, dto, query)).resolves.toBe(result)
     })
 
@@ -215,8 +290,54 @@ describe('RelationQueryService', () => {
       const dtos = [new TestType()]
       const query = {}
       const result = new Map([[{ foo: 'bar' }, 1]])
-      when(mockQueryService.countRelations(TestType, relationName, dtos, query)).thenResolve(result)
+      when(mockQueryService.countRelations(TestType, relationName, dtos, query, undefined)).thenResolve(result)
       return expect(queryService.countRelations(TestType, relationName, dtos, query)).resolves.toBe(result)
+    })
+
+    it('should count with the filter merged into the relation query filter for one dto', () => {
+      const relationName = 'test'
+      const dto = new TestType()
+      const result = 1
+      const filter = { foo: { eq: 'bar' } }
+      const relationFilter = { foo: { neq: 'baz' } }
+      testRelationFn.mockReturnValue({ filter: relationFilter })
+      when(mockRelationService.count(deepEqual({ and: [relationFilter, filter] }), undefined)).thenResolve(result)
+      return expect(queryService.countRelations(TestType, relationName, dto, filter)).resolves.toBe(result)
+    })
+
+    it('should count with the filter merged into the relation query filter for many dtos', () => {
+      const relationName = 'test'
+      const dtos = [new TestType()]
+      const relationResult = 1
+      const filter = { foo: { eq: 'bar' } }
+      const relationFilter = { foo: { neq: 'baz' } }
+      testRelationFn.mockReturnValue({ filter: relationFilter })
+      when(mockRelationService.count(deepEqual({ and: [relationFilter, filter] }), undefined)).thenResolve(relationResult)
+      return expect(queryService.countRelations(TestType, relationName, dtos, filter)).resolves.toEqual(
+        new Map([[dtos[0], relationResult]])
+      )
+    })
+
+    it('should pass the opts to the relation service when calling countRelations', async () => {
+      const relationName = 'test'
+      const dto = new TestType()
+      const result = 1
+      const query = {}
+      const opts = { withDeleted: true }
+      const relationQuery = {}
+      testRelationFn.mockReturnValue(relationQuery)
+      when(mockRelationService.count(deepEqual({ ...relationQuery }), opts)).thenResolve(result)
+      return expect(queryService.countRelations(TestType, relationName, dto, query, opts)).resolves.toBe(result)
+    })
+
+    it('should pass the opts to the underlying service for an unknown relation', () => {
+      const relationName = 'unknown'
+      const dto = new TestType()
+      const query = {}
+      const opts = { withDeleted: true }
+      const result = 1
+      when(mockQueryService.countRelations(TestType, relationName, dto, query, opts)).thenResolve(result)
+      return expect(queryService.countRelations(TestType, relationName, dto, query, opts)).resolves.toBe(result)
     })
   })
 

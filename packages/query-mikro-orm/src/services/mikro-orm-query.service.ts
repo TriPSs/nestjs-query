@@ -12,6 +12,7 @@ import {
   GetByIdOptions,
   NoOpQueryService,
   Query,
+  QueryOptions,
   QueryRelationsOptions,
   SortDirection,
   SortField,
@@ -27,6 +28,10 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
   }
 
   async getById(id: string | number, opts?: GetByIdOptions<DTO>): Promise<DTO> {
+    if (opts?.withDeleted) {
+      throw new Error('MikroOrmQueryService does not support withDeleted on getById')
+    }
+
     const where = this.convertFilter(opts?.filter)
     const meta = this.repo.getEntityManager().getMetadata().get(this.repo.getEntityName())
     const pkField = meta.primaryKeys[0]
@@ -42,6 +47,10 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
   }
 
   async findById(id: string | number, opts?: FindByIdOptions<DTO>): Promise<DTO | undefined> {
+    if (opts?.withDeleted) {
+      throw new Error('MikroOrmQueryService does not support withDeleted on findById')
+    }
+
     const where = this.convertFilter(opts?.filter)
     const meta = this.repo.getEntityManager().getMetadata().get(this.repo.getEntityName())
     const pkField = meta.primaryKeys[0]
@@ -58,7 +67,11 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     return entity as unknown as DTO
   }
 
-  async query(query: Query<DTO>): Promise<DTO[]> {
+  async query(query: Query<DTO>, opts?: QueryOptions<DTO>): Promise<DTO[]> {
+    if (opts?.withDeleted) {
+      throw new Error('MikroOrmQueryService does not support withDeleted on query')
+    }
+
     const convertedQuery = this.assembler?.convertQuery?.(query) ?? query
     const orderBy = this.convertSorting(convertedQuery.sorting as SortField<unknown>[] | undefined)
     const { limit, offset } = convertedQuery.paging ?? {}
