@@ -103,13 +103,11 @@ export class FilterQueryBuilder<Entity> {
   public select(query: Query<Entity>): SelectQueryBuilder<Entity> {
     let qb = this.createQueryBuilder()
 
-    qb = this.applyRelationJoinsRecursive(
-      qb,
-      this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, query.filter, query.relations),
-      query.relations
-    )
+    const relationsMap = this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, query.filter, query.relations)
 
-    qb = this.applyFilter(qb, query.filter, qb.alias)
+    qb = this.applyRelationJoinsRecursive(qb, relationsMap, query.relations)
+
+    qb = this.applyFilter(qb, query.filter, qb.alias, relationsMap)
     qb = this.applySorting(qb, query.sorting, qb.alias)
     qb = this.applyPaging(qb, query.paging, this.shouldUseSkipTake(query.filter))
 
@@ -121,15 +119,14 @@ export class FilterQueryBuilder<Entity> {
   }
 
   public aggregate(query: Query<Entity>, aggregate: AggregateQuery<Entity>): SelectQueryBuilder<Entity> {
-    const hasFilterRelations = this.filterHasRelations(query.filter)
     let qb = this.createQueryBuilder()
 
-    qb = hasFilterRelations
-      ? this.applyRelationJoinsRecursive(qb, this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, query.filter))
-      : qb
+    const relationsMap = this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, query.filter)
+
+    qb = this.applyRelationJoinsRecursive(qb, relationsMap)
 
     qb = this.applyAggregate(qb, aggregate, qb.alias)
-    qb = this.applyFilter(qb, query.filter, qb.alias)
+    qb = this.applyFilter(qb, query.filter, qb.alias, relationsMap)
     qb = this.applyAggregateSorting(qb, aggregate.groupBy, qb.alias)
     qb = this.applyAggregateGroupBy(qb, aggregate.groupBy, qb.alias)
 
@@ -199,13 +196,26 @@ export class FilterQueryBuilder<Entity> {
    * @param qb - the `typeorm` QueryBuilder.
    * @param filter - the filter.
    * @param alias - optional alias to use to qualify an identifier
+   * @param relationsMap - optional pre-computed relation alias map. Pass the same map that was used to create the joins so
+   * that the `WHERE` clause binds to the aliases the relations were actually joined under. Computed from the filter alone
+   * when omitted.
    */
-  public applyFilter<Where extends WhereExpressionBuilder>(qb: Where, filter?: Filter<Entity>, alias?: string): Where {
+  public applyFilter<Where extends WhereExpressionBuilder>(
+    qb: Where,
+    filter?: Filter<Entity>,
+    alias?: string,
+    relationsMap?: NestedRelationsAliased
+  ): Where {
     if (!filter) {
       return qb
     }
 
-    return this.whereBuilder.build(qb, filter, this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, filter), alias)
+    return this.whereBuilder.build(
+      qb,
+      filter,
+      relationsMap ?? this.getReferencedRelationsWithAliasRecursive(this.repo.metadata, filter),
+      alias
+    )
   }
 
   /**
