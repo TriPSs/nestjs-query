@@ -5,6 +5,8 @@ import { TestEntity } from './test.entity'
 import { TestRelation } from './test-relation.entity'
 import { TestSoftDeleteEntity } from './test-soft-delete.entity'
 import { TestSoftDeleteRelation } from './test-soft-delete.relation'
+import { TestVirtualColumnEntity } from './test-virtual-column.entity'
+import { TestVirtualColumnRelation } from './test-virtual-column.relation'
 
 export const TEST_ENTITIES: TestEntity[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
   const testEntityPk = `test-entity-${i}`
@@ -69,12 +71,27 @@ export const TEST_RELATIONS_OF_RELATION = TEST_RELATIONS.map<Partial<RelationOfT
   testRelationId: testRelation.testRelationPk
 })) as RelationOfTestRelationEntity[]
 
+export const TEST_VIRTUAL_COLUMN_ENTITIES = [
+  { testVirtualColumnPk: 'test-virtual-column-entity-1', relationCount: 3 },
+  { testVirtualColumnPk: 'test-virtual-column-entity-2', relationCount: 1 }
+] as TestVirtualColumnEntity[]
+
+export const TEST_VIRTUAL_COLUMN_RELATIONS = TEST_VIRTUAL_COLUMN_ENTITIES.flatMap(({ testVirtualColumnPk, relationCount }) =>
+  Array.from({ length: relationCount }, (unusedValue, index) => ({
+    testVirtualColumnRelationPk: `${testVirtualColumnPk}-relation-${index + 1}`,
+    testVirtualColumnEntityId: testVirtualColumnPk,
+    siblingCount: relationCount
+  }))
+) as TestVirtualColumnRelation[]
+
 export const seed = async (connection: DataSource): Promise<void> => {
   const testEntityRepo = connection.getRepository(TestEntity)
   const testRelationRepo = connection.getRepository(TestRelation)
   const relationOfTestRelationRepo = connection.getRepository(RelationOfTestRelationEntity)
   const testSoftDeleteRepo = connection.getRepository(TestSoftDeleteEntity)
   const testSoftDeleteRelationRepo = connection.getRepository(TestSoftDeleteRelation)
+  const testVirtualColumnRepo = connection.getRepository(TestVirtualColumnEntity)
+  const testVirtualColumnRelationRepo = connection.getRepository(TestVirtualColumnRelation)
 
   const testEntities = await testEntityRepo.save(TEST_ENTITIES.map((e: TestEntity) => ({ ...e })))
 
@@ -116,4 +133,12 @@ export const seed = async (connection: DataSource): Promise<void> => {
   await testSoftDeleteRelationRepo.softDelete({
     testEntityPk: In(TEST_SOFT_DELETE_RELATION_ENTITIES.map(({ testEntityPk }) => testEntityPk))
   })
+
+  await testVirtualColumnRepo.save(TEST_VIRTUAL_COLUMN_ENTITIES.map(({ testVirtualColumnPk }) => ({ testVirtualColumnPk })))
+  await testVirtualColumnRelationRepo.save(
+    TEST_VIRTUAL_COLUMN_RELATIONS.map(({ testVirtualColumnRelationPk, testVirtualColumnEntityId }) => ({
+      testVirtualColumnRelationPk,
+      testVirtualColumnEntityId
+    }))
+  )
 }
