@@ -15,6 +15,7 @@ import {
   FindRelationOptions,
   GetByIdOptions,
   ModifyRelationOptions,
+  NullOrdering,
   Query,
   QueryOptions,
   UpdateManyResponse,
@@ -34,6 +35,10 @@ export class AssemblerQueryService<
     readonly assembler: Assembler<DTO, Entity, C, CE, U, UE>,
     readonly queryService: QueryService<Entity, CE, UE>
   ) {}
+
+  public get nullOrdering(): NullOrdering | undefined {
+    return this.queryService.nullOrdering
+  }
 
   public async addRelations<Relation>(
     relationName: string,

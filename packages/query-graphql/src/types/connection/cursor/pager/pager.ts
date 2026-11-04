@@ -1,7 +1,7 @@
 import { Query } from '@ptc-org/nestjs-query-core'
 
 import { CursorQueryArgsType } from '../../../query'
-import { Count, EdgeType, Pager, QueryMany } from '../../interfaces'
+import { Count, EdgeType, PageOptions, Pager, QueryMany } from '../../interfaces'
 import { CursorPagerResult, PagingMeta, QueryResults } from './interfaces'
 import { CursorPagingOpts, OffsetPagingOpts, PagerStrategy } from './strategies'
 
@@ -25,13 +25,14 @@ export class CursorPager<DTO> implements Pager<DTO, CursorPagerResult<DTO>> {
   async page<Q extends CursorQueryArgsType<DTO>>(
     queryMany: QueryMany<DTO, Q>,
     query: Q,
-    count: Count<DTO>
+    count: Count<DTO>,
+    opts?: PageOptions
   ): Promise<CursorPagerResult<DTO>> {
     const pagingMeta = this.getPageMeta(query)
     if (!this.isValidPaging(pagingMeta)) {
       return EMPTY_PAGING_RESULTS()
     }
-    const results = await this.runQuery(queryMany, query, pagingMeta)
+    const results = await this.runQuery(queryMany, query, pagingMeta, opts)
     if (this.isEmptyPage(results, pagingMeta)) {
       return EMPTY_PAGING_RESULTS()
     }
@@ -55,10 +56,11 @@ export class CursorPager<DTO> implements Pager<DTO, CursorPagerResult<DTO>> {
   private async runQuery<Q extends Query<DTO>>(
     queryMany: QueryMany<DTO, Q>,
     query: Q,
-    pagingMeta: PagingMeta<DTO, CursorPagingOpts<DTO>>
+    pagingMeta: PagingMeta<DTO, CursorPagingOpts<DTO>>,
+    pageOpts?: PageOptions
   ): Promise<QueryResults<DTO>> {
     const { opts } = pagingMeta
-    const windowedQuery = this.strategy.createQuery(query, opts, true)
+    const windowedQuery = this.strategy.createQuery(query, opts, true, pageOpts)
     const nodes = await queryMany(windowedQuery)
     const returnNodes = this.strategy.checkForExtraNode(nodes, opts)
     const hasExtraNode = returnNodes.length !== nodes.length
