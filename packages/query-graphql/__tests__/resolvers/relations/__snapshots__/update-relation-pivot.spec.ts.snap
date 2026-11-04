@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`UpdateRelationsResolver - pivot should accept the pivot properties on add/set and add a mutation to update them 1`] = `
+"type TestResolverDTO {
+  id: ID!
+  stringField: String!
+}
+
+type Query {
+  test: TestResolverDTO!
+}
+
+type Mutation {
+  setRelationsPropertiesOnTestResolverDTO(input: SetRelationsPropertiesOnTestResolverDTOInput!): TestResolverDTO!
+  addRelationsToTestResolverDTO(input: AddRelationsToTestResolverDTOInput!): TestResolverDTO!
+  setRelationsOnTestResolverDTO(input: SetRelationsOnTestResolverDTOInput!): TestResolverDTO!
+}
+
+input SetRelationsPropertiesOnTestResolverDTOInput {
+  """The id of the record."""
+  id: ID!
+
+  """The id of relation."""
+  relationId: ID!
+
+  """The properties of the relationship."""
+  properties: TestResolverDTORelationsProperties!
+}
+
+input TestResolverDTORelationsProperties {
+  since: String
+}
+
+input AddRelationsToTestResolverDTOInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+
+  """The properties of the relationship, applied to every relation."""
+  properties: TestResolverDTORelationsProperties
+}
+
+input SetRelationsOnTestResolverDTOInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+
+  """The properties of the relationship, applied to every relation."""
+  properties: TestResolverDTORelationsProperties
+}"
+`;
+
+exports[`UpdateRelationsResolver - pivot should not add pivot mutations when enableUpdate is not set 1`] = `
+"type TestResolverDTO {
+  id: ID!
+  stringField: String!
+}
+
+type Query {
+  test: TestResolverDTO!
+}
+
+type Mutation {
+  addRelationsToTestResolverDTO(input: AddRelationsToTestResolverDTOInput!): TestResolverDTO!
+  setRelationsOnTestResolverDTO(input: SetRelationsOnTestResolverDTOInput!): TestResolverDTO!
+}
+
+input AddRelationsToTestResolverDTOInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
+input SetRelationsOnTestResolverDTOInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}"
+`;
+
+exports[`UpdateRelationsResolver - pivot should use the configured field name 1`] = `
+"type TestResolverDTO {
+  id: ID!
+  stringField: String!
+}
+
+type Query {
+  test: TestResolverDTO!
+}
+
+type Mutation {
+  setRelationsEdgePropertiesOnTestResolverDTO(input: SetRelationsEdgePropertiesOnTestResolverDTOInput!): TestResolverDTO!
+  addRelationsToTestResolverDTO(input: AddRelationsToTestResolverDTOInput!): TestResolverDTO!
+  setRelationsOnTestResolverDTO(input: SetRelationsOnTestResolverDTOInput!): TestResolverDTO!
+}
+
+input SetRelationsEdgePropertiesOnTestResolverDTOInput {
+  """The id of the record."""
+  id: ID!
+
+  """The id of relation."""
+  relationId: ID!
+
+  """The properties of the relationship."""
+  edgeProperties: TestResolverDTORelationsProperties!
+}
+
+input TestResolverDTORelationsProperties {
+  since: String
+}
+
+input AddRelationsToTestResolverDTOInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+
+  """The properties of the relationship, applied to every relation."""
+  edgeProperties: TestResolverDTORelationsProperties
+}
+
+input SetRelationsOnTestResolverDTOInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+
+  """The properties of the relationship, applied to every relation."""
+  edgeProperties: TestResolverDTORelationsProperties
+}"
+`;

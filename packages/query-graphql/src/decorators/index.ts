@@ -17,6 +17,7 @@ export * from './inject-custom-authorizer.decorator'
 export { InjectPubSub } from './inject-pub-sub.decorator'
 export * from './key-set.decorator'
 export * from './objectId.decorator'
+export * from './pivot-mapping.decorator'
 export * from './query-options.decorator'
 export { Reference, ReferenceDecoratorOpts, ReferenceTypeFunc } from './reference.decorator'
 export {
