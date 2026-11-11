@@ -85,6 +85,7 @@ The REST package exports a `Patch` decorator for custom controller methods. It a
 ```ts
 import { Body, Param } from '@nestjs/common'
 import { Patch } from '@ptc-org/nestjs-query-rest'
+import { TodoItemUpdateDTO } from './dto/todo-item-update.dto'
 
 // Inside a controller extending CRUDController(TodoItemDTO):
 @Patch(() => TodoItemDTO, { path: ':id' })
