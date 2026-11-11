@@ -1,44 +1,50 @@
 {
   "name": "query-graphql",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/query-graphql/src",
-  "projectType": "library",
+  "$schema": "../../node_modules/@isox-sh/core/schemas/project.schema.json",
   "tags": [],
-  "implicitDependencies": ["core"],
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "yarn eslint \"packages/query-graphql/**/*.ts\""
+      }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/packages/query-graphql"],
+      "executor": "@isox-sh/vitest:test",
       "options": {
-        "jestConfig": "packages/query-graphql/jest.config.ts"
+        "configFile": "packages/query-graphql/vitest.config.ts"
       }
     },
     "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@isox-sh/js:tsc",
+      "outputs": ["{workspaceRoot}/dist/packages/query-graphql"],
       "options": {
-        "outputPath": "dist/packages/query-graphql",
         "tsConfig": "packages/query-graphql/tsconfig.lib.json",
-        "packageJson": "packages/query-graphql/package.json",
-        "main": "packages/query-graphql/src/index.ts",
-        "assets": ["packages/query-graphql/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true,
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+        "generatePackageJson": true,
+        "assets": [
+          {
+            "input": "packages/query-graphql",
+            "glob": "*.md",
+            "ignore": ["README.md", "LICENSE.md"]
+          }
+        ]
+      }
+    },
+    "publish": {
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "npm publish ./dist/packages/query-graphql --access public"
+      },
+      "configurations": {
+        "alpha": {
+          "command": "npm publish ./dist/packages/query-graphql --access public --tag alpha"
+        }
       }
     },
     "version": {
-      "executor": "@jscutlery/semver:version",
+      "executor": "@isox-sh/semver:version",
       "options": {}
-    },
-    "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npm publish ./dist/packages/query-graphql --access public"
-      }
     }
-  }
+  },
+  "dependencies": ["core"]
 }

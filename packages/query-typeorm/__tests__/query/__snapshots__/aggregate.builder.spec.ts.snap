@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AggregateBuilder date type on postgres should group by day 1`] = `
+exports[`AggregateBuilder > date type > on postgres > should group by day 1`] = `
 "SELECT
   "TestEntity"."date_type" AS "GROUP_BY_dateType",
   COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
@@ -8,7 +8,7 @@ FROM
   "test_entity" "TestEntity""
 `;
 
-exports[`AggregateBuilder date type on postgres should group by month 1`] = `
+exports[`AggregateBuilder > date type > on postgres > should group by month 1`] = `
 "SELECT
   DATE(TO_CHAR ("TestEntity"."date_type", 'YYYY-mm-01')) AS "GROUP_BY_dateType",
   COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
@@ -16,7 +16,7 @@ FROM
   "test_entity" "TestEntity""
 `;
 
-exports[`AggregateBuilder date type on postgres should group by week 1`] = `
+exports[`AggregateBuilder > date type > on postgres > should group by week 1`] = `
 "SELECT
   DATE(DATE_TRUNC ('week', "TestEntity"."date_type")) AS "GROUP_BY_dateType",
   COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
@@ -24,7 +24,7 @@ FROM
   "test_entity" "TestEntity""
 `;
 
-exports[`AggregateBuilder date type on postgres should group by year 1`] = `
+exports[`AggregateBuilder > date type > on postgres > should group by year 1`] = `
 "SELECT
   DATE(TO_CHAR ("TestEntity"."date_type", 'YYYY-01-01')) AS "GROUP_BY_dateType",
   COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
@@ -32,7 +32,7 @@ FROM
   "test_entity" "TestEntity""
 `;
 
-exports[`AggregateBuilder date type should default group by day 1`] = `
+exports[`AggregateBuilder > date type > should default group by day 1`] = `
 "SELECT
   "TestEntity"."date_type" AS "GROUP_BY_dateType",
   COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk"
@@ -40,7 +40,7 @@ FROM
   "test_entity" "TestEntity""
 `;
 
-exports[`AggregateBuilder date type should default group by month 1`] = `
+exports[`AggregateBuilder > date type > should default group by month 1`] = `
 "SELECT
   DATE(
     DATE_FORMAT ("TestEntity"."date_type", '%Y-%m-01')
@@ -50,7 +50,7 @@ FROM
   "test_entity" "TestEntity""
 `;
 
-exports[`AggregateBuilder date type should default group by week 1`] = `
+exports[`AggregateBuilder > date type > should default group by week 1`] = `
 "SELECT
   DATE_SUB (
     DATE("TestEntity"."date_type"),
@@ -61,7 +61,7 @@ FROM
   "test_entity" "TestEntity""
 `;
 
-exports[`AggregateBuilder date type should default group by year 1`] = `
+exports[`AggregateBuilder > date type > should default group by year 1`] = `
 "SELECT
   DATE(
     DATE_FORMAT ("TestEntity"."date_type", '%Y-01-01')
@@ -71,7 +71,7 @@ FROM
   "test_entity" "TestEntity""
 `;
 
-exports[`AggregateBuilder should create selects for all aggregate functions 1`] = `
+exports[`AggregateBuilder > should create selects for all aggregate functions 1`] = `
 "SELECT
   COUNT("TestEntity"."test_entity_pk") AS "COUNT_testEntityPk",
   SUM("TestEntity"."number_type") AS "SUM_numberType",
@@ -86,7 +86,7 @@ FROM
   "test_entity" "TestEntity""
 `;
 
-exports[`AggregateBuilder should create selects for all aggregate functions and group bys 1`] = `
+exports[`AggregateBuilder > should create selects for all aggregate functions and group bys 1`] = `
 "SELECT
   "TestEntity"."string_type" AS "GROUP_BY_stringType",
   "TestEntity"."bool_type" AS "GROUP_BY_boolType",

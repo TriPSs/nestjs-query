@@ -1,20 +1,13 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "outDir": "../../dist/out-tsc",
+    "module": "NodeNext",
+    "outDir": "../../dist/packages/query-rest",
     "declaration": true,
-    "types": [
-      "node"
-    ]
+    "types": ["node"],
+    "rootDir": ".",
+    "moduleResolution": "NodeNext"
   },
-  "exclude": [
-    "jest.config.ts",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "__tests__"
-  ],
-  "include": [
-    "**/*.ts"
-  ]
+  "exclude": ["vitest.config.ts", "**/*.spec.ts", "**/*.test.ts", "__tests__"],
+  "include": ["**/*.ts"]
 }

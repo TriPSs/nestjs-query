@@ -199,7 +199,7 @@ export const getFilterOmitting = <DTO>(filter: Filter<DTO>, ...keys: (keyof Filt
         delete omitted.or
       }
     } else if (!keys.includes(k)) {
-      omitted[k] = filter[k]
+      Object.assign(omitted, { [k]: filter[k] })
     }
 
     return omitted

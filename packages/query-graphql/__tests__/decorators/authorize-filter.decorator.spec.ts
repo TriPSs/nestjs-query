@@ -1,6 +1,7 @@
 import { ExecutionContext } from '@nestjs/common'
 import { ROUTE_ARGS_METADATA } from '@nestjs/common/constants'
 import { instance, mock, when } from 'ts-mockito'
+import { vi } from 'vitest'
 
 import { OperationGroup } from '../../src/auth'
 import { AuthorizerFilter } from '../../src/decorators'
@@ -16,7 +17,7 @@ describe('AuthorizerFilter', () => {
       }
     }
 
-    const authorize = jest.fn().mockResolvedValue({ id: { eq: 'allowed' } })
+    const authorize = vi.fn().mockResolvedValue({ id: { eq: 'allowed' } })
     const context = { authorizer: { authorize } }
     const executionContext = mock<ExecutionContext>()
     when(executionContext.getArgs()).thenReturn([undefined, {}, context, undefined])

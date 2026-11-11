@@ -1,5 +1,6 @@
 import { ID, ObjectType } from '@nestjs/graphql'
 import { CRUDResolver, FilterableField, PagingStrategies } from '@ptc-org/nestjs-query-graphql'
+import { vi } from 'vitest'
 
 import * as createResolver from '../../src/resolvers/create.resolver'
 import * as deleteResolver from '../../src/resolvers/delete.resolver'
@@ -8,13 +9,13 @@ import * as readResolver from '../../src/resolvers/read.resolver'
 import * as updateResolver from '../../src/resolvers/update.resolver'
 
 describe('CrudResolver', () => {
-  const creatableSpy = jest.spyOn(createResolver, 'Creatable')
-  const readableSpy = jest.spyOn(readResolver, 'Readable')
-  const updatableSpy = jest.spyOn(updateResolver, 'Updatable')
-  const deleteResolverSpy = jest.spyOn(deleteResolver, 'DeleteResolver')
-  const exportableSpy = jest.spyOn(exportResolver, 'Exportable')
+  const creatableSpy = vi.spyOn(createResolver, 'Creatable')
+  const readableSpy = vi.spyOn(readResolver, 'Readable')
+  const updatableSpy = vi.spyOn(updateResolver, 'Updatable')
+  const deleteResolverSpy = vi.spyOn(deleteResolver, 'DeleteResolver')
+  const exportableSpy = vi.spyOn(exportResolver, 'Exportable')
 
-  beforeEach(() => jest.clearAllMocks())
+  beforeEach(() => vi.clearAllMocks())
 
   @ObjectType()
   class TestResolverDTO {

@@ -1,17 +1,18 @@
 import { CommonFieldComparisonBetweenType } from '@ptc-org/nestjs-query-core'
+import { type Mock, vi } from 'vitest'
 
 import { randomString } from '../../src/common'
 import { SQLComparisonBuilder } from '../../src/query'
 import { TestEntity } from '../__fixtures__/test.entity'
 
-jest.mock('../../src/common/randomString', () => ({ randomString: jest.fn() }))
+vi.mock('../../src/common/randomString', () => ({ randomString: vi.fn() }))
 
 describe('SQLComparisonBuilder', (): void => {
   const createSQLComparisonBuilder = () => new SQLComparisonBuilder<TestEntity>()
 
   beforeEach(() => {
     let index = -1
-    ;(randomString as jest.Mock<any, any>).mockImplementation(() => {
+    ;(randomString as Mock).mockImplementation(() => {
       index += 1
       return index.toString()
     })

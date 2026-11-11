@@ -2,20 +2,20 @@
 import * as nestGraphql from '@nestjs/graphql'
 import { MutationOptions, ReturnTypeFunc } from '@nestjs/graphql'
 import { Class } from '@ptc-org/nestjs-query-core'
+import { vi } from 'vitest'
 
 import { ResolverMutation } from '../../src/decorators'
 import * as resolverDecorator from '../../src/decorators/resolver-method.decorator'
 
-jest.mock('@nestjs/graphql', (): any => ({
-  __esModule: true,
-  ...jest.requireActual('@nestjs/graphql')
+vi.mock('@nestjs/graphql', async () => ({
+  ...(await vi.importActual<typeof import('@nestjs/graphql')>('@nestjs/graphql'))
 }))
 
 describe('ResolverMutation decorator', (): void => {
-  const resolverMethodSpy = jest.spyOn(resolverDecorator, 'ResolverMethod')
-  const mutationSpy = jest.spyOn(nestGraphql, 'Mutation')
+  const resolverMethodSpy = vi.spyOn(resolverDecorator, 'ResolverMethod')
+  const mutationSpy = vi.spyOn(nestGraphql, 'Mutation')
 
-  beforeEach(() => jest.clearAllMocks())
+  beforeEach(() => vi.clearAllMocks())
 
   function createTestResolver(
     typeFunc: ReturnTypeFunc,

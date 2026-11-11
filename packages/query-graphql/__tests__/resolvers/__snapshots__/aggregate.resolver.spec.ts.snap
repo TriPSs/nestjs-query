@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AggregateResolver should create a AggregateResolver for the DTO 1`] = `
+exports[`AggregateResolver > should create a AggregateResolver for the DTO 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -83,7 +83,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`AggregateResolver should not expose read methods if not enabled 1`] = `
+exports[`AggregateResolver > should not expose read methods if not enabled 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!

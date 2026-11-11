@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`UpdateRelationsResolver many should not add update many methods if disableUpdate is true 1`] = `
+exports[`UpdateRelationsResolver > many > should not add update many methods if disableUpdate is true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -11,7 +11,7 @@ type Query {
 }"
 `;
 
-exports[`UpdateRelationsResolver many should use the dtoName if provided 1`] = `
+exports[`UpdateRelationsResolver > many > should use the dtoName if provided 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -48,7 +48,7 @@ input SetTestOnTestResolverDTOInput {
 }"
 `;
 
-exports[`UpdateRelationsResolver many should use the object type name 1`] = `
+exports[`UpdateRelationsResolver > many > should use the object type name 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -85,7 +85,7 @@ input SetRelationsOnTestResolverDTOInput {
 }"
 `;
 
-exports[`UpdateRelationsResolver one should not add update one methods if disableRead is true 1`] = `
+exports[`UpdateRelationsResolver > one > should not add update one methods if disableRead is true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -96,7 +96,7 @@ type Query {
 }"
 `;
 
-exports[`UpdateRelationsResolver one should use the dtoName if provided 1`] = `
+exports[`UpdateRelationsResolver > one > should use the dtoName if provided 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -120,7 +120,7 @@ input SetTestOnTestResolverDTOInput {
 }"
 `;
 
-exports[`UpdateRelationsResolver one should use the object type name 1`] = `
+exports[`UpdateRelationsResolver > one > should use the object type name 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -144,7 +144,7 @@ input SetRelationOnTestResolverDTOInput {
 }"
 `;
 
-exports[`UpdateRelationsResolver should not add update methods if one and many are empty 1`] = `
+exports[`UpdateRelationsResolver > should not add update methods if one and many are empty 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -155,7 +155,7 @@ type Query {
 }"
 `;
 
-exports[`UpdateRelationsResolver should preserve custom descriptions for one and many relation updates 1`] = `
+exports[`UpdateRelationsResolver > should preserve custom descriptions for one and many relation updates 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!

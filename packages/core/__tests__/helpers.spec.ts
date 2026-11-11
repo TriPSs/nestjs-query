@@ -1565,6 +1565,17 @@ describe('getFilterOmitting', () => {
     })
   })
 
+  it('preserves comparisons without mutating the source filter', () => {
+    const comparison = { gt: 0 }
+    const filter: Filter<Foo> = { bar: comparison, baz: { lt: 100 } }
+
+    const result = getFilterOmitting(filter, 'baz')
+
+    expect(result).toEqual({ bar: comparison })
+    expect(result.bar).toBe(comparison)
+    expect(filter).toEqual({ bar: comparison, baz: { lt: 100 } })
+  })
+
   it('should delete and and or properties if they are empty after omitting', () => {
     const filter: Filter<Foo> = {
       bar: { gt: 0 },

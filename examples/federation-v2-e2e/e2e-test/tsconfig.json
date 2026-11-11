@@ -8,7 +8,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "rootDir": "./e2e"
+    "rootDir": "./e2e",
+    "types": ["vitest/globals", "node"]
   },
   "include": ["e2e/**/*"],
   "exclude": ["node_modules"]

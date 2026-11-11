@@ -4,16 +4,17 @@
 # ============================================
 # Stage 1: Build nestjs-query packages
 # ============================================
-FROM node:22 AS builder
+FROM node:24 AS builder
 
 WORKDIR /build
 
 # Copy only dependency files first for caching
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn ./.yarn
-COPY nx.json ./
+COPY isox.json project.json ./
+COPY tools/ ./tools/
 COPY tsconfig*.json ./
-COPY jest.* ./
+
 
 # Copy package.json files for each package (for dependency resolution)
 COPY packages/core/package.json ./packages/core/
@@ -27,7 +28,7 @@ RUN corepack enable && yarn install
 COPY packages/ ./packages/
 
 # Build all packages
-RUN yarn nx run-many --target=build --all
+RUN yarn isox run-many --target=build
 
 # Pack the built packages for installation
 WORKDIR /build/dist/packages/core

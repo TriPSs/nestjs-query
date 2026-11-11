@@ -1,18 +1,18 @@
 import * as nestjsGraphQL from '@nestjs/graphql'
 import { FilterableField } from '@ptc-org/nestjs-query-graphql'
+import { vi } from 'vitest'
 
 import { getFilterableFields } from '../../src/decorators'
 
 const { Float, ObjectType, Field, Int } = nestjsGraphQL
 
-jest.mock('@nestjs/graphql', (): any => ({
-  __esModule: true,
-  ...jest.requireActual('@nestjs/graphql')
+vi.mock('@nestjs/graphql', async () => ({
+  ...(await vi.importActual<typeof import('@nestjs/graphql')>('@nestjs/graphql'))
 }))
 
 describe('FilterableField decorator', (): void => {
-  const fieldSpy = jest.spyOn(nestjsGraphQL, 'Field')
-  beforeAll(() => jest.clearAllMocks())
+  const fieldSpy = vi.spyOn(nestjsGraphQL, 'Field')
+  beforeAll(() => vi.clearAllMocks())
 
   it('should store metadata', () => {
     const floatReturnFunc = () => Float

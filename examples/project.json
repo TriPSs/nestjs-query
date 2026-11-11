@@ -1,23 +1,20 @@
 {
   "name": "examples",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "examples/src",
-  "projectType": "application",
+  "$schema": "../node_modules/@isox-sh/core/schemas/project.schema.json",
   "tags": [],
-  "implicitDependencies": ["core", "query-graphql", "query-mongoose", "query-sequelize", "query-typegoose", "query-typeorm"],
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "yarn eslint \"examples/**/*.ts\""
+      }
     },
     "e2e": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/examples"],
+      "executor": "@isox-sh/core:run-command",
       "options": {
-        "jestConfig": "jest.e2e.ts",
-        "runInBand": true,
-        "passWithNoTests": false
+        "command": "yarn vitest run --config examples/vitest.config.ts"
       }
     }
-  }
+  },
+  "dependencies": ["core", "query-graphql", "query-mongoose", "query-sequelize", "query-typegoose", "query-typeorm"]
 }

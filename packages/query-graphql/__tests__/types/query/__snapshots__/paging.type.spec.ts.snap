@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PagingType should create the correct filter graphql schema 1`] = `
+exports[`PagingType > should create the correct filter graphql schema 1`] = `
 "type Query {
   test(input: Paging!): Int!
 }

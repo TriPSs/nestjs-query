@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`RemoveRelationsResolver many should not add remove many methods if disableRemove is true 1`] = `
+exports[`RemoveRelationsResolver > many > should not add remove many methods if disableRemove is true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -11,7 +11,7 @@ type Query {
 }"
 `;
 
-exports[`RemoveRelationsResolver many should use the dtoName if provided 1`] = `
+exports[`RemoveRelationsResolver > many > should use the dtoName if provided 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -34,7 +34,7 @@ input RemoveTestsFromTestResolverDTOInput {
 }"
 `;
 
-exports[`RemoveRelationsResolver many should use the object type name 1`] = `
+exports[`RemoveRelationsResolver > many > should use the object type name 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -57,7 +57,7 @@ input RemoveRelationsFromTestResolverDTOInput {
 }"
 `;
 
-exports[`RemoveRelationsResolver one should not add remove methods if disableRemove is true 1`] = `
+exports[`RemoveRelationsResolver > one > should not add remove methods if disableRemove is true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -68,7 +68,7 @@ type Query {
 }"
 `;
 
-exports[`RemoveRelationsResolver one should use the dtoName if provided 1`] = `
+exports[`RemoveRelationsResolver > one > should use the dtoName if provided 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -91,7 +91,7 @@ input RemoveTestFromTestResolverDTOInput {
 }"
 `;
 
-exports[`RemoveRelationsResolver one should use the object type name 1`] = `
+exports[`RemoveRelationsResolver > one > should use the object type name 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -114,7 +114,7 @@ input RemoveRelationFromTestResolverDTOInput {
 }"
 `;
 
-exports[`RemoveRelationsResolver should not add remove methods if one and many are empty 1`] = `
+exports[`RemoveRelationsResolver > should not add remove methods if one and many are empty 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!

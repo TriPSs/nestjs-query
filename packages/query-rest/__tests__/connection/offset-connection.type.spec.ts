@@ -1,4 +1,5 @@
 import { Query } from '@ptc-org/nestjs-query-core'
+import { vi } from 'vitest'
 
 import { getOrCreateOffsetConnectionType } from '../../src/connection/offset/offset-connection.type'
 import { Field } from '../../src/decorators'
@@ -13,7 +14,7 @@ describe('getOrCreateOffsetConnectionType', () => {
     }
 
     const ConnectionType = getOrCreateOffsetConnectionType(TestDTO, {})
-    const count = jest.fn().mockResolvedValue(1)
+    const count = vi.fn().mockResolvedValue(1)
     const connection = await ConnectionType.createFromPromise(() => Promise.resolve([{ id: 1 }]), query as Query<TestDTO>, count)
 
     expect(count).not.toHaveBeenCalled()
@@ -28,7 +29,7 @@ describe('getOrCreateOffsetConnectionType', () => {
     }
 
     const ConnectionType = getOrCreateOffsetConnectionType(TestDTOWithTotalCount, { enableTotalCount: true })
-    const count = jest.fn().mockResolvedValue(1)
+    const count = vi.fn().mockResolvedValue(1)
     const connection = await ConnectionType.createFromPromise(
       () => Promise.resolve([{ id: 1 }]),
       query as Query<TestDTOWithTotalCount>,

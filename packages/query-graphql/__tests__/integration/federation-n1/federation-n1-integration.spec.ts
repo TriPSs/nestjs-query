@@ -6,6 +6,7 @@ import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 import request from 'supertest'
 import { DataSource } from 'typeorm'
+import { vi } from 'vitest'
 
 import { NestjsQueryGraphQLModule, PagingStrategies } from '../../../src'
 import { TodoItemDto } from './dtos/todo-item.dto'
@@ -202,11 +203,11 @@ describe('Federation N+1 Integration Test (Based on User Demo)', () => {
 
       // Capture console output to verify DataLoader logs
       const consoleLogs: string[] = []
-      const logSpy = jest.spyOn(console, 'log').mockImplementation((...args) => {
+      const logSpy = vi.spyOn(console, 'log').mockImplementation((...args) => {
         const message = args.join(' ')
         consoleLogs.push(message)
         // Optionally, call the original implementation if you want logs to still appear:
-        // jest.requireActual('console').log(...args)
+        // vi.requireActual('console').log(...args)
       })
 
       const query = `

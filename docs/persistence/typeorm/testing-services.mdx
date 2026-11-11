@@ -16,7 +16,6 @@ import { TodoItemEntity } from './todo-item.entity'
 
 @QueryService(TodoItemEntity)
 export class TodoItemService extends TypeOrmQueryService<TodoItemEntity> {
-
   constructor(
     @InjectRepository(TodoItemEntity) private todosRepository: Repository<TodoItemEntity>,
     @InjectQueryService(SubTaskEntity) private subTaskService: QueryService<SubTaskEntity>
@@ -35,6 +34,7 @@ export class TodoItemService extends TypeOrmQueryService<TodoItemEntity> {
 Now lets write some tests!
 
 ```ts title="todo-item.service.spec.ts"
+import { vi } from 'vitest'
 import { Test, TestingModule } from '@nestjs/testing'
 import { getQueryServiceToken } from '@ptc-org/nestjs-query-core'
 import { getRepositoryToken } from '@nestjs/typeorm'
@@ -56,11 +56,11 @@ describe('TodosItemService', () => {
 
   const mockedSubTaskService = {
     // mock the query method that is used by getWithSubTasks
-    query: jest.fn((query) => Promise.resolve(subTasks))
+    query: vi.fn((query) => Promise.resolve(subTasks))
   }
   const mockedRepo = {
     // mock the repo `findOneOrFail`
-    findOneOrFail: jest.fn((id) => Promise.resolve(oneTodo))
+    findOneOrFail: vi.fn((id) => Promise.resolve(oneTodo))
   }
 
   beforeEach(async () => {
@@ -85,17 +85,17 @@ describe('TodosItemService', () => {
   })
 
   // reset call counts and called with arguments after each spec
-  afterEach(() => jest.clearAllMocks())
+  afterEach(() => vi.clearAllMocks())
 
   // Now we are ready to write the tests.
   describe('getWithSubTasks', () => {
     it('should return a TodoItem with subTasks', async () => {
-      // We can use jest spies to inspect if functions are called ...
+      // We can use Vitest spies to inspect if functions are called ...
 
       // create a spy for the repository findOneOrFail method
-      const findOneOrFailSpy = jest.spyOn(mockedRepo, 'findOneOrFail')
+      const findOneOrFailSpy = vi.spyOn(mockedRepo, 'findOneOrFail')
       // create a spy for the mocked subTaskService query method
-      const querySpy = jest.spyOn(mockedSubTaskService, 'query')
+      const querySpy = vi.spyOn(mockedSubTaskService, 'query')
 
       // When we call a service function the following things happen:
       // - the real service function is called, so we can test its code
@@ -134,7 +134,7 @@ async getWithSubTasks(id: number): Promise<{ todoItem: TodoItemEntity; subTasks:
 To mock the `getById` method we can create a new `spy` with a mock implementation
 
 ```ts
-const getByIdSpy = jest.spyOn(service, 'getById').mockImplementation(() => Promise.resolve(oneTodo))
+const getByIdSpy = vi.spyOn(service, 'getById').mockImplementation(() => Promise.resolve(oneTodo))
 ```
 
 Lets update our tests to mock out the `getById` implementation
@@ -142,12 +142,12 @@ Lets update our tests to mock out the `getById` implementation
 ```ts
 describe('getWithSubTasks', () => {
   it('should return a TodoItem with subTasks', async () => {
-    // We can use jest spies to inspect if functions are called ...
+    // We can use Vitest spies to inspect if functions are called ...
 
     // create a mock implementation for getById on the service
-    const getByIdSpy = jest.spyOn(service, 'getById').mockImplementation(() => Promise.resolve(oneTodo))
+    const getByIdSpy = vi.spyOn(service, 'getById').mockImplementation(() => Promise.resolve(oneTodo))
     // create a spy for the mocked subTaskService query method
-    const querySpy = jest.spyOn(mockedSubTaskService, 'query')
+    const querySpy = vi.spyOn(mockedSubTaskService, 'query')
 
     // When we call a service function the following things happen:
     // - the real service function is called, so we can test its code
@@ -167,12 +167,12 @@ describe('getWithSubTasks', () => {
   })
 
   it('should reject if the getById rejects with an error', async () => {
-    // We can use jest spies to inspect if functions are called ...
+    // We can use Vitest spies to inspect if functions are called ...
 
     // create a mock implementation for the service getById method
-    const getByIdSpy = jest.spyOn(service, 'getById').mockImplementation(() => Promise.reject(new Error('foo')))
+    const getByIdSpy = vi.spyOn(service, 'getById').mockImplementation(() => Promise.reject(new Error('foo')))
     // create a spy for the mocked subTaskService query method
-    const querySpy = jest.spyOn(mockedSubTaskService, 'query')
+    const querySpy = vi.spyOn(mockedSubTaskService, 'query')
 
     // When we call a service function the following things happen:
     // - the real service function is called, so we can test its code

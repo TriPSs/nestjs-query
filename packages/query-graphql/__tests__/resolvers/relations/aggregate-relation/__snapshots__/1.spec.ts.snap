@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AggregateRelationsResolver aggregate should not add read methods if enableAggregate is not true 1`] = `
+exports[`AggregateRelationsResolver > aggregate > should not add read methods if enableAggregate is not true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -11,7 +11,7 @@ type Query {
 }"
 `;
 
-exports[`AggregateRelationsResolver aggregate should use the object type name 1`] = `
+exports[`AggregateRelationsResolver > aggregate > should use the object type name 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -94,7 +94,7 @@ type Query {
 }"
 `;
 
-exports[`AggregateRelationsResolver should not add read methods if one and many are empty 1`] = `
+exports[`AggregateRelationsResolver > should not add read methods if one and many are empty 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!

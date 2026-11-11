@@ -1,42 +1,50 @@
 {
   "name": "query-typeorm",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/query-typeorm/src",
-  "projectType": "library",
+  "$schema": "../../node_modules/@isox-sh/core/schemas/project.schema.json",
   "tags": [],
-  "implicitDependencies": ["core"],
   "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+    "lint": {
+      "executor": "@isox-sh/core:run-command",
       "options": {
-        "outputPath": "dist/packages/query-typeorm",
-        "tsConfig": "packages/query-typeorm/tsconfig.lib.json",
-        "packageJson": "packages/query-typeorm/package.json",
-        "main": "packages/query-typeorm/src/index.ts",
-        "assets": ["packages/query-typeorm/*.md"]
+        "command": "yarn eslint \"packages/query-typeorm/**/*.ts\""
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
-    },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/packages/query-typeorm"],
+      "executor": "@isox-sh/vitest:test",
       "options": {
-        "jestConfig": "packages/query-typeorm/jest.config.ts"
+        "configFile": "packages/query-typeorm/vitest.config.ts"
+      }
+    },
+    "build": {
+      "executor": "@isox-sh/js:tsc",
+      "outputs": ["{workspaceRoot}/dist/packages/query-typeorm"],
+      "options": {
+        "tsConfig": "packages/query-typeorm/tsconfig.lib.json",
+        "generatePackageJson": true,
+        "assets": [
+          {
+            "input": "packages/query-typeorm",
+            "glob": "*.md",
+            "ignore": ["README.md", "LICENSE.md"]
+          }
+        ]
+      }
+    },
+    "publish": {
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "npm publish ./dist/packages/query-typeorm --access public"
+      },
+      "configurations": {
+        "alpha": {
+          "command": "npm publish ./dist/packages/query-typeorm --access public --tag alpha"
+        }
       }
     },
     "version": {
-      "executor": "@jscutlery/semver:version",
+      "executor": "@isox-sh/semver:version",
       "options": {}
-    },
-    "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npm publish ./dist/packages/query-typeorm --access public"
-      }
     }
-  }
+  },
+  "dependencies": ["core"]
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { Filter } from '@ptc-org/nestjs-query-core'
 import { Authorize, Authorizer, Relation, UnPagedRelation } from '@ptc-org/nestjs-query-graphql'
+import { vi } from 'vitest'
 
 import {
   AuthorizationContext,
@@ -231,11 +232,11 @@ describe('createDefaultAuthorizer', () => {
 
   it('should call authorizeRelation of authorizer and fallback to authorize decorator', async () => {
     const authorizer = testingModule.get<Authorizer<TestWithAuthorizerDTO>>(getAuthorizerToken(TestWithAuthorizerDTO))
-    jest.spyOn(authorizer, 'authorizeRelation')
+    vi.spyOn(authorizer, 'authorizeRelation')
     const customAuthorizer = testingModule.get<CustomAuthorizer<TestWithAuthorizerDTO>>(
       getCustomAuthorizerToken(TestWithAuthorizerDTO)
     )
-    jest.spyOn(customAuthorizer, 'authorizeRelation')
+    vi.spyOn(customAuthorizer, 'authorizeRelation')
     expect(customAuthorizer).toBeDefined()
     const filter = await authorizer.authorizeRelation(
       'unPagedDecoratorRelations',
@@ -276,18 +277,18 @@ describe('createDefaultAuthorizer', () => {
 
   it('should call authorizeRelation of authorizer and fallback to custom authorizer of relation', async () => {
     const authorizer = testingModule.get<Authorizer<TestWithAuthorizerDTO>>(getAuthorizerToken(TestWithAuthorizerDTO))
-    jest.spyOn(authorizer, 'authorizeRelation')
+    vi.spyOn(authorizer, 'authorizeRelation')
     const customAuthorizer = testingModule.get<CustomAuthorizer<TestWithAuthorizerDTO>>(
       getCustomAuthorizerToken(TestWithAuthorizerDTO)
     )
-    jest.spyOn(customAuthorizer, 'authorizeRelation')
+    vi.spyOn(customAuthorizer, 'authorizeRelation')
     expect(customAuthorizer).toBeDefined()
     const relationAuthorizer = testingModule.get<Authorizer<RelationWithAuthorizer>>(getAuthorizerToken(RelationWithAuthorizer))
-    jest.spyOn(relationAuthorizer, 'authorize')
+    vi.spyOn(relationAuthorizer, 'authorize')
     const customRelationAuthorizer = testingModule.get<CustomAuthorizer<RelationWithAuthorizer>>(
       getCustomAuthorizerToken(RelationWithAuthorizer)
     )
-    jest.spyOn(customRelationAuthorizer, 'authorize')
+    vi.spyOn(customRelationAuthorizer, 'authorize')
     const filter = await authorizer.authorizeRelation(
       'authorizerRelation',
       { user: { id: 2 } },

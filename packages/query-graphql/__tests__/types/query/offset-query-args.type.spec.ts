@@ -15,11 +15,12 @@ import { SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 import { CursorQueryArgsType, FilterableField, PagingStrategies, QueryArgsType } from '@ptc-org/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
 import { validateSync } from 'class-validator'
+import { vi } from 'vitest'
 
 import { generateSchema } from '../../__fixtures__'
 
 describe('Offset paging strategy QueryArgsType with manual options', (): void => {
-  afterEach(() => jest.clearAllMocks())
+  afterEach(() => vi.clearAllMocks())
 
   @ObjectType('TestQuery')
   class TestDto {

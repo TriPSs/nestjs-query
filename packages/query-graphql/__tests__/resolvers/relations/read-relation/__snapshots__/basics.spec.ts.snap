@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ReadRelationsResolver - basics one should not add read one methods if disableRead is true 1`] = `
+exports[`ReadRelationsResolver - basics > one > should not add read one methods if disableRead is true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -49,7 +49,7 @@ type Query {
 }"
 `;
 
-exports[`ReadRelationsResolver - basics one should use the object type name 1`] = `
+exports[`ReadRelationsResolver - basics > one > should use the object type name 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -99,7 +99,7 @@ type Query {
 }"
 `;
 
-exports[`ReadRelationsResolver - basics should not add read methods if one and many are empty 1`] = `
+exports[`ReadRelationsResolver - basics > should not add read methods if one and many are empty 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!

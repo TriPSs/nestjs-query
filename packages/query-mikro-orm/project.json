@@ -1,44 +1,50 @@
 {
   "name": "query-mikro-orm",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/query-mikro-orm/src",
-  "projectType": "library",
+  "$schema": "../../node_modules/@isox-sh/core/schemas/project.schema.json",
   "tags": [],
-  "implicitDependencies": ["core"],
   "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+    "lint": {
+      "executor": "@isox-sh/core:run-command",
       "options": {
-        "outputPath": "dist/packages/query-mikro-orm",
-        "tsConfig": "packages/query-mikro-orm/tsconfig.lib.json",
-        "packageJson": "packages/query-mikro-orm/package.json",
-        "main": "packages/query-mikro-orm/src/index.ts",
-        "assets": ["packages/query-mikro-orm/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true,
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+        "command": "yarn eslint \"packages/query-mikro-orm/**/*.ts\""
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
-    },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/packages/query-mikro-orm"],
+      "executor": "@isox-sh/vitest:test",
       "options": {
-        "jestConfig": "packages/query-mikro-orm/jest.config.ts"
+        "configFile": "packages/query-mikro-orm/vitest.config.ts"
+      }
+    },
+    "build": {
+      "executor": "@isox-sh/js:tsc",
+      "outputs": ["{workspaceRoot}/dist/packages/query-mikro-orm"],
+      "options": {
+        "tsConfig": "packages/query-mikro-orm/tsconfig.lib.json",
+        "generatePackageJson": true,
+        "assets": [
+          {
+            "input": "packages/query-mikro-orm",
+            "glob": "*.md",
+            "ignore": ["README.md", "LICENSE.md"]
+          }
+        ]
+      }
+    },
+    "publish": {
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "npm publish ./dist/packages/query-mikro-orm --access public"
+      },
+      "configurations": {
+        "alpha": {
+          "command": "npm publish ./dist/packages/query-mikro-orm --access public --tag alpha"
+        }
       }
     },
     "version": {
-      "executor": "@jscutlery/semver:version",
+      "executor": "@isox-sh/semver:version",
       "options": {}
-    },
-    "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npm publish ./dist/packages/query-mikro-orm --access public"
-      }
     }
-  }
+  },
+  "dependencies": ["core"]
 }

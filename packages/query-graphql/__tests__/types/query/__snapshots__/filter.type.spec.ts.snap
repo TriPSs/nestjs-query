@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`filter types DeleteFilterType should create the correct filter graphql schema 1`] = `
+exports[`filter types > DeleteFilterType > should create the correct filter graphql schema 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -230,7 +230,7 @@ input TimestampFieldComparisonBetween {
 }"
 `;
 
-exports[`filter types FilterType allowedBooleanExpressions option no boolean expressions should only expose allowed comparisons 1`] = `
+exports[`filter types > FilterType > allowedBooleanExpressions option > no boolean expressions > should only expose allowed comparisons 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -299,7 +299,7 @@ input NumberFieldComparisonBetween {
 }"
 `;
 
-exports[`filter types FilterType allowedBooleanExpressions option only and boolean expressions should only expose allowed comparisons 1`] = `
+exports[`filter types > FilterType > allowedBooleanExpressions option > only and boolean expressions > should only expose allowed comparisons 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -375,7 +375,7 @@ input NumberFieldComparisonBetween {
 }"
 `;
 
-exports[`filter types FilterType allowedBooleanExpressions option only or boolean expressions should only expose allowed comparisons 1`] = `
+exports[`filter types > FilterType > allowedBooleanExpressions option > only or boolean expressions > should only expose allowed comparisons 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -451,7 +451,7 @@ input NumberFieldComparisonBetween {
 }"
 `;
 
-exports[`filter types FilterType allowedComparisons option should only expose allowed comparisons 1`] = `
+exports[`filter types > FilterType > allowedComparisons option > should only expose allowed comparisons 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -572,7 +572,7 @@ input TestAllowedComparisonStringFieldFilterComparison {
 }"
 `;
 
-exports[`filter types FilterType allowedComparisons option should only expose between/not between comparisons for allowed types 1`] = `
+exports[`filter types > FilterType > allowedComparisons option > should only expose between/not between comparisons for allowed types 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -708,7 +708,7 @@ input TestBetweenComparisonStringFieldFilterComparison {
 }"
 `;
 
-exports[`filter types FilterType filterDecorators option should apply the decorator to the correct fields 1`] = `
+exports[`filter types > FilterType > filterDecorators option > should apply the decorator to the correct fields 1`] = `
 [
   {
     "propertyKey": "eq",
@@ -809,7 +809,7 @@ exports[`filter types FilterType filterDecorators option should apply the decora
 ]
 `;
 
-exports[`filter types FilterType filterDepth option different filterDepth options shouldn't affect each other 1`] = `
+exports[`filter types > FilterType > filterDepth option > different filterDepth options shouldn't affect each other 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -933,7 +933,7 @@ input TestFilterDepth_ShouldNotAffect_RelationAFilterTestRelationDtoFilter {
 }"
 `;
 
-exports[`filter types FilterType filterDepth option should generate a 0-level deep filter-type 1`] = `
+exports[`filter types > FilterType > filterDepth option > should generate a 0-level deep filter-type 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -1004,7 +1004,7 @@ input NumberFieldComparisonBetween {
 }"
 `;
 
-exports[`filter types FilterType filterDepth option should generate a 1-level deep filter-type 1`] = `
+exports[`filter types > FilterType > filterDepth option > should generate a 1-level deep filter-type 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -1101,7 +1101,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`filter types FilterType filterDepth option should generate a 2-level deep filter-type 1`] = `
+exports[`filter types > FilterType > filterDepth option > should generate a 2-level deep filter-type 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -1207,7 +1207,7 @@ input TestFilterDepth_2FilterTestFilterDepth_2_RelationAFilterTestRelationDtoFil
 }"
 `;
 
-exports[`filter types FilterType filterDepth option should generate a infinite deep filter-type 1`] = `
+exports[`filter types > FilterType > filterDepth option > should generate a infinite deep filter-type 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -1313,7 +1313,7 @@ input TestRelationDtoDeepFilter {
 }"
 `;
 
-exports[`filter types FilterType filterDepth option should generate filter types with suffix / 0-level depth 1`] = `
+exports[`filter types > FilterType > filterDepth option > should generate filter types with suffix / 0-level depth 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -1410,7 +1410,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`filter types FilterType filterDepth option should return cached types 1`] = `
+exports[`filter types > FilterType > filterDepth option > should return cached types 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -1537,7 +1537,7 @@ input TestFilterDepth_ShouldNotAffect_RelationAFilterTestRelationDtoFilter {
 }"
 `;
 
-exports[`filter types FilterType filterRequired option should only expose allowed comparisons 1`] = `
+exports[`filter types > FilterType > filterRequired option > should only expose allowed comparisons 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -1644,7 +1644,7 @@ input DateFieldComparisonBetween {
 }"
 `;
 
-exports[`filter types FilterType should create the correct filter graphql schema 1`] = `
+exports[`filter types > FilterType > should create the correct filter graphql schema 1`] = `
 "type Query {
   test(input: TestDtoFilter!): Int!
 }
@@ -1876,7 +1876,7 @@ input TestFilterDtoFilterTestRelationDtoFilter {
 }"
 `;
 
-exports[`filter types FilterType typeNamePrefix option should apply correct type name prefix 1`] = `
+exports[`filter types > FilterType > typeNamePrefix option > should apply correct type name prefix 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -2009,7 +2009,7 @@ input MyCustomFloatFilterComparisonBetween {
 }"
 `;
 
-exports[`filter types SubscriptionFilterType should create the correct filter graphql schema 1`] = `
+exports[`filter types > SubscriptionFilterType > should create the correct filter graphql schema 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!
@@ -2239,7 +2239,7 @@ input TimestampFieldComparisonBetween {
 }"
 `;
 
-exports[`filter types UpdateFilterType should create the correct filter graphql schema 1`] = `
+exports[`filter types > UpdateFilterType > should create the correct filter graphql schema 1`] = `
 "type TestFilterDto {
   id: Float!
   boolField: Boolean!

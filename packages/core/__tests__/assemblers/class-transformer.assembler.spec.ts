@@ -1,9 +1,10 @@
 // eslint-disable-next-line max-classes-per-file
 import { Assembler, AssemblerDeserializer, AssemblerSerializer, ClassTransformerAssembler } from '@ptc-org/nestjs-query-core'
 import * as classTransformer from 'class-transformer'
+import { vi } from 'vitest'
 
 describe('ClassTransformerAssembler', () => {
-  const plainToClassSpy = jest.spyOn(classTransformer, 'plainToClass')
+  const plainToClassSpy = vi.spyOn(classTransformer, 'plainToClass')
 
   class TestDTO {
     firstName!: string
@@ -20,7 +21,7 @@ describe('ClassTransformerAssembler', () => {
   @Assembler(TestDTO, TestEntity)
   class TestClassAssembler extends ClassTransformerAssembler<TestDTO, TestEntity> {}
 
-  beforeEach(() => jest.clearAllMocks())
+  beforeEach(() => vi.clearAllMocks())
 
   describe('convertToDTO', () => {
     it('should call plainToClass with the DTO class and the passed in entity', () => {
@@ -55,8 +56,8 @@ describe('ClassTransformerAssembler', () => {
   })
 
   describe('with serializer', () => {
-    const testDtoSerialize = jest.fn((td: TestSerializeDTO) => ({ firstName: td.firstName, lastName: td.lastName }))
-    const testEntitySerialize = jest.fn((te: TestSerializeEntity) => ({
+    const testDtoSerialize = vi.fn((td: TestSerializeDTO) => ({ firstName: td.firstName, lastName: td.lastName }))
+    const testEntitySerialize = vi.fn((te: TestSerializeEntity) => ({
       firstName: te.firstName,
       lastName: te.lastName
     }))
@@ -104,7 +105,7 @@ describe('ClassTransformerAssembler', () => {
   })
 
   describe('with deserializer', () => {
-    const testDtoDeserialize = jest.fn((td) => {
+    const testDtoDeserialize = vi.fn((td) => {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const input = new TestDeserializeDTO()
       // @ts-ignore
@@ -114,7 +115,7 @@ describe('ClassTransformerAssembler', () => {
       return input
     })
 
-    const testEntityDserialize = jest.fn((te) => {
+    const testEntityDserialize = vi.fn((te) => {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const input = new TestDeserializeEntity()
       // @ts-ignore

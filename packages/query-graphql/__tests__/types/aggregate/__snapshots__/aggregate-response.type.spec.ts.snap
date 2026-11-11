@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AggregateResponseType should create an aggregate type with a custom name 1`] = `
+exports[`AggregateResponseType > should create an aggregate type with a custom name 1`] = `
 "type FakeTypeAggregateGroupBy {
   stringField: String
   numberField: Float
@@ -88,7 +88,7 @@ type Query {
 }"
 `;
 
-exports[`AggregateResponseType should create an aggregate type with the correct fields for each type 1`] = `
+exports[`AggregateResponseType > should create an aggregate type with the correct fields for each type 1`] = `
 "type FakeTypeAggregateGroupBy {
   stringField: String
   numberField: Float
@@ -142,7 +142,7 @@ type Query {
 }"
 `;
 
-exports[`AggregateResponseType should return the same class if called multiple times 1`] = `
+exports[`AggregateResponseType > should return the same class if called multiple times 1`] = `
 "type FakeTypeAggregateGroupBy {
   stringField: String
   numberField: Float

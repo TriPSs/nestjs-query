@@ -7,12 +7,7 @@ on:
       - releases/*
   pull_request:
 
-env:
-  NX_BRANCH: ${{ github.event.number }}
-  NX_RUN_GROUP: ${{ github.run_id }}
-
 jobs:
-
   setup:
     uses: ./.github/workflows/shared.setup-env.yml
 
@@ -22,8 +17,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [ 24.x, 26.x ]
-        target: [ 'build', 'test', 'lint' ]
+        node-version: [24.x, 26.x]
+        target: ['build', 'test', 'lint']
     steps:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v7
@@ -43,12 +38,8 @@ jobs:
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
-      - name: nx workspace:version
-        if: matrix.target == 'build'
-        run: yarn nx run workspace:version
-
-      - name: nx affected:${{ matrix.target }}
-        run: yarn nx run-many --target=${{ matrix.target }} --all
+      - name: isox ${{ matrix.target }}
+        run: yarn isox run-many --target=${{ matrix.target }}
 
       - name: Codecov
         uses: codecov/codecov-action@v7
@@ -65,7 +56,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [ 22.x, 24.x ]
+        node-version: [24.x, 26.x]
         db-type: ['postgres', 'mysql']
     steps:
       - name: Use Node.js ${{ matrix.node-version }}
@@ -83,8 +74,8 @@ jobs:
       - name: docker compose
         run: docker compose -f ./examples/docker-compose.yml up -d
 
-      - name: nx affected:e2e
-        run: yarn nx run-many --target=e2e --all
+      - name: isox e2e
+        run: yarn isox run-many --target=e2e
         env:
           NESTJS_QUERY_DB_TYPE: ${{ matrix.db-type }}
 

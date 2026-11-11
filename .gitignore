@@ -90,10 +90,7 @@ tsconfig.tsbuildinfo
 # VSCode workspace files
 .vscode
 
-.nx/cache
-.nx/workspace-data
-
 .npmrc
 .claude/worktrees
-.nx/polygraph
-.nx/self-healing
+
+.isox/

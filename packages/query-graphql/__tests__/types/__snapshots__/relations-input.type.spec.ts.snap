@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`RelationsInputType should create an input type with a custom parent and relation id 1`] = `
+exports[`RelationsInputType > should create an input type with a custom parent and relation id 1`] = `
 "type Query {
   test(input: RelationsCustomParentRelationIdInput!): Int!
 }
@@ -14,7 +14,7 @@ input RelationsCustomParentRelationIdInput {
 }"
 `;
 
-exports[`RelationsInputType should create an input type with a custom parent id 1`] = `
+exports[`RelationsInputType > should create an input type with a custom parent id 1`] = `
 "type Query {
   test(input: RelationsCustomParentIdInput!): Int!
 }
@@ -28,7 +28,7 @@ input RelationsCustomParentIdInput {
 }"
 `;
 
-exports[`RelationsInputType should create an input type with a custom relation id 1`] = `
+exports[`RelationsInputType > should create an input type with a custom relation id 1`] = `
 "type Query {
   test(input: RelationsCustomRelationIdInput!): Int!
 }
@@ -42,7 +42,7 @@ input RelationsCustomRelationIdInput {
 }"
 `;
 
-exports[`RelationsInputType should create an input type with an id and relationIds fields 1`] = `
+exports[`RelationsInputType > should create an input type with an id and relationIds fields 1`] = `
 "type Query {
   test(input: RelationsInput!): Int!
 }

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`WhereBuilder and and multiple expressions together 1`] = `
+exports[`WhereBuilder > and > and multiple expressions together 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
@@ -21,7 +21,7 @@ WHERE
   )"
 `;
 
-exports[`WhereBuilder and and multiple filters together with multiple fields 1`] = `
+exports[`WhereBuilder > and > and multiple filters together with multiple fields 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
@@ -46,7 +46,7 @@ WHERE
   )"
 `;
 
-exports[`WhereBuilder and multiple field comparisons together 1`] = `
+exports[`WhereBuilder > and multiple field comparisons together 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
@@ -64,7 +64,7 @@ WHERE
   AND ("TestEntity"."bool_type" = TRUE)"
 `;
 
-exports[`WhereBuilder and should properly group AND with a sibling field comparison 1`] = `
+exports[`WhereBuilder > and > should properly group AND with a sibling field comparison 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
@@ -84,7 +84,7 @@ WHERE
   AND ("TestEntity"."string_type" = foo)"
 `;
 
-exports[`WhereBuilder and should support nested ors 1`] = `
+exports[`WhereBuilder > and > should support nested ors 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
@@ -113,7 +113,7 @@ WHERE
   )"
 `;
 
-exports[`WhereBuilder or and multiple and filters together 1`] = `
+exports[`WhereBuilder > or > and multiple and filters together 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
@@ -138,7 +138,7 @@ WHERE
   )"
 `;
 
-exports[`WhereBuilder or multiple operators for a single field together 1`] = `
+exports[`WhereBuilder > or multiple operators for a single field together 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
@@ -159,7 +159,7 @@ WHERE
   )"
 `;
 
-exports[`WhereBuilder or or multiple expressions together 1`] = `
+exports[`WhereBuilder > or > or multiple expressions together 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
@@ -180,7 +180,7 @@ WHERE
   )"
 `;
 
-exports[`WhereBuilder or should properly group OR with a sibling field comparison 1`] = `
+exports[`WhereBuilder > or > should properly group OR with a sibling field comparison 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
@@ -200,7 +200,7 @@ WHERE
   AND ("TestEntity"."string_type" = foo)"
 `;
 
-exports[`WhereBuilder or should support nested ands 1`] = `
+exports[`WhereBuilder > or > should support nested ands 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",
@@ -229,7 +229,7 @@ WHERE
   )"
 `;
 
-exports[`WhereBuilder should accept a empty filter 1`] = `
+exports[`WhereBuilder > should accept a empty filter 1`] = `
 "SELECT
   "TestEntity"."test_entity_pk" AS "TestEntity_test_entity_pk",
   "TestEntity"."string_type" AS "TestEntity_string_type",

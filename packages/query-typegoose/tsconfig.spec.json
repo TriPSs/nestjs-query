@@ -2,14 +2,11 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
-    "types": [
-      "jest",
-      "node"
-    ]
+    "module": "esnext",
+    "types": ["vitest/globals", "node"]
   },
   "include": [
-    "jest.config.ts",
+    "vitest.config.ts",
     "**/*.test.ts",
     "**/*.spec.ts",
     "**/*.test.tsx",
@@ -18,6 +15,7 @@
     "**/*.spec.js",
     "**/*.test.jsx",
     "**/*.spec.jsx",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "__tests__/**/*.ts"
   ]
 }

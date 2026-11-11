@@ -8,6 +8,7 @@ import {
   Relatable,
   Relation
 } from '@ptc-org/nestjs-query-graphql'
+import { vi } from 'vitest'
 
 import * as readRelations from '../../../src/resolvers/relations/read-relations.resolver'
 import * as referenceRelation from '../../../src/resolvers/relations/references-relation.resolver'
@@ -16,10 +17,10 @@ import * as updateRelations from '../../../src/resolvers/relations/update-relati
 import { BaseServiceResolver } from '../../../src/resolvers/resolver.interface'
 
 describe('Relatable', () => {
-  const referenceMixinSpy = jest.spyOn(referenceRelation, 'ReferencesRelationMixin')
-  const readMixinSpy = jest.spyOn(readRelations, 'ReadRelationsMixin')
-  const updateMixinSpy = jest.spyOn(updateRelations, 'UpdateRelationsMixin')
-  const removeMixinSpy = jest.spyOn(removeRelations, 'RemoveRelationsMixin')
+  const referenceMixinSpy = vi.spyOn(referenceRelation, 'ReferencesRelationMixin')
+  const readMixinSpy = vi.spyOn(readRelations, 'ReadRelationsMixin')
+  const updateMixinSpy = vi.spyOn(updateRelations, 'UpdateRelationsMixin')
+  const removeMixinSpy = vi.spyOn(removeRelations, 'RemoveRelationsMixin')
 
   @ObjectType()
   class TestRelation {
@@ -27,7 +28,7 @@ describe('Relatable', () => {
     id!: number
   }
 
-  afterEach(() => jest.clearAllMocks())
+  afterEach(() => vi.clearAllMocks())
 
   it('should call the mixins with the relations derived from decorators', () => {
     @ObjectType()

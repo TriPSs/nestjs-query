@@ -2,6 +2,7 @@ import { Controller, INestApplication, UnauthorizedException } from '@nestjs/com
 import { Test } from '@nestjs/testing'
 import { Filter, QueryService } from '@ptc-org/nestjs-query-core'
 import request from 'supertest'
+import { vi } from 'vitest'
 
 import { Authorizer, getAuthorizerToken, OperationGroup } from '../../src/auth'
 import { CreateController, CreateControllerOpts } from '../../src/controllers/create.controller'
@@ -19,11 +20,11 @@ describe('CreateController', () => {
     }
 
     const service = {
-      createOne: jest.fn()
+      createOne: vi.fn()
     }
     const authorizer: Authorizer<TestDTO> = {
-      authorize: jest.fn().mockRejectedValue(new UnauthorizedException()),
-      authorizeRelation: jest.fn()
+      authorize: vi.fn().mockRejectedValue(new UnauthorizedException()),
+      authorizeRelation: vi.fn()
     }
 
     @Controller('tests')
@@ -66,11 +67,11 @@ describe('CreateController', () => {
 
     const setupApp = async (opts: CreateControllerOpts<ValidatedDTO>, resolvedAuthFilter: Filter<ValidatedDTO> | undefined) => {
       const service = {
-        createOne: jest.fn().mockImplementation((input: ValidatedDTO) => Promise.resolve(input))
+        createOne: vi.fn().mockImplementation((input: ValidatedDTO) => Promise.resolve(input))
       }
       const authorizer: Authorizer<ValidatedDTO> = {
-        authorize: jest.fn().mockResolvedValue(resolvedAuthFilter),
-        authorizeRelation: jest.fn()
+        authorize: vi.fn().mockResolvedValue(resolvedAuthFilter),
+        authorizeRelation: vi.fn()
       }
 
       @Controller('validated-tests')

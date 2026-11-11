@@ -1,10 +1,12 @@
+import { vi } from 'vitest'
+
 // eslint-disable-next-line max-classes-per-file
 import { SkipIf } from '../../src/decorators'
 
 describe('@SkipIf decorator', () => {
   describe('class decorator', () => {
     it('should call the decorator if the condition is false', () => {
-      const dec = jest.fn()
+      const dec = vi.fn()
 
       @SkipIf(() => false, dec)
       class TestSkipDecorator {}
@@ -13,7 +15,7 @@ describe('@SkipIf decorator', () => {
     })
 
     it('should not call the decorator if the condition is true', () => {
-      const dec = jest.fn()
+      const dec = vi.fn()
 
       @SkipIf(() => true, dec)
       // @ts-ignore
@@ -26,7 +28,7 @@ describe('@SkipIf decorator', () => {
 
   describe('property decorator', () => {
     it('should call the decorator if the condition is false', () => {
-      const dec = jest.fn()
+      const dec = vi.fn()
 
       class TestSkipDecorator {
         @SkipIf(() => false, dec)
@@ -37,7 +39,7 @@ describe('@SkipIf decorator', () => {
     })
 
     it('should not call the decorator if the condition is true', () => {
-      const dec = jest.fn()
+      const dec = vi.fn()
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       class TestSkipDecorator {
@@ -51,7 +53,7 @@ describe('@SkipIf decorator', () => {
 
   describe('method decorator', () => {
     it('should call the decorator if the condition is false', () => {
-      const dec = jest.fn()
+      const dec = vi.fn()
 
       class TestSkipDecorator {
         @SkipIf(() => false, dec)
@@ -68,7 +70,7 @@ describe('@SkipIf decorator', () => {
     })
 
     it('should not call the decorator if the condition is true', () => {
-      const dec = jest.fn()
+      const dec = vi.fn()
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       class TestSkipDecorator {
@@ -84,7 +86,7 @@ describe('@SkipIf decorator', () => {
 
   describe('parameter decorator', () => {
     it('should call the decorator if the condition is false', () => {
-      const dec = jest.fn()
+      const dec = vi.fn()
 
       class TestSkipDecorator {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -97,7 +99,7 @@ describe('@SkipIf decorator', () => {
     })
 
     it('should not call the decorator if the condition is true', () => {
-      const dec = jest.fn()
+      const dec = vi.fn()
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       class TestSkipDecorator {

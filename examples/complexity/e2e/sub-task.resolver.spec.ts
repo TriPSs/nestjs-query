@@ -3,13 +3,14 @@ import { Test } from '@nestjs/testing'
 import { CursorConnectionType } from '@ptc-org/nestjs-query-graphql'
 import request from 'supertest'
 import { DataSource } from 'typeorm'
+import { vi } from 'vitest'
 
 import { AppModule } from '../src/app.module'
 import { SubTaskDTO } from '../src/sub-task/dto/sub-task.dto'
 import { refresh } from './fixtures'
 import { edgeNodes, pageInfoField, subTaskFields, todoItemFields } from './graphql-fragments'
 
-jest.setTimeout(20000)
+vi.setConfig({ testTimeout: 20000 })
 
 describe('SubTaskResolver (complexity - e2e)', () => {
   let app: INestApplication

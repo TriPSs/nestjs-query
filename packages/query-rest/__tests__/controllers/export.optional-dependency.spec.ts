@@ -1,10 +1,11 @@
 import { QueryService } from '@ptc-org/nestjs-query-core'
 import { Expose } from 'class-transformer'
 import { anything, instance, mock, when } from 'ts-mockito'
+import { vi } from 'vitest'
 
 import { ExportController } from '../../src'
 
-jest.mock('csv-stringify/sync', () => {
+vi.mock('csv-stringify/sync', () => {
   throw new Error('Cannot find module csv-stringify/sync')
 })
 
