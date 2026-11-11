@@ -1,0 +1,24 @@
+docs/rest/controllers.mdx
+  s_bfe59bc1d2a9c4::t_05252e6576f488 88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4e0cf292ea8758e01ae16db224c6c0a2d0f64004",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_bfe59bc1d2a9c4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ca42-bbf1-7d73-a093-6782b241ff3b",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
