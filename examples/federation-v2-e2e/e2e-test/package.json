@@ -10,13 +10,13 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "graphql": "^16.13.2",
+    "graphql": "^16.15.0",
     "graphql-request": "^7.4.0"
   },
   "devDependencies": {
-    "@types/node": "^22.19.1",
+    "@types/node": "^22.20.5",
     "typescript": "^5.9.3",
-    "vite": "^8.3.5",
+    "vite": "^8.3.7",
     "vitest": "5.1.0"
   }
 }
