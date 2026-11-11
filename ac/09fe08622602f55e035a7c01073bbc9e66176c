@@ -1,0 +1,429 @@
+packages/query-graphql/__tests__/auth/default-crud-auth.service.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 235,239,280,284,287,291
+  s_2b94a19f58591b::t_01f348d3cbb43a 6
+packages/query-graphql/__tests__/types/query/offset-query-args.type.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 23
+  s_2b94a19f58591b::t_4506f7a659b784 18
+examples/complexity/e2e/tag.resolver.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 14
+  s_2b94a19f58591b::t_639e17ffb257bc 6
+.ncurc.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 7
+packages/query-graphql/__tests__/types/connection/cursor-connection.type.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 97,111,120,135,157,181,202,227,266,280,295,327,359,397,437,497,530,568,608,671,684,698
+  s_2b94a19f58591b::t_92b7255f7e4d92 6
+examples/federation-v2-e2e/user-service/Dockerfile
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 7,14-15
+  s_3e7dfcd51cc345::t_7a64e43828435a 17,31
+examples/project.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 3,7-10,18-19
+  s_3e7dfcd51cc345::t_7c7b944f13696e 13,15
+packages/core/project.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 3,7-10,13,15,19-20,23-26,29-30,34,37-41,43-46,48-49
+  s_3e7dfcd51cc345::t_2bb686160be225 27-28
+packages/query-mongoose/project.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 3,7-10,13,15,19-20,23-26,29-30,34,37-41,43-46,48-49
+  s_3e7dfcd51cc345::t_32d7dadfd9516b 27-28
+packages/query-sequelize/project.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 3,7-10,13,15,19-20,23-26,29-30,34,37-41,43-46,48-49
+  s_3e7dfcd51cc345::t_3da9e22614bebd 27-28
+examples/federation-v2-e2e/tag-service/Dockerfile
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 7,14-15
+  s_3e7dfcd51cc345::t_9529b5d5022c95 17,31
+packages/query-typegoose/tsconfig.spec.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 6,9
+  s_3e7dfcd51cc345::t_e1406b20193980 5,18-19
+examples/complexity/e2e/todo-item.resolver.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 15
+  s_2b94a19f58591b::t_59e701e8e1c182 6
+packages/query-graphql/__tests__/decorators/resolver-method.decorator.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 1-2,20,28
+packages/query-mikro-orm/vitest.config.ts
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 1-2
+  s_3e7dfcd51cc345::t_7ef500b3644b4a 3
+packages/query-graphql/__tests__/types/mutation-args.type.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 17
+  s_2b94a19f58591b::t_25d2be6e52e88d 2
+packages/query-mongoose/vitest.config.ts
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 1-2
+  s_3e7dfcd51cc345::t_e1e0e5868a011a 3
+packages/core/__tests__/assemblers/default.assembler.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 6,20
+  s_2b94a19f58591b::t_976c2610f194ba 3
+packages/query-graphql/__tests__/types/connection/offset-connection.type.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 95,109,121,136,153,172,191,211
+  s_2b94a19f58591b::t_ff33401c9257e9 5
+package.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 12
+  s_3e7dfcd51cc345::t_c9e1219f5f9fbd 13-15,50-54,73-74,100-102,115-117
+packages/query-graphql/__tests__/decorators/hook.decorator.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 23,33,45,50,60,71,81,93,98,108,119,129,141,146,156,167,177,189,194,204,215,225,237,242,252,263,273,285,290,300,311,321,333,338,348,359,369,381,386,396
+  s_2b94a19f58591b::t_ee11d0c3805f90 15
+tsconfig.spec.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 6,8
+  s_3e7dfcd51cc345::t_2b613fa6997a20 5
+.eslintrc.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 3,15-24,29-39,99-100,110
+  s_3e7dfcd51cc345::t_157271991ecb26 9
+examples/federation-v2-e2e/todo-service/Dockerfile
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 7,14-15
+  s_3e7dfcd51cc345::t_e98979167178b0 17,31
+packages/query-typegoose/project.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 3,7-10,13,15,19-20,23-26,29-30,34,37-41,43-46,48-49
+  s_3e7dfcd51cc345::t_33b101452aaaad 27-28
+packages/query-typegoose/vitest.config.ts
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 1-2
+  s_3e7dfcd51cc345::t_2d22131cda8dd2 3
+packages/query-typeorm/tsconfig.spec.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 6,9
+  s_3e7dfcd51cc345::t_6dd53eeadd2b15 5,18-19
+packages/query-graphql/project.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 3,7-10,13,15,19-20,23-26,29-30,34,37-41,43-46,48-49
+  s_3e7dfcd51cc345::t_88c213f67b4b0a 27-28
+packages/query-rest/vitest.config.ts
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 1-2
+  s_3e7dfcd51cc345::t_37e6148c6e81c2 3
+packages/query-graphql/__tests__/resolvers/relations/relations.resolver.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 20-23,31
+  s_2b94a19f58591b::t_9ffcf7b8b27479 11
+packages/query-typeorm/vitest.config.ts
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 1-2
+  s_3e7dfcd51cc345::t_762648dbb6505c 3
+packages/query-graphql/__tests__/types/query/cursor-query-args-with-decorator.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 23
+  s_2b94a19f58591b::t_0a326e0fa6dee2 18
+README.md
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 53,56,60,63
+  s_3e7dfcd51cc345::t_4fbf4a18a6e462 24-30,36-43,47
+packages/query-graphql/__tests__/decorators/filterable-fields.decorator.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 9-10,14-15
+  s_2b94a19f58591b::t_403d24a5271ee3 3
+CONTRIBUTING.md
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 26,33-35,50
+  s_3e7dfcd51cc345::t_b6670d15edeb44 20,41-43
+project.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 3,6,10,19
+  s_3e7dfcd51cc345::t_db79191426cfeb 21-22
+packages/core/tsconfig.lib.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 5,7-8
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 11
+  s_3e7dfcd51cc345::t_b8b71d7015bfe3 4,9,12
+examples/federation-v2-e2e/e2e-test/vitest.config.cts
+  s_3e7dfcd51cc345::t_0bba22b25d9061 1-12
+packages/query-graphql/__tests__/types/query/cursor-query-args.type.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 23
+  s_2b94a19f58591b::t_0e82eb637d5381 18
+packages/query-typeorm/tsconfig.lib.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 5,7-8
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 11
+  s_3e7dfcd51cc345::t_c65a3c1b62b1e2 4,9,12
+packages/query-rest/__tests__/controllers/create.controller.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 23,26-27,70,73-74
+  s_2b94a19f58591b::t_98c3297c4793d6 5
+isox.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 1-27
+.prettierignore
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 4
+packages/core/__tests__/services/relation-query.service.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 8,21
+  s_2b94a19f58591b::t_6279bb52e99bec 3
+packages/query-mikro-orm/tsconfig.lib.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 11
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 5,7-8
+  s_3e7dfcd51cc345::t_149589bc6f03ec 4,9,12
+packages/query-rest/__tests__/connection/offset-connection.type.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 17,32
+  s_2b94a19f58591b::t_0436427db9a261 2
+packages/query-rest/project.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 3,6,8,12,14,18-19,22-25,28-29,33,36-40,42-45,49
+  s_3e7dfcd51cc345::t_432021a1eee9ca 26-27
+packages/query-graphql/__tests__/resolvers/crud.resolver.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 12-16,18
+  s_2b94a19f58591b::t_3f666bf2204729 3
+packages/query-graphql/__tests__/types/query/none-query-args-with-decorator.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 21
+  s_2b94a19f58591b::t_3f426b77e15c91 16
+packages/query-graphql/__tests__/decorators/resolver-mutation.decorator.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 10-11,15-16,18
+  s_2b94a19f58591b::t_8869e14abefc42 5
+packages/query-graphql/__tests__/resolvers/export.optional-dependency.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 8
+  s_2b94a19f58591b::t_cbb7b8c1ab2ce8 4
+packages/query-rest/tsconfig.lib.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 5,7-8
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 11
+  s_3e7dfcd51cc345::t_7ce83972ec9c21 4,9,12
+packages/query-graphql/__tests__/types/query/offset-query-args-with-decorator.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 29
+  s_2b94a19f58591b::t_952f53d886071e 24
+.github/workflows/release.yml
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 21-23,33-36,59,63,66,69-70
+  s_3e7dfcd51cc345::t_6a251e8fcce20d 18,71-74
+packages/query-graphql/__tests__/decorators/skip-if.decorator.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 1-2,9,18,31,42,56,73,89,102
+.gitignore
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 95-96
+packages/query-graphql/__tests__/decorators/authorize-filter.decorator.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 20
+  s_2b94a19f58591b::t_388bc86e2221ec 4
+packages/query-mikro-orm/project.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 3,6-7,9,13,15,18-26,29-31,34,37-41,43-46,48-49
+  s_3e7dfcd51cc345::t_3404033d46e677 27-28
+packages/query-mongoose/tsconfig.spec.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 6,9
+  s_3e7dfcd51cc345::t_c2770829aefef1 5,18-19
+packages/query-graphql/__tests__/decorators/resolver-query.decorator.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 10-11,15-16,18
+  s_2b94a19f58591b::t_1df97803dafe4a 5
+packages/query-graphql/tsconfig.lib.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 11
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 5,7-8
+  s_3e7dfcd51cc345::t_1d11f591dbb5bf 4,9,12
+packages/query-rest/__tests__/controllers/export.optional-dependency.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 8
+  s_2b94a19f58591b::t_e5c31150327a87 4
+packages/query-sequelize/vitest.config.ts
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 1-2
+  s_3e7dfcd51cc345::t_b3e26c3ba43015 3
+packages/query-mongoose/tsconfig.lib.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 11
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 5,7-8
+  s_3e7dfcd51cc345::t_cedf5e31bf3a22 4,9,12
+packages/query-typeorm/project.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 3,6-7,9,13,15,18-26,29-31,34,37-41,43-46,48-49
+  s_3e7dfcd51cc345::t_58a73320e29636 27-28
+examples/tsconfig.app.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 8
+  s_3e7dfcd51cc345::t_ff0c32787bd95c 6,9
+packages/query-sequelize/tsconfig.lib.json
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 5,7-8
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 11
+  s_3e7dfcd51cc345::t_2dbebdaf2d7ad9 4,9,12
+packages/query-typeorm/__tests__/query/aggregate.builder.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 31
+  s_2b94a19f58591b::t_afa5daf82d3d22 6
+examples/tsconfig.spec.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 6,8
+  s_3e7dfcd51cc345::t_70c0403408d185 5
+packages/core/tsconfig.spec.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 6,9
+  s_3e7dfcd51cc345::t_f6677adb1db23a 5,18-19
+examples/complexity/e2e/sub-task.resolver.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 13
+  s_2b94a19f58591b::t_ba0f3433f4b0e0 6
+packages/query-graphql/__tests__/decorators/resolver-field.decorator.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 10-11,15-16,18
+  s_2b94a19f58591b::t_12e6dd8955ed0d 5
+packages/query-graphql/__tests__/loaders/dataloader.factory.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 7,10,35
+  s_2b94a19f58591b::t_e23e43ba476f24 3
+packages/query-graphql/__tests__/integration/federation-n1/federation-n1-integration.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 206,210
+  s_2b94a19f58591b::t_4785e7ebd3cd08 9
+packages/query-sequelize/tsconfig.spec.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 6,9
+  s_3e7dfcd51cc345::t_dea7f989c45461 5,18-19
+packages/query-graphql/tsconfig.spec.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 6,9
+  s_3e7dfcd51cc345::t_842264acf1e9b7 5,18-19
+packages/query-mikro-orm/tsconfig.spec.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 6,9
+  s_3e7dfcd51cc345::t_5b1534d85be858 5,18-19
+packages/query-rest/tsconfig.spec.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 6,9
+  s_3e7dfcd51cc345::t_f658f03d0763ee 5,18-19
+packages/query-typegoose/tsconfig.lib.json
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 11
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 5,7-8
+  s_3e7dfcd51cc345::t_5ea19b47527526 4,9,12
+packages/query-typeorm/__tests__/query/sql-comparison.builder.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 8,15
+  s_2b94a19f58591b::t_86deea32a80a56 2
+.github/workflows/test.yml
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 20,41-42,59,77-78
+  s_3e7dfcd51cc345::t_46a248bbf5ad67 21
+examples/federation-v2-e2e/e2e-test/Dockerfile
+  s_3e7dfcd51cc345::t_0bba22b25d9061 8
+packages/query-graphql/__tests__/types/query/none-query-args.type.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 23
+  s_2b94a19f58591b::t_5e6514199de00c 18
+packages/core/vitest.config.ts
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 1-2
+  s_3e7dfcd51cc345::t_82e520f9a458d5 3
+AGENTS.md
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 5,9,21-23,26
+packages/query-graphql/vitest.config.ts
+  s_3e7dfcd51cc345::t_c275aaa4b6517d 1-2
+  s_3e7dfcd51cc345::t_fbe9bcdcdf7daf 3
+examples/dataloader-configuration/e2e/tag.resolver.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 14-15,22
+  s_2b94a19f58591b::t_a60343a520d697 6
+packages/core/__tests__/assemblers/class-transformer.assembler.spec.ts
+  s_3e7dfcd51cc345::t_dc1a7e836dfbd0 7,24,59-60,108,118
+  s_2b94a19f58591b::t_d62b54575c95ae 4
+.github/workflows/publish-preview.yml
+  s_3e7dfcd51cc345::t_17bbf73b6c6f61 27
+.github/workflows/shared.setup-env.yml
+  s_3e7dfcd51cc345::t_7ccca147ade968 14-17
+docs/contributing.mdx
+  s_3e7dfcd51cc345::t_ff3692aab2a1ef 126,130,146,154-155
+docs/persistence/typeorm/testing-services.mdx
+  s_3e7dfcd51cc345::t_c529a72e26d326 37,59,63,88,93,96,98,137,145,148,150,170,173,175
+examples/federation-v2-e2e/README.md
+  s_3e7dfcd51cc345::t_6bbb2223312538 31,85
+examples/federation-v2-e2e/e2e-test/package.json
+  s_3e7dfcd51cc345::t_a2aff6273765a2 6,18-20
+examples/federation-v2-e2e/e2e-test/tsconfig.json
+  s_3e7dfcd51cc345::t_5bd519ab0d3e78 11-12
+examples/mongoose/e2e/todo-item.resolver.spec.ts
+  s_3e7dfcd51cc345::t_5fa36eb32e6b97 1
+examples/typegoose/e2e/todo-item.resolver.spec.ts
+  s_3e7dfcd51cc345::t_9ef22f40ae4ca3 1
+examples/vitest.config.ts
+  s_3e7dfcd51cc345::t_2483520f16664c 1-3
+packages/core/__tests__/helpers.spec.ts
+  s_3e7dfcd51cc345::t_f5ebfb140b44fc 1568-1578
+packages/core/src/helpers/filter.helpers.ts
+  s_3e7dfcd51cc345::t_372e27ca1ca374 202
+packages/query-graphql/__tests__/decorators/relation.decorator.spec.ts
+  s_3e7dfcd51cc345::t_0b47de46b7e952 19
+packages/query-graphql/__tests__/resolvers/__snapshots__/aggregate.resolver.spec.ts.snap
+  s_3e7dfcd51cc345::t_e38ed6f7a30bca 1,3,86
+packages/query-graphql/__tests__/resolvers/__snapshots__/create.resolver.spec.ts.snap
+  s_3e7dfcd51cc345::t_78c1036c9b3788 1,3,39,64,89,125,206,237,268,279,310,341,372
+packages/query-graphql/__tests__/resolvers/__snapshots__/delete.resolver.spec.ts.snap
+  s_3e7dfcd51cc345::t_8bc703a4d88179 1,3,81,106,172,249,343,424,517,594,671,682,759,836
+packages/query-graphql/__tests__/resolvers/__snapshots__/read.resolver.spec.ts.snap
+  s_3e7dfcd51cc345::t_12d8e71ad2f330 1,3,143,289,337,475,619,757,901,1045,1183,1227,1367,1511
+packages/query-graphql/__tests__/resolvers/__snapshots__/reference.resolver.spec.ts.snap
+  s_3e7dfcd51cc345::t_9cd78f43ada331 1,3
+packages/query-graphql/__tests__/resolvers/__snapshots__/update.resolver.spec.ts.snap
+  s_3e7dfcd51cc345::t_a7c4e5723bd928 1,3,31,120,194,283,366,377,460,543,626,709,809,896,995
+packages/query-graphql/__tests__/resolvers/federation/__snapshots__/federation.resolver.spec.ts.snap
+  s_3e7dfcd51cc345::t_d1711dec0b5fa1 1,3,52
+packages/query-graphql/__tests__/resolvers/relations/__snapshots__/references-relation.resolver.spec.ts.snap
+  s_3e7dfcd51cc345::t_0bf3ff49faba3d 1,3,14,31
+packages/query-graphql/__tests__/resolvers/relations/__snapshots__/remove-relation.resolver.spec.ts.snap
+  s_3e7dfcd51cc345::t_eef88daa9a42d5 1,3,14,37,60,71,94,117
+packages/query-graphql/__tests__/resolvers/relations/__snapshots__/update-relation.resolver.spec.ts.snap
+  s_3e7dfcd51cc345::t_78f858b8aa33f4 1,3,14,51,88,99,123,147,158
+packages/query-graphql/__tests__/resolvers/relations/aggregate-relation/__snapshots__/1.spec.ts.snap
+  s_3e7dfcd51cc345::t_503f62a02c8c25 1,3,14,97
+packages/query-graphql/__tests__/resolvers/relations/aggregate-relation/__snapshots__/2.spec.ts.snap
+  s_3e7dfcd51cc345::t_cd07f87a1218f3 1,3
+packages/query-graphql/__tests__/resolvers/relations/read-relation/__snapshots__/basics.spec.ts.snap
+  s_3e7dfcd51cc345::t_1c0302e6da1443 1,3,52,102
+packages/query-graphql/__tests__/resolvers/relations/read-relation/many/__snapshots__/1.spec.ts.snap
+  s_3e7dfcd51cc345::t_79cad616b1b81e 1,3,96
+packages/query-graphql/__tests__/resolvers/relations/read-relation/many/__snapshots__/2.spec.ts.snap
+  s_3e7dfcd51cc345::t_757b774cb7076a 1,3
+packages/query-graphql/__tests__/resolvers/relations/read-relation/many/__snapshots__/3.spec.ts.snap
+  s_3e7dfcd51cc345::t_fb15d95fac3cf8 1,3
+packages/query-graphql/__tests__/resolvers/relations/read-relation/many/__snapshots__/4.spec.ts.snap
+  s_3e7dfcd51cc345::t_c72729c66cd130 1,3
+packages/query-graphql/__tests__/resolvers/relations/read-relation/many/__snapshots__/5.spec.ts.snap
+  s_3e7dfcd51cc345::t_eeecdf14afff7b 1,3
+packages/query-graphql/__tests__/resolvers/relations/read-relation/many/__snapshots__/6.spec.ts.snap
+  s_3e7dfcd51cc345::t_87383a7ae699ea 1,3
+packages/query-graphql/__tests__/resolvers/relations/read-relation/one/__snapshots__/1.spec.ts.snap
+  s_3e7dfcd51cc345::t_fc0a21e792fc5f 1,3
+packages/query-graphql/__tests__/resolvers/relations/read-relation/one/__snapshots__/2.spec.ts.snap
+  s_3e7dfcd51cc345::t_7844f6479d678c 1,3
+packages/query-graphql/__tests__/types/__snapshots__/create-many-input.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_441bcf4aaf3eff 1,3
+packages/query-graphql/__tests__/types/__snapshots__/create-one-input.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_b2fc1cd27dedb4 1,3
+packages/query-graphql/__tests__/types/__snapshots__/delete-many-input.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_0c757ba3d35dfb 1,3
+packages/query-graphql/__tests__/types/__snapshots__/delete-many-response.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_282aaf79bd0b77 1,3
+packages/query-graphql/__tests__/types/__snapshots__/delete-one-input.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_c78a234d9dbb8c 1,3,14
+packages/query-graphql/__tests__/types/__snapshots__/find-one-args.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_d7d1a344d227b7 1,3,12
+packages/query-graphql/__tests__/types/__snapshots__/mutation-args.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_7e5b7edd738c71 1,3
+packages/query-graphql/__tests__/types/__snapshots__/relation-input.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_24da9043aef8f9 1,3,17,31,45
+packages/query-graphql/__tests__/types/__snapshots__/relations-input.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_aa1bfaf6699d1a 1,3,17,31,45
+packages/query-graphql/__tests__/types/__snapshots__/update-many-input.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_7be64dd53a65ad 1,3
+packages/query-graphql/__tests__/types/__snapshots__/update-many-response.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_da548c8dcab3b1 1,3
+packages/query-graphql/__tests__/types/__snapshots__/update-one-input.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_66f040eba51ed6 1,3,21
+packages/query-graphql/__tests__/types/aggregate/__snapshots__/aggregate-args.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_a47fbe517bff94 1,3
+packages/query-graphql/__tests__/types/aggregate/__snapshots__/aggregate-response.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_bc91565f157e9b 1,3,91,145
+packages/query-graphql/__tests__/types/connection/__snapshots__/cursor-connection.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_e75ae3a57361da 1,3,48
+packages/query-graphql/__tests__/types/connection/__snapshots__/offset-connection.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_ee2c724faa6ce8 1,3,31
+packages/query-graphql/__tests__/types/query/__snapshots__/cursor-query-args-with-decorator.spec.ts.snap
+  s_3e7dfcd51cc345::t_0f8bcab03a1b03 1,3
+packages/query-graphql/__tests__/types/query/__snapshots__/cursor-query-args.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_9c31243ebbc1fe 1,3,283,575
+packages/query-graphql/__tests__/types/query/__snapshots__/filter.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_3d11601a7cb1f6 1,3,233,302,378,454,575,711,812,936,1007,1104,1210,1316,1413,1540,1647,1879,2012,2242
+packages/query-graphql/__tests__/types/query/__snapshots__/none-query-args-with-decorator.spec.ts.snap
+  s_3e7dfcd51cc345::t_96ca848633d17e 1,3
+packages/query-graphql/__tests__/types/query/__snapshots__/none-query-args.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_e64b537ebd3b03 1,3,222,441
+packages/query-graphql/__tests__/types/query/__snapshots__/offset-query-args-with-decorator.spec.ts.snap
+  s_3e7dfcd51cc345::t_ccc6d04a449d9c 1,3
+packages/query-graphql/__tests__/types/query/__snapshots__/offset-query-args.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_ed4bfe53d0be58 1,3,279,559
+packages/query-graphql/__tests__/types/query/__snapshots__/paging.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_9d7dd8cf86eef6 1,3
+packages/query-graphql/__tests__/types/query/__snapshots__/sorting.type.spec.ts.snap
+  s_3e7dfcd51cc345::t_60e1a8b2e469e2 1,3
+packages/query-typeorm/__tests__/query/__snapshots__/aggregate.builder.spec.ts.snap
+  s_3e7dfcd51cc345::t_b0ebfd23fccf67 1,3,11,19,27,35,43,53,64,74,89
+packages/query-typeorm/__tests__/query/__snapshots__/filter-query.builder.spec.ts.snap
+  s_3e7dfcd51cc345::t_17dc2664191610 1,3,9,11,13,36,52,66,80,98,116,135,155,175,194,210,227,243,258,278,307,323,339,355,371,387,403,422,431,439,447,455,461,469,477,485,493,501,509
+packages/query-typeorm/__tests__/query/__snapshots__/relation-query.builder.spec.ts.snap
+  s_3e7dfcd51cc345::t_3f28c6026769cc 1,3,18,34,46,65,81,97,116,135,150,168,182,198,217,236,253,270,287,304,321,338
+packages/query-typeorm/__tests__/query/__snapshots__/where.builder.spec.ts.snap
+  s_3e7dfcd51cc345::t_4ba572ff2517bc 1,3,24,49,67,87,116,141,162,183,203,232
+tools/vitest-config.ts
+  s_3e7dfcd51cc345::t_cdbc50a3452e72 1-81
+tools/vitest-setup.ts
+  s_3e7dfcd51cc345::t_d3f0210f6df4eb 1
+tsconfig.json
+  s_3e7dfcd51cc345::t_a9cd0e4ee32d0e 15,20-28
+vitest.config.ts
+  s_3e7dfcd51cc345::t_4cfdee2de2f3fc 1-7
+yarn.lock
+  s_3e7dfcd51cc345::t_35ce442668ba50 475,486,488-489,493,495-496,500,502,505-507,511,521-524,762-764,766,768,772-774,777,781-783,786,1051,1251,1253-1254,1258-1260,1262-1266,1270-1272,1274-1279,1283-1285,1287-1293,1297-1299,1301-1308,1312-1314,1316-1319,1339,1366,1373,1383-1389,1507-1509,1513-1515,2171-2177,2375-2498,2500-2502,2504-2530,2669-2678,2704-2710,2738-2744,3080-3082,3084-3085,3089,3103-3105,3107-3109,3113-3115,3118,3146-3149,3172-3174,3176-3179,3187,3205-3207,3210-3212,3216,3230-3232,3234,3236,3240-3307,3311-3317,3321-3324,3328-3330,3335-3337,3342-3351,3356-3359,3363-3365,3370-3373,3377-3380,3384-3387,3391-3394,3398-3401,3405-3408,3412-3415,3419-3422,3426-3429,3433-3436,3440-3486,3490-3492,3494-3508,3512-3515,3519-3524,3528-3551,3780,3789,3894,3901,3915,3924,3990,4105-4122,4155,4279,4321,4368-4377,4395,4431,4467-4473,4518,4550,4581-4588,4667,4703,4725,4732,4741,4764,4837,4877,4881-4883,4885-4886,4890-4892,4894-4895,4899-4910,4914-4917,4933-4935,4937-4938,4940-4941,5039,5111,5153,5205,5212,5243,5329,5343,5362-5363,5397-5400,5404,5434,5467,5550,5557,5581,5597,5646,5807,5876,5887,5897,5929-5937,5982-5985,6060,6073,6184,6222,6274,6312,6373-6392,6501,6543,6603,6628,6707,6803,6828,6835,6851,6901,6957,6971-6974,7026,7041-7043,7208,7237,7284-7285,7289-7292,7296-7299,7303-7306,7310-7312,7314-7318,7322-7325,7329-7331,7333-7334,7338-7341,7345-7347,7349-7351,7355-7357,7359-7362,7366-7368,7370-7371,7375-7378,7382-7385,7389-7391,7393-7394,7398-7400,7402-7404,7408-7411,7415-7418,7422-7425,7429-7445,7447-7452,7483-7489,7574-7579,7583,7711-7791,7795-7834,7982,8022,8068-8087,8097,8148,8244,8271,8294-8303,8322,8702-8710,8775-8779,8809-8810,8843-8844,9017,9128-9134,9144,9153,9176,9214,9280,9351,9501,9515,9522,9529,9552-9562,9795-9798,9802,9866,9894,9924,9954,10010-10070,10102,10124,10176-10178,10191,10430,10508-10511,10532,10548,10641-10647,10676,10758,10767,10785,10858,10867,10906,10961,11105-11112,11129-11132,11331,11589,11599-11610,11620-11624,11626-11627,11769,11840-11964,11974,12158-12166,12192,12203,12236,12292,12327
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ac09fe08622602f55e035a7c01073bbc9e66176c",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_2b94a19f58591b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cbb1-dc21-7581-a721-9392b2b20435",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    },
+    "s_3e7dfcd51cc345": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cbc8-da2d-73f3-a6f3-1ffbcaf93d09",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
