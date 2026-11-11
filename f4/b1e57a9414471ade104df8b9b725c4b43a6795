@@ -1,0 +1,28 @@
+packages/query-graphql/__tests__/resolvers/relations/update-relation.resolver.spec.ts
+  s_bfe59bc1d2a9c4::t_6464d9ab0615e3 40-49
+packages/query-graphql/src/resolvers/relations/update-relations.resolver.ts
+  s_bfe59bc1d2a9c4::t_74a6d12b131cf3 40,94,117-119
+packages/query-graphql/__tests__/resolvers/relations/__snapshots__/update-relation.resolver.spec.ts.snap
+  s_bfe59bc1d2a9c4::t_022c37566a29ff 25,27-30,62,64-67,110,134,157-202
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f4b1e57a9414471ade104df8b9b725c4b43a6795",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_bfe59bc1d2a9c4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ca42-bbf1-7d73-a093-6782b241ff3b",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
