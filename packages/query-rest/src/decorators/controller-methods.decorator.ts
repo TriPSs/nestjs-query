@@ -5,6 +5,7 @@ import {
   Get as NestGet,
   HttpCode,
   HttpStatus,
+  Patch as NestPatch,
   Post as NestPost,
   Put as NestPut,
   SerializeOptions,
@@ -152,6 +153,21 @@ export function Put(
   ...methodOpts: MethodOpts[]
 ): MethodDecorator | PropertyDecorator {
   return methodDecorator(NestPut, HttpStatus.OK)(returnTypeFuncOrOptions, maybeOptions, ...methodOpts)
+}
+
+export function Patch(options: MutationMethodDecoratorArg, ...methodOpts: MethodOpts[]): PropertyDecorator & MethodDecorator
+export function Patch(
+  returnTypeFunction?: ReturnTypeFunc,
+  options?: MutationMethodDecoratorArg,
+  ...methodOpts: MethodOpts[]
+): PropertyDecorator & MethodDecorator
+
+export function Patch(
+  returnTypeFuncOrOptions?: ReturnTypeFunc | MutationMethodDecoratorArg,
+  maybeOptions?: MutationMethodDecoratorArg,
+  ...methodOpts: MethodOpts[]
+): MethodDecorator | PropertyDecorator {
+  return methodDecorator(NestPatch, HttpStatus.OK)(returnTypeFuncOrOptions, maybeOptions, ...methodOpts)
 }
 
 export function Delete(options: MutationMethodDecoratorArg, ...methodOpts: MethodOpts[]): PropertyDecorator & MethodDecorator
