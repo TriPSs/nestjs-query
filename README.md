@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://nestjs-query.mintlify.site/" target="blank"><img src="https://nestjs-query.mintlify.site/images/logo.svg" width="120" alt="Nestjs-query Logo" /></a>
+  <a href="https://nestjs-query.mintlify.site/" target="blank"><img src="docs/images/readme-banner.png" width="100%" alt="nestjs-query — Queryable APIs for NestJS. GraphQL, REST, and TypeScript." /></a>
 </p>
 
 [![Test](https://github.com/TriPSs/nestjs-query/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/TriPSs/nestjs-query/actions/workflows/test.yml)
