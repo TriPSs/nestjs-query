@@ -1,0 +1,21 @@
+.github/workflows/test.yml
+  s_3e7dfcd51cc345::t_c67be05f3663e8 10-12
+yarn.lock
+  s_3e7dfcd51cc345::t_b51fccdfd1594d 4209-4210,4213,4216,4218,4221,5932-5934,9517,11433-11435
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fbe37133b6b9c124fcd4e58b8ac78e5fe42af283",
+  "prompts": {},
+  "sessions": {
+    "s_3e7dfcd51cc345": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cbc8-da2d-73f3-a6f3-1ffbcaf93d09",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
