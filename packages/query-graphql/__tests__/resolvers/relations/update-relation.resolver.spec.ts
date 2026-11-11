@@ -37,6 +37,16 @@ describe('UpdateRelationsResolver', () => {
 
   it('should not add update methods if one and many are empty', () => expectResolverSDL())
 
+  it('should preserve custom descriptions for one and many relation updates', () =>
+    expectResolverSDL({
+      one: {
+        relation: { DTO: TestRelationDTO, update: { enabled: true, description: 'Custom relation update.' } }
+      },
+      many: {
+        relations: { DTO: TestRelationDTO, update: { enabled: true, description: 'Custom relations update.' } }
+      }
+    }))
+
   describe('one', () => {
     it('should use the object type name', () =>
       expectResolverSDL({

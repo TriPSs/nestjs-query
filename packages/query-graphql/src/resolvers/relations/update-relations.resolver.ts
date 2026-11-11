@@ -37,7 +37,7 @@ const UpdateOneRelationMixin =
       @ResolverRelationMutation(
         () => DTOClass,
         {
-          description: relation.update?.description,
+          description: relation.update?.description ?? 'Sets the provided relation, replacing any existing relation.',
           complexity: relation.update?.complexity
         },
         mergeBaseResolverOpts(relation.update, commonResolverOpts),
@@ -91,7 +91,7 @@ const UpdateManyRelationMixin =
       @ResolverRelationMutation(
         () => DTOClass,
         {
-          description: relation.update?.description,
+          description: relation.update?.description ?? 'Adds the provided relations without removing existing relations.',
           complexity: relation.update?.complexity
         },
         mergeBaseResolverOpts(relation.update, commonResolverOpts),
@@ -114,6 +114,9 @@ const UpdateManyRelationMixin =
       @ResolverRelationMutation(
         () => DTOClass,
         {
+          description:
+            relation.update?.description ??
+            'Replaces all existing relations with the provided relations. An empty list removes all relations.',
           complexity: relation.update?.complexity
         },
         mergeBaseResolverOpts(relation.update, commonResolverOpts),
