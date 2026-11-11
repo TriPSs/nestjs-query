@@ -1,0 +1,33 @@
+packages/query-sequelize/README.md
+  s_3cf9d0fefa6a63::t_da23e904669790 2
+packages/query-typeorm/README.md
+  s_3cf9d0fefa6a63::t_44cba63d1c91fd 2
+packages/query-mikro-orm/README.md
+  s_3cf9d0fefa6a63::t_6a0d4dff12d913 1-4
+packages/query-typegoose/README.md
+  s_3cf9d0fefa6a63::t_cde567b714f6cf 2
+packages/query-mongoose/README.md
+  s_3cf9d0fefa6a63::t_53d7202f0ac93a 2
+packages/core/README.md
+  s_3cf9d0fefa6a63::t_eaf1fe70ada18c 2
+packages/query-graphql/README.md
+  s_3cf9d0fefa6a63::t_e3bacd40afe46c 2
+packages/query-rest/README.md
+  s_3cf9d0fefa6a63::t_b6f56e0f817650 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9c558d8a5ebe4bc9df391fbe31ec187dd7726751",
+  "prompts": {},
+  "sessions": {
+    "s_3cf9d0fefa6a63": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cbde-426e-76f1-96c4-5974ae7199dc",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
