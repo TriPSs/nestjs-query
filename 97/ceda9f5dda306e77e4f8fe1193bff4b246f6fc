@@ -1,0 +1,25 @@
+docs/rest/dtos.mdx
+  s_bfe59bc1d2a9c4::t_baa916034deb6d 39-47,49-52
+  s_bfe59bc1d2a9c4::t_ceff7479265c30 35-38,48,53-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "97ceda9f5dda306e77e4f8fe1193bff4b246f6fc",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_bfe59bc1d2a9c4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ca42-bbf1-7d73-a093-6782b241ff3b",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
