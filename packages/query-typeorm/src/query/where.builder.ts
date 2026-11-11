@@ -1,5 +1,5 @@
 import { Filter, FilterComparisons, FilterFieldComparison } from '@ptc-org/nestjs-query-core'
-import { Brackets } from 'typeorm'
+import { Brackets, ObjectLiteral } from 'typeorm'
 
 import type { WhereExpressionBuilder } from 'typeorm'
 
@@ -10,7 +10,7 @@ import { EntityComparisonField, SQLComparisonBuilder } from './sql-comparison.bu
  * @internal
  * Builds a WHERE clause from a Filter.
  */
-export class WhereBuilder<Entity> {
+export class WhereBuilder<Entity extends ObjectLiteral> {
   constructor(private readonly sqlComparisonBuilder: SQLComparisonBuilder<Entity> = new SQLComparisonBuilder<Entity>()) {}
 
   /**

@@ -68,7 +68,7 @@ export class OffsetPager<DTO> implements Pager<DTO, OffsetPagerResult<DTO>> {
 
   private createQuery<Q extends OffsetQueryArgsType<DTO>>(query: Q, pagingMeta: OffsetPagingMeta<DTO>): Q {
     const { limit, offset } = pagingMeta.opts
-    const paging = { limit: limit + 1, offset }
+    const paging: { limit?: number; offset?: number } = { limit: limit + 1, offset }
 
     if (this.enableFetchAllWithNegative && limit === -1) {
       delete paging.limit

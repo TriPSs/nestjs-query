@@ -25,7 +25,7 @@ export class OffsetPager<DTO> implements Pager<DTO, OffsetPagerResult<DTO>> {
       return createEmptyPageResult()
     }
     const results = await this.runQuery(queryMany, query, pagingMeta)
-    return this.createPagingResult(results, pagingMeta, await count?.(query.filter))
+    return this.createPagingResult(results, pagingMeta, await count?.(query.filter ?? {}))
   }
 
   private isValidPaging(pagingMeta: OffsetPagingMeta<DTO>): boolean {

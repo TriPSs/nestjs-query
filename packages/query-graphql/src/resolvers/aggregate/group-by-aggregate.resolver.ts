@@ -38,7 +38,7 @@ export const GroupByAggregateMixin =
             }) // eslint-disable-next-line @typescript-eslint/no-unused-vars
             by: string
           ): unknown {
-            return dto[field.propertyName]
+            return (dto as Record<string, unknown>)[field.propertyName]
           }
         }
 

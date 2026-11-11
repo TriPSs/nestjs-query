@@ -8,8 +8,8 @@ import { TodoItemDto } from './todo-item.dto'
 @Directive('@key(fields: "id")')
 export class TodoListDto {
   @FilterableField()
-  id: number
+  id!: number
 
   @FilterableField()
-  name: string
+  name!: string
 }

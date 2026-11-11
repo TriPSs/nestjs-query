@@ -18,10 +18,7 @@ import type { GraphQLCompositeType, GraphQLResolveInfo as ResolveInfo, Selection
  * Parts based of https://github.com/graphile/graphile-engine/blob/master/packages/graphql-parse-resolve-info/src/index.ts
  */
 
-function getFieldFromAST<TContext>(
-  fieldNode: ASTNode,
-  parentType: GraphQLCompositeType
-): GraphQLField<GraphQLCompositeType, TContext> | undefined {
+function getFieldFromAST(fieldNode: ASTNode, parentType: GraphQLCompositeType): GraphQLField<unknown, unknown> | undefined {
   if (fieldNode.kind === Kind.FIELD) {
     if (!(parentType instanceof GraphQLUnionType)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -34,12 +31,13 @@ function getFieldFromAST<TContext>(
 }
 
 function getDirectiveValue(directive: DirectiveNode, info: ResolveInfo) {
-  const arg = directive.arguments[0] // only arg on an include or skip directive is "if"
+  const arg = directive.arguments?.[0] // only arg on an include or skip directive is "if"
+  if (!arg) return false
   if (arg.value.kind !== Kind.VARIABLE) {
     // eslint-disable-next-line
-    return !!arg.value['value']
+    return 'value' in arg.value && !!arg.value.value
   }
-  return info.variableValues[arg.value.name.value]
+  return !!info.variableValues[arg.value.name.value]
 }
 
 function getDirectiveResults(fieldNode: SelectionNode, info: ResolveInfo) {
@@ -48,7 +46,7 @@ function getDirectiveResults(fieldNode: SelectionNode, info: ResolveInfo) {
     shouldSkip: false
   }
 
-  return fieldNode.directives.reduce((result, directive) => {
+  return (fieldNode.directives ?? []).reduce((result, directive) => {
     switch (directive.name.value) {
       case 'include':
         return { ...result, shouldInclude: getDirectiveValue(directive, info) }
@@ -66,64 +64,57 @@ function parseFieldNodes<DTO>(
   initTree: QueryResolveFields<DTO> | null,
   parentType: GraphQLCompositeType
 ): QueryResolveTree<DTO> | QueryResolveFields<DTO> {
-  const asts: ReadonlyArray<SelectionNode> = Array.isArray(inASTs) ? inASTs : [inASTs]
+  const asts: ReadonlyArray<SelectionNode> = 'kind' in inASTs ? [inASTs] : inASTs
 
-  return asts.reduce((tree, fieldNode) => {
-    let name: string
-    let alias: string
+  return (
+    asts.reduce<QueryResolveTree<DTO> | QueryResolveFields<DTO> | null>((tree, fieldNode) => {
+      if (fieldNode.kind !== Kind.FIELD) return tree
+      const name = fieldNode.name.value
+      const alias = fieldNode.alias?.value ?? name
 
-    if (fieldNode.kind === Kind.INLINE_FRAGMENT) {
-      name = fieldNode?.typeCondition?.name.value
-    } else {
-      name = fieldNode.name.value
-    }
-
-    if (fieldNode.kind === Kind.FIELD) {
-      alias = fieldNode?.alias?.value ?? name
-    }
-
-    const field = getFieldFromAST(fieldNode, parentType)
-    if (field == null) {
-      return tree
-    }
-    const fieldGqlTypeOrUndefined = getNamedType(field.type)
-    if (!fieldGqlTypeOrUndefined) {
-      return tree
-    }
-
-    if (fieldNode.directives && fieldNode.directives.length) {
-      const { shouldInclude, shouldSkip } = getDirectiveResults(fieldNode, resolveInfo)
-      // field/fragment is not included if either the @skip condition is true or the @include condition is false
-      // https://facebook.github.io/graphql/draft/#sec--include
-      if (shouldSkip || !shouldInclude) {
+      const field = getFieldFromAST(fieldNode, parentType)
+      if (field == null) {
         return tree
       }
-    }
+      const fieldGqlTypeOrUndefined = getNamedType(field.type)
+      if (!fieldGqlTypeOrUndefined) {
+        return tree
+      }
 
-    const parsedField = {
-      name,
-      alias,
-      args: fieldNode.kind === Kind.FIELD ? getArgumentValues(field, fieldNode, resolveInfo.variableValues) : {},
+      if (fieldNode.directives && fieldNode.directives.length) {
+        const { shouldInclude, shouldSkip } = getDirectiveResults(fieldNode, resolveInfo)
+        // field/fragment is not included if either the @skip condition is true or the @include condition is false
+        // https://facebook.github.io/graphql/draft/#sec--include
+        if (shouldSkip || !shouldInclude) {
+          return tree
+        }
+      }
 
-      fields:
-        fieldNode.kind !== Kind.FRAGMENT_SPREAD && fieldNode.selectionSet && isCompositeType(fieldGqlTypeOrUndefined)
-          ? parseFieldNodes(
-              fieldNode.selectionSet.selections,
-              resolveInfo,
-              {} as QueryResolveFields<DTO>,
-              fieldGqlTypeOrUndefined
-            )
-          : {}
-    } as QueryResolveTree<DTO>
+      const parsedField = {
+        name,
+        alias,
+        args: fieldNode.kind === Kind.FIELD ? getArgumentValues(field, fieldNode, resolveInfo.variableValues) : {},
 
-    if (tree === null) {
-      return parsedField
-    } else {
-      tree[alias] = parsedField
-    }
+        fields:
+          fieldNode.selectionSet && isCompositeType(fieldGqlTypeOrUndefined)
+            ? parseFieldNodes(
+                fieldNode.selectionSet.selections,
+                resolveInfo,
+                {} as QueryResolveFields<DTO>,
+                fieldGqlTypeOrUndefined
+              )
+            : {}
+      } as QueryResolveTree<DTO>
 
-    return tree
-  }, initTree)
+      if (tree === null) {
+        return parsedField
+      } else {
+        Object.assign(tree, { [alias]: parsedField })
+      }
+
+      return tree
+    }, initTree) ?? ({} as QueryResolveFields<DTO>)
+  )
 }
 
 function isOffsetPaging<DTO>(info: unknown): info is QueryResolveTree<OffsetConnectionType<DTO>> {
@@ -159,7 +150,7 @@ export function createLookAheadInfo<DTO>(
       if (relation.name in simplifiedInfoWithoutPaging.fields) {
         return {
           name: relation.name,
-          query: (simplifiedInfoWithoutPaging.fields[relation.name] as QueryResolveTree<DTO>).args || {}
+          query: (simplifiedInfoWithoutPaging.fields as Record<string, QueryResolveTree<DTO>>)[relation.name].args || {}
         }
       }
 

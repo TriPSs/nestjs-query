@@ -49,7 +49,11 @@ export const seed = async (connection: Connection): Promise<void> => {
       await Promise.all(
         references.map((r) => {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-          TEST_REFERENCES.find((tr) => tr._id.toString() === r._id.toString()).testEntity = te._id
+          const fixture = TEST_REFERENCES.find((tr) => tr._id.toString() === r._id.toString())
+
+          if (!fixture) throw new Error('Reference fixture was not found')
+
+          fixture.testEntity = te._id
 
           return r.updateOne({ $set: { testEntity: te._id } })
         })

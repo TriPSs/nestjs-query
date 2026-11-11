@@ -47,7 +47,7 @@ function getOrCreateFilterType<T>(
       public get filter(): Filter<T> {
         const filters = fields.reduce((filter, field) => {
           if (this[field.schemaName] !== undefined) {
-            filter[field.schemaName] = { eq: this[field.schemaName] }
+            Object.assign(filter, { [field.schemaName]: { eq: this[field.schemaName] } })
           }
 
           return filter

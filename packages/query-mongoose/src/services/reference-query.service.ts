@@ -434,7 +434,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
   }
 
   private getReferenceQueryBuilder<Ref extends Document>(refName: string): FilterQueryBuilder<Ref> {
-    return new FilterQueryBuilder<Ref>(this.getReferenceModel(refName))
+    return new FilterQueryBuilder<Ref>(this.getReferenceModel<Ref>(refName))
   }
 
   private getReferenceModel<Ref extends Document>(refName: string): MongooseModel<Ref> {

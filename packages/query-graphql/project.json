@@ -19,7 +19,7 @@
       "executor": "@isox-sh/js:tsc",
       "outputs": ["{workspaceRoot}/dist/packages/query-graphql"],
       "options": {
-        "tsConfig": "packages/query-graphql/tsconfig.lib.json",
+        "tsConfig": "packages/query-graphql/tsconfig.build.json",
         "generatePackageJson": true,
         "assets": [
           {

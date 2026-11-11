@@ -1,0 +1,19 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "removeComments": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@ptc-org/nestjs-query-core": ["../../../dist/packages/core/index.d.ts"],
+      "@ptc-org/nestjs-query-*": ["../../../dist/packages/query-*/index.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}

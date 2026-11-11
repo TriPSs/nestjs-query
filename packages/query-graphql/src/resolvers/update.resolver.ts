@@ -41,7 +41,10 @@ export interface UpdateResolver<DTO, U, QS extends QueryService<DTO, unknown, U>
 
   updateMany(input: MutationArgsType<UpdateManyInputType<DTO, U>>, authFilter?: Filter<DTO>): Promise<UpdateManyResponse>
 
-  updatedOneSubscription(input?: SubscriptionArgsType<DTO>, authFilter?: Filter<DTO>): AsyncIterator<UpdatedEvent<DTO>>
+  updatedOneSubscription(
+    input?: SubscriptionArgsType<SubscriptionFilterInputType<DTO>>,
+    authFilter?: Filter<DTO>
+  ): AsyncIterator<UpdatedEvent<DTO>>
 
   updatedManySubscription(authFilter?: Filter<DTO>): AsyncIterator<UpdatedEvent<DeleteManyResponse>>
 }

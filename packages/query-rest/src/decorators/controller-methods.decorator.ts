@@ -11,8 +11,15 @@ import {
   SerializeOptions,
   UseInterceptors
 } from '@nestjs/common'
-import { ApiBody, ApiConsumes, ApiOperation, ApiOperationOptions, ApiResponse, ApiResponseOptions } from '@nestjs/swagger'
-import { ApiBodyOptions } from '@nestjs/swagger/dist/decorators/api-body.decorator'
+import {
+  ApiBody,
+  ApiBodyOptions,
+  ApiConsumes,
+  ApiOperation,
+  ApiOperationOptions,
+  ApiResponse,
+  ApiResponseOptions
+} from '@nestjs/swagger'
 import { isArray } from 'class-validator'
 
 import { ReturnTypeFunc } from '../interfaces/return-type-func'
@@ -42,7 +49,7 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
 
     if (typeof returnTypeFuncOrOptions === 'object') {
       options = returnTypeFuncOrOptions
-      returnTypeFuncOrOptions = null
+      returnTypeFuncOrOptions = undefined
     } else {
       returnTypeFunc = returnTypeFuncOrOptions
     }
@@ -98,12 +105,14 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
       decorators.push(ApiOperation(options.operation))
     }
 
-    if ((options as MutationMethodDecoratorArg).body) {
-      decorators.push(ApiBody((options as MutationMethodDecoratorArg).body))
+    const body = (options as MutationMethodDecoratorArg).body
+    if (body) {
+      decorators.push(ApiBody(body))
     }
 
-    if ((options as MutationMethodDecoratorArg).consumes?.length > 0) {
-      decorators.push(ApiConsumes(...(options as MutationMethodDecoratorArg).consumes))
+    const consumes = (options as MutationMethodDecoratorArg).consumes
+    if (consumes?.length) {
+      decorators.push(ApiConsumes(...consumes))
     }
 
     return applyDecorators(...decorators)

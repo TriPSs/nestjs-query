@@ -36,14 +36,18 @@ type PrimaryKey = {
   propertyName: string
 }
 
-interface RelationQuery<Relation, Entity> {
+interface RelationQuery<Relation extends ObjectLiteral, Entity extends ObjectLiteral> {
   relation: RelationMetadata
   from: Class<Relation>
   fromAlias: string
   fromPrimaryKeys: PrimaryKey[]
   joins: JoinColumn[]
 
-  mapRelations<RawRelation>(entity: Entity, relations: Relation[], rawRelations: RawRelation[]): Relation[]
+  mapRelations<RawRelation extends Record<string, unknown>>(
+    entity: Entity,
+    relations: Relation[],
+    rawRelations: RawRelation[]
+  ): Relation[]
 
   batchSelect(qb: SelectQueryBuilder<Relation>, entities: Entity[]): SelectQueryBuilder<Relation>
 
@@ -56,7 +60,7 @@ type UnionQueries = {
   parameters: ObjectLiteral
 }
 
-export type EntityIndexRelation<Relation> = Relation & {
+export type EntityIndexRelation<Relation extends ObjectLiteral> = Relation & {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   __nestjsQuery__entityIndex__: number
 }
@@ -66,7 +70,7 @@ export type EntityIndexRelation<Relation> = Relation & {
  *
  * Class that will convert a Query into a `typeorm` Query Builder.
  */
-export class RelationQueryBuilder<Entity, Relation> {
+export class RelationQueryBuilder<Entity extends ObjectLiteral, Relation extends ObjectLiteral> {
   readonly filterQueryBuilder: FilterQueryBuilder<Relation>
 
   readonly relationRepo: Repository<Relation>
@@ -80,7 +84,7 @@ export class RelationQueryBuilder<Entity, Relation> {
    *
    * TODO:: Do this different? Maybe cleanup the batchSelect / whereCondition as its almost the same
    */
-  private existingAlias: Alias
+  private existingAlias: Alias | undefined
 
   constructor(
     readonly repo: Repository<Entity>,
@@ -244,7 +248,7 @@ export class RelationQueryBuilder<Entity, Relation> {
         alias: aliasName,
         conditions: relation.joinColumns.map((joinColumn) => ({
           leftHand: `${aliasName}.${joinColumn.propertyName}`,
-          rightHand: `${relation.propertyName}.${joinColumn.referencedColumn.propertyName}`
+          rightHand: `${relation.propertyName}.${this.requireMetadata(joinColumn.referencedColumn, 'referenced column').propertyName}`
         }))
       }
     ]
@@ -262,7 +266,11 @@ export class RelationQueryBuilder<Entity, Relation> {
       fromPrimaryKeys,
       joins,
 
-      mapRelations: <RawRelation>(entity: Entity, relations: Relation[], rawRelations: RawRelation[]): Relation[] => {
+      mapRelations: <RawRelation extends Record<string, unknown>>(
+        entity: Entity,
+        relations: Relation[],
+        rawRelations: RawRelation[]
+      ): Relation[] => {
         // Set the alias to use for the join
         const joinAlias = this.existingAlias?.name || aliasName
 
@@ -277,18 +285,21 @@ export class RelationQueryBuilder<Entity, Relation> {
 
         // First filter the raw relations with the PK of the entity, then filter the relations
         // with the PK of the raw relation
-        return lodashFilter(rawRelations, rawFilter).reduce((entityRelations: Relation[], rawRelation: RawRelation) => {
-          const filter = this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
-            (columns: Partial<Entity>, column) => ({
-              ...columns,
+        return this.filterRawRelations(rawRelations, rawFilter).reduce(
+          (entityRelations: Relation[], rawRelation: RawRelation) => {
+            const filter = this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
+              (columns: Partial<Entity>, column) => ({
+                ...columns,
 
-              [column.propertyName]: rawRelation[column.columnName]
-            }),
-            {} as Partial<Entity>
-          )
+                [column.propertyName]: rawRelation[column.columnName]
+              }),
+              {} as Partial<Entity>
+            )
 
-          return entityRelations.concat(lodashFilter(relations, filter) as Relation[])
-        }, [] as Relation[])
+            return entityRelations.concat(lodashFilter(relations, filter) as Relation[])
+          },
+          [] as Relation[]
+        )
       },
 
       batchSelect: (queryBuilder, entities) => {
@@ -344,7 +355,7 @@ export class RelationQueryBuilder<Entity, Relation> {
 
   private getOneToManyOrOneToOneNotOwnerMeta(relation: RelationMetadata): RelationQuery<Relation, Entity> {
     const aliasName = relation.propertyName
-    const columns = relation.inverseRelation.joinColumns
+    const columns = this.requireMetadata(relation.inverseRelation, 'inverse relation').joinColumns
     const fromPrimaryKeys: PrimaryKey[] = relation.inverseEntityMetadata.primaryColumns.map((pk) => ({
       selectPath: `${aliasName}.${pk.propertyName}`,
       databasePath: pk.databasePath,
@@ -353,25 +364,32 @@ export class RelationQueryBuilder<Entity, Relation> {
 
     return {
       relation,
-      from: relation.inverseRelation.entityMetadata.target as Class<Relation>,
+      from: this.requireMetadata(relation.inverseRelation, 'inverse relation').entityMetadata.target as Class<Relation>,
       fromAlias: aliasName,
       fromPrimaryKeys,
       joins: [],
-      mapRelations: <RawRelation>(entity: Entity, relations: Relation[], rawRelations: RawRelation[]): Relation[] => {
+      mapRelations: <RawRelation extends Record<string, unknown>>(
+        entity: Entity,
+        relations: Relation[],
+        rawRelations: RawRelation[]
+      ): Relation[] => {
         // create a filter for the raw relation array to filter only for the objects that are related to this entity
         // do this by building an alias based on the column database name for filtering
         // e.g. if the entity is a customer, look for a customer id in the raw relation entity object.
         const rawFilter = columns.reduce(
           (columnsFilter, column) => ({
             ...columnsFilter,
-            [this.buildAlias(column.databaseName)]: column.referencedColumn.getEntityValue(entity)
+            [this.buildAlias(column.databaseName)]: this.requireMetadata(
+              column.referencedColumn,
+              'referenced column'
+            ).getEntityValue(entity)
           }),
           {} as Partial<Entity>
         )
 
         // First filter the raw relations with the PK of the entity, then filter the relations
         // with the PK of the raw relation
-        return lodashFilter(rawRelations, rawFilter).reduce((entityRelations, rawRelation) => {
+        return this.filterRawRelations(rawRelations, rawFilter).reduce((entityRelations, rawRelation) => {
           const filter = this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
             (columnsFilter, column) => ({
               ...columnsFilter,
@@ -384,12 +402,14 @@ export class RelationQueryBuilder<Entity, Relation> {
         }, [] as Relation[])
       },
       batchSelect: (qb: SelectQueryBuilder<Relation>, entities: Entity[]) => {
-        const params = {}
+        const params: Record<string, unknown> = {}
 
         const where = columns
           .map((column) => {
             const paramName = this.getParamName(aliasName)
-            params[paramName] = entities.map((entity) => column.referencedColumn.getEntityValue(entity) as unknown)
+            params[paramName] = entities.map(
+              (entity) => this.requireMetadata(column.referencedColumn, 'referenced column').getEntityValue(entity) as unknown
+            )
 
             return `${aliasName}.${column.propertyPath} IN (:...${paramName})`
           })
@@ -405,7 +425,7 @@ export class RelationQueryBuilder<Entity, Relation> {
           .map((col) => {
             const paramName = this.getParamName(aliasName)
 
-            params[paramName] = col.referencedColumn.getEntityValue(entity)
+            params[paramName] = this.requireMetadata(col.referencedColumn, 'referenced column').getEntityValue(entity)
             return `${aliasName}.${col.propertyPath} = :${paramName}`
           })
           .join(' AND ')
@@ -417,14 +437,14 @@ export class RelationQueryBuilder<Entity, Relation> {
 
   private getManyToManyOwnerMeta(relation: RelationMetadata): RelationQuery<Relation, Entity> {
     const mainAlias = relation.propertyName
-    const joinAlias = relation.junctionEntityMetadata.tableName
+    const joinAlias = this.requireMetadata(relation.junctionEntityMetadata, 'junction entity').tableName
     const joins: JoinColumn[] = [
       {
         target: joinAlias,
         alias: joinAlias,
         conditions: relation.inverseJoinColumns.map((inverseJoinColumn) => ({
           leftHand: `${joinAlias}.${inverseJoinColumn.propertyName}`,
-          rightHand: `${mainAlias}.${inverseJoinColumn.referencedColumn.propertyName}`
+          rightHand: `${mainAlias}.${this.requireMetadata(inverseJoinColumn.referencedColumn, 'referenced column').propertyName}`
         }))
       }
     ]
@@ -442,7 +462,11 @@ export class RelationQueryBuilder<Entity, Relation> {
       fromPrimaryKeys,
       joins,
 
-      mapRelations: <RawRelation>(entity: Entity, relations: Relation[], rawRelations: RawRelation[]): Relation[] => {
+      mapRelations: <RawRelation extends Record<string, unknown>>(
+        entity: Entity,
+        relations: Relation[],
+        rawRelations: RawRelation[]
+      ): Relation[] => {
         return this.batchMapRelationsManyToMany<RawRelation>(joinAlias, relation.joinColumns, entity, relations, rawRelations)
       },
 
@@ -457,7 +481,7 @@ export class RelationQueryBuilder<Entity, Relation> {
           .map((joinColumn) => {
             const paramName = this.getParamName(joinColumn.propertyName)
 
-            params[paramName] = joinColumn.referencedColumn.getEntityValue(entity)
+            params[paramName] = this.requireMetadata(joinColumn.referencedColumn, 'referenced column').getEntityValue(entity)
             return `${joinAlias}.${joinColumn.propertyName} = :${paramName}`
           })
           .join(' AND ')
@@ -469,14 +493,14 @@ export class RelationQueryBuilder<Entity, Relation> {
 
   private getManyToManyNotOwnerMetadata(relation: RelationMetadata): RelationQuery<Relation, Entity> {
     const mainAlias = relation.propertyName
-    const joinAlias = relation.junctionEntityMetadata.tableName
+    const joinAlias = this.requireMetadata(relation.junctionEntityMetadata, 'junction entity').tableName
     const joins = [
       {
         target: joinAlias,
         alias: joinAlias,
-        conditions: relation.inverseRelation.joinColumns.map((joinColumn) => ({
+        conditions: this.requireMetadata(relation.inverseRelation, 'inverse relation').joinColumns.map((joinColumn) => ({
           leftHand: `${joinAlias}.${joinColumn.propertyName}`,
-          rightHand: `${mainAlias}.${joinColumn.referencedColumn.propertyName}`
+          rightHand: `${mainAlias}.${this.requireMetadata(joinColumn.referencedColumn, 'referenced column').propertyName}`
         }))
       }
     ]
@@ -494,10 +518,14 @@ export class RelationQueryBuilder<Entity, Relation> {
       fromPrimaryKeys,
       joins,
 
-      mapRelations: <RawRelation>(entity: Entity, relations: Relation[], rawRelations: RawRelation[]): Relation[] => {
+      mapRelations: <RawRelation extends Record<string, unknown>>(
+        entity: Entity,
+        relations: Relation[],
+        rawRelations: RawRelation[]
+      ): Relation[] => {
         return this.batchMapRelationsManyToMany<RawRelation>(
           joinAlias,
-          relation.inverseRelation.inverseJoinColumns,
+          this.requireMetadata(relation.inverseRelation, 'inverse relation').inverseJoinColumns,
           entity,
           relations,
           rawRelations
@@ -505,17 +533,24 @@ export class RelationQueryBuilder<Entity, Relation> {
       },
 
       batchSelect: (qb: SelectQueryBuilder<Relation>, entities: Entity[]): SelectQueryBuilder<Relation> => {
-        return this.batchSelectManyToMany(qb, entities, joinAlias, relation.inverseRelation.inverseJoinColumns)
+        return this.batchSelectManyToMany(
+          qb,
+          entities,
+          joinAlias,
+          this.requireMetadata(relation.inverseRelation, 'inverse relation').inverseJoinColumns
+        )
       },
 
       whereCondition: (entity: Entity): SQLFragment => {
         const params: ObjectLiteral = {}
 
-        const sql = relation.inverseRelation.inverseJoinColumns
-          .map((inverseJoinColumn) => {
+        const sql = this.requireMetadata(relation.inverseRelation, 'inverse relation')
+          .inverseJoinColumns.map((inverseJoinColumn) => {
             const paramName = this.getParamName(inverseJoinColumn.propertyName)
 
-            params[paramName] = inverseJoinColumn.referencedColumn.getEntityValue(entity)
+            params[paramName] = this.requireMetadata(inverseJoinColumn.referencedColumn, 'referenced column').getEntityValue(
+              entity
+            )
 
             return `${joinAlias}.${inverseJoinColumn.propertyName} = :${paramName}`
           })
@@ -532,12 +567,14 @@ export class RelationQueryBuilder<Entity, Relation> {
     joinAlias: string,
     columns: ColumnMetadata[]
   ) {
-    const params = {}
+    const params: Record<string, unknown> = {}
 
     const sql = columns
       .map((column) => {
         const paramName = this.getParamName(column.propertyName)
-        params[paramName] = entities.map((entity) => column.referencedColumn.getEntityValue(entity) as unknown)
+        params[paramName] = entities.map(
+          (entity) => this.requireMetadata(column.referencedColumn, 'referenced column').getEntityValue(entity) as unknown
+        )
 
         // We also want to select the field, so we can map them back in the mapper
         queryBuilder.addSelect(`${joinAlias}.${column.propertyName}`, this.buildAlias(joinAlias, column.propertyName))
@@ -556,7 +593,7 @@ export class RelationQueryBuilder<Entity, Relation> {
       .andWhere(sql, params)
   }
 
-  private batchMapRelationsManyToMany<RawRelation>(
+  private batchMapRelationsManyToMany<RawRelation extends Record<string, unknown>>(
     joinAlias: string,
     columns: ColumnMetadata[],
     entity: Entity,
@@ -567,14 +604,17 @@ export class RelationQueryBuilder<Entity, Relation> {
       (columnsFilter, column) => ({
         ...columnsFilter,
 
-        [this.buildAlias(joinAlias, column.propertyName)]: column.referencedColumn.getEntityValue(entity)
+        [this.buildAlias(joinAlias, column.propertyName)]: this.requireMetadata(
+          column.referencedColumn,
+          'referenced column'
+        ).getEntityValue(entity)
       }),
       {} as Partial<Entity>
     )
 
     // First filter the raw relations with the PK of the entity, then filter the relations
     // with the PK of the raw relation
-    return lodashFilter(rawRelations, rawFilter).reduce((entityRelations, rawRelation) => {
+    return this.filterRawRelations(rawRelations, rawFilter).reduce((entityRelations, rawRelation) => {
       const filter = this.getRelationPrimaryKeysPropertyNameAndColumnsName().reduce(
         (columnsFilter, column) => ({
           ...columnsFilter,
@@ -603,6 +643,18 @@ export class RelationQueryBuilder<Entity, Relation> {
 
   private escapeName(str: string): string {
     return this.relationRepo.manager.connection.driver.escape(str)
+  }
+
+  private filterRawRelations<RawRelation extends Record<string, unknown>>(
+    rows: RawRelation[],
+    filter: Record<string, unknown>
+  ): RawRelation[] {
+    return lodashFilter<Record<string, unknown>>(rows, filter) as RawRelation[]
+  }
+
+  private requireMetadata<T>(metadata: T | undefined, name: string): T {
+    if (metadata === undefined) throw new Error(`Missing ${name} for relation ${this.relation}`)
+    return metadata
   }
 
   private getRelationPrimaryKeysPropertyNameAndColumnsName(): { columnName: string; propertyName: string }[] {

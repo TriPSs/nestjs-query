@@ -61,7 +61,8 @@ RUN npm install ./packages/ptc-org-nestjs-query-core-*.tgz \
 
 # Copy source code
 COPY examples/federation-v2-e2e/tag-service/src ./src
-COPY examples/federation-v2-e2e/tag-service/tsconfig.json ./
+COPY tsconfig.base.json /tsconfig.base.json
+COPY examples/federation-v2-e2e/tag-service/tsconfig*.json ./
 COPY examples/federation-v2-e2e/tag-service/nest-cli.json ./
 
 # Build NestJS application

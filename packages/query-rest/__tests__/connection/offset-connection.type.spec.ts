@@ -36,7 +36,7 @@ describe('getOrCreateOffsetConnectionType', () => {
       count
     )
 
-    expect(count).toHaveBeenCalledWith(undefined)
+    expect(count).toHaveBeenCalledWith({})
     expect(connection.totalCount).toBe(1)
     expect(Reflect.getMetadata('swagger/apiModelProperties', ConnectionType.prototype, 'totalCount')).toBeDefined()
   })

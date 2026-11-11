@@ -18,7 +18,7 @@ export interface QueryParamArgsType {
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export function ParamArgsType(DTOClass: Class<unknown>): Class<ParamArgsType> {
-  const dtoIDFields = getIDFields(DTOClass)
+  const dtoIDFields = getIDFields(DTOClass) ?? []
   const properties = dtoIDFields.map(({ propertyName }) => propertyName)
 
   if (properties.length === 0) {
@@ -27,7 +27,7 @@ export function ParamArgsType(DTOClass: Class<unknown>): Class<ParamArgsType> {
   }
 
   class FindOneArgs extends PickType(DTOClass, properties as never) implements ParamArgsType {
-    id: string | number
+    id!: string | number
 
     getId() {
       // Return the default "id", unless it's not set then return the first ID field
@@ -40,7 +40,7 @@ export function ParamArgsType(DTOClass: Class<unknown>): Class<ParamArgsType> {
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export function QueryParamArgsType(DTOClass: Class<unknown>): Class<QueryParamArgsType> {
-  const dtoIDFields = getIDFields(DTOClass)
+  const dtoIDFields = getIDFields(DTOClass) ?? []
   const properties = dtoIDFields.map(({ propertyName }) => propertyName)
 
   if (properties.length === 1) {
@@ -57,7 +57,7 @@ export function QueryParamArgsType(DTOClass: Class<unknown>): Class<QueryParamAr
   class QueryArgs extends PickType(DTOClass, properties as never) implements QueryParamArgsType {
     getFilter(): Filter<unknown> {
       return properties.reduce((filter, property) => {
-        filter[property] = { eq: this[property] as unknown }
+        Object.assign(filter, { [property]: { eq: (this as unknown as Record<string, unknown>)[property] } })
 
         return filter
       }, {}) as Filter<unknown>

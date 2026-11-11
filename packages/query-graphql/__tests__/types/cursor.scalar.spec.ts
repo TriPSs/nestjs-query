@@ -8,6 +8,11 @@ describe('ConnectionCursorScalar', (): void => {
     })
   })
 
+  it.each([123, null, undefined, {}, true])('rejects non-string cursor values: %s', (value) => {
+    expect(() => ConnectionCursorScalar.parseValue(value)).toThrow('ConnectionCursor must be a string')
+    expect(() => ConnectionCursorScalar.serialize(value)).toThrow('ConnectionCursor must be a string')
+  })
+
   describe('#serialize', () => {
     it('should serialize a value', () => {
       expect(ConnectionCursorScalar.serialize('aaa')).toBe('aaa')

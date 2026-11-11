@@ -78,15 +78,15 @@ export const mergeFilter = <T>(base: Filter<T>, source: Filter<T>): Filter<T> =>
   return { and: [source, base] } as Filter<T>
 }
 export const mergeFilters = <T>(...filters: Filter<T>[]): Filter<T> => {
-  const newFilter = { and: [] } as Filter<T>
+  const and: Filter<T>[] = []
 
   for (const filter of filters) {
     if (Object.keys(filter).length) {
-      newFilter.and.push(filter)
+      and.push(filter)
     }
   }
 
-  return newFilter
+  return { and } as Filter<T>
 }
 
 export const getFilterFields = <DTO>(filter: Filter<DTO>): string[] => {

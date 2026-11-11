@@ -11,7 +11,7 @@ import {
   QueryRelationsOptions
 } from '@ptc-org/nestjs-query-core'
 import lodashOmit from 'lodash.omit'
-import { RelationQueryBuilder as TypeOrmRelationQueryBuilder, Repository } from 'typeorm'
+import { ObjectLiteral, RelationQueryBuilder as TypeOrmRelationQueryBuilder, Repository } from 'typeorm'
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata'
 
 import { AggregateBuilder, EntityIndexRelation, FilterQueryBuilder, RelationQueryBuilder } from '../query'
@@ -20,7 +20,7 @@ import { AggregateBuilder, EntityIndexRelation, FilterQueryBuilder, RelationQuer
  * Base class to house relations loading.
  * @internal
  */
-export abstract class RelationQueryService<Entity> {
+export abstract class RelationQueryService<Entity extends ObjectLiteral> {
   abstract filterQueryBuilder: FilterQueryBuilder<Entity>
 
   abstract EntityClass: Class<Entity>
@@ -37,7 +37,7 @@ export abstract class RelationQueryService<Entity> {
    * @param entities - the dtos to find relations for.
    * @param query - A query to use to filter, page, and sort relations.
    */
-  public async queryRelations<Relation>(
+  public async queryRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -52,7 +52,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationName - The name of relation to query for.
    * @param query - A query to filter, page and sort relations.
    */
-  public async queryRelations<Relation>(
+  public async queryRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
@@ -60,7 +60,7 @@ export abstract class RelationQueryService<Entity> {
     opts?: QueryRelationsOptions
   ): Promise<Relation[]>
 
-  public async queryRelations<Relation>(
+  public async queryRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -79,7 +79,7 @@ export abstract class RelationQueryService<Entity> {
     )
   }
 
-  public async aggregateRelations<Relation>(
+  public async aggregateRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -87,7 +87,7 @@ export abstract class RelationQueryService<Entity> {
     aggregate: AggregateQuery<Relation>
   ): Promise<Map<Entity, AggregateResponse<Relation>[]>>
 
-  public async aggregateRelations<Relation>(
+  public async aggregateRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
@@ -95,7 +95,7 @@ export abstract class RelationQueryService<Entity> {
     aggregate: AggregateQuery<Relation>
   ): Promise<AggregateResponse<Relation>[]>
 
-  public async aggregateRelations<Relation>(
+  public async aggregateRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -116,7 +116,7 @@ export abstract class RelationQueryService<Entity> {
     return aggResponse.map((agg) => assembler.convertAggregateResponse(agg))
   }
 
-  public async countRelations<Relation>(
+  public async countRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -124,7 +124,7 @@ export abstract class RelationQueryService<Entity> {
     opts?: QueryRelationsOptions
   ): Promise<Map<Entity, number>>
 
-  public async countRelations<Relation>(
+  public async countRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
@@ -132,7 +132,7 @@ export abstract class RelationQueryService<Entity> {
     opts?: QueryRelationsOptions
   ): Promise<number>
 
-  public async countRelations<Relation>(
+  public async countRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -155,7 +155,7 @@ export abstract class RelationQueryService<Entity> {
    * @param dtos - the dtos to find the relation for.
    * @param opts - Additional options
    */
-  public async findRelation<Relation>(
+  public async findRelation<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: Entity[],
@@ -169,14 +169,14 @@ export abstract class RelationQueryService<Entity> {
    * @param relationName - The name of the relation to query for.
    * @param opts - Additional options
    */
-  public async findRelation<Relation>(
+  public async findRelation<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity,
     opts?: FindRelationOptions<Relation>
   ): Promise<Relation | undefined>
 
-  public async findRelation<Relation>(
+  public async findRelation<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     dto: Entity | Entity[],
@@ -212,7 +212,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationIds - The ids of relations to add.
    * @param opts - Addition options
    */
-  public async addRelations<Relation>(
+  public async addRelations<Relation extends ObjectLiteral>(
     relationName: string,
     id: string | number,
     relationIds: (string | number)[],
@@ -236,7 +236,7 @@ export abstract class RelationQueryService<Entity> {
    * will be removed.
    * @param opts - Additional options
    */
-  async setRelations<Relation>(
+  async setRelations<Relation extends ObjectLiteral>(
     relationName: string,
     id: string | number,
     relationIds: (string | number)[],
@@ -263,7 +263,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationId - The id of the relation to set on the entity.
    * @param opts - Additional options
    */
-  public async setRelation<Relation>(
+  public async setRelation<Relation extends ObjectLiteral>(
     relationName: string,
     id: string | number,
     relationId: string | number,
@@ -285,7 +285,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationIds - The ids of the relations to add.
    * @param opts - Additional options
    */
-  public async removeRelations<Relation>(
+  public async removeRelations<Relation extends ObjectLiteral>(
     relationName: string,
     id: string | number,
     relationIds: (string | number)[],
@@ -307,7 +307,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationName - The name of the relation to query for.
    * @param relationId - The id of the relation to set on the entity.
    */
-  public async removeRelation<Relation>(
+  public async removeRelation<Relation extends ObjectLiteral>(
     relationName: string,
     id: string | number,
     relationId: string | number,
@@ -328,7 +328,7 @@ export abstract class RelationQueryService<Entity> {
     return entity
   }
 
-  public getRelationQueryBuilder<Relation>(name: string): RelationQueryBuilder<Entity, Relation> {
+  public getRelationQueryBuilder<Relation extends ObjectLiteral>(name: string): RelationQueryBuilder<Entity, Relation> {
     return new RelationQueryBuilder(this.repo, name)
   }
 
@@ -340,7 +340,7 @@ export abstract class RelationQueryService<Entity> {
    * @param query - A query to filter, page or sort relations.
    * @param withDeleted - Also query the soft deleted records
    */
-  private async batchQueryRelations<Relation>(
+  private async batchQueryRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -371,7 +371,7 @@ export abstract class RelationQueryService<Entity> {
    * @param filter - Filter.
    * @param query - A query to filter, page or sort relations.
    */
-  private async batchAggregateRelations<Relation>(
+  private async batchAggregateRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -393,7 +393,9 @@ export abstract class RelationQueryService<Entity> {
       const resultingAgg = results.get(e) ?? []
       results.set(e, [
         ...resultingAgg,
-        ...AggregateBuilder.convertToAggregateResponse([lodashOmit(relationAgg, relationQueryBuilder.entityIndexColName)])
+        ...AggregateBuilder.convertToAggregateResponse<Relation>([
+          lodashOmit(relationAgg, relationQueryBuilder.entityIndexColName)
+        ])
       ])
       return results
     }, new Map<Entity, AggregateResponse<Relation>[]>())
@@ -406,7 +408,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationName - The name of relation to query for.
    * @param filter - The filter to apply to the relation query.
    */
-  private async batchCountRelations<Relation>(
+  private async batchCountRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     entities: Entity[],
@@ -435,7 +437,7 @@ export abstract class RelationQueryService<Entity> {
    * @param relationName - The name of relation to query for.
    * @param opts - A query to filter, page or sort relations.
    */
-  private async batchFindRelations<Relation>(
+  private async batchFindRelations<Relation extends ObjectLiteral>(
     RelationClass: Class<Relation>,
     relationName: string,
     dtos: Entity[],
@@ -452,7 +454,7 @@ export abstract class RelationQueryService<Entity> {
       ) {
         const assembler = AssemblerFactory.getAssembler(RelationClass, this.getRelationEntity(relationName))
 
-        const results = new Map<Entity, Relation>()
+        const results = new Map<Entity, Relation | undefined>()
         for (const entity of dtos) {
           results.set(entity, entity[relationName] ? await assembler.convertToDTO(entity[relationName]) : undefined)
         }
@@ -472,7 +474,7 @@ export abstract class RelationQueryService<Entity> {
       opts?.withDeleted
     )
 
-    const results = new Map<Entity, Relation>()
+    const results = new Map<Entity, Relation | undefined>()
     batchResults.forEach((relation, dto) => {
       // get just the first one.
       results.set(dto, relation[0])
@@ -507,12 +509,16 @@ export abstract class RelationQueryService<Entity> {
     return relationMeta.type as Class<unknown>
   }
 
-  private getRelations<Relation>(relationName: string, ids: (string | number)[], filter?: Filter<Relation>): Promise<Relation[]> {
+  private getRelations<Relation extends ObjectLiteral>(
+    relationName: string,
+    ids: (string | number)[],
+    filter?: Filter<Relation>
+  ): Promise<Relation[]> {
     const relationQueryBuilder = this.getRelationQueryBuilder<Relation>(relationName).filterQueryBuilder
     return relationQueryBuilder.selectById(ids, { filter }).getMany()
   }
 
-  private foundAllRelations<Relation>(relationIds: (string | number)[], relations: Relation[]): boolean {
+  private foundAllRelations<Relation extends ObjectLiteral>(relationIds: (string | number)[], relations: Relation[]): boolean {
     return new Set([...relationIds]).size === relations.length
   }
 }

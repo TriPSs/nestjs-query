@@ -19,7 +19,7 @@
       "executor": "@isox-sh/js:tsc",
       "outputs": ["{workspaceRoot}/dist/packages/query-typeorm"],
       "options": {
-        "tsConfig": "packages/query-typeorm/tsconfig.lib.json",
+        "tsConfig": "packages/query-typeorm/tsconfig.build.json",
         "generatePackageJson": true,
         "assets": [
           {

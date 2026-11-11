@@ -199,7 +199,7 @@ describe('WhereBuilder', (): void => {
       class TestMainObject extends Document<any> {
         @FilterableField(() => TestSubObjectDTO)
         @Prop({ type: TestSubObjectSchema, required: true })
-        subType: TestSubObjectDTO
+        subType!: TestSubObjectDTO
       }
       const TestMainObjectSchema = SchemaFactory.createForClass(TestMainObject)
 

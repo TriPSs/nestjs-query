@@ -1,6 +1,7 @@
 import { Query, Resolver } from '@nestjs/graphql'
 import { AggregateQuery, AggregateResponse } from '@ptc-org/nestjs-query-core'
 import { AggregateArgsType } from '@ptc-org/nestjs-query-graphql'
+import { ok as assert } from 'node:assert'
 import { deepEqual, objectContaining, when } from 'ts-mockito'
 
 import { AggregateResolver, AggregateResolverOpts } from '../../src/resolvers/aggregate.resolver'
@@ -47,6 +48,7 @@ describe('AggregateResolver', () => {
           count: { id: 10 }
         }
       ]
+      assert(input.filter)
       when(mockService.aggregate(objectContaining(input.filter), deepEqual(aggregateQuery))).thenResolve(output)
       const result = await resolver.aggregate(input, aggregateQuery)
       return expect(result).toEqual(output)

@@ -1,30 +1,9 @@
 {
-  "compileOnSave": false,
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": ".",
-    "sourceMap": true,
-    "declaration": true,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "module": "esnext",
-    "target": "ES2021",
-    "typeRoots": ["node_modules/@types", "tools/@types", "node_modules"],
-    "lib": ["ES2021"],
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "paths": {
-      "@ptc-org/nestjs-query-core": ["./packages/core/src/index.ts"],
-      "@ptc-org/nestjs-query-graphql": ["./packages/query-graphql/src/index.ts"],
-      "@ptc-org/nestjs-query-mongoose": ["./packages/query-mongoose/src/index.ts"],
-      "@ptc-org/nestjs-query-sequelize": ["./packages/query-sequelize/src/index.ts"],
-      "@ptc-org/nestjs-query-typegoose": ["./packages/query-typegoose/src/index.ts"],
-      "@ptc-org/nestjs-query-typeorm": ["./packages/query-typeorm/src/index.ts"],
-      "@ptc-org/nestjs-query-rest": ["./packages/query-rest/src/index.ts"]
-    },
-    "strict": false
-  }
+    "noEmit": true,
+    "composite": false,
+    "rootDir": "."
+  },
+  "include": ["tools/**/*.ts", "vitest.config.ts"]
 }

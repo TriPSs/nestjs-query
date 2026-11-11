@@ -1,5 +1,14 @@
-import { Collection, EntityKey, EntityRepository, FilterQuery, QueryOrder, QueryOrderMap, Reference, wrap } from '@mikro-orm/core'
-import { OperatorMap } from '@mikro-orm/core/typings'
+import {
+  Collection,
+  EntityKey,
+  EntityRepository,
+  FilterQuery,
+  ObjectQuery,
+  QueryOrder,
+  QueryOrderMap,
+  Reference,
+  wrap
+} from '@mikro-orm/core'
 import {
   Assembler,
   AssemblerFactory,
@@ -99,13 +108,13 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
 
     if (convertedFilter?.and) {
       return {
-        $and: convertedFilter.and.map((f) => this.convertFilter(f as Filter<DTO> | Filter<Entity>))
+        $and: convertedFilter.and.map((f) => this.convertFilter(f))
       } as FilterQuery<Entity>
     }
 
     if (convertedFilter?.or) {
       return {
-        $or: convertedFilter.or.map((f) => this.convertFilter(f as Filter<DTO> | Filter<Entity>))
+        $or: convertedFilter.or.map((f) => this.convertFilter(f))
       } as FilterQuery<Entity>
     }
 
@@ -122,39 +131,39 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
 
   protected expandFilterComparison(k: string, v: unknown): [string, unknown] {
     if (k === 'eq' || k === 'is') {
-      return ['$eq', v as string] satisfies ['$eq', OperatorMap<string>['$eq']]
+      return ['$eq', v as string] satisfies ['$eq', ObjectQuery<string>['$eq']]
     }
 
     if (k === 'neq' || k === 'isNot') {
-      return ['$ne', v as string] satisfies ['$ne', OperatorMap<string>['$ne']]
+      return ['$ne', v as string] satisfies ['$ne', ObjectQuery<string>['$ne']]
     }
 
     if (k === 'gt') {
-      return ['$gt', v as string] satisfies ['$gt', OperatorMap<string>['$gt']]
+      return ['$gt', v as string] satisfies ['$gt', ObjectQuery<string>['$gt']]
     }
 
     if (k === 'gte') {
-      return ['$gte', v as string] satisfies ['$gte', OperatorMap<string>['$gte']]
+      return ['$gte', v as string] satisfies ['$gte', ObjectQuery<string>['$gte']]
     }
 
     if (k === 'lt') {
-      return ['$lt', v as string] satisfies ['$lt', OperatorMap<string>['$lt']]
+      return ['$lt', v as string] satisfies ['$lt', ObjectQuery<string>['$lt']]
     }
 
     if (k === 'lte') {
-      return ['$lte', v as string] satisfies ['$lte', OperatorMap<string>['$lte']]
+      return ['$lte', v as string] satisfies ['$lte', ObjectQuery<string>['$lte']]
     }
 
     if (k === 'in') {
-      return ['$in', v as string[]] satisfies ['$in', OperatorMap<string>['$in']]
+      return ['$in', v as string[]] satisfies ['$in', ObjectQuery<string>['$in']]
     }
 
     if (k === 'notIn') {
-      return ['$nin', v as string[]] satisfies ['$nin', OperatorMap<string>['$nin']]
+      return ['$nin', v as string[]] satisfies ['$nin', ObjectQuery<string>['$nin']]
     }
 
     if (k === 'like') {
-      return ['$like', v as string] satisfies ['$like', OperatorMap<string>['$like']]
+      return ['$like', v as string] satisfies ['$like', ObjectQuery<string>['$like']]
     }
 
     if (k === 'notLike') {
@@ -162,7 +171,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     }
 
     if (k === 'iLike') {
-      return ['$ilike', v as string] satisfies ['$ilike', OperatorMap<string>['$ilike']]
+      return ['$ilike', v as string] satisfies ['$ilike', ObjectQuery<string>['$ilike']]
     }
 
     if (k === 'notILike') {

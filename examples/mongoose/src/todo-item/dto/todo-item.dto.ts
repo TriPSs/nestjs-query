@@ -20,7 +20,7 @@ import { TagDTO } from '../../tag/dto/tag.dto'
 })
 export class TodoItemDTO {
   @ObjectId()
-  _id: mongoose.Types.ObjectId
+  _id!: mongoose.Types.ObjectId
 
   @FilterableField(() => ID)
   id!: string

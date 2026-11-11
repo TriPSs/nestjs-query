@@ -15,6 +15,7 @@ import { SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 import { CursorQueryArgsType, FilterableField, PagingStrategies, QueryArgsType } from '@ptc-org/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
 import { validateSync } from 'class-validator'
+import { ok as assert } from 'node:assert'
 import { vi } from 'vitest'
 
 import { generateSchema } from '../../__fixtures__'
@@ -102,6 +103,7 @@ describe('None paging strategy QueryArgsType with manual options', (): void => {
     }
     const queryInstance = plainToClass(TestNoPagingQuery, queryObj)
     expect(validateSync(queryInstance)).toEqual([])
+    assert(queryInstance.sorting)
     expect(queryInstance.sorting[0]).toBeInstanceOf(TestNoPagingQuery.SortType)
   })
 

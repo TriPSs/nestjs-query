@@ -11,5 +11,5 @@ export class TodoItemCursorFetchWithNegativeDisableDTO {
   title!: string
 
   @FilterableField()
-  completed: boolean
+  completed!: boolean
 }

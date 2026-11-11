@@ -1,6 +1,6 @@
 import { Class, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
-import { DataSource } from 'typeorm'
+import { DataSource, ObjectLiteral } from 'typeorm'
 
 import { RelationQueryBuilder } from '../../src/query'
 import { createTestConnection } from '../__fixtures__/connection.fixture'
@@ -15,12 +15,12 @@ describe('RelationQueryBuilder', (): void => {
   })
   afterEach(() => dataSource.destroy())
 
-  const getRelationQueryBuilder = <Entity, Relation>(
+  const getRelationQueryBuilder = <Entity extends ObjectLiteral, Relation extends ObjectLiteral>(
     EntityClass: Class<Entity>,
     relationName: string
   ): RelationQueryBuilder<Entity, Relation> => new RelationQueryBuilder(dataSource.getRepository(EntityClass), relationName)
 
-  const expectSQLSnapshot = <Entity, Relation>(
+  const expectSQLSnapshot = <Entity extends ObjectLiteral, Relation extends ObjectLiteral>(
     EntityClass: Class<Entity>,
     entity: Entity,
     relation: string,
@@ -32,7 +32,7 @@ describe('RelationQueryBuilder', (): void => {
     expect(formatSql(sql, { params })).toMatchSnapshot()
   }
 
-  const expectBatchSQLSnapshot = <Entity, Relation>(
+  const expectBatchSQLSnapshot = <Entity extends ObjectLiteral, Relation extends ObjectLiteral>(
     EntityClass: Class<Entity>,
     entities: Entity[],
     relation: string,

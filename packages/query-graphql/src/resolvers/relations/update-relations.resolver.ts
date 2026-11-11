@@ -40,7 +40,7 @@ const UpdateOneRelationMixin =
           description: relation.update?.description ?? 'Sets the provided relation, replacing any existing relation.',
           complexity: relation.update?.complexity
         },
-        mergeBaseResolverOpts(relation.update, commonResolverOpts),
+        mergeBaseResolverOpts(relation.update ?? {}, commonResolverOpts),
         {
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }
@@ -94,7 +94,7 @@ const UpdateManyRelationMixin =
           description: relation.update?.description ?? 'Adds the provided relations without removing existing relations.',
           complexity: relation.update?.complexity
         },
-        mergeBaseResolverOpts(relation.update, commonResolverOpts),
+        mergeBaseResolverOpts(relation.update ?? {}, commonResolverOpts),
         {
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }
@@ -119,7 +119,7 @@ const UpdateManyRelationMixin =
             'Replaces all existing relations with the provided relations. An empty list removes all relations.',
           complexity: relation.update?.complexity
         },
-        mergeBaseResolverOpts(relation.update, commonResolverOpts),
+        mergeBaseResolverOpts(relation.update ?? {}, commonResolverOpts),
         {
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }

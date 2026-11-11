@@ -18,7 +18,7 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     const isForward = isForwardPaging(cursor)
     const isBackward = isBackwardPaging(cursor)
     const hasBefore = hasBeforeCursor(cursor)
-    let payload: KeySetCursorPayload<DTO>
+    let payload: KeySetCursorPayload<DTO> | undefined
     let limit = 0
     if (isForwardPaging(cursor)) {
       payload = cursor.after ? this.decodeCursor(cursor.after) : undefined
@@ -49,9 +49,9 @@ export class KeysetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     const { payload } = opts
     const sorting = this.getSortFields(query, opts)
     const filter = mergeFilter(query.filter ?? {}, this.createFieldsFilter(sorting, payload))
-    const createdQuery = { ...query, filter, sorting, paging }
+    const createdQuery: Query<DTO> = { ...query, filter, sorting, paging }
     if (this.enableFetchAllWithNegative && opts.limit === -1) delete createdQuery.paging
-    return createdQuery
+    return createdQuery as Q
   }
 
   checkForExtraNode(nodes: DTO[], opts: KeySetPagingOpts<DTO>): DTO[] {

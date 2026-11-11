@@ -5,7 +5,6 @@ import {
   AssemblerFactory,
   AssemblerQueryService,
   Class,
-  DeepPartial,
   InjectAssemblerQueryService,
   InjectQueryService,
   QueryService
@@ -14,39 +13,49 @@ import { PubSub } from 'graphql-subscriptions'
 
 import { InjectPubSub } from '../decorators'
 import { CRUDResolver, CRUDResolverOpts, FederationResolver } from '../resolvers'
+import { ReadResolverOpts } from '../resolvers/read.resolver'
 import { PagingStrategies } from '../types/query/paging'
 
-export type CRUDAutoResolverOpts<DTO, C, U, R, PS extends PagingStrategies> = CRUDResolverOpts<DTO, C, U, R, PS> & {
+export type CRUDAutoResolverOpts<DTO, C, U, R extends ReadResolverOpts<DTO>, PS extends PagingStrategies> = CRUDResolverOpts<
+  DTO,
+  C,
+  U,
+  R,
+  PS
+> & {
   DTOClass: Class<DTO>
 }
 
-export type EntityCRUDAutoResolverOpts<DTO, Entity, C, U, R, PS extends PagingStrategies> = CRUDAutoResolverOpts<
+export type EntityCRUDAutoResolverOpts<
   DTO,
+  Entity,
   C,
   U,
-  R,
-  PS
-> & {
+  R extends ReadResolverOpts<DTO>,
+  PS extends PagingStrategies
+> = CRUDAutoResolverOpts<DTO, C, U, R, PS> & {
   EntityClass: Class<Entity>
 }
 
-export type AssemblerCRUDAutoResolverOpts<DTO, Assembler, C, U, R, PS extends PagingStrategies> = CRUDAutoResolverOpts<
+export type AssemblerCRUDAutoResolverOpts<
   DTO,
+  Assembler,
   C,
   U,
-  R,
-  PS
-> & {
+  R extends ReadResolverOpts<DTO>,
+  PS extends PagingStrategies
+> = CRUDAutoResolverOpts<DTO, C, U, R, PS> & {
   AssemblerClass: Class<Assembler>
 }
 
-export type ServiceCRUDAutoResolverOpts<DTO, QueryService, C, U, R, PS extends PagingStrategies> = CRUDAutoResolverOpts<
+export type ServiceCRUDAutoResolverOpts<
   DTO,
+  QueryService,
   C,
   U,
-  R,
-  PS
-> & {
+  R extends ReadResolverOpts<DTO>,
+  PS extends PagingStrategies
+> = CRUDAutoResolverOpts<DTO, C, U, R, PS> & {
   ServiceClass: Class<QueryService>
 }
 
@@ -56,21 +65,35 @@ export type FederatedAutoResolverOpts<DTO, Service> = {
   Service: Class<Service>
 }
 
-export type AutoResolverOpts<DTO, EntityServiceOrAssembler, C, U, R, PS extends PagingStrategies> =
+export type AutoResolverOpts<DTO, EntityServiceOrAssembler, C, U, R extends ReadResolverOpts<DTO>, PS extends PagingStrategies> =
   | EntityCRUDAutoResolverOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>
   | AssemblerCRUDAutoResolverOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>
   | ServiceCRUDAutoResolverOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>
   | FederatedAutoResolverOpts<DTO, EntityServiceOrAssembler>
 
-export const isFederatedResolverOpts = <DTO, MaybeService, C, U, R, PS extends PagingStrategies>(
+export const isFederatedResolverOpts = <DTO, MaybeService, C, U, R extends ReadResolverOpts<DTO>, PS extends PagingStrategies>(
   opts: AutoResolverOpts<DTO, MaybeService, C, U, R, PS>
 ): opts is FederatedAutoResolverOpts<DTO, MaybeService> => 'type' in opts && opts.type === 'federated'
 
-export const isAssemblerCRUDAutoResolverOpts = <DTO, MaybeAssembler, C, U, R, PS extends PagingStrategies>(
+export const isAssemblerCRUDAutoResolverOpts = <
+  DTO,
+  MaybeAssembler,
+  C,
+  U,
+  R extends ReadResolverOpts<DTO>,
+  PS extends PagingStrategies
+>(
   opts: AutoResolverOpts<DTO, MaybeAssembler, C, U, R, PS>
 ): opts is AssemblerCRUDAutoResolverOpts<DTO, MaybeAssembler, C, U, R, PS> => 'DTOClass' in opts && 'AssemblerClass' in opts
 
-export const isServiceCRUDAutoResolverOpts = <DTO, MaybeService, C, U, R, PS extends PagingStrategies>(
+export const isServiceCRUDAutoResolverOpts = <
+  DTO,
+  MaybeService,
+  C,
+  U,
+  R extends ReadResolverOpts<DTO>,
+  PS extends PagingStrategies
+>(
   opts: AutoResolverOpts<DTO, MaybeService, C, U, R, PS>
 ): opts is ServiceCRUDAutoResolverOpts<DTO, MaybeService, C, U, R, PS> => 'DTOClass' in opts && 'ServiceClass' in opts
 
@@ -96,7 +119,7 @@ function createFederatedResolver<DTO, Service>(resolverOpts: FederatedAutoResolv
   return AutoResolver
 }
 
-function createEntityAutoResolver<DTO, Entity extends DeepPartial<Entity>, C, U, R, PS extends PagingStrategies>(
+function createEntityAutoResolver<DTO, Entity, C, U, R extends ReadResolverOpts<DTO>, PS extends PagingStrategies>(
   resolverOpts: EntityCRUDAutoResolverOpts<DTO, Entity, C, U, R, PS>
 ): Provider {
   const { DTOClass, EntityClass } = resolverOpts
@@ -123,7 +146,7 @@ function createEntityAutoResolver<DTO, Entity extends DeepPartial<Entity>, C, U,
   return AutoResolver
 }
 
-function createAssemblerAutoResolver<DTO, Asmblr, C, U, R, PS extends PagingStrategies>(
+function createAssemblerAutoResolver<DTO, Asmblr, C, U, R extends ReadResolverOpts<DTO>, PS extends PagingStrategies>(
   resolverOpts: AssemblerCRUDAutoResolverOpts<DTO, Asmblr, C, U, R, PS>
 ): Provider {
   const { DTOClass, AssemblerClass } = resolverOpts
@@ -144,7 +167,7 @@ function createAssemblerAutoResolver<DTO, Asmblr, C, U, R, PS extends PagingStra
   return AutoResolver
 }
 
-function createServiceAutoResolver<DTO, Service, C, U, R, PS extends PagingStrategies>(
+function createServiceAutoResolver<DTO, Service, C, U, R extends ReadResolverOpts<DTO>, PS extends PagingStrategies>(
   resolverOpts: ServiceCRUDAutoResolverOpts<DTO, Service, C, U, R, PS>
 ): Provider {
   const { DTOClass, ServiceClass } = resolverOpts
@@ -164,14 +187,9 @@ function createServiceAutoResolver<DTO, Service, C, U, R, PS extends PagingStrat
   return AutoResolver
 }
 
-function createResolver<
-  DTO,
-  EntityServiceOrAssembler extends DeepPartial<EntityServiceOrAssembler>,
-  C,
-  U,
-  R,
-  PS extends PagingStrategies
->(resolverOpts: AutoResolverOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>): Provider {
+function createResolver<DTO, EntityServiceOrAssembler, C, U, R extends ReadResolverOpts<DTO>, PS extends PagingStrategies>(
+  resolverOpts: AutoResolverOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>
+): Provider {
   if (isFederatedResolverOpts(resolverOpts)) {
     return createFederatedResolver(resolverOpts)
   }
@@ -185,5 +203,5 @@ function createResolver<
 }
 
 export const createResolvers = (
-  opts: AutoResolverOpts<unknown, unknown, unknown, unknown, unknown, PagingStrategies>[]
+  opts: AutoResolverOpts<unknown, unknown, unknown, unknown, ReadResolverOpts<unknown>, PagingStrategies>[]
 ): Provider[] => opts.map((opt) => createResolver(opt))

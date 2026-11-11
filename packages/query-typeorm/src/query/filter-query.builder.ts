@@ -12,6 +12,7 @@ import merge from 'lodash.merge'
 import {
   DeleteQueryBuilder,
   EntityMetadata,
+  ObjectLiteral,
   QueryBuilder,
   Repository,
   SelectQueryBuilder,
@@ -30,11 +31,11 @@ import { WhereBuilder } from './where.builder'
  *
  * Interface that for Typeorm query builders that are sortable.
  */
-interface Sortable<Entity> extends QueryBuilder<Entity> {
+interface Sortable<Entity extends ObjectLiteral> extends QueryBuilder<Entity> {
   addOrderBy(sort: string, order?: 'ASC' | 'DESC', nulls?: 'NULLS FIRST' | 'NULLS LAST'): this
 }
 
-interface Groupable<Entity> extends QueryBuilder<Entity> {
+interface Groupable<Entity extends ObjectLiteral> extends QueryBuilder<Entity> {
   addGroupBy(groupBy: string): this
 }
 
@@ -43,7 +44,7 @@ interface Groupable<Entity> extends QueryBuilder<Entity> {
  *
  * Interface for `typeorm` query builders that are pageable.
  */
-interface Pageable<Entity> extends QueryBuilder<Entity> {
+interface Pageable<Entity extends ObjectLiteral> extends QueryBuilder<Entity> {
   limit(limit?: number): this
 
   offset(offset?: number): this
@@ -80,7 +81,7 @@ export interface NestedRelationsAliased {
  *
  * Class that will convert a Query into a `typeorm` Query Builder.
  */
-export class FilterQueryBuilder<Entity> {
+export class FilterQueryBuilder<Entity extends ObjectLiteral> {
   private readonly virtualColumns: string[] = []
 
   constructor(
@@ -344,7 +345,7 @@ export class FilterQueryBuilder<Entity> {
       if (!relation) return false
       if (!relation.isOneToOne && !relation.isManyToOne) return true
 
-      const nestedFilter = filter[field] as Filter<unknown>
+      const nestedFilter = filter[field as keyof Filter<T>] as Filter<unknown>
 
       return this.shouldUseSkipTake(nestedFilter, relation.inverseEntityMetadata.relations)
     })
@@ -364,7 +365,7 @@ export class FilterQueryBuilder<Entity> {
     relations: NestedRecord,
     counter = new Map<string, number>()
   ): NestedRelationsAliased {
-    return Object.entries(relations).reduce((prev, [name, children]) => {
+    return Object.entries(relations).reduce<NestedRelationsAliased>((prev, [name, children]) => {
       const relationMetadata = metadata.relations.find(({ propertyName }) => propertyName === name)?.inverseEntityMetadata
 
       if (!relationMetadata) {
@@ -412,7 +413,7 @@ export class FilterQueryBuilder<Entity> {
       }
 
       return relations
-    }, {})
+    }, {} as NestedRecord)
 
     return referencedFields.reduce((prev, curr) => {
       const currFilterValue = filter[curr]
@@ -432,8 +433,8 @@ export class FilterQueryBuilder<Entity> {
       return {
         ...prev,
         [curr]: merge(
-          (prev as NestedRecord)[curr],
-          this.getReferencedRelationsRecursive(referencedRelation.inverseEntityMetadata, currFilterValue, [])
+          prev[curr],
+          this.getReferencedRelationsRecursive(referencedRelation.inverseEntityMetadata, currFilterValue as Filter<unknown>, [])
         )
       }
     }, referencedRelations)

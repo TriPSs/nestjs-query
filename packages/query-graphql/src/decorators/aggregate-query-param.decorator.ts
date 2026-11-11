@@ -13,19 +13,13 @@ export const AggregateQueryParam = createParamDecorator(<DTO>(data: unknown, ctx
   const simpleResolverInfo = removePagingFromSimplifiedInfo(simplifyResolveInfo<DTO>(info))
 
   return QUERY_OPERATORS.reduce((query, operator) => {
-    if (simpleResolverInfo.fields[operator]) {
-      const simpleOperator = simpleResolverInfo.fields[operator] as QueryResolveTree<DTO> | undefined
-      const operatorFields = Object.keys(simpleOperator.fields || {})
-
-      if (operatorFields && operatorFields.length > 0) {
+    const simpleOperator = (simpleResolverInfo.fields as Record<string, QueryResolveTree<DTO> | undefined>)[operator]
+    if (simpleOperator) {
+      const operatorFields = Object.values(simpleOperator.fields) as QueryResolveTree<unknown>[]
+      if (operatorFields.length > 0) {
         return {
           ...query,
-          [operator]: operatorFields.map((operatorField) => ({
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            field: simpleOperator.fields[operatorField].name,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            args: simpleOperator.fields[operatorField].args
-          }))
+          [operator]: operatorFields.map((field) => ({ field: field.name, args: field.args }))
         }
       }
     }

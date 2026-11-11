@@ -35,6 +35,14 @@ yarn isox test <project>
 yarn isox build <project>
 ```
 
+TypeScript projects share `tsconfig.base.json` with ES2022, NodeNext, and strict checking. Each library uses `tsconfig.json` for editor checks, `tsconfig.build.json` to compile `src/` into `dist/packages/<project>`, and `tsconfig.spec.json` for tests. Nest decorator metadata is enabled in the shared base; Vitest reads the same compiler settings.
+
+To typecheck all library source, examples, and tests without emitting files:
+
+```bash
+yarn tsc --project tsconfig.spec.json
+```
+
 For all packages:
 
 ```bash

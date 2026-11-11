@@ -52,7 +52,8 @@ describe('TypegooseQueryService', () => {
     }).compile()
   }, 120000)
 
-  function convertDocument<Doc>(doc: DocumentType<Doc>): Doc {
+  function convertDocument<Doc>(doc: DocumentType<Doc> | undefined): Doc {
+    if (!doc) throw new Error('Expected a document')
     return doc.toObject({ virtuals: true }) as Doc
   }
 
@@ -60,7 +61,8 @@ describe('TypegooseQueryService', () => {
     return docs.map((doc) => convertDocument(doc))
   }
 
-  function testEntityToObject(te: TestEntity): Partial<TestEntity> {
+  function testEntityToObject(te: TestEntity | undefined): Partial<TestEntity> {
+    if (!te) throw new Error('Expected a test entity')
     return {
       _id: te._id,
       stringType: te.stringType,
@@ -70,7 +72,8 @@ describe('TypegooseQueryService', () => {
     }
   }
 
-  function testEntityToCreate(te: TestEntity): Partial<TestEntity> {
+  function testEntityToCreate(te: TestEntity | undefined): Partial<TestEntity> {
+    if (!te) throw new Error('Expected a test entity')
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { _id, ...insert } = testEntityToObject(te)
     return insert

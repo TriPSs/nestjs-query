@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { getDataSourceToken, InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
 import { Filter, SortDirection } from '@ptc-org/nestjs-query-core'
 import { plainToClass } from 'class-transformer'
+import { ok as assert } from 'node:assert'
 import { Repository } from 'typeorm'
 
 import { TypeOrmQueryService } from '../../src'
@@ -714,6 +715,7 @@ describe('TypeOrmQueryService', (): void => {
       describe('oneToMany', () => {
         it('set the relation to null', async () => {
           const relation = TEST_RELATIONS[0]
+          assert(relation.testEntityId)
           const queryService = moduleRef.get(TestEntityService)
           const count = await queryService.count({
             testRelations: {
@@ -1772,6 +1774,7 @@ describe('TypeOrmQueryService', (): void => {
     describe('manyToOne', () => {
       it('set the relation to null', async () => {
         const relation = TEST_RELATIONS[0]
+        assert(relation.testEntityId)
         const queryService = moduleRef.get(TestRelationService)
         const queryResult = await queryService.removeRelation(
           'testEntity',
@@ -1787,6 +1790,7 @@ describe('TypeOrmQueryService', (): void => {
       describe('with modify options', () => {
         it('should throw an error if the entity is not found with the id and provided filter', async () => {
           const relation = TEST_RELATIONS[0]
+          assert(relation.testEntityId)
           const queryService = moduleRef.get(TestRelationService)
           return expect(
             queryService.removeRelation('testEntity', relation.testRelationPk, TEST_ENTITIES[1].testEntityPk, {
@@ -1797,6 +1801,7 @@ describe('TypeOrmQueryService', (): void => {
 
         it('should throw an error if the relations are not found with the relationIds and provided filter', async () => {
           const relation = TEST_RELATIONS[0]
+          assert(relation.testEntityId)
           const queryService = moduleRef.get(TestRelationService)
           return expect(
             queryService.removeRelation('testEntity', relation.testRelationPk, TEST_ENTITIES[0].testEntityPk, {

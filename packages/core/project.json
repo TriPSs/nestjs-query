@@ -19,7 +19,7 @@
       "executor": "@isox-sh/js:tsc",
       "outputs": ["{workspaceRoot}/dist/packages/core"],
       "options": {
-        "tsConfig": "packages/core/tsconfig.lib.json",
+        "tsConfig": "packages/core/tsconfig.build.json",
         "generatePackageJson": true,
         "assets": [
           {

@@ -24,7 +24,7 @@ export interface GraphQLResolveInfoResult<InfoDTO, RelationsDTO = InfoDTO> {
 export const GraphQLResultInfo = <DTO>(DTOClass: Class<DTO>): ParameterDecorator => {
   // Get all relations that have look ahead enabled
   const relations = getRelationsDescriptors(DTOClass).filter(
-    (relation) => relation.relationOpts.enableLookAhead && !relation.isMany
+    (relation) => relation.relationOpts?.enableLookAhead && !relation.isMany
   )
 
   return createParamDecorator((data: unknown, ctx: ExecutionContext): GraphQLResolveInfoResult<DTO> => {

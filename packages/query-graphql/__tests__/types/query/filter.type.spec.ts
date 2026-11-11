@@ -29,6 +29,7 @@ import {
   UpdateFilterType
 } from '@ptc-org/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
+import { ok as assert } from 'node:assert'
 
 import { generateSchema } from '../../__fixtures__'
 
@@ -165,6 +166,7 @@ describe('filter types', (): void => {
         and: [{ stringField: { eq: 'foo' } }]
       }
       const filterInstance = plainToClass(TestDtoFilter, filterObject)
+      assert(filterInstance.and)
       expect(filterInstance.and[0]).toBeInstanceOf(TestGraphQLFilter)
     })
 
@@ -173,6 +175,7 @@ describe('filter types', (): void => {
         or: [{ stringField: { eq: 'foo' } }]
       }
       const filterInstance = plainToClass(TestDtoFilter, filterObject)
+      assert(filterInstance.or)
       expect(filterInstance.or[0]).toBeInstanceOf(TestGraphQLFilter)
     })
 
@@ -188,7 +191,9 @@ describe('filter types', (): void => {
         or: [{ subType: { stringField: { eq: 'foo' } } }]
       }
       const filterInstance = plainToClass(TestSubObjectFilter, filterObject)
+      assert(filterInstance.or)
       const subType = filterInstance.or[0].subType as Filter<TestDto>
+      assert(subType.stringField)
       expect(subType.stringField.eq).toBe(`foo`)
       expect(subType.constructor.name).toBe(`GraphQLFilter`)
     })
@@ -800,6 +805,7 @@ describe('filter types', (): void => {
         and: [{ stringField: { eq: 'foo' } }]
       }
       const filterInstance = plainToClass(TestDtoFilter, filterObject)
+      assert(filterInstance.and)
       expect(filterInstance.and[0]).toBeInstanceOf(TestGraphQLFilter)
     })
 
@@ -808,6 +814,7 @@ describe('filter types', (): void => {
         or: [{ stringField: { eq: 'foo' } }]
       }
       const filterInstance = plainToClass(TestDtoFilter, filterObject)
+      assert(filterInstance.or)
       expect(filterInstance.or[0]).toBeInstanceOf(TestGraphQLFilter)
     })
   })
@@ -866,6 +873,7 @@ describe('filter types', (): void => {
         and: [{ stringField: { eq: 'foo' } }]
       }
       const filterInstance = plainToClass(TestDtoFilter, filterObject)
+      assert(filterInstance.and)
       expect(filterInstance.and[0]).toBeInstanceOf(TestGraphQLFilter)
     })
 
@@ -874,6 +882,7 @@ describe('filter types', (): void => {
         or: [{ stringField: { eq: 'foo' } }]
       }
       const filterInstance = plainToClass(TestDtoFilter, filterObject)
+      assert(filterInstance.or)
       expect(filterInstance.or[0]).toBeInstanceOf(TestGraphQLFilter)
     })
   })
@@ -934,6 +943,7 @@ describe('filter types', (): void => {
         and: [{ stringField: { eq: 'foo' } }]
       }
       const filterInstance = plainToClass(TestDtoFilter, filterObject)
+      assert(filterInstance.and)
       expect(filterInstance.and[0]).toBeInstanceOf(TestGraphQLFilter)
     })
 
@@ -942,6 +952,7 @@ describe('filter types', (): void => {
         or: [{ stringField: { eq: 'foo' } }]
       }
       const filterInstance = plainToClass(TestDtoFilter, filterObject)
+      assert(filterInstance.or)
       expect(filterInstance.or[0]).toBeInstanceOf(TestGraphQLFilter)
     })
   })

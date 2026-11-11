@@ -14,7 +14,8 @@ RUN npm install
 
 # Copy source code
 COPY examples/federation-v2-e2e/gateway/src ./src
-COPY examples/federation-v2-e2e/gateway/tsconfig.json ./
+COPY tsconfig.base.json /tsconfig.base.json
+COPY examples/federation-v2-e2e/gateway/tsconfig*.json ./
 COPY examples/federation-v2-e2e/gateway/nest-cli.json ./
 
 # Build NestJS application

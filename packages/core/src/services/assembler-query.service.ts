@@ -59,7 +59,7 @@ export class AssemblerQueryService<
 
   public async deleteMany(filter: Filter<DTO>): Promise<DeleteManyResponse> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.queryService.deleteMany(this.assembler.convertQuery({ filter }).filter)
+    return this.queryService.deleteMany(this.assembler.convertQuery({ filter }).filter ?? {})
   }
 
   public async deleteOne(id: number | string, opts?: DeleteOneOptions<DTO>): Promise<DTO> {
@@ -92,7 +92,7 @@ export class AssemblerQueryService<
     opts?: AggregateOptions
   ): Promise<AggregateResponse<DTO>[]> {
     const aggregateResponse = await this.queryService.aggregate(
-      this.assembler.convertQuery({ filter }).filter || {},
+      this.assembler.convertQuery({ filter }).filter ?? {},
       this.assembler.convertAggregateQuery(aggregate),
       opts
     )
@@ -101,7 +101,7 @@ export class AssemblerQueryService<
   }
 
   public count(filter: Filter<DTO>, opts?: CountOptions): Promise<number> {
-    return this.queryService.count(this.assembler.convertQuery({ filter }).filter || {}, opts)
+    return this.queryService.count(this.assembler.convertQuery({ filter }).filter ?? {}, opts)
   }
 
   /**
@@ -279,7 +279,7 @@ export class AssemblerQueryService<
     return this.queryService.updateMany(
       await this.assembler.convertToUpdateEntity(update),
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.assembler.convertQuery({ filter }).filter
+      this.assembler.convertQuery({ filter }).filter ?? {}
     )
   }
 

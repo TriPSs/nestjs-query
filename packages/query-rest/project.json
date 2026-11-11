@@ -18,7 +18,7 @@
       "executor": "@isox-sh/js:tsc",
       "outputs": ["{workspaceRoot}/dist/packages/query-rest"],
       "options": {
-        "tsConfig": "packages/query-rest/tsconfig.lib.json",
+        "tsConfig": "packages/query-rest/tsconfig.build.json",
         "generatePackageJson": true,
         "assets": [
           {

@@ -1,3 +1,29 @@
 {
-  "extends": "./tsconfig.json"
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@ptc-org/nestjs-query-core": ["./packages/core/src/index.ts"],
+      "@ptc-org/nestjs-query-graphql": ["./packages/query-graphql/src/index.ts"],
+      "@ptc-org/nestjs-query-mongoose": ["./packages/query-mongoose/src/index.ts"],
+      "@ptc-org/nestjs-query-sequelize": ["./packages/query-sequelize/src/index.ts"],
+      "@ptc-org/nestjs-query-typegoose": ["./packages/query-typegoose/src/index.ts"],
+      "@ptc-org/nestjs-query-typeorm": ["./packages/query-typeorm/src/index.ts"],
+      "@ptc-org/nestjs-query-rest": ["./packages/query-rest/src/index.ts"],
+      "@ptc-org/nestjs-query-mikro-orm": ["./packages/query-mikro-orm/src/index.ts"]
+    },
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "types": ["node"],
+    "lib": ["ES2022"]
+  }
 }

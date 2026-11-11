@@ -8,11 +8,11 @@ import { registerDecorator } from 'class-validator'
  * @param decorators - The decorators to apply
  */
 export function HasRequiredFilter<T>(): PropertyDecorator {
-  return function (object: object, propertyName: string): void {
+  return function (object: object, propertyName: string | symbol): void {
     registerDecorator({
       name: 'hasRequiredFilter',
       target: object.constructor,
-      propertyName: propertyName,
+      propertyName: String(propertyName),
       // constraints: [property],
       options: {
         message: 'There was no filter provided for "$property"!'

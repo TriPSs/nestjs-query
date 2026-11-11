@@ -51,7 +51,7 @@ export class QueryRelationsLoader<DTO, Relation> implements NestjsQueryDataloade
         map.set(queryJson, [])
       }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      map.get(queryJson).push({ ...args, index })
+      map.get(queryJson)?.push({ ...args, index })
       return map
     }, new Map<string, (QueryRelationsArgs<DTO, Relation> & { index: number })[]>())
   }

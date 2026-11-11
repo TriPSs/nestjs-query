@@ -1,7 +1,8 @@
 import { Class, Filter, Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
+import { ok as assert } from 'node:assert'
 import { format as formatSql } from 'sql-formatter'
 import { anything, deepEqual, instance, mock, verify, when } from 'ts-mockito'
-import { DataSource, EntityMetadata, QueryBuilder, WhereExpressionBuilder } from 'typeorm'
+import { DataSource, EntityMetadata, ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm'
 
 import { FilterQueryBuilder, WhereBuilder } from '../../src/query'
 import { createTestConnection } from '../__fixtures__/connection.fixture'
@@ -16,10 +17,12 @@ describe('FilterQueryBuilder', (): void => {
   })
   afterEach(() => connection.destroy())
 
-  const getEntityQueryBuilder = <Entity>(entity: Class<Entity>, whereBuilder: WhereBuilder<Entity>): FilterQueryBuilder<Entity> =>
-    new FilterQueryBuilder(connection.getRepository(entity), whereBuilder)
+  const getEntityQueryBuilder = <Entity extends ObjectLiteral>(
+    entity: Class<Entity>,
+    whereBuilder: WhereBuilder<Entity>
+  ): FilterQueryBuilder<Entity> => new FilterQueryBuilder<Entity>(connection.getRepository(entity), whereBuilder)
 
-  const expectSQLSnapshot = <Entity>(query: QueryBuilder<Entity>): void => {
+  const expectSQLSnapshot = <Entity extends ObjectLiteral>(query: QueryBuilder<Entity>): void => {
     const [sql, params] = query.getQueryAndParameters()
 
     expect(formatSql(sql, { params })).toMatchSnapshot()
@@ -180,7 +183,10 @@ describe('FilterQueryBuilder', (): void => {
       const nestedRelationQuery: Filter<TestEntity> = { oneTestRelation: { testEntity: { stringType: { eq: '123' } } } }
       const relations = qb.getReferencedRelationsWithAliasRecursive(qb.repo.metadata, nestedRelationQuery)
 
+      assert(relations.oneTestRelation.metadata)
       expect(relations.oneTestRelation.metadata.target).toBe(TestRelation)
+      assert(relations.oneTestRelation.relations)
+      assert(relations.oneTestRelation.relations.testEntity.metadata)
       expect(relations.oneTestRelation.relations.testEntity.metadata.target).toBe(TestEntity)
     })
   })
@@ -276,7 +282,10 @@ describe('FilterQueryBuilder', (): void => {
       })
 
       it('should apply filtering from relations query filter', () => {
-        const expectSQLSnapshotUsingQuery = <Entity>(EntityClass: Class<Entity>, query: Query<Entity>): void => {
+        const expectSQLSnapshotUsingQuery = <Entity extends ObjectLiteral>(
+          EntityClass: Class<Entity>,
+          query: Query<Entity>
+        ): void => {
           const geFilterQueryBuilder = (e: Class<Entity>): FilterQueryBuilder<Entity> =>
             new FilterQueryBuilder(connection.getRepository(e))
 

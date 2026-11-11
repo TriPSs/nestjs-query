@@ -3,16 +3,10 @@ import ts from 'typescript'
 import { defineConfig } from 'vitest/config'
 
 const workspaceRoot = resolve(__dirname, '..')
-const packages = [
-  'core',
-  'query-graphql',
-  'query-rest',
-  'query-typeorm',
-  'query-mongoose',
-  'query-sequelize',
-  'query-typegoose',
-  'query-mikro-orm'
-]
+const tsconfig = ts.readConfigFile(resolve(workspaceRoot, 'tsconfig.base.json'), (file) => ts.sys.readFile(file))
+if (tsconfig.error) throw new Error(ts.flattenDiagnosticMessageText(tsconfig.error.messageText, '\n'))
+const { compilerOptions: jsonCompilerOptions } = tsconfig.config as { compilerOptions: Record<string, unknown> }
+const { options: compilerOptions } = ts.convertCompilerOptionsFromJson(jsonCompilerOptions, workspaceRoot)
 
 export function createTestConfig(name: string, root: string, e2e = false) {
   return defineConfig({
@@ -27,13 +21,9 @@ export function createTestConfig(name: string, root: string, e2e = false) {
           const result = ts.transpileModule(code, {
             fileName: id,
             compilerOptions: {
-              target: ts.ScriptTarget.ES2021,
+              ...compilerOptions,
               module: ts.ModuleKind.ESNext,
-              experimentalDecorators: true,
-              emitDecoratorMetadata: true,
-              useDefineForClassFields: false,
-              esModuleInterop: true,
-              sourceMap: true,
+              moduleResolution: ts.ModuleResolutionKind.Bundler,
               inlineSources: true
             }
           })
@@ -49,9 +39,9 @@ export function createTestConfig(name: string, root: string, e2e = false) {
           find: /^graphql-query-complexity$/,
           replacement: resolve(workspaceRoot, 'node_modules/graphql-query-complexity/dist/cjs/index.js')
         },
-        ...packages.map((pkg) => ({
-          find: `@ptc-org/nestjs-query-${pkg}`,
-          replacement: resolve(workspaceRoot, `packages/${pkg}/src/index.ts`)
+        ...Object.entries(compilerOptions.paths ?? {}).map(([find, entries]) => ({
+          find,
+          replacement: resolve(workspaceRoot, entries[0])
         }))
       ]
     },

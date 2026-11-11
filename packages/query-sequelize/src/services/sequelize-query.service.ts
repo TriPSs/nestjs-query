@@ -149,7 +149,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
     ensureMatchesCreationFilter(record as Entity, opts?.filter)
     await this.ensureEntityDoesNotExist(record)
     const changedValues = this.getChangedValues(record)
-    return this.model.create<Entity>(changedValues as MakeNullishOptional<Entity>)
+    return this.model.create<Entity>(changedValues as MakeNullishOptional<Entity['_creationAttributes']>)
   }
 
   /**
@@ -173,7 +173,8 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
 
     return this.model.bulkCreate<Entity>(
       creatableRecords.map(
-        (creatableRecord) => this.getChangedValues(creatableRecord as DeepPartial<Entity>) as MakeNullishOptional<Entity>
+        (creatableRecord) =>
+          this.getChangedValues(creatableRecord as DeepPartial<Entity>) as MakeNullishOptional<Entity['_creationAttributes']>
       )
     )
   }
@@ -260,7 +261,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
   // eslint-disable-next-line @typescript-eslint/ban-types
   private getChangedValues(record: DeepPartial<Entity>): Partial<Entity> {
     if (record instanceof this.model) {
-      const recordEntity = record as Entity
+      const recordEntity = record
 
       const raw = recordEntity.get({ plain: true })
       const changed = recordEntity.changed()

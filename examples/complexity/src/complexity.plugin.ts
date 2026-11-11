@@ -1,4 +1,4 @@
-import { ApolloServerPlugin, GraphQLRequestListener } from '@apollo/server'
+import { ApolloServerPlugin, BaseContext, GraphQLRequestListener } from '@apollo/server'
 import { Plugin } from '@nestjs/apollo'
 import { Logger, LoggerService } from '@nestjs/common'
 import { GraphQLSchemaHost } from '@nestjs/graphql'
@@ -15,7 +15,7 @@ export class ComplexityPlugin implements ApolloServerPlugin {
     this.logger = new Logger('complexity-plugin')
   }
 
-  requestDidStart(): Promise<GraphQLRequestListener<unknown>> {
+  requestDidStart(): Promise<GraphQLRequestListener<BaseContext>> {
     const { schema } = this.gqlSchemaHost
 
     return Promise.resolve({

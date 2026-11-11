@@ -1,9 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../dist/out-tsc",
-    "module": "esnext",
     "types": ["vitest/globals", "node"]
   },
-  "include": ["vitest.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"]
+  "include": ["**/e2e/**/*.ts", "**/*.spec.ts", "vitest.config.ts"],
+  "exclude": ["federation-v2-e2e/**", "**/node_modules/**", "**/dist/**"]
 }

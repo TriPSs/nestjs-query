@@ -13,14 +13,16 @@
   },
   "license": "MIT",
   "author": "doug-martin <doug@dougamartin.com>",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "directories": {
-    "lib": "src",
+    "lib": ".",
     "test": "__tests__"
   },
   "files": [
-    "src/**"
+    "**/*.js",
+    "**/*.d.ts",
+    "**/*.js.map"
   ],
   "dependencies": {
     "camel-case": "^4.1.2",

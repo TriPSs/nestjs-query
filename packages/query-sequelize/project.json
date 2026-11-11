@@ -19,7 +19,7 @@
       "executor": "@isox-sh/js:tsc",
       "outputs": ["{workspaceRoot}/dist/packages/query-sequelize"],
       "options": {
-        "tsConfig": "packages/query-sequelize/tsconfig.lib.json",
+        "tsConfig": "packages/query-sequelize/tsconfig.build.json",
         "generatePackageJson": true,
         "assets": [
           {

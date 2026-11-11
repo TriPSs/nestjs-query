@@ -5,7 +5,7 @@ import mongoose, { Document, SchemaTypes, Types } from 'mongoose'
 @Schema({ timestamps: true })
 export class SubTaskEntity extends Document {
   @ObjectId()
-  _id: mongoose.Types.ObjectId
+  _id!: mongoose.Types.ObjectId
 
   @Prop({ required: true })
   title!: string

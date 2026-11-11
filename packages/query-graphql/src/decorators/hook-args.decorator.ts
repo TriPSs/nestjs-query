@@ -48,7 +48,7 @@ export const MutationHookArgs = <T extends MutationArgsType<unknown>>(): Paramet
       for (const hook of context.hooks) {
         hookedArgs = (await hook.run(hookedArgs, context)) as T
       }
-      return { input: hookedArgs }
+      return { ...data, input: hookedArgs }
     }
     return data
   })
