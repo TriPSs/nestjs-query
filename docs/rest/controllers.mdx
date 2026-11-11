@@ -78,6 +78,24 @@ export class TodoItemModule {}
 
 For narrower controllers, extend `CreateController`, `ReadController`, `UpdateController`, `DeleteController`, or `ExportController` instead.
 
+### Custom PATCH routes
+
+The REST package exports a `Patch` decorator for custom controller methods. It accepts the same response type and options as its `Put` decorator and adds OpenAPI response metadata and response serialization.
+
+```ts
+import { Body, Param } from '@nestjs/common'
+import { Patch } from '@ptc-org/nestjs-query-rest'
+import { TodoItemUpdateDTO } from './dto/todo-item-update.dto'
+
+// Inside a controller extending CRUDController(TodoItemDTO):
+@Patch(() => TodoItemDTO, { path: ':id' })
+patchOne(@Param('id') id: string, @Body() update: TodoItemUpdateDTO) {
+  return this.service.updateOne(id, update)
+}
+```
+
+Custom PATCH methods must configure their own validation, guards, authorization, and hooks as needed. The generated CRUD update route continues to use `PUT`.
+
 ## Options[​](#options 'Direct link to Options')
 
 Top-level `CRUDController` and endpoint options include:

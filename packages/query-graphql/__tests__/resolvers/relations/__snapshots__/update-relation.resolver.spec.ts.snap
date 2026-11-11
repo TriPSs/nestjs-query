@@ -22,7 +22,12 @@ type Query {
 }
 
 type Mutation {
+  """Adds the provided relations without removing existing relations."""
   addTestToTestResolverDTO(input: AddTestToTestResolverDTOInput!): TestResolverDTO!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setTestOnTestResolverDTO(input: SetTestOnTestResolverDTOInput!): TestResolverDTO!
 }
 
@@ -54,7 +59,12 @@ type Query {
 }
 
 type Mutation {
+  """Adds the provided relations without removing existing relations."""
   addRelationsToTestResolverDTO(input: AddRelationsToTestResolverDTOInput!): TestResolverDTO!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setRelationsOnTestResolverDTO(input: SetRelationsOnTestResolverDTOInput!): TestResolverDTO!
 }
 
@@ -97,6 +107,7 @@ type Query {
 }
 
 type Mutation {
+  """Sets the provided relation, replacing any existing relation."""
   setTestOnTestResolverDTO(input: SetTestOnTestResolverDTOInput!): TestResolverDTO!
 }
 
@@ -120,6 +131,7 @@ type Query {
 }
 
 type Mutation {
+  """Sets the provided relation, replacing any existing relation."""
   setRelationOnTestResolverDTO(input: SetRelationOnTestResolverDTOInput!): TestResolverDTO!
 }
 
@@ -140,5 +152,51 @@ exports[`UpdateRelationsResolver should not add update methods if one and many a
 
 type Query {
   test: TestResolverDTO!
+}"
+`;
+
+exports[`UpdateRelationsResolver should preserve custom descriptions for one and many relation updates 1`] = `
+"type TestResolverDTO {
+  id: ID!
+  stringField: String!
+}
+
+type Query {
+  test: TestResolverDTO!
+}
+
+type Mutation {
+  """Custom relation update."""
+  setRelationOnTestResolverDTO(input: SetRelationOnTestResolverDTOInput!): TestResolverDTO!
+
+  """Custom relations update."""
+  addRelationsToTestResolverDTO(input: AddRelationsToTestResolverDTOInput!): TestResolverDTO!
+
+  """Custom relations update."""
+  setRelationsOnTestResolverDTO(input: SetRelationsOnTestResolverDTOInput!): TestResolverDTO!
+}
+
+input SetRelationOnTestResolverDTOInput {
+  """The id of the record."""
+  id: ID!
+
+  """The id of relation."""
+  relationId: ID!
+}
+
+input AddRelationsToTestResolverDTOInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
+}
+
+input SetRelationsOnTestResolverDTOInput {
+  """The id of the record."""
+  id: ID!
+
+  """The ids of the relations."""
+  relationIds: [ID!]!
 }"
 `;
