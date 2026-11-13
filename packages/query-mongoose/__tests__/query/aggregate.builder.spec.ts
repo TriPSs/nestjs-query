@@ -1,11 +1,18 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AggregateQuery } from '@ptc-org/nestjs-query-core'
+import { expectTypeOf } from 'vitest'
 
 import { AggregateBuilder } from '../../src/query'
+import { MongooseGroupAndAggregate } from '../../src/query/aggregate.builder'
 import { TestEntity } from '../__fixtures__/test.entity'
 
 describe('AggregateBuilder', (): void => {
   const createAggregateBuilder = () => new AggregateBuilder<TestEntity>()
+
+  it('allows null only for the group identifier', () => {
+    expectTypeOf<MongooseGroupAndAggregate['_id']>().toEqualTypeOf<Record<string, string> | null>()
+    expectTypeOf<MongooseGroupAndAggregate['sum_numberType']>().toEqualTypeOf<Record<string, unknown>>()
+  })
 
   it('should throw an error if no selects are generated', (): void => {
     expect(() => createAggregateBuilder().build({})).toThrow('No aggregate fields found.')

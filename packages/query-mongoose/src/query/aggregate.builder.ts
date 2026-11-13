@@ -13,7 +13,7 @@ enum AggregateFuncs {
   MIN = 'min'
 }
 
-type Aggregate = Record<string, Record<string, unknown> | null>
+type Aggregate = Record<`${AggregateFuncs}_${string}`, Record<string, unknown>>
 type Group = { _id: Record<string, string> | null }
 export type MongooseGroupAndAggregate = Aggregate & Group
 
