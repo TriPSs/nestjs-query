@@ -1,11 +1,31 @@
 import { Query, SortDirection, SortNulls } from '@ptc-org/nestjs-query-core'
-import { DestroyOptions, FindOptions, Op, UpdateOptions } from 'sequelize'
+import { col, DestroyOptions, Dialect, FindOptions, fn, Op, UpdateOptions } from 'sequelize'
+import { Sequelize } from 'sequelize-typescript'
 import { anything, deepEqual, instance, mock, verify, when } from 'ts-mockito'
 
 import { FilterQueryBuilder, WhereBuilder } from '../../src/query'
+import { CONNECTION_OPTIONS } from '../__fixtures__/sequelize.fixture'
 import { TestEntity } from '../__fixtures__/test.entity'
 
 describe('FilterQueryBuilder', (): void => {
+  let connectedSequelize: Sequelize | undefined
+
+  const closeConnectedSequelize = async (): Promise<void> => {
+    await connectedSequelize?.close()
+    connectedSequelize = undefined
+  }
+
+  const connectModelsToDialect = async (dialect: Dialect): Promise<void> => {
+    await closeConnectedSequelize()
+    connectedSequelize = new Sequelize({ ...CONNECTION_OPTIONS, dialect, username: 'test' })
+  }
+
+  const isNullOrderingKey = (columnName: string) => fn('ISNULL', col(`TestEntity.${columnName}`))
+
+  beforeEach(() => connectModelsToDialect('sqlite'))
+
+  afterEach(() => closeConnectedSequelize())
+
   const getEntityQueryBuilder = (whereBuilder: WhereBuilder<TestEntity>): FilterQueryBuilder<TestEntity> =>
     new FilterQueryBuilder(TestEntity, whereBuilder)
 
@@ -200,6 +220,161 @@ describe('FilterQueryBuilder', (): void => {
           }
         )
         verify(mockWhereBuilder.build(anything(), anything())).never()
+      })
+
+      describe('on a dialect without NULLS FIRST/LAST support', () => {
+        beforeEach(() => connectModelsToDialect('mysql'))
+
+        it('should order by an IS NULL key before the column for NULLS_FIRST', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectFindOptions(
+            { sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }] },
+            instance(mockWhereBuilder),
+            {
+              order: [
+                [isNullOrderingKey('number_type'), 'DESC'],
+                ['numberType', 'ASC']
+              ]
+            }
+          )
+        })
+
+        it('should order by an IS NULL key before the column for NULLS_LAST', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectFindOptions(
+            { sorting: [{ field: 'numberType', direction: SortDirection.DESC, nulls: SortNulls.NULLS_LAST }] },
+            instance(mockWhereBuilder),
+            {
+              order: [
+                [isNullOrderingKey('number_type'), 'ASC'],
+                ['numberType', 'DESC']
+              ]
+            }
+          )
+        })
+
+        it('should not add an IS NULL key when nulls is not specified', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectFindOptions({ sorting: [{ field: 'numberType', direction: SortDirection.ASC }] }, instance(mockWhereBuilder), {
+            order: [['numberType', 'ASC']]
+          })
+        })
+
+        it('should keep each IS NULL key next to its own field in a multiple sort', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectFindOptions(
+            {
+              sorting: [
+                { field: 'numberType', direction: SortDirection.ASC },
+                { field: 'stringType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST },
+                { field: 'dateType', direction: SortDirection.DESC, nulls: SortNulls.NULLS_LAST }
+              ]
+            },
+            instance(mockWhereBuilder),
+            {
+              order: [
+                ['numberType', 'ASC'],
+                [isNullOrderingKey('string_type'), 'DESC'],
+                ['stringType', 'ASC'],
+                [isNullOrderingKey('date_type'), 'ASC'],
+                ['dateType', 'DESC']
+              ]
+            }
+          )
+        })
+
+        it('should qualify the IS NULL key with the alias the root table has in a query that joins a relation', async () => {
+          const findOptions = getEntityQueryBuilder(new WhereBuilder<TestEntity>()).findOptions({
+            filter: { testRelations: { relationName: { eq: 'foo' } } },
+            sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }]
+          })
+          const noRows = [] as unknown as [unknown[], unknown]
+          const querySpy = jest.spyOn(connectedSequelize, 'query').mockResolvedValue(noRows)
+
+          await TestEntity.findAll(findOptions)
+
+          const [sql] = querySpy.mock.calls[0]
+          expect(sql).toMatch(
+            /FROM `TestEntities` AS `TestEntity` LEFT OUTER JOIN .* ORDER BY ISNULL\(`TestEntity`\.`number_type`\) DESC, `numberType` ASC;$/
+          )
+        })
+
+        it('should leave a field that is not a model attribute for the database to reject', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectFindOptions(
+            {
+              sorting: [
+                { field: 'notAnAttribute' as keyof TestEntity, direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }
+              ]
+            },
+            instance(mockWhereBuilder),
+            {
+              order: [
+                [isNullOrderingKey('notAnAttribute'), 'DESC'],
+                ['notAnAttribute', 'ASC']
+              ]
+            }
+          )
+        })
+      })
+
+      describe('on a dialect with native NULLS FIRST/LAST support', () => {
+        beforeEach(() => connectModelsToDialect('postgres'))
+
+        it('should pass NULLS_FIRST through to the dialect', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectFindOptions(
+            { sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }] },
+            instance(mockWhereBuilder),
+            { order: [['numberType', 'ASC NULLS FIRST']] }
+          )
+        })
+
+        it('should pass NULLS_LAST through to the dialect', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectFindOptions(
+            { sorting: [{ field: 'numberType', direction: SortDirection.DESC, nulls: SortNulls.NULLS_LAST }] },
+            instance(mockWhereBuilder),
+            { order: [['numberType', 'DESC NULLS LAST']] }
+          )
+        })
+      })
+
+      describe('on a dialect that cannot express null ordering at all', () => {
+        beforeEach(() => {
+          jest.spyOn(TestEntity.sequelize, 'getDialect').mockReturnValue('mssql')
+        })
+
+        afterEach(() => {
+          jest.restoreAllMocks()
+        })
+
+        it('should reject NULLS_FIRST naming the offending field', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expect(() =>
+            getEntityQueryBuilder(instance(mockWhereBuilder)).findOptions({
+              sorting: [{ field: 'numberType', direction: SortDirection.ASC, nulls: SortNulls.NULLS_FIRST }]
+            })
+          ).toThrow(
+            `Sorting by null placement is not supported on the "mssql" dialect. Remove 'nulls' from the sort on 'numberType'.`
+          )
+        })
+
+        it('should reject NULLS_LAST', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expect(() =>
+            getEntityQueryBuilder(instance(mockWhereBuilder)).findOptions({
+              sorting: [{ field: 'numberType', direction: SortDirection.DESC, nulls: SortNulls.NULLS_LAST }]
+            })
+          ).toThrow('Sorting by null placement is not supported')
+        })
+
+        it('should still sort when nulls is not specified', () => {
+          const mockWhereBuilder = mock<WhereBuilder<TestEntity>>(WhereBuilder)
+          expectFindOptions({ sorting: [{ field: 'numberType', direction: SortDirection.ASC }] }, instance(mockWhereBuilder), {
+            order: [['numberType', 'ASC']]
+          })
+        })
       })
     })
   })
