@@ -215,7 +215,8 @@ html:is([data-current-path='/'], [data-current-path='/index']) .mobile-nav-tabs-
   border-top: 1px solid var(--home-border);
 }
 
-.query-home h2 {
+.query-home .query-home-section > h2,
+.query-home .query-home-persistence > div > h2 {
   margin: 0 0 20px;
   font-size: clamp(24px, 3vw, 32px);
   font-weight: 600;
