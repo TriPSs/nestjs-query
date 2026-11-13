@@ -1,0 +1,19 @@
+docs/contributing.mdx
+  s_5a8c1804caa23d::t_3cf4a075c490bb 64-65,117-120
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a14d5e4e612a164a3863781438008f31cb11455b",
+  "prompts": {},
+  "sessions": {
+    "s_5a8c1804caa23d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d559-1330-7513-8804-1b5fcd4bda54",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
