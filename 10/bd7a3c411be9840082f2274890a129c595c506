@@ -1,0 +1,27 @@
+examples/federation-v2-e2e/todo-service/package.json
+  s_5a8c1804caa23d::t_3cf4a075c490bb 30
+examples/federation-v2-e2e/tag-service/package.json
+  s_5a8c1804caa23d::t_3cf4a075c490bb 31
+examples/federation-v2-e2e/user-service/package.json
+  s_5a8c1804caa23d::t_3cf4a075c490bb 30
+examples/federation-v2-e2e/gateway/package.json
+  s_5a8c1804caa23d::t_3cf4a075c490bb 25-26
+yarn.lock
+  s_5a8c1804caa23d::t_1727f02c5d7762 6278,10728,10970,11519
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "10bd7a3c411be9840082f2274890a129c595c506",
+  "prompts": {},
+  "sessions": {
+    "s_5a8c1804caa23d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d559-1330-7513-8804-1b5fcd4bda54",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
