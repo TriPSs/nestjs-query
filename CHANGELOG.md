@@ -1,4 +1,15 @@
  
+## [11.0.1-alpha.0](https://github.com/TriPSs/nestjs-query/compare/v11.0.0-alpha.0...v11.0.1-alpha.0) (2026-11-13)
+
+### Features
+
+* **query-rest:** Export Patch decorator for custom routes ([8377bf7](https://github.com/TriPSs/nestjs-query/commit/8377bf7db6bc01fa77b0c9a6d251ee4743ba481b))
+
+### Bug Fixes
+
+* **deps:** Make CSV export optional and prune unused dependencies ([b466120](https://github.com/TriPSs/nestjs-query/commit/b46612055ece248c92389a9a53b396b79ce9dbee)), closes [TriPSs/nestjs-query#305](https://github.com/TriPSs/nestjs-query/issues/305)
+* **query-typeorm:** Allow optional metadata and nested relations ([ab55ffc](https://github.com/TriPSs/nestjs-query/commit/ab55ffc316f5e88462a4fd42bb996e736d43650f))
+
 ## [10.0.3](https://github.com/TriPSs/nestjs-query/compare/v10.0.2...v10.0.3) (2026-08-29)
 
 
