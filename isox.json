@@ -22,6 +22,11 @@
     "lint": {
       "cache": true,
       "inputs": ["default", "^default"]
+    },
+    "test": {
+      "cache": true,
+      "inputs": ["default", "^default", "{workspaceRoot}/vitest.config.ts"],
+      "outputs": ["coverage/packages/{projectName}"]
     }
   }
 }
