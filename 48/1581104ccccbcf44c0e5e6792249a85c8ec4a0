@@ -1,0 +1,22 @@
+packages/query-mongoose/__tests__/query/aggregate.builder.spec.ts
+  s_5a8c1804caa23d::t_3cf4a075c490bb 3,6,12-15
+  s_5a8c1804caa23d::t_823f3f00117c3c 16
+packages/query-mongoose/src/query/aggregate.builder.ts
+  s_5a8c1804caa23d::t_3cf4a075c490bb 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "481581104ccccbcf44c0e5e6792249a85c8ec4a0",
+  "prompts": {},
+  "sessions": {
+    "s_5a8c1804caa23d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d559-1330-7513-8804-1b5fcd4bda54",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
