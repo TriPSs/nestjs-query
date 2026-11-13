@@ -1,4 +1,7 @@
- 
+# Changelog
+
+## 11.1.0-alpha.0 (2026-11-13)
+
 ## [11.0.1-alpha.0](https://github.com/TriPSs/nestjs-query/compare/v11.0.0-alpha.0...v11.0.1-alpha.0) (2026-11-13)
 
 ### Features
