@@ -11,15 +11,40 @@
       },
       "configurations": {
         "production": {
-          "postTargets": ["workspace:github"]
+          "postTargets": ["workspace:release-packages", "workspace:push-release-tag", "workspace:github"]
+        },
+        "alpha": {
+          "preid": "alpha",
+          "postTargets": ["workspace:release-packages:alpha", "workspace:push-release-tag", "workspace:github"]
         }
+      }
+    },
+    "release-packages": {
+      "executor": "@isox-sh/core:run-command",
+      "cache": false,
+      "options": {
+        "commands": ["yarn isox run-many --target=build", "yarn isox run-many --target=publish"],
+        "parallel": false
+      },
+      "configurations": {
+        "alpha": {
+          "commands": ["yarn isox run-many --target=build", "yarn isox run-many --target=publish --config=alpha"]
+        }
+      }
+    },
+    "push-release-tag": {
+      "executor": "@isox-sh/core:run-command",
+      "cache": false,
+      "options": {
+        "command": "git push origin refs/tags/{tag}:refs/tags/{tag}"
       }
     },
     "github": {
       "executor": "@isox-sh/semver:github",
       "options": {
         "tag": "{tag}",
-        "notes": "{notes}"
+        "notes": "{notes}",
+        "prerelease": "{prerelease}"
       }
     }
   }

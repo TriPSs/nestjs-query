@@ -155,6 +155,22 @@ yarn test
 yarn test:e2e
 ```
 
+## Releases
+
+Run a release from a clean checkout with complete Git history and tags:
+
+```bash
+# Stable release
+yarn isox run workspace:version --prod
+
+# Alpha release
+yarn isox run workspace:version --config=alpha --releaseAs=patch
+```
+
+Isox updates the package versions locally, builds all packages, publishes them to npm, pushes the release tag, and creates the GitHub release. Alpha packages use the `alpha` npm tag and GitHub prerelease flag. Authenticate npm and the GitHub CLI before running these commands locally.
+
+Releases tag the existing commit. Generated manifest and changelog changes remain staged locally; the release does not create or push a version commit. Build or publish failures stop the sequence before the tag is pushed or a GitHub release is created.
+
 ## Conventional Commits
 
 `nestjs-query` follows the [Conventional Commits Guidelines](https://www.conventionalcommits.org/en/v1.0.0/)

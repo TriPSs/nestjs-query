@@ -22,9 +22,18 @@ on:
           - minor
           - patch
 
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -54,24 +63,10 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Version
+      - name: Release
         if: ${{ inputs.environment == 'prod' }}
-        run: yarn isox run workspace:version
+        run: yarn isox run workspace:version --prod
 
-      - name: Version (Alpha)
+      - name: Release (Alpha)
         if: ${{ inputs.environment == 'alpha' }}
-        run: yarn isox run workspace:version --releaseAs=${{inputs.releaseAs}} --preid=alpha
-
-      - name: Build
-        run: yarn isox run-many --target=build
-
-      - name: Publish
-        if: ${{ inputs.environment == 'prod' }}
-        run: yarn isox run-many --target=publish
-
-      - name: Publish (Alpha)
-        if: ${{ inputs.environment == 'alpha' }}
-        run: yarn isox run-many --target=publish --config=alpha
-
-      - name: Push GIT
-        run: git push --follow-tags
+        run: yarn isox run workspace:version --config=alpha --releaseAs=${{inputs.releaseAs}}
