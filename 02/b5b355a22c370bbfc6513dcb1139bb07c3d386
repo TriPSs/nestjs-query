@@ -1,0 +1,21 @@
+docs/docs.json
+  s_da224be4fe7464::t_3d2fae5c14a00a 70
+docs/introduction/getting-started.mdx
+  s_da224be4fe7464::t_3ecfbae1d7ede8 37-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "02b5b355a22c370bbfc6513dcb1139bb07c3d386",
+  "prompts": {},
+  "sessions": {
+    "s_da224be4fe7464": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d583-b8d2-7b71-8f26-db2d7718b1ed",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
