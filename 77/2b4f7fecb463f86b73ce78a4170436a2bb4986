@@ -1,0 +1,35 @@
+packages/query-mikro-orm/README.md
+  s_5a8c1804caa23d::t_3cf4a075c490bb 2
+packages/query-sequelize/README.md
+  s_5a8c1804caa23d::t_3cf4a075c490bb 2
+packages/query-rest/README.md
+  s_5a8c1804caa23d::t_3cf4a075c490bb 2
+packages/core/README.md
+  s_5a8c1804caa23d::t_3cf4a075c490bb 2
+packages/query-mongoose/README.md
+  s_5a8c1804caa23d::t_3cf4a075c490bb 2
+packages/query-graphql/README.md
+  s_5a8c1804caa23d::t_3cf4a075c490bb 2
+packages/query-typeorm/README.md
+  s_5a8c1804caa23d::t_3cf4a075c490bb 2
+README.md
+  s_5a8c1804caa23d::t_3cf4a075c490bb 2
+packages/query-typegoose/README.md
+  s_5a8c1804caa23d::t_3cf4a075c490bb 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "772b4f7fecb463f86b73ce78a4170436a2bb4986",
+  "prompts": {},
+  "sessions": {
+    "s_5a8c1804caa23d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d559-1330-7513-8804-1b5fcd4bda54",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
