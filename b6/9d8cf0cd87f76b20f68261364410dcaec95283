@@ -1,0 +1,21 @@
+docs/home.css
+  s_da224be4fe7464::t_ba909f46d2c20d 92,285-286
+docs/index.mdx
+  s_da224be4fe7464::t_ba909f46d2c20d 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b69d8cf0cd87f76b20f68261364410dcaec95283",
+  "prompts": {},
+  "sessions": {
+    "s_da224be4fe7464": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d583-b8d2-7b71-8f26-db2d7718b1ed",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
