@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { getDataSourceToken, InjectRepository, TypeOrmModule } from '@nestjs/typeorm'
-import { Filter, SortDirection } from '@ptc-org/nestjs-query-core'
+import { Filter, SelectRelation, SortDirection } from '@ptc-org/nestjs-query-core'
 import { plainToClass } from 'class-transformer'
 import { Repository } from 'typeorm'
 
@@ -83,6 +83,52 @@ describe('TypeOrmQueryService', (): void => {
       const queriedPrimaryKeys = queryResult.map((e) => e.testEntityPk)
 
       return expect(primaryKeys).toEqual(queriedPrimaryKeys)
+    })
+
+    it('should bind a relation filter to the alias it was joined under when selected relations shadow its name', async () => {
+      const queryService = moduleRef.get(TestEntityService)
+      const filter: Filter<TestEntity> = { manyTestRelations: { relationName: { eq: 'foo2-test-relation-two' } } }
+      const shadowingRelations: SelectRelation<TestEntity>[] = [
+        {
+          name: 'manyToManyUniDirectional',
+          query: {
+            relations: [
+              {
+                name: 'manyTestEntities',
+                query: {
+                  relations: [
+                    {
+                      name: 'manyTestRelations',
+                      query: {
+                        relations: [
+                          {
+                            name: 'manyTestEntities',
+                            query: { relations: [{ name: 'manyTestRelations', query: {} }] }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+
+      const withoutShadowing = await queryService.query({ filter })
+      const withShadowing = await queryService.query({ filter, relations: shadowingRelations })
+
+      expect(withoutShadowing.map(({ testEntityPk }) => testEntityPk).sort()).toEqual([
+        'test-entity-10',
+        'test-entity-2',
+        'test-entity-4',
+        'test-entity-6',
+        'test-entity-8'
+      ])
+      expect(withShadowing.map(({ testEntityPk }) => testEntityPk).sort()).toEqual(
+        withoutShadowing.map(({ testEntityPk }) => testEntityPk).sort()
+      )
     })
 
     describe('filter on relations', () => {
