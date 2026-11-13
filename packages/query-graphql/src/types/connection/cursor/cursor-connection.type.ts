@@ -12,6 +12,7 @@ import {
   CursorConnectionType,
   EdgeType,
   PageInfoType,
+  PageOptions,
   QueryMany,
   StaticConnectionType
 } from '../interfaces'
@@ -52,9 +53,10 @@ export function getOrCreateCursorConnectionType<DTO>(
       static async createFromPromise<Q extends Query<DTO>>(
         queryMany: QueryMany<DTO, Q>,
         query: Q,
-        count?: Count<DTO>
+        count?: Count<DTO>,
+        pageOpts?: PageOptions
       ): Promise<AbstractConnection> {
-        const { pageInfo, edges, totalCount } = await pager.page(queryMany, query, count ?? DEFAULT_COUNT)
+        const { pageInfo, edges, totalCount } = await pager.page(queryMany, query, count ?? DEFAULT_COUNT, pageOpts)
         return new AbstractConnection(
           // create the appropriate graphql instance
           new PIT(pageInfo.hasNextPage, pageInfo.hasPreviousPage, pageInfo.startCursor, pageInfo.endCursor),

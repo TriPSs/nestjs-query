@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common'
 import { InjectModel, SequelizeModule } from '@nestjs/sequelize'
 import { Test, TestingModule } from '@nestjs/testing'
-import { DeepPartial } from '@ptc-org/nestjs-query-core'
+import { DeepPartial, NullOrdering } from '@ptc-org/nestjs-query-core'
 import { ModelCtor, Sequelize } from 'sequelize-typescript'
 
 import { SequelizeQueryService } from '../../src'
@@ -45,6 +45,11 @@ describe('SequelizeQueryService', (): void => {
   it('should create a filterQueryBuilder and assemblerService based on the repo passed in if not provided', () => {
     const queryService = moduleRef.get(TestEntityService)
     expect(queryService.filterQueryBuilder).toBeInstanceOf(FilterQueryBuilder)
+  })
+
+  it('should report the null ordering of the dialect it is connected to', () => {
+    const queryService = moduleRef.get(TestEntityService)
+    expect(queryService.nullOrdering).toBe(NullOrdering.NULLS_SMALLEST)
   })
 
   describe('#query', () => {
