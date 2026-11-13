@@ -1,0 +1,32 @@
+.github/workflows/release.yml
+  s_89daab6d2f1627::t_658db3651744a4 28-29,61-63,67-69
+CHANGELOG.md
+  s_89daab6d2f1627::t_7fdb9af073f7b6 1
+  s_89daab6d2f1627::t_4eb1ca6a620aaf 3
+project.json
+  s_89daab6d2f1627::t_658db3651744a4 10,14
+docs/contributing.mdx
+  s_89daab6d2f1627::t_e9fb4c7ba93a4e 189-190,192-193,195-201,203-204
+  s_89daab6d2f1627::t_658db3651744a4 191,194,202
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5386bf4dfe993fe71ab6b1b5be2fd8ae0dcc6e45",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_89daab6d2f1627": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d57d-b568-7cc2-9a46-5361dca22b74",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
