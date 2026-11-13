@@ -7,7 +7,7 @@
       "options": {
         "syncVersions": true,
         "skipProjectChangelog": true,
-        "commitMessageFormat": "chore(release): v{version}"
+        "skipCommit": true
       },
       "configurations": {
         "production": {
