@@ -61,9 +61,8 @@ Pull Requests are the best way to contribute to this library. When issuing a pul
 Before you begin writing any new code you will need to run the following
 
 ```bash
-npm install
-npm run bootstrap
-npm run build
+yarn install --immutable
+yarn build
 ```
 
 ## Writing Tests
@@ -115,7 +114,10 @@ To run your tests follow [these instructions](#running-e2e-tests)
 
 To start your example run the following
 
-`npm run start -- {example-name}`
+```bash
+cd examples
+yarn nest start {example-name}
+```
 
 ## Running Tests
 
