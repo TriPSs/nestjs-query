@@ -1,0 +1,113 @@
+---
+title: 'Nestjs-query'
+sidebarTitle: 'Overview'
+description: 'Build queryable GraphQL and REST APIs with NestJS. Reuse filtering, sorting, paging, and persistence services with less boilerplate.'
+mode: 'custom'
+---
+
+<div className="query-home">
+  <section className="query-home-hero" aria-labelledby="home-title">
+    <div>
+      <p className="query-home-eyebrow">NestJS · GraphQL · REST</p>
+      <h1 id="home-title">Your data.<br />Your API.<br /><span>Less boilerplate.</span></h1>
+      <p className="query-home-lead">
+        Build queryable APIs with NestJS. Define your DTOs, connect your persistence layer, and let nestjs-query handle the
+        repetitive CRUD work.
+      </p>
+      <div className="query-home-actions">
+        <a className="query-home-button" href="/introduction/getting-started">Start building <span aria-hidden="true">↗</span></a>
+        <a className="query-home-secondary" href="/introduction/example">Explore an example <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div className="query-home-blueprint" role="group" aria-label="Architecture: GraphQL resolvers and REST controllers use a common QueryService connected to your persistence adapter.">
+      <div className="query-home-blueprint-heading"><span className="query-home-status" /> One query layer. Your choice of API.</div>
+      <div className="query-home-transports">
+        <div><span className="query-home-node-icon" aria-hidden="true">◈</span><strong>GraphQL</strong><small>Resolvers &amp; connections</small></div>
+        <div><span className="query-home-node-icon" aria-hidden="true">↗</span><strong>REST</strong><small>Controllers &amp; OpenAPI</small></div>
+      </div>
+      <div className="query-home-connector" aria-hidden="true">↕</div>
+      <div className="query-home-service">
+        <span className="query-home-eyebrow">The shared foundation</span>
+        <strong>QueryService</strong>
+        <span>Filter · Sort · Page · Create · Update · Delete</span>
+      </div>
+      <div className="query-home-connector" aria-hidden="true">↕</div>
+      <div className="query-home-database">Your persistence adapter</div>
+      <p className="query-home-blueprint-note">Keep your business logic in your services.</p>
+    </div>
+  </section>
+
+<section className="query-home-section" aria-labelledby="api-title">
+  <p className="query-home-eyebrow">Choose your starting point</p>
+  <h2 id="api-title">Two ways to put your data to work.</h2>
+  <p className="query-home-section-intro">
+    Use the API style your application needs, backed by a common query service interface.
+  </p>
+  <Columns cols={2}>
+    <Card title="Build a GraphQL API" icon="diagram-project" href="/graphql/getting-started" cta="Explore GraphQL" arrow>
+      Generate code-first CRUD resolvers with filtering, sorting, Relay connections, relations, and subscriptions.
+    </Card>
+    <Card title="Build a REST API" icon="code" href="/rest/getting-started" cta="Explore REST" arrow>
+      Generate CRUD controllers with DTO-based filters, offset paging, validation, CSV export, and OpenAPI documentation.
+    </Card>
+  </Columns>
+</section>
+
+<section className="query-home-persistence" aria-labelledby="persistence-title">
+  <div>
+    <p className="query-home-eyebrow">Bring your persistence layer</p>
+    <h2 id="persistence-title">
+      A familiar interface.
+      <br />
+      The tools you already use.
+    </h2>
+    <p>Connect an adapter, or build a custom QueryService for your own data source.</p>
+    <a className="query-home-secondary" href="/persistence/services">
+      Explore persistence services <span aria-hidden="true">→</span>
+    </a>
+  </div>
+  <div className="query-home-adapters">
+    <a href="/persistence/typeorm/getting-started">
+      <strong>TypeORM</strong>
+      <span>Get started ↗</span>
+    </a>
+    <a href="/persistence/sequelize/getting-started">
+      <strong>Sequelize</strong>
+      <span>Get started ↗</span>
+    </a>
+    <a href="/persistence/mongoose/getting-started">
+      <strong>Mongoose</strong>
+      <span>Get started ↗</span>
+    </a>
+    <a href="/persistence/typegoose/getting-started">
+      <strong>Typegoose</strong>
+      <span>Get started ↗</span>
+    </a>
+  </div>
+</section>
+
+<section className="query-home-section" aria-labelledby="concepts-title">
+  <p className="query-home-eyebrow">Learn the building blocks</p>
+  <h2 id="concepts-title">Small pieces. A lot less repetition.</h2>
+  <Columns cols={3}>
+    <Card title="Describe your data" icon="shapes" href="/concepts/dtos">
+      Use DTOs to define the shape of your API and separate it from your persistence model.
+    </Card>
+    <Card title="Make data queryable" icon="filter" href="/concepts/queries">
+      Compose filters, sorting, and paging with a shared, typed query interface.
+    </Card>
+    <Card title="Make it your own" icon="sliders" href="/concepts/services">
+      Extend query services to add the business logic your application needs.
+    </Card>
+  </Columns>
+</section>
+
+  <footer className="query-home-footer">
+    <span>Built for NestJS. Designed to be extended.</span>
+    <div>
+      <a href="/faq">FAQ</a>
+      <a href="/contributing">Contribute</a>
+      <a href="https://github.com/TriPSs/nestjs-query">GitHub <span aria-hidden="true">↗</span></a>
+    </div>
+  </footer>
+</div>
