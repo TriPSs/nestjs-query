@@ -1,0 +1,14 @@
+{
+  "name": "docs",
+  "$schema": "../node_modules/@isox-sh/core/schemas/project.schema.json",
+  "targets": {
+    "serve": {
+      "executor": "@isox-sh/core:run-command",
+      "cache": false,
+      "options": {
+        "command": "yarn dlx mint@4.3.16 dev",
+        "cwd": "docs"
+      }
+    }
+  }
+}
