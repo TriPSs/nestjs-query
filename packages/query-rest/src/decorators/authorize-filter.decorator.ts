@@ -52,8 +52,8 @@ function getAuthorizationContext(
 
 export function AuthorizerFilter<DTO>(partialAuthContext?: PartialAuthorizationContext): ParameterDecorator {
   // eslint-disable-next-line @typescript-eslint/ban-types
-  return (target: object, propertyKey: string | symbol, parameterIndex: number) => {
-    const authorizationContext = getAuthorizationContext(propertyKey, partialAuthContext)
+  return (target: object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+    const authorizationContext = getAuthorizationContext(propertyKey ?? target.constructor.name, partialAuthContext)
     return createParamDecorator((data: unknown, executionContext: ExecutionContext) =>
       getAuthorizerFilter(getContext<AuthorizerContext<DTO>>(executionContext), authorizationContext)
     )()(target, propertyKey, parameterIndex)
@@ -65,8 +65,8 @@ export function AuthorizerFilter<DTO>(partialAuthContext?: PartialAuthorizationC
 //   partialAuthContext?: PartialAuthorizationContext
 // ): ParameterDecorator {
 //   // eslint-disable-next-line @typescript-eslint/ban-types
-//   return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
-//     const authorizationContext = getAuthorizationContext(propertyKey, partialAuthContext)
+//   return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+//     const authorizationContext = getAuthorizationContext(propertyKey ?? target.constructor.name, partialAuthContext)
 //     return createParamDecorator((data: unknown, executionContext: ExecutionContext) =>
 //       getRelationAuthFilter(getContext<AuthorizerContext<DTO>>(executionContext), relationName, authorizationContext)
 //     )()(target, propertyKey, parameterIndex)
@@ -78,8 +78,8 @@ export function AuthorizerFilter<DTO>(partialAuthContext?: PartialAuthorizationC
 //   partialAuthContext?: PartialAuthorizationContext
 // ): ParameterDecorator {
 //   // eslint-disable-next-line @typescript-eslint/ban-types
-//   return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
-//     const authorizationContext = getAuthorizationContext(propertyKey, partialAuthContext)
+//   return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+//     const authorizationContext = getAuthorizationContext(propertyKey ?? target.constructor.name, partialAuthContext)
 //     return createParamDecorator(
 //       async (data: unknown, executionContext: ExecutionContext): Promise<ModifyRelationOptions<unknown, unknown>> => {
 //         const context = getContext<AuthorizerContext<DTO>>(executionContext)

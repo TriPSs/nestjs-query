@@ -51,7 +51,10 @@ export interface CreateResolver<DTO, C, QS extends QueryService<DTO, C, unknown>
 
   createMany(input: MutationArgsType<CreateManyInputType<C>>, authorizeFilter?: Filter<DTO>): Promise<DTO[]>
 
-  createdSubscription(input?: SubscriptionArgsType<DTO>, authorizeFilter?: Filter<DTO>): AsyncIterator<CreatedEvent<DTO>>
+  createdSubscription(
+    input?: SubscriptionArgsType<SubscriptionFilterInputType<DTO>>,
+    authorizeFilter?: Filter<DTO>
+  ): AsyncIterator<CreatedEvent<DTO>>
 }
 
 /** @internal */

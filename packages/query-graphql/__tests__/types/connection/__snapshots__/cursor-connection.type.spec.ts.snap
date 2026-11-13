@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CursorConnectionType should create the connection SDL 1`] = `
+exports[`CursorConnectionType > should create the connection SDL 1`] = `
 "type Test {
   stringField: String!
   numberField: Float!
@@ -45,7 +45,7 @@ type Query {
 }"
 `;
 
-exports[`CursorConnectionType should create the connection SDL with totalCount if enabled 1`] = `
+exports[`CursorConnectionType > should create the connection SDL with totalCount if enabled 1`] = `
 "type Test {
   stringField: String!
   numberField: Float!

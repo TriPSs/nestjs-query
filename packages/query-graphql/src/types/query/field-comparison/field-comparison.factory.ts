@@ -113,13 +113,16 @@ export function createFilterComparisonType<T>(options: FilterComparisonOptions<T
     const comparisonAllowed = isInAllowedList(options.allowedComparisons, val as unknown)
 
     if (comparisonAllowed) {
-      return mustBeType && !mustBeType.has(fieldType)
+      return !!mustBeType && !mustBeType.has(fieldType)
     }
 
     return true
   }
 
-  const BetweenFieldValidator = () => composeDecorators(...[betweenFilterValidationMap.get(fieldType)].filter(Boolean))
+  const BetweenFieldValidator = () => {
+    const validator = betweenFilterValidationMap.get(fieldType)
+    return composeDecorators(...(validator ? [validator] : []))
+  }
 
   @InputType(`${inputName}Between`)
   class FcBetween {

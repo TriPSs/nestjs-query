@@ -54,5 +54,5 @@ export function QueryArgsType<DTO>(DTOClass: Class<DTO>, opts?: QueryArgsTypeOpt
     return createNonePagingQueryArgsType(DTOClass, mergedOpts)
   }
 
-  return createCursorQueryArgsType(DTOClass, mergedOpts)
+  return createCursorQueryArgsType(DTOClass, { ...mergedOpts, pagingStrategy: PagingStrategies.CURSOR })
 }

@@ -13,11 +13,12 @@ import {
 } from '@nestjs/graphql'
 import { SortDirection } from '@ptc-org/nestjs-query-core'
 import { FilterableField, PagingStrategies, QueryArgsType, QueryOptions } from '@ptc-org/nestjs-query-graphql'
+import { vi } from 'vitest'
 
 import { generateSchema } from '../../__fixtures__'
 
 describe('QueryArgsType with decorator options', (): void => {
-  afterEach(() => jest.clearAllMocks())
+  afterEach(() => vi.clearAllMocks())
 
   @ObjectType('NoPagingQueryOptionsDTO')
   @QueryOptions({

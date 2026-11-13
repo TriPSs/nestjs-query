@@ -15,25 +15,24 @@ on:
       releaseAs:
         description: Release as (Required if env = alpha)
         required: false
+        default: patch
         type: choice
         options:
-          - premajor
-          - preminor
-          - prepatch
-          - prerelease
-
-env:
-  NX_BRANCH: ${{ github.event.number }}
-  NX_RUN_GROUP: ${{ github.run_id }}
+          - major
+          - minor
+          - patch
 
 jobs:
-
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
 
       - name: Cache node modules
         id: cache
@@ -57,17 +56,22 @@ jobs:
 
       - name: Version
         if: ${{ inputs.environment == 'prod' }}
-        run: yarn nx run workspace:version
+        run: yarn isox run workspace:version
 
       - name: Version (Alpha)
         if: ${{ inputs.environment == 'alpha' }}
-        run: yarn nx run workspace:version --releaseAs=${{inputs.releaseAs}} --preid=alpha
+        run: yarn isox run workspace:version --releaseAs=${{inputs.releaseAs}} --preid=alpha
 
       - name: Build
-        run: yarn nx run-many --target=build --all
+        run: yarn isox run-many --target=build
 
       - name: Publish
-        run: yarn nx run-many --target=publish --all
+        if: ${{ inputs.environment == 'prod' }}
+        run: yarn isox run-many --target=publish
+
+      - name: Publish (Alpha)
+        if: ${{ inputs.environment == 'alpha' }}
+        run: yarn isox run-many --target=publish --config=alpha
 
       - name: Push GIT
         run: git push --follow-tags

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`DeleteOneInputType should create an input type with a custom ID type 1`] = `
+exports[`DeleteOneInputType > should create an input type with a custom ID type 1`] = `
 "type Query {
   test(input: DeleteOneCustomId!): Int!
 }
@@ -11,7 +11,7 @@ input DeleteOneCustomId {
 }"
 `;
 
-exports[`DeleteOneInputType should create an input type with id field as the type 1`] = `
+exports[`DeleteOneInputType > should create an input type with id field as the type 1`] = `
 "type Query {
   test(input: DeleteOne!): Int!
 }

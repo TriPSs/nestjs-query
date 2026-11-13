@@ -1,3 +1,7 @@
+<p align="center">
+  <a href="https://nestjs-query.mintlify.site/" target="blank"><img src="https://nestjs-query.mintlify.site/images/readme-banner.png" width="100%" alt="nestjs-query — Queryable APIs for NestJS. GraphQL, REST, and TypeScript." /></a>
+</p>
+
 # `@ptc-org/nestjs-query-mikro-orm`
 
 The MikroORM persistence adapter for Nestjs-Query. It provides an implementation of the `@ptc-org/nestjs-query-core` `QueryService` for applications using [MikroORM](https://mikro-orm.io/).

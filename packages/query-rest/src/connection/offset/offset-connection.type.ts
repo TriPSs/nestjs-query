@@ -22,7 +22,7 @@ export function getOrCreateOffsetConnectionType<DTO>(
     class OffsetConnection implements OffsetConnectionType<DTO> {
       public static async createFromPromise<Q extends Query<DTO>>(
         queryMany: QueryMany<DTO, Q>,
-        query: Query<DTO>,
+        query: Q,
         count?: Count<DTO>
       ): Promise<OffsetConnection> {
         const { pageInfo, nodes, totalCount } = await pager.page(queryMany, query, opts.enableTotalCount ? count : undefined)

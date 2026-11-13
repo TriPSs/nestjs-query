@@ -153,7 +153,7 @@ export const Readable =
             this.service.query(q, {
               withDeleted: opts?.many?.withDeleted
             }),
-          mergeQuery(query, { filter: mergeFilter(params.getFilter(), authorizeFilter) }),
+          mergeQuery(query, { filter: mergeFilter(params.getFilter(), authorizeFilter ?? {}) }),
           (filter) =>
             this.service.count(filter, {
               withDeleted: opts?.many?.withDeleted

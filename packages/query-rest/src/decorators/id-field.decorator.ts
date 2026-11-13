@@ -44,9 +44,9 @@ export function IDField(options?: IDFieldOptions): PropertyDecorator & MethodDec
     delete options?.idOnly
 
     if (descriptor) {
-      return Field(options)(target, propertyName, descriptor)
+      return Field(options ?? {})(target, propertyName, descriptor)
     }
-    return Field(options)(target, propertyName)
+    return Field(options ?? {})(target, propertyName)
   }
 }
 

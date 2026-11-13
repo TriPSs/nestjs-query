@@ -3,6 +3,7 @@ import { Field, ObjectType, Query, Resolver } from '@nestjs/graphql'
 import { SortDirection } from '@ptc-org/nestjs-query-core'
 import { CursorConnectionType, CursorPagingType, PagingStrategies, StaticConnectionType } from '@ptc-org/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
+import { vi } from 'vitest'
 
 import { KeySet } from '../../../src/decorators'
 import { getOrCreateCursorConnectionType } from '../../../src/types/connection'
@@ -93,7 +94,7 @@ describe('CursorConnectionType', (): void => {
 
     describe('.createFromPromise', () => {
       it('should create a connections response with an empty query', async () => {
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         const response = await TestConnection.createFromPromise(queryMany, {})
         expect(queryMany).toHaveBeenCalledTimes(0)
         expect(response).toEqual({
@@ -107,7 +108,7 @@ describe('CursorConnectionType', (): void => {
       })
 
       it('should pass additional query params to queryMany', async () => {
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         const dtos = [createTestDTO(1), createTestDTO(2)]
         queryMany.mockResolvedValueOnce([...dtos])
         await TestConnection.createFromPromise(queryMany, { search: 'searchString', paging: createPage({ first: 2 }) })
@@ -116,7 +117,7 @@ describe('CursorConnectionType', (): void => {
       })
 
       it('should create a connections response with an empty paging', async () => {
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         const response = await TestConnection.createFromPromise(queryMany, { paging: {} })
         expect(queryMany).toHaveBeenCalledTimes(0)
         expect(response).toEqual({
@@ -131,7 +132,7 @@ describe('CursorConnectionType', (): void => {
 
       describe('with first', () => {
         it('should return hasNextPage and hasPreviousPage false when there are the exact number of records', async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1), createTestDTO(2)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await TestConnection.createFromPromise(queryMany, { paging: createPage({ first: 2 }) })
@@ -153,7 +154,7 @@ describe('CursorConnectionType', (): void => {
         })
 
         it('should return hasNextPage true and hasPreviousPage false when the number of records more than the first', async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1), createTestDTO(2), createTestDTO(3)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await TestConnection.createFromPromise(queryMany, { paging: createPage({ first: 2 }) })
@@ -177,7 +178,7 @@ describe('CursorConnectionType', (): void => {
 
       describe('with last', () => {
         it("should return hasPreviousPage false if paging backwards and we're on the first page", async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await TestConnection.createFromPromise(queryMany, {
@@ -198,7 +199,7 @@ describe('CursorConnectionType', (): void => {
         })
 
         it('should return hasPreviousPage true if paging backwards and there is an additional node', async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1), createTestDTO(2), createTestDTO(3)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await TestConnection.createFromPromise(queryMany, {
@@ -223,7 +224,7 @@ describe('CursorConnectionType', (): void => {
       })
 
       it('should create an empty connection', async () => {
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         queryMany.mockResolvedValueOnce([])
         const response = await TestConnection.createFromPromise(queryMany, {
           paging: createPage({ first: 2 })
@@ -262,7 +263,7 @@ describe('CursorConnectionType', (): void => {
 
     describe('.createFromPromise', () => {
       it('should create a connections response with an empty query', async () => {
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         const response = await getConnectionType().createFromPromise(queryMany, {})
         expect(queryMany).toHaveBeenCalledTimes(0)
         expect(response).toEqual({
@@ -276,7 +277,7 @@ describe('CursorConnectionType', (): void => {
       })
 
       it('should create a connections response with an empty paging', async () => {
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         const response = await getConnectionType().createFromPromise(queryMany, { paging: {} })
         expect(queryMany).toHaveBeenCalledTimes(0)
         expect(response).toEqual({
@@ -291,7 +292,7 @@ describe('CursorConnectionType', (): void => {
 
       describe('with first', () => {
         it('should return hasNextPage and hasPreviousPage false when there are the exact number of records', async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1), createTestDTO(2)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await getConnectionType().createFromPromise(queryMany, { paging: createPage({ first: 2 }) })
@@ -323,7 +324,7 @@ describe('CursorConnectionType', (): void => {
         })
 
         it('should return hasNextPage true and hasPreviousPage false when the number of records more than the first', async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1), createTestDTO(2), createTestDTO(3)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await getConnectionType().createFromPromise(queryMany, { paging: createPage({ first: 2 }) })
@@ -355,7 +356,7 @@ describe('CursorConnectionType', (): void => {
         })
 
         it('should fetch nodes after the cursor', async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(2), createTestDTO(3), createTestDTO(4)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await getConnectionType().createFromPromise(queryMany, {
@@ -393,7 +394,7 @@ describe('CursorConnectionType', (): void => {
 
         describe('with additional filter', () => {
           it('should merge the cursor filter and query filter', async () => {
-            const queryMany = jest.fn()
+            const queryMany = vi.fn()
             const dtos = [createTestDTO(2), createTestDTO(3), createTestDTO(4)]
             queryMany.mockResolvedValueOnce([...dtos])
             const response = await getConnectionType().createFromPromise(queryMany, {
@@ -433,7 +434,7 @@ describe('CursorConnectionType', (): void => {
 
         describe('with additional sorting', () => {
           it('should merge the cursor filter and query filter', async () => {
-            const queryMany = jest.fn()
+            const queryMany = vi.fn()
             const dtos = [createTestDTO(2), createTestDTO(3), createTestDTO(4)]
             queryMany.mockResolvedValueOnce([...dtos])
             const response = await getConnectionType().createFromPromise(queryMany, {
@@ -493,7 +494,7 @@ describe('CursorConnectionType', (): void => {
 
       describe('with last', () => {
         it("should return hasPreviousPage false if paging backwards and we're on the first page", async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await getConnectionType().createFromPromise(queryMany, {
@@ -526,7 +527,7 @@ describe('CursorConnectionType', (): void => {
         })
 
         it('should return hasPreviousPage true if paging backwards and there is an additional node', async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1), createTestDTO(2), createTestDTO(3)]
           queryMany.mockResolvedValueOnce([...dtos].reverse())
           const response = await getConnectionType().createFromPromise(queryMany, {
@@ -564,7 +565,7 @@ describe('CursorConnectionType', (): void => {
 
         describe('with additional filter', () => {
           it('should merge the cursor filter and query filter', async () => {
-            const queryMany = jest.fn()
+            const queryMany = vi.fn()
             const dtos = [createTestDTO(1), createTestDTO(2), createTestDTO(3)]
             queryMany.mockResolvedValueOnce([...dtos].reverse())
             const response = await getConnectionType().createFromPromise(queryMany, {
@@ -604,7 +605,7 @@ describe('CursorConnectionType', (): void => {
 
         describe('with additional sort', () => {
           it('should merge the cursor sort', async () => {
-            const queryMany = jest.fn()
+            const queryMany = vi.fn()
             const dtos = [createTestDTO(1), createTestDTO(2), createTestDTO(3)]
             queryMany.mockResolvedValueOnce([...dtos].reverse())
             const response = await getConnectionType().createFromPromise(queryMany, {
@@ -667,7 +668,7 @@ describe('CursorConnectionType', (): void => {
           { field: 'stringField' as const, direction: SortDirection.ASC },
           { field: 'stringField' as const, direction: SortDirection.DESC }
         ]
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         const dtos = [createTestDTO(1), createTestDTO(2), createTestDTO(3)]
         queryMany.mockResolvedValueOnce([...dtos])
         const response = await getConnectionType().createFromPromise(queryMany, {
@@ -680,7 +681,7 @@ describe('CursorConnectionType', (): void => {
           sorting: [{ field: 'stringField', direction: SortDirection.ASC }]
         })
 
-        const queryManyNextPage = jest.fn()
+        const queryManyNextPage = vi.fn()
         queryManyNextPage.mockResolvedValueOnce([])
         await getConnectionType().createFromPromise(queryManyNextPage, {
           sorting: duplicatedSorting,
@@ -694,7 +695,7 @@ describe('CursorConnectionType', (): void => {
       })
 
       it('should create an empty connection', async () => {
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         queryMany.mockResolvedValueOnce([])
         const response = await getConnectionType().createFromPromise(queryMany, {
           paging: createPage({ first: 2 })

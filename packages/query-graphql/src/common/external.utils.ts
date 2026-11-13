@@ -1,6 +1,8 @@
 import { TypeMetadataStorage } from '@nestjs/graphql'
-import { EnumMetadata } from '@nestjs/graphql/dist/schema-builder/metadata'
-import { ObjectTypeMetadata } from '@nestjs/graphql/dist/schema-builder/metadata/object-type.metadata'
+// eslint-disable-next-line import/extensions
+import { EnumMetadata } from '@nestjs/graphql/dist/schema-builder/metadata/index.js'
+// eslint-disable-next-line import/extensions
+import { ObjectTypeMetadata } from '@nestjs/graphql/dist/schema-builder/metadata/object-type.metadata.js'
 // `@nestjs/graphql` maps its internals via a `"./*": "./*"` exports wildcard which — unlike legacy CJS
 // resolution — does NOT append the file extension. The two imports above are used in type positions only
 // (erased at compile time), but `LazyMetadataStorage` is a runtime value, so its specifier must carry the

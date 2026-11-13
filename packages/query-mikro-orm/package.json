@@ -12,23 +12,25 @@
     "directory": "packages/query-mikro-orm"
   },
   "license": "MIT",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "directories": {
-    "lib": "src",
+    "lib": ".",
     "test": "__tests__"
   },
   "files": [
-    "src/**"
+    "**/*.js",
+    "**/*.d.ts",
+    "**/*.js.map"
   ],
   "dependencies": {
-    "tslib": "^2.8.1"
+    "tslib": "^2.9.1"
   },
   "devDependencies": {
-    "@mikro-orm/better-sqlite": "^6.6.14",
-    "@mikro-orm/core": "^6.6.14",
+    "@mikro-orm/better-sqlite": "^6.6.17",
+    "@mikro-orm/core": "^6.6.17",
     "@mikro-orm/nestjs": "^6.1.2",
-    "@mikro-orm/sqlite": "^6.6.14"
+    "@mikro-orm/sqlite": "^6.6.17"
   },
   "peerDependencies": {
     "@mikro-orm/core": "^6.0.0",

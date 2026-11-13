@@ -50,7 +50,7 @@ export class MongooseQueryService<Entity extends Document>
 {
   constructor(
     readonly Model: MongooseModel<Entity>,
-    readonly filterQueryBuilder: FilterQueryBuilder<Entity> = new FilterQueryBuilder(Model)
+    readonly filterQueryBuilder: FilterQueryBuilder<Entity> = new FilterQueryBuilder<Entity>(Model)
   ) {
     super()
   }

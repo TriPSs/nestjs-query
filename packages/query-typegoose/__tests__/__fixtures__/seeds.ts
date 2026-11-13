@@ -112,7 +112,11 @@ export const seed = async (connection: mongoose.Connection): Promise<void> => {
     return references.map((reference) => {
       const fixtureReferences = reference.referenceName.includes('descrim') ? TEST_REFERENCES_FOR_DISCRIMINATES : TEST_REFERENCES
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      fixtureReferences.find((tr) => tr._id.toString() === reference._id.toString()).testEntity = entity._id
+      const fixture = fixtureReferences.find((tr) => tr._id.toString() === reference._id.toString())
+
+      if (!fixture) throw new Error('Reference fixture was not found')
+
+      fixture.testEntity = entity._id
       return {
         updateOne: {
           filter: { _id: reference._id },

@@ -10,7 +10,7 @@ import { ComparisonBuilder, EntityComparisonField } from './comparison.builder'
 export class WhereBuilder<Entity extends Document> {
   constructor(
     readonly Model: MongooseModel<Entity>,
-    readonly comparisonBuilder: ComparisonBuilder<Entity> = new ComparisonBuilder(Model)
+    readonly comparisonBuilder: ComparisonBuilder<Entity> = new ComparisonBuilder<Entity>(Model)
   ) {}
 
   /**
@@ -49,21 +49,21 @@ export class WhereBuilder<Entity extends Document> {
    */
   private getNormalizedFilter(filter: Filter<Entity>): Filter<Entity> {
     if (!this.isGraphQLFilter(filter)) return filter
-    const newFilter = {}
+    const newFilter: Record<string, unknown> = {}
     const keys = Object.keys(filter)
     // Converting to dot notation
     for (const key of keys) {
-      const value = filter[key]
+      const value = filter[key as keyof Filter<Entity>]
       if (!['and', 'or'].includes(key) && this.isGraphQLFilter(value)) {
         const subFilter = this.getNormalizedFilter(value as Filter<Entity>)
         for (const subKey of Object.keys(subFilter)) {
-          newFilter[`${key}.${subKey}`] = subFilter[subKey]
+          newFilter[`${key}.${subKey}`] = subFilter[subKey as keyof Filter<Entity>]
         }
       } else {
         newFilter[key] = value
       }
     }
-    return newFilter
+    return newFilter as Filter<Entity>
   }
 
   /**

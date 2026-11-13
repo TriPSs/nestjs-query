@@ -43,7 +43,7 @@ export interface DeleteResolver<DTO, QS extends QueryService<DTO, unknown, unkno
   deleteMany(input: MutationArgsType<DeleteManyInputType<DTO>>, authorizeFilter?: Filter<DTO>): Promise<DeleteManyResponse>
 
   deletedOneSubscription(
-    input?: SubscriptionArgsType<DTO>,
+    input?: SubscriptionArgsType<SubscriptionFilterInputType<DTO>>,
     authorizeFilter?: Filter<DTO>
   ): AsyncIterator<DeletedEvent<Partial<DTO>>>
 
@@ -165,7 +165,7 @@ export const Deletable =
         return deleteManyResponse
       }
 
-      async publishDeletedOneEvent(dto: DeleteOneResponse, authorizeFilter?: Filter<DTO>): Promise<void> {
+      async publishDeletedOneEvent(dto: Partial<DTO>, authorizeFilter?: Filter<DTO>): Promise<void> {
         if (this.pubSub) {
           const eventName = getSubscriptionEventName(deletedOneEvent, authorizeFilter)
           await this.pubSub.publish(eventName, { [deletedOneEvent]: dto })
@@ -194,7 +194,7 @@ export const Deletable =
         @Args() input?: DOSA,
         @AuthorizerFilter({ operationGroup: OperationGroup.DELETE, many: false })
         authorizeFilter?: Filter<DTO>
-      ): AsyncIterator<DeletedEvent<DeleteOneResponse>> {
+      ): AsyncIterator<DeletedEvent<Partial<DTO>>> {
         if (!enableOneSubscriptions || !this.pubSub) {
           throw new Error(`Unable to subscribe to ${deletedOneEvent}`)
         }

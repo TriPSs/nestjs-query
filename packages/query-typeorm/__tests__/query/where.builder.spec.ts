@@ -1,6 +1,6 @@
 import { Filter, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, ObjectLiteral, Repository } from 'typeorm'
 
 import {
   EntityComparisonField,
@@ -179,6 +179,21 @@ describe('WhereBuilder', (): void => {
       return sql.replace(/"/g, '')
     }
 
+    it('rejects a virtual column without its query function', () => {
+      const metadata = dataSource.getRepository(TestVirtualColumnEntity).metadata
+      const column = metadata.columns.find((candidate) => candidate.propertyName === 'relationCount')
+      if (!column) throw new Error('Virtual column fixture is missing')
+      const query = column.query
+      column.query = undefined
+      try {
+        expect(() =>
+          SQLComparisonBuilder.forEntityMetadata<TestVirtualColumnEntity>(metadata).build('relationCount', 'gt', 1)
+        ).toThrow('Virtual column relationCount is missing a query')
+      } finally {
+        column.query = query
+      }
+    })
+
     it('should compare a root virtual column with its query', (): void => {
       const sql = buildVirtualColumnFilterSql({ relationCount: { gt: 1 } })
 
@@ -198,7 +213,7 @@ describe('WhereBuilder', (): void => {
     })
 
     it('should compare a root virtual column with its query when a subclass overrides build', (): void => {
-      class CollatedComparisonBuilder<Entity> extends SQLComparisonBuilder<Entity> {
+      class CollatedComparisonBuilder<Entity extends ObjectLiteral> extends SQLComparisonBuilder<Entity> {
         public build<F extends keyof Entity>(
           field: F,
           cmp: FilterComparisonOperators<Entity[F]>,

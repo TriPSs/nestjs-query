@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "./src",
+    "outDir": "../../dist/packages/query-mongoose"
+  },
+  "include": ["src/**/*.ts"]
+}

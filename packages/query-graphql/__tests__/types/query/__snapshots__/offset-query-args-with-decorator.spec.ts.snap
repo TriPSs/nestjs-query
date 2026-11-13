@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Offset paging strategy QueryArgsType with decorator options allow apply the options to the generated SDL 1`] = `
+exports[`Offset paging strategy QueryArgsType with decorator options > allow apply the options to the generated SDL 1`] = `
 "type TestQuery {
   idField: ID!
   idFieldOption: ID

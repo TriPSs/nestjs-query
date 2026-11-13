@@ -4,7 +4,6 @@ import {
   AssemblerFactory,
   AssemblerQueryService,
   Class,
-  DeepPartial,
   InjectAssemblerQueryService,
   InjectQueryService,
   QueryService
@@ -12,58 +11,89 @@ import {
 
 import { getDTONames } from '../common'
 import { CRUDController, CRUDControllerOpts } from '../controllers'
+import { ReadControllerOpts } from '../controllers/read.controller'
 import { PagingStrategies } from '../types/query'
 
-export type CRUDAutoControllerOpts<DTO, C, U, R, PS extends PagingStrategies> = CRUDControllerOpts<DTO, C, U, R, PS> & {
+export type CRUDAutoControllerOpts<
+  DTO,
+  C,
+  U,
+  R extends ReadControllerOpts<DTO>,
+  PS extends PagingStrategies
+> = CRUDControllerOpts<DTO, C, U, R, PS> & {
   DTOClass: Class<DTO>
 }
 
-export type EntityCRUDAutoControllerOpts<DTO, Entity, C, U, R, PS extends PagingStrategies> = CRUDAutoControllerOpts<
+export type EntityCRUDAutoControllerOpts<
   DTO,
+  Entity,
   C,
   U,
-  R,
-  PS
-> & {
+  R extends ReadControllerOpts<DTO>,
+  PS extends PagingStrategies
+> = CRUDAutoControllerOpts<DTO, C, U, R, PS> & {
   EntityClass: Class<Entity>
 }
 
-export type AssemblerCRUDAutoControllerOpts<DTO, Assembler, C, U, R, PS extends PagingStrategies> = CRUDAutoControllerOpts<
+export type AssemblerCRUDAutoControllerOpts<
   DTO,
+  Assembler,
   C,
   U,
-  R,
-  PS
-> & {
+  R extends ReadControllerOpts<DTO>,
+  PS extends PagingStrategies
+> = CRUDAutoControllerOpts<DTO, C, U, R, PS> & {
   AssemblerClass: Class<Assembler>
 }
 
-export type ServiceCRUDAutoControllerOpts<DTO, QueryService, C, U, R, PS extends PagingStrategies> = CRUDAutoControllerOpts<
+export type ServiceCRUDAutoControllerOpts<
   DTO,
+  QueryService,
   C,
   U,
-  R,
-  PS
-> & {
+  R extends ReadControllerOpts<DTO>,
+  PS extends PagingStrategies
+> = CRUDAutoControllerOpts<DTO, C, U, R, PS> & {
   ServiceClass: Class<QueryService>
 }
 
-export type AutoControllerOpts<DTO, EntityServiceOrAssembler, C, U, R, PS extends PagingStrategies> =
+export type AutoControllerOpts<
+  DTO,
+  EntityServiceOrAssembler,
+  C,
+  U,
+  R extends ReadControllerOpts<DTO>,
+  PS extends PagingStrategies
+> =
   | EntityCRUDAutoControllerOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>
   | AssemblerCRUDAutoControllerOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>
   | ServiceCRUDAutoControllerOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>
 
-export const isServiceCRUDAutoControllerOpts = <DTO, MaybeService, C, U, R, PS extends PagingStrategies>(
+export const isServiceCRUDAutoControllerOpts = <
+  DTO,
+  MaybeService,
+  C,
+  U,
+  R extends ReadControllerOpts<DTO>,
+  PS extends PagingStrategies
+>(
   opts: AutoControllerOpts<DTO, MaybeService, C, U, R, PS>
 ): opts is ServiceCRUDAutoControllerOpts<DTO, MaybeService, C, U, R, PS> => 'DTOClass' in opts && 'ServiceClass' in opts
 
-export const isAssemblerCRUDAutoControllerOpts = <DTO, MaybeAssembler, C, U, R, PS extends PagingStrategies>(
+export const isAssemblerCRUDAutoControllerOpts = <
+  DTO,
+  MaybeAssembler,
+  C,
+  U,
+  R extends ReadControllerOpts<DTO>,
+  PS extends PagingStrategies
+>(
   opts: AutoControllerOpts<DTO, MaybeAssembler, C, U, R, PS>
 ): opts is AssemblerCRUDAutoControllerOpts<DTO, MaybeAssembler, C, U, R, PS> => 'DTOClass' in opts && 'AssemblerClass' in opts
 
 const getEndpointToken = <DTO>(DTOClass: Class<DTO>): string => `${DTOClass.name}AutoEndpoint`
 
-function createEntityAutoController<DTO, Entity extends DeepPartial<Entity>, C, U, R, PS extends PagingStrategies>(
+function createEntityAutoController<DTO, Entity, C, U, R extends ReadControllerOpts<DTO>, PS extends PagingStrategies>(
   controllerOpts: EntityCRUDAutoControllerOpts<DTO, Entity, C, U, R, PS>
 ): Type {
   const { DTOClass, EntityClass, basePath } = controllerOpts
@@ -89,7 +119,7 @@ function createEntityAutoController<DTO, Entity extends DeepPartial<Entity>, C, 
   return AutoController
 }
 
-function createAssemblerAutoController<DTO, Asmblr, C, U, R, PS extends PagingStrategies>(
+function createAssemblerAutoController<DTO, Asmblr, C, U, R extends ReadControllerOpts<DTO>, PS extends PagingStrategies>(
   controllerOpts: AssemblerCRUDAutoControllerOpts<DTO, Asmblr, C, U, R, PS>
 ): Type {
   const { DTOClass, AssemblerClass, basePath } = controllerOpts
@@ -110,7 +140,7 @@ function createAssemblerAutoController<DTO, Asmblr, C, U, R, PS extends PagingSt
   return AutoController
 }
 
-function createServiceAutoController<DTO, Service, C, U, R, PS extends PagingStrategies>(
+function createServiceAutoController<DTO, Service, C, U, R extends ReadControllerOpts<DTO>, PS extends PagingStrategies>(
   controllerOpts: ServiceCRUDAutoControllerOpts<DTO, Service, C, U, R, PS>
 ): Type {
   const { DTOClass, ServiceClass, basePath } = controllerOpts
@@ -128,14 +158,9 @@ function createServiceAutoController<DTO, Service, C, U, R, PS extends PagingStr
   return AutoController
 }
 
-function createEndpoint<
-  DTO,
-  EntityServiceOrAssembler extends DeepPartial<EntityServiceOrAssembler>,
-  C,
-  U,
-  R,
-  PS extends PagingStrategies
->(controllerOpts: AutoControllerOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>): Type {
+function createEndpoint<DTO, EntityServiceOrAssembler, C, U, R extends ReadControllerOpts<DTO>, PS extends PagingStrategies>(
+  controllerOpts: AutoControllerOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>
+): Type {
   if (isAssemblerCRUDAutoControllerOpts(controllerOpts)) {
     return createAssemblerAutoController(controllerOpts)
   } else if (isServiceCRUDAutoControllerOpts(controllerOpts)) {
@@ -146,5 +171,5 @@ function createEndpoint<
 }
 
 export const createEndpoints = (
-  opts: AutoControllerOpts<unknown, unknown, unknown, unknown, unknown, PagingStrategies>[]
+  opts: AutoControllerOpts<unknown, unknown, unknown, unknown, ReadControllerOpts<unknown>, PagingStrategies>[]
 ): Type[] => opts.map((opt) => createEndpoint(opt))

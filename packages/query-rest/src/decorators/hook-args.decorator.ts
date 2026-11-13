@@ -9,7 +9,7 @@ import { MutationArgsType } from '../types'
 import { BuildableQueryType } from '../types/query/buildable-query.type'
 
 class HooksTransformer<T> implements PipeTransform {
-  @Inject(REQUEST) protected readonly request: Request
+  @Inject(REQUEST) protected readonly request!: Request
 
   public async transform(value: T, metadata: ArgumentMetadata): Promise<MutationArgsType<T> | Query<T>> {
     const transformedValue = this.transformValue(value, metadata.metatype)

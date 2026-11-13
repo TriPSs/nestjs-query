@@ -1,4 +1,5 @@
 import { Args, ArgsType, Field, InputType, Int, Query, Resolver } from '@nestjs/graphql'
+import { vi } from 'vitest'
 
 import { MutationArgsType } from '../../src/types'
 import { generateSchema } from '../__fixtures__'
@@ -13,7 +14,7 @@ describe('MutationArgsType', (): void => {
   @ArgsType()
   class MutationArgs extends MutationArgsType(FakeType) {}
 
-  beforeEach(() => jest.clearAllMocks())
+  beforeEach(() => vi.clearAllMocks())
 
   it('should create an args type with an array field', async () => {
     @Resolver()

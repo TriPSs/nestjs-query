@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`UpdateManyResponseType should create a @nestjs/graphql object type 1`] = `
+exports[`UpdateManyResponseType > should create a @nestjs/graphql object type 1`] = `
 "type UpdateManyResponse {
   """The number of records updated."""
   updatedCount: Int!

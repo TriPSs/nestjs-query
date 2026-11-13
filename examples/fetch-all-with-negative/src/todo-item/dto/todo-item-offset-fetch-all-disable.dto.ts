@@ -11,5 +11,5 @@ export class TodoItemOffsetFetchWithNegativeDisableDTO {
   title!: string
 
   @FilterableField()
-  completed: boolean
+  completed!: boolean
 }

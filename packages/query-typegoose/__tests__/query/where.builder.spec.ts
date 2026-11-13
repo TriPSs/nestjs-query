@@ -194,7 +194,7 @@ describe('WhereBuilder', (): void => {
       class TestMainObject {
         @FilterableField(() => TestSubObjectDTO)
         @Prop({ type: TestSubObjectDTO, required: true })
-        subType: TestSubObjectDTO
+        subType!: TestSubObjectDTO
       }
 
       const filterObject: Filter<TestMainObject> = {

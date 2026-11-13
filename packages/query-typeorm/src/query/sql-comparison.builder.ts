@@ -11,7 +11,7 @@ type CmpSQLType = { sql: string; params: ObjectLiteral }
 /**
  * @internal
  */
-export type EntityComparisonField<Entity, F extends keyof Entity> =
+export type EntityComparisonField<Entity extends ObjectLiteral, F extends keyof Entity> =
   | Entity[F]
   | Entity[F][]
   | CommonFieldComparisonBetweenType<Entity[F]>
@@ -23,7 +23,7 @@ export type EntityComparisonField<Entity, F extends keyof Entity> =
  * @internal
  * Builder to create SQL Comparisons. (=, !=, \>, etc...)
  */
-export class SQLComparisonBuilder<Entity> {
+export class SQLComparisonBuilder<Entity extends ObjectLiteral> {
   static DEFAULT_COMPARISON_MAP: Record<string, string> = {
     eq: '=',
     neq: '!=',
@@ -56,7 +56,7 @@ export class SQLComparisonBuilder<Entity> {
    *
    * @param entityMetadata - metadata of the entity the builder builds comparisons for.
    */
-  public static forEntityMetadata<Entity>(entityMetadata: EntityMetadata): SQLComparisonBuilder<Entity> {
+  public static forEntityMetadata<Entity extends ObjectLiteral>(entityMetadata?: EntityMetadata): SQLComparisonBuilder<Entity> {
     return new SQLComparisonBuilder<Entity>(SQLComparisonBuilder.DEFAULT_COMPARISON_MAP, undefined, entityMetadata)
   }
 
@@ -214,7 +214,9 @@ export class SQLComparisonBuilder<Entity> {
     const column = this.entityMetadata?.columns.find(({ databasePath }) => databasePath === field)
 
     if (column && column.isVirtualProperty) {
-      return `(${column.query(alias)})`
+      const query = column.query
+      if (!query) throw new Error(`Virtual column ${field} is missing a query`)
+      return `(${query(alias ?? column.entityMetadata.tableName)})`
     }
 
     return alias ? `${alias}.${field}` : `${field}`

@@ -17,7 +17,7 @@ export class LimitOffsetPagerStrategy<DTO> implements PagerStrategy<DTO> {
     const isForward = isForwardPaging(cursor)
     const isBackward = isBackwardPaging(cursor)
     const hasBefore = hasBeforeCursor(cursor)
-    return { limit: this.getLimit(cursor), offset: this.getOffset(cursor), isForward, isBackward, hasBefore }
+    return { limit: this.getLimit(cursor) ?? 0, offset: this.getOffset(cursor), isForward, isBackward, hasBefore }
   }
 
   isEmptyCursor(opts: OffsetPagingOpts): boolean {
@@ -26,15 +26,15 @@ export class LimitOffsetPagerStrategy<DTO> implements PagerStrategy<DTO> {
 
   createQuery<Q extends Query<DTO>>(query: Q, opts: OffsetPagingOpts, includeExtraNode: boolean): Q {
     const { isBackward } = opts
-    const paging = { limit: opts.limit, offset: opts.offset }
+    const paging: { limit?: number; offset?: number } = { limit: opts.limit, offset: opts.offset }
     if (includeExtraNode && (!this.enableFetchAllWithNegative || opts.limit !== -1)) {
       // Add 1 to the limit so we will fetch an additional node
-      paging.limit += 1
+      paging.limit = opts.limit + 1
       // if paging backwards, remove one from the offset to check for a previous page.
       if (isBackward) {
-        paging.offset -= 1
+        paging.offset = opts.offset - 1
       }
-      if (paging.offset < 0) {
+      if (paging.offset !== undefined && paging.offset < 0) {
         // if the offset is < 0, it means we underflow and that we can't have an extra page.
         paging.offset = 0
         paging.limit = opts.limit

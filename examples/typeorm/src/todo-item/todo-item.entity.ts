@@ -35,7 +35,7 @@ export class TodoItemEntity {
                        FROM sub_task
                        WHERE todo_item_id = ${alias}.id`
   })
-  subTasksCount: number
+  subTasksCount!: number
 
   @CreateDateColumn()
   created!: Date

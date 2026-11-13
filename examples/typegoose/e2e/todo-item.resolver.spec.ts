@@ -1,4 +1,4 @@
-/* eslint-disable jest/no-commented-out-tests */
+/* eslint-disable @vitest/no-commented-out-tests */
 import { getConnectionToken } from '@m8a/nestjs-typegoose'
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { Test } from '@nestjs/testing'

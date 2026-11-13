@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`MutationArgsType should create an args type with an array field 1`] = `
+exports[`MutationArgsType > should create an args type with an array field 1`] = `
 "type Query {
   test(input: FakeType!): Int!
 }

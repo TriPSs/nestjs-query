@@ -52,7 +52,7 @@ export const applyQuery = <DTO>(dtos: DTO[], query: Query<DTO>): DTO[] => {
 export function invertSort<DTO>(sortFields: SortField<DTO>[]): SortField<DTO>[] {
   return sortFields.map((sf) => {
     const direction = sf.direction === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
-    let nulls: SortNulls
+    let nulls: SortNulls | undefined
     if (sf.nulls === SortNulls.NULLS_LAST) {
       nulls = SortNulls.NULLS_FIRST
     } else if (sf.nulls === SortNulls.NULLS_FIRST) {

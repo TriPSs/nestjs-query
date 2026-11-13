@@ -7,7 +7,7 @@ import {
   GroupBy
 } from '@ptc-org/nestjs-query-core'
 import { camelCase } from 'camel-case'
-import { Repository, SelectQueryBuilder } from 'typeorm'
+import { ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm'
 import { DriverUtils } from 'typeorm/driver/DriverUtils'
 
 enum AggregateFuncs {
@@ -24,7 +24,7 @@ const AGG_REGEXP = /(AVG|SUM|COUNT|MAX|MIN|GROUP_BY)_(.*)/
  * @internal
  * Builds a WHERE clause from a Filter.
  */
-export class AggregateBuilder<Entity> {
+export class AggregateBuilder<Entity extends ObjectLiteral> {
   private readonly isPostgres: boolean
 
   constructor(readonly repo: Repository<Entity>) {
@@ -32,7 +32,7 @@ export class AggregateBuilder<Entity> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  public static async asyncConvertToAggregateResponse<Entity>(
+  public static async asyncConvertToAggregateResponse<Entity extends ObjectLiteral>(
     responsePromise: Promise<Record<string, unknown>[]>
   ): Promise<AggregateResponse<Entity>[]> {
     const aggResponse = await responsePromise
@@ -40,17 +40,17 @@ export class AggregateBuilder<Entity> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  public static getAggregateSelects<Entity>(query: AggregateQuery<Entity>): string[] {
+  public static getAggregateSelects<Entity extends ObjectLiteral>(query: AggregateQuery<Entity>): string[] {
     return [...this.getAggregateGroupBySelects(query), ...this.getAggregateFuncSelects(query)]
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  private static getAggregateGroupBySelects<Entity>(query: AggregateQuery<Entity>): string[] {
+  private static getAggregateGroupBySelects<Entity extends ObjectLiteral>(query: AggregateQuery<Entity>): string[] {
     return (query.groupBy ?? []).map(({ field }) => this.getGroupByAlias(field))
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  private static getAggregateFuncSelects<Entity>(query: AggregateQuery<Entity>): string[] {
+  private static getAggregateFuncSelects<Entity extends ObjectLiteral>(query: AggregateQuery<Entity>): string[] {
     const aggs: [AggregateFuncs, AggregateQueryField<Entity>[] | undefined][] = [
       [AggregateFuncs.COUNT, query.count],
       [AggregateFuncs.SUM, query.sum],
@@ -66,17 +66,19 @@ export class AggregateBuilder<Entity> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  public static getAggregateAlias<Entity>(func: AggregateFuncs, field: keyof Entity): string {
+  public static getAggregateAlias<Entity extends ObjectLiteral>(func: AggregateFuncs, field: keyof Entity): string {
     return `${func}_${field as string}`
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  public static getGroupByAlias<Entity>(field: keyof Entity): string {
+  public static getGroupByAlias<Entity extends ObjectLiteral>(field: keyof Entity): string {
     return `GROUP_BY_${field as string}`
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  public static convertToAggregateResponse<Entity>(rawAggregates: Record<string, unknown>[]): AggregateResponse<Entity>[] {
+  public static convertToAggregateResponse<Entity extends ObjectLiteral>(
+    rawAggregates: Record<string, unknown>[]
+  ): AggregateResponse<Entity>[] {
     return rawAggregates.map((response) => {
       return Object.keys(response).reduce((agg: AggregateResponse<Entity>, resultField: string) => {
         const matchResult = AGG_REGEXP.exec(resultField)

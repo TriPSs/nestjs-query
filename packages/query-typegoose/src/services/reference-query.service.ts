@@ -73,7 +73,7 @@ export abstract class ReferenceQueryService<Entity extends Base> {
       }, Promise.resolve(new Map<DocumentType<Entity>, AggregateResponse<DocumentType<Relation>>[]>()))
     }
     const assembler = AssemblerFactory.getAssembler(RelationClass, this.getReferenceEntity(relationName))
-    const refFilter = this.getReferenceFilter(relationName, dto, assembler.convertQuery({ filter }).filter)
+    const refFilter = this.getReferenceFilter(relationName, dto, assembler.convertQuery({ filter }).filter ?? {})
     if (!refFilter) {
       return []
     }
@@ -120,7 +120,7 @@ export abstract class ReferenceQueryService<Entity extends Base> {
     const assembler = AssemblerFactory.getAssembler(RelationClass, this.getReferenceEntity(relationName))
     const relationModel = this.getReferenceModel<Relation>(relationName)
     const referenceQueryBuilder = this.getReferenceQueryBuilder(relationName)
-    const refFilter = this.getReferenceFilter(relationName, dto, assembler.convertQuery({ filter }).filter)
+    const refFilter = this.getReferenceFilter(relationName, dto, assembler.convertQuery({ filter }).filter ?? {})
     if (!refFilter) {
       return 0
     }
@@ -404,7 +404,7 @@ export abstract class ReferenceQueryService<Entity extends Base> {
 
   private async findAndUpdate(
     id: string | number,
-    filter: Filter<Entity>,
+    filter: Filter<Entity> | undefined,
     query: mongoose.UpdateQuery<DocumentType<Entity>>
   ): Promise<DocumentType<Entity>> {
     const entity = await this.Model.findOneAndUpdate(this.filterQueryBuilder.buildIdFilterQuery(id, filter), query, {

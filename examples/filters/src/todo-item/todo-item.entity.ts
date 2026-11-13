@@ -9,10 +9,11 @@ export class TodoItemEntity {
   title!: string
 
   @Column({
+    type: String,
     nullable: true,
     name: 'description'
   })
-  'todo item description'?: string
+  'todo item description'?: string | null
 
   @Column()
   completed!: boolean

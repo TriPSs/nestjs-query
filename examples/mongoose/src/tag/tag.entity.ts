@@ -5,7 +5,7 @@ import mongoose, { Document } from 'mongoose'
 @Schema({ timestamps: true })
 export class TagEntity extends Document {
   @ObjectId()
-  _id: mongoose.Types.ObjectId
+  _id!: mongoose.Types.ObjectId
 
   id!: string
 

@@ -40,5 +40,5 @@ export function QueryArgsType<DTO>(DTOClass: Class<DTO>, opts?: QueryArgsTypeOpt
     return createOffsetQueryArgs(DTOClass, mergedOpts)
   }
 
-  return createNonePagingQueryArgs(DTOClass, mergedOpts)
+  return createNonePagingQueryArgs(DTOClass, { ...mergedOpts, pagingStrategy: PagingStrategies.NONE })
 }

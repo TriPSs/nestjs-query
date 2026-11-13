@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing'
 import { CursorConnectionType } from '@ptc-org/nestjs-query-graphql'
 import request from 'supertest'
 import { DataSource } from 'typeorm'
+import { type Mock, vi } from 'vitest'
 
 import { refresh } from '../e2e/fixtures'
 import { AppModule } from '../src/app.module'
@@ -10,15 +11,15 @@ import { batchScheduleFn } from '../src/batch-schedule-fn'
 import { TagDTO } from '../src/tag/dto/tag.dto'
 import { edgeNodes, pageInfoField, tagFields } from './graphql-fragments'
 
-jest.mock('../src/batch-schedule-fn', () => ({
-  batchScheduleFn: jest.fn((callback: () => void) => {
+vi.mock('../src/batch-schedule-fn', () => ({
+  batchScheduleFn: vi.fn((callback: () => void) => {
     return setTimeout(callback, 250)
   })
 }))
 
 describe('TagResolver (dataloader-configuration - e2e)', () => {
   let app: INestApplication
-  const batchScheduleFnMock = batchScheduleFn as jest.Mock
+  const batchScheduleFnMock = batchScheduleFn as Mock
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({

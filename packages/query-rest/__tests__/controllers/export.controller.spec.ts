@@ -6,10 +6,6 @@ import { ExportTransform } from '../../src'
 import { CRUDControllerOpts } from '../../src/controllers/crud.controller'
 import { ExportController, stringifyExportCsv } from '../../src/controllers/export.controller'
 
-jest.mock('@nestjs/swagger/dist/plugin/plugin-constants', () => ({
-  METADATA_FACTORY_NAME: 'OPENAPI_METADATA_FACTORY'
-}))
-
 describe('stringifyExportCsv', () => {
   class ExportDTO {
     @Expose()

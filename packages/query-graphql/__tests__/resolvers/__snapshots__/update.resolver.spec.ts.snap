@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`UpdateResolver #updateMany should not expose update many method if disabled 1`] = `
+exports[`UpdateResolver > #updateMany > should not expose update many method if disabled 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -28,7 +28,7 @@ input UpdateTestResolverDTO {
 }"
 `;
 
-exports[`UpdateResolver #updateMany should not update a new type if the UpdateManyArgs is supplied 1`] = `
+exports[`UpdateResolver > #updateMany > should not update a new type if the UpdateManyArgs is supplied 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -117,7 +117,7 @@ input TestResolverInputDTO {
 }"
 `;
 
-exports[`UpdateResolver #updateOne should not expose update one method if disabled 1`] = `
+exports[`UpdateResolver > #updateOne > should not expose update one method if disabled 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -191,7 +191,7 @@ input UpdateTestResolverDTO {
 }"
 `;
 
-exports[`UpdateResolver #updateOne should use the provided UpdateOneInput type 1`] = `
+exports[`UpdateResolver > #updateOne > should use the provided UpdateOneInput type 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -280,7 +280,7 @@ input UpdateTestResolverDTO {
 }"
 `;
 
-exports[`UpdateResolver should create a UpdateResolver for the DTO 1`] = `
+exports[`UpdateResolver > should create a UpdateResolver for the DTO 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -363,7 +363,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`UpdateResolver should not expose update methods if disabled 1`] = `
+exports[`UpdateResolver > should not expose update methods if disabled 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -374,7 +374,7 @@ type Query {
 }"
 `;
 
-exports[`UpdateResolver should use the UpdateDTOClass if provided 1`] = `
+exports[`UpdateResolver > should use the UpdateDTOClass if provided 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -457,7 +457,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`UpdateResolver should use the dtoName if provided 1`] = `
+exports[`UpdateResolver > should use the dtoName if provided 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -540,7 +540,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`UpdateResolver should use the many.name option for the updateMany if provided 1`] = `
+exports[`UpdateResolver > should use the many.name option for the updateMany if provided 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -623,7 +623,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`UpdateResolver should use the one.name option for the updateOne if provided 1`] = `
+exports[`UpdateResolver > should use the one.name option for the updateOne if provided 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -706,7 +706,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`UpdateResolver updated subscription should add subscription types if enableSubscriptions is true 1`] = `
+exports[`UpdateResolver > updated subscription > should add subscription types if enableSubscriptions is true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -806,7 +806,7 @@ input TestResolverDTOSubscriptionFilter {
 }"
 `;
 
-exports[`UpdateResolver updated subscription should add subscription types if many.enableSubscriptions is true 1`] = `
+exports[`UpdateResolver > updated subscription > should add subscription types if many.enableSubscriptions is true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -893,7 +893,7 @@ type Subscription {
 }"
 `;
 
-exports[`UpdateResolver updated subscription should add subscription types if one.enableSubscriptions is true 1`] = `
+exports[`UpdateResolver > updated subscription > should add subscription types if one.enableSubscriptions is true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -992,7 +992,7 @@ input TestResolverDTOSubscriptionFilter {
 }"
 `;
 
-exports[`UpdateResolver updated subscription should not expose subscriptions if enableSubscriptions is false 1`] = `
+exports[`UpdateResolver > updated subscription > should not expose subscriptions if enableSubscriptions is false 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!

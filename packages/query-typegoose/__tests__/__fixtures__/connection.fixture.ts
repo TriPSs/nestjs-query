@@ -14,10 +14,13 @@ export class MongoServer {
     if (this.mongod) {
       return this.mongod.getUri()
     }
+    throw new Error('MongoDB server has not been initialized')
   }
 
   async clearDatabase(): Promise<void> {
-    const collections = await connections[connections.length - 1].db.collections()
+    const db = connections[connections.length - 1].db
+    if (!db) throw new Error('MongoDB connection has not been initialized')
+    const collections = await db.collections()
     await Promise.all(collections.map((collection) => collection.deleteMany({})))
   }
 

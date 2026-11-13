@@ -1,4 +1,4 @@
-/* eslint-disable jest/no-commented-out-tests -- Retained as a disabled Mongoose test suite pending service support. */
+/* eslint-disable @vitest/no-commented-out-tests -- Retained as a disabled Mongoose test suite pending service support. */
 
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { getConnectionToken } from '@nestjs/mongoose'

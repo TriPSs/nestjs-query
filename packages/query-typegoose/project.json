@@ -1,44 +1,50 @@
 {
   "name": "query-typegoose",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/query-typegoose/src",
-  "projectType": "library",
+  "$schema": "../../node_modules/@isox-sh/core/schemas/project.schema.json",
   "tags": [],
-  "implicitDependencies": ["core"],
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "yarn eslint \"packages/query-typegoose/**/*.ts\""
+      }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/packages/query-typegoose"],
+      "executor": "@isox-sh/vitest:test",
       "options": {
-        "jestConfig": "packages/query-typegoose/jest.config.ts"
+        "configFile": "packages/query-typegoose/vitest.config.ts"
       }
     },
     "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@isox-sh/js:tsc",
+      "outputs": ["{workspaceRoot}/dist/packages/query-typegoose"],
       "options": {
-        "outputPath": "dist/packages/query-typegoose",
-        "tsConfig": "packages/query-typegoose/tsconfig.lib.json",
-        "packageJson": "packages/query-typegoose/package.json",
-        "main": "packages/query-typegoose/src/index.ts",
-        "assets": ["packages/query-typegoose/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true,
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+        "tsConfig": "packages/query-typegoose/tsconfig.build.json",
+        "generatePackageJson": true,
+        "assets": [
+          {
+            "input": "packages/query-typegoose",
+            "glob": "*.md",
+            "ignore": ["README.md", "LICENSE.md"]
+          }
+        ]
+      }
+    },
+    "publish": {
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "npm publish ./dist/packages/query-typegoose --access public"
+      },
+      "configurations": {
+        "alpha": {
+          "command": "npm publish ./dist/packages/query-typegoose --access public --tag alpha"
+        }
       }
     },
     "version": {
-      "executor": "@jscutlery/semver:version",
+      "executor": "@isox-sh/semver:version",
       "options": {}
-    },
-    "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npm publish ./dist/packages/query-typegoose --access public"
-      }
     }
-  }
+  },
+  "dependencies": ["core"]
 }

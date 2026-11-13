@@ -3,24 +3,20 @@
   "version": "11.0.1-alpha.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand --forceExit"
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "graphql": "^16.13.2",
+    "graphql": "^16.15.0",
     "graphql-request": "^7.4.0"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "@types/node": "^22.19.1",
-    "jest": "^30.5.1",
-    "ts-jest": "^29.4.12",
-    "typescript": "^5.9.3"
-  },
-  "nx": {
-    "includedScripts": []
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.7",
+    "vitest": "5.1.0"
   }
 }

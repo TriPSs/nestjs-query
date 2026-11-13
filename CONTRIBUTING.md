@@ -17,37 +17,45 @@ Feature requests should explain the use case, proposed behavior, and why it belo
 
 ## Development setup
 
-The repository is a Yarn 4 workspace managed with Nx. Use the Node.js version supported by the repository and run:
+The repository is a Yarn 4 workspace managed with Isox. Use Node.js 24+ and run:
 
 ```bash
 yarn install --immutable
 ```
 
-Use `yarn nx show projects` to list available projects. Common package names include `core`, `query-graphql`, `query-rest`, `query-mikro-orm`, `query-mongoose`, `query-sequelize`, `query-typegoose`, and `query-typeorm`.
+Use `yarn isox plan --all --target=build` to list available projects. Common package names include `core`, `query-graphql`, `query-rest`, `query-mikro-orm`, `query-mongoose`, `query-sequelize`, `query-typegoose`, and `query-typeorm`.
 
 ## Tests and checks
 
 Run the smallest relevant checks while developing:
 
 ```bash
-yarn nx lint <project>
-yarn nx test <project>
-yarn nx build <project>
+yarn isox lint <project>
+yarn isox test <project>
+yarn isox build <project>
+```
+
+TypeScript projects share `tsconfig.base.json` with ES2022, NodeNext, and strict checking. Each library uses `tsconfig.json` for editor checks, `tsconfig.build.json` to compile `src/` into `dist/packages/<project>`, and `tsconfig.spec.json` for tests. Nest decorator metadata is enabled in the shared base; Vitest reads the same compiler settings.
+
+To typecheck all library source, examples, and tests without emitting files:
+
+```bash
+yarn tsc --project tsconfig.spec.json
 ```
 
 For all packages:
 
 ```bash
-yarn nx run-many --target=lint --all
-yarn nx run-many --target=test --all
-yarn nx run-many --target=build --all
+yarn isox run-many --target=lint
+yarn isox run-many --target=test
+yarn isox run-many --target=build
 ```
 
 The standard E2E suite requires Docker services:
 
 ```bash
 yarn docker up -d
-yarn nx e2e examples
+yarn isox e2e examples
 ```
 
 Stop the services when finished with `yarn docker down`.

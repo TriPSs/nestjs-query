@@ -1,10 +1,11 @@
 import { AggregateQuery, QueryService, QueryServiceRelation, RelationQueryService } from '@ptc-org/nestjs-query-core'
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito'
+import { vi } from 'vitest'
 
 describe('RelationQueryService', () => {
   const mockQueryService: QueryService<TestType> = mock<QueryService<TestType>>()
   const mockRelationService: QueryService<TestType> = mock<QueryService<TestType>>()
-  const testRelationFn = jest.fn()
+  const testRelationFn = vi.fn()
 
   class TestType {
     foo!: string
@@ -17,7 +18,7 @@ describe('RelationQueryService', () => {
   afterEach(() => {
     reset(mockQueryService)
     reset(mockRelationService)
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   const queryService: QueryService<TestType> = new RelationQueryService(instance(mockQueryService), relations)

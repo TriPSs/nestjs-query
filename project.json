@@ -1,15 +1,13 @@
 {
   "name": "workspace",
-  "$schema": "node_modules/nx/schemas/project-schema.json",
+  "$schema": "node_modules/@isox-sh/core/schemas/project.schema.json",
   "targets": {
     "version": {
-      "executor": "@jscutlery/semver:version",
+      "executor": "@isox-sh/semver:version",
       "options": {
         "syncVersions": true,
         "skipProjectChangelog": true,
-        "baseBranch": "master",
-        "changelogHeader": " ",
-        "commitMessageFormat": "chore(release): v${version}"
+        "commitMessageFormat": "chore(release): v{version}"
       },
       "configurations": {
         "production": {
@@ -18,10 +16,10 @@
       }
     },
     "github": {
-      "executor": "@jscutlery/semver:github",
+      "executor": "@isox-sh/semver:github",
       "options": {
-        "tag": "${tag}",
-        "notes": "${notes}"
+        "tag": "{tag}",
+        "notes": "{notes}"
       }
     }
   }

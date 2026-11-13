@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SortingType should create the correct graphql schema for sorting type 1`] = `
+exports[`SortingType > should create the correct graphql schema for sorting type 1`] = `
 "type Query {
   test(input: Sorting!): Int!
 }

@@ -4,10 +4,6 @@ import { plainToInstance } from 'class-transformer'
 import { FilterableField } from '../../../src/decorators'
 import { FilterType } from '../../../src/types/query/filter.type'
 
-jest.mock('@nestjs/swagger/dist/plugin/plugin-constants', () => ({
-  METADATA_FACTORY_NAME: 'OPENAPI_METADATA_FACTORY'
-}))
-
 describe('FilterType', () => {
   class QueryArgs {
     public get filter(): Filter<unknown> {

@@ -2,6 +2,7 @@
 import { Field, ObjectType, Query, Resolver } from '@nestjs/graphql'
 import { OffsetConnectionType, OffsetPagingType, PagingStrategies } from '@ptc-org/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
+import { vi } from 'vitest'
 
 import { getOrCreateOffsetConnectionType } from '../../../src/types/connection'
 import { getOrCreateOffsetPagingType } from '../../../src/types/query/paging'
@@ -91,7 +92,7 @@ describe('OffsetConnectionType', (): void => {
 
     describe('.createFromPromise', () => {
       it('should create a connections response with an empty query', async () => {
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         const response = await TestConnection.createFromPromise(queryMany, {})
         expect(queryMany).toHaveBeenCalledTimes(0)
         expect(response).toEqual({
@@ -105,7 +106,7 @@ describe('OffsetConnectionType', (): void => {
       })
 
       it('should pass additional query params to queryMany', async () => {
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         const dtos = [createTestDTO(1), createTestDTO(2)]
         queryMany.mockResolvedValueOnce([...dtos])
         await TestConnection.createFromPromise(queryMany, {
@@ -117,7 +118,7 @@ describe('OffsetConnectionType', (): void => {
       })
 
       it('should create a connections response with an empty paging', async () => {
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         const response = await TestConnection.createFromPromise(queryMany, { paging: {} })
         expect(queryMany).toHaveBeenCalledTimes(0)
         expect(response).toEqual({
@@ -132,7 +133,7 @@ describe('OffsetConnectionType', (): void => {
 
       describe('with limit', () => {
         it('should return hasNextPage and hasPreviousPage false when there are the exact number of records', async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1), createTestDTO(2)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await TestConnection.createFromPromise(queryMany, { paging: createPage({ limit: 2 }) })
@@ -149,7 +150,7 @@ describe('OffsetConnectionType', (): void => {
         })
 
         it('should return hasNextPage true and hasPreviousPage false when the number of records more than the limit and offset == 0', async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1), createTestDTO(2), createTestDTO(3)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await TestConnection.createFromPromise(queryMany, { paging: createPage({ limit: 2 }) })
@@ -168,7 +169,7 @@ describe('OffsetConnectionType', (): void => {
 
       describe('with offset', () => {
         it('should return hasPreviousPage false if offset == 0', async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await TestConnection.createFromPromise(queryMany, {
@@ -187,7 +188,7 @@ describe('OffsetConnectionType', (): void => {
         })
 
         it('should return hasPreviousPage true if offset > 0', async () => {
-          const queryMany = jest.fn()
+          const queryMany = vi.fn()
           const dtos = [createTestDTO(1), createTestDTO(2), createTestDTO(3)]
           queryMany.mockResolvedValueOnce([...dtos])
           const response = await TestConnection.createFromPromise(queryMany, {
@@ -207,7 +208,7 @@ describe('OffsetConnectionType', (): void => {
       })
 
       it('should create an empty connection', async () => {
-        const queryMany = jest.fn()
+        const queryMany = vi.fn()
         queryMany.mockResolvedValueOnce([])
         const response = await TestConnection.createFromPromise(queryMany, {
           paging: createPage({ limit: 2 })

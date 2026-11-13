@@ -7,6 +7,7 @@ import {
   OffsetQueryArgsType,
   PagingStrategies
 } from '@ptc-org/nestjs-query-graphql'
+import { ok as assert } from 'node:assert'
 import { deepEqual, objectContaining, when } from 'ts-mockito'
 
 import { ReadRelationsResolver, RelationsOpts } from '../../../../src/resolvers/relations'
@@ -311,6 +312,7 @@ describe('ReadRelationsResolver - basics', () => {
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const result = await resolver.queryRelations(dto, query, {}, {}, { info: partialResolveInfoWithTotalCount })
+        assert(query.filter)
         when(
           mockService.countRelations(
             TestRelationDTO,

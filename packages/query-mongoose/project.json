@@ -1,44 +1,50 @@
 {
   "name": "query-mongoose",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/query-mongoose/src",
-  "projectType": "library",
+  "$schema": "../../node_modules/@isox-sh/core/schemas/project.schema.json",
   "tags": [],
-  "implicitDependencies": ["core"],
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "yarn eslint \"packages/query-mongoose/**/*.ts\""
+      }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/packages/query-mongoose"],
+      "executor": "@isox-sh/vitest:test",
       "options": {
-        "jestConfig": "packages/query-mongoose/jest.config.ts"
+        "configFile": "packages/query-mongoose/vitest.config.ts"
       }
     },
     "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@isox-sh/js:tsc",
+      "outputs": ["{workspaceRoot}/dist/packages/query-mongoose"],
       "options": {
-        "outputPath": "dist/packages/query-mongoose",
-        "tsConfig": "packages/query-mongoose/tsconfig.lib.json",
-        "packageJson": "packages/query-mongoose/package.json",
-        "main": "packages/query-mongoose/src/index.ts",
-        "assets": ["packages/query-mongoose/*.md"],
-        "updateBuildableProjectDepsInPackageJson": true,
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+        "tsConfig": "packages/query-mongoose/tsconfig.build.json",
+        "generatePackageJson": true,
+        "assets": [
+          {
+            "input": "packages/query-mongoose",
+            "glob": "*.md",
+            "ignore": ["README.md", "LICENSE.md"]
+          }
+        ]
+      }
+    },
+    "publish": {
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "npm publish ./dist/packages/query-mongoose --access public"
+      },
+      "configurations": {
+        "alpha": {
+          "command": "npm publish ./dist/packages/query-mongoose --access public --tag alpha"
+        }
       }
     },
     "version": {
-      "executor": "@jscutlery/semver:version",
+      "executor": "@isox-sh/semver:version",
       "options": {}
-    },
-    "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npm publish ./dist/packages/query-mongoose --access public"
-      }
     }
-  }
+  },
+  "dependencies": ["core"]
 }

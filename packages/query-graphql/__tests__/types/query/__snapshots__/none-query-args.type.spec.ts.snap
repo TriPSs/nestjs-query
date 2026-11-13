@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`None paging strategy QueryArgsType with manual options create a query for string fields 1`] = `
+exports[`None paging strategy QueryArgsType with manual options > create a query for string fields 1`] = `
 "type Query {
   test(
     """Specify to filter the records returned."""
@@ -219,7 +219,7 @@ enum SortNulls {
 }"
 `;
 
-exports[`None paging strategy QueryArgsType with manual options options allow apply the options to the generated SDL 1`] = `
+exports[`None paging strategy QueryArgsType with manual options > options > allow apply the options to the generated SDL 1`] = `
 "type Query {
   test(
     """Specify to filter the records returned."""
@@ -438,7 +438,7 @@ enum SortNulls {
 }"
 `;
 
-exports[`None paging strategy QueryArgsType with manual options should make the filter required if there is a filterRequired field 1`] = `
+exports[`None paging strategy QueryArgsType with manual options > should make the filter required if there is a filterRequired field 1`] = `
 "type Query {
   test(
     """Specify to filter the records returned."""

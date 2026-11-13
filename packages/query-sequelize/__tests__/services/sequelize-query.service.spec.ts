@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common'
 import { InjectModel, SequelizeModule } from '@nestjs/sequelize'
 import { Test, TestingModule } from '@nestjs/testing'
 import { DeepPartial } from '@ptc-org/nestjs-query-core'
+import { ok as assert } from 'node:assert'
 import { ModelCtor, Sequelize } from 'sequelize-typescript'
 
 import { SequelizeQueryService } from '../../src'
@@ -407,6 +408,7 @@ describe('SequelizeQueryService', (): void => {
       describe('oneToMany', () => {
         it('set the relation to null', async () => {
           const relation = PLAIN_TEST_RELATIONS[0]
+          assert(relation.testEntityId)
           const queryService = moduleRef.get(TestEntityService)
           const count = await queryService.count({
             testRelations: {
@@ -818,6 +820,7 @@ describe('SequelizeQueryService', (): void => {
         const queryService = moduleRef.get(TestEntityService)
         const queryResult = await queryService.findRelation(TestRelation, 'oneTestRelation', entity)
 
+        assert(queryResult)
         expect(queryResult.get({ plain: true })).toEqual(PLAIN_TEST_RELATIONS[0])
       })
 
@@ -827,6 +830,7 @@ describe('SequelizeQueryService', (): void => {
         const queryResult1 = await queryService.findRelation(TestRelation, 'oneTestRelation', entity, {
           filter: { relationName: { eq: PLAIN_TEST_RELATIONS[0].relationName } }
         })
+        assert(queryResult1)
         expect(queryResult1.get({ plain: true })).toEqual(PLAIN_TEST_RELATIONS[0])
 
         const queryResult2 = await queryService.findRelation(TestRelation, 'oneTestRelation', entity, {
@@ -1018,6 +1022,7 @@ describe('SequelizeQueryService', (): void => {
       expect(queryResult).toEqual(expect.objectContaining(entity))
 
       const relation = await queryService.findRelation(TestRelation, 'oneTestRelation', entity)
+      assert(relation)
       expect(relation.testRelationPk).toBe(PLAIN_TEST_RELATIONS[1].testRelationPk)
     })
 
@@ -1149,6 +1154,7 @@ describe('SequelizeQueryService', (): void => {
     describe('manyToOne', () => {
       it('set the relation to null', async () => {
         const relation = PLAIN_TEST_RELATIONS[0] as TestRelation
+        assert(relation.testEntityId)
         const queryService = moduleRef.get(TestRelationService)
         const queryResult = await queryService.removeRelation(
           'testEntity',
@@ -1164,6 +1170,7 @@ describe('SequelizeQueryService', (): void => {
       describe('with modify options', () => {
         it('should throw an error if the entity is not found with the id and provided filter', async () => {
           const relation = PLAIN_TEST_RELATIONS[0]
+          assert(relation.testEntityId)
           const queryService = moduleRef.get(TestRelationService)
           return expect(
             queryService.removeRelation('testEntity', relation.testRelationPk, PLAIN_TEST_ENTITIES[1].testEntityPk, {
@@ -1174,6 +1181,7 @@ describe('SequelizeQueryService', (): void => {
 
         it('should throw an error if the relations are not found with the relationIds and provided filter', async () => {
           const relation = PLAIN_TEST_RELATIONS[0]
+          assert(relation.testEntityId)
           const queryService = moduleRef.get(TestRelationService)
           return expect(
             queryService.removeRelation('testEntity', relation.testRelationPk, PLAIN_TEST_ENTITIES[0].testEntityPk, {

@@ -23,14 +23,14 @@ import {
   UpdateManyResponse,
   UpdateOneOptions
 } from '@ptc-org/nestjs-query-core'
-import { DeleteResult, FindOptionsWhere, Repository } from 'typeorm'
+import { DeleteResult, FindOptionsWhere, ObjectLiteral, Repository } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 import { UpdateResult } from 'typeorm/query-builder/result/UpdateResult'
 
 import { AggregateBuilder, FilterQueryBuilder } from '../query'
 import { RelationQueryService } from './relation-query.service'
 
-export interface TypeOrmQueryServiceOpts<Entity> {
+export interface TypeOrmQueryServiceOpts<Entity extends ObjectLiteral> {
   useSoftDelete?: boolean
   filterQueryBuilder?: FilterQueryBuilder<Entity>
 }
@@ -51,7 +51,7 @@ export interface TypeOrmQueryServiceOpts<Entity> {
  * }
  * ```
  */
-export class TypeOrmQueryService<Entity>
+export class TypeOrmQueryService<Entity extends ObjectLiteral>
   extends RelationQueryService<Entity>
   implements QueryService<Entity, DeepPartial<Entity>, DeepPartial<Entity>>
 {

@@ -1,12 +1,13 @@
 import { ExecutionContext } from '@nestjs/common'
 import DataLoader from 'dataloader'
+import { type MockedClass, vi } from 'vitest'
 
 import { DataLoaderFactory } from '../../src/loader'
 
-jest.mock('dataloader')
+vi.mock('dataloader')
 
 describe('DataLoaderFactory', () => {
-  const DataLoaderMock = DataLoader as jest.MockedClass<typeof DataLoader>
+  const DataLoaderMock = DataLoader as MockedClass<typeof DataLoader>
 
   beforeEach(() => {
     DataLoaderMock.mockClear()
@@ -31,7 +32,7 @@ describe('DataLoaderFactory', () => {
 
     it('should override the default dataloader implementation if a custom one is provided', () => {
       const context = createContext()
-      const batchScheduleFn = jest.fn()
+      const batchScheduleFn = vi.fn()
 
       DataLoaderFactory.getOrCreateLoader(context, 'loader', () => dataloadFn, { batchScheduleFn })
 

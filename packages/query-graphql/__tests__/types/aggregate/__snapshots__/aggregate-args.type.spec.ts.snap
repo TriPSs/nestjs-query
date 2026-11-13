@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AggregateArgsType should create an aggregate type with the correct fields for each type 1`] = `
+exports[`AggregateArgsType > should create an aggregate type with the correct fields for each type 1`] = `
 "type Query {
   aggregate(
     """Filter to find records to aggregate on"""

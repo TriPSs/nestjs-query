@@ -21,11 +21,12 @@ import {
 } from '@ptc-org/nestjs-query-graphql'
 import { plainToClass } from 'class-transformer'
 import { validateSync } from 'class-validator'
+import { vi } from 'vitest'
 
 import { generateSchema } from '../../__fixtures__'
 
 describe('Offset paging strategy QueryArgsType with decorator options', (): void => {
-  afterEach(() => jest.clearAllMocks())
+  afterEach(() => vi.clearAllMocks())
 
   @ObjectType('TestQuery')
   @QueryOptions({

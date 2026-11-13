@@ -3,6 +3,7 @@ import { AggregateQuery, GroupBy } from '@ptc-org/nestjs-query-core'
 import { format as formatSql } from 'sql-formatter'
 import { DataSource } from 'typeorm'
 import { DriverUtils } from 'typeorm/driver/DriverUtils'
+import { vi } from 'vitest'
 
 import { AggregateBuilder } from '../../src/query'
 import { createTestConnection } from '../__fixtures__/connection.fixture'
@@ -27,7 +28,7 @@ describe('AggregateBuilder', (): void => {
   }
 
   const expectPostgresSQLSnapshot = (agg: AggregateQuery<TestEntity>): void => {
-    const isPostgresFamily = jest.spyOn(DriverUtils, 'isPostgresFamily').mockReturnValue(true)
+    const isPostgresFamily = vi.spyOn(DriverUtils, 'isPostgresFamily').mockReturnValue(true)
     try {
       expectSQLSnapshot(agg)
     } finally {

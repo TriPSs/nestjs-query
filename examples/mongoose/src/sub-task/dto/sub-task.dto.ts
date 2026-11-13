@@ -12,7 +12,7 @@ import { TodoItemDTO } from '../../todo-item/dto/todo-item.dto'
 })
 export class SubTaskDTO {
   @ObjectId()
-  _id: mongoose.Types.ObjectId
+  _id!: mongoose.Types.ObjectId
 
   @FilterableField(() => ID)
   id!: string

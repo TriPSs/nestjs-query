@@ -1,8 +1,9 @@
 import { DefaultAssembler } from '@ptc-org/nestjs-query-core'
 import * as classTransformer from 'class-transformer'
+import { vi } from 'vitest'
 
 describe('DefaultAssembler', () => {
-  const plainToClassSpy = jest.spyOn(classTransformer, 'plainToClass')
+  const plainToClassSpy = vi.spyOn(classTransformer, 'plainToClass')
 
   class TestDTO {
     firstName!: string
@@ -16,7 +17,7 @@ describe('DefaultAssembler', () => {
     lastName!: string
   }
 
-  beforeEach(() => jest.clearAllMocks())
+  beforeEach(() => vi.clearAllMocks())
 
   describe('convertToDTO', () => {
     it('should call plainToClass with the DTO class and the passed in entity', () => {

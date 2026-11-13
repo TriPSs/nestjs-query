@@ -64,7 +64,7 @@ export function Field(returnTypeFunction?: ReturnTypeFunc, options?: FieldOption
 export function Field(
   returnTypeFuncOrOptions?: ReturnTypeFunc | FieldOptions,
   maybeOptions?: FieldOptions
-): MethodDecorator | PropertyDecorator {
+): MethodDecorator & PropertyDecorator {
   let returnTypeFunc: ReturnTypeFunc | undefined
   let advancedOptions: FieldOptions | undefined
   if (typeof returnTypeFuncOrOptions === 'function') {
@@ -76,9 +76,11 @@ export function Field(
     advancedOptions = maybeOptions
   }
 
-  return <D>(target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<D>) => {
+  return <D>(target: object, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<D>) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    const metadataType = target?.constructor?.[OPENAPI_METADATA_FACTORY]?.()[propertyKey]?.type as ReturnTypeFunc | undefined
+    const metadataType = (
+      target.constructor as { _OPENAPI_METADATA_FACTORY?: () => Record<PropertyKey, { type?: ReturnTypeFunc }> }
+    )[OPENAPI_METADATA_FACTORY]?.()[propertyKey]?.type
     const returnedType = !returnTypeFunc
       ? (metadataType?.() ?? Reflect.getMetadata('design:type', target, propertyKey))
       : returnTypeFunc()
@@ -86,11 +88,11 @@ export function Field(
     const isArray = returnedType && Array.isArray(returnedType)
     const type = isArray ? returnedType[0] : returnedType
 
-    const options = {
+    const options: FieldOptions = {
       required: !advancedOptions?.nullable && advancedOptions?.default === undefined,
       example: advancedOptions?.default,
       ...advancedOptions
-    }
+    } as FieldOptions
 
     // TypeScript emits Object as the design type for enum properties. Infer the
     // primitive type from the enum so Swagger does not generate an Object schema.

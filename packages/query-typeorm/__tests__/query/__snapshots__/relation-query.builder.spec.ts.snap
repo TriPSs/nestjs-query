@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`RelationQueryBuilder #batchSelect many to one should query with with multiple entities 1`] = `
+exports[`RelationQueryBuilder > #batchSelect > many to one > should query with with multiple entities 1`] = `
 "SELECT
   "manyToOneRelation"."test_relation_pk" AS "manyToOneRelation_test_relation_pk",
   "manyToOneRelation"."relation_name" AS "manyToOneRelation_relation_name",
@@ -15,7 +15,7 @@ WHERE
   "test_entity"."test_entity_pk" IN (test-entity-id-1, test-entity-id-2)"
 `;
 
-exports[`RelationQueryBuilder #batchSelect should reuse existing join alias if there is one 1`] = `
+exports[`RelationQueryBuilder > #batchSelect > should reuse existing join alias if there is one 1`] = `
 "SELECT
   "manyToOneRelation"."test_relation_pk" AS "manyToOneRelation_test_relation_pk",
   "manyToOneRelation"."relation_name" AS "manyToOneRelation_relation_name",
@@ -31,7 +31,7 @@ WHERE
   AND "testEntity"."test_entity_pk" IN (test-entity-1)"
 `;
 
-exports[`RelationQueryBuilder #select many to many many-to-many custom join table should work with a many-to-many through a join table 1`] = `
+exports[`RelationQueryBuilder > #select > many to many > many-to-many custom join table > should work with a many-to-many through a join table 1`] = `
 "SELECT
   "testEntityRelation"."test_relation_id" AS "testEntityRelation_test_relation_id",
   "testEntityRelation"."test_entity_id" AS "testEntityRelation_test_entity_id"
@@ -43,7 +43,7 @@ WHERE
   )"
 `;
 
-exports[`RelationQueryBuilder #select many to many on non owning side should work with many to many 1`] = `
+exports[`RelationQueryBuilder > #select > many to many > on non owning side > should work with many to many 1`] = `
 "SELECT
   "manyTestEntities"."test_entity_pk" AS "manyTestEntities_test_entity_pk",
   "manyTestEntities"."string_type" AS "manyTestEntities_string_type",
@@ -62,7 +62,7 @@ WHERE
   )"
 `;
 
-exports[`RelationQueryBuilder #select many to many on owning side should work with one entity 1`] = `
+exports[`RelationQueryBuilder > #select > many to many > on owning side > should work with one entity 1`] = `
 "SELECT
   "manyTestRelations"."test_relation_pk" AS "manyTestRelations_test_relation_pk",
   "manyTestRelations"."relation_name" AS "manyTestRelations_relation_name",
@@ -78,7 +78,7 @@ WHERE
   )"
 `;
 
-exports[`RelationQueryBuilder #select many to many uni-directional many to many should create the correct sql 1`] = `
+exports[`RelationQueryBuilder > #select > many to many > uni-directional many to many > should create the correct sql 1`] = `
 "SELECT
   "manyToManyUniDirectional"."test_relation_pk" AS "manyToManyUniDirectional_test_relation_pk",
   "manyToManyUniDirectional"."relation_name" AS "manyToManyUniDirectional_relation_name",
@@ -94,7 +94,7 @@ WHERE
   )"
 `;
 
-exports[`RelationQueryBuilder #select many to one should work with a uni-directional relationship 1`] = `
+exports[`RelationQueryBuilder > #select > many to one > should work with a uni-directional relationship 1`] = `
 "SELECT
   "testEntityUniDirectional"."test_entity_pk" AS "testEntityUniDirectional_test_entity_pk",
   "testEntityUniDirectional"."string_type" AS "testEntityUniDirectional_string_type",
@@ -113,7 +113,7 @@ WHERE
   )"
 `;
 
-exports[`RelationQueryBuilder #select many to one should work with one entity 1`] = `
+exports[`RelationQueryBuilder > #select > many to one > should work with one entity 1`] = `
 "SELECT
   "testEntity"."test_entity_pk" AS "testEntity_test_entity_pk",
   "testEntity"."string_type" AS "testEntity_string_type",
@@ -132,7 +132,7 @@ WHERE
   )"
 `;
 
-exports[`RelationQueryBuilder #select one to many should query with a single entity 1`] = `
+exports[`RelationQueryBuilder > #select > one to many > should query with a single entity 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
   "testRelations"."relation_name" AS "testRelations_relation_name",
@@ -147,7 +147,7 @@ WHERE
   )"
 `;
 
-exports[`RelationQueryBuilder #select one to one on non owning side 1`] = `
+exports[`RelationQueryBuilder > #select > one to one > on non owning side 1`] = `
 "SELECT
   "oneTestEntity"."test_entity_pk" AS "oneTestEntity_test_entity_pk",
   "oneTestEntity"."string_type" AS "oneTestEntity_string_type",
@@ -165,7 +165,7 @@ WHERE
   )"
 `;
 
-exports[`RelationQueryBuilder #select one to one on owning side 1`] = `
+exports[`RelationQueryBuilder > #select > one to one > on owning side 1`] = `
 "SELECT
   "oneTestRelation"."test_relation_pk" AS "oneTestRelation_test_relation_pk",
   "oneTestRelation"."relation_name" AS "oneTestRelation_relation_name",
@@ -179,7 +179,7 @@ WHERE
   ("test_entity"."test_entity_pk" = test-entity-id-1)"
 `;
 
-exports[`RelationQueryBuilder #select with filter should call whereBuilder#build if there is a filter 1`] = `
+exports[`RelationQueryBuilder > #select > with filter > should call whereBuilder#build if there is a filter 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
   "testRelations"."relation_name" AS "testRelations_relation_name",
@@ -195,7 +195,7 @@ WHERE
   AND ("testRelations"."relation_name" = foo)"
 `;
 
-exports[`RelationQueryBuilder #select with paging should apply paging args going backward 1`] = `
+exports[`RelationQueryBuilder > #select > with paging > should apply paging args going backward 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
   "testRelations"."relation_name" AS "testRelations_relation_name",
@@ -214,7 +214,7 @@ OFFSET
   10"
 `;
 
-exports[`RelationQueryBuilder #select with paging should apply paging args going forward 1`] = `
+exports[`RelationQueryBuilder > #select > with paging > should apply paging args going forward 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
   "testRelations"."relation_name" AS "testRelations_relation_name",
@@ -233,7 +233,7 @@ OFFSET
   11"
 `;
 
-exports[`RelationQueryBuilder #select with sorting should apply ASC NULLS_FIRST sorting 1`] = `
+exports[`RelationQueryBuilder > #select > with sorting > should apply ASC NULLS_FIRST sorting 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
   "testRelations"."relation_name" AS "testRelations_relation_name",
@@ -250,7 +250,7 @@ ORDER BY
   "testRelations"."relation_name" ASC NULLS FIRST"
 `;
 
-exports[`RelationQueryBuilder #select with sorting should apply ASC NULLS_LAST sorting 1`] = `
+exports[`RelationQueryBuilder > #select > with sorting > should apply ASC NULLS_LAST sorting 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
   "testRelations"."relation_name" AS "testRelations_relation_name",
@@ -267,7 +267,7 @@ ORDER BY
   "testRelations"."relation_name" ASC NULLS LAST"
 `;
 
-exports[`RelationQueryBuilder #select with sorting should apply ASC sorting 1`] = `
+exports[`RelationQueryBuilder > #select > with sorting > should apply ASC sorting 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
   "testRelations"."relation_name" AS "testRelations_relation_name",
@@ -284,7 +284,7 @@ ORDER BY
   "testRelations"."relation_name" ASC"
 `;
 
-exports[`RelationQueryBuilder #select with sorting should apply DESC NULLS_FIRST sorting 1`] = `
+exports[`RelationQueryBuilder > #select > with sorting > should apply DESC NULLS_FIRST sorting 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
   "testRelations"."relation_name" AS "testRelations_relation_name",
@@ -301,7 +301,7 @@ ORDER BY
   "testRelations"."relation_name" DESC NULLS FIRST"
 `;
 
-exports[`RelationQueryBuilder #select with sorting should apply DESC NULLS_LAST sorting 1`] = `
+exports[`RelationQueryBuilder > #select > with sorting > should apply DESC NULLS_LAST sorting 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
   "testRelations"."relation_name" AS "testRelations_relation_name",
@@ -318,7 +318,7 @@ ORDER BY
   "testRelations"."relation_name" DESC NULLS LAST"
 `;
 
-exports[`RelationQueryBuilder #select with sorting should apply DESC sorting 1`] = `
+exports[`RelationQueryBuilder > #select > with sorting > should apply DESC sorting 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
   "testRelations"."relation_name" AS "testRelations_relation_name",
@@ -335,7 +335,7 @@ ORDER BY
   "testRelations"."relation_name" DESC"
 `;
 
-exports[`RelationQueryBuilder #select with sorting should apply multiple sorts 1`] = `
+exports[`RelationQueryBuilder > #select > with sorting > should apply multiple sorts 1`] = `
 "SELECT
   "testRelations"."test_relation_pk" AS "testRelations_test_relation_pk",
   "testRelations"."relation_name" AS "testRelations_relation_name",

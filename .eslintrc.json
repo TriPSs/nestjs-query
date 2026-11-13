@@ -1,45 +1,49 @@
 {
   "root": true,
-  "ignorePatterns": ["**/*"],
-  "plugins": ["@nx", "simple-import-sort"],
+  "plugins": ["simple-import-sort"],
   "extends": [
     "airbnb-typescript/base",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:jest/recommended",
-    "plugin:jest/style",
+    "plugin:@vitest/legacy-recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
     "plugin:prettier/recommended"
   ],
+  "env": { "node": true },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["tsconfig.spec.json"]
+  },
   "rules": {
     "import/no-unresolved": "off"
   },
   "overrides": [
     {
+      "files": ["tools/**/*.ts", "vitest.config.ts"],
+      "rules": { "import/no-extraneous-dependencies": ["error", { "devDependencies": true }] }
+    },
+    {
+      "files": ["examples/**/*.ts", "examples/**/*.tsx"],
+      "rules": { "import/no-extraneous-dependencies": "off" }
+    },
+    {
+      "files": ["packages/query-sequelize/**/*.{ts,tsx,js,jsx}"],
+      "rules": {
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-unsafe-argument": "off"
+      }
+    },
+    {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@nx/enforce-module-boundaries": [
-          "error",
-          {
-            "enforceBuildableLibDependency": true,
-            "allow": [],
-            "depConstraints": [
-              {
-                "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
-              }
-            ]
-          }
-        ],
         "semi": ["warn", "never"]
       }
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
       "rules": {
         // airbnb default is 1
         "max-classes-per-file": ["error", 5],
@@ -85,15 +89,14 @@
     },
     {
       "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nx/javascript"],
       "rules": {
         "@typescript-eslint/no-extra-semi": "error",
         "no-extra-semi": "off"
       }
     },
     {
-      "files": ["*.spec.ts", "*/__fixtures__/*.ts"],
-      "extends": ["plugin:@nx/typescript"],
+      "files": ["*.spec.ts", "**/__fixtures__/**/*.ts"],
+      "env": { "@vitest/env": true },
       "rules": {
         "max-classes-per-file": ["off"],
         "@typescript-eslint/no-unsafe-assignment": "off",
@@ -103,8 +106,7 @@
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "import/no-extraneous-dependencies": "off",
-        "jest/expect-expect": "off",
-        "@nx/enforce-module-boundaries": ["off"],
+        "@vitest/expect-expect": "off",
         "@typescript-eslint/no-extra-semi": "error",
         "no-extra-semi": "off"
       }

@@ -1,15 +1,11 @@
 {
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "commonjs",
-    "lib": ["ES2022"],
+    "noEmit": true,
+    "composite": false,
+    "rootDir": "../../..",
     "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
-    "rootDir": "./e2e"
+    "types": ["vitest/globals", "node"]
   },
-  "include": ["e2e/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["e2e/**/*.ts", "vitest.config.cts"]
 }

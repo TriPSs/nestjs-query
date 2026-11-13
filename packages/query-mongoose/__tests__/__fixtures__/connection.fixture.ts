@@ -14,6 +14,7 @@ export class MongoServer {
     if (this.mongod) {
       return this.mongod.getUri()
     }
+    throw new Error('MongoDB server has not been initialized')
   }
 
   async dropDatabase(): Promise<void> {

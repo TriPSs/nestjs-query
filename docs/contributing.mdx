@@ -123,11 +123,11 @@ To start your example run the following
 
 ### Running Lint
 
-`npm run lint`
+`yarn lint`
 
 ### Running Unit Tests
 
-`npm run jest:unit`
+`yarn test`
 
 ### Running E2E Tests
 
@@ -143,7 +143,7 @@ docker compose up -d
 To run the tests you can issue the following from the root
 
 ```bash
-npm run jest:e2e
+yarn test:e2e
 ```
 
 ### Running All Tests
@@ -151,7 +151,8 @@ npm run jest:e2e
 <Note>You will need to start the backing services described in `Running E2E Tests` first.</Note>
 
 ```bash
-npm run jest
+yarn test
+yarn test:e2e
 ```
 
 ## Conventional Commits

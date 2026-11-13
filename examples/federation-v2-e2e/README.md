@@ -28,7 +28,7 @@ federation-v2-e2e/
 ├── gateway/                # Apollo Gateway (exposed on host:3000)
 │   ├── Dockerfile
 │   └── src/
-├── e2e-test/               # Jest E2E test suite
+├── e2e-test/               # Vitest E2E test suite
 │   ├── Dockerfile
 │   └── e2e/
 └── init-scripts/           # PostgreSQL initialization
@@ -82,7 +82,7 @@ docker compose down -v
 
 ## Running E2E Tests
 
-Run the automated Jest test suite:
+Run the automated Vitest test suite:
 
 ```bash
 # Run tests with the test profile

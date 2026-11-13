@@ -16,7 +16,12 @@ export function composeDecorators(...decorators: ComposableDecorator[]): Compose
       if (typeof descriptorOrIndex === 'number') {
         return (decorator as ParameterDecorator)(target, propertyKey, descriptorOrIndex)
       }
-      return (decorator as MethodDecorator | PropertyDecorator)(target, propertyKey, descriptorOrIndex)
+      if (propertyKey === undefined) return
+      return (decorator as (target: object, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<Y>) => void)(
+        target,
+        propertyKey,
+        descriptorOrIndex
+      )
     })
   }
 }

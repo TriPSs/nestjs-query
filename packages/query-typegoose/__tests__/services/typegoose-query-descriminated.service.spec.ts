@@ -56,7 +56,8 @@ describe('TypegooseQueryService-With Descriminates', () => {
     }).compile()
   }, 120000)
 
-  function convertDocument<Doc>(doc: DocumentType<Doc>): Doc {
+  function convertDocument<Doc>(doc: DocumentType<Doc> | undefined): Doc {
+    if (!doc) throw new Error('Expected a document')
     return doc.toObject({ virtuals: true }) as Doc
   }
 
@@ -64,7 +65,8 @@ describe('TypegooseQueryService-With Descriminates', () => {
     return docs.map((doc) => convertDocument(doc))
   }
 
-  function testDiscriminatedEntityToObject(tde: TestDiscriminatedEntity): Partial<TestDiscriminatedEntity> {
+  function testDiscriminatedEntityToObject(tde: TestDiscriminatedEntity | undefined): Partial<TestDiscriminatedEntity> {
+    if (!tde) throw new Error('Expected a discriminated test entity')
     return {
       _id: tde._id,
       stringType: tde.stringType,
@@ -75,7 +77,8 @@ describe('TypegooseQueryService-With Descriminates', () => {
     }
   }
 
-  function testDiscriminatedEntityToCreate(tde: TestDiscriminatedEntity): Partial<TestDiscriminatedEntity> {
+  function testDiscriminatedEntityToCreate(tde: TestDiscriminatedEntity | undefined): Partial<TestDiscriminatedEntity> {
+    if (!tde) throw new Error('Expected a discriminated test entity')
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { _id, ...insert } = testDiscriminatedEntityToObject(tde)
     return insert

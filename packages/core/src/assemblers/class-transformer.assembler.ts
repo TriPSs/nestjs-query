@@ -9,7 +9,7 @@ import { getAssemblerSerializer } from './assembler.serializer'
 /**
  * Base assembler that uses class-transformer to transform to and from the DTO/Entity.
  */
-export abstract class ClassTransformerAssembler<DTO, Entity extends DeepPartial<Entity>> extends AbstractAssembler<
+export abstract class ClassTransformerAssembler<DTO, Entity> extends AbstractAssembler<
   DTO,
   Entity,
   DeepPartial<DTO>,
@@ -38,11 +38,11 @@ export abstract class ClassTransformerAssembler<DTO, Entity extends DeepPartial<
   }
 
   public convertToCreateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> | Promise<DeepPartial<Entity>> {
-    return this.convert(this.EntityClass, create)
+    return this.convert(this.EntityClass, create as object)
   }
 
   public convertToUpdateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> | Promise<DeepPartial<Entity>> {
-    return this.convert(this.EntityClass, create)
+    return this.convert(this.EntityClass, create as object)
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-types

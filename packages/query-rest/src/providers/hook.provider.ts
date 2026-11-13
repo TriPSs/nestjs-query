@@ -1,18 +1,19 @@
 import { Provider } from '@nestjs/common'
 import { Class } from '@ptc-org/nestjs-query-core'
 
+import { ReadControllerOpts } from '../controllers/read.controller'
 import { getHooksForType } from '../decorators'
 import { getHookToken, HookTypes } from '../hooks'
 import { PagingStrategies } from '../types/query'
 import { CRUDAutoControllerOpts } from './controller.provider'
 
 export type HookProviderOptions<DTO, C, U> = Pick<
-  CRUDAutoControllerOpts<DTO, C, U, unknown, PagingStrategies>,
+  CRUDAutoControllerOpts<DTO, C, U, ReadControllerOpts<DTO>, PagingStrategies>,
   'DTOClass' | 'CreateDTOClass' | 'UpdateDTOClass'
 >
 
-function createHookProvider(hookType: HookTypes, ...DTOClass: Class<unknown>[]): Provider[] | undefined {
-  return DTOClass.reduce((p: Provider[] | undefined, cls) => {
+function createHookProvider(hookType: HookTypes, ...DTOClass: Class<unknown>[]): Provider[] {
+  return DTOClass.reduce((p: Provider[], cls) => {
     if (p && p.length > 0) {
       return p
     }

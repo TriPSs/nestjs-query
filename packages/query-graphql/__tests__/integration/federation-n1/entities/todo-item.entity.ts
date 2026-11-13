@@ -6,14 +6,14 @@ import { TodoList } from './todo-list.entity'
 @Entity('test_todo_item')
 export class TodoItem {
   @PrimaryGeneratedColumn()
-  id: number
+  id!: number
 
   @Column()
-  listId: number
+  listId!: number
 
   @Column()
-  content: string
+  content!: string
 
   @ManyToOne(() => TodoList, (list) => list.items)
-  list: TodoList
+  list!: TodoList
 }

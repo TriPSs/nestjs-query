@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/@isox-sh/core/schemas/isox.schema.json",
+  "version": "1.0.0-alpha.6",
+  "affected": {
+    "defaultBase": "master"
+  },
+  "namedInputs": {
+    "shared": [
+      "{workspaceRoot}/yarn.lock",
+      "{workspaceRoot}/tsconfig*.json",
+      "{workspaceRoot}/tools/**/*",
+      "{workspaceRoot}/.eslintrc.json"
+    ],
+    "default": ["{projectRoot}/**/*", "shared"]
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "cache": true,
+      "inputs": ["default", "^default"]
+    },
+    "lint": {
+      "cache": true,
+      "inputs": ["default", "^default"]
+    }
+  }
+}

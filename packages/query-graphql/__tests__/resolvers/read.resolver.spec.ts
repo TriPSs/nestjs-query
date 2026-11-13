@@ -1,6 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import { ArgsType, Field, Query, Resolver } from '@nestjs/graphql'
 import { Filter } from '@ptc-org/nestjs-query-core'
+import { ok as assert } from 'node:assert'
 import { deepEqual, objectContaining, when } from 'ts-mockito'
 
 import {
@@ -191,6 +192,7 @@ describe('ReadResolver', () => {
           )
         ).thenResolve(output)
         const result = await resolver.queryMany(input)
+        assert(input.filter)
         when(mockService.count(objectContaining(input.filter), objectContaining({ withDeleted: undefined }))).thenResolve(10)
         return expect(result.totalCount).resolves.toBe(10)
       })

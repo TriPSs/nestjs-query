@@ -24,7 +24,7 @@ export class RelationQueryService<DTO, C = DeepPartial<DTO>, U = DeepPartial<DTO
   ) {
     if (typeof queryService.query === 'function') {
       super(queryService as QueryService<DTO, C, U>)
-      this.relations = relations
+      this.relations = relations ?? {}
     } else {
       super(NoOpQueryService.getInstance())
       this.relations = queryService as Record<string, QueryServiceRelation<DTO, unknown>>

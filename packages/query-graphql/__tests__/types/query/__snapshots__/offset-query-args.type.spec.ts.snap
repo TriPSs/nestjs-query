@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Offset paging strategy QueryArgsType with manual options create a query for string fields 1`] = `
+exports[`Offset paging strategy QueryArgsType with manual options > create a query for string fields 1`] = `
 "type TestQuery {
   idField: ID!
   idFieldOption: ID
@@ -276,7 +276,7 @@ enum SortNulls {
 }"
 `;
 
-exports[`Offset paging strategy QueryArgsType with manual options options allow apply the options to the generated SDL 1`] = `
+exports[`Offset paging strategy QueryArgsType with manual options > options > allow apply the options to the generated SDL 1`] = `
 "type TestQuery {
   idField: ID!
   idFieldOption: ID
@@ -556,7 +556,7 @@ enum SortNulls {
 }"
 `;
 
-exports[`Offset paging strategy QueryArgsType with manual options should make the filter required if there is a filterRequired field 1`] = `
+exports[`Offset paging strategy QueryArgsType with manual options > should make the filter required if there is a filterRequired field 1`] = `
 "type TestQuery {
   idField: ID!
   idFieldOption: ID

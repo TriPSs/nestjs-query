@@ -40,7 +40,7 @@ const RemoveOneRelationMixin =
           description: relation.remove?.description,
           complexity: relation.remove?.complexity
         },
-        mergeBaseResolverOpts(relation.remove, commonResolverOpts),
+        mergeBaseResolverOpts(relation.remove ?? {}, commonResolverOpts),
         {
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }
@@ -88,7 +88,7 @@ const RemoveManyRelationsMixin =
           description: relation.remove?.description,
           complexity: relation.remove?.complexity
         },
-        mergeBaseResolverOpts(relation.remove, commonResolverOpts),
+        mergeBaseResolverOpts(relation.remove ?? {}, commonResolverOpts),
         {
           interceptors: [AuthorizerInterceptor(DTOClass)]
         }

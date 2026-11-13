@@ -1,12 +1,13 @@
 import { FactoryProvider } from '@nestjs/common'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Class, getQueryServiceToken } from '@ptc-org/nestjs-query-core'
+import { ObjectLiteral } from 'typeorm'
 
 import type { DataSource, Repository } from 'typeorm'
 
 import { TypeOrmQueryService } from './services'
 
-function createTypeOrmQueryServiceProvider<Entity>(
+function createTypeOrmQueryServiceProvider<Entity extends ObjectLiteral>(
   EntityClass: Class<Entity>,
   dataSource?: DataSource | string
 ): FactoryProvider {
@@ -20,6 +21,6 @@ function createTypeOrmQueryServiceProvider<Entity>(
 }
 
 export const createTypeOrmQueryServiceProviders = (
-  entities: Class<unknown>[],
+  entities: Class<ObjectLiteral>[],
   dataSource?: DataSource | string
 ): FactoryProvider[] => entities.map((entity) => createTypeOrmQueryServiceProvider(entity, dataSource))

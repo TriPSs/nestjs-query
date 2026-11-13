@@ -1,10 +1,11 @@
 import { ObjectType } from '@nestjs/graphql'
 import { QueryService } from '@ptc-org/nestjs-query-core'
 import { anything, instance, mock, when } from 'ts-mockito'
+import { vi } from 'vitest'
 
 import { ExportResolver, FilterableField } from '../../src'
 
-jest.mock('csv-stringify/sync', () => {
+vi.mock('csv-stringify/sync', () => {
   throw new Error('Cannot find module csv-stringify/sync')
 })
 

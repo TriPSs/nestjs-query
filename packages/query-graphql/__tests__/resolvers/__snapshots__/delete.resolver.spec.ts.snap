@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`DeleteResolver #deleteMany should not create a new delete type if the DeleteManyArgs is supplied 1`] = `
+exports[`DeleteResolver > #deleteMany > should not create a new delete type if the DeleteManyArgs is supplied 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -78,7 +78,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`DeleteResolver #deleteMany should not expose delete many method if disabled 1`] = `
+exports[`DeleteResolver > #deleteMany > should not expose delete many method if disabled 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -103,7 +103,7 @@ input DeleteOneTestResolverDTOInput {
 }"
 `;
 
-exports[`DeleteResolver #deleteOne should not expose delete one method if disabled 1`] = `
+exports[`DeleteResolver > #deleteOne > should not expose delete one method if disabled 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -169,7 +169,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`DeleteResolver #deleteOne should use the provided DeleteOneInput type 1`] = `
+exports[`DeleteResolver > #deleteOne > should use the provided DeleteOneInput type 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -246,7 +246,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`DeleteResolver deleted subscription should add subscription types if enableSubscriptions is true 1`] = `
+exports[`DeleteResolver > deleted subscription > should add subscription types if enableSubscriptions is true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -340,7 +340,7 @@ input TestResolverDTOSubscriptionFilter {
 }"
 `;
 
-exports[`DeleteResolver deleted subscription should add subscription types if many.enableSubscriptions is true 1`] = `
+exports[`DeleteResolver > deleted subscription > should add subscription types if many.enableSubscriptions is true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -421,7 +421,7 @@ type Subscription {
 }"
 `;
 
-exports[`DeleteResolver deleted subscription should add subscription types if one.enableSubscriptions is true 1`] = `
+exports[`DeleteResolver > deleted subscription > should add subscription types if one.enableSubscriptions is true 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -514,7 +514,7 @@ input TestResolverDTOSubscriptionFilter {
 }"
 `;
 
-exports[`DeleteResolver deleted subscription should not expose subscriptions if enableSubscriptions is false 1`] = `
+exports[`DeleteResolver > deleted subscription > should not expose subscriptions if enableSubscriptions is false 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -591,7 +591,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`DeleteResolver should create a DeleteResolver for the DTO 1`] = `
+exports[`DeleteResolver > should create a DeleteResolver for the DTO 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -668,7 +668,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`DeleteResolver should not expose delete methods if disabled 1`] = `
+exports[`DeleteResolver > should not expose delete methods if disabled 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -679,7 +679,7 @@ type Query {
 }"
 `;
 
-exports[`DeleteResolver should use the dtoName if provided 1`] = `
+exports[`DeleteResolver > should use the dtoName if provided 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -756,7 +756,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`DeleteResolver should use the many.name option for the deleteMany if provided 1`] = `
+exports[`DeleteResolver > should use the many.name option for the deleteMany if provided 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
@@ -833,7 +833,7 @@ input StringFieldComparison {
 }"
 `;
 
-exports[`DeleteResolver should use the one.name option for the deleteOne if provided 1`] = `
+exports[`DeleteResolver > should use the one.name option for the deleteOne if provided 1`] = `
 "type TestResolverDTO {
   id: ID!
   stringField: String!
