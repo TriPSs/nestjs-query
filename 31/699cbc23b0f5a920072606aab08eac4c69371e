@@ -1,0 +1,25 @@
+docs/rest/controllers.mdx
+  s_5a8c1804caa23d::t_9c745bcdd5eaee 97
+packages/query-rest/__tests__/controllers/update.controller.spec.ts
+  s_5a8c1804caa23d::t_a90058ef0bc1d5 1-72
+packages/query-rest/src/controllers/update.controller.ts
+  s_5a8c1804caa23d::t_fa6d4bd651a14d 6,17-18,58-68,77
+docs/rest/mutations.mdx
+  s_5a8c1804caa23d::t_97b541e5b2acc6 39-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "31699cbc23b0f5a920072606aab08eac4c69371e",
+  "prompts": {},
+  "sessions": {
+    "s_5a8c1804caa23d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d559-1330-7513-8804-1b5fcd4bda54",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
