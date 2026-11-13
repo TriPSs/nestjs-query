@@ -94,7 +94,7 @@ patchOne(@Param('id') id: string, @Body() update: TodoItemUpdateDTO) {
 }
 ```
 
-Custom PATCH methods must configure their own validation, guards, authorization, and hooks as needed. The generated CRUD update route continues to use `PUT`.
+Custom PATCH methods must configure their own validation, guards, authorization, and hooks as needed. To use `PATCH` for the generated update route, set `update: { method: 'patch' }` in the controller or endpoint options. The default is `'put'`. See [Mutations](/rest/mutations).
 
 ## Options[​](#options 'Direct link to Options')
 

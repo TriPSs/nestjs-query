@@ -36,6 +36,18 @@ Content-Type: application/json
 
 A successful update returns `200 OK` with the updated record. Make update DTO properties nullable/optional so clients can submit partial updates.
 
+Updates use `PUT` by default. Set `update.method` to `'patch'` in your endpoint or `CRUDController` options to use `PATCH`:
+
+```ts
+{
+  update: {
+    method: 'patch'
+  }
+}
+```
+
+For a standalone controller, use `UpdateController(TodoItemDTO, { method: 'patch' })`. Both methods use the same request body, authorization, hooks, and response serialization.
+
 ## Delete one[​](#delete-one 'Direct link to Delete one')
 
 ```http
