@@ -89,7 +89,7 @@ html:is([data-current-path='/'], [data-current-path='/index']) .mobile-nav-tabs-
 .query-home .query-home-button {
   display: inline-flex;
   align-items: center;
-  gap: 24px;
+  gap: 8px;
   padding: 12px 18px;
   border-radius: 8px;
   background: #087459;
@@ -282,6 +282,8 @@ html:is([data-current-path='/'], [data-current-path='/index']) .mobile-nav-tabs-
 
 .query-home .query-home-footer a {
   color: var(--home-muted);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 @media (max-width: 900px) {
