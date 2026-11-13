@@ -1,0 +1,19 @@
+project.json
+  s_da224be4fe7464::t_1ecf77d629d10d 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5f4d888c3e6296fb67d2b163f84f051131dacbd7",
+  "prompts": {},
+  "sessions": {
+    "s_da224be4fe7464": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d583-b8d2-7b71-8f26-db2d7718b1ed",
+        "model": "unknown"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
