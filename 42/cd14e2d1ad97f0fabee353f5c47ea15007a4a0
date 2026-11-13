@@ -1,0 +1,19 @@
+.github/workflows/shared.setup-env.yml
+  s_5a8c1804caa23d::t_3cf4a075c490bb 18-21,29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "42cd14e2d1ad97f0fabee353f5c47ea15007a4a0",
+  "prompts": {},
+  "sessions": {
+    "s_5a8c1804caa23d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d559-1330-7513-8804-1b5fcd4bda54",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
