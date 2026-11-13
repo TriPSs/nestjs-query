@@ -1,0 +1,37 @@
+docs/rest/controllers.mdx
+  s_5a8c1804caa23d::t_079c981e5410ed 97
+packages/query-rest/__tests__/controllers/update.controller.spec.ts
+  s_5a8c1804caa23d::t_bdfe867bd3bc4b 1-2,6,8-9,11,13,16,22-31,33-44,47-49,57,63-70
+  s_bfe59bc1d2a9c4::t_36b062e477ebbe 32
+  s_bfe59bc1d2a9c4::t_6ff62ddd706c62 3-5,7,10,12,14-15,17-21,45-46,50-56,58-62,71-72
+docs/rest/mutations.mdx
+  s_5a8c1804caa23d::t_079c981e5410ed 39-42,46-50
+  s_5a8c1804caa23d::t_1c13707f6002ad 43-45
+packages/query-rest/src/controllers/update.controller.ts
+  s_5a8c1804caa23d::t_079c981e5410ed 6,17-18,58,77
+  s_5a8c1804caa23d::t_1c13707f6002ad 59-68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "81deb15f095857c43234a07a81545bc6ed3ff52c",
+  "prompts": {},
+  "sessions": {
+    "s_5a8c1804caa23d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d559-1330-7513-8804-1b5fcd4bda54",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    },
+    "s_bfe59bc1d2a9c4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ca42-bbf1-7d73-a093-6782b241ff3b",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
