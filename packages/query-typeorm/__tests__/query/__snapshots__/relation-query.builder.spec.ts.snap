@@ -7,28 +7,29 @@ exports[`RelationQueryBuilder #batchSelect many to one should query with with mu
   "manyToOneRelation"."test_entity_id" AS "manyToOneRelation_test_entity_id",
   "manyToOneRelation"."uni_directional_test_entity_id" AS "manyToOneRelation_uni_directional_test_entity_id",
   "manyToOneRelation"."uni_directional_relation_test_entity_id" AS "manyToOneRelation_uni_directional_relation_test_entity_id",
-  "test_entity"."test_entity_pk" AS "manyToOneRelation_test_entity_testEntityPk"
+  "__nestjsQuery__owner__"."test_entity_pk" AS "manyToOneRelation___nestjsQuery__owner___testEntityPk"
 FROM
   "test_relation" "manyToOneRelation"
-  INNER JOIN "test_entity" "test_entity" ON "test_entity"."many_to_one_relation_id" = "manyToOneRelation"."test_relation_pk"
+  INNER JOIN "test_entity" "__nestjsQuery__owner__" ON "__nestjsQuery__owner__"."many_to_one_relation_id" = "manyToOneRelation"."test_relation_pk"
 WHERE
-  "test_entity"."test_entity_pk" IN (test-entity-id-1, test-entity-id-2)"
+  "__nestjsQuery__owner__"."test_entity_pk" IN (test-entity-id-1, test-entity-id-2)"
 `;
 
-exports[`RelationQueryBuilder #batchSelect should reuse existing join alias if there is one 1`] = `
+exports[`RelationQueryBuilder #batchSelect should add a dedicated owner join when a filter joins the owning entity type through another relation 1`] = `
 "SELECT
   "manyToOneRelation"."test_relation_pk" AS "manyToOneRelation_test_relation_pk",
   "manyToOneRelation"."relation_name" AS "manyToOneRelation_relation_name",
   "manyToOneRelation"."test_entity_id" AS "manyToOneRelation_test_entity_id",
   "manyToOneRelation"."uni_directional_test_entity_id" AS "manyToOneRelation_uni_directional_test_entity_id",
   "manyToOneRelation"."uni_directional_relation_test_entity_id" AS "manyToOneRelation_uni_directional_relation_test_entity_id",
-  "testEntity"."test_entity_pk" AS "manyToOneRelation_testEntity_testEntityPk"
+  "__nestjsQuery__owner__"."test_entity_pk" AS "manyToOneRelation___nestjsQuery__owner___testEntityPk"
 FROM
   "test_relation" "manyToOneRelation"
   LEFT JOIN "test_entity" "testEntity" ON "testEntity"."test_entity_pk" = "manyToOneRelation"."test_entity_id"
+  INNER JOIN "test_entity" "__nestjsQuery__owner__" ON "__nestjsQuery__owner__"."many_to_one_relation_id" = "manyToOneRelation"."test_relation_pk"
 WHERE
   (("testEntity"."test_entity_pk" = test))
-  AND "testEntity"."test_entity_pk" IN (test-entity-1)"
+  AND "__nestjsQuery__owner__"."test_entity_pk" IN (test-entity-1)"
 `;
 
 exports[`RelationQueryBuilder #select many to many many-to-many custom join table should work with a many-to-many through a join table 1`] = `
@@ -106,10 +107,10 @@ exports[`RelationQueryBuilder #select many to one should work with a uni-directi
   "testEntityUniDirectional"."oneTestRelationTestRelationPk" AS "testEntityUniDirectional_oneTestRelationTestRelationPk"
 FROM
   "test_entity" "testEntityUniDirectional"
-  INNER JOIN "test_relation" "test_relation" ON "test_relation"."uni_directional_test_entity_id" = "testEntityUniDirectional"."test_entity_pk"
+  INNER JOIN "test_relation" "__nestjsQuery__owner__" ON "__nestjsQuery__owner__"."uni_directional_test_entity_id" = "testEntityUniDirectional"."test_entity_pk"
 WHERE
   (
-    "test_relation"."test_relation_pk" = test-relation-id-1
+    "__nestjsQuery__owner__"."test_relation_pk" = test-relation-id-1
   )"
 `;
 
@@ -125,10 +126,10 @@ exports[`RelationQueryBuilder #select many to one should work with one entity 1`
   "testEntity"."oneTestRelationTestRelationPk" AS "testEntity_oneTestRelationTestRelationPk"
 FROM
   "test_entity" "testEntity"
-  INNER JOIN "test_relation" "test_relation" ON "test_relation"."test_entity_id" = "testEntity"."test_entity_pk"
+  INNER JOIN "test_relation" "__nestjsQuery__owner__" ON "__nestjsQuery__owner__"."test_entity_id" = "testEntity"."test_entity_pk"
 WHERE
   (
-    "test_relation"."test_relation_pk" = test-relation-id-1
+    "__nestjsQuery__owner__"."test_relation_pk" = test-relation-id-1
   )"
 `;
 
@@ -174,9 +175,11 @@ exports[`RelationQueryBuilder #select one to one on owning side 1`] = `
   "oneTestRelation"."uni_directional_relation_test_entity_id" AS "oneTestRelation_uni_directional_relation_test_entity_id"
 FROM
   "test_relation" "oneTestRelation"
-  INNER JOIN "test_entity" "test_entity" ON "test_entity"."oneTestRelationTestRelationPk" = "oneTestRelation"."test_relation_pk"
+  INNER JOIN "test_entity" "__nestjsQuery__owner__" ON "__nestjsQuery__owner__"."oneTestRelationTestRelationPk" = "oneTestRelation"."test_relation_pk"
 WHERE
-  ("test_entity"."test_entity_pk" = test-entity-id-1)"
+  (
+    "__nestjsQuery__owner__"."test_entity_pk" = test-entity-id-1
+  )"
 `;
 
 exports[`RelationQueryBuilder #select with filter should call whereBuilder#build if there is a filter 1`] = `
