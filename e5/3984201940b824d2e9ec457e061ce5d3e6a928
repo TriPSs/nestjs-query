@@ -1,0 +1,30 @@
+docs/home.css
+  s_da224be4fe7464::t_6cacbd577afeb1 11-316
+  s_da224be4fe7464::t_8c1765288abc19 1-10
+docs/index.mdx
+  s_da224be4fe7464::t_0ecff6be667f7f 18
+  s_da224be4fe7464::t_6cacbd577afeb1 1-17,19-113
+docs/docs.json
+  s_da224be4fe7464::t_6ac1d17c0b486b 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e53984201940b824d2e9ec457e061ce5d3e6a928",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_da224be4fe7464": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d583-b8d2-7b71-8f26-db2d7718b1ed",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
