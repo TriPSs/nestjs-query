@@ -3,7 +3,7 @@ import { PartialType } from '@nestjs/swagger'
 import { Class, DeepPartial, Filter, QueryService } from '@ptc-org/nestjs-query-core'
 import omit from 'lodash.omit'
 
-import { ApiSchema, MutationArgsType, Put } from '../'
+import { ApiSchema, MutationArgsType, Patch, Put } from '../'
 import { OperationGroup } from '../auth'
 import { DTONames, getDTONames } from '../common'
 import { AuthorizerFilter, BodyHookArgs } from '../decorators'
@@ -14,6 +14,8 @@ import { ParamArgsType, UpdateOneInputType } from '../types'
 import { BaseServiceController, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
 
 export interface UpdateControllerOpts<DTO, U = DeepPartial<DTO>> extends MutationOpts {
+  /** HTTP method for the update endpoint. Defaults to 'put'. */
+  method?: 'put' | 'patch'
   UpdateDTOClass?: Class<U>
   UpdateOneInput?: Class<UpdateOneInputType<U>>
 }
@@ -53,7 +55,17 @@ export const Updateable =
       UpdateOneInput = defaultUpdateOneInput(dtoNames, UpdateDTOClass)
     } = opts
 
-    const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'UpdateDTOClass', 'UpdateOneInput', 'UpdateManyInput')
+    const UpdateMethod = opts.method === 'patch' ? Patch : Put
+    const commonControllerOpts = omit(
+      opts,
+      'method',
+      'dtoName',
+      'one',
+      'many',
+      'UpdateDTOClass',
+      'UpdateOneInput',
+      'UpdateManyInput'
+    )
 
     @ApiSchema({ name: `Update${DTOClass.name}` })
     class UOI extends MutationArgsType(UpdateOneInput) {}
@@ -62,7 +74,7 @@ export const Updateable =
     class UOP extends ParamArgsType(DTOClass) {}
 
     class UpdateControllerBase extends BaseClass {
-      @Put(
+      @UpdateMethod(
         () => DTOClass,
         {
           path: opts?.one?.path ?? ':id',
