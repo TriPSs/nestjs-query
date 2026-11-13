@@ -71,7 +71,7 @@
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
     "@vitest/coverage-v8": "5.1.0",
-    "@vitest/eslint-plugin": "^1.6.28",
+    "@vitest/eslint-plugin": "1.6.27",
     "better-sqlite3": "^13.0.3",
     "class-transformer": "0.5.1",
     "csv-stringify": "^6.9.0",
