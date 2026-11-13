@@ -22,7 +22,8 @@
     "@nestjs/platform-express": "^11.2.9",
     "graphql": "^16.15.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "tslib": "^2.9.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.24",

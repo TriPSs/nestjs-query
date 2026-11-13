@@ -6275,6 +6275,7 @@ __metadata:
     graphql: "npm:^16.15.0"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"
+    tslib: "npm:^2.9.1"
     typescript: "npm:^5.9.3"
   languageName: unknown
   linkType: soft
@@ -10724,6 +10725,7 @@ __metadata:
     pg: "npm:^8.23.1"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"
+    tslib: "npm:^2.9.1"
     typeorm: "npm:^0.3.31"
     typescript: "npm:^5.9.3"
   languageName: unknown
@@ -10965,6 +10967,7 @@ __metadata:
     pg: "npm:^8.23.1"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"
+    tslib: "npm:^2.9.1"
     typeorm: "npm:^0.3.31"
     typescript: "npm:^5.9.3"
   languageName: unknown
@@ -11513,6 +11516,7 @@ __metadata:
     pg: "npm:^8.23.1"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"
+    tslib: "npm:^2.9.1"
     typeorm: "npm:^0.3.31"
     typescript: "npm:^5.9.3"
   languageName: unknown
