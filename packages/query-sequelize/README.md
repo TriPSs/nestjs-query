@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://nestjs-query.mintlify.site/" target="blank"><img src="https://nestjs-query.mintlify.site/images/readme-banner.png" width="100%" alt="nestjs-query — Queryable APIs for NestJS. GraphQL, REST, and TypeScript." /></a>
+  <a href="https://nestjs-query.mintlify.site/" target="_blank"><img src="https://nestjs-query.mintlify.site/images/readme-banner.png" width="100%" alt="nestjs-query — Queryable APIs for NestJS. GraphQL, REST, and TypeScript." /></a>
 </p>
 
 [![npm version](https://img.shields.io/npm/v/@ptc-org/nestjs-query-sequelize.svg)](https://www.npmjs.org/package/@ptc-org/nestjs-query-sequelize)
