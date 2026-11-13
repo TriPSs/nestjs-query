@@ -66,3 +66,41 @@ Applications that do not use CSV export can omit it.
 ## REST Swagger runtime dependency
 
 `@ptc-org/nestjs-query-rest` requires `@nestjs/swagger` at runtime, even when an application does not generate OpenAPI documentation. Its `@ApiProperty` decorators run when REST DTO classes are defined, so the dependency cannot be loaded lazily. Keep `@nestjs/swagger` installed when upgrading.
+
+## Relation filter aliases
+
+If you subclass `FilterQueryBuilder` and override `applyFilter`, accept and forward its new optional fourth argument. An override that drops it recomputes the relation alias map and can qualify a filter with the wrong relation's alias.
+
+Otherwise no action is required. Queries where a selected relation shared a name with a filtered one previously returned the wrong rows and now return the right ones.
+
+## Custom builders on relation paths
+
+In v10, a builder configured through `TypeOrmQueryServiceOpts.filterQueryBuilder` was replaced by a default builder wherever a query reached a relation. In v11 it also applies to filters that descend into a relation, to selected relations, to `queryRelations`, `countRelations`, `aggregateRelations` and `findRelation`, single and batch, and to the lookups `addRelations`, `setRelations`, `setRelation`, `removeRelations` and `removeRelation` make. Expect different SQL and results on those paths. For example, a builder that scopes queries to a tenant now also limits which relations those five methods can find, so they throw `Unable to find ...` for a relation outside the tenant.
+
+A `FilterQueryBuilder` subclass that overrides `applyFilter` is now also called for relation queries. For a selected relation it is called on a builder copied for the relation rather than on the root builder, so `this.repo` is the relation's repository.
+
+### Subclasses that need a change
+
+Each builder is copied for the relation, through `deriveForEntityMetadata` on `SQLComparisonBuilder` and `WhereBuilder`, and `deriveForRepository` on `AggregateBuilder` and `FilterQueryBuilder`. The copy is shallow and keeps the prototype, which breaks three subclass shapes:
+
+- A subclass holding ECMAScript `#private` fields raises a `TypeError` wherever the copy reads one. For a `FilterQueryBuilder` subclass that can be any relation query or selected relation, and for an `AggregateBuilder` subclass any relation aggregate.
+- A subclass that computes state from `entityMetadata` or `repo` silently uses the root entity's state for the relation. That covers state computed in the constructor, and state cached in an own object such as a `Map`, which the copy shares with the root builder in both directions.
+- A subclass whose methods are arrow function class fields, or are bound in its constructor, keeps `this` pointing at the root builder in those methods.
+
+Fix each by overriding the matching `deriveFor...` method to construct the copy yourself. TypeScript's `private` keyword is unaffected. An overriding `FilterQueryBuilder` also has to derive its where and aggregate builders, or relation queries fall back to default ones:
+
+```ts
+class TenantFilterQueryBuilder<Entity> extends FilterQueryBuilder<Entity> {
+  public deriveForRepository<Relation>(repo: Repository<Relation>): FilterQueryBuilder<Relation> {
+    return new TenantFilterQueryBuilder<Relation>(
+      repo,
+      this.whereBuilder.deriveForEntityMetadata<Relation>(repo.metadata),
+      this.aggregateBuilder.deriveForRepository<Relation>(repo)
+    )
+  }
+}
+```
+
+### `SQLComparisonBuilder.forEntityMetadata` removed
+
+The public static `SQLComparisonBuilder.forEntityMetadata`, shipped in `11.0.0-alpha.0` and `11.0.0-alpha.1`, is removed. Replace `SQLComparisonBuilder.forEntityMetadata(metadata)` with `new SQLComparisonBuilder(SQLComparisonBuilder.DEFAULT_COMPARISON_MAP, undefined, metadata)`, or keep a builder's behaviour with `builder.deriveForEntityMetadata(metadata)`.
