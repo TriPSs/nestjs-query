@@ -1,0 +1,24 @@
+docs/rest/dtos.mdx
+  s_027943e0f90b77::t_7c31a85c9c0f92 51-53,66,72-74
+packages/query-rest/__tests__/decorators/field.decorator.spec.ts
+  s_027943e0f90b77::t_7c31a85c9c0f92 7-36,38-59
+  s_027943e0f90b77::t_a9cd321b1260b6 37
+packages/query-rest/src/decorators/field.decorator.ts
+  s_027943e0f90b77::t_7c31a85c9c0f92 8,11,13,199-206
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b0d543cc242a36777205c8fac2cf0d82c3fb503c",
+  "prompts": {},
+  "sessions": {
+    "s_027943e0f90b77": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d9c6-cd70-7bb2-90ba-7be561f913c1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
