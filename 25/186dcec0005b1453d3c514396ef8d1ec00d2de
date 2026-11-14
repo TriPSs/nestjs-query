@@ -1,0 +1,23 @@
+examples/federation-v2-e2e/e2e-test/package.json
+  s_027943e0f90b77::t_8309220758bce0 20
+package.json
+  s_027943e0f90b77::t_66e4b8e1721206 43,97
+yarn.lock
+  s_027943e0f90b77::t_3e4cd5a10ee259 5087,8490,8492,11033-11035,11098,11421
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "25186dcec0005b1453d3c514396ef8d1ec00d2de",
+  "prompts": {},
+  "sessions": {
+    "s_027943e0f90b77": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d9c6-cd70-7bb2-90ba-7be561f913c1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
