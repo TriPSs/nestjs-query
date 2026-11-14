@@ -1,0 +1,176 @@
+packages/query-graphql/src/resolvers/relations/remove-relations.resolver.ts
+  s_027943e0f90b77::t_5da6e032b034c9 1
+examples/federation-v2-e2e/gateway/package.json
+  s_027943e0f90b77::t_8309220758bce0 8-9,32
+packages/core/src/interfaces/filter-field-comparison.interface.ts
+  s_027943e0f90b77::t_66e4b8e1721206 193,195,201,213
+packages/query-graphql/src/decorators/hook.decorator.ts
+  s_027943e0f90b77::t_66e4b8e1721206 35,37
+packages/query-sequelize/__tests__/__fixtures__/test-relation.entity.ts
+  s_027943e0f90b77::t_66e4b8e1721206 8
+packages/core/src/interfaces/create-one-options.interface.ts
+  s_027943e0f90b77::t_66e4b8e1721206 9
+packages/query-graphql/__tests__/__fixtures__/index.ts
+  s_027943e0f90b77::t_66e4b8e1721206 27
+packages/core/__tests__/decorators/inject-assembler-query-service.decorator.spec.ts
+  s_027943e0f90b77::t_66e4b8e1721206 16
+packages/query-graphql/src/common/external.utils.ts
+  s_027943e0f90b77::t_66e4b8e1721206 35
+packages/query-rest/src/decorators/decorator.utils.ts
+  s_027943e0f90b77::t_66e4b8e1721206 5,7
+packages/core/src/common/reflect.utils.ts
+  s_027943e0f90b77::t_66e4b8e1721206 10,12,27,35
+packages/query-rest/src/types/validators/is-undefined.validator.ts
+  s_027943e0f90b77::t_66e4b8e1721206 5
+packages/query-graphql/src/decorators/decorator.utils.ts
+  s_027943e0f90b77::t_66e4b8e1721206 5,7
+packages/query-graphql/src/resolvers/relations/update-relations.resolver.ts
+  s_027943e0f90b77::t_5da6e032b034c9 1
+packages/core/src/interfaces/query-relations-options.interface.ts
+  s_027943e0f90b77::t_66e4b8e1721206 3
+CONTRIBUTING.md
+  s_027943e0f90b77::t_a60aa633a467fc 40-41
+examples/federation-v2-e2e/e2e-test/package.json
+  s_027943e0f90b77::t_8309220758bce0 6-7,19
+packages/query-graphql/src/types/validators/is-undefined.validator.ts
+  s_027943e0f90b77::t_66e4b8e1721206 5
+packages/query-mongoose/src/query/comparison.builder.ts
+  s_027943e0f90b77::t_5da6e032b034c9 99-100
+  s_027943e0f90b77::t_b7a835600ca41d 60,75
+examples/federation-v2-e2e/todo-service/package.json
+  s_027943e0f90b77::t_8309220758bce0 8-9,37
+examples/federation-v2-e2e/tag-service/package.json
+  s_027943e0f90b77::t_8309220758bce0 9-10,38
+packages/core/src/assemblers/assembler.serializer.ts
+  s_027943e0f90b77::t_66e4b8e1721206 5
+packages/query-graphql/src/resolvers/delete.resolver.ts
+  s_027943e0f90b77::t_5da6e032b034c9 1
+packages/query-sequelize/src/providers.ts
+  s_027943e0f90b77::t_66e4b8e1721206 17
+packages/query-rest/src/decorators/authorize-filter.decorator.ts
+  s_027943e0f90b77::t_66e4b8e1721206 54,67,80
+packages/core/__tests__/assemblers/assembler.deserializer.spec.ts
+  s_027943e0f90b77::t_66e4b8e1721206 8,19
+packages/query-graphql/__tests__/decorators/resolver-method.decorator.spec.ts
+  s_027943e0f90b77::t_66e4b8e1721206 19,27
+packages/query-mongoose/src/providers.ts
+  s_027943e0f90b77::t_66e4b8e1721206 20,22
+packages/query-sequelize/src/query/filter-query.builder.ts
+  s_027943e0f90b77::t_5910e3533c54bf 84-85
+packages/core/src/interfaces/aggregate-options.interface.ts
+  s_027943e0f90b77::t_66e4b8e1721206 3
+packages/query-graphql/src/subscription/pub-sub.interface.ts
+  s_027943e0f90b77::t_66e4b8e1721206 5
+packages/query-rest/src/decorators/hook.decorator.ts
+  s_027943e0f90b77::t_66e4b8e1721206 37,39
+packages/query-sequelize/__tests__/__fixtures__/test.entity.ts
+  s_027943e0f90b77::t_66e4b8e1721206 8
+tools/eslint-typescript.cjs
+  s_027943e0f90b77::t_66e4b8e1721206 1-167
+  s_027943e0f90b77::t_a38aa113ca22e9 168-171
+packages/core/src/interfaces/count-options.interface.ts
+  s_027943e0f90b77::t_66e4b8e1721206 3
+packages/query-graphql/src/decorators/id-field.decorator.ts
+  s_027943e0f90b77::t_66e4b8e1721206 38
+packages/query-rest/__tests__/decorators/controller-methods.decorator.spec.ts
+  s_027943e0f90b77::t_5da6e032b034c9 38-39
+packages/query-mongoose/__tests__/services/mongoose-query.service.spec.ts
+  s_027943e0f90b77::t_5910e3533c54bf 881
+.eslintrc.json
+  s_027943e0f90b77::t_66e4b8e1721206 5
+  s_027943e0f90b77::t_d153d5bf503a9e 86,93,110
+packages/core/src/assemblers/class-transformer.assembler.ts
+  s_027943e0f90b77::t_66e4b8e1721206 48,73,86
+packages/query-graphql/src/decorators/filterable-field.decorator.ts
+  s_027943e0f90b77::t_66e4b8e1721206 74
+packages/query-graphql/src/resolvers/update.resolver.ts
+  s_027943e0f90b77::t_5da6e032b034c9 1
+packages/query-graphql/src/decorators/authorize-filter.decorator.ts
+  s_027943e0f90b77::t_66e4b8e1721206 57,70,83
+packages/core/src/interfaces/query-options.interface.ts
+  s_027943e0f90b77::t_66e4b8e1721206 4
+packages/query-rest/src/interfaces/return-type-func.ts
+  s_027943e0f90b77::t_66e4b8e1721206 3
+examples/federation-v2-e2e/user-service/package.json
+  s_027943e0f90b77::t_8309220758bce0 11-12,37
+packages/core/src/assemblers/assembler.deserializer.ts
+  s_027943e0f90b77::t_66e4b8e1721206 5
+package.json
+  s_027943e0f90b77::t_66e4b8e1721206 70-71,96
+  s_027943e0f90b77::t_62a1e67f68c0da 15-16
+packages/query-sequelize/src/services/sequelize-query.service.ts
+  s_027943e0f90b77::t_66e4b8e1721206 260
+  s_027943e0f90b77::t_d4761ee7112dc0 302
+packages/core/src/helpers/aggregate.helpers.ts
+  s_027943e0f90b77::t_0f6892288abe93 17
+packages/core/src/helpers/query.helpers.ts
+  s_027943e0f90b77::t_e07312374925c4 24,39
+packages/query-graphql/src/decorators/hook-args.decorator.ts
+  s_027943e0f90b77::t_f4bdcc2104725e 49
+packages/query-graphql/src/resolvers/create.resolver.ts
+  s_027943e0f90b77::t_f1f40991499a90 1
+packages/query-graphql/src/resolvers/export.resolver.ts
+  s_027943e0f90b77::t_53eeb0958947e7 75,190
+packages/query-graphql/src/resolvers/reference.resolver.ts
+  s_027943e0f90b77::t_2d9ef6ded8e955 72-73,75
+packages/query-mikro-orm/__tests__/services/mikro-orm-query.service.spec.ts
+  s_027943e0f90b77::t_e14f985d63092d 388
+packages/query-mikro-orm/src/services/mikro-orm-query.service.ts
+  s_027943e0f90b77::t_bb0748aba643d5 45,60,100,263-266
+packages/query-mongoose/src/mongoose-types.helper.ts
+  s_027943e0f90b77::t_c5fdcfce1afe7b 25,68
+packages/query-mongoose/src/query/where.builder.ts
+  s_027943e0f90b77::t_cecdc320bfed43 37,40,89,109
+packages/query-mongoose/src/services/mongoose-query.service.ts
+  s_027943e0f90b77::t_e75ee75b4e1621 172
+packages/query-mongoose/src/services/reference-query.service.ts
+  s_027943e0f90b77::t_730d207d4c6e1e 477
+packages/query-rest/__tests__/connection/offset-connection.type.spec.ts
+  s_027943e0f90b77::t_5ab7ab207155cc 17,32
+packages/query-rest/src/controllers/export.controller.ts
+  s_027943e0f90b77::t_910dd49aa05a62 132
+packages/query-rest/src/types/param-args.type.ts
+  s_027943e0f90b77::t_164513b46918d6 63
+packages/query-rest/src/types/query/filter.type.ts
+  s_027943e0f90b77::t_44c2b58469bd81 87
+packages/query-rest/src/types/query/query-args/export-paging-query-args.type.ts
+  s_027943e0f90b77::t_a1f1be71722424 44
+packages/query-rest/src/types/query/query-args/none-paging-query-args.type.ts
+  s_027943e0f90b77::t_96afec3fb3a2b4 48,51
+packages/query-rest/src/types/query/query-args/offset-query-args.type.ts
+  s_027943e0f90b77::t_a2751549fc020e 74,77
+packages/query-sequelize/__tests__/services/sequelize-query.service.spec.ts
+  s_027943e0f90b77::t_f4e1e206369489 1320,1352,1456,1467
+packages/query-sequelize/src/services/relation-query.service.ts
+  s_027943e0f90b77::t_bddbeb53f3e1cb 326
+packages/query-typegoose/src/query/comparison.builder.ts
+  s_027943e0f90b77::t_ef56f6ef83fd97 61,75,102-103
+packages/query-typegoose/src/query/where.builder.ts
+  s_027943e0f90b77::t_bd4aca942fca15 97,121
+packages/query-typegoose/src/services/reference-query.service.ts
+  s_027943e0f90b77::t_488168e8b61635 341,351
+packages/query-typegoose/src/services/typegoose-query-service.ts
+  s_027943e0f90b77::t_f79c0d2d0aec20 155
+packages/query-typegoose/src/typegoose-types.helper.ts
+  s_027943e0f90b77::t_d191b8f2d5f6fd 41,83
+packages/query-typeorm/src/query/where.builder.ts
+  s_027943e0f90b77::t_5c52362ac3e0a2 109
+yarn.lock
+  s_027943e0f90b77::t_2ee1a1db75e5d9 788,799-806,2888-2890,2892-2897,2899,2901-2904,2908-2910,2912-2916,2918-2920,2956-2958,2960-2964,2966-2968,2998,5086,6138,6383,6661,6668,8458-8459,8491,8706,8720,9818,10575,10816,11179,11200,11355
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7cd37072df8620d6ed08df17a5c48148cd1aef5e",
+  "prompts": {},
+  "sessions": {
+    "s_027943e0f90b77": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d9c6-cd70-7bb2-90ba-7be561f913c1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
