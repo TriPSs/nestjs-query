@@ -6,10 +6,10 @@ import {
   DeleteManyResponse,
   Filter,
   mergeFilter,
+  omit,
   QueryService,
   UpdateManyResponse
 } from '@ptc-org/nestjs-query-core'
-import omit from 'lodash.omit'
 
 import { OperationGroup } from '../auth'
 import { DTONames, getDTONames } from '../common'

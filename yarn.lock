@@ -2205,7 +2205,6 @@ __metadata:
   resolution: "@ptc-org/nestjs-query-graphql@workspace:packages/query-graphql"
   dependencies:
     dataloader: "npm:^2.2.3"
-    lodash.omit: "npm:^4.18.0"
     pluralize: "npm:^8.0.0"
     tslib: "npm:^2.9.1"
   peerDependencies:
@@ -2244,7 +2243,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-mongoose@workspace:packages/query-mongoose"
   dependencies:
-    lodash.escaperegexp: "npm:^4.1.2"
     tslib: "npm:^2.9.1"
   peerDependencies:
     "@nestjs/common": ^10.0.0 || ^11.0.0
@@ -2257,7 +2255,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-rest@workspace:packages/query-rest"
   dependencies:
-    lodash.omit: "npm:^4.18.0"
     pluralize: "npm:^8.0.0"
     tslib: "npm:^2.9.1"
   peerDependencies:
@@ -2291,7 +2288,6 @@ __metadata:
   resolution: "@ptc-org/nestjs-query-typegoose@workspace:packages/query-typegoose"
   dependencies:
     is-class: "npm:0.0.9"
-    lodash.escaperegexp: "npm:^4.1.2"
     tslib: "npm:^2.9.1"
   peerDependencies:
     "@m8a/nestjs-typegoose": ^13.0.0
@@ -2307,7 +2303,6 @@ __metadata:
   dependencies:
     lodash.filter: "npm:^4.6.0"
     lodash.merge: "npm:^4.6.2"
-    lodash.omit: "npm:^4.18.0"
     tslib: "npm:^2.9.1"
   peerDependencies:
     "@nestjs/common": ^10.0.0 || ^11.0.0
@@ -2679,15 +2674,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.escaperegexp@npm:4.1.9":
-  version: 4.1.9
-  resolution: "@types/lodash.escaperegexp@npm:4.1.9"
-  dependencies:
-    "@types/lodash": "npm:*"
-  checksum: 10/e73c9bb54ec088c9c5797cf1fd1a23208a26105695e6a65882258feae258e054f19b8e935fb48c44f8e298f1ca9216c919ad3741e32e154c5c71f9f966198ce5
-  languageName: node
-  linkType: hard
-
 "@types/lodash.filter@npm:4.6.9":
   version: 4.6.9
   resolution: "@types/lodash.filter@npm:4.6.9"
@@ -2703,15 +2689,6 @@ __metadata:
   dependencies:
     "@types/lodash": "npm:*"
   checksum: 10/d0dd6654547c9d8d905184d14aa5c2a37a1ed1c3204f5ab20b7d591a05f34859ef09d3b72c065e94ca1989abf9109eb8230f67c4d64a5768b1d65b9ed8baf8e7
-  languageName: node
-  linkType: hard
-
-"@types/lodash.omit@npm:4.5.9":
-  version: 4.5.9
-  resolution: "@types/lodash.omit@npm:4.5.9"
-  dependencies:
-    "@types/lodash": "npm:*"
-  checksum: 10/5be43f3598d6b1fa481fe7046e9e15e2225f547e0e309746c2b87f4e4fa8705e96c564e2762a9312e73e2a223d701ab893b122c506500de49a4b9fb40fb6d17c
   languageName: node
   linkType: hard
 
@@ -7688,13 +7665,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.escaperegexp@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "lodash.escaperegexp@npm:4.1.2"
-  checksum: 10/6d99452b1cfd6073175a9b741a9b09ece159eac463f86f02ea3bee2e2092923fce812c8d2bf446309cc52d1d61bf9af51c8118b0d7421388e6cead7bd3798f0f
-  languageName: node
-  linkType: hard
-
 "lodash.filter@npm:^4.6.0":
   version: 4.6.0
   resolution: "lodash.filter@npm:4.6.0"
@@ -7758,7 +7728,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.omit@npm:4.18.0, lodash.omit@npm:^4.18.0":
+"lodash.omit@npm:4.18.0":
   version: 4.18.0
   resolution: "lodash.omit@npm:4.18.0"
   checksum: 10/dc406ff88b793fe28ce9e615d40128bb8075b23cec8d81e91dfc37a63485f7d5a2a0986cf3c61b598ea0a9759a254bb13cf346a427ea81b7a3b8f037edf53a48
@@ -8573,10 +8543,8 @@ __metadata:
     "@nestjs/testing": "npm:^11.2.9"
     "@nestjs/typeorm": "npm:^11.0.3"
     "@typegoose/typegoose": "npm:13.5.0"
-    "@types/lodash.escaperegexp": "npm:4.1.9"
     "@types/lodash.filter": "npm:4.6.9"
     "@types/lodash.merge": "npm:4.6.9"
-    "@types/lodash.omit": "npm:4.5.9"
     "@types/node": "npm:24.19.2"
     "@types/passport-jwt": "npm:4.0.1"
     "@types/pluralize": "npm:0.0.33"

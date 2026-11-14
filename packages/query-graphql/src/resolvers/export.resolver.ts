@@ -5,11 +5,11 @@ import {
   EXPORT_TRANSFORM_GROUP,
   Filter,
   mergeQuery,
+  omit,
   QueryService,
   SelectRelation
 } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
-import omit from 'lodash.omit'
 
 import { OperationGroup } from '../auth'
 import { getDTONames } from '../common'

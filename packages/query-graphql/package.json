@@ -32,7 +32,6 @@
   ],
   "dependencies": {
     "dataloader": "^2.2.3",
-    "lodash.omit": "^4.18.0",
     "pluralize": "^8.0.0",
     "tslib": "^2.9.1"
   },

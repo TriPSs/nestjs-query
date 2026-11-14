@@ -1,6 +1,5 @@
 import { ArgsType, Resolver } from '@nestjs/graphql'
-import { Class, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
-import omit from 'lodash.omit'
+import { Class, Filter, mergeQuery, omit, QueryService } from '@ptc-org/nestjs-query-core'
 
 import { OperationGroup } from '../auth'
 import { getDTONames } from '../common'
