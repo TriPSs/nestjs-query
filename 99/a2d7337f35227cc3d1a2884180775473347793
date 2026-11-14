@@ -1,0 +1,21 @@
+docs/snippets/github-releases.jsx
+  s_e096220fcddcda::t_18822979e9ef22 7-9
+docs/test/github-releases.spec.ts
+  s_e096220fcddcda::t_18822979e9ef22 20-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "99a2d7337f35227cc3d1a2884180775473347793",
+  "prompts": {},
+  "sessions": {
+    "s_e096220fcddcda": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1dafa-894f-7133-81b6-619a4c15c7dd",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
