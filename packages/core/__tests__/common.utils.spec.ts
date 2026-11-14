@@ -1,6 +1,10 @@
 import { escapeRegExp, omit } from '../src'
 
 describe('omit', () => {
+  it.each([1, '1'])('omits a numeric property using key %s', (key) => {
+    expect(omit({ 1: 'remove', 2: 'keep' }, key)).toEqual({ 2: 'keep' })
+  })
+
   it('removes only the requested top-level keys without changing the source', () => {
     const nested = { keep: true }
     const source = { keep: nested, remove: 2, missing: undefined }
