@@ -1,6 +1,7 @@
 export const FILTERABLE_FIELD_KEY = 'nestjs-query:filterable-field'
 export const ID_FIELD_KEY = 'nestjs-query:id-field'
 export const RELATION_KEY = 'nestjs-query:relation'
+export const PIVOT_MAPPING_KEY = 'nestjs-query:pivot-mapping'
 export const REFERENCE_KEY = 'nestjs-query:reference'
 
 export const AUTHORIZER_KEY = 'nestjs-query:authorizer'
