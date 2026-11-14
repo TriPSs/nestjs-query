@@ -5,14 +5,18 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsArray,
+  IsBase64,
   IsBoolean,
   IsDate,
+  IsEmail,
   IsEnum,
+  IsIP,
   IsNotEmpty,
   IsNumber,
   IsObject,
   IsOptional,
   IsString,
+  IsUUID,
   Max,
   MaxLength,
   Min,
@@ -188,6 +192,18 @@ export function Field(
 
     if (options.enum && !advancedOptions?.skipIsEnum) {
       decorators.push(IsEnum(options.enum, { each: isArray }))
+    }
+
+    if (options.format === 'uuid') {
+      decorators.push(IsUUID(undefined, { each: isArray }))
+    } else if (options.format === 'email') {
+      decorators.push(IsEmail({}, { each: isArray }))
+    } else if (options.format === 'ipv4') {
+      decorators.push(IsIP('4', { each: isArray }))
+    } else if (options.format === 'ipv6') {
+      decorators.push(IsIP('6', { each: isArray }))
+    } else if (options.format === 'byte') {
+      decorators.push(IsBase64({}, { each: isArray }))
     }
 
     return applyDecorators(...decorators)(target, propertyKey, descriptor)
