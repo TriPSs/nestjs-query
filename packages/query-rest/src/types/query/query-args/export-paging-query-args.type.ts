@@ -41,5 +41,5 @@ export function createExportQueryArgs<DTO>(
     }
   }
 
-  return ExportFilterType<DTO>(DTOClass, ExportQueryArgs) as never as StaticQueryType<DTO, PagingStrategies.NONE>
+  return ExportFilterType<DTO>(DTOClass, ExportQueryArgs) as never
 }

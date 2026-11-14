@@ -34,9 +34,9 @@ const hookDecorator = <H extends Hook<unknown>>(hookType: HookTypes) => {
     return createDefaultHook(hook)
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   return (...data: HookDecoratorArg<H>[]) =>
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
     (target: Function): void => {
       return Reflect.defineMetadata(
         key,

@@ -338,7 +338,7 @@ export abstract class ReferenceQueryService<Entity extends Base> {
     const refFilter = {
       _id: { [Array.isArray(referenceIds) ? 'in' : 'eq']: referenceIds }
     } as unknown as Filter<Ref>
-    return mergeFilter(filter ?? ({} as Filter<Ref>), refFilter)
+    return mergeFilter(filter ?? {}, refFilter)
   }
 
   private getVirtualReferenceFilter<Ref>(virtualType: VirtualTypeWithOptions, entity: Entity, filter?: Filter<Ref>): Filter<Ref> {
@@ -348,7 +348,7 @@ export abstract class ReferenceQueryService<Entity extends Base> {
     const lookupFilter = {
       [foreignField as keyof Ref]: { [isArray ? 'in' : 'eq']: refVal }
     } as unknown as Filter<Ref>
-    return mergeFilter(filter ?? ({} as Filter<Ref>), lookupFilter)
+    return mergeFilter(filter ?? {}, lookupFilter)
   }
 
   private getReferenceModel<Ref>(refName: string): ReturnModelType<Class<Ref>> {

@@ -1,11 +1,10 @@
+/* eslint-disable max-classes-per-file */
 /**
  * This is the doc comment for file1.ts
  * @packageDocumentation
  */
-// eslint-disable-next-line max-classes-per-file
 import { Args, ArgsType, InputType, OmitType, Resolver } from '@nestjs/graphql'
-import { AuthValidationOpts, Class, DeepPartial, Filter, QueryService } from '@ptc-org/nestjs-query-core'
-import omit from 'lodash.omit'
+import { AuthValidationOpts, Class, DeepPartial, Filter, omit, QueryService } from '@ptc-org/nestjs-query-core'
 
 import { OperationGroup } from '../auth'
 import { DTONames, getDTONames } from '../common'

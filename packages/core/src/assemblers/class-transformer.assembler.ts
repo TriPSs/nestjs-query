@@ -45,7 +45,7 @@ export abstract class ClassTransformerAssembler<DTO, Entity> extends AbstractAss
     return this.convert(this.EntityClass, create as object)
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   public convert<T>(cls: Class<T>, obj: object): T {
     const deserializer = getAssemblerDeserializer(cls)
     if (deserializer) {
@@ -70,7 +70,7 @@ export abstract class ClassTransformerAssembler<DTO, Entity> extends AbstractAss
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   public toPlain(entityOrDto: Entity | DTO): object {
     if (entityOrDto && entityOrDto instanceof this.EntityClass) {
       const serializer = getAssemblerSerializer(this.EntityClass)
@@ -83,7 +83,7 @@ export abstract class ClassTransformerAssembler<DTO, Entity> extends AbstractAss
         return serializer(entityOrDto)
       }
     } else if (entityOrDto && 'constructor' in (entityOrDto as object)) {
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
       const serializer = getAssemblerSerializer(entityOrDto.constructor as Class<unknown>)
 
       if (serializer) {

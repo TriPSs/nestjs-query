@@ -7,10 +7,10 @@ import {
   FindRelationOptions,
   GetByIdOptions,
   ModifyRelationOptions,
+  omit,
   Query,
   QueryRelationsOptions
 } from '@ptc-org/nestjs-query-core'
-import lodashOmit from 'lodash.omit'
 import { ObjectLiteral, RelationQueryBuilder as TypeOrmRelationQueryBuilder, Repository } from 'typeorm'
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata'
 
@@ -393,9 +393,7 @@ export abstract class RelationQueryService<Entity extends ObjectLiteral> {
       const resultingAgg = results.get(e) ?? []
       results.set(e, [
         ...resultingAgg,
-        ...AggregateBuilder.convertToAggregateResponse<Relation>([
-          lodashOmit(relationAgg, relationQueryBuilder.entityIndexColName)
-        ])
+        ...AggregateBuilder.convertToAggregateResponse<Relation>([omit(relationAgg, relationQueryBuilder.entityIndexColName)])
       ])
       return results
     }, new Map<Entity, AggregateResponse<Relation>[]>())

@@ -5,7 +5,7 @@ import { getAssemblerDeserializer } from '../../src/assemblers/assembler.deseria
 describe('AssemblerDeserializer decorator', () => {
   it('should register a serializer', () => {
     // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
     @AssemblerDeserializer((obj: object): TestSerializer => ({ foo: obj.bar }))
     class TestSerializer {
       foo!: string
@@ -16,7 +16,7 @@ describe('AssemblerDeserializer decorator', () => {
 
   it('should throw an error if the serializer is registered twice', () => {
     // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
     const deserializer = (obj: object): TestSerializer => ({ foo: obj.bar })
 
     @AssemblerDeserializer(deserializer)

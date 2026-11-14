@@ -1,4 +1,4 @@
-// eslint-disable-next-line max-classes-per-file
+/* eslint-disable max-classes-per-file */
 import { Args, ArgsType, InputType, Resolver } from '@nestjs/graphql'
 import { Class, ModifyRelationOptions, QueryService } from '@ptc-org/nestjs-query-core'
 

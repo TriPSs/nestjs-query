@@ -24,7 +24,7 @@ const getOrCreateSchemaFactory = async (): Promise<GraphQLSchemaFactory> => {
   return moduleRef.get(GraphQLSchemaFactory)
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
 export const generateSchema = async (resolvers: Function[]): Promise<string> => {
   const sf = await getOrCreateSchemaFactory()
   const schema = await sf.create(resolvers)

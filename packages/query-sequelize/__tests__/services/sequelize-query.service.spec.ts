@@ -1,7 +1,6 @@
 import { BadRequestException } from '@nestjs/common'
 import { InjectModel, SequelizeModule } from '@nestjs/sequelize'
 import { Test, TestingModule } from '@nestjs/testing'
-import { DeepPartial } from '@ptc-org/nestjs-query-core'
 import { ok as assert } from 'node:assert'
 import { ModelCtor, Sequelize } from 'sequelize-typescript'
 
@@ -1318,7 +1317,7 @@ describe('SequelizeQueryService', (): void => {
       await truncate(moduleRef.get(Sequelize))
       const queryService = moduleRef.get(TestEntityService)
       const entities = PLAIN_TEST_ENTITIES.map((pe) => TestEntity.build(pe))
-      const created = await queryService.createMany(entities as DeepPartial<TestEntity>[])
+      const created = await queryService.createMany(entities)
       expect(created.map((c) => c.get({ plain: true }))).toEqual(PLAIN_TEST_ENTITIES)
     })
 
@@ -1348,10 +1347,10 @@ describe('SequelizeQueryService', (): void => {
 
     it('call save on the repo with an instance of the entity when passed an instance', async () => {
       await truncate(moduleRef.get(Sequelize))
-      const entity = PLAIN_TEST_ENTITIES[0]
+      const entity = TestEntity.build(PLAIN_TEST_ENTITIES[0])
       const queryService = moduleRef.get(TestEntityService)
-      const created = await queryService.createOne(entity as DeepPartial<TestEntity>)
-      expect(created).toEqual(expect.objectContaining(entity))
+      const created = await queryService.createOne(entity)
+      expect(created.get({ plain: true })).toEqual(PLAIN_TEST_ENTITIES[0])
     })
 
     it('should reject if the entity contains an id', async () => {
@@ -1447,6 +1446,29 @@ describe('SequelizeQueryService', (): void => {
   })
 
   describe('#updateOne', () => {
+    it('only applies changed attributes when updating with a model instance', async () => {
+      const queryService = moduleRef.get(TestEntityService)
+      const original = PLAIN_TEST_ENTITIES[0]
+      const update = await queryService.getById(original.testEntityPk)
+      update.stringType = 'updated'
+      await queryService.updateOne(original.testEntityPk, { boolType: !original.boolType })
+
+      const updated = await queryService.updateOne(original.testEntityPk, update)
+
+      expect(updated.get({ plain: true })).toEqual({ ...original, stringType: 'updated', boolType: !original.boolType })
+    })
+
+    it('does not overwrite newer values when updating with an unchanged model instance', async () => {
+      const queryService = moduleRef.get(TestEntityService)
+      const original = PLAIN_TEST_ENTITIES[0]
+      const update = await queryService.getById(original.testEntityPk)
+      await queryService.updateOne(original.testEntityPk, { stringType: 'newer' })
+
+      const updated = await queryService.updateOne(original.testEntityPk, update)
+
+      expect(updated.stringType).toBe('newer')
+    })
+
     it('update the entity', async () => {
       const queryService = moduleRef.get(TestEntityService)
       const updated = await queryService.updateOne(PLAIN_TEST_ENTITIES[0].testEntityPk, { stringType: 'updated' })

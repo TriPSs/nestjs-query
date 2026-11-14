@@ -1,5 +1,4 @@
-import { Class, Filter, mergeFilter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
-import omit from 'lodash.omit'
+import { Class, Filter, mergeFilter, mergeQuery, omit, QueryService } from '@ptc-org/nestjs-query-core'
 
 import {
   ApiSchema,

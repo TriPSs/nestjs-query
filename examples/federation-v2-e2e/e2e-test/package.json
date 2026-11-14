@@ -3,7 +3,8 @@
   "version": "11.0.1-alpha.0",
   "main": "index.js",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "tsc": "tsc6"
   },
   "keywords": [],
   "author": "",
@@ -15,8 +16,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
-    "typescript": "^5.9.3",
-    "vite": "^8.3.7",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "vite": "^8.3.8",
     "vitest": "5.1.0"
   }
 }

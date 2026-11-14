@@ -17,9 +17,9 @@ function createMongooseQueryServiceProvider<Entity extends Document>(model: Nest
   return {
     provide: getQueryServiceToken(model.document),
     useFactory(ModelClass: Model<Entity>) {
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
       AssemblerDeserializer<Entity>((obj: object) => new ModelClass(obj))(model.document)
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
       return new MongooseQueryService<Entity>(ModelClass)
     },
     inject: [getModelToken(model.name)]

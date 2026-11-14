@@ -94,7 +94,7 @@ export class WhereBuilder<Entity> {
     }
 
     if (ands.length) {
-      return { $and: ands } as mongoose.QueryFilter<Entity>
+      return { $and: ands }
     }
 
     return undefined
@@ -118,6 +118,6 @@ export class WhereBuilder<Entity> {
     }
     return {
       $or: opts.map((cmpType) => this.comparisonBuilder.build(field, cmpType, cmp[cmpType] as EntityComparisonField<Entity, T>))
-    } as mongoose.QueryFilter<Entity>
+    }
   }
 }

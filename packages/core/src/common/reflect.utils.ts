@@ -7,9 +7,9 @@ export type MetaValue<MetaType> = MetaType | undefined
 type ClassDecoratorDataFunc<Data> = (data: Data) => ClassDecorator
 export const classMetadataDecorator =
   <Data>(key: string): ClassDecoratorDataFunc<Data> =>
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   (data: Data) =>
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   (target: Function): void => {
     Reflect.defineMetadata(key, data, target)
   }
@@ -24,7 +24,7 @@ export function getClassMetadata<DTO, Data>(DTOClass: Class<DTO>, key: string, i
 abstract class Reflector {
   constructor(readonly metaKey: string) {}
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   protected getMetadata<Data>(target: Function, includeParents: boolean): MetaValue<Data> {
     if (includeParents) {
       return Reflect.getMetadata(this.metaKey, target) as MetaValue<Data>
@@ -32,7 +32,7 @@ abstract class Reflector {
     return Reflect.getOwnMetadata(this.metaKey, target) as MetaValue<Data>
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   protected defineMetadata<Data>(data: Data, target: Function): void {
     Reflect.defineMetadata(this.metaKey, data, target)
   }

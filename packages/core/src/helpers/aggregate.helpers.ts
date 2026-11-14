@@ -14,7 +14,7 @@ const convertAggregateQueryFields = <From, To>(
     if (!otherKey) {
       throw new Error(`No corresponding field found for '${field as string}' when transforming aggregateQuery`)
     }
-    return { field: otherKey, args } as AggregateQueryField<To>
+    return { field: otherKey, args }
   })
 }
 

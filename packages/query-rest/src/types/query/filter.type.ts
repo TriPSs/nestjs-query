@@ -84,7 +84,7 @@ function getOrCreateFilterType<T>(
     TClassCache.set(typeName, QueryFilter)
     internalCache.set(TClass, TClassCache)
 
-    return QueryFilter as never as FilterConstructor<T>
+    return QueryFilter as never
   })
 }
 

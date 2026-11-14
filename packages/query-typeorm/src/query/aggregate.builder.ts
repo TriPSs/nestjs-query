@@ -6,7 +6,6 @@ import {
   AggregateResponse,
   GroupBy
 } from '@ptc-org/nestjs-query-core'
-import { camelCase } from 'camel-case'
 import { ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm'
 import { DriverUtils } from 'typeorm/driver/DriverUtils'
 
@@ -86,7 +85,9 @@ export class AggregateBuilder<Entity extends ObjectLiteral> {
           throw new Error('Unknown aggregate column encountered.')
         }
         const [matchedFunc, matchedFieldName] = matchResult.slice(1)
-        const aggFunc = camelCase(matchedFunc.toLowerCase()) as keyof AggregateResponse<Entity>
+        const aggFunc = (
+          matchedFunc.toLowerCase() === 'group_by' ? 'groupBy' : matchedFunc.toLowerCase()
+        ) as keyof AggregateResponse<Entity>
         const fieldName = matchedFieldName as keyof Entity
         const aggResult = agg[aggFunc] || {}
         return {

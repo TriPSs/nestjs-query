@@ -323,7 +323,7 @@ export abstract class RelationQueryService<Entity extends Model<Entity, Partial<
     if (association.isSingleAssociation) {
       // TODO:: update that this line to remove the casting once
       //  https://github.com/RobinBuschmann/sequelize-typescript/issues/803 is addressed.
-      await entity.$set(relationName as keyof Entity, null as unknown as string)
+      await entity.$set(relationName as keyof Entity, null)
     } else {
       await entity.$remove(relationName, relationId)
     }

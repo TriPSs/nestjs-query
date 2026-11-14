@@ -21,7 +21,7 @@ export const transformSort = <From, To>(
     if (!field) {
       throw new Error(`No corresponding field found for '${sf.field as string}' when transforming SortField`)
     }
-    return { ...sf, field } as SortField<To>
+    return { ...sf, field }
   })
 }
 
@@ -36,7 +36,7 @@ export const mergeQuery = <T>(base: Query<T>, source: Query<T>): Query<T> => {
   const { filter: sourceFilter = {}, ...restSource } = source
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  return merge(restBase, restSource, { filter: mergeFilter(baseFilter, sourceFilter) }) as Query<T>
+  return merge(restBase, restSource, { filter: mergeFilter(baseFilter, sourceFilter) })
 }
 
 export const applySort = <DTO>(dtos: DTO[], sortFields: SortField<DTO>[]): DTO[] => SortBuilder.build(sortFields)(dtos)

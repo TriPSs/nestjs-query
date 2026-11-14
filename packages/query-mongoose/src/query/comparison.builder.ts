@@ -1,6 +1,5 @@
 import { BadRequestException } from '@nestjs/common'
-import { CommonFieldComparisonBetweenType, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
-import escapeRegExp from 'lodash.escaperegexp'
+import { CommonFieldComparisonBetweenType, escapeRegExp, FilterComparisonOperators } from '@ptc-org/nestjs-query-core'
 import { Document, Model as MongooseModel, QueryFilter, Schema, Types } from 'mongoose'
 
 import { getSchemaKey } from './helpers'
@@ -58,7 +57,7 @@ export class ComparisonBuilder<Entity extends Document> {
       // comparison operator (e.b. =, !=, >, <)
       querySelector = {
         [this.comparisonMap[normalizedCmp]]: this.convertQueryValue(field, val as Entity[F])
-      } as QueryFilter<Entity[F]>
+      }
     }
 
     if (normalizedCmp.includes('like')) {
@@ -73,7 +72,7 @@ export class ComparisonBuilder<Entity extends Document> {
       throw new BadRequestException(`unknown operator ${JSON.stringify(cmp)}`)
     }
 
-    return { [schemaKey]: querySelector } as QueryFilter<Entity>
+    return { [schemaKey]: querySelector }
   }
 
   private betweenComparison<F extends keyof Entity>(
@@ -97,6 +96,8 @@ export class ComparisonBuilder<Entity extends Document> {
   }
 
   private likeComparison<F extends keyof Entity>(cmp: string, val: EntityComparisonField<Entity, F>): QueryFilter<RegExp> {
+    // Preserve the existing string coercion for LIKE comparisons.
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     const regExpStr = escapeRegExp(`${String(val)}`).replace(/%/g, '.*')
     const regExp = new RegExp(`^${regExpStr}$`, cmp.includes('ilike') ? 'i' : undefined)
 

@@ -46,7 +46,7 @@ export const MutationHookArgs = <T extends MutationArgsType<unknown>>(): Paramet
     if (context.hooks && context.hooks.length > 0) {
       let hookedArgs = data.input
       for (const hook of context.hooks) {
-        hookedArgs = (await hook.run(hookedArgs, context)) as T
+        hookedArgs = await hook.run(hookedArgs, context)
       }
       return { ...data, input: hookedArgs }
     }

@@ -474,7 +474,7 @@ export abstract class ReferenceQueryService<Entity extends Document> {
       [refFieldMap.foreignField as keyof Relation]: { in: referenceIds }
     } as unknown as Filter<Relation>
 
-    return mergeFilter(filter ?? ({} as Filter<Relation>), refFilter)
+    return mergeFilter(filter ?? {}, refFilter)
   }
 
   private getReferenceIds(localField: string, entity: Entity | Entity[]) {

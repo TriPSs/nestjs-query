@@ -1,7 +1,7 @@
-import { v4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 
 const replacer = /-/g
 
 export function randomString(): string {
-  return v4().replace(replacer, '')
+  return randomUUID().replace(replacer, '')
 }

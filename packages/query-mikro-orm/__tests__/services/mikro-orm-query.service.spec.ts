@@ -385,7 +385,7 @@ describe('MikroOrmQueryService', () => {
           filter: {
             and: [{ numberType: { eq: 1 } }],
             numberType: { eq: 2 }
-          } as never
+          }
         })
       ).rejects.toThrow('filter must contain either only `and` or `or` property, or other properties')
     })

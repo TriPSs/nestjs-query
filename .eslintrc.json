@@ -2,7 +2,7 @@
   "root": true,
   "plugins": ["simple-import-sort"],
   "extends": [
-    "airbnb-typescript/base",
+    "./tools/eslint-typescript.cjs",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
@@ -83,14 +83,14 @@
           }
         ],
         "simple-import-sort/exports": "warn",
-        "@typescript-eslint/no-extra-semi": "error",
+        "semi": "off",
         "no-extra-semi": "off"
       }
     },
     {
       "files": ["*.js", "*.jsx"],
       "rules": {
-        "@typescript-eslint/no-extra-semi": "error",
+        "semi": "off",
         "no-extra-semi": "off"
       }
     },
@@ -107,7 +107,7 @@
         "@typescript-eslint/no-explicit-any": "off",
         "import/no-extraneous-dependencies": "off",
         "@vitest/expect-expect": "off",
-        "@typescript-eslint/no-extra-semi": "error",
+        "semi": "off",
         "no-extra-semi": "off"
       }
     }

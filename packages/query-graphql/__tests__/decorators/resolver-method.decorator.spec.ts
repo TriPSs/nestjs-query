@@ -16,7 +16,7 @@ describe('ResolverMethod decorator', (): void => {
 
   describe('decorators option', () => {
     it('should call the decorator', () => {
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
       const propDecorator = vi.fn((target: Object, propertyKey: string | symbol) => undefined)
       const opts = [{ decorators: [propDecorator] }]
       createTestResolver(...opts)
@@ -24,7 +24,7 @@ describe('ResolverMethod decorator', (): void => {
     })
 
     it('should call the decorator once', () => {
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
       const propDecorator = vi.fn((target: Object, propertyKey: string | symbol) => undefined)
       const opts = [{ decorators: [propDecorator] }, { decorators: [propDecorator] }]
       createTestResolver(...opts)

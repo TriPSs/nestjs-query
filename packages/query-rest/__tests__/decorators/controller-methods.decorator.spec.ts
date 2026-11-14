@@ -35,6 +35,8 @@ describe('controller method decorators', () => {
     ['POST', 'post', 201],
     ['PATCH', 'patch', 200]
   ])('documents a %s %s response with status %i', (_method, methodName, status) => {
+    // Metadata inspection does not invoke the method.
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const handler = TestController.prototype[methodName as 'get' | 'post' | 'patch']
     const responses = Reflect.getMetadata('swagger/apiResponse', handler)
 

@@ -60,7 +60,7 @@ export function QueryParamArgsType(DTOClass: Class<unknown>): Class<QueryParamAr
         Object.assign(filter, { [property]: { eq: (this as unknown as Record<string, unknown>)[property] } })
 
         return filter
-      }, {}) as Filter<unknown>
+      }, {})
     }
   }
 

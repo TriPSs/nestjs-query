@@ -190,15 +190,15 @@ type BuiltInTypes = boolean | string | number | Date | RegExp | bigint | symbol 
  * * `boolean|null|undefined|never` - [[BooleanFieldComparisons]]
  * * all other types use [[CommonFieldComparisonType]]
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
 type FilterFieldComparisonType<FieldType, IsKeys extends true | false> = FieldType extends string | String
-  ? StringFieldComparisons // eslint-disable-next-line @typescript-eslint/ban-types
+  ? StringFieldComparisons // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   : FieldType extends boolean | Boolean
     ? BooleanFieldComparisons
     : FieldType extends number | Date | RegExp | bigint | BuiltInTypes[] | symbol
       ? CommonFieldComparisonType<FieldType>
       : FieldType extends Array<infer U>
-        ? CommonFieldComparisonType<U> | Filter<U> // eslint-disable-next-line @typescript-eslint/ban-types
+        ? CommonFieldComparisonType<U> | Filter<U> // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
         : IsKeys extends true
           ? CommonFieldComparisonType<FieldType> & StringFieldComparisons & Filter<FieldType>
           : CommonFieldComparisonType<FieldType> | Filter<FieldType>
@@ -210,7 +210,7 @@ type FilterFieldComparisonType<FieldType, IsKeys extends true | false> = FieldTy
  * * `boolean|null|undefined|never` - [[BooleanFieldComparisons]]
  * * all other types use [[CommonFieldComparisonType]]
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
 export type FilterFieldComparison<FieldType> = FilterFieldComparisonType<FieldType, false>
 
 /**

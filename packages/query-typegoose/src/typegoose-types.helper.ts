@@ -38,7 +38,7 @@ export type SchemaTypeWithReferenceOptions = {
 
 export function isSchemaTypeWithReferenceOptions(type: unknown): type is SchemaTypeWithReferenceOptions {
   if (type && typeof type === 'object' && 'options' in type) {
-    const { options } = type as { options: unknown }
+    const { options } = type
     return isReferenceOptions(options)
   }
   return false
@@ -80,7 +80,7 @@ export type VirtualTypeWithOptions = {
 
 export function isVirtualTypeWithReferenceOptions(virtualType: unknown): virtualType is VirtualTypeWithOptions {
   if (virtualType && typeof virtualType === 'object' && 'options' in virtualType) {
-    const { options } = virtualType as { options: unknown }
+    const { options } = virtualType
     return isVirtualReferenceOptions(options)
   }
   return false

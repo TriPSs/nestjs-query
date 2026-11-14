@@ -2,9 +2,9 @@ export type ComposableDecorator = MethodDecorator | PropertyDecorator | ClassDec
 export type ComposedDecorator = MethodDecorator & PropertyDecorator & ClassDecorator & ParameterDecorator
 
 export function composeDecorators(...decorators: ComposableDecorator[]): ComposedDecorator {
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   return <TFunction extends Function, Y>(
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
     target: TFunction | object,
     propertyKey?: string | symbol,
     descriptorOrIndex?: TypedPropertyDescriptor<Y> | number

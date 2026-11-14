@@ -1,6 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { Class, Filter, QueryService } from '@ptc-org/nestjs-query-core'
-import omit from 'lodash.omit'
+import { Class, Filter, omit, QueryService } from '@ptc-org/nestjs-query-core'
 
 import { AuthorizerFilter, AuthorizerInterceptor, Delete, OperationGroup, ParamArgsType } from '../'
 import { getDTONames } from '../common'

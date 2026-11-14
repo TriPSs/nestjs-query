@@ -1,4 +1,4 @@
-// eslint-disable-next-line max-classes-per-file
+/* eslint-disable max-classes-per-file */
 import { Args, ArgsType, InputType, PartialType, Resolver } from '@nestjs/graphql'
 import {
   Class,
@@ -6,10 +6,10 @@ import {
   DeleteManyResponse,
   Filter,
   mergeFilter,
+  omit,
   QueryService,
   UpdateManyResponse
 } from '@ptc-org/nestjs-query-core'
-import omit from 'lodash.omit'
 
 import { OperationGroup } from '../auth'
 import { DTONames, getDTONames } from '../common'

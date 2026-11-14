@@ -1,8 +1,7 @@
 import { Header } from '@nestjs/common'
 import { ApiProduces } from '@nestjs/swagger'
-import { Class, DeepPartial, EXPORT_TRANSFORM_GROUP, Filter, mergeQuery, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, DeepPartial, EXPORT_TRANSFORM_GROUP, Filter, mergeQuery, omit, QueryService } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
-import omit from 'lodash.omit'
 
 import { AuthorizerFilter, Get, HookTypes, NonePagingQueryArgsTypeOpts, OperationGroup, QueryType } from '../'
 import { getDTONames } from '../common'
@@ -130,7 +129,7 @@ export const Exportable =
       }
     }
 
-    return ExportControllerBase as Class<ExportController<DTO, QS>> & B
+    return ExportControllerBase
   }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional

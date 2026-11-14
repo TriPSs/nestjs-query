@@ -1,4 +1,4 @@
-import omit from 'lodash.omit'
+import { omit } from '@ptc-org/nestjs-query-core'
 
 import { ResolverMethodOpts } from '../../decorators'
 import { RelationTypeMap, ResolverRelation, ResolverRelationReference } from './relations.interface'

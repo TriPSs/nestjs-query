@@ -34,10 +34,10 @@ export class WhereBuilder<Entity extends Document> {
       ands = [...ands, filterAnds]
     }
     if (ands.length) {
-      filterQuery = { ...filterQuery, $and: ands } as QueryFilter<Entity>
+      filterQuery = { ...filterQuery, $and: ands }
     }
     if (ors.length) {
-      filterQuery = { ...filterQuery, $or: ors } as QueryFilter<Entity>
+      filterQuery = { ...filterQuery, $or: ors }
     }
     return filterQuery
   }
@@ -86,7 +86,7 @@ export class WhereBuilder<Entity extends Document> {
       return ands[0]
     }
     if (ands.length) {
-      return { $and: ands } as QueryFilter<Entity>
+      return { $and: ands }
     }
     return undefined
   }
@@ -106,6 +106,6 @@ export class WhereBuilder<Entity extends Document> {
     }
     return {
       $or: opts.map((cmpType) => this.comparisonBuilder.build(field, cmpType, cmp[cmpType] as EntityComparisonField<Entity, T>))
-    } as QueryFilter<Entity>
+    }
   }
 }
