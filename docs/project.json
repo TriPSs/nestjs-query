@@ -2,6 +2,12 @@
   "name": "docs",
   "$schema": "../node_modules/@isox-sh/core/schemas/project.schema.json",
   "targets": {
+    "test": {
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "yarn vitest run --config docs/vitest.config.ts"
+      }
+    },
     "serve": {
       "executor": "@isox-sh/core:run-command",
       "cache": false,
