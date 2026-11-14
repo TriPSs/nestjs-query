@@ -105,6 +105,11 @@ export function Field(
     const isInteger = options.type === 'integer'
     const resolvedType = isInteger ? Number : type === Object ? (enumType ?? type) : type
 
+    if (isInteger && options.format === 'int32') {
+      options.minimum = Math.max(options.minimum ?? -2147483648, -2147483648)
+      options.maximum = Math.min(options.maximum ?? 2147483647, 2147483647)
+    }
+
     // Remove non-valid options
     delete options.forceArray
     delete options.skipIsEnum
@@ -151,16 +156,12 @@ export function Field(
       decorators.push(MaxLength(options.maxLength))
     }
 
-    const isInt32 = isInteger && options.format === 'int32'
-    const minimum = isInt32 ? Math.max(options.minimum ?? -2147483648, -2147483648) : options.minimum
-    const maximum = isInt32 ? Math.min(options.maximum ?? 2147483647, 2147483647) : options.maximum
-
-    if (minimum !== undefined) {
-      decorators.push(Min(minimum, { each: isInteger && isArray }))
+    if (options.minimum !== undefined) {
+      decorators.push(Min(options.minimum, { each: isInteger && isArray }))
     }
 
-    if (maximum !== undefined) {
-      decorators.push(Max(maximum, { each: isInteger && isArray }))
+    if (options.maximum !== undefined) {
+      decorators.push(Max(options.maximum, { each: isInteger && isArray }))
     }
 
     if (resolvedType && resolvedType !== Boolean) {

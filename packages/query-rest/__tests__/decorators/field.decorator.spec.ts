@@ -155,6 +155,13 @@ describe('Field', () => {
       expect(validateSync(plainToInstance(Int32ArrayDTO, { values: [0, 1.5] }))[0].constraints).toHaveProperty('isInt')
     })
 
+    it.each([Int32DTO, Int32ArrayDTO])('documents default int32 bounds for %s', (DTOClass) => {
+      const key = DTOClass === Int32DTO ? 'value' : 'values'
+      const property = Reflect.getMetadata('swagger/apiModelProperties', DTOClass.prototype, key)
+
+      expect(property).toMatchObject({ minimum: -2147483648, maximum: 2147483647 })
+    })
+
     it('honors explicit bounds without widening the int32 range', () => {
       class NarrowInt32DTO {
         @Field({ type: 'integer', format: 'int32', minimum: 0, maximum: 100 })
@@ -166,6 +173,14 @@ describe('Field', () => {
         value!: number
       }
 
+      expect(Reflect.getMetadata('swagger/apiModelProperties', NarrowInt32DTO.prototype, 'value')).toMatchObject({
+        minimum: 0,
+        maximum: 100
+      })
+      expect(Reflect.getMetadata('swagger/apiModelProperties', WideInt32DTO.prototype, 'value')).toMatchObject({
+        minimum: -2147483648,
+        maximum: 2147483647
+      })
       expect(validateSync(plainToInstance(NarrowInt32DTO, { value: 50 }))).toHaveLength(0)
       expect(validateSync(plainToInstance(NarrowInt32DTO, { value: -1 }))[0].constraints).toHaveProperty('min')
       expect(validateSync(plainToInstance(NarrowInt32DTO, { value: 101 }))[0].constraints).toHaveProperty('max')

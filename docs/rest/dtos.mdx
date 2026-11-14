@@ -71,7 +71,7 @@ Validation runs on transformed values. The decorator adds `class-transformer`'s 
 
 Use `@Field({ type: 'integer', minimum: 0 })` for an integer property without a separate `@IsInt()` decorator. The integer type selects numeric transformation, including for nullable properties. For arrays, use `@Field(() => [Number], { type: 'integer' })` or `@Field({ type: 'integer', isArray: true })`.
 
-Integer validation accepts `'12'` after transformation to `12`, but rejects fractional values such as `'12.5'` without truncating them. Ordinary `Number` fields still accept fractions. With `format: 'int32'`, explicit `minimum` and `maximum` options can narrow the signed 32-bit range but cannot widen it. `format: 'int64'` adds no range or precision validation; JavaScript numbers cannot represent the full 64-bit integer range exactly.
+Integer validation accepts `'12'` after transformation to `12`, but rejects fractional values such as `'12.5'` without truncating them. Ordinary `Number` fields still accept fractions. With `format: 'int32'`, explicit `minimum` and `maximum` options can narrow the signed 32-bit range but cannot widen it. Swagger documents the same effective bounds used by validation. `format: 'int64'` adds no range or precision validation; JavaScript numbers cannot represent the full 64-bit integer range exactly.
 
 `@Field({ format: 'uuid' })` automatically validates UUIDs, so a separate `@IsUUID()` decorator is unnecessary. It uses the default UUID version handling from `class-validator`.
 
