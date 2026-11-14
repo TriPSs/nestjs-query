@@ -26,7 +26,6 @@
   ],
   "dependencies": {
     "camel-case": "^4.1.2",
-    "lodash.pick": "4.4.0",
     "tslib": "^2.9.1"
   },
   "peerDependencies": {

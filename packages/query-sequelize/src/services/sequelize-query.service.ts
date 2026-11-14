@@ -18,7 +18,6 @@ import {
   UpdateManyResponse,
   UpdateOneOptions
 } from '@ptc-org/nestjs-query-core'
-import lodashPick from 'lodash.pick'
 import { WhereOptions } from 'sequelize'
 import { MakeNullishOptional } from 'sequelize/types/utils'
 import { Model, ModelCtor } from 'sequelize-typescript'
@@ -269,7 +268,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
         return {}
       }
 
-      return lodashPick(raw, changed)
+      return Object.fromEntries(Object.entries(raw).filter(([key]) => changed.includes(key))) as Partial<Entity>
     }
 
     return record as Partial<Entity>
