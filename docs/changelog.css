@@ -19,8 +19,13 @@
   font: inherit;
 }
 
-.query-changelog-button:hover {
+.query-changelog-button:hover:not([aria-disabled='true']) {
   background: rgb(13 147 115 / 10%);
+}
+
+.query-changelog-button[aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.6;
 }
 
 .query-changelog-button:focus-visible {

@@ -97,17 +97,20 @@ export const GitHubReleases = () => {
         )}
         {!loading && !error && releases.length === 0 && <p>No published releases yet.</p>}
       </div>
-      {!loading && (error || hasMore) && (
+      {(error || hasMore || page > 1 || attempt > 0) && (
         <button
           type="button"
           className="query-changelog-button"
+          aria-disabled={loading || (!error && !hasMore)}
           onClick={() => {
+            // Native disabled buttons lose focus in Chrome; keep this control focusable.
+            if (loading || (!error && !hasMore)) return
             setLoading(true)
             if (error) setAttempt((value) => value + 1)
             else setPage((value) => value + 1)
           }}
         >
-          {error ? 'Try again' : 'Load older releases'}
+          {loading ? 'Loading releases…' : error ? 'Try again' : hasMore ? 'Load older releases' : 'All releases loaded'}
         </button>
       )}
       <p>
