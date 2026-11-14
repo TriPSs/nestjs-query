@@ -56,8 +56,15 @@ describe('omit', () => {
 })
 
 describe('escapeRegExp', () => {
-  it.each(['', 'plain text', '.*+?^${}()|[]\\', 'a/b-c', '100%_match', 'héllo 🌍'])('matches %s literally', (value) => {
-    expect(new RegExp(`^${escapeRegExp(value)}$`).test(value)).toBe(true)
+  it.each([
+    ['', ''],
+    ['plain text', 'plain text'],
+    ['.*+?^${}()|[]\\', '\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\'],
+    ['a/b-c', 'a/b-c'],
+    ['100%_match', '100%_match'],
+    ['héllo 🌍', 'héllo 🌍']
+  ])('escapes %s literally', (value, expected) => {
+    expect(escapeRegExp(value)).toBe(expected)
   })
 
   it('keeps SQL LIKE wildcards available for subsequent conversion', () => {
