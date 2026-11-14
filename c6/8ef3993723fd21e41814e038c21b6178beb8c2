@@ -1,0 +1,21 @@
+docs/snippets/github-releases.jsx
+  s_e096220fcddcda::t_327a804c4ec2d0 114
+docs/test/github-releases-interactions.spec.ts
+  s_e096220fcddcda::t_327a804c4ec2d0 90,136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c68ef3993723fd21e41814e038c21b6178beb8c2",
+  "prompts": {},
+  "sessions": {
+    "s_e096220fcddcda": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1dafa-894f-7133-81b6-619a4c15c7dd",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
