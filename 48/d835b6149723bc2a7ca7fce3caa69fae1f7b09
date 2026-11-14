@@ -1,0 +1,29 @@
+docs/snippets/github-releases.jsx
+  s_e096220fcddcda::t_90b3a553e611d2 104,106-107
+  s_e096220fcddcda::t_f60faeb2b98daf 100,113
+docs/changelog.css
+  s_e096220fcddcda::t_90b3a553e611d2 22,26
+  s_e096220fcddcda::t_f60faeb2b98daf 27-28
+  s_e096220fcddcda::t_3f9cd6326799a7 29-30
+docs/test/github-releases-interactions.spec.ts
+  s_e096220fcddcda::t_ec545bd4e1e12d 42
+  s_e096220fcddcda::t_f34a075e44f53f 92-94,105-107
+  s_e096220fcddcda::t_f60faeb2b98daf 1-41,43-82,84-88,90-91,95-102,104,108-120,122-132,134-167
+  s_e096220fcddcda::t_f103f8e9ee8494 83,89,103,121,133
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "48d835b6149723bc2a7ca7fce3caa69fae1f7b09",
+  "prompts": {},
+  "sessions": {
+    "s_e096220fcddcda": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1dafa-894f-7133-81b6-619a4c15c7dd",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
