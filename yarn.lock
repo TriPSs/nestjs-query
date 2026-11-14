@@ -1492,6 +1492,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mongodb-js/saslprep@npm:^1.5.0":
+  version: 1.6.3
+  resolution: "@mongodb-js/saslprep@npm:1.6.3"
+  dependencies:
+    sparse-bitfield: "npm:^3.0.3"
+  checksum: 10/fe830e4d2779bfa22ddc30bc1a1cb507305e84d50393f55b66c54d1c2082ae425c9d03b00643aeff26bbe4871dea019ff6130108caee492a5dcf783b7375e410
+  languageName: node
+  linkType: hard
+
 "@napi-rs/wasm-runtime@npm:1.2.6":
   version: 1.2.6
   resolution: "@napi-rs/wasm-runtime@npm:1.2.6"
@@ -4287,6 +4296,13 @@ __metadata:
   version: 7.3.3
   resolution: "bson@npm:7.3.3"
   checksum: 10/27f90714578b84999cd79dd53aede2fd09118371af453f2a0b47ed07e50ab9514c1b2d5acd3d85e805172c32b963f3c3a457a34dd6ff7d0eb0d9e20910735f8f
+  languageName: node
+  linkType: hard
+
+"bson@npm:^7.3.2":
+  version: 7.3.4
+  resolution: "bson@npm:7.3.4"
+  checksum: 10/f0df76350601fa45ac65845fa93cf2803287de69aaa66ec124c10e53b58a9c7a288ceeef2df3d5c25d64ea2780603ddfb10e65500e462da6cc2061d5727c568c
   languageName: node
   linkType: hard
 
@@ -7476,10 +7492,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kareem@npm:3.3.0":
-  version: 3.3.0
-  resolution: "kareem@npm:3.3.0"
-  checksum: 10/28fa51f594531ddf88b00e421156fd6e2b4d3c0fe069f908cc705587a2c3ba55ac90c7dbe6ffd867259b9116efcf0d3efdaab7b6a9ad711259d186c88ac18393
+"kareem@npm:3.4.1":
+  version: 3.4.1
+  resolution: "kareem@npm:3.4.1"
+  checksum: 10/3c7b3e8907b6e0aa4bb55fc2f31391b86f6912c6f6ccf7dd0f5eaccef709f8cc05fa329021af174159d760afb1a9c5e949bd75e68ba9346d74c277065f5a8be2
   languageName: node
   linkType: hard
 
@@ -8314,7 +8330,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb-connection-string-url@npm:^7.0.1":
+"mongodb-connection-string-url@npm:^7.0.1, mongodb-connection-string-url@npm:^7.0.2":
   version: 7.0.2
   resolution: "mongodb-connection-string-url@npm:7.0.2"
   dependencies:
@@ -8354,7 +8370,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:~7.5, mongodb@npm:~7.5.0":
+"mongodb@npm:~7.5.0":
   version: 7.5.0
   resolution: "mongodb@npm:7.5.0"
   dependencies:
@@ -8388,18 +8404,52 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongoose@npm:9.9.5":
-  version: 9.9.5
-  resolution: "mongoose@npm:9.9.5"
+"mongodb@npm:~7.7":
+  version: 7.7.0
+  resolution: "mongodb@npm:7.7.0"
+  dependencies:
+    "@mongodb-js/saslprep": "npm:^1.5.0"
+    bson: "npm:^7.3.2"
+    mongodb-connection-string-url: "npm:^7.0.2"
+  peerDependencies:
+    "@aws-sdk/credential-providers": ^3.806.0
+    "@mongodb-js/zstd": ^7.0.0
+    gcp-metadata: ^7.0.1
+    kerberos: ^7.0.0
+    mongodb-client-encryption: ^7.2.0
+    snappy: ^7.3.2
+    socks: ^2.8.6
+  peerDependenciesMeta:
+    "@aws-sdk/credential-providers":
+      optional: true
+    "@mongodb-js/zstd":
+      optional: true
+    gcp-metadata:
+      optional: true
+    kerberos:
+      optional: true
+    mongodb-client-encryption:
+      optional: true
+    snappy:
+      optional: true
+    socks:
+      optional: true
+  checksum: 10/3c46927a2225d02b10da6aaa3860d1df7fe9e7b6284d8941fbe5ee9d2adbbe61b4e5e28a68f441040d553d1c33bd52fe068c8b8f614fed75938d7d0eece08413
+  languageName: node
+  linkType: hard
+
+"mongoose@npm:9.11.4":
+  version: 9.11.4
+  resolution: "mongoose@npm:9.11.4"
   dependencies:
     "@standard-schema/spec": "npm:^1.1.0"
-    kareem: "npm:3.3.0"
-    mongodb: "npm:~7.5"
+    kareem: "npm:3.4.1"
+    mongodb: "npm:~7.7"
     mpath: "npm:0.9.0"
-    mquery: "npm:6.0.0"
+    mquery: "npm:6.0.1"
     ms: "npm:2.1.3"
     sift: "npm:17.1.3"
-  checksum: 10/0abe0ea7fad6204e36dc179a065aadf77dc98f4290c6e34820b0d4d4798f5b029f8bf26f83cef5cece1311c09d983a1e5c6032dcc3d1e3c44576fd9caae1567f
+  checksum: 10/88264f2a54dfe9c4bcca0e3ec3237fc5abb5feaf9b7acf5f9bdac547eac1782de6dbcd869b2f91d267128466a31a05559d7a9969c6e183f98b751f73534864f8
   languageName: node
   linkType: hard
 
@@ -8417,10 +8467,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mquery@npm:6.0.0":
-  version: 6.0.0
-  resolution: "mquery@npm:6.0.0"
-  checksum: 10/79f0f8361f701e422fb7f179c0bf3d1c0a22d4da9893b6aa1e09e331455c18ad4c6023909c2ad9a6a23d9be0e634fef9790eaffe0c461543a1338e1d7b9a4a83
+"mquery@npm:6.0.1":
+  version: 6.0.1
+  resolution: "mquery@npm:6.0.1"
+  checksum: 10/f354a092a13e0f845494d59a8b4380ef4aa7ecfcbb7767a05cdd84c555fc732e61d5dc284ecadeb2f511729ce00e939bd5806b6655f64adc0dba0158eab2ce4a
   languageName: node
   linkType: hard
 
@@ -8607,7 +8657,7 @@ __metadata:
     graphql-subscriptions: "npm:^3.0.0"
     husky: "npm:9.1.7"
     mongodb-memory-server: "npm:11.3.0"
-    mongoose: "npm:9.9.5"
+    mongoose: "npm:9.11.4"
     mysql2: "npm:3.24.6"
     passport: "npm:0.7.0"
     passport-jwt: "npm:4.0.1"

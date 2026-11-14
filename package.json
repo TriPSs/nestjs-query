@@ -33,7 +33,7 @@
     "@nestjs/swagger": "^11.4.8",
     "@nestjs/typeorm": "^11.0.3",
     "class-validator": "0.15.1",
-    "mongoose": "9.9.5",
+    "mongoose": "9.11.4",
     "reflect-metadata": "^0.2.2",
     "sequelize": "6.37.8",
     "sequelize-typescript": "2.1.6",
