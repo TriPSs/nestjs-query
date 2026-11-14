@@ -1,0 +1,23 @@
+packages/query-typeorm/src/common/randomString.ts
+  s_027943e0f90b77::t_6e04760952546d 1,6
+packages/query-typeorm/__tests__/common/random-string.spec.ts
+  s_027943e0f90b77::t_e567a6ff8c5b2f 1-7
+packages/query-typeorm/package.json
+  s_027943e0f90b77::t_7fb1e17a550206 32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d0785492536a8df27eecec6678ab1f3a6a3b2b5d",
+  "prompts": {},
+  "sessions": {
+    "s_027943e0f90b77": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d9c6-cd70-7bb2-90ba-7be561f913c1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
