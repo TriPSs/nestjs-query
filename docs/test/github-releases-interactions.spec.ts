@@ -87,7 +87,7 @@ describe('GitHubReleases interactions', () => {
     expect(view.busy()).toBe(true)
     expect(view.button().type).toBe(buttonType)
     expect(view.button().props['aria-disabled']).toBe(true)
-    expect(view.button().props.children).toEqual(['Loading releases…'])
+    expect(view.button().props.children).toEqual(['Loading…'])
     expect(fetch.mock.calls[1][0]).toContain('page=2')
     view.button().props.onClick()
     view.render()
@@ -133,7 +133,7 @@ describe('GitHubReleases interactions', () => {
     expect(view.button().props['aria-disabled']).toBe(true)
     // Clearing the previous error in the effect must not unmount the retry button.
     view.render()
-    expect(view.button().props.children).toEqual(['Loading releases…'])
+    expect(view.button().props.children).toEqual(['Loading…'])
     const calls = fetch.mock.calls
     expect(calls.at(-1)?.[0]).toBe(calls.at(-2)?.[0])
 

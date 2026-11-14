@@ -111,7 +111,7 @@ export const GitHubReleases = () => {
             else setPage((value) => value + 1)
           }}
         >
-          {loading ? 'Loading releases…' : error ? 'Try again' : hasMore ? 'Load older releases' : 'All releases loaded'}
+          {loading ? 'Loading…' : error ? 'Try again' : hasMore ? 'Load older releases' : 'All releases loaded'}
         </button>
       )}
       <p>
