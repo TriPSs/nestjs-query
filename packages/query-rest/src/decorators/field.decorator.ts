@@ -10,6 +10,7 @@ import {
   IsDate,
   IsEmail,
   IsEnum,
+  IsInt,
   IsIP,
   IsNotEmpty,
   IsNumber,
@@ -89,8 +90,8 @@ export function Field(
       ? (metadataType?.() ?? Reflect.getMetadata('design:type', target, propertyKey))
       : returnTypeFunc()
 
-    const isArray = returnedType && Array.isArray(returnedType)
-    const type = isArray ? returnedType[0] : returnedType
+    const isArray = Array.isArray(returnedType) || (advancedOptions?.type === 'integer' && advancedOptions.isArray === true)
+    const type = Array.isArray(returnedType) ? returnedType[0] : returnedType
 
     const options: FieldOptions = {
       required: !advancedOptions?.nullable && advancedOptions?.default === undefined,
@@ -101,7 +102,8 @@ export function Field(
     // TypeScript emits Object as the design type for enum properties. Infer the
     // primitive type from the enum so Swagger does not generate an Object schema.
     const enumType = getEnumType(options.enum)
-    const resolvedType = type === Object ? (enumType ?? type) : type
+    const isInteger = options.type === 'integer'
+    const resolvedType = isInteger ? Number : type === Object ? (enumType ?? type) : type
 
     // Remove non-valid options
     delete options.forceArray
@@ -112,7 +114,7 @@ export function Field(
       Expose({ name: advancedOptions?.name }),
       ApiProperty({
         type: metadataType ?? resolvedType,
-        isArray: metadataType ? undefined : isArray,
+        isArray: metadataType && !isInteger ? undefined : isArray,
         ...(options as ApiPropertyOptions)
       })
     ]
@@ -149,12 +151,16 @@ export function Field(
       decorators.push(MaxLength(options.maxLength))
     }
 
-    if (options.minimum !== undefined) {
-      decorators.push(Min(options.minimum))
+    const isInt32 = isInteger && options.format === 'int32'
+    const minimum = isInt32 ? Math.max(options.minimum ?? -2147483648, -2147483648) : options.minimum
+    const maximum = isInt32 ? Math.min(options.maximum ?? 2147483647, 2147483647) : options.maximum
+
+    if (minimum !== undefined) {
+      decorators.push(Min(minimum, { each: isInteger && isArray }))
     }
 
-    if (options.maximum !== undefined) {
-      decorators.push(Max(options.maximum))
+    if (maximum !== undefined) {
+      decorators.push(Max(maximum, { each: isInteger && isArray }))
     }
 
     if (resolvedType && resolvedType !== Boolean) {
@@ -173,7 +179,7 @@ export function Field(
     if (resolvedType === String) {
       decorators.push(IsString({ each: isArray }))
     } else if (resolvedType === Number) {
-      decorators.push(IsNumber({}, { each: isArray }))
+      decorators.push(isInteger ? IsInt({ each: isArray }) : IsNumber({}, { each: isArray }))
     } else if (resolvedType === Date) {
       decorators.push(IsDate({ each: isArray }))
     } else if (resolvedType === Boolean) {
