@@ -4,6 +4,72 @@ import { validateSync } from 'class-validator'
 import { Field } from '../../src/decorators'
 
 describe('Field', () => {
+  describe.each([
+    { format: 'uuid', valid: '550e8400-e29b-41d4-a716-446655440000', invalid: 'not-a-uuid', constraint: 'isUuid' },
+    { format: 'email', valid: 'user@example.com', invalid: 'not-an-email', constraint: 'isEmail' },
+    { format: 'ipv4', valid: '192.0.2.1', invalid: '2001:db8::1', constraint: 'isIp' },
+    { format: 'ipv6', valid: '2001:db8::1', invalid: '192.0.2.1', constraint: 'isIp' },
+    { format: 'byte', valid: 'aGVsbG8=', invalid: 'not-base64!', constraint: 'isBase64' }
+  ])('$format format', ({ format, valid, invalid, constraint }) => {
+    class FormatDTO {
+      @Field({ format })
+      value!: string
+    }
+
+    class FormatArrayDTO {
+      @Field(() => [String], { format })
+      values!: string[]
+    }
+
+    class OptionalFormatDTO {
+      @Field({ format, nullable: true })
+      value?: string | null
+    }
+
+    it('accepts valid input and preserves the OpenAPI format', () => {
+      expect(validateSync(plainToInstance(FormatDTO, { value: valid }))).toHaveLength(0)
+      expect(Reflect.getMetadata('swagger/apiModelProperties', FormatDTO.prototype, 'value').format).toBe(format)
+    })
+
+    it.each([invalid, '', null, undefined])('rejects invalid or missing required input: %s', (value) => {
+      const errors = validateSync(plainToInstance(FormatDTO, { value }))
+
+      expect(errors).toHaveLength(1)
+      expect(errors[0].constraints).toHaveProperty(value === invalid ? constraint : 'isNotEmpty')
+    })
+
+    it('validates every array element', () => {
+      expect(validateSync(plainToInstance(FormatArrayDTO, { values: [valid] }))).toHaveLength(0)
+      const errors = validateSync(plainToInstance(FormatArrayDTO, { values: [valid, invalid] }))
+
+      expect(errors).toHaveLength(1)
+      expect(errors[0].constraints).toHaveProperty(constraint)
+    })
+
+    it.each([null, undefined, valid])('accepts optional input: %s', (value) => {
+      expect(validateSync(plainToInstance(OptionalFormatDTO, { value }))).toHaveLength(0)
+    })
+
+    it('rejects invalid input on optional fields', () => {
+      const errors = validateSync(plainToInstance(OptionalFormatDTO, { value: invalid }))
+
+      expect(errors).toHaveLength(1)
+      expect(errors[0].constraints).toHaveProperty(constraint)
+    })
+  })
+
+  it('does not add format validation to strings with no format or an unknown format', () => {
+    class StringDTO {
+      @Field()
+      value!: string
+
+      @Field({ format: 'custom' })
+      custom!: string
+    }
+
+    expect(validateSync(plainToInstance(StringDTO, { value: 'text', custom: 'text' }))).toHaveLength(0)
+  })
+
   class TestDTO {
     @Field(() => [String], { forceArray: true })
     values?: string[] | null

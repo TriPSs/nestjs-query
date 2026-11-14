@@ -47,6 +47,10 @@ export class TodoItemDTO {
 | Explicit array type, such as `() => [String]`                               | `IsArray()`, plus type validation for each element.                                               |
 | Nested DTO supplied through a return type function or Swagger type metadata | `ValidateNested()`, plus `IsObject()` for a non-array field. Arrays validate each nested element. |
 | `enum`                                                                      | `IsEnum(enum)`, applied to each element for arrays.                                               |
+| `format: 'uuid'`                                                            | `IsUUID()`, applied to each element for arrays.                                                   |
+| `format: 'email'`                                                           | `IsEmail()`, applied to each element for arrays.                                                  |
+| `format: 'ipv4'` / `format: 'ipv6'`                                          | `IsIP('4')` / `IsIP('6')`, applied to each element for arrays.                                     |
+| `format: 'byte'`                                                            | `IsBase64()`, applied to each element for arrays.                                                 |
 | `minLength` / `maxLength`                                                   | `MinLength(minLength)` / `MaxLength(maxLength)`                                                   |
 | `minimum` / `maximum`                                                       | `Min(minimum)` / `Max(maximum)`                                                                   |
 | `minItems` / `maxItems` on an array field                                   | `ArrayMinSize(minItems)` / `ArrayMaxSize(maxItems)`                                               |
@@ -59,11 +63,15 @@ Use these options to customize the automatic behavior:
 - `skipIsEnum: true` omits `IsEnum()`. Type and other validators still apply.
 - `forceArray: true` wraps a non-null scalar in an array before validation when the return type is an array. Without it, `IsArray()` rejects scalar input.
 
-The type, enum, and nested validators use `each: true` for arrays. The length and numeric-bound validators do not; add your own `class-validator` decorators with `{ each: true }` when you need those constraints on individual elements. To require a nonempty array, use `minItems: 1`.
+The type, enum, format, and nested validators use `each: true` for arrays. The length and numeric-bound validators do not; add your own `class-validator` decorators with `{ each: true }` when you need those constraints on individual elements. To require a nonempty array, use `minItems: 1`.
 
 Validation runs on transformed values. The decorator adds `class-transformer`'s `Type()` for resolved types other than `Boolean`, so numeric strings and date strings can become numbers and `Date` instances before validation. Boolean fields explicitly convert the strings `'true'` and `'false'` to booleans.
 
-Other Swagger options describe the schema without necessarily adding runtime checks. Add decorators such as `@IsEmail()`, `@IsUUID()`, or `@Matches()` when you need those validations; setting `format` or `pattern` alone does not add them.
+`@Field({ format: 'uuid' })` automatically validates UUIDs, so a separate `@IsUUID()` decorator is unnecessary. It uses the default UUID version handling from `class-validator`.
+
+Likewise, `@Field({ format: 'email' })` validates email addresses, `'ipv4'` and `'ipv6'` validate their respective IP address versions, and `'byte'` validates Base64-encoded strings. These checks use the default options from `class-validator` and respect optional fields.
+
+Other Swagger options describe the schema without necessarily adding runtime checks. Formats other than `'uuid'`, `'email'`, `'ipv4'`, `'ipv6'`, and `'byte'` do not add format validators. Add decorators such as `@Matches()` when you need pattern validation; `pattern` alone does not add it.
 
 ## `@FilterableField`[​](#filterablefield 'Direct link to filterablefield')
 
