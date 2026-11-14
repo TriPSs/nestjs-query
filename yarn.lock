@@ -2244,7 +2244,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-mongoose@workspace:packages/query-mongoose"
   dependencies:
-    camel-case: "npm:^4.1.2"
     lodash.escaperegexp: "npm:^4.1.2"
     tslib: "npm:^2.9.1"
   peerDependencies:
@@ -2278,7 +2277,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-sequelize@workspace:packages/query-sequelize"
   dependencies:
-    camel-case: "npm:^4.1.2"
     tslib: "npm:^2.9.1"
   peerDependencies:
     "@nestjs/common": ^10.0.0 || ^11.0.0
@@ -2292,7 +2290,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-typegoose@workspace:packages/query-typegoose"
   dependencies:
-    camel-case: "npm:^4.1.2"
     is-class: "npm:0.0.9"
     lodash.escaperegexp: "npm:^4.1.2"
     tslib: "npm:^2.9.1"
@@ -2308,7 +2305,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ptc-org/nestjs-query-typeorm@workspace:packages/query-typeorm"
   dependencies:
-    camel-case: "npm:^4.1.2"
     lodash.filter: "npm:^4.6.0"
     lodash.merge: "npm:^4.6.2"
     lodash.omit: "npm:^4.18.0"
@@ -4418,16 +4414,6 @@ __metadata:
   version: 3.1.0
   resolution: "callsites@npm:3.1.0"
   checksum: 10/072d17b6abb459c2ba96598918b55868af677154bec7e73d222ef95a8fdb9bbf7dae96a8421085cdad8cd190d86653b5b6dc55a4484f2e5b2e27d5e0c3fc15b3
-  languageName: node
-  linkType: hard
-
-"camel-case@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "camel-case@npm:4.1.2"
-  dependencies:
-    pascal-case: "npm:^3.1.2"
-    tslib: "npm:^2.0.3"
-  checksum: 10/bcbd25cd253b3cbc69be3f535750137dbf2beb70f093bdc575f73f800acc8443d34fd52ab8f0a2413c34f1e8203139ffc88428d8863e4dfe530cfb257a379ad6
   languageName: node
   linkType: hard
 
@@ -7831,15 +7817,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lower-case@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "lower-case@npm:2.0.2"
-  dependencies:
-    tslib: "npm:^2.0.3"
-  checksum: 10/83a0a5f159ad7614bee8bf976b96275f3954335a84fad2696927f609ddae902802c4f3312d86668722e668bef41400254807e1d3a7f2e8c3eede79691aa1f010
-  languageName: node
-  linkType: hard
-
 "lru-cache@npm:^10.2.0":
   version: 10.4.3
   resolution: "lru-cache@npm:10.4.3"
@@ -8658,16 +8635,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"no-case@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "no-case@npm:3.0.4"
-  dependencies:
-    lower-case: "npm:^2.0.2"
-    tslib: "npm:^2.0.3"
-  checksum: 10/0b2ebc113dfcf737d48dde49cfebf3ad2d82a8c3188e7100c6f375e30eafbef9e9124aadc3becef237b042fd5eb0aad2fd78669c20972d045bbe7fea8ba0be5c
-  languageName: node
-  linkType: hard
-
 "node-abi@npm:^3.3.0":
   version: 3.96.0
   resolution: "node-abi@npm:3.96.0"
@@ -9092,16 +9059,6 @@ __metadata:
   version: 1.3.3
   resolution: "parseurl@npm:1.3.3"
   checksum: 10/407cee8e0a3a4c5cd472559bca8b6a45b82c124e9a4703302326e9ab60fc1081442ada4e02628efef1eb16197ddc7f8822f5a91fd7d7c86b51f530aedb17dfa2
-  languageName: node
-  linkType: hard
-
-"pascal-case@npm:^3.1.2":
-  version: 3.1.2
-  resolution: "pascal-case@npm:3.1.2"
-  dependencies:
-    no-case: "npm:^3.0.4"
-    tslib: "npm:^2.0.3"
-  checksum: 10/ba98bfd595fc91ef3d30f4243b1aee2f6ec41c53b4546bfa3039487c367abaa182471dcfc830a1f9e1a0df00c14a370514fa2b3a1aacc68b15a460c31116873e
   languageName: node
   linkType: hard
 
@@ -11097,7 +11054,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.8.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.8.1":
+"tslib@npm:2.8.1, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.8.1":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10/3e2e043d5c2316461cb54e5c7fe02c30ef6dccb3384717ca22ae5c6b5bc95232a6241df19c622d9c73b809bea33b187f6dbc73030963e29950c2141bc32a79f7

@@ -1,6 +1,5 @@
 import { BadRequestException } from '@nestjs/common'
 import { AggregateQuery, AggregateQueryField, AggregateResponse } from '@ptc-org/nestjs-query-core'
-import { camelCase } from 'camel-case'
 import sequelize, { Projectable } from 'sequelize'
 import { Model, ModelCtor } from 'sequelize-typescript'
 
@@ -28,7 +27,9 @@ export class AggregateBuilder<Entity extends Model<Entity, Partial<Entity>>> {
           throw new Error('Unknown aggregate column encountered.')
         }
         const [matchedFunc, matchedFieldName] = matchResult.slice(1)
-        const aggResponseKey = camelCase(matchedFunc.toLowerCase()) as keyof AggregateResponse<Entity>
+        const aggResponseKey = (
+          matchedFunc.toLowerCase() === 'group_by' ? 'groupBy' : matchedFunc.toLowerCase()
+        ) as keyof AggregateResponse<Entity>
         const fieldName = matchedFieldName as keyof Entity
         const aggResult = agg[aggResponseKey] || {}
         return {

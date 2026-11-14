@@ -1,7 +1,6 @@
 import { BadRequestException } from '@nestjs/common'
 import { AggregateQuery, AggregateQueryField, AggregateResponse } from '@ptc-org/nestjs-query-core'
 import { DocumentType } from '@typegoose/typegoose'
-import { camelCase } from 'camel-case'
 
 import { getSchemaKey } from './helpers'
 
@@ -42,7 +41,9 @@ export class AggregateBuilder<Entity> {
         throw new Error('Unknown aggregate column encountered.')
       }
       const [matchedFunc, matchedFieldName] = matchResult.slice(1)
-      const aggFunc = camelCase(matchedFunc.toLowerCase()) as keyof AggregateResponse<Entity>
+      const aggFunc = (
+        matchedFunc.toLowerCase() === 'group_by' ? 'groupBy' : matchedFunc.toLowerCase()
+      ) as keyof AggregateResponse<Entity>
       const fieldName = matchedFieldName as keyof Entity
       const aggResult = agg[aggFunc] || {}
       return {

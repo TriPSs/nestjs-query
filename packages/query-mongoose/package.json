@@ -25,7 +25,6 @@
     "**/*.js.map"
   ],
   "dependencies": {
-    "camel-case": "^4.1.2",
     "lodash.escaperegexp": "^4.1.2",
     "tslib": "^2.9.1"
   },
