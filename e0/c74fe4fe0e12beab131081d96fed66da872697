@@ -1,0 +1,27 @@
+packages/query-sequelize/src/query/aggregate.builder.ts
+  s_027943e0f90b77::t_465c0f0102ce27 30-32
+packages/query-typeorm/src/query/aggregate.builder.ts
+  s_027943e0f90b77::t_465c0f0102ce27 88-90
+packages/query-typegoose/src/query/aggregate.builder.ts
+  s_027943e0f90b77::t_465c0f0102ce27 44-46
+packages/query-mongoose/src/query/aggregate.builder.ts
+  s_027943e0f90b77::t_465c0f0102ce27 44-46
+yarn.lock
+  s_027943e0f90b77::t_3af7afd16f54a0 11057
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e0c74fe4fe0e12beab131081d96fed66da872697",
+  "prompts": {},
+  "sessions": {
+    "s_027943e0f90b77": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d9c6-cd70-7bb2-90ba-7be561f913c1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
