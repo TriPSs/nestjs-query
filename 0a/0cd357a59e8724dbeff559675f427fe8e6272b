@@ -1,0 +1,19 @@
+packages/query-rest/__tests__/decorators/field.decorator.spec.ts
+  s_027943e0f90b77::t_53275d820a3393 8,61-64,66-67,70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0a0cd357a59e8724dbeff559675f427fe8e6272b",
+  "prompts": {},
+  "sessions": {
+    "s_027943e0f90b77": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d9c6-cd70-7bb2-90ba-7be561f913c1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
