@@ -13,7 +13,7 @@ describe('@InjectAssemblerQueryService', () => {
     num!: string
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   class TestAssembler extends DefaultAssembler<Foo, Bar> {}
 
   it('call inject with the correct key', async () => {

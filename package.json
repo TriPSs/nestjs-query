@@ -12,7 +12,8 @@
     "test:e2e": "isox e2e examples",
     "build": "isox run-many --target=build",
     "lint": "isox run-many --target=lint",
-    "test": "isox run-many --target=test"
+    "test": "isox run-many --target=test",
+    "tsc": "tsc6"
   },
   "resolutions": {
     "@apollo/gateway": "2.14.4",
@@ -66,8 +67,8 @@
     "@types/passport-jwt": "4.0.1",
     "@types/pluralize": "0.0.33",
     "@types/supertest": "7.2.1",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
-    "@typescript-eslint/parser": "7.18.0",
+    "@typescript-eslint/eslint-plugin": "8.72.2",
+    "@typescript-eslint/parser": "8.72.2",
     "@vitest/coverage-v8": "5.1.0",
     "@vitest/eslint-plugin": "^1.6.28",
     "better-sqlite3": "^13.0.3",
@@ -75,7 +76,6 @@
     "csv-stringify": "^6.9.0",
     "dataloader": "2.2.3",
     "eslint": "8.57.1",
-    "eslint-config-airbnb-typescript": "18.0.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-prettier": "5.5.7",
@@ -93,7 +93,7 @@
     "sql-formatter": "^15.9.0",
     "supertest": "7.3.2",
     "ts-mockito": "2.6.1",
-    "typescript": "^5.9.3",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "vite": "^8.3.7",
     "vitest": "5.1.0"
   },

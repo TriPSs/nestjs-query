@@ -106,13 +106,7 @@ export class WhereBuilder<Entity extends ObjectLiteral> {
   ): Where {
     return Object.keys(filter).reduce((w, field) => {
       if (field !== 'and' && field !== 'or') {
-        return this.withFilterComparison(
-          where,
-          field as keyof Entity,
-          this.getField(filter, field as keyof Entity),
-          relationNames,
-          alias
-        )
+        return this.withFilterComparison(where, field, this.getField(filter, field as keyof Entity), relationNames, alias)
       }
       return w
     }, where)

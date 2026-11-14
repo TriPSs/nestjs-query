@@ -257,7 +257,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
     return { deletedCount: deletedCount || 0 }
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   private getChangedValues(record: DeepPartial<Entity>): Partial<Entity> {
     if (record instanceof this.model) {
       const recordEntity = record
@@ -299,7 +299,7 @@ export class SequelizeQueryService<Entity extends Model<Entity, Partial<Entity>>
       const key = pk as keyof Entity
 
       if (key in changed && changed[key] !== undefined) {
-        return { ...pks, [pk]: changed[key] } as WhereOptions<Entity>
+        return { ...pks, [pk]: changed[key] }
       }
 
       return pks

@@ -69,7 +69,10 @@ export const Referenceable =
         const result = await loader.load({ [key]: id as string | number })
 
         if (!result) {
+          // GraphQL IDs retain their existing string coercion in diagnostics.
+          // eslint-disable-next-line @typescript-eslint/no-base-to-string
           this.logger.error(`Unable to find ${baseName} with ${key}: ${String(id)}`)
+          // eslint-disable-next-line @typescript-eslint/no-base-to-string
           throw new BadRequestException(`Unable to find ${baseName} with ${key}: ${String(id)}`)
         }
 

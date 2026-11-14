@@ -169,7 +169,7 @@ export class MongooseQueryService<Entity extends Document>
    */
   public async createMany(records: DeepPartial<Entity>[], opts?: CreateManyOptions<Entity>): Promise<Entity[]> {
     const recordsToCreate = filterCreatableRecords(records as Entity[], opts?.filter)
-    recordsToCreate.forEach((recordToCreate) => this.ensureIdIsNotPresent(recordToCreate as DeepPartial<Entity>))
+    recordsToCreate.forEach((recordToCreate) => this.ensureIdIsNotPresent(recordToCreate))
     return this.Model.create(recordsToCreate as Partial<Entity>[])
   }
 

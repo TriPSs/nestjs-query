@@ -72,7 +72,7 @@ const createExportRelations = <DTO>(fields: ExportFieldInput[]): SelectRelation<
     })
   }
 
-  return createRelations(relationPaths) as SelectRelation<DTO>[]
+  return createRelations(relationPaths)
 }
 
 export const stringifyExportCsv = async <DTO>(items: DTO[], fields: ExportFieldInput[]): Promise<string> => {
@@ -187,7 +187,7 @@ export const Exportable =
       }
     }
 
-    return ExportResolverBase as Class<ExportResolver<DTO, QS>> & B
+    return ExportResolverBase
   }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional

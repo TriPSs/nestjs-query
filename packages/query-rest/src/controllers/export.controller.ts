@@ -129,7 +129,7 @@ export const Exportable =
       }
     }
 
-    return ExportControllerBase as Class<ExportController<DTO, QS>> & B
+    return ExportControllerBase
   }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional

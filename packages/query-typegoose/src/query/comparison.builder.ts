@@ -58,7 +58,7 @@ export class ComparisonBuilder<Entity> {
       // comparison operator (e.b. =, !=, >, <)
       querySelector = {
         [this.comparisonMap[normalizedCmp]]: this.convertQueryValue(field, val as Entity[F])
-      } as mongoose.QueryFilter<Entity[F]>
+      }
     }
     if (normalizedCmp.includes('like')) {
       querySelector = this.likeComparison(normalizedCmp, val)
@@ -72,7 +72,7 @@ export class ComparisonBuilder<Entity> {
       throw new BadRequestException(`unknown operator ${JSON.stringify(cmp)}`)
     }
 
-    return { [schemaKey]: querySelector } as mongoose.QueryFilter<Entity>
+    return { [schemaKey]: querySelector }
   }
 
   private betweenComparison<F extends keyof Entity>(
@@ -99,6 +99,8 @@ export class ComparisonBuilder<Entity> {
     cmp: string,
     val: EntityComparisonField<Entity, F>
   ): mongoose.QueryFilter<RegExp> {
+    // Preserve the existing string coercion for LIKE comparisons.
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     const regExpStr = escapeRegExp(`${String(val)}`).replace(/%/g, '.*')
     const regExp = new RegExp(regExpStr, cmp.includes('ilike') ? 'i' : undefined)
     if (cmp.startsWith('not')) {

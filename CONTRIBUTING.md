@@ -37,6 +37,8 @@ yarn isox build <project>
 
 TypeScript projects share `tsconfig.base.json` with ES2022, NodeNext, and strict checking. Each library uses `tsconfig.json` for editor checks, `tsconfig.build.json` to compile `src/` into `dist/packages/<project>`, and `tsconfig.spec.json` for tests. Nest decorator metadata is enabled in the shared base; Vitest reads the same compiler settings.
 
+Isox builds with the native TypeScript 7 compiler. The root `typescript` dependency aliases `@typescript/typescript6` to provide the JavaScript compiler API used by Vitest's decorator transformation and typescript-eslint. Preserve that alias when updating compiler tooling. The TypeScript lint rules live in `tools/eslint-typescript.cjs` and support typescript-eslint 8.
+
 To typecheck all library source, examples, and tests without emitting files:
 
 ```bash

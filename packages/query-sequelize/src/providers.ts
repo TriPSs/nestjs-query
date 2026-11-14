@@ -14,7 +14,7 @@ function createSequelizeQueryServiceProvider<Entity extends Model>(
     provide: getQueryServiceToken(EntityClass),
     useFactory(entity: ModelCtor<Entity>) {
       AssemblerSerializer<Entity>((instance) => instance.get({ plain: true }) as Entity)(entity)
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
       AssemblerDeserializer<Entity>((obj) => entity.build(obj as MakeNullishOptional<Entity['_creationAttributes']>))(entity)
       return new SequelizeQueryService(entity)
     },

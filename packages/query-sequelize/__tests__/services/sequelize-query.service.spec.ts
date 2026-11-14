@@ -1,7 +1,6 @@
 import { BadRequestException } from '@nestjs/common'
 import { InjectModel, SequelizeModule } from '@nestjs/sequelize'
 import { Test, TestingModule } from '@nestjs/testing'
-import { DeepPartial } from '@ptc-org/nestjs-query-core'
 import { ok as assert } from 'node:assert'
 import { ModelCtor, Sequelize } from 'sequelize-typescript'
 
@@ -1318,7 +1317,7 @@ describe('SequelizeQueryService', (): void => {
       await truncate(moduleRef.get(Sequelize))
       const queryService = moduleRef.get(TestEntityService)
       const entities = PLAIN_TEST_ENTITIES.map((pe) => TestEntity.build(pe))
-      const created = await queryService.createMany(entities as DeepPartial<TestEntity>[])
+      const created = await queryService.createMany(entities)
       expect(created.map((c) => c.get({ plain: true }))).toEqual(PLAIN_TEST_ENTITIES)
     })
 
@@ -1350,7 +1349,7 @@ describe('SequelizeQueryService', (): void => {
       await truncate(moduleRef.get(Sequelize))
       const entity = TestEntity.build(PLAIN_TEST_ENTITIES[0])
       const queryService = moduleRef.get(TestEntityService)
-      const created = await queryService.createOne(entity as DeepPartial<TestEntity>)
+      const created = await queryService.createOne(entity)
       expect(created.get({ plain: true })).toEqual(PLAIN_TEST_ENTITIES[0])
     })
 
@@ -1454,7 +1453,7 @@ describe('SequelizeQueryService', (): void => {
       update.stringType = 'updated'
       await queryService.updateOne(original.testEntityPk, { boolType: !original.boolType })
 
-      const updated = await queryService.updateOne(original.testEntityPk, update as DeepPartial<TestEntity>)
+      const updated = await queryService.updateOne(original.testEntityPk, update)
 
       expect(updated.get({ plain: true })).toEqual({ ...original, stringType: 'updated', boolType: !original.boolType })
     })
@@ -1465,7 +1464,7 @@ describe('SequelizeQueryService', (): void => {
       const update = await queryService.getById(original.testEntityPk)
       await queryService.updateOne(original.testEntityPk, { stringType: 'newer' })
 
-      const updated = await queryService.updateOne(original.testEntityPk, update as DeepPartial<TestEntity>)
+      const updated = await queryService.updateOne(original.testEntityPk, update)
 
       expect(updated.stringType).toBe('newer')
     })

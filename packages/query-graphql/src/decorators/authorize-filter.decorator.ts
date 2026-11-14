@@ -54,7 +54,7 @@ function getAuthorizationContext(
 }
 
 export function AuthorizerFilter<DTO>(partialAuthContext?: PartialAuthorizationContext): ParameterDecorator {
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
     const authorizationContext = getAuthorizationContext(propertyKey ?? target.constructor.name, partialAuthContext)
     return createParamDecorator((data: unknown, executionContext: ExecutionContext) =>
@@ -67,7 +67,7 @@ export function RelationAuthorizerFilter<DTO>(
   relationName: string,
   partialAuthContext?: PartialAuthorizationContext
 ): ParameterDecorator {
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
     const authorizationContext = getAuthorizationContext(propertyKey ?? target.constructor.name, partialAuthContext)
     return createParamDecorator((data: unknown, executionContext: ExecutionContext) =>
@@ -80,7 +80,7 @@ export function ModifyRelationAuthorizerFilter<DTO>(
   relationName: string,
   partialAuthContext?: PartialAuthorizationContext
 ): ParameterDecorator {
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
   return (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) => {
     const authorizationContext = getAuthorizationContext(propertyKey ?? target.constructor.name, partialAuthContext)
     return createParamDecorator(

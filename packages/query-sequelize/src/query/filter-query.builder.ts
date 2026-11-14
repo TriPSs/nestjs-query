@@ -81,6 +81,8 @@ export class FilterQueryBuilder<Entity extends Model<Entity, Partial<Entity>>> {
   public findByIdOptions(pk: string | number | (string | number)[], query: Query<Entity>): FindOptions {
     let opts: FindOptions = this.applyAssociationIncludes({ subQuery: false }, query.filter)
     opts = this.applyFilter(opts, {
+      // Preserve the generic filter type when spreading the empty fallback.
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       ...(query.filter ?? ({} as Filter<Entity>)),
       [this.model.primaryKeyAttribute]: { [Array.isArray(pk) ? 'in' : 'eq']: pk }
     })

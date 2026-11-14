@@ -2,7 +2,7 @@ import { Class, MetaValue, ValueReflector } from '../common'
 import { ASSEMBLER_SERIALIZER_KEY } from './constants'
 
 const reflector = new ValueReflector(ASSEMBLER_SERIALIZER_KEY)
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type,@typescript-eslint/no-unsafe-function-type,@typescript-eslint/no-wrapper-object-types
 export type AssemblerSerializer<T> = (instance: T) => object
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional

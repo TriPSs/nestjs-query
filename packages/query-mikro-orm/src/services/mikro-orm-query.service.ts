@@ -42,7 +42,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     const entity = await this.repo.findOneOrFail({
       ...where,
       [pkField]: id
-    } as unknown as FilterQuery<Entity>)
+    })
 
     if (this.assembler) {
       return this.assembler.convertToDTO(entity)
@@ -57,7 +57,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     const entity = await this.repo.findOne({
       ...where,
       [pkField]: id
-    } as unknown as FilterQuery<Entity>)
+    })
 
     if (!entity) return undefined
 
@@ -97,7 +97,7 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
 
   protected convertFilter(filter: Filter<DTO> | Filter<Entity> | undefined): FilterQuery<Entity> {
     if (!filter) {
-      return {} as FilterQuery<Entity>
+      return {}
     }
 
     const convertedFilter = this.assembler?.convertQuery?.({ filter } as Query<DTO>)?.filter ?? filter
@@ -260,13 +260,10 @@ export class MikroOrmQueryService<DTO extends object, Entity extends object = DT
     const wrapped = wrap(relation, true)
     const pk = wrapped.getPrimaryKey()
 
-    const found = await em.findOne(
-      relation.constructor as Class<Relation>,
-      {
-        ...where,
-        [wrapped.__meta.primaryKeys[0]]: pk
-      } as FilterQuery<Relation>
-    )
+    const found = await em.findOne(relation.constructor as Class<Relation>, {
+      ...where,
+      [wrapped.__meta.primaryKeys[0]]: pk
+    })
 
     return (found as Relation) ?? undefined
   }
