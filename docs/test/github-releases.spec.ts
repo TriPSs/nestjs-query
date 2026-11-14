@@ -17,6 +17,8 @@ describe('formatReleaseNotes', () => {
   it.each([
     notes,
     '<h2>Breaking changes</h2>' + notes,
+    '<h2><em>11.1.0-alpha.3</em></h2>' + notes,
+    '<h2><scr<script>ipt>11.1.0-alpha.3</scr</script>ipt></h2>' + notes,
     '<h2>11.0.0 (2026-11-14)</h2>' + notes,
     '<p>Upgrade instructions</p><h2>11.1.0-alpha.3 (2026-11-14)</h2>' + notes
   ])('preserves substantive headings and other release content', (html) => {

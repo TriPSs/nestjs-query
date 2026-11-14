@@ -4,8 +4,9 @@ export const formatReleaseNotes = (release) => {
   if (!heading || !release.tag_name) return html
 
   // Generated notes repeat the version and date already shown by Update.
-  const title = heading[2]
-    .replace(/<[^>]*>/g, '')
+  // Match a plain title or a single linked title; do not attempt to strip HTML tags.
+  const link = heading[2].match(/^\s*<a\b[^>]*>([^<]*)<\/a>\s*$/i)
+  const title = (link ? link[1] : heading[2])
     .trim()
     .replace(/\s+\(\d{4}-\d{2}-\d{2}\)$/, '')
     .replace(/^v/, '')
