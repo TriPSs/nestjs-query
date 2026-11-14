@@ -1,0 +1,60 @@
+packages/query-rest/src/controllers/export.controller.ts
+  s_027943e0f90b77::t_465c0f0102ce27 3
+packages/query-typegoose/src/query/comparison.builder.ts
+  s_027943e0f90b77::t_465c0f0102ce27 2
+packages/core/__tests__/common.utils.spec.ts
+  s_027943e0f90b77::t_465c0f0102ce27 39
+  s_027943e0f90b77::t_b5bddb1e92443f 26
+  s_027943e0f90b77::t_e567a6ff8c5b2f 1-25,27-38,40-66
+packages/query-graphql/src/resolvers/update.resolver.ts
+  s_027943e0f90b77::t_465c0f0102ce27 9
+packages/query-mongoose/src/query/comparison.builder.ts
+  s_027943e0f90b77::t_465c0f0102ce27 2
+packages/query-rest/src/controllers/read.controller.ts
+  s_027943e0f90b77::t_465c0f0102ce27 1
+packages/query-typeorm/src/services/relation-query.service.ts
+  s_027943e0f90b77::t_465c0f0102ce27 10,396
+packages/query-rest/src/controllers/update.controller.ts
+  s_027943e0f90b77::t_465c0f0102ce27 3
+packages/query-graphql/src/resolvers/create.resolver.ts
+  s_027943e0f90b77::t_465c0f0102ce27 7
+packages/core/src/common/index.ts
+  s_027943e0f90b77::t_6e04760952546d 5,7
+packages/query-rest/src/controllers/create.controller.ts
+  s_027943e0f90b77::t_465c0f0102ce27 3
+packages/core/src/common/string.utils.ts
+  s_027943e0f90b77::t_6e04760952546d 1-4
+packages/query-rest/src/controllers/delete.controller.ts
+  s_027943e0f90b77::t_465c0f0102ce27 2
+packages/query-graphql/src/resolvers/export.resolver.ts
+  s_027943e0f90b77::t_465c0f0102ce27 8
+packages/query-graphql/src/resolvers/aggregate.resolver.ts
+  s_027943e0f90b77::t_465c0f0102ce27 2
+packages/query-graphql/src/resolvers/read.resolver.ts
+  s_027943e0f90b77::t_465c0f0102ce27 2
+packages/query-graphql/src/resolvers/delete.resolver.ts
+  s_027943e0f90b77::t_465c0f0102ce27 3
+packages/core/src/common/object.utils.ts
+  s_027943e0f90b77::t_b5bddb1e92443f 8-9,12
+  s_027943e0f90b77::t_6e04760952546d 1-7,10-11,13-21
+packages/query-graphql/src/resolvers/relations/helpers.ts
+  s_027943e0f90b77::t_7fb1e17a550206 1
+yarn.lock
+  s_027943e0f90b77::t_0563b8419e1ada 7731
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "78071250c17eb6c6738d7c995115bd96995f351e",
+  "prompts": {},
+  "sessions": {
+    "s_027943e0f90b77": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d9c6-cd70-7bb2-90ba-7be561f913c1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
