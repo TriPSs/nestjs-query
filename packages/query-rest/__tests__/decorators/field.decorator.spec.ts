@@ -4,6 +4,61 @@ import { validateSync } from 'class-validator'
 import { Field } from '../../src/decorators'
 
 describe('Field', () => {
+  describe('UUID format', () => {
+    const uuid = '550e8400-e29b-41d4-a716-446655440000'
+
+    class UUIDDTO {
+      @Field({ format: 'uuid' })
+      id!: string
+    }
+
+    class UUIDArrayDTO {
+      @Field(() => [String], { format: 'uuid' })
+      ids!: string[]
+    }
+
+    class OptionalUUIDDTO {
+      @Field({ format: 'uuid', nullable: true })
+      id?: string | null
+    }
+
+    it('accepts a valid UUID and preserves the OpenAPI format', () => {
+      expect(validateSync(plainToInstance(UUIDDTO, { id: uuid }))).toHaveLength(0)
+      expect(Reflect.getMetadata('swagger/apiModelProperties', UUIDDTO.prototype, 'id').format).toBe('uuid')
+    })
+
+    it.each(['not-a-uuid', '', null, undefined])('rejects an invalid or missing required UUID: %s', (id) => {
+      const errors = validateSync(plainToInstance(UUIDDTO, { id }))
+
+      expect(errors).toHaveLength(1)
+      expect(errors[0].constraints).toHaveProperty('isUuid')
+    })
+
+    it('validates every array element', () => {
+      expect(validateSync(plainToInstance(UUIDArrayDTO, { ids: [uuid] }))).toHaveLength(0)
+      const errors = validateSync(plainToInstance(UUIDArrayDTO, { ids: [uuid, 'not-a-uuid'] }))
+
+      expect(errors).toHaveLength(1)
+      expect(errors[0].constraints).toHaveProperty('isUuid')
+    })
+
+    it.each([null, undefined, uuid])('accepts an optional UUID: %s', (id) => {
+      expect(validateSync(plainToInstance(OptionalUUIDDTO, { id }))).toHaveLength(0)
+    })
+
+    it('does not add UUID validation to other string formats', () => {
+      class StringDTO {
+        @Field()
+        value!: string
+
+        @Field({ format: 'custom' })
+        custom!: string
+      }
+
+      expect(validateSync(plainToInstance(StringDTO, { value: 'text', custom: 'text' }))).toHaveLength(0)
+    })
+  })
+
   class TestDTO {
     @Field(() => [String], { forceArray: true })
     values?: string[] | null

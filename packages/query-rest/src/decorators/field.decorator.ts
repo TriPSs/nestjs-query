@@ -13,6 +13,7 @@ import {
   IsObject,
   IsOptional,
   IsString,
+  IsUUID,
   Max,
   MaxLength,
   Min,
@@ -188,6 +189,10 @@ export function Field(
 
     if (options.enum && !advancedOptions?.skipIsEnum) {
       decorators.push(IsEnum(options.enum, { each: isArray }))
+    }
+
+    if (options.format === 'uuid') {
+      decorators.push(IsUUID(undefined, { each: isArray }))
     }
 
     return applyDecorators(...decorators)(target, propertyKey, descriptor)
