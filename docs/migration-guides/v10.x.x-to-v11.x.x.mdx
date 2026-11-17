@@ -1,6 +1,6 @@
 ---
 title: 'v10.x.x to v11.x.x'
-description: 'Migrate query limits, CSV exports, and REST Swagger dependencies.'
+description: 'Migrate query limits, CSV exports, REST Swagger dependencies, and filters evaluated in memory.'
 ---
 
 In v11, the default `maxResultsSize` is `100` for both GraphQL and REST, up from `50` in v10. This affects endpoints that use the generated paging arguments without an explicit maximum.
@@ -66,3 +66,49 @@ Applications that do not use CSV export can omit it.
 ## REST Swagger runtime dependency
 
 `@ptc-org/nestjs-query-rest` requires `@nestjs/swagger` at runtime, even when an application does not generate OpenAPI documentation. Its `@ApiProperty` decorators run when REST DTO classes are defined, so the dependency cannot be loaded lazily. Keep `@nestjs/swagger` installed when upgrading.
+
+## Filters evaluated in memory reject what they cannot evaluate
+
+Core evaluates a filter in memory, rather than in the database, in three places: the authorizer filter checked against the input of `createOne` and `createMany`, GraphQL subscription filters, and direct calls to `applyFilter` and `applyQuery`. In v10 a filter there that could not be evaluated still returned a result, and for an authorizer filter that result could permit a create the filter was written to reject. In v11 it raises `InvalidFilterError`. Queries, updates and deletes run in the database and are unaffected.
+
+### What now throws
+
+| Filter                                                                                                        | v10 result                                                                                 | Example                                                     |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| A key that is not an operator, under a field whose value in the record is a scalar, a `Date` or an array      | Read as a missing relation, so the negative operators matched                              | `{ role: { nin: { neq: 'admin' } } }`                       |
+| Operators mixed with keys that are not operators                                                              | Named the wrong key in the error                                                           | `{ role: { eq: 'admin', tenant: 'acme' } }`                 |
+| An operator given an object literal, an array or a function                                                   | Compared by reference, so `neq` and `isNot` always matched                                 | `{ role: { neq: {} } }`, `{ ownerId: { neq: user.getId } }` |
+| `in` or `notIn` given a non-array, or an array holding an object literal, an array, a function or `undefined` | `in` matched a substring, `notIn` of a nested array always matched                         | `{ role: { in: 'admin' } }`                                 |
+| Any operator given `undefined`, `NaN` or an invalid `Date`                                                    | `eq: undefined` matched an input that omitted the field, and `neq` any input that set it   | `{ ownerId: { eq: user.id } }` with `user.id` unset         |
+| `gt`, `gte`, `lt`, `lte`, `between` or `notBetween` given `null`                                              | `null` was coerced to `0`, so `{ createdAt: { gte: null } }` matched every date since 1970 | `{ amount: { lte: user.limit } }` with `user.limit` null    |
+| `like`, `notLike`, `iLike` or `notILike` given a non-string, or `between`/`notBetween` without both bounds    | Raised a `TypeError`, or compared against `undefined`                                      | `{ amount: { between: { lower: 1 } } }`                     |
+| A field given a value that is not an object                                                                   | Never matched, or raised a `TypeError` for `null`                                          | `{ ownerId: 42 }`                                           |
+
+A filter that builds a comparison from a value that may be missing, such as `user.id` or `user.since`, now throws when it is missing instead of matching or not matching silently. That is the safer outcome. SQL matches nothing against a missing value, so on the SQL adapters the read side of the same authorizer already returned nothing, while in v10 the create side could permit the record. MongoDB is different: the driver sends `undefined` as `null`, so on the Mongoose and Typegoose adapters a read with `{ status: { neq: input.status } }` and `status` unset returns every document that has a `status`, and v10's create check agreed with it. Those reads are unchanged, but in v11 the create check throws. Where a missing value is expected, check it in the authorizer and throw an `UnauthorizedException` or build a different filter, for example one that leaves the comparison out.
+
+An error still cannot catch a mistyped operator when the input omits the field it names. `{ role: { nin: { neq: 'admin' } } }` reads as a filter on a relation `role`, and an input without `role` still passes it. Correct such filters rather than relying on the error.
+
+### What now matches differently
+
+These filters are well formed and still evaluate, but now match the way the database does. They affect GraphQL subscription filters as well as authorizer filters.
+
+- `eq`, `neq`, `in` and `notIn` compare two `Date`s by the instant they hold. In v10 `eq` never matched a `Date` and `neq` always did.
+- `gt`, `gte`, `lt`, `lte`, `between` and `notBetween` do not match a `null` field, as SQL does not. In v10 a `null` field was read as `0`, so `{ amount: { lte: 1000 } }` matched an input with `amount: null`.
+- `like`, `notLike`, `iLike` and `notILike` read the pattern as Postgres and MySQL do rather than as a regular expression. `_` matches any single character, `%` matches line breaks too, a backslash makes the next character match itself, and every other character matches itself. In v10 `{ email: { like: '%@example.com' } }` matched `user@exampleXcom`, and `x|` matched every value. SQLite has no default escape character, so a pattern containing a backslash matches differently there. `iLike` and `notILike` compare the lower-cased value with the lower-cased pattern, as Postgres does, so `k` matches the Kelvin sign `K`, which it did not in v10. Postgres lower-cases `İ` and a word-final `Σ` differently under ICU and libc collations, so `iLike` matches only where both would and `notILike` only where neither would. The `C` collation and the Turkish ICU collation lower-case fewer or different letters, so there `iLike` can still match in memory where Postgres does not.
+
+A class instance other than a `Date`, such as an `ObjectId` or a `Buffer`, is still compared by reference, as in v10.
+
+### What still differs from SQL
+
+These are unchanged from v10, and each can permit a create that the same filter would not return from a SQL read. The client chooses what a create input contains, so where a compared value may be `null` or an input may omit or retype a field, check that case in the authorizer rather than relying on the filter.
+
+- `null` compares as a JavaScript value, not as SQL `NULL`. `eq: null` matches a `null` field, and `neq`, `notIn` and `isNot` given a value other than `null` match a `null` or missing field, where SQL matches neither.
+- `like`, `notLike`, `iLike` and `notILike` read a `null` or missing field as the text `null` or `undefined`, so `notLike` matches it and `like: 'null'` matches `null`, where SQL matches neither.
+- `eq`, `neq`, `in` and `notIn` compare without type conversion. A GraphQL `ID` arrives as a string, so an input `ownerId` of `'1'` fails `{ ownerId: { eq: 1 } }` and passes `neq: 1` and `notIn: [1]`, where SQL converts `'1'` to `1` and does the opposite.
+- `iLike` and `notILike` follow Unicode lower-casing, which no single database collation matches exactly. Under the `C` collation, the Turkish ICU collation `tr-x-icu` or a macOS libc locale, a non-ASCII letter can match in memory where the database does not, so a creation authorizer should not rely on `iLike` or `notILike` to restrict non-ASCII text.
+
+### Error type
+
+`InvalidFilterError` is not an HTTP exception, so a malformed authorizer filter now answers `500` over REST and `INTERNAL_SERVER_ERROR` over GraphQL, where v10 answered `400 Entity does not meet creation constraints` or silently dropped records from `createMany`. `BadRequestException` still means that a record failed a filter that was evaluated. The `unknown comparison` and `unknown operator` errors that were a plain `Error` in v10 are now `InvalidFilterError`, which extends `Error`, so existing handlers still catch them. The messages name fields, operators and keys but not the values compared against, and GraphQL returns them to the client in production. A subscription filter that throws is treated as not matching, so that subscriber receives no events.
+
+Filters that group with `and` and `or` are unaffected, including ones on fields named after operators such as `{ owner: { and: [...], is: { eq: true } } }`. A nested filter whose keys are all fields named after operators, such as `{ owner: { is: { eq: true } } }`, reads as a comparison of `owner` itself and is now rejected. Wrap it in `and`: `{ owner: { and: [{ is: { eq: true } }] } }`.
