@@ -1,0 +1,19 @@
+docs/migration-guides/v10.x.x-to-v11.x.x.mdx
+  s_65010382641c1f::t_031ded3e8d91b1 3,69-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f620cd49ca3225fd7f3e3553ec74e1a30f1caadf",
+  "prompts": {},
+  "sessions": {
+    "s_65010382641c1f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1eb32-13ad-7781-85a4-57972aa9e540",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
