@@ -1,0 +1,28 @@
+packages/query-rest/src/decorators/authorize-filter.decorator.ts
+  s_65010382641c1f::t_de2488d5a2c568 16
+docs/migration-guides/v10.x.x-to-v11.x.x.mdx
+  s_65010382641c1f::t_c9363d0ce15e0c 72,74
+  s_65010382641c1f::t_de2488d5a2c568 3,70,76-78
+  s_65010382641c1f::t_3f03c063452da6 75
+packages/query-rest/__tests__/decorators/authorize-filter.decorator.spec.ts
+  s_65010382641c1f::t_de2488d5a2c568 1-3,5-31,36-81
+  s_65010382641c1f::t_cda1a664fc7281 4,32-35
+docs/rest/authorization.mdx
+  s_65010382641c1f::t_de2488d5a2c568 13,24-25,50-54,57,102,107-114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bb3940473adcceccd259d35c8fa39e078432a182",
+  "prompts": {},
+  "sessions": {
+    "s_65010382641c1f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1eb32-13ad-7781-85a4-57972aa9e540",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
