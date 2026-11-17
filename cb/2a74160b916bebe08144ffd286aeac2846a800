@@ -1,0 +1,42 @@
+docs/rest/queries/paging.mdx
+  s_65010382641c1f::t_634d846db4a3ee 66-80
+  s_65010382641c1f::t_023ab1dc45a031 92
+  s_65010382641c1f::t_ca7ca07a4027f9 93
+packages/query-rest/src/types/query/query-args/none-paging-query-args.type.ts
+  s_65010382641c1f::t_634d846db4a3ee 9,19
+packages/query-rest/src/types/query/query-args/offset-query-args.type.ts
+  s_65010382641c1f::t_634d846db4a3ee 9,21
+packages/query-rest/__tests__/types/query/sorting.type.spec.ts
+  s_65010382641c1f::t_430204810c2d34 1-69,71-90,92-94,96-106,124-125,133-134
+  s_65010382641c1f::t_69be256b28c3cf 70,126-128
+  s_65010382641c1f::t_0a487197136da6 91,95,129-132
+  s_65010382641c1f::t_023ab1dc45a031 107-123
+packages/query-rest/src/types/query/query-args/export-paging-query-args.type.ts
+  s_65010382641c1f::t_634d846db4a3ee 8,18
+packages/query-rest/src/types/query/sorting.type.ts
+  s_65010382641c1f::t_69be256b28c3cf 3,28,35
+  s_65010382641c1f::t_023ab1dc45a031 21,25,41
+  s_65010382641c1f::t_634d846db4a3ee 1-2,4-20,22-24,26-27,29,31-34,36-40,42-58
+  s_65010382641c1f::t_430204810c2d34 30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cb2a74160b916bebe08144ffd286aeac2846a800",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_65010382641c1f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1eb32-13ad-7781-85a4-57972aa9e540",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
