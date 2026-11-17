@@ -6,11 +6,12 @@ import { Field, getFilterableFields, SkipIf } from '../../decorators'
 import { BaseQueryArgsTypeOpts } from './query-args/interfaces'
 
 export function createSortingQueryArgs<DTO>(DTOClass: Class<DTO>, opts: BaseQueryArgsTypeOpts<DTO>) {
+  const fields = getFilterableFields(DTOClass)
   const sorts = new Map<string, SortField<DTO>>()
-  for (const field of getFilterableFields(DTOClass)) {
+  for (const field of fields) {
     for (const direction of Object.values(SortDirection)) {
       const sort = { field: field.propertyName as keyof DTO, direction }
-      const key = `${field.schemaName}:${direction}`
+      const key = `${field.advancedOptions?.name ?? field.schemaName}:${direction}`
       sorts.set(key, sort)
       for (const nulls of Object.keys(SortNulls) as (keyof typeof SortNulls)[]) {
         sorts.set(`${key}:${nulls}`, { ...sort, nulls: SortNulls[nulls] })
@@ -18,7 +19,8 @@ export function createSortingQueryArgs<DTO>(DTOClass: Class<DTO>, opts: BaseQuer
     }
   }
   const values = [...sorts.keys()]
-  const disableSort = !!opts.disableSort || values.length === 0
+  const hasSortFilter = fields.some((field) => field.schemaName === 'sort' || field.advancedOptions?.name === 'sort')
+  const disableSort = !!opts.disableSort || values.length === 0 || hasSortFilter
 
   class SortingQueryArgs {
     @SkipIf(

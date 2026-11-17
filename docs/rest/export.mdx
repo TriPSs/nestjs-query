@@ -3,7 +3,7 @@ title: 'CSV Export'
 description: 'Export filtered and authorized REST query results as CSV.'
 ---
 
-Every generated CRUD controller includes a `GET /<basePath>/export` endpoint unless export is disabled. The endpoint accepts the generated filters and, when search is enabled, the optional `query` search term. It uses the configured default sorting, runs the collection query hook, applies the authorization filter, and respects the configured soft-delete visibility.
+Every generated CRUD controller includes a `GET /<basePath>/export` endpoint unless export is disabled. The endpoint accepts the generated filters and, when search is enabled, the optional `query` search term. It accepts client `sort` parameters when sorting is enabled, falling back to the configured default sorting when omitted (see [sorting](/rest/queries/paging#sorting)). It runs the collection query hook, applies the authorization filter, and respects the configured soft-delete visibility.
 
 For an endpoint with `basePath: 'todo-items'`, request matching records with:
 
@@ -28,7 +28,7 @@ To use a different format, return a string from `@ExportTransform()` as shown be
 
 ## Configure exports
 
-Exports return at most `1000` matching records by default, starting at offset `0` and using the configured default sorting. If more records match, only the first `limit` records are included. The CSV response does not report whether additional records were omitted. Narrow the filter or configure a larger limit to include more records.
+Exports return at most `1000` matching records by default, starting at offset `0` and using client sorting when supplied, otherwise the configured default sorting. If more records match, only the first `limit` records are included. The CSV response does not report whether additional records were omitted. Narrow the filter or configure a larger limit to include more records.
 
 You can change the limit and customize the generated route without affecting the collection endpoint:
 

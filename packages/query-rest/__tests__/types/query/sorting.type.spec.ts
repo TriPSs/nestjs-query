@@ -121,6 +121,68 @@ describe.each([
     }
   )
 
+  it('uses exposed sort names while returning the underlying property', () => {
+    class AliasedDTO {
+      @FilterableField(() => String, { name: 'state' })
+      status!: string
+    }
+
+    const QueryArgs = createArgs(AliasedDTO)
+    const query = plainToInstance(QueryArgs, { sort: 'state:ASC:NULLS_LAST' }, { excludeExtraneousValues: true })
+    const metadata = Reflect.getMetadata('swagger/apiModelProperties', QueryArgs.prototype, 'sort') as {
+      items: { enum: string[] }
+    }
+
+    expect(validateSync(query)).toHaveLength(0)
+    expect((query as unknown as BuildableQueryType<AliasedDTO>).buildQuery().sorting).toEqual([
+      { field: 'status', direction: SortDirection.ASC, nulls: SortNulls.NULLS_LAST }
+    ])
+    expect(metadata.items.enum).toContain('state:ASC')
+    expect(metadata.items.enum).not.toContain('status:ASC')
+    expect(validateSync(plainToInstance(QueryArgs, { sort: 'status:ASC' })).length).toBeGreaterThan(0)
+  })
+
+  it.each([undefined, 'rank'])('preserves inherited filters named sort with exposed name %s', (name) => {
+    class BaseDTO {
+      @FilterableField(() => Number, { name })
+      sort!: number
+    }
+
+    class SortFilterDTO extends BaseDTO {
+      @FilterableField(() => String)
+      title!: string
+    }
+
+    const defaultSort = [{ field: 'title' as const, direction: SortDirection.ASC }]
+    const QueryArgs = createArgs(SortFilterDTO, { defaultSort })
+    const query = plainToInstance(QueryArgs, { [name ?? 'sort']: '5' }, { excludeExtraneousValues: true })
+
+    expect(validateSync(query)).toHaveLength(0)
+    expect((query as unknown as BuildableQueryType<SortFilterDTO>).buildQuery()).toMatchObject({
+      filter: { sort: { eq: 5 } },
+      sorting: defaultSort
+    })
+    expect(Reflect.getMetadata('swagger/apiModelProperties', QueryArgs.prototype, 'sort')).toMatchObject({ type: Number })
+  })
+
+  it('preserves filters exposed as sort without adding sorting metadata', () => {
+    class SortAliasDTO {
+      @FilterableField(() => Number, { name: 'sort' })
+      rank!: number
+    }
+
+    const defaultSort = [{ field: 'rank' as const, direction: SortDirection.DESC }]
+    const QueryArgs = createArgs(SortAliasDTO, { defaultSort })
+    const query = plainToInstance(QueryArgs, { sort: '5' }, { excludeExtraneousValues: true })
+
+    expect(validateSync(query)).toHaveLength(0)
+    expect((query as unknown as BuildableQueryType<SortAliasDTO>).buildQuery()).toMatchObject({
+      filter: { rank: { eq: 5 } },
+      sorting: defaultSort
+    })
+    expect(Reflect.getMetadata('swagger/apiModelProperties', QueryArgs.prototype, 'sort')).toBeUndefined()
+  })
+
   it('exposes allowed sort values in OpenAPI', () => {
     const QueryArgs = createArgs(createDTO())
     const metadata = Reflect.getMetadata('swagger/apiModelProperties', QueryArgs.prototype, 'sort') as {

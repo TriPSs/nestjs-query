@@ -75,7 +75,7 @@ Optionally append `:NULLS_FIRST` or `:NULLS_LAST` to control null ordering when 
 GET /todo-items?sort=title:ASC:NULLS_LAST
 ```
 
-Directions and null-order options are case-sensitive. Unknown fields and malformed sort values return HTTP 400. Only filterable DTO properties can be requested, including inherited properties.
+Directions and null-order options are case-sensitive. Unknown fields and malformed sort values return HTTP 400. Only filterable DTO properties can be requested, including inherited properties. For fields with a custom `name`, use the exposed name: `@FilterableField({ name: 'state' }) status` accepts `sort=state:ASC` and sorts the underlying `status` property.
 
 When `sort` is omitted, the server uses `defaultSort`. Client sorting replaces the default sort list:
 
@@ -89,6 +89,6 @@ When `sort` is omitted, the server uses `defaultSort`. Client sorting replaces t
 export class TodoItemDTO {}
 ```
 
-Set `disableSort: true` in query options to remove the client sort parameter and always use `defaultSort`. The client sort parameter is also omitted when the DTO has no filterable fields. Server-configured defaults are not restricted to filterable fields.
+Set `disableSort: true` in query options to remove the client sort parameter and always use `defaultSort`. Client sorting is also disabled when the DTO has no filterable fields or a filterable field uses `sort` as its property or exposed name. In the latter case, `sort` remains an equality filter and `defaultSort` still applies. Server-configured defaults are not restricted to filterable fields.
 
 Always add a stable tie-breaker (commonly the ID) when records can share the same sort value, especially when using offset paging.
