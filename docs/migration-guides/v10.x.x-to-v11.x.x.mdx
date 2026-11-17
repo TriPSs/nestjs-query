@@ -1,6 +1,6 @@
 ---
 title: 'v10.x.x to v11.x.x'
-description: 'Migrate query limits, REST hook contexts, CSV exports, and REST Swagger dependencies.'
+description: 'Migrate query limits, REST hook and authorizer contexts, CSV exports, and REST Swagger dependencies.'
 ---
 
 In v11, the default `maxResultsSize` is `100` for both GraphQL and REST, up from `50` in v10. This affects endpoints that use the generated paging arguments without an explicit maximum.
@@ -67,11 +67,15 @@ Applications that do not use CSV export can omit it.
 
 `@ptc-org/nestjs-query-rest` requires `@nestjs/swagger` at runtime, even when an application does not generate OpenAPI documentation. Its `@ApiProperty` decorators run when REST DTO classes are defined, so the dependency cannot be loaded lazily. Keep `@nestjs/swagger` installed when upgrading.
 
-## REST hook context
+## REST hook and authorizer contexts
 
-REST `BeforeCreateOne`, `BeforeUpdateOne`, and `BeforeQueryMany` hooks now receive `{ req }` as their second argument instead of the HTTP request directly. This includes query hooks on CSV exports and aligns request access with GraphQL contexts that expose `req`.
+This breaking change aligns REST hook and authorizer contexts with GraphQL contexts that expose the HTTP request as `req`. Both APIs can now use `context.req` to access request data, making it easier to share hooks and authorizers between REST and GraphQL.
 
-Update hooks from `context.user` or `context.headers` to `context.req.user` or `context.req.headers`. For typed hooks, change the context generic from `Request` to `{ req: Request }` (or the equivalent authenticated request type). The first argument and return value are unchanged. REST authorizer contexts are unchanged.
+REST `BeforeCreateOne`, `BeforeUpdateOne`, and `BeforeQueryMany` hooks now receive `{ req }` as their second argument instead of the HTTP request directly. This includes query hooks on CSV exports.
+
+Update hooks from `context.user` or `context.headers` to `context.req.user` or `context.req.headers`. For typed hooks, change the context generic from `Request` to `{ req: Request }` (or the equivalent authenticated request type). The first argument and return value are unchanged.
+
+REST authorizers, both inline `@Authorize` callbacks and custom authorizer classes, also receive `{ req }` as their first argument. Update their request access in the same way. The second argument remains the operation metadata (`AuthorizationContext`); for example, use `authorize(context: { req: AuthenticatedRequest }, authorizationContext: AuthorizationContext)`.
 
 ```ts
 // Before

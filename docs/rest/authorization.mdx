@@ -10,7 +10,7 @@ description: 'Authorization filters restrict records before generated read, upda
 
 ## Inline authorizer[​](#inline-authorizer 'Direct link to Inline authorizer')
 
-Decorate the response DTO with `@Authorize`. The first argument is the HTTP request and the second describes the generated operation.
+Decorate the response DTO with `@Authorize`. The first argument is a context object with the HTTP request at `context.req`, matching REST hooks and GraphQL contexts that expose `req`. The second argument describes the generated operation.
 
 ```ts todo-item.dto.ts
 import { Request } from 'express'
@@ -21,12 +21,11 @@ type AuthenticatedRequest = Request & {
 }
 
 @Authorize<TodoItemDTO>({
-  authorize: (request: AuthenticatedRequest) => ({
-    ownerId: { eq: request.user.id }
+  authorize: (context: { req: AuthenticatedRequest }) => ({
+    ownerId: { eq: context.req.user.id }
   })
 })
 export class TodoItemDTO {
-
   @IDField()
   id!: number
 
@@ -48,12 +47,14 @@ import { AuthorizationContext, CustomAuthorizer, OperationGroup } from '@ptc-org
 
 @Injectable()
 export class TodoItemAuthorizer implements CustomAuthorizer<TodoItemDTO> {
-
-  async authorize(request: AuthenticatedRequest, context: AuthorizationContext): Promise<Filter<TodoItemDTO>> {
-    if (context.operationGroup === OperationGroup.CREATE && !request.user) {
+  async authorize(
+    context: { req: AuthenticatedRequest },
+    authorizationContext: AuthorizationContext
+  ): Promise<Filter<TodoItemDTO>> {
+    if (authorizationContext.operationGroup === OperationGroup.CREATE && !context.req.user) {
       throw new ForbiddenException()
     }
-    return { ownerId: { eq: request.user.id } }
+    return { ownerId: { eq: context.req.user.id } }
   }
 }
 ```
@@ -98,16 +99,16 @@ The authorizer runs for `createOne`, but by default the filter it returns is not
 }
 ```
 
-The filter is passed to the query service, which evaluates it in JS against the request body before saving. A body that does not match the filter, for example an `ownerId` different from `request.user.id`, is rejected with a `BadRequestException` (HTTP 400) and the message `Entity does not meet creation constraints`. The option only takes effect when the authorizer resolves a filter for the `create` operation group; if no authorizer is registered for the DTO, or it returns no filter for create operations, the option is a no-op.
+The filter is passed to the query service, which evaluates it in JS against the request body before saving. A body that does not match the filter, for example an `ownerId` different from `context.req.user.id`, is rejected with a `BadRequestException` (HTTP 400) and the message `Entity does not meet creation constraints`. The option only takes effect when the authorizer resolves a filter for the `create` operation group; if no authorizer is registered for the DTO, or it returns no filter for create operations, the option is a no-op.
 
 <Warning>
   The filter is evaluated in JS against the flat request body. This has a few limitations:
 
-  - Filter clauses on relations, or on fields populated by the database (such as `createdAt`, generated ids, or column
-    defaults), cannot be checked and will not match.
-  - The filter is evaluated against the fields present on the body: a field that is missing from the body fails positive
-    operators (`eq`, `in`, `like`) but passes negated operators (`neq`, `notIn`, `notLike`), so negated filters cannot reliably
-    constrain fields the client omits.
-  - Enforcement happens in the query service, so a custom service that overrides `createOne(item)` or `createMany(items)`
-    without accepting and forwarding the new `opts` parameter will silently skip the check.
-</Warning>
+- Filter clauses on relations, or on fields populated by the database (such as `createdAt`, generated ids, or column
+  defaults), cannot be checked and will not match.
+- The filter is evaluated against the fields present on the body: a field that is missing from the body fails positive
+  operators (`eq`, `in`, `like`) but passes negated operators (`neq`, `notIn`, `notLike`), so negated filters cannot reliably
+  constrain fields the client omits.
+- Enforcement happens in the query service, so a custom service that overrides `createOne(item)` or `createMany(items)`
+  without accepting and forwarding the new `opts` parameter will silently skip the check.
+  </Warning>
