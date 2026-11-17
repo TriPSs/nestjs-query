@@ -34,9 +34,10 @@ class HooksTransformer<T> implements PipeTransform {
   private async runMutationHooks(data: T): Promise<MutationArgsType<T>> {
     const hooks = (this.request as HookContext<Hook<unknown>>).hooks
     if (hooks && hooks.length > 0) {
+      const context = { req: this.request }
       let hookedArgs = { input: data }
       for (const hook of hooks) {
-        hookedArgs = (await hook.run(hookedArgs, this.request)) as MutationArgsType<T>
+        hookedArgs = (await hook.run(hookedArgs, context)) as MutationArgsType<T>
       }
 
       return hookedArgs
@@ -50,8 +51,9 @@ class HooksTransformer<T> implements PipeTransform {
     let hookedArgs = data.buildQuery()
 
     if (hooks && hooks.length > 0) {
+      const context = { req: this.request }
       for (const hook of hooks) {
-        hookedArgs = (await hook.run(hookedArgs, this.request)) as Query<T>
+        hookedArgs = (await hook.run(hookedArgs, context)) as Query<T>
       }
 
       return hookedArgs
