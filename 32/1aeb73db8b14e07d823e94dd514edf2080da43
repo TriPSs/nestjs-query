@@ -1,0 +1,26 @@
+docs/changelog.mdx
+  s_65010382641c1f::t_e850fed821c2b5 12-33
+packages/query-rest/__tests__/decorators/hook-args.decorator.spec.ts
+  s_65010382641c1f::t_e850fed821c2b5 1-22,25-96
+  s_65010382641c1f::t_97814714045da4 23-24
+docs/rest/hooks.mdx
+  s_65010382641c1f::t_e850fed821c2b5 6-7,20,23,38,41,85-86,88
+packages/query-rest/src/decorators/hook-args.decorator.ts
+  s_65010382641c1f::t_e850fed821c2b5 37,40,54,56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "321aeb73db8b14e07d823e94dd514edf2080da43",
+  "prompts": {},
+  "sessions": {
+    "s_65010382641c1f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1eb32-13ad-7781-85a4-57972aa9e540",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
