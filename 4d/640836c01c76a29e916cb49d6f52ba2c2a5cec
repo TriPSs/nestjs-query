@@ -1,0 +1,31 @@
+docs/rest/mutations.mdx
+  s_65010382641c1f::t_644ba6516c8423 51-91
+packages/query-rest/src/controllers/update.controller.ts
+  s_65010382641c1f::t_644ba6516c8423 16-18,56,70-71,82
+packages/query-rest/src/controllers/create.controller.ts
+  s_65010382641c1f::t_644ba6516c8423 27-29,65,70-79,90
+packages/query-rest/__tests__/controllers/mutation-return-dto.spec.ts
+  s_65010382641c1f::t_c8e27516e5686b 52
+  s_65010382641c1f::t_644ba6516c8423 1-51,53-89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4d640836c01c76a29e916cb49d6f52ba2c2a5cec",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_65010382641c1f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1eb32-13ad-7781-85a4-57972aa9e540",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
