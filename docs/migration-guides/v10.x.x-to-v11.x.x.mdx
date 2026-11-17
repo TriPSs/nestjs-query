@@ -1,6 +1,6 @@
 ---
 title: 'v10.x.x to v11.x.x'
-description: 'Migrate query limits, CSV exports, and REST Swagger dependencies.'
+description: 'Migrate query limits, REST hook contexts, CSV exports, and REST Swagger dependencies.'
 ---
 
 In v11, the default `maxResultsSize` is `100` for both GraphQL and REST, up from `50` in v10. This affects endpoints that use the generated paging arguments without an explicit maximum.
@@ -66,3 +66,23 @@ Applications that do not use CSV export can omit it.
 ## REST Swagger runtime dependency
 
 `@ptc-org/nestjs-query-rest` requires `@nestjs/swagger` at runtime, even when an application does not generate OpenAPI documentation. Its `@ApiProperty` decorators run when REST DTO classes are defined, so the dependency cannot be loaded lazily. Keep `@nestjs/swagger` installed when upgrading.
+
+## REST hook context
+
+REST `BeforeCreateOne`, `BeforeUpdateOne`, and `BeforeQueryMany` hooks now receive `{ req }` as their second argument instead of the HTTP request directly. This includes query hooks on CSV exports and aligns request access with GraphQL contexts that expose `req`.
+
+Update hooks from `context.user` or `context.headers` to `context.req.user` or `context.req.headers`. For typed hooks, change the context generic from `Request` to `{ req: Request }` (or the equivalent authenticated request type). The first argument and return value are unchanged. REST authorizer contexts are unchanged.
+
+```ts
+// Before
+run(input: CreateOneInputType<CreateTodoDTO>, request: AuthenticatedRequest) {
+  input.input.ownerId = request.user.id
+  return input
+}
+
+// After
+run(input: CreateOneInputType<CreateTodoDTO>, context: { req: AuthenticatedRequest }) {
+  input.input.ownerId = context.req.user.id
+  return input
+}
+```

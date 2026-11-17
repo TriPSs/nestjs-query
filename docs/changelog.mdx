@@ -9,26 +9,4 @@ import { GitHubReleases } from '/snippets/github-releases.jsx'
 Release notes are loaded from [GitHub releases](https://github.com/TriPSs/nestjs-query/releases), including prereleases.
 For help upgrading between major versions, see the migration guides in the General tab.
 
-## Next alpha (unreleased)
-
-### Breaking: REST hook context
-
-REST `BeforeCreateOne`, `BeforeUpdateOne`, and `BeforeQueryMany` hooks now receive `{ req }` as their second argument instead of the HTTP request directly. This includes query hooks on CSV exports and aligns request access with GraphQL contexts that expose `req`.
-
-Update hooks from `context.user` or `context.headers` to `context.req.user` or `context.req.headers`. For typed hooks, change the context generic from `Request` to `{ req: Request }` (or the equivalent authenticated request type). The first argument and return value are unchanged. REST authorizer contexts are unchanged.
-
-```ts
-// Before
-run(input: CreateOneInputType<CreateTodoDTO>, request: AuthenticatedRequest) {
-  input.input.ownerId = request.user.id
-  return input
-}
-
-// After
-run(input: CreateOneInputType<CreateTodoDTO>, context: { req: AuthenticatedRequest }) {
-  input.input.ownerId = context.req.user.id
-  return input
-}
-```
-
 <GitHubReleases />
