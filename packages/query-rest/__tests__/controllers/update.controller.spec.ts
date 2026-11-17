@@ -8,7 +8,9 @@ import { vi } from 'vitest'
 import { getAuthorizerToken } from '../../src/auth'
 import { CRUDController } from '../../src/controllers/crud.controller'
 import { UpdateController, UpdateControllerOpts } from '../../src/controllers/update.controller'
-import { Field, IDField } from '../../src/decorators'
+import { BeforeUpdateOne, Field, IDField } from '../../src/decorators'
+import { createHookProviders } from '../../src/providers/hook.provider'
+import { UpdateOneInputType } from '../../src/types'
 
 describe('UpdateController HTTP method', () => {
   class TestDTO {
@@ -35,6 +37,61 @@ describe('UpdateController HTTP method', () => {
   let app: INestApplication
 
   afterEach(() => app?.close())
+
+  it.each([
+    { method: 'put', customUpdateDTO: false },
+    { method: 'patch', customUpdateDTO: false },
+    { method: 'put', customUpdateDTO: true },
+    { method: 'patch', customUpdateDTO: true }
+  ] as const)(
+    'passes update data through chained hooks for $method (custom DTO: $customUpdateDTO)',
+    async ({ method, customUpdateDTO }) => {
+      const firstHook = vi.fn((args: UpdateOneInputType<TestDTO>) => ({
+        update: { ...args.update, name: `${args.update.name}-first` }
+      }))
+      const secondHook = vi.fn((args: UpdateOneInputType<TestDTO>) => ({
+        update: { ...args.update, name: `${args.update.name}-second` }
+      }))
+
+      @BeforeUpdateOne(firstHook, secondHook)
+      class HookedDTO extends TestDTO {}
+
+      const service = {
+        updateOne: vi.fn().mockResolvedValue({ id: '1', name: 'updated-first-second' })
+      }
+      const filter = { id: { eq: '1' } }
+      const authorizer = { authorize: vi.fn().mockResolvedValue(filter), authorizeRelation: vi.fn() }
+
+      @Controller('hooked-tests')
+      class TestController extends UpdateController(HookedDTO, {
+        method,
+        ...(customUpdateDTO ? { UpdateDTOClass: HookedDTO } : {})
+      }) {
+        constructor() {
+          super(service as unknown as QueryService<HookedDTO>)
+        }
+      }
+
+      const moduleRef = await Test.createTestingModule({
+        controllers: [TestController],
+        providers: [
+          { provide: getAuthorizerToken(HookedDTO), useValue: authorizer },
+          ...createHookProviders([{ DTOClass: HookedDTO }])
+        ]
+      }).compile()
+      app = moduleRef.createNestApplication()
+      await app.init()
+
+      await request(app.getHttpServer())[method]('/hooked-tests/1').send({ name: 'updated' }).expect(200)
+
+      expect(firstHook).toHaveBeenCalledWith({ update: { name: 'updated' } }, expect.objectContaining({ req: expect.anything() }))
+      expect(secondHook).toHaveBeenCalledWith(
+        { update: { name: 'updated-first' } },
+        expect.objectContaining({ req: expect.anything() })
+      )
+      expect(service.updateOne).toHaveBeenCalledWith('1', { name: 'updated-first-second' }, { filter })
+    }
+  )
 
   it('serves PATCH with authorization and serialization on the configured path', async () => {
     const service = {

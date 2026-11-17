@@ -30,7 +30,7 @@ export class TodoItemInputDTO {
 }
 ```
 
-The function must return the complete wrapper (`{ input }` for create and `{ update }` for update), not only the inner DTO.
+The function must return the complete wrapper (`{ input }` for create and `{ update }` for update), not only the inner DTO. Generated PUT and PATCH endpoints pass `{ update }` through each update hook and send the final `update` value to the query service. The hook interceptor selects the update wrapper automatically, including for custom endpoints using `@BodyHookArgs()` with `HookInterceptor(HookTypes.BEFORE_UPDATE_ONE, ...)`.
 
 ```ts todo-item-update.dto.ts
 import { BeforeUpdateOne, UpdateOneInputType } from '@ptc-org/nestjs-query-rest'

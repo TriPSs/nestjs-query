@@ -6,6 +6,7 @@ import { getHookToken, Hook, HookTypes } from '../hooks'
 
 export type HookContext<H extends Hook<unknown>> = {
   hooks?: H[]
+  hookType?: HookTypes
 }
 
 class DefaultHookInterceptor implements NestInterceptor {
@@ -28,6 +29,7 @@ export function HookInterceptor(type: HookTypes, ...DTOClasses: Class<unknown>[]
     public intercept(context: ExecutionContext, next: CallHandler) {
       const request = context.switchToHttp().getRequest<Record<string, unknown>>()
       request.hooks = this.hooks
+      request.hookType = type
 
       return next.handle()
     }

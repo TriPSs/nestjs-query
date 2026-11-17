@@ -15,6 +15,7 @@ import request from 'supertest'
 import { vi } from 'vitest'
 
 import { BodyHookArgs, Field, QueryHookArgs } from '../../src/decorators'
+import { HookTypes } from '../../src/hooks'
 import { BuildableQueryType } from '../../src/types/query/buildable-query.type'
 
 describe('REST hook context', () => {
@@ -36,8 +37,9 @@ describe('REST hook context', () => {
 
   class AttachHooks implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler) {
-      const req = context.switchToHttp().getRequest<{ hooks: unknown[] }>()
+      const req = context.switchToHttp().getRequest<{ hooks: unknown[]; hookType: HookTypes }>()
       req.hooks = [firstHook, secondHook]
+      req.hookType = context.getHandler().name === 'update' ? HookTypes.BEFORE_UPDATE_ONE : HookTypes.BEFORE_CREATE_ONE
       httpRequest = req
       return next.handle()
     }
@@ -72,18 +74,18 @@ describe('REST hook context', () => {
 
   afterEach(() => app.close())
 
-  it.each(['post', 'patch'] as const)(
-    'passes the original request under req to %s hooks and preserves the input wrapper',
-    async (method) => {
-      const response = await request(app.getHttpServer())[method]('/hooks').send({ title: 'test' })
+  it.each([
+    ['post', 'input'],
+    ['patch', 'update']
+  ] as const)('passes the original request under req to %s hooks and preserves the input wrapper', async (method, key) => {
+    const response = await request(app.getHttpServer())[method]('/hooks').send({ title: 'test' })
 
-      expect(response.status).toBe(method === 'post' ? 201 : 200)
-      expect(response.body).toEqual({ input: { title: 'test' } })
-      expect(firstHook.run).toHaveBeenCalledWith({ input: { title: 'test' } }, { req: httpRequest })
-      expect(firstHook.run.mock.calls[0][1]).toBe(secondHook.run.mock.calls[0][1])
-      expect((firstHook.run.mock.calls[0][1] as { req: unknown }).req).toBe(httpRequest)
-    }
-  )
+    expect(response.status).toBe(method === 'post' ? 201 : 200)
+    expect(response.body).toEqual({ input: method === 'post' ? { title: 'test' } : { update: { title: 'test' } } })
+    expect(firstHook.run).toHaveBeenCalledWith({ [key]: { title: 'test' } }, { req: httpRequest })
+    expect(firstHook.run.mock.calls[0][1]).toBe(secondHook.run.mock.calls[0][1])
+    expect((firstHook.run.mock.calls[0][1] as { req: unknown }).req).toBe(httpRequest)
+  })
 
   it('passes the same request context to query hooks and preserves the built query', async () => {
     const response = await request(app.getHttpServer()).get('/hooks').expect(200)
