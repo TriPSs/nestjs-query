@@ -1,0 +1,25 @@
+docs/rest/export.mdx
+  s_65010382641c1f::t_8d20349bc0c485 6,31
+packages/query-rest/__tests__/types/query/sorting.type.spec.ts
+  s_65010382641c1f::t_8d20349bc0c485 124-185
+packages/query-rest/src/types/query/sorting.type.ts
+  s_65010382641c1f::t_8d20349bc0c485 9,11,14,22-23
+docs/rest/queries/paging.mdx
+  s_65010382641c1f::t_8d20349bc0c485 78,92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3549f894e681f3db42c271a68fac9864dd897dd9",
+  "prompts": {},
+  "sessions": {
+    "s_65010382641c1f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1eb32-13ad-7781-85a4-57972aa9e540",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
