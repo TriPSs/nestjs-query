@@ -1,0 +1,70 @@
+packages/query-rest/__tests__/controllers/read-return-dto.spec.ts
+  s_65010382641c1f::t_ba3da7db1b4e5a 144
+  s_65010382641c1f::t_704453d13292df 107
+  s_65010382641c1f::t_12caaa68d9a12a 67-71,115-116
+  s_65010382641c1f::t_ae19945fea34ea 18-19,21-26,89-91,130-141,143
+  s_65010382641c1f::t_cb41640541cb2a 1-17,48-51,53-66,72-88,93-96,98,103-104,106,108-113,117-129,150-152
+  s_65010382641c1f::t_e8d5b9a122286b 20,27-47,52,92,97,99-102,105,114,142,145-149
+packages/query-rest/__tests__/controllers/export-list-dto.spec.ts
+  s_65010382641c1f::t_8602b4a5911d7c 9,13,47,59-69
+  s_65010382641c1f::t_12caaa68d9a12a 1-8,10-12,14-29,31-46,70-90,93-94,99-110
+  s_65010382641c1f::t_3187c21b4424ec 91-92
+  s_65010382641c1f::t_327794086296bd 30,95-98
+  s_65010382641c1f::t_8bbc74dacfbe73 48-58
+packages/query-rest/__tests__/controllers/export.controller.spec.ts
+  s_65010382641c1f::t_300b0f37c3344c 3,90-106
+  s_65010382641c1f::t_0eff3f277cf625 107-108
+packages/query-rest/src/controllers/crud.controller.ts
+  s_65010382641c1f::t_8602b4a5911d7c 104
+  s_65010382641c1f::t_94ae519a6cdd10 98-103,105-109
+packages/query-rest/src/controllers/export.controller.ts
+  s_65010382641c1f::t_49c71dc24775fc 94
+  s_65010382641c1f::t_94ae519a6cdd10 32,35-37
+  s_65010382641c1f::t_7193a5f6aa2780 3-12,132-139,141
+  s_65010382641c1f::t_8602b4a5911d7c 33-34,85,87,91,119
+docs/migration-guides/v10.x.x-to-v11.x.x.mdx
+  s_65010382641c1f::t_300b0f37c3344c 99-100
+  s_65010382641c1f::t_49c71dc24775fc 93-97
+  s_65010382641c1f::t_adfff001ced9bb 98
+packages/query-rest/src/types/query/query-args/interfaces.ts
+  s_65010382641c1f::t_2147546edf4c3d 54-55
+packages/query-rest/src/types/query/query-args/none-paging-query-args.type.ts
+  s_65010382641c1f::t_e8d5b9a122286b 22-23
+docs/rest/queries/endpoints.mdx
+  s_65010382641c1f::t_191c911cacb1fb 25-36
+  s_65010382641c1f::t_49c71dc24775fc 74,89-112,116
+  s_65010382641c1f::t_d8891c74cba009 118,120-121,150
+  s_65010382641c1f::t_300b0f37c3344c 75-88,114-115
+  s_65010382641c1f::t_adfff001ced9bb 113,117,119,122-149
+packages/query-rest/src/controllers/read.controller.ts
+  s_65010382641c1f::t_94ae519a6cdd10 48-49,147,163-166
+  s_65010382641c1f::t_49c71dc24775fc 39-41,44-45,47,50,86-87,92,105
+  s_65010382641c1f::t_191c911cacb1fb 1,42-43,117,129
+  s_65010382641c1f::t_e8d5b9a122286b 46,83-84
+  s_65010382641c1f::t_2147546edf4c3d 135
+packages/query-rest/__tests__/controllers/read.controller.spec.ts
+  s_65010382641c1f::t_191c911cacb1fb 1-32
+packages/query-rest/src/types/param-args.type.ts
+  s_65010382641c1f::t_3187c21b4424ec 4
+packages/query-rest/src/decorators/query-options.decorator.ts
+  s_65010382641c1f::t_704453d13292df 18
+docs/rest/export.mdx
+  s_65010382641c1f::t_8602b4a5911d7c 67-68
+  s_65010382641c1f::t_300b0f37c3344c 65-66,69-71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "242fe08e3f1bb33e796f32a114620be90e96febf",
+  "prompts": {},
+  "sessions": {
+    "s_65010382641c1f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1eb32-13ad-7781-85a4-57972aa9e540",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
