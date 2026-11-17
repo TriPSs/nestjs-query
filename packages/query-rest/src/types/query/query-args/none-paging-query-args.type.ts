@@ -6,6 +6,7 @@ import { RestQuery } from '../../../types'
 import { BuildableQueryType } from '../buildable-query.type'
 import { FilterType } from '../filter.type'
 import { PagingStrategies } from '../paging'
+import { createSortingQueryArgs } from '../sorting.type'
 import { DEFAULT_QUERY_OPTS } from './constants'
 import { NonePagingQueryArgsTypeOpts, StaticQueryType } from './interfaces'
 
@@ -15,10 +16,8 @@ export function createNonePagingQueryArgs<DTO>(
 ): StaticQueryType<DTO, PagingStrategies.NONE> {
   const ConnectionType = getOrCreateArrayConnectionType(DTOClass, opts)
 
-  class QueryNonPagingArgs implements BuildableQueryType<DTO> {
+  class QueryNonPagingArgs extends createSortingQueryArgs(DTOClass, opts) implements BuildableQueryType<DTO> {
     static ConnectionType = ConnectionType
-
-    public sorting = opts.defaultSort
 
     public get filter() {
       return opts.defaultFilter
