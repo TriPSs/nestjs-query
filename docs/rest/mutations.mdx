@@ -48,6 +48,47 @@ Updates use `PUT` by default. Set `update.method` to `'patch'` in your endpoint 
 
 For a standalone controller, use `UpdateController(TodoItemDTO, { method: 'patch' })`. Both methods use the same request body, authorization, hooks, and response serialization.
 
+## Custom response DTOs
+
+Set `ReturnDTOClass` separately for create and update to control response serialization and the OpenAPI response schema. Each operation defaults to the controller's `DTOClass`.
+
+```ts
+import { Field } from '@ptc-org/nestjs-query-rest'
+
+export class CreatedTodoDTO {
+  @Field()
+  id!: number
+}
+
+export class UpdatedTodoDTO {
+  @Field()
+  id!: number
+
+  @Field()
+  completed!: boolean
+}
+```
+
+Configure generated endpoints or `CRUDController` with:
+
+```ts
+{
+  DTOClass: TodoItemDTO,
+  EntityClass: TodoItemEntity,
+  create: { ReturnDTOClass: CreatedTodoDTO },
+  update: { ReturnDTOClass: UpdatedTodoDTO }
+}
+```
+
+Standalone controllers accept the same option:
+
+```ts
+CreateController(TodoItemDTO, { ReturnDTOClass: CreatedTodoDTO })
+UpdateController(TodoItemDTO, { ReturnDTOClass: UpdatedTodoDTO, method: 'patch' })
+```
+
+Only exposed properties of the return DTO are serialized; use `@Field()` or `@Expose()` on those properties. This option shapes the query service's result and does not fetch additional data. Ensure the service returns the values your response DTO needs. Request DTOs, hooks, authorization, and other endpoints continue to use their existing configuration.
+
 ## Delete one[​](#delete-one 'Direct link to Delete one')
 
 ```http
