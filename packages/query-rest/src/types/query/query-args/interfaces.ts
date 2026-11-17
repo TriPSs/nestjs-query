@@ -51,6 +51,8 @@ export type QueryArgsTypeOpts<DTO> = OffsetQueryArgsTypeOpts<DTO> | NonePagingQu
 
 export interface StaticQueryType<DTO, PS extends PagingStrategies> extends Class<QueryType<DTO, PS>> {
   ConnectionType: StaticConnectionType<DTO, PS>
+  /** Response schema and serialization type, when different from the connection class. */
+  ResponseType?: Class<unknown> | Class<unknown>[]
 }
 
 export interface QueryType<DTO, PS extends PagingStrategies> extends Query<DTO> {

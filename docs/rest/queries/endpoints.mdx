@@ -22,6 +22,18 @@ Successful requests return `200 OK` and the serialized DTO:
 
 The route parameter type comes from the property decorated with `@IDField`.
 
+Configure `read.one.relations` to load default relations for every find-by-ID request:
+
+```ts
+ReadController(TodoItemDTO, {
+  one: {
+    relations: [{ name: 'assignee', query: {} }]
+  }
+})
+```
+
+For a CRUD controller, put the same `one` options under `read`. Relations use the query service's `{ name, query }` format and support nested selections through `query.relations`. They are passed to `getById` alongside the authorization filter and `one.withDeleted`; collection queries are unaffected. The query service must support loading the selected relations, and the response DTO must expose them for serialization.
+
 ## Query a collection
 
 ```http
@@ -59,3 +71,80 @@ curl 'http://localhost:3000/todo-items?completed=false&limit=2&offset=0'
 ```
 
 Read more about [filter query parameters](./filtering) and [paging strategies](./paging).
+
+### Default collection relations
+
+Use `many.relations` to include relations in every collection query, with or without paging:
+
+```ts
+ReadController(TodoItemDTO, {
+  many: {
+    relations: [{ name: 'assignee', query: {} }]
+  }
+})
+```
+
+For CRUD controllers, use `read.many.relations`. These selections are added to any relations supplied by query hooks. Nested selections use `query.relations`, as with `one.relations`. CRUD exports inherit these relations unless `export.many.relations` is supplied; use an empty array to disable that inheritance.
+
+## Custom response DTOs
+
+Configure `read.one.ReturnDTOClass` and `read.many.ReturnDTOClass` independently to customize single-record and collection responses:
+
+```ts
+{
+  DTOClass: TodoItemDTO,
+  EntityClass: TodoItemEntity,
+  read: {
+    one: { ReturnDTOClass: TodoDetailsDTO },
+    many: { ReturnDTOClass: TodoSummaryDTO }
+  }
+}
+```
+
+Standalone controllers accept the same options:
+
+```ts
+ReadController(TodoItemDTO, {
+  one: { ReturnDTOClass: TodoDetailsDTO },
+  many: { ReturnDTOClass: TodoSummaryDTO }
+})
+```
+
+Both default to `DTOClass`. The collection DTO applies to `nodes` with offset paging and to each array item without paging.
+
+CRUD exports also default to `read.many.ReturnDTOClass` for their CSV fields and generated filters and sorting. An explicit `export.ExportDTOClass` overrides the CSV fields, and `export.QueryArgs` overrides the export query arguments.
+
+`read.many.ReturnDTOClass` defines the collection's query contract as well as its response: `@FilterableField` determines which fields can be filtered and sorted, and `@QueryOptions` provides paging and query defaults. Metadata inherited from a base DTO is supported. Explicit controller query options override the DTO defaults.
+
+For example, share list fields with a more detailed DTO while keeping collection filtering limited to the list DTO:
+
+```ts
+@QueryOptions({ pagingStrategy: PagingStrategies.OFFSET, defaultResultSize: 20 })
+export class TodoListItemDTO {
+  @IDField()
+  id!: number
+
+  @FilterableField()
+  title!: string
+}
+
+export class TodoDetailsDTO extends TodoListItemDTO {
+  @Field()
+  description!: string
+}
+
+ReadController(TodoDetailsDTO, {
+  one: { ReturnDTOClass: TodoDetailsDTO },
+  many: { ReturnDTOClass: TodoListItemDTO }
+})
+```
+
+The collection can filter and sort by `title`, but does not expose `description`. A derived list DTO can add its own filterable fields and override query defaults without changing the single-record response.
+
+`read.one.ReturnDTOClass` controls single-record serialization and OpenAPI. ID route parameters and authorization continue to use the main `DTOClass`. Ensure the query service supplies the data needed by each return DTO. There is no top-level `read.ReturnDTOClass`; use `one` and `many` to select which endpoint to customize.
+
+When supplying a custom `QueryArgs` class, it takes precedence over generated collection query arguments. Build it from the collection DTO:
+
+```ts
+class CustomQueryArgs extends QueryArgsType(TodoListItemDTO, { pagingStrategy: PagingStrategies.OFFSET }) {}
+```

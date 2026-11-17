@@ -1,6 +1,6 @@
 import { QueryService } from '@ptc-org/nestjs-query-core'
 import { Expose, plainToInstance } from 'class-transformer'
-import { anything, instance, mock, verify, when } from 'ts-mockito'
+import { anything, deepEqual, instance, mock, verify, when } from 'ts-mockito'
 
 import { ExportTransform } from '../../src'
 import { CRUDControllerOpts } from '../../src/controllers/crud.controller'
@@ -85,6 +85,25 @@ describe('ExportController', () => {
     await expect(controller.exportMany({})).resolves.toBe('"value"\n"test"\n')
 
     verify(service.exportMany(anything(), anything())).once()
+  })
+
+  it('adds default relations without overwriting relations supplied by query hooks', async () => {
+    const defaults = [{ name: 'assignee', query: { relations: [{ name: 'team', query: {} }] } }]
+    const hookRelations = [{ name: 'comments', query: { paging: { limit: 5 } } }]
+    const service = mock<QueryService<ExportDTO>>()
+    when(service.exportMany(anything(), anything())).thenResolve([{ value: 'test' }])
+    const controller = new (ExportController(ExportDTO, { many: { relations: defaults } }))(instance(service))
+
+    await controller.exportMany({ relations: hookRelations })
+
+    verify(
+      service.exportMany(
+        deepEqual({ filter: {}, relations: [...defaults, ...hookRelations], paging: { limit: 1000, offset: 0 } }),
+        anything()
+      )
+    ).once()
+    expect(defaults).toEqual([{ name: 'assignee', query: { relations: [{ name: 'team', query: {} }] } }])
+    expect(hookRelations).toEqual([{ name: 'comments', query: { paging: { limit: 5 } } }])
   })
 
   it('serializes with the ExportDTOClass when one is provided', async () => {

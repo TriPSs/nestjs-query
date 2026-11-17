@@ -95,8 +95,18 @@ function extractDeleteOpts<DTO>(
 function extractExportOpts<DTO, E>(
   opts: CRUDControllerOpts<DTO, unknown, unknown, ReadControllerOpts<DTO>, PagingStrategies, E>
 ): ExportControllerOpts<DTO, E> {
-  const { export: exportArgs = {} } = opts
-  return mergeBaseMethodOpts<ExportControllerOpts<DTO, E>>(exportArgs, opts)
+  const { export: exportArgs = {}, read } = opts
+  return mergeBaseMethodOpts<ExportControllerOpts<DTO, E>>(
+    {
+      ...exportArgs,
+      many: {
+        ...exportArgs.many,
+        ReturnDTOClass: exportArgs.many?.ReturnDTOClass ?? read?.many?.ReturnDTOClass,
+        relations: exportArgs.many?.relations ?? read?.many?.relations
+      }
+    },
+    opts
+  )
 }
 
 /**

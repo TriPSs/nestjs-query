@@ -19,6 +19,8 @@ export function createNonePagingQueryArgs<DTO>(
   class QueryNonPagingArgs extends createSortingQueryArgs(DTOClass, opts) implements BuildableQueryType<DTO> {
     static ConnectionType = ConnectionType
 
+    static ResponseType = [DTOClass]
+
     public get filter() {
       return opts.defaultFilter
     }

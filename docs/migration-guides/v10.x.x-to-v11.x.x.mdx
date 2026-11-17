@@ -90,3 +90,11 @@ run(input: CreateOneInputType<CreateTodoDTO>, context: { req: AuthenticatedReque
   return input
 }
 ```
+
+## REST read response DTOs
+
+Replace `read.FindDTOClass` with `read.one.ReturnDTOClass`. For standalone controllers, replace `ReadController(DTO, { FindDTOClass: DetailsDTO })` with `ReadController(DTO, { one: { ReturnDTOClass: DetailsDTO } })`.
+
+Use `read.many.ReturnDTOClass` to customize the collection independently. Its metadata defines the response items, filterable and sortable fields, and query defaults, including inherited metadata. `read.one.ReturnDTOClass` only changes single-record serialization and OpenAPI. ID route parameters now always come from the main `DTOClass`, so any `@IDField` metadata previously supplied only by `FindDTOClass` must be defined on the main DTO.
+
+CRUD exports now default to the list DTO configured in `read.many.ReturnDTOClass` for CSV fields and generated filter and sorting metadata. Explicit `export.ExportDTOClass` and `export.QueryArgs` still override their respective defaults. Default relation selections can be configured separately with `read.one.relations` and `read.many.relations`; exports inherit the latter unless `export.many.relations` is provided.
