@@ -1,0 +1,20 @@
+examples/federation-v2-e2e/e2e-test/Dockerfile
+  s_054890820e01fd::t_687c0e9b29d812 6-8,10,16
+  s_054890820e01fd::t_0b68f21ecafb7e 5,11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a40123cd3c109a40c35e66164f64925fc6102c0f",
+  "prompts": {},
+  "sessions": {
+    "s_054890820e01fd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1edc3-9d97-7861-9f05-d0226c2b9b94",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
