@@ -87,7 +87,7 @@ CreateController(TodoItemDTO, { ReturnDTOClass: CreatedTodoDTO })
 UpdateController(TodoItemDTO, { ReturnDTOClass: UpdatedTodoDTO, method: 'patch' })
 ```
 
-Only exposed properties of the return DTO are serialized; use `@Field()` or `@Expose()` on those properties. This option shapes the query service's result and does not fetch additional data. Ensure the service returns the values your response DTO needs. Request DTOs, hooks, authorization, and other endpoints continue to use their existing configuration.
+Use `@Field()` or `@Expose()` on the properties the response DTO should serialize. `ReturnDTOClass` controls serialization and the OpenAPI response schema. The query service still receives the same input and must return the values the response DTO needs.
 
 ## Delete one[​](#delete-one 'Direct link to Delete one')
 

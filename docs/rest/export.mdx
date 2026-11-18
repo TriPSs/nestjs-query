@@ -66,7 +66,7 @@ By default, CRUD exports use `read.many.ReturnDTOClass` when configured, falling
 
 The export controller receives the list DTO as `many.ReturnDTOClass` and builds its query arguments from it. Set `export.many.ReturnDTOClass` to override the inherited list DTO, or `many.ReturnDTOClass` when using a standalone export controller.
 
-Set `ExportDTOClass` to choose a different set of CSV columns without changing the query DTO or the other CRUD endpoints. Each decorated property becomes a column, and its property name becomes the CSV header. Standalone export controllers default to their `DTOClass`.
+Set `ExportDTOClass` to choose a different set of CSV columns without changing the query DTO or the other CRUD endpoints. Each decorated property becomes a column, and its property name becomes the CSV header. Standalone export controllers use `many.ReturnDTOClass` by default, falling back to `DTOClass`.
 
 CRUD exports also inherit `read.many.relations`. Set `export.many.relations` to override the selections, or `[]` to omit the inherited relations. Relations from query hooks are added to these defaults. For standalone export controllers, configure `many.relations` directly.
 
