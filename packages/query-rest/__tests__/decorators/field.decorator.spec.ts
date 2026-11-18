@@ -1,9 +1,38 @@
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { Test } from '@nestjs/testing'
 import { plainToInstance } from 'class-transformer'
 import { validateSync } from 'class-validator'
 
 import { Field } from '../../src/decorators'
 
 describe('Field', () => {
+  it('omits hidden fields from the generated schema while still exposing, transforming and validating them', async () => {
+    class ExampleDTO {
+      @Field({ hideFromSwagger: true, minimum: 1 })
+      count!: number
+
+      @Field(() => String, { hideFromSwagger: false })
+      label!: string
+    }
+
+    const module = await Test.createTestingModule({}).compile()
+    const app = module.createNestApplication()
+    try {
+      const document = SwaggerModule.createDocument(app, new DocumentBuilder().build(), { extraModels: [ExampleDTO] })
+      expect(document.components?.schemas?.ExampleDTO).toEqual({
+        type: 'object',
+        properties: { label: { type: 'string' } },
+        required: ['label']
+      })
+    } finally {
+      await app.close()
+    }
+
+    const dto = plainToInstance(ExampleDTO, { count: '0', label: 'test' }, { excludeExtraneousValues: true })
+    expect(dto.count).toBe(0)
+    expect(validateSync(dto)[0].constraints).toHaveProperty('min')
+  })
+
   describe('integer type', () => {
     class IntegerDTO {
       @Field({ type: 'integer' })
