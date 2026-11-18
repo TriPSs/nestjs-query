@@ -1,0 +1,24 @@
+packages/query-rest/__tests__/decorators/field.decorator.spec.ts
+  s_dc9145248def59::t_a934975e07181d 1-2,9,18-29
+  s_dc9145248def59::t_a592713829a622 10-17,30-35
+packages/query-rest/src/decorators/field.decorator.ts
+  s_dc9145248def59::t_0428141afc7b14 2,34-35,119,123-129
+docs/rest/dtos.mdx
+  s_dc9145248def59::t_10e1d9bd4c2936 22-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5f4d5f1aa8d20762f5c07aeb723856c5f3692607",
+  "prompts": {},
+  "sessions": {
+    "s_dc9145248def59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1f072-5bf1-7f60-be3b-94172bdc12d8",
+        "model": "gpt-6.2-astra"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
