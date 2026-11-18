@@ -15,4 +15,4 @@ export function QueryOptions(opts: QueryOptionsDecoratorOpts<any>) {
 }
 
 export const getQueryOptions = <DTO>(DTOClass: Class<DTO>): MetaValue<QueryOptionsDecoratorOpts<DTO>> =>
-  valueReflector.get(DTOClass)
+  valueReflector.get(DTOClass, true)

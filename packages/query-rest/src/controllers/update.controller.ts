@@ -13,6 +13,9 @@ import { ParamArgsType, UpdateOneInputType } from '../types'
 import { BaseServiceController, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
 
 export interface UpdateControllerOpts<DTO, U = DeepPartial<DTO>> extends MutationOpts {
+  /** DTO used for response serialization and OpenAPI. Defaults to DTOClass. */
+  ReturnDTOClass?: Class<unknown>
+
   /** HTTP method for the update endpoint. Defaults to 'put'. */
   method?: 'put' | 'patch'
   UpdateDTOClass?: Class<U>
@@ -50,6 +53,7 @@ export const Updateable =
     const dtoNames = getDTONames(DTOClass, opts)
 
     const {
+      ReturnDTOClass = DTOClass,
       UpdateDTOClass = defaultUpdateDTO(dtoNames, DTOClass),
       UpdateOneInput = defaultUpdateOneInput(dtoNames, UpdateDTOClass)
     } = opts
@@ -63,7 +67,8 @@ export const Updateable =
       'many',
       'UpdateDTOClass',
       'UpdateOneInput',
-      'UpdateManyInput'
+      'UpdateManyInput',
+      'ReturnDTOClass'
     )
 
     @ApiSchema({ name: `Update${DTOClass.name}` })
@@ -74,7 +79,7 @@ export const Updateable =
 
     class UpdateControllerBase extends BaseClass {
       @UpdateMethod(
-        () => DTOClass,
+        () => ReturnDTOClass,
         {
           path: opts?.one?.path ?? ':id',
           operation: {

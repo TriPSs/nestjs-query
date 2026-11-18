@@ -3,6 +3,8 @@ title: 'Hooks'
 description: 'Hooks transform generated endpoint arguments before the query service is called. REST currently exposes BeforeCreateOne, BeforeUpdateOne, and BeforeQueryMany hooks. A hook can be an inline function or an injectable class.'
 ---
 
+Hooks receive a context object with the HTTP request at `context.req`, matching GraphQL contexts that expose `req`. This applies to `BeforeCreateOne`, `BeforeUpdateOne`, and `BeforeQueryMany`, including CSV export queries.
+
 ## Mutation hooks[​](#mutation-hooks 'Direct link to Mutation hooks')
 
 Decorate the create or update DTO when a value should be derived from the HTTP request rather than accepted from the client.
@@ -15,33 +17,31 @@ type AuthenticatedRequest = Request & {
   user: { id: string }
 }
 
-@BeforeCreateOne((args: CreateOneInputType<TodoItemInputDTO>, request: AuthenticatedRequest) => ({
+@BeforeCreateOne((args: CreateOneInputType<TodoItemInputDTO>, context: { req: AuthenticatedRequest }) => ({
   input: {
     ...args.input,
-    ownerId: request.user.id
+    ownerId: context.req.user.id
   }
 }))
 export class TodoItemInputDTO {
-
   @Field()
   title!: string
   ownerId!: string
 }
 ```
 
-The function must return the complete wrapper (`{ input }` for create and `{ update }` for update), not only the inner DTO.
+The function must return the complete wrapper (`{ input }` for create and `{ update }` for update), not only the inner DTO. Generated PUT and PATCH endpoints pass `{ update }` through each update hook and send the final `update` value to the query service. The hook interceptor selects the update wrapper automatically, including for custom endpoints using `@BodyHookArgs()` with `HookInterceptor(HookTypes.BEFORE_UPDATE_ONE, ...)`.
 
 ```ts todo-item-update.dto.ts
 import { BeforeUpdateOne, UpdateOneInputType } from '@ptc-org/nestjs-query-rest'
 
-@BeforeUpdateOne((args: UpdateOneInputType<TodoItemUpdateDTO>, request: AuthenticatedRequest) => ({
+@BeforeUpdateOne((args: UpdateOneInputType<TodoItemUpdateDTO>, context: { req: AuthenticatedRequest }) => ({
   update: {
     ...args.update,
-    updatedById: request.user.id
+    updatedById: context.req.user.id
   }
 }))
 export class TodoItemUpdateDTO {
-
   updatedById?: string
 }
 ```
@@ -66,7 +66,6 @@ import { BeforeQueryMany, FilterableField, RestQuery } from '@ptc-org/nestjs-que
   }
 })
 export class TodoItemDTO {
-
   @FilterableField()
   title!: string
 }
@@ -83,11 +82,10 @@ import { Injectable } from '@nestjs/common'
 import { BeforeCreateOneHook, CreateOneInputType } from '@ptc-org/nestjs-query-rest'
 
 @Injectable()
-export class SetOwnerHook implements BeforeCreateOneHook<TodoItemInputDTO, AuthenticatedRequest> {
-
-  run(args: CreateOneInputType<TodoItemInputDTO>, request: AuthenticatedRequest) {
+export class SetOwnerHook implements BeforeCreateOneHook<TodoItemInputDTO, { req: AuthenticatedRequest }> {
+  run(args: CreateOneInputType<TodoItemInputDTO>, context: { req: AuthenticatedRequest }) {
     return {
-      input: { ...args.input, ownerId: request.user.id }
+      input: { ...args.input, ownerId: context.req.user.id }
     }
   }
 }

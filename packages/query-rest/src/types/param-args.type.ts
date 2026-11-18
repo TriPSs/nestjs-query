@@ -1,7 +1,7 @@
 import { PickType } from '@nestjs/swagger'
 import { Class, Filter } from '@ptc-org/nestjs-query-core'
 
-import { getIDFields } from '../index'
+import { getIDFields } from '../decorators/id-field.decorator'
 
 export interface ParamArgsType {
   id: string | number

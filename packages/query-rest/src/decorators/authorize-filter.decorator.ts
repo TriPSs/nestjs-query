@@ -13,7 +13,7 @@ function getAuthorizerFilter<C extends AuthorizerContext<unknown>>(context: C, a
   if (!context.authorizer) {
     return undefined
   }
-  return context.authorizer.authorize(context, authorizationContext)
+  return context.authorizer.authorize({ req: context }, authorizationContext)
 }
 
 // function getRelationAuthFilter<C extends AuthorizerContext<unknown>>(

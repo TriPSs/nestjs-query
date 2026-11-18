@@ -1,6 +1,15 @@
 import { Header } from '@nestjs/common'
 import { ApiProduces } from '@nestjs/swagger'
-import { Class, DeepPartial, EXPORT_TRANSFORM_GROUP, Filter, mergeQuery, omit, QueryService } from '@ptc-org/nestjs-query-core'
+import {
+  Class,
+  DeepPartial,
+  EXPORT_TRANSFORM_GROUP,
+  Filter,
+  mergeQuery,
+  omit,
+  Query,
+  QueryService
+} from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
 
 import { AuthorizerFilter, Get, HookTypes, NonePagingQueryArgsTypeOpts, OperationGroup, QueryType } from '../'
@@ -20,6 +29,12 @@ export type ExportControllerOpts<DTO, ExportDTO = DeepPartial<DTO>> = {
    * DTO used to select fields for CSV serialization.
    */
   ExportDTOClass?: Class<ExportDTO>
+  many?: ControllerOpts['many'] & {
+    /** DTO defining generated export queries and default CSV fields. Defaults to DTOClass. */
+    ReturnDTOClass?: Class<unknown>
+    /** Default relations to load for export queries. */
+    relations?: Query<DTO>['relations']
+  }
 } & ControllerOpts &
   NonePagingQueryArgsTypeOpts<DTO>
 
@@ -67,15 +82,16 @@ export const Exportable =
     }
 
     const dtoNames = getDTONames(DTOClass, opts)
+    const ManyReturnDTOClass = (opts.many?.ReturnDTOClass ?? DTOClass) as Class<DTO>
     const {
-      QueryArgs = createExportQueryArgs(DTOClass, {
+      QueryArgs = createExportQueryArgs(ManyReturnDTOClass, {
         ...opts,
         connectionName: `${dtoNames.baseName}Connection`
       }),
-      ExportDTOClass = DTOClass
+      ExportDTOClass = ManyReturnDTOClass
     } = opts
 
-    const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'FindDTOClass', 'Connection', 'withDeleted')
+    const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection', 'withDeleted')
 
     class EQA extends QueryArgs {}
 
@@ -100,7 +116,7 @@ export const Exportable =
         },
         { interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)] },
         commonControllerOpts,
-        opts.many ?? {}
+        omit(opts.many ?? {}, 'ReturnDTOClass', 'relations')
       )
       @Header('content-type', 'text/csv')
       @ApiProduces('text/csv')
@@ -113,13 +129,16 @@ export const Exportable =
         authorizeFilter?: Filter<DTO>
       ): Promise<string> {
         const items = await this.service.exportMany(
-          mergeQuery(query, {
-            filter: authorizeFilter,
-            paging: {
-              limit: opts?.limit ?? 1000,
-              offset: 0
+          mergeQuery(
+            { ...query, relations: [...(opts.many?.relations ?? []), ...(query.relations ?? [])] },
+            {
+              filter: authorizeFilter,
+              paging: {
+                limit: opts?.limit ?? 1000,
+                offset: 0
+              }
             }
-          }),
+          ),
           {
             withDeleted: opts?.many?.withDeleted
           }

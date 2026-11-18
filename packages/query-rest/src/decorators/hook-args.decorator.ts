@@ -3,15 +3,15 @@ import { REQUEST } from '@nestjs/core'
 import { Class, Query } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
 
-import { Hook } from '../hooks'
+import { Hook, HookTypes } from '../hooks'
 import { HookContext } from '../interceptors'
-import { MutationArgsType } from '../types'
+import { MutationArgsType, UpdateOneInputType } from '../types'
 import { BuildableQueryType } from '../types/query/buildable-query.type'
 
 class HooksTransformer<T> implements PipeTransform {
   @Inject(REQUEST) protected readonly request!: Request
 
-  public async transform(value: T, metadata: ArgumentMetadata): Promise<MutationArgsType<T> | Query<T>> {
+  public async transform(value: T, metadata: ArgumentMetadata): Promise<MutationArgsType<unknown> | Query<T>> {
     const transformedValue = this.transformValue(value, metadata.metatype)
 
     if (metadata.type === 'param') {
@@ -31,15 +31,17 @@ class HooksTransformer<T> implements PipeTransform {
     return plainToInstance<V, unknown>(type, value, { excludeExtraneousValues: true })
   }
 
-  private async runMutationHooks(data: T): Promise<MutationArgsType<T>> {
-    const hooks = (this.request as HookContext<Hook<unknown>>).hooks
+  private async runMutationHooks(data: T): Promise<MutationArgsType<unknown>> {
+    const { hooks, hookType } = this.request as HookContext<Hook<unknown>>
     if (hooks && hooks.length > 0) {
-      let hookedArgs = { input: data }
+      const context = { req: this.request }
+      const isUpdate = hookType === HookTypes.BEFORE_UPDATE_ONE
+      let hookedArgs: MutationArgsType<T> | UpdateOneInputType<T> = isUpdate ? { update: data } : { input: data }
       for (const hook of hooks) {
-        hookedArgs = (await hook.run(hookedArgs, this.request)) as MutationArgsType<T>
+        hookedArgs = (await hook.run(hookedArgs, context)) as MutationArgsType<T> | UpdateOneInputType<T>
       }
 
-      return hookedArgs
+      return isUpdate ? { input: hookedArgs } : (hookedArgs as MutationArgsType<T>)
     }
 
     return { input: data }
@@ -50,8 +52,9 @@ class HooksTransformer<T> implements PipeTransform {
     let hookedArgs = data.buildQuery()
 
     if (hooks && hooks.length > 0) {
+      const context = { req: this.request }
       for (const hook of hooks) {
-        hookedArgs = (await hook.run(hookedArgs, this.request)) as Query<T>
+        hookedArgs = (await hook.run(hookedArgs, context)) as Query<T>
       }
 
       return hookedArgs

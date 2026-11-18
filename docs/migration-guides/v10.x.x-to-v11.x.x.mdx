@@ -1,6 +1,6 @@
 ---
 title: 'v10.x.x to v11.x.x'
-description: 'Migrate query limits, CSV exports, and REST Swagger dependencies.'
+description: 'Migrate query limits, REST hook and authorizer contexts, CSV exports, and REST Swagger dependencies.'
 ---
 
 In v11, the default `maxResultsSize` is `100` for both GraphQL and REST, up from `50` in v10. This affects endpoints that use the generated paging arguments without an explicit maximum.
@@ -66,3 +66,35 @@ Applications that do not use CSV export can omit it.
 ## REST Swagger runtime dependency
 
 `@ptc-org/nestjs-query-rest` requires `@nestjs/swagger` at runtime, even when an application does not generate OpenAPI documentation. Its `@ApiProperty` decorators run when REST DTO classes are defined, so the dependency cannot be loaded lazily. Keep `@nestjs/swagger` installed when upgrading.
+
+## REST hook and authorizer contexts
+
+This breaking change aligns REST hook and authorizer contexts with GraphQL contexts that expose the HTTP request as `req`. Both APIs can now use `context.req` to access request data, making it easier to share hooks and authorizers between REST and GraphQL.
+
+REST `BeforeCreateOne`, `BeforeUpdateOne`, and `BeforeQueryMany` hooks now receive `{ req }` as their second argument instead of the HTTP request directly. This includes query hooks on CSV exports.
+
+Update hooks from `context.user` or `context.headers` to `context.req.user` or `context.req.headers`. For typed hooks, change the context generic from `Request` to `{ req: Request }` (or the equivalent authenticated request type). The first argument and return value are unchanged.
+
+REST authorizers, both inline `@Authorize` callbacks and custom authorizer classes, also receive `{ req }` as their first argument. Update their request access in the same way. The second argument remains the operation metadata (`AuthorizationContext`); for example, use `authorize(context: { req: AuthenticatedRequest }, authorizationContext: AuthorizationContext)`.
+
+```ts
+// Before
+run(input: CreateOneInputType<CreateTodoDTO>, request: AuthenticatedRequest) {
+  input.input.ownerId = request.user.id
+  return input
+}
+
+// After
+run(input: CreateOneInputType<CreateTodoDTO>, context: { req: AuthenticatedRequest }) {
+  input.input.ownerId = context.req.user.id
+  return input
+}
+```
+
+## REST read response DTOs
+
+Replace `read.FindDTOClass` with `read.one.ReturnDTOClass`. For standalone controllers, replace `ReadController(DTO, { FindDTOClass: DetailsDTO })` with `ReadController(DTO, { one: { ReturnDTOClass: DetailsDTO } })`.
+
+Use `read.many.ReturnDTOClass` to customize the collection independently. Its metadata defines the response items, filterable and sortable fields, and query defaults, including inherited metadata. `read.one.ReturnDTOClass` only changes single-record serialization and OpenAPI. ID route parameters now always come from the main `DTOClass`, so any `@IDField` metadata previously supplied only by `FindDTOClass` must be defined on the main DTO.
+
+CRUD exports now default to the list DTO configured in `read.many.ReturnDTOClass` for CSV fields and generated filter and sorting metadata. Explicit `export.ExportDTOClass` and `export.QueryArgs` still override their respective defaults. Default relation selections can be configured separately with `read.one.relations` and `read.many.relations`; exports inherit the latter unless `export.many.relations` is provided.

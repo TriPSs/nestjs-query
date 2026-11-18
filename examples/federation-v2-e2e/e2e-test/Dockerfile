@@ -2,12 +2,15 @@ FROM node:22
 
 WORKDIR /app
 
-COPY examples/federation-v2-e2e/e2e-test/package*.json ./
-RUN npm install
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY .yarn/releases ./.yarn/releases
+COPY examples/federation-v2-e2e/e2e-test/package.json ./examples/federation-v2-e2e/e2e-test/
+RUN corepack enable && yarn workspaces focus e2e-test
 
+WORKDIR /app/examples/federation-v2-e2e/e2e-test
+COPY tsconfig.base.json /app/tsconfig.base.json
 COPY examples/federation-v2-e2e/e2e-test/vitest.config.cts ./
-COPY tsconfig.base.json /tsconfig.base.json
 COPY examples/federation-v2-e2e/e2e-test/tsconfig*.json ./
 COPY examples/federation-v2-e2e/e2e-test/e2e ./e2e
 
-CMD ["npm", "test"]
+CMD ["yarn", "test"]

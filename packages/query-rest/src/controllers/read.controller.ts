@@ -1,4 +1,4 @@
-import { Class, Filter, mergeFilter, mergeQuery, omit, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, Filter, GetByIdOptions, mergeFilter, mergeQuery, omit, QueryService } from '@ptc-org/nestjs-query-core'
 
 import {
   ApiSchema,
@@ -36,10 +36,18 @@ export type ReadControllerFromOpts<
 export type ReadControllerOpts<DTO> = {
   QueryArgs?: StaticQueryType<DTO, PagingStrategies>
 
-  /**
-   * DTO to return with finding one record
-   */
-  FindDTOClass?: Class<DTO>
+  one?: ControllerOpts['one'] & {
+    /** DTO used for single-record response serialization and OpenAPI. Defaults to DTOClass. */
+    ReturnDTOClass?: Class<unknown>
+    /** Default relations to load when finding a single record. */
+    relations?: GetByIdOptions<DTO>['relations']
+  }
+  many?: ControllerOpts['many'] & {
+    /** DTO defining collection items, filters, sorting, and query defaults. Defaults to DTOClass. */
+    ReturnDTOClass?: Class<unknown>
+    /** Default relations to load for collection queries. */
+    relations?: GetByIdOptions<DTO>['relations']
+  }
 } & ControllerOpts &
   QueryArgsTypeOpts<DTO> &
   Pick<ConnectionOptions, 'enableTotalCount'>
@@ -72,17 +80,16 @@ export const Readable =
     }
 
     const dtoNames = getDTONames(DTOClass, opts)
-    const {
-      QueryArgs = QueryArgsType(DTOClass, { ...opts, connectionName: `${dtoNames.baseName}Connection` }),
-      FindDTOClass = DTOClass
-    } = opts
+    const ManyReturnDTOClass = (opts.many?.ReturnDTOClass ?? DTOClass) as Class<DTO>
+    const { QueryArgs = QueryArgsType(ManyReturnDTOClass, { ...opts, connectionName: `${dtoNames.baseName}Connection` }) } = opts
 
-    const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'FindDTOClass', 'Connection', 'withDeleted')
+    const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'QueryArgs', 'Connection', 'withDeleted')
+    const OneReturnDTOClass = opts.one?.ReturnDTOClass ?? DTOClass
 
     class QA extends QueryArgs {}
 
     @ApiSchema({ name: `Find${DTOClass.name}Args` })
-    class FOP extends ParamArgsType(FindDTOClass) {}
+    class FOP extends ParamArgsType(DTOClass) {}
 
     @ApiSchema({ name: `Query${DTOClass.name}Args` })
     class QOP extends QueryParamArgsType(DTOClass) {}
@@ -95,7 +102,7 @@ export const Readable =
 
     class ReadControllerBase extends BaseClass {
       @Get(
-        () => FindDTOClass,
+        () => OneReturnDTOClass,
         {
           path: opts?.one?.path ?? ':id',
           operation: {
@@ -107,7 +114,7 @@ export const Readable =
         },
         { interceptors: [HookInterceptor(HookTypes.BEFORE_FIND_ONE, DTOClass), AuthorizerInterceptor(DTOClass)] },
         commonControllerOpts,
-        opts.one ?? {}
+        omit(opts.one ?? {}, 'ReturnDTOClass', 'relations')
       )
       public async findById(
         @ParamArgs() params: FOP,
@@ -119,12 +126,13 @@ export const Readable =
       ): Promise<DTO> {
         return this.service.getById(params.getId(), {
           filter: authorizeFilter,
+          relations: opts?.one?.relations,
           withDeleted: opts?.one?.withDeleted
         })
       }
 
       @Get(
-        () => QueryArgs.ConnectionType,
+        () => QueryArgs.ResponseType ?? QueryArgs.ConnectionType,
         {
           path: opts?.many?.path,
           operation: {
@@ -136,7 +144,7 @@ export const Readable =
         },
         { interceptors: [HookInterceptor(HookTypes.BEFORE_QUERY_MANY, DTOClass), AuthorizerInterceptor(DTOClass)] },
         commonControllerOpts,
-        opts.many ?? {}
+        omit(opts.many ?? {}, 'ReturnDTOClass', 'relations')
       )
       public async queryMany(
         @ParamHookArgs() params: QOP,
@@ -152,7 +160,10 @@ export const Readable =
             this.service.query(q, {
               withDeleted: opts?.many?.withDeleted
             }),
-          mergeQuery(query, { filter: mergeFilter(params.getFilter(), authorizeFilter ?? {}) }),
+          mergeQuery(
+            { ...query, relations: [...(opts.many?.relations ?? []), ...(query.relations ?? [])] },
+            { filter: mergeFilter(params.getFilter(), authorizeFilter ?? {}) }
+          ),
           (filter) =>
             this.service.count(filter, {
               withDeleted: opts?.many?.withDeleted

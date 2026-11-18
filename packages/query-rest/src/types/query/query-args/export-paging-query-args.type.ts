@@ -5,6 +5,7 @@ import { getMergedQueryOpts, RestQuery } from '../../../types'
 import { BuildableQueryType } from '../buildable-query.type'
 import { ExportFilterType } from '../filter.type'
 import { PagingStrategies } from '../paging'
+import { createSortingQueryArgs } from '../sorting.type'
 import { DEFAULT_QUERY_OPTS } from './constants'
 import { NonePagingQueryArgsTypeOpts, StaticQueryType } from './interfaces'
 
@@ -14,9 +15,7 @@ export function createExportQueryArgs<DTO>(
 ): StaticQueryType<DTO, PagingStrategies.NONE> {
   const mergedOpts = getMergedQueryOpts(DTOClass, opts)
 
-  class ExportQueryArgs implements BuildableQueryType<DTO> {
-    public sorting = mergedOpts.defaultSort
-
+  class ExportQueryArgs extends createSortingQueryArgs(DTOClass, mergedOpts) implements BuildableQueryType<DTO> {
     public get filter() {
       return mergedOpts.defaultFilter
     }

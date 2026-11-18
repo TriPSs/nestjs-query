@@ -6,6 +6,7 @@ import { RestQuery } from '../../../types'
 import { BuildableQueryType } from '../buildable-query.type'
 import { FilterType } from '../filter.type'
 import { PagingStrategies } from '../paging'
+import { createSortingQueryArgs } from '../sorting.type'
 import { DEFAULT_QUERY_OPTS } from './constants'
 import { OffsetQueryArgsTypeOpts, StaticQueryType } from './interfaces'
 
@@ -17,11 +18,11 @@ export function createOffsetQueryArgs<DTO>(
   const defaultResultSize = opts.defaultResultSize ?? DEFAULT_QUERY_OPTS.defaultResultSize
   const maxResultsSize = opts.maxResultsSize ?? DEFAULT_QUERY_OPTS.maxResultsSize
 
-  class QueryArgs implements Paging, BuildableQueryType<DTO> {
+  class QueryArgs extends createSortingQueryArgs(DTOClass, opts) implements Paging, BuildableQueryType<DTO> {
     static ConnectionType = ConnectionType
 
     @Field({
-      type: Number,
+      type: 'integer',
       description: 'The maximum number of results to return.',
       nullable: true,
       default: defaultResultSize,
@@ -31,7 +32,7 @@ export function createOffsetQueryArgs<DTO>(
     limit?: number
 
     @Field({
-      type: Number,
+      type: 'integer',
       description: 'The offset to start returning results from.',
       nullable: true,
       required: false,
@@ -39,8 +40,6 @@ export function createOffsetQueryArgs<DTO>(
       default: 0
     })
     offset?: number
-
-    public sorting = opts.defaultSort
 
     public get filter() {
       return opts.defaultFilter

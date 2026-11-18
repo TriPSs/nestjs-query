@@ -24,6 +24,9 @@ export interface CreateControllerOpts<DTO, C = DeepPartial<DTO>> extends Mutatio
    */
   CreateOneInput?: Class<CreateOneInputType<C>>
 
+  /** DTO used for response serialization and OpenAPI. Defaults to DTOClass. */
+  ReturnDTOClass?: Class<unknown>
+
   one?: MutationOpts['one'] & AuthValidationOpts
 }
 
@@ -59,11 +62,21 @@ export const Creatable =
     const dtoNames = getDTONames(DTOClass, opts)
 
     const {
+      ReturnDTOClass = DTOClass,
       CreateDTOClass = defaultCreateDTO(dtoNames, DTOClass),
       CreateOneInput = defaultCreateOneInput(dtoNames, CreateDTOClass)
     } = opts
 
-    const commonControllerOpts = omit(opts, 'dtoName', 'one', 'many', 'CreateDTOClass', 'CreateOneInput', 'CreateManyInput')
+    const commonControllerOpts = omit(
+      opts,
+      'dtoName',
+      'one',
+      'many',
+      'CreateDTOClass',
+      'CreateOneInput',
+      'CreateManyInput',
+      'ReturnDTOClass'
+    )
     const validateCreateOneWithAuthFilter = opts.one?.validateWithAuthFilter ?? opts.validateWithAuthFilter ?? false
 
     @ApiSchema({ name: `Create${DTOClass.name}` })
@@ -74,7 +87,7 @@ export const Creatable =
 
     class CreateControllerBase extends BaseClass {
       @Post(
-        () => DTOClass,
+        () => ReturnDTOClass,
         {
           disabled: opts.disabled,
           path: opts.one?.path,

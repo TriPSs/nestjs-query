@@ -6,8 +6,10 @@ title: Paging and Sorting
 
 Offset paging is the default REST strategy. The endpoint accepts:
 
-- `limit`: maximum number of records to return. The default is `25` and the default maximum is `100`.
-- `offset`: zero-based number of records to skip. The default is `0`.
+- `limit`: positive integer specifying the maximum number of records to return. The default is `25` and the default maximum is `100`.
+- `offset`: non-negative integer specifying the number of records to skip. The default is `0`.
+
+With NestJS validation enabled, fractional values such as `limit=1.5` or `offset=0.5` return HTTP 400.
 
 ```http
 GET /todo-items?limit=25&offset=50
@@ -63,7 +65,21 @@ Use this strategy only for bounded collections.
 
 ## Sorting
 
-REST sorting is currently configured on the server through `defaultSort`; generated endpoints do not expose a client-controlled sort parameter.
+Use `sort=field:ASC` or `sort=field:DESC` to sort by a property decorated with `@FilterableField`. Repeat the parameter for multiple fields; the order of the parameters determines sort priority. Sorting is supported on paged, unpaged, and CSV export endpoints.
+
+```http
+GET /todo-items?sort=completed:ASC&sort=id:DESC
+```
+
+Optionally append `:NULLS_FIRST` or `:NULLS_LAST` to control null ordering when supported by your persistence adapter:
+
+```http
+GET /todo-items?sort=title:ASC:NULLS_LAST
+```
+
+Directions and null-order options are case-sensitive. Unknown fields and malformed sort values return HTTP 400. Only filterable DTO properties can be requested, including inherited properties. For fields with a custom `name`, use the exposed name: `@FilterableField({ name: 'state' }) status` accepts `sort=state:ASC` and sorts the underlying `status` property.
+
+When `sort` is omitted, the server uses `defaultSort`. Client sorting replaces the default sort list:
 
 ```ts
 @QueryOptions({
@@ -74,5 +90,7 @@ REST sorting is currently configured on the server through `defaultSort`; genera
 })
 export class TodoItemDTO {}
 ```
+
+Set `disableSort: true` in query options to remove the client sort parameter and always use `defaultSort`. Client sorting is also disabled when the DTO has no filterable fields or a filterable field uses `sort` as its property or exposed name. In the latter case, `sort` remains an equality filter and `defaultSort` still applies. Server-configured defaults are not restricted to filterable fields.
 
 Always add a stable tie-breaker (commonly the ID) when records can share the same sort value, especially when using offset paging.
