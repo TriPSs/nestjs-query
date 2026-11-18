@@ -1,0 +1,25 @@
+packages/query-rest/__tests__/types/query/offset-query-args.type.spec.ts
+  s_054890820e01fd::t_f99dac4d582fd3 1,16-33,38-49
+  s_054890820e01fd::t_d312283e914110 34-37
+  s_054890820e01fd::t_4e350ad1acf650 50
+docs/rest/queries/paging.mdx
+  s_054890820e01fd::t_3453efffa936ea 9-12
+packages/query-rest/src/types/query/query-args/offset-query-args.type.ts
+  s_054890820e01fd::t_3453efffa936ea 25,35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "98f736bd8ae040b93697c0cae4646cafdbdb4438",
+  "prompts": {},
+  "sessions": {
+    "s_054890820e01fd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1edc3-9d97-7861-9f05-d0226c2b9b94",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
