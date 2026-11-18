@@ -19,6 +19,8 @@ export class TodoItemInputDTO {
 }
 ```
 
+Use `@Field({ hideFromSwagger: true })` to omit a property from the DTO's OpenAPI schema. The field still participates in validation, transformation, and serialization.
+
 For nested objects and arrays, provide an explicit return type:
 
 ```ts

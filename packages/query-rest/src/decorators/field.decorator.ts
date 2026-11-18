@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common'
-import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
+import { ApiHideProperty, ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
 import { Expose, Transform, TransformationType, Type } from 'class-transformer'
 import {
   ArrayMaxSize,
@@ -31,6 +31,8 @@ import { ReturnTypeFunc } from '../interfaces/return-type-func'
 const OPENAPI_METADATA_FACTORY = '_OPENAPI_METADATA_FACTORY'
 
 export type FieldOptions = ApiPropertyOptions & {
+  /** Omit this property from the DTO's OpenAPI schema. */
+  hideFromSwagger?: boolean
   // prevents the IsEnum decorator from being added
   skipIsEnum?: boolean
   skipRequired?: boolean
@@ -114,14 +116,17 @@ export function Field(
     delete options.forceArray
     delete options.skipIsEnum
     delete options.skipRequired
+    delete options.hideFromSwagger
 
     const decorators: Array<PropertyDecorator> = [
       Expose({ name: advancedOptions?.name }),
-      ApiProperty({
-        type: metadataType ?? resolvedType,
-        isArray: metadataType && !isInteger ? undefined : isArray,
-        ...(options as ApiPropertyOptions)
-      })
+      advancedOptions?.hideFromSwagger
+        ? ApiHideProperty()
+        : ApiProperty({
+            type: metadataType ?? resolvedType,
+            isArray: metadataType && !isInteger ? undefined : isArray,
+            ...(options as ApiPropertyOptions)
+          })
     ]
 
     if (isArray) {
