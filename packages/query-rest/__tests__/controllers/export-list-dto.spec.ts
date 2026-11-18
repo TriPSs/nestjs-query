@@ -103,8 +103,12 @@ describe.each(['standalone', 'CRUD'] as const)('%s exports with a list DTO', (ki
       )
       await request(app.getHttpServer())
         .get('/tests/export')
-        .query({ sort: 'detail:ASC' })
+        .query({ sort: mode === 'query override' ? 'title:DESC' : 'detail:ASC' })
         .expect(mode === 'query override' ? 200 : 400)
+      const clientSortedQuery = expect.objectContaining({ sorting: [{ field: 'title', direction: SortDirection.DESC }] })
+      expect(service.exportMany.mock.calls.slice(1)).toEqual(
+        mode === 'query override' ? [[clientSortedQuery, { withDeleted: true }]] : []
+      )
     }
   )
 })

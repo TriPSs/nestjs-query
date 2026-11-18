@@ -46,15 +46,22 @@ describe('UpdateController HTTP method', () => {
   ] as const)(
     'passes update data through chained hooks for $method (custom DTO: $customUpdateDTO)',
     async ({ method, customUpdateDTO }) => {
-      const firstHook = vi.fn((args: UpdateOneInputType<TestDTO>) => ({
+      const firstHook = vi.fn((args: UpdateOneInputType<{ name: string }>) => ({
         update: { ...args.update, name: `${args.update.name}-first` }
       }))
-      const secondHook = vi.fn((args: UpdateOneInputType<TestDTO>) => ({
+      const secondHook = vi.fn((args: UpdateOneInputType<{ name: string }>) => ({
         update: { ...args.update, name: `${args.update.name}-second` }
       }))
 
-      @BeforeUpdateOne(firstHook, secondHook)
       class HookedDTO extends TestDTO {}
+
+      class UpdateDTO {
+        @Field({ name: 'title' })
+        name!: string
+      }
+
+      const UpdateDTOClass = customUpdateDTO ? UpdateDTO : undefined
+      BeforeUpdateOne(firstHook, secondHook)(UpdateDTOClass ?? HookedDTO)
 
       const service = {
         updateOne: vi.fn().mockResolvedValue({ id: '1', name: 'updated-first-second' })
@@ -65,10 +72,10 @@ describe('UpdateController HTTP method', () => {
       @Controller('hooked-tests')
       class TestController extends UpdateController(HookedDTO, {
         method,
-        ...(customUpdateDTO ? { UpdateDTOClass: HookedDTO } : {})
+        UpdateDTOClass
       }) {
         constructor() {
-          super(service as unknown as QueryService<HookedDTO>)
+          super(service as unknown as QueryService<HookedDTO, unknown, { name: string }>)
         }
       }
 
@@ -76,13 +83,16 @@ describe('UpdateController HTTP method', () => {
         controllers: [TestController],
         providers: [
           { provide: getAuthorizerToken(HookedDTO), useValue: authorizer },
-          ...createHookProviders([{ DTOClass: HookedDTO }])
+          ...createHookProviders([{ DTOClass: HookedDTO, UpdateDTOClass }])
         ]
       }).compile()
       app = moduleRef.createNestApplication()
       await app.init()
 
-      await request(app.getHttpServer())[method]('/hooked-tests/1').send({ name: 'updated' }).expect(200)
+      await request(app.getHttpServer())
+        [method]('/hooked-tests/1')
+        .send(customUpdateDTO ? { title: 'updated' } : { name: 'updated' })
+        .expect(200)
 
       expect(firstHook).toHaveBeenCalledWith({ update: { name: 'updated' } }, expect.objectContaining({ req: expect.anything() }))
       expect(secondHook).toHaveBeenCalledWith(

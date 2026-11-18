@@ -39,7 +39,12 @@ describe('REST hook context', () => {
     intercept(context: ExecutionContext, next: CallHandler) {
       const req = context.switchToHttp().getRequest<{ hooks: unknown[]; hookType: HookTypes }>()
       req.hooks = [firstHook, secondHook]
-      req.hookType = context.getHandler().name === 'update' ? HookTypes.BEFORE_UPDATE_ONE : HookTypes.BEFORE_CREATE_ONE
+      const hookTypes: Record<string, HookTypes> = {
+        create: HookTypes.BEFORE_CREATE_ONE,
+        update: HookTypes.BEFORE_UPDATE_ONE,
+        query: HookTypes.BEFORE_QUERY_MANY
+      }
+      req.hookType = hookTypes[context.getHandler().name]
       httpRequest = req
       return next.handle()
     }
