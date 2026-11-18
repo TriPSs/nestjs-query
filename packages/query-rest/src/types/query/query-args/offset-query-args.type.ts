@@ -22,7 +22,7 @@ export function createOffsetQueryArgs<DTO>(
     static ConnectionType = ConnectionType
 
     @Field({
-      type: Number,
+      type: 'integer',
       description: 'The maximum number of results to return.',
       nullable: true,
       default: defaultResultSize,
@@ -32,7 +32,7 @@ export function createOffsetQueryArgs<DTO>(
     limit?: number
 
     @Field({
-      type: Number,
+      type: 'integer',
       description: 'The offset to start returning results from.',
       nullable: true,
       required: false,

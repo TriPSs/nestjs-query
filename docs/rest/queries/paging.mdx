@@ -6,8 +6,10 @@ title: Paging and Sorting
 
 Offset paging is the default REST strategy. The endpoint accepts:
 
-- `limit`: maximum number of records to return. The default is `25` and the default maximum is `100`.
-- `offset`: zero-based number of records to skip. The default is `0`.
+- `limit`: positive integer specifying the maximum number of records to return. The default is `25` and the default maximum is `100`.
+- `offset`: non-negative integer specifying the number of records to skip. The default is `0`.
+
+With NestJS validation enabled, fractional values such as `limit=1.5` or `offset=0.5` return HTTP 400.
 
 ```http
 GET /todo-items?limit=25&offset=50

@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common'
 import { Filter } from '@ptc-org/nestjs-query-core'
 import { plainToInstance } from 'class-transformer'
 import { validateSync } from 'class-validator'
@@ -11,6 +12,41 @@ describe('createOffsetQueryArgs', () => {
     @FilterableField()
     title!: string
   }
+
+  describe.each([false, true])('pagination with disableFilter=%s', (disableFilter) => {
+    it.each(['limit', 'offset'])('rejects fractional %s query parameters with HTTP 400', async (field) => {
+      const QueryArgs = createOffsetQueryArgs(TestDTO, { disableFilter })
+      const pipe = new ValidationPipe({ transform: true })
+      const input = { limit: '1', offset: '0', [field]: field === 'limit' ? '1.5' : '0.5' }
+
+      expect(validateSync(plainToInstance(QueryArgs, input))[0]?.constraints).toHaveProperty('isInt')
+      await expect(pipe.transform(input, { type: 'query', metatype: QueryArgs })).rejects.toMatchObject({
+        status: 400
+      })
+    })
+
+    it.each([
+      ['1', '0'],
+      ['100', '50']
+    ])('accepts and transforms integer limit=%s and offset=%s', async (limit, offset) => {
+      const QueryArgs = createOffsetQueryArgs(TestDTO, { disableFilter })
+      const pipe = new ValidationPipe({ transform: true })
+      const query = (await pipe.transform(
+        { limit, offset },
+        { type: 'query', metatype: QueryArgs }
+      )) as BuildableQueryType<TestDTO>
+
+      expect(query.buildQuery().paging).toEqual({ limit: Number(limit), offset: Number(offset) })
+    })
+
+    it('describes both pagination parameters as integers in OpenAPI', () => {
+      const QueryArgs = createOffsetQueryArgs(TestDTO, { disableFilter })
+
+      for (const field of ['limit', 'offset']) {
+        expect(Reflect.getMetadata('swagger/apiModelProperties', QueryArgs.prototype, field)?.type).toBe('integer')
+      }
+    })
+  })
 
   it('retains the default filter and omits filter fields when filtering is disabled', () => {
     const defaultFilter: Filter<TestDTO> = { title: { eq: 'default' } }
