@@ -49,7 +49,7 @@ export class TodoItemDTO {
 | `Boolean`                                                                   | `IsBoolean()`                                                                                     |
 | `Date`                                                                      | `IsDate()`                                                                                        |
 | Explicit array type, such as `() => [String]`                               | `IsArray()`, plus type validation for each element.                                               |
-| Nested DTO supplied through a return type function or Swagger type metadata | `ValidateNested()`, plus `IsObject()` for a non-array field. Arrays validate each nested element. |
+| Nested DTO supplied through a return type function or Swagger type metadata | `ValidateNested()` and `IsObject()`, applied to each element for arrays.                          |
 | `enum`                                                                      | `IsEnum(enum)`, applied to each element for arrays.                                               |
 | `format: 'uuid'`                                                            | `IsUUID()`, applied to each element for arrays.                                                   |
 | `format: 'email'`                                                           | `IsEmail()`, applied to each element for arrays.                                                  |
