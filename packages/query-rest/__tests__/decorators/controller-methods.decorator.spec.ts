@@ -42,9 +42,9 @@ describe('controller method decorators', () => {
       return 'tagged'
     }
 
-    @Get(() => String, { path: 'untagged', operation: { tags: [] } })
-    untagged(): string {
-      return 'untagged'
+    @Get(() => String, { path: 'empty-operation-tags', operation: { tags: [] } })
+    emptyOperationTags(): string {
+      return 'empty operation tags'
     }
   }
 
@@ -98,7 +98,7 @@ describe('controller method decorators', () => {
     expect(responses).not.toHaveProperty('204')
   })
 
-  it('combines operation tags with controller and method tags and honors an explicit empty tag list', async () => {
+  it('combines operation tags with controller and method tags and inherits controller tags for an empty list', async () => {
     const module = await Test.createTestingModule({ controllers: [TestController] }).compile()
     const app = module.createNestApplication()
 
@@ -109,7 +109,7 @@ describe('controller method decorators', () => {
         summary: 'Tagged operation',
         tags: ['controller', 'method', 'operation']
       })
-      expect(document.paths['/test/untagged']?.get?.tags).toEqual([])
+      expect(document.paths['/test/empty-operation-tags']?.get?.tags).toEqual(['controller'])
     } finally {
       await app.close()
     }
