@@ -1,6 +1,7 @@
 import { Controller, INestApplication, UnauthorizedException } from '@nestjs/common'
+import { ApiTags, DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { Test } from '@nestjs/testing'
-import { Filter, QueryService } from '@ptc-org/nestjs-query-core'
+import { Filter, NoOpQueryService, QueryService } from '@ptc-org/nestjs-query-core'
 import request from 'supertest'
 import { vi } from 'vitest'
 
@@ -12,6 +13,31 @@ describe('CreateController', () => {
   let app: INestApplication
 
   afterEach(() => app?.close())
+
+  it('keeps Swagger decorator tags when no generated tags are configured', async () => {
+    class TestDTO {
+      @Field()
+      name!: string
+    }
+
+    @ApiTags('controller')
+    @Controller('tests')
+    class TestController extends CreateController(TestDTO, { decorators: [ApiTags('create')] }) {
+      constructor() {
+        super(NoOpQueryService.getInstance())
+      }
+    }
+
+    const module = await Test.createTestingModule({
+      controllers: [TestController],
+      providers: [{ provide: getAuthorizerToken(TestDTO), useValue: { authorize: vi.fn() } }]
+    }).compile()
+    app = module.createNestApplication()
+
+    const document = SwaggerModule.createDocument(app, new DocumentBuilder().build())
+
+    expect(document.paths['/tests']?.post?.tags).toEqual(['controller', 'create'])
+  })
 
   it('authorizes createOne before calling the query service', async () => {
     class TestDTO {

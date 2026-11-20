@@ -18,7 +18,8 @@ import {
   ApiOperation,
   ApiOperationOptions,
   ApiResponse,
-  ApiResponseOptions
+  ApiResponseOptions,
+  ApiTags
 } from '@nestjs/swagger'
 import { isArray } from 'class-validator'
 
@@ -102,7 +103,12 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
     decorators.push(HttpCode(status))
 
     if (options.operation) {
-      decorators.push(ApiOperation(options.operation))
+      const { tags, ...operation } = options.operation
+      if (tags?.length) {
+        decorators.push(ApiTags(...tags), ApiOperation(operation))
+      } else {
+        decorators.push(ApiOperation(options.operation))
+      }
     }
 
     const body = (options as MutationMethodDecoratorArg).body

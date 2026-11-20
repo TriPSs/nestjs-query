@@ -4,7 +4,7 @@ import { Class, DeepPartial, Filter, omit, QueryService } from '@ptc-org/nestjs-
 
 import { ApiSchema, MutationArgsType, Patch, Put } from '../'
 import { OperationGroup } from '../auth'
-import { DTONames, getDTONames } from '../common'
+import { DTONames, getDTONames, mergeArrays } from '../common'
 import { AuthorizerFilter, BodyHookArgs } from '../decorators'
 import { ParamArgs } from '../decorators/param-args.decorator'
 import { HookTypes } from '../hooks'
@@ -84,7 +84,7 @@ export const Updateable =
           path: opts?.one?.path ?? ':id',
           operation: {
             operationId: `${dtoNames.pluralBaseNameLower}.updateOne`,
-            tags: [...(opts.tags || []), ...(opts.one?.tags ?? [])],
+            tags: mergeArrays(opts.tags, opts.one?.tags),
             description: opts?.one?.description,
             ...opts?.one?.operationOptions
           },

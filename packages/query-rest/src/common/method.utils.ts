@@ -1,6 +1,6 @@
 import { BaseMethodOptions } from '../decorators/method.decorator'
 
-const mergeArrays = <T>(arr1?: T[], arr2?: T[]): T[] | undefined => {
+export const mergeArrays = <T>(arr1?: T[], arr2?: T[]): T[] | undefined => {
   if (arr1 || arr2) {
     return [...(arr1 ?? []), ...(arr2 ?? [])]
   }

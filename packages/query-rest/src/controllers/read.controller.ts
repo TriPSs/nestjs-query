@@ -13,7 +13,7 @@ import {
   QueryParamArgsType,
   QueryType
 } from '../'
-import { getDTONames } from '../common'
+import { getDTONames, mergeArrays } from '../common'
 import { ConnectionOptions, InferConnectionTypeFromStrategy } from '../connection/interfaces'
 import { QueryHookArgs } from '../decorators/hook-args.decorator'
 import { ParamArgs } from '../decorators/param-args.decorator'
@@ -107,7 +107,7 @@ export const Readable =
           path: opts?.one?.path ?? ':id',
           operation: {
             operationId: `${dtoNames.pluralBaseNameLower}.findById`,
-            tags: [...(opts.tags || []), ...(opts.one?.tags ?? [])],
+            tags: mergeArrays(opts.tags, opts.one?.tags),
             description: opts?.one?.description,
             ...opts?.one?.operationOptions
           }
@@ -137,7 +137,7 @@ export const Readable =
           path: opts?.many?.path,
           operation: {
             operationId: `${dtoNames.pluralBaseNameLower}.queryMany`,
-            tags: [...(opts.tags || []), ...(opts.many?.tags ?? [])],
+            tags: mergeArrays(opts.tags, opts.many?.tags),
             description: opts?.many?.description,
             ...opts?.many?.operationOptions
           }
