@@ -315,6 +315,37 @@ describe('Field', () => {
     expect(validateSync(dto)).toHaveLength(0)
   })
 
+  describe('nested DTO arrays', () => {
+    class LabelDTO {
+      @Field()
+      name!: string
+    }
+
+    class LabelsDTO {
+      @Field(() => [LabelDTO])
+      labels!: LabelDTO[]
+    }
+
+    it('transforms and validates a flat array of DTO objects', () => {
+      const dto = plainToInstance(LabelsDTO, { labels: [{ name: 'one' }] })
+
+      expect(dto.labels[0]).toBeInstanceOf(LabelDTO)
+      expect(validateSync(dto)).toHaveLength(0)
+    })
+
+    it.each([{ labels: [[]] }, { labels: [[{ name: 'one' }]] }])('rejects array elements: %j', (input) => {
+      const errors = validateSync(plainToInstance(LabelsDTO, input))
+
+      expect(errors[0]?.constraints).toHaveProperty('isObject')
+    })
+
+    it('validates the fields of each nested DTO', () => {
+      const errors = validateSync(plainToInstance(LabelsDTO, { labels: [{ name: 'one' }, {}] }))
+
+      expect(errors).toMatchObject([{ property: 'labels', children: [{ property: '1', children: [{ property: 'name' }] }] }])
+    })
+  })
+
   it('resolves Swagger metadata factory types for transformation and validation', () => {
     const metadataType = () => Number
 

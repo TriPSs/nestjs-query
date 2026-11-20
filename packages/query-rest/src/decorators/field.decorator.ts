@@ -196,10 +196,7 @@ export function Field(
       )
     } else if ((returnTypeFunc || metadataType) && typeof resolvedType === 'function') {
       decorators.push(ValidateNested({ each: isArray }))
-
-      if (!isArray) {
-        decorators.push(IsObject())
-      }
+      decorators.push(IsObject({ each: isArray }))
     }
 
     if (options.enum && !advancedOptions?.skipIsEnum) {
