@@ -104,11 +104,12 @@ const methodDecorator = (method: (path?: string | string[]) => MethodDecorator, 
 
     if (options.operation) {
       const { tags, ...operation } = options.operation
+
       if (tags?.length) {
-        decorators.push(ApiTags(...tags), ApiOperation(operation))
-      } else {
-        decorators.push(ApiOperation(options.operation))
+        decorators.push(ApiTags(...tags))
       }
+
+      decorators.push(ApiOperation(operation))
     }
 
     const body = (options as MutationMethodDecoratorArg).body
