@@ -1,0 +1,46 @@
+packages/query-rest/__tests__/decorators/controller-methods.decorator.spec.ts
+  s_2a7cae781178bc::t_d5182eaec99028 1,3-4,9-10,35-48,100-115
+  s_2a7cae781178bc::t_e6d87d3c99359d 116
+packages/query-rest/src/controllers/create.controller.ts
+  s_2a7cae781178bc::t_b701c15d77013c 7,96
+packages/query-rest/src/controllers/read.controller.ts
+  s_2a7cae781178bc::t_b701c15d77013c 16,110,140
+packages/query-rest/src/controllers/delete.controller.ts
+  s_2a7cae781178bc::t_b701c15d77013c 5,50
+packages/query-rest/src/controllers/export.controller.ts
+  s_2a7cae781178bc::t_b701c15d77013c 16,112
+packages/query-rest/src/decorators/controller-methods.decorator.ts
+  h_b13471b77746e9 106-107,111
+  s_2a7cae781178bc::t_1d850ac07e9d10 21-22,108-110
+docs/rest/openapi.mdx
+  s_2a7cae781178bc::t_0a6239dd9de1bf 33-34
+packages/query-rest/src/common/method.utils.ts
+  s_2a7cae781178bc::t_b701c15d77013c 3
+packages/query-rest/src/controllers/update.controller.ts
+  s_2a7cae781178bc::t_b701c15d77013c 7,87
+packages/query-rest/__tests__/controllers/create.controller.spec.ts
+  s_2a7cae781178bc::t_d2e1207d19f3d8 2,4,17-30,35-40
+  s_2a7cae781178bc::t_0cd81deefadf52 31-34
+  s_2a7cae781178bc::t_1d725792499023 41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "80df80c4a8042d6f07b5767d2118e10d9c39fd3b",
+  "prompts": {},
+  "humans": {
+    "h_b13471b77746e9": {
+      "author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  },
+  "sessions": {
+    "s_2a7cae781178bc": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fab7-b18a-7541-9c55-1f876f4885ee",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
