@@ -1,0 +1,21 @@
+docs/rest/openapi.mdx
+  s_2a7cae781178bc::t_0bf773480c2724 33
+packages/query-rest/__tests__/decorators/controller-methods.decorator.spec.ts
+  s_2a7cae781178bc::t_0bf773480c2724 45-47,101,112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9f79fa2d0b6ecb7bd639246d6d45baa1c5a67d89",
+  "prompts": {},
+  "sessions": {
+    "s_2a7cae781178bc": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fab7-b18a-7541-9c55-1f876f4885ee",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Tycho Bokdam <tycho@palmtreecoding.com>"
+    }
+  }
+}
