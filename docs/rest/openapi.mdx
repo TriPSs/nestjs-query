@@ -30,6 +30,8 @@ The Swagger UI is then available at `/api`.
 
 Set shared tags at the endpoint level and operation-specific descriptions, tags, or Swagger operation options under `one` or `many`.
 
+Generated operation tags combine with tags from `@ApiTags` on the controller or method. An empty `operationOptions.tags` list leaves Swagger to use the decorator tags or its normal defaults.
+
 ```ts
 {
   DTOClass: TodoItemDTO,

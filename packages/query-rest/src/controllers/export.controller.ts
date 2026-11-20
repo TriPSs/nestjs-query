@@ -13,7 +13,7 @@ import {
 import { plainToInstance } from 'class-transformer'
 
 import { AuthorizerFilter, Get, HookTypes, NonePagingQueryArgsTypeOpts, OperationGroup, QueryType } from '../'
-import { getDTONames } from '../common'
+import { getDTONames, mergeArrays } from '../common'
 import { QueryHookArgs } from '../decorators'
 import { AuthorizerInterceptor, HookInterceptor } from '../interceptors'
 import { PagingStrategies, StaticQueryType } from '../types/query'
@@ -109,7 +109,7 @@ export const Exportable =
           path: `${opts?.many?.path ?? ''}/export`,
           operation: {
             operationId: `${dtoNames.pluralBaseNameLower}.exportMany`,
-            tags: [...(opts.tags || []), ...(opts.many?.tags ?? [])],
+            tags: mergeArrays(opts.tags, opts.many?.tags),
             description: opts?.many?.description,
             ...opts?.many?.operationOptions
           }

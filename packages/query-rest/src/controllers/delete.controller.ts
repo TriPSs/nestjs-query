@@ -2,7 +2,7 @@
 import { Class, Filter, omit, QueryService } from '@ptc-org/nestjs-query-core'
 
 import { AuthorizerFilter, AuthorizerInterceptor, Delete, OperationGroup, ParamArgsType } from '../'
-import { getDTONames } from '../common'
+import { getDTONames, mergeArrays } from '../common'
 import { ParamArgs } from '../decorators/param-args.decorator'
 import { BaseServiceController, ControllerClass, MutationOpts, ServiceController } from './controller.interface'
 
@@ -47,7 +47,7 @@ export const Deletable =
           path: opts?.one?.path ?? ':id',
           operation: {
             operationId: `${dtoNames.pluralBaseNameLower}.deleteOne`,
-            tags: [...(opts.tags || []), ...(opts.one?.tags ?? [])],
+            tags: mergeArrays(opts.tags, opts.one?.tags),
             description: opts?.one?.description,
             ...opts?.one?.operationOptions
           }

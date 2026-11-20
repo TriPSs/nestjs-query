@@ -4,7 +4,7 @@ import { AuthValidationOpts, Class, DeepPartial, Filter, omit, QueryService } fr
 
 import { ApiSchema, HookTypes, MutationArgsType, Post } from '../'
 import { OperationGroup } from '../auth'
-import { DTONames, getDTONames } from '../common'
+import { DTONames, getDTONames, mergeArrays } from '../common'
 import { AuthorizerFilter } from '../decorators'
 import { BodyHookArgs } from '../decorators/hook-args.decorator'
 import { ParamArgs } from '../decorators/param-args.decorator'
@@ -93,7 +93,7 @@ export const Creatable =
           path: opts.one?.path,
           operation: {
             operationId: `${dtoNames.pluralBaseNameLower}.createOne`,
-            tags: [...(opts.tags || []), ...(opts.one?.tags ?? [])],
+            tags: mergeArrays(opts.tags, opts.one?.tags),
             description: opts?.one?.description,
             ...opts?.one?.operationOptions
           },

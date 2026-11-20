@@ -1,9 +1,13 @@
-import { RequestMethod } from '@nestjs/common'
+import { Controller, RequestMethod } from '@nestjs/common'
 import { METHOD_METADATA, PATH_METADATA } from '@nestjs/common/constants'
+import { ApiTags, DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { Test } from '@nestjs/testing'
 
 import { Get, Patch, Post } from '../../src/decorators'
 
 describe('controller method decorators', () => {
+  @ApiTags('controller')
+  @Controller('test')
   class TestController {
     @Get(() => String)
     get(): string {
@@ -28,6 +32,20 @@ describe('controller method decorators', () => {
 
     @Post({ response: { status: 202, description: 'Accepted response.' } })
     accepted(): void {}
+
+    @Get(() => String, {
+      path: 'tagged',
+      operation: { tags: ['operation'], summary: 'Tagged operation' },
+      decorators: [ApiTags('method')]
+    })
+    tagged(): string {
+      return 'tagged'
+    }
+
+    @Get(() => String, { path: 'empty-operation-tags', operation: { tags: [] } })
+    emptyOperationTags(): string {
+      return 'empty operation tags'
+    }
   }
 
   it.each([
@@ -78,5 +96,22 @@ describe('controller method decorators', () => {
     expect(responses).toHaveProperty('202')
     expect(responses[202].description).toBe('Accepted response.')
     expect(responses).not.toHaveProperty('204')
+  })
+
+  it('combines operation tags with controller and method tags and inherits controller tags for an empty list', async () => {
+    const module = await Test.createTestingModule({ controllers: [TestController] }).compile()
+    const app = module.createNestApplication()
+
+    try {
+      const document = SwaggerModule.createDocument(app, new DocumentBuilder().build())
+
+      expect(document.paths['/test/tagged']?.get).toMatchObject({
+        summary: 'Tagged operation',
+        tags: ['controller', 'method', 'operation']
+      })
+      expect(document.paths['/test/empty-operation-tags']?.get?.tags).toEqual(['controller'])
+    } finally {
+      await app.close()
+    }
   })
 })
