@@ -30,27 +30,26 @@ export const createGroupByResolver = <DTO>(DTOClass: Class<DTO>): Provider | nul
 
     const [, GroupByType] = AggregateResponseType(DTOClass)
 
-    const GroupByResolverClass = fields.reduce(
-      (Base, field) => {
-        @Resolver(() => GroupByType)
-        class GroupByResolver extends Base {
-          @ResolverField(field.schemaName, () => field.target, { nullable: true })
-          [field.schemaName](
-            @Parent() dto: DTO,
-            @Args('by', {
-              type: () => GroupBy,
-              defaultValue: GroupBy.DAY
-            }) // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            by: string
-          ): unknown {
-            return (dto as Record<string, unknown>)[field.propertyName]
-          }
-        }
+    class EmptyBase {}
 
-        return GroupByResolver
-      },
-      class Base {} as Class<unknown>
-    )
+    const GroupByResolverClass = fields.reduce<typeof EmptyBase>((Base, field) => {
+      @Resolver(() => GroupByType)
+      class GroupByResolver extends Base {
+        @ResolverField(field.schemaName, () => field.target, { nullable: true })
+        [field.schemaName](
+          @Parent() dto: DTO,
+          @Args('by', {
+            type: () => GroupBy,
+            defaultValue: GroupBy.DAY
+          }) // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          by: string
+        ): unknown {
+          return (dto as Record<string, unknown>)[field.propertyName]
+        }
+      }
+
+      return GroupByResolver
+    }, EmptyBase)
 
     // need to set class name so DI works properly
     Object.defineProperty(GroupByResolverClass, 'name', { value: `${objName}GroupByResolver`, writable: false })
