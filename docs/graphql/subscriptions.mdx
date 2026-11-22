@@ -293,8 +293,7 @@ Error formatting also differs between the drivers: Apollo exposes `formatError` 
 <Warning>
   The plain Mercurius driver cannot serve as a federation subgraph. Use `MercuriusFederationDriver` (also exported by
   `@nestjs/mercurius`) instead: it builds the subgraph schema through `@apollo/subgraph`, supports `@ResolveReference`, and
-  patches subscriptions so they keep working. Note that the Mercurius gateway only composes federation v1 SDL, so subgraphs should
-  not be configured with a federation v2 `autoSchemaFile`.
+  patches subscriptions so they keep working. The Mercurius gateway composes the federation v2 SDL used by the example below.
 </Warning>
 
 A complete runnable example lives in [`examples/subscriptions-mercurius`](https://github.com/tripss/nestjs-query/tree/master/examples/subscriptions-mercurius).
@@ -309,6 +308,10 @@ subscription operations over WebSocket:
 gateway/app.module.ts
 
 ```ts
+import { Module } from '@nestjs/common'
+import { GraphQLModule } from '@nestjs/graphql'
+import { MercuriusGatewayDriver } from '@nestjs/mercurius'
+
 @Module({
   imports: [
     GraphQLModule.forRoot({
