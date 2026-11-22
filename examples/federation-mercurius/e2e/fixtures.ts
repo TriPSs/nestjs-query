@@ -30,15 +30,24 @@ const subgraphEntrypoints: Array<[number, string]> = [
 const startSubgraph = (port: number, entrypoint: string): ReturnType<typeof spawn> =>
   spawn(process.execPath, ['-r', 'ts-node/register', '-r', 'tsconfig-paths/register', path.join(REPO_ROOT, entrypoint)], {
     cwd: REPO_ROOT,
-    env: { ...process.env, PORT: String(port), TS_NODE_TRANSPILE_ONLY: '1' },
+    // pin CJS: the root tsconfig declares `module: esnext`, and node's native ESM loading of the
+    // entry fails on extensionless relative imports depending on the node version/environment
+    env: { ...process.env, PORT: String(port), TS_NODE_TRANSPILE_ONLY: '1', TS_NODE_COMPILER_OPTIONS: '{"module":"commonjs"}' },
     stdio: 'inherit'
   })
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
 
-const waitForSubgraph = async (port: number): Promise<void> => {
+const waitForSubgraph = async (port: number, child: ReturnType<typeof spawn>): Promise<void> => {
+  let exited = false
+  child.once('exit', () => {
+    exited = true
+  })
   const deadline = Date.now() + 30_000
   while (Date.now() < deadline) {
+    if (exited) {
+      throw new Error(`subgraph on port ${port} exited before becoming ready (e.g. port already in use)`)
+    }
     try {
       const res = await fetch(`http://localhost:${port}/graphql`, {
         method: 'POST',
@@ -63,34 +72,46 @@ export const truncateApplications = async (apps: TestApplications): Promise<void
 
 export const startApplications = async (): Promise<TestApplications> => {
   const processes = subgraphEntrypoints.map(([port, entrypoint]) => startSubgraph(port, entrypoint))
-  await Promise.all(subgraphEntrypoints.map(([port]) => waitForSubgraph(port)))
+  let gatewayApp: NestFastifyApplication | undefined
+  let dataSources: DataSource[] = []
+  try {
+    await Promise.all(subgraphEntrypoints.map(([port], index) => waitForSubgraph(port, processes[index])))
 
-  const gatewayApp = (
-    await Test.createTestingModule({ imports: [(await import('../gateway/src/app.module')).AppModule] }).compile()
-  ).createNestApplication<NestFastifyApplication>(new FastifyAdapter())
-  await gatewayApp.listen(GATEWAY_PORT)
+    gatewayApp = (
+      await Test.createTestingModule({ imports: [(await import('../gateway/src/app.module')).AppModule] }).compile()
+    ).createNestApplication<NestFastifyApplication>(new FastifyAdapter())
+    await gatewayApp.listen(GATEWAY_PORT)
 
-  const dataSources = await Promise.all(
-    [
-      ['federation_mercurius_todo_item', [TodoItemEntity]],
-      ['federation_mercurius_user', [UserEntity]]
-    ].map(async ([database, entities]) =>
-      new DataSource({
-        ...(typeormOrmConfig(database as string, undefined, {
-          synchronize: false,
-          dropSchema: false
-        }) as DataSourceOptions),
-        entities: entities as never[]
-      }).initialize()
+    dataSources = await Promise.all(
+      [
+        ['federation_mercurius_todo_item', [TodoItemEntity]],
+        ['federation_mercurius_user', [UserEntity]]
+      ].map(async ([database, entities]) =>
+        new DataSource({
+          ...(typeormOrmConfig(database as string, undefined, {
+            synchronize: false,
+            dropSchema: false
+          }) as DataSourceOptions),
+          entities: entities as never[]
+        }).initialize()
+      )
     )
-  )
 
-  return {
-    gatewayApp,
-    todoItemProcess: processes[0],
-    userProcess: processes[1],
-    todoItemDataSource: dataSources[0],
-    userDataSource: dataSources[1]
+    return {
+      gatewayApp,
+      todoItemProcess: processes[0],
+      userProcess: processes[1],
+      todoItemDataSource: dataSources[0],
+      userDataSource: dataSources[1]
+    }
+  } catch (err) {
+    // roll back everything started so far so a failed beforeAll never leaks children or ports
+    processes.forEach((p) => p.kill())
+    if (gatewayApp) {
+      await gatewayApp.close()
+    }
+    await Promise.allSettled(dataSources.map((ds) => ds.destroy()))
+    throw err
   }
 }
 

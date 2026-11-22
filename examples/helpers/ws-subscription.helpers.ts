@@ -16,8 +16,16 @@ interface ServerMessage {
 
 const parseMessage = (raw: WebSocket.RawData): ServerMessage => JSON.parse((raw as Buffer).toString()) as ServerMessage
 
+const wait = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
+
+// The legacy graphql-ws subprotocol has no server acknowledgment for a subscription start,
+// so the client settles briefly before tests publish events.
+const SUBSCRIBE_SETTLE_MS = 100
+// next() polls the received queue; events land within a few ms, 25ms adds negligible latency
+const SUBSCRIBE_POLL_MS = 25
+
 export interface SubscriptionClient {
-  subscribe(query: string, variables?: Record<string, unknown>): string
+  subscribe(query: string, variables?: Record<string, unknown>): Promise<string>
   next(timeoutMs?: number): Promise<{ id: string; payload: { data?: EventData; errors?: unknown[] } }>
   expectNoEvents(timeoutMs?: number): Promise<void>
   close(): Promise<void>
@@ -43,7 +51,6 @@ export const createSubscriptionClient = async (httpUrl: string): Promise<Subscri
   })
 
   const received: Event[] = []
-  const waiters: Array<(msg: Event) => void> = []
   let subscriptionCount = 0
 
   socket.on('message', (raw: WebSocket.RawData) => {
@@ -53,32 +60,29 @@ export const createSubscriptionClient = async (httpUrl: string): Promise<Subscri
       console.log('WS MSG', msg.type, msg.id ?? '', JSON.stringify(msg.payload)?.slice(0, 300))
     }
     if ((msg.type === 'data' || msg.type === 'error') && msg.id && msg.payload) {
-      const event: Event = { id: msg.id, payload: msg.payload }
-      if (waiters.length > 0) {
-        waiters.shift()(event)
-      } else {
-        received.push(event)
-      }
+      received.push({ id: msg.id, payload: msg.payload })
     }
   })
 
   return {
-    subscribe(query, variables) {
+    async subscribe(query, variables) {
       const id = `sub-${++subscriptionCount}`
       socket.send(JSON.stringify({ type: 'start', id, payload: { query, variables } }))
+      await wait(SUBSCRIBE_SETTLE_MS)
       return id
     },
-    next(timeoutMs = 5000) {
-      if (received.length > 0) {
-        return Promise.resolve(received.shift())
+    async next(timeoutMs = 5000) {
+      const deadline = Date.now() + timeoutMs
+      for (;;) {
+        const event = received.shift()
+        if (event) {
+          return event
+        }
+        if (Date.now() >= deadline) {
+          throw new Error('Timed out waiting for subscription event')
+        }
+        await wait(SUBSCRIBE_POLL_MS)
       }
-      return new Promise((resolve, reject) => {
-        const timer = setTimeout(() => reject(new Error('Timed out waiting for subscription event')), timeoutMs)
-        waiters.push((msg) => {
-          clearTimeout(timer)
-          resolve(msg)
-        })
-      })
     },
     async expectNoEvents(timeoutMs = 500) {
       await new Promise((resolve) => setTimeout(resolve, timeoutMs))
@@ -90,5 +94,14 @@ export const createSubscriptionClient = async (httpUrl: string): Promise<Subscri
         socket.close()
       })
     }
+  }
+}
+
+export const withSubscriptionClient = async <T>(httpUrl: string, run: (client: SubscriptionClient) => Promise<T>): Promise<T> => {
+  const client = await createSubscriptionClient(httpUrl)
+  try {
+    return await run(client)
+  } finally {
+    await client.close()
   }
 }

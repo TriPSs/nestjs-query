@@ -1,9 +1,9 @@
 import { NestFastifyApplication } from '@nestjs/platform-fastify'
 import request from 'supertest'
 
+import { withSubscriptionClient } from '../../helpers'
 import { GATEWAY_PORT } from '../ports'
 import { seedTodoItem, seedUser, startApplications, stopApplications, TestApplications, truncateApplications } from './fixtures'
-import { createSubscriptionClient } from './ws.helper'
 
 describe('Federation subscriptions (mercurius gateway - e2e)', () => {
   let apps: TestApplications
@@ -15,7 +15,9 @@ describe('Federation subscriptions (mercurius gateway - e2e)', () => {
   })
 
   afterAll(async () => {
-    await stopApplications(apps)
+    if (apps) {
+      await stopApplications(apps)
+    }
   })
 
   beforeEach(async () => {
@@ -29,32 +31,30 @@ describe('Federation subscriptions (mercurius gateway - e2e)', () => {
   }
 
   it('should deliver todo item events published by the mercurius subgraph', async () => {
-    const client = await createSubscriptionClient(`http://localhost:${GATEWAY_PORT}`)
-    client.subscribe('subscription { createdTodoItem { id title } }')
+    await withSubscriptionClient(`http://localhost:${GATEWAY_PORT}`, async (client) => {
+      await client.subscribe('subscription { createdTodoItem { id title } }')
 
-    const res = await graphql(
-      'mutation { createOneTodoItem(input: { todoItem: { title: "From gateway", completed: false } }) { id title } }'
-    )
+      const res = await graphql(
+        'mutation { createOneTodoItem(input: { todoItem: { title: "From gateway", completed: false } }) { id title } }'
+      )
 
-    const event = await client.next()
-    expect(event.payload.errors).toBeUndefined()
-    expect(event.payload.data.createdTodoItem.title).toBe('From gateway')
-    expect(Number(res.body.data.createOneTodoItem.id)).toBe(Number(event.payload.data.createdTodoItem.id))
-
-    await client.close()
+      const event = await client.next()
+      expect(event.payload.errors).toBeUndefined()
+      expect(event.payload.data.createdTodoItem.title).toBe('From gateway')
+      expect(Number(res.body.data.createOneTodoItem.id)).toBe(Number(event.payload.data.createdTodoItem.id))
+    })
   })
 
   it('should deliver user events published by the apollo subgraph', async () => {
-    const client = await createSubscriptionClient(`http://localhost:${GATEWAY_PORT}`)
-    client.subscribe('subscription { createdUser { id name } }')
+    await withSubscriptionClient(`http://localhost:${GATEWAY_PORT}`, async (client) => {
+      await client.subscribe('subscription { createdUser { id name } }')
 
-    await graphql('mutation { createOneUser(input: { user: { name: "Jane", email: "jane@example.com" } }) { id } }')
+      await graphql('mutation { createOneUser(input: { user: { name: "Jane", email: "jane@example.com" } }) { id } }')
 
-    const event = await client.next()
-    expect(event.payload.errors).toBeUndefined()
-    expect(event.payload.data.createdUser.name).toBe('Jane')
-
-    await client.close()
+      const event = await client.next()
+      expect(event.payload.errors).toBeUndefined()
+      expect(event.payload.data.createdUser.name).toBe('Jane')
+    })
   })
 
   it('should resolve federated entities across subgraphs', async () => {
@@ -71,16 +71,16 @@ describe('Federation subscriptions (mercurius gateway - e2e)', () => {
   it('should resolve federated entities inside subscription payloads', async () => {
     const user = await seedUser(apps, 'Jane')
 
-    const client = await createSubscriptionClient(`http://localhost:${GATEWAY_PORT}`)
-    client.subscribe('subscription { createdTodoItem { id title assignee { name } } }')
+    await withSubscriptionClient(`http://localhost:${GATEWAY_PORT}`, async (client) => {
+      await client.subscribe('subscription { createdTodoItem { id title assignee { name } } }')
 
-    await graphql(
-      `mutation { createOneTodoItem(input: { todoItem: { title: "Enriched", completed: false, assigneeId: ${user.id} } }) { id } }`
-    )
+      await graphql(
+        `mutation { createOneTodoItem(input: { todoItem: { title: "Enriched", completed: false, assigneeId: ${user.id} } }) { id } }`
+      )
 
-    const event = await client.next()
-    expect(event.payload.data.createdTodoItem.assignee?.name).toBe('Jane')
-
-    await client.close()
+      const event = await client.next()
+      expect(event.payload.errors).toBeUndefined()
+      expect(event.payload.data.createdTodoItem.assignee?.name).toBe('Jane')
+    })
   })
 })

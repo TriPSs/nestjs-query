@@ -4,9 +4,9 @@ import { Test } from '@nestjs/testing'
 import request from 'supertest'
 import { DataSource } from 'typeorm'
 
+import { withSubscriptionClient } from '../../helpers'
 import { AppModule } from '../src/app.module'
 import { refresh } from './fixtures'
-import { createSubscriptionClient } from './ws.helper'
 
 describe('TodoItemResolver subscriptions (mercurius - e2e)', () => {
   let app: INestApplication
@@ -51,79 +51,73 @@ describe('TodoItemResolver subscriptions (mercurius - e2e)', () => {
 
   it('should deliver created events over the websocket', async () => {
     await refresh(app.get(DataSource))
-    const client = await createSubscriptionClient(url)
-
-    client.subscribe(`subscription {
+    await withSubscriptionClient(url, async (client) => {
+      await client.subscribe(`subscription {
       createdTodoItem { id title completed }
     }`)
 
-    const response = await createTodo({ title: 'Ws Created', completed: false })
+      const response = await createTodo({ title: 'Ws Created', completed: false })
 
-    const event = await client.next()
-    expect(event.payload.errors).toBeUndefined()
-    expect(event.payload.data.createdTodoItem.title).toBe('Ws Created')
-    expect(response.body.data.createOneTodoItem.title).toBe('Ws Created')
-
-    await client.close()
+      const event = await client.next()
+      expect(event.payload.errors).toBeUndefined()
+      expect(event.payload.data.createdTodoItem.title).toBe('Ws Created')
+      expect(response.body.data.createOneTodoItem.title).toBe('Ws Created')
+    })
   })
 
   it('should apply the client filter to created events', async () => {
     await refresh(app.get(DataSource))
-    const client = await createSubscriptionClient(url)
-
-    client.subscribe(`subscription {
+    await withSubscriptionClient(url, async (client) => {
+      await client.subscribe(`subscription {
       createdTodoItem(input: { filter: { title: { eq: "Matching" } } }) { id title completed }
     }`)
 
-    await createTodo({ title: 'Not Matching', completed: false })
-    await client.expectNoEvents()
+      await createTodo({ title: 'Not Matching', completed: false })
+      await client.expectNoEvents()
 
-    await createTodo({ title: 'Matching', completed: false })
+      await createTodo({ title: 'Matching', completed: false })
 
-    const event = await client.next()
-    expect(event.payload.errors).toBeUndefined()
-    expect(event.payload.data.createdTodoItem.title).toBe('Matching')
-
-    await client.close()
+      const event = await client.next()
+      expect(event.payload.errors).toBeUndefined()
+      expect(event.payload.data.createdTodoItem.title).toBe('Matching')
+    })
   })
 
-  it('should apply authorization scoping through the subscription resolvers', async () => {
+  it('should deliver updated and deleted events over the websocket', async () => {
     await refresh(app.get(DataSource))
-    const client = await createSubscriptionClient(url)
-
-    client.subscribe(`subscription {
+    await withSubscriptionClient(url, async (client) => {
+      await client.subscribe(`subscription {
       updatedOneTodoItem { id title }
     }`)
 
-    await request(app.getHttpServer())
-      .post('/graphql')
-      .send({
-        operationName: null,
-        variables: { id: 1, input: { completed: true } },
-        query: `mutation updateTodo($id: ID!, $input: TodoItemUpdate!) {
+      await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: { id: 1, input: { completed: true } },
+          query: `mutation updateTodo($id: ID!, $input: TodoItemUpdate!) {
           updateOneTodoItem(input: { id: $id, update: $input }) { id completed }
         }`
-      })
-      .expect(200)
+        })
+        .expect(200)
 
-    const event = await client.next()
-    expect(event.payload.errors).toBeUndefined()
-    expect(event.payload.data.updatedOneTodoItem.id).toBe('1')
+      const event = await client.next()
+      expect(event.payload.errors).toBeUndefined()
+      expect(event.payload.data.updatedOneTodoItem.id).toBe('1')
 
-    client.subscribe(`subscription { deletedOneTodoItem { id } }`)
-    await request(app.getHttpServer())
-      .post('/graphql')
-      .send({
-        operationName: null,
-        variables: { id: 1 },
-        query: `mutation deleteTodo($id: ID!) { deleteOneTodoItem(input: { id: $id }) { id } }`
-      })
-      .expect(200)
+      await client.subscribe(`subscription { deletedOneTodoItem { id } }`)
+      await request(app.getHttpServer())
+        .post('/graphql')
+        .send({
+          operationName: null,
+          variables: { id: 1 },
+          query: `mutation deleteTodo($id: ID!) { deleteOneTodoItem(input: { id: $id }) { id } }`
+        })
+        .expect(200)
 
-    const deletedEvent = await client.next()
-    expect(deletedEvent.payload.errors).toBeUndefined()
-
-    await client.close()
+      const deletedEvent = await client.next()
+      expect(deletedEvent.payload.errors).toBeUndefined()
+    })
   })
 
   it('should return a standard error payload', () =>
