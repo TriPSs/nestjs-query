@@ -20,6 +20,7 @@ COPY tsconfig*.json ./
 COPY packages/core/package.json ./packages/core/
 COPY packages/query-graphql/package.json ./packages/query-graphql/
 COPY packages/query-typeorm/package.json ./packages/query-typeorm/
+COPY packages/query-drizzle/package.json ./packages/query-drizzle/
 
 # Install dependencies (this layer will be cached if deps don't change)
 RUN corepack enable && yarn install
