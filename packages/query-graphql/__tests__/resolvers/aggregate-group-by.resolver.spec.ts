@@ -58,6 +58,7 @@ describe('aggregate group by resolver', () => {
       update: { disabled: true },
       delete: { disabled: true },
       read: { one: { disabled: true }, many: { name: 'scratchDatesOffset' } },
+      aggregate: { enabled: true, name: 'scratchDatesOffsetAggregate' },
       pagingStrategy: PagingStrategies.NONE
     } as never
 
