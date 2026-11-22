@@ -14,7 +14,8 @@
       "@ptc-org/nestjs-query-typegoose": ["./packages/query-typegoose/src/index.ts"],
       "@ptc-org/nestjs-query-typeorm": ["./packages/query-typeorm/src/index.ts"],
       "@ptc-org/nestjs-query-rest": ["./packages/query-rest/src/index.ts"],
-      "@ptc-org/nestjs-query-mikro-orm": ["./packages/query-mikro-orm/src/index.ts"]
+      "@ptc-org/nestjs-query-mikro-orm": ["./packages/query-mikro-orm/src/index.ts"],
+      "@ptc-org/nestjs-query-drizzle": ["./packages/query-drizzle/src/index.ts"]
     },
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

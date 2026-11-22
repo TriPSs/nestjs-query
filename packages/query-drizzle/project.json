@@ -1,0 +1,50 @@
+{
+  "name": "query-drizzle",
+  "$schema": "../../node_modules/@isox-sh/core/schemas/project.schema.json",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "yarn eslint \"packages/query-drizzle/**/*.ts\""
+      }
+    },
+    "test": {
+      "executor": "@isox-sh/vitest:test",
+      "options": {
+        "configFile": "packages/query-drizzle/vitest.config.ts"
+      }
+    },
+    "build": {
+      "executor": "@isox-sh/js:tsc",
+      "outputs": ["{workspaceRoot}/dist/packages/query-drizzle"],
+      "options": {
+        "tsConfig": "packages/query-drizzle/tsconfig.build.json",
+        "generatePackageJson": true,
+        "assets": [
+          {
+            "input": "packages/query-drizzle",
+            "glob": "*.md",
+            "ignore": ["README.md", "LICENSE.md"]
+          }
+        ]
+      }
+    },
+    "publish": {
+      "executor": "@isox-sh/core:run-command",
+      "options": {
+        "command": "npm publish ./dist/packages/query-drizzle --access public"
+      },
+      "configurations": {
+        "alpha": {
+          "command": "npm publish ./dist/packages/query-drizzle --access public --tag alpha"
+        }
+      }
+    },
+    "version": {
+      "executor": "@isox-sh/semver:version",
+      "options": {}
+    }
+  },
+  "dependencies": ["core"]
+}
