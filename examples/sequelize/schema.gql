@@ -5,8 +5,8 @@
 type Tag {
   id: ID!
   name: String!
-  created(by: GroupBy! = DAY): DateTime
-  updated(by: GroupBy! = DAY): DateTime
+  created: DateTime!
+  updated: DateTime!
   todoItemsAggregate(
     """Filter to find records to aggregate on"""
     filter: TodoItemAggregateFilter
@@ -27,14 +27,6 @@ type Tag {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
-
-"""Group by"""
-enum GroupBy {
-  DAY
-  WEEK
-  MONTH
-  YEAR
-}
 
 input TodoItemAggregateFilter {
   and: [TodoItemAggregateFilter!]
@@ -235,8 +227,8 @@ type TodoItem {
   title: String!
   description: String
   completed: Boolean!
-  created(by: GroupBy! = DAY): DateTime
-  updated(by: GroupBy! = DAY): DateTime
+  created: DateTime!
+  updated: DateTime!
   age: Float!
   priority: Float!
   subTasksAggregate(
@@ -397,10 +389,75 @@ type SubTask {
   title: String!
   description: String
   completed: Boolean!
-  created(by: GroupBy! = DAY): DateTime
-  updated(by: GroupBy! = DAY): DateTime
+  created: DateTime!
+  updated: DateTime!
   todoItemId: Float!
   todoItem: TodoItem!
+}
+
+type SubTaskAggregateGroupBy {
+  id: ID
+  title: String
+  description: String
+  completed: Boolean
+  created(by: GroupBy! = DAY): DateTime
+  updated(by: GroupBy! = DAY): DateTime
+  todoItemId: Float
+}
+
+"""Group by"""
+enum GroupBy {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
+type SubTaskCountAggregate {
+  id: Int
+  title: Int
+  description: Int
+  completed: Int
+  created: Int
+  updated: Int
+  todoItemId: Int
+}
+
+type SubTaskSumAggregate {
+  id: Float
+  todoItemId: Float
+}
+
+type SubTaskAvgAggregate {
+  id: Float
+  todoItemId: Float
+}
+
+type SubTaskMinAggregate {
+  id: ID
+  title: String
+  description: String
+  created: DateTime
+  updated: DateTime
+  todoItemId: Float
+}
+
+type SubTaskMaxAggregate {
+  id: ID
+  title: String
+  description: String
+  created: DateTime
+  updated: DateTime
+  todoItemId: Float
+}
+
+type SubTaskAggregateResponse {
+  groupBy: SubTaskAggregateGroupBy
+  count: SubTaskCountAggregate
+  sum: SubTaskSumAggregate
+  avg: SubTaskAvgAggregate
+  min: SubTaskMinAggregate
+  max: SubTaskMaxAggregate
 }
 
 type DeleteManyResponse {
@@ -456,94 +513,11 @@ type SubTaskConnection {
   totalCount: Int!
 }
 
-type SubTaskAggregateGroupBy {
-  id: ID
-  title: String
-  description: String
-  completed: Boolean
-  created: DateTime
-  updated: DateTime
-  todoItemId: Float
-}
-
-type SubTaskCountAggregate {
-  id: Int
-  title: Int
-  description: Int
-  completed: Int
-  created: Int
-  updated: Int
-  todoItemId: Int
-}
-
-type SubTaskSumAggregate {
-  id: Float
-  todoItemId: Float
-}
-
-type SubTaskAvgAggregate {
-  id: Float
-  todoItemId: Float
-}
-
-type SubTaskMinAggregate {
-  id: ID
-  title: String
-  description: String
-  created: DateTime
-  updated: DateTime
-  todoItemId: Float
-}
-
-type SubTaskMaxAggregate {
-  id: ID
-  title: String
-  description: String
-  created: DateTime
-  updated: DateTime
-  todoItemId: Float
-}
-
-type SubTaskAggregateResponse {
-  groupBy: SubTaskAggregateGroupBy
-  count: SubTaskCountAggregate
-  sum: SubTaskSumAggregate
-  avg: SubTaskAvgAggregate
-  min: SubTaskMinAggregate
-  max: SubTaskMaxAggregate
-}
-
-type TagDeleteResponse {
-  id: ID
-  name: String
-  created: DateTime
-  updated: DateTime
-}
-
-type TagEdge {
-  """The node containing the Tag"""
-  node: Tag!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-type TagConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [TagEdge!]!
-
-  """Fetch total count of records"""
-  totalCount: Int!
-}
-
 type TagAggregateGroupBy {
   id: ID
   name: String
-  created: DateTime
-  updated: DateTime
+  created(by: GroupBy! = DAY): DateTime
+  updated(by: GroupBy! = DAY): DateTime
 }
 
 type TagCountAggregate {
@@ -582,6 +556,32 @@ type TagAggregateResponse {
   avg: TagAvgAggregate
   min: TagMinAggregate
   max: TagMaxAggregate
+}
+
+type TagDeleteResponse {
+  id: ID
+  name: String
+  created: DateTime
+  updated: DateTime
+}
+
+type TagEdge {
+  """The node containing the Tag"""
+  node: Tag!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type TagConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TagEdge!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
 }
 
 type TodoItemEdge {
@@ -671,24 +671,13 @@ type TodoItemConnection {
   totalCount: Int!
 }
 
-type TodoItemDeleteResponse {
-  id: ID
-  title: String
-  description: String
-  completed: Boolean
-  created: DateTime
-  updated: DateTime
-  age: Float
-  priority: Float
-}
-
 type TodoItemAggregateGroupBy {
   id: ID
   title: String
   description: String
   completed: Boolean
-  created: DateTime
-  updated: DateTime
+  created(by: GroupBy! = DAY): DateTime
+  updated(by: GroupBy! = DAY): DateTime
   priority: Float
 }
 
@@ -737,6 +726,17 @@ type TodoItemAggregateResponse {
   avg: TodoItemAvgAggregate
   min: TodoItemMinAggregate
   max: TodoItemMaxAggregate
+}
+
+type TodoItemDeleteResponse {
+  id: ID
+  title: String
+  description: String
+  completed: Boolean
+  created: DateTime
+  updated: DateTime
+  age: Float
+  priority: Float
 }
 
 type TodoItemTagsConnection {
