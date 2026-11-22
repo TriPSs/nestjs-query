@@ -3,7 +3,7 @@ title: 'Upgrading to NestJS 12'
 description: 'Migrate to NestJS 12 and @nestjs/graphql 14: relation and field name collisions, and subscription authentication.'
 ---
 
-`@ptc-org/nestjs-query-graphql@11.1` and later support NestJS 12 with `@nestjs/graphql@14`. Note that `@nestjs/graphql@14` requires `@nestjs/common@^12` strictly, so NestJS 10 and 11 stay on `@nestjs/graphql@13` — both pairings are supported.
+`@ptc-org/nestjs-query-graphql@11.1` and later support NestJS 12 with `@nestjs/graphql@14`. Note that `@nestjs/graphql@14` requires `@nestjs/common@^12` strictly, so NestJS 10 and 11 stay on `@nestjs/graphql@13` — both pairings are supported. CommonJS projects also need Node.js >= 20.19 (the first release with unflagged `require(esm)`) to load the Nest 12 packages.
 
 ## Relation and field name collisions
 
@@ -14,6 +14,8 @@ An explicitly declared field takes precedence over a relation with the same name
 If you migrate your subscriptions to the `graphql-ws` protocol as part of the upgrade, authentication no longer flows through `onConnect`: its return value is only the connection-ack payload and never reaches resolvers. Expose the connection params as headers through `context` instead.
 
 ```ts
+import { Context } from 'graphql-ws'
+
 GraphQLModule.forRoot({
   driver: ApolloDriver,
   subscriptions: {
