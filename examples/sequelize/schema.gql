@@ -5,8 +5,8 @@
 type Tag {
   id: ID!
   name: String!
-  created: DateTime!
-  updated: DateTime!
+  created(by: GroupBy! = DAY): DateTime
+  updated(by: GroupBy! = DAY): DateTime
   todoItemsAggregate(
     """Filter to find records to aggregate on"""
     filter: TodoItemAggregateFilter
@@ -27,6 +27,14 @@ type Tag {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+"""Group by"""
+enum GroupBy {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
 
 input TodoItemAggregateFilter {
   and: [TodoItemAggregateFilter!]
@@ -227,8 +235,8 @@ type TodoItem {
   title: String!
   description: String
   completed: Boolean!
-  created: DateTime!
-  updated: DateTime!
+  created(by: GroupBy! = DAY): DateTime
+  updated(by: GroupBy! = DAY): DateTime
   age: Float!
   priority: Float!
   subTasksAggregate(
@@ -389,8 +397,8 @@ type SubTask {
   title: String!
   description: String
   completed: Boolean!
-  created: DateTime!
-  updated: DateTime!
+  created(by: GroupBy! = DAY): DateTime
+  updated(by: GroupBy! = DAY): DateTime
   todoItemId: Float!
   todoItem: TodoItem!
 }
@@ -453,17 +461,9 @@ type SubTaskAggregateGroupBy {
   title: String
   description: String
   completed: Boolean
-  created(by: GroupBy! = DAY): DateTime
-  updated(by: GroupBy! = DAY): DateTime
+  created: DateTime
+  updated: DateTime
   todoItemId: Float
-}
-
-"""Group by"""
-enum GroupBy {
-  DAY
-  WEEK
-  MONTH
-  YEAR
 }
 
 type SubTaskCountAggregate {
@@ -542,8 +542,8 @@ type TagConnection {
 type TagAggregateGroupBy {
   id: ID
   name: String
-  created(by: GroupBy! = DAY): DateTime
-  updated(by: GroupBy! = DAY): DateTime
+  created: DateTime
+  updated: DateTime
 }
 
 type TagCountAggregate {
@@ -687,8 +687,8 @@ type TodoItemAggregateGroupBy {
   title: String
   description: String
   completed: Boolean
-  created(by: GroupBy! = DAY): DateTime
-  updated(by: GroupBy! = DAY): DateTime
+  created: DateTime
+  updated: DateTime
   priority: Float
 }
 
@@ -941,6 +941,7 @@ type Query {
 }
 
 type Mutation {
+  """Sets the provided relation, replacing any existing relation."""
   setTodoItemOnSubTask(input: SetTodoItemOnSubTaskInput!): SubTask!
   createOneSubTask(input: CreateOneSubTaskInput!): SubTask!
   createManySubTasks(input: CreateManySubTasksInput!): [SubTask!]!
@@ -948,9 +949,21 @@ type Mutation {
   updateManySubTasks(input: UpdateManySubTasksInput!): UpdateManyResponse!
   deleteOneSubTask(input: DeleteOneSubTaskInput!): SubTaskDeleteResponse!
   deleteManySubTasks(input: DeleteManySubTasksInput!): DeleteManyResponse!
+
+  """Adds the provided relations without removing existing relations."""
   addSubTasksToTodoItem(input: AddSubTasksToTodoItemInput!): TodoItem!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setSubTasksOnTodoItem(input: SetSubTasksOnTodoItemInput!): TodoItem!
+
+  """Adds the provided relations without removing existing relations."""
   addTagsToTodoItem(input: AddTagsToTodoItemInput!): TodoItem!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setTagsOnTodoItem(input: SetTagsOnTodoItemInput!): TodoItem!
   removeSubTasksFromTodoItem(input: RemoveSubTasksFromTodoItemInput!): TodoItem!
   removeTagsFromTodoItem(input: RemoveTagsFromTodoItemInput!): TodoItem!
@@ -960,7 +973,13 @@ type Mutation {
   updateManyTodoItems(input: UpdateManyTodoItemsInput!): UpdateManyResponse!
   deleteOneTodoItem(input: DeleteOneTodoItemInput!): TodoItemDeleteResponse!
   deleteManyTodoItems(input: DeleteManyTodoItemsInput!): DeleteManyResponse!
+
+  """Adds the provided relations without removing existing relations."""
   addTodoItemsToTag(input: AddTodoItemsToTagInput!): Tag!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setTodoItemsOnTag(input: SetTodoItemsOnTagInput!): Tag!
   removeTodoItemsFromTag(input: RemoveTodoItemsFromTagInput!): Tag!
   createOneTag(input: CreateOneTagInput!): Tag!

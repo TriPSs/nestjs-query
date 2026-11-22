@@ -6,6 +6,63 @@
         "operationId": "subTaskDTOS.exportMany",
         "parameters": [
           {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "title:ASC",
+                  "title:ASC:NULLS_FIRST",
+                  "title:ASC:NULLS_LAST",
+                  "title:DESC",
+                  "title:DESC:NULLS_FIRST",
+                  "title:DESC:NULLS_LAST",
+                  "description:ASC",
+                  "description:ASC:NULLS_FIRST",
+                  "description:ASC:NULLS_LAST",
+                  "description:DESC",
+                  "description:DESC:NULLS_FIRST",
+                  "description:DESC:NULLS_LAST",
+                  "completed:ASC",
+                  "completed:ASC:NULLS_FIRST",
+                  "completed:ASC:NULLS_LAST",
+                  "completed:DESC",
+                  "completed:DESC:NULLS_FIRST",
+                  "completed:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST",
+                  "todoItemId:ASC",
+                  "todoItemId:ASC:NULLS_FIRST",
+                  "todoItemId:ASC:NULLS_LAST",
+                  "todoItemId:DESC",
+                  "todoItemId:DESC:NULLS_FIRST",
+                  "todoItemId:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
+          {
             "name": "id",
             "required": false,
             "in": "query",
@@ -78,7 +135,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
       }
     },
     "/sub-task-dtos/{id}": {
@@ -98,7 +157,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
       },
       "delete": {
         "operationId": "subTaskDTOS.deleteOne",
@@ -116,7 +177,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
       },
       "put": {
         "operationId": "subTaskDTOS.updateOne",
@@ -144,13 +207,72 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
       }
     },
     "/sub-task-dtos": {
       "get": {
         "operationId": "subTaskDTOS.queryMany",
         "parameters": [
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "title:ASC",
+                  "title:ASC:NULLS_FIRST",
+                  "title:ASC:NULLS_LAST",
+                  "title:DESC",
+                  "title:DESC:NULLS_FIRST",
+                  "title:DESC:NULLS_LAST",
+                  "description:ASC",
+                  "description:ASC:NULLS_FIRST",
+                  "description:ASC:NULLS_LAST",
+                  "description:DESC",
+                  "description:DESC:NULLS_FIRST",
+                  "description:DESC:NULLS_LAST",
+                  "completed:ASC",
+                  "completed:ASC:NULLS_FIRST",
+                  "completed:ASC:NULLS_LAST",
+                  "completed:DESC",
+                  "completed:DESC:NULLS_FIRST",
+                  "completed:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST",
+                  "todoItemId:ASC",
+                  "todoItemId:ASC:NULLS_FIRST",
+                  "todoItemId:ASC:NULLS_LAST",
+                  "todoItemId:DESC",
+                  "todoItemId:DESC:NULLS_FIRST",
+                  "todoItemId:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
           {
             "name": "limit",
             "required": false,
@@ -162,7 +284,7 @@
               "nullable": true,
               "default": 25,
               "example": 25,
-              "type": "number"
+              "type": "integer"
             }
           },
           {
@@ -175,7 +297,7 @@
               "nullable": true,
               "default": 0,
               "example": 0,
-              "type": "number"
+              "type": "integer"
             }
           },
           {
@@ -251,7 +373,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
       },
       "post": {
         "operationId": "subTaskDTOS.createOne",
@@ -279,13 +403,66 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
       }
     },
     "/todo-item-dtos/export": {
       "get": {
         "operationId": "todoItemDTOS.exportMany",
         "parameters": [
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "title:ASC",
+                  "title:ASC:NULLS_FIRST",
+                  "title:ASC:NULLS_LAST",
+                  "title:DESC",
+                  "title:DESC:NULLS_FIRST",
+                  "title:DESC:NULLS_LAST",
+                  "description:ASC",
+                  "description:ASC:NULLS_FIRST",
+                  "description:ASC:NULLS_LAST",
+                  "description:DESC",
+                  "description:DESC:NULLS_FIRST",
+                  "description:DESC:NULLS_LAST",
+                  "isCompleted:ASC",
+                  "isCompleted:ASC:NULLS_FIRST",
+                  "isCompleted:ASC:NULLS_LAST",
+                  "isCompleted:DESC",
+                  "isCompleted:DESC:NULLS_FIRST",
+                  "isCompleted:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
           {
             "name": "id",
             "required": false,
@@ -351,7 +528,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
       }
     },
     "/todo-item-dtos/{id}": {
@@ -371,7 +550,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
       },
       "delete": {
         "operationId": "todoItemDTOS.deleteOne",
@@ -389,7 +570,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
       },
       "put": {
         "operationId": "todoItemDTOS.updateOne",
@@ -417,13 +600,66 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
       }
     },
     "/todo-item-dtos": {
       "get": {
         "operationId": "todoItemDTOS.queryMany",
         "parameters": [
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "title:ASC",
+                  "title:ASC:NULLS_FIRST",
+                  "title:ASC:NULLS_LAST",
+                  "title:DESC",
+                  "title:DESC:NULLS_FIRST",
+                  "title:DESC:NULLS_LAST",
+                  "description:ASC",
+                  "description:ASC:NULLS_FIRST",
+                  "description:ASC:NULLS_LAST",
+                  "description:DESC",
+                  "description:DESC:NULLS_FIRST",
+                  "description:DESC:NULLS_LAST",
+                  "isCompleted:ASC",
+                  "isCompleted:ASC:NULLS_FIRST",
+                  "isCompleted:ASC:NULLS_LAST",
+                  "isCompleted:DESC",
+                  "isCompleted:DESC:NULLS_FIRST",
+                  "isCompleted:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
           {
             "name": "limit",
             "required": false,
@@ -435,7 +671,7 @@
               "nullable": true,
               "default": 25,
               "example": 25,
-              "type": "number"
+              "type": "integer"
             }
           },
           {
@@ -448,7 +684,7 @@
               "nullable": true,
               "default": 0,
               "example": 0,
-              "type": "number"
+              "type": "integer"
             }
           },
           {
@@ -516,7 +752,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
       },
       "post": {
         "operationId": "todoItemDTOS.createOne",
@@ -544,13 +782,54 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
       }
     },
     "/tag-dtos/export": {
       "get": {
         "operationId": "tagDTOS.exportMany",
         "parameters": [
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "name:ASC",
+                  "name:ASC:NULLS_FIRST",
+                  "name:ASC:NULLS_LAST",
+                  "name:DESC",
+                  "name:DESC:NULLS_FIRST",
+                  "name:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
           {
             "name": "id",
             "required": false,
@@ -599,7 +878,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       }
     },
     "/tag-dtos/{id}": {
@@ -619,7 +900,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       },
       "delete": {
         "operationId": "tagDTOS.deleteOne",
@@ -637,7 +920,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       },
       "put": {
         "operationId": "tagDTOS.updateOne",
@@ -665,13 +950,54 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       }
     },
     "/tag-dtos": {
       "get": {
         "operationId": "tagDTOS.queryMany",
         "parameters": [
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "name:ASC",
+                  "name:ASC:NULLS_FIRST",
+                  "name:ASC:NULLS_LAST",
+                  "name:DESC",
+                  "name:DESC:NULLS_FIRST",
+                  "name:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
           {
             "name": "limit",
             "required": false,
@@ -683,7 +1009,7 @@
               "nullable": true,
               "default": 25,
               "example": 25,
-              "type": "number"
+              "type": "integer"
             }
           },
           {
@@ -696,7 +1022,7 @@
               "nullable": true,
               "default": 0,
               "example": 0,
-              "type": "number"
+              "type": "integer"
             }
           },
           {
@@ -747,7 +1073,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       },
       "post": {
         "operationId": "tagDTOS.createOne",
@@ -775,7 +1103,9 @@
           }
         },
         "summary": "",
-        "tags": []
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       }
     }
   },

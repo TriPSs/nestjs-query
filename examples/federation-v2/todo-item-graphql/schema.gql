@@ -2,7 +2,9 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable"]) {
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.14", import: ["@authenticated", "@cacheTag", "@composeDirective", "@context", "@cost", "@extends", "@external", "@fromContext", "@inaccessible", "@interfaceObject", "@key", "@listSize", "@override", "@policy", "@provides", "@requires", "@requiresScopes", "@shareable", "@tag"])
+
+schema {
   query: Query
   mutation: Mutation
 }

@@ -5,8 +5,8 @@
 type Tag {
   id: ID!
   name: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt(by: GroupBy! = DAY): DateTime
+  updatedAt(by: GroupBy! = DAY): DateTime
   createdBy: String
   updatedBy: String
   todoItemsAggregate(
@@ -29,6 +29,14 @@ type Tag {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+"""Group by"""
+enum GroupBy {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
 
 input TodoItemAggregateFilter {
   and: [TodoItemAggregateFilter!]
@@ -189,8 +197,8 @@ type TodoItem {
   title: String!
   description: String
   completed: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt(by: GroupBy! = DAY): DateTime
+  updatedAt(by: GroupBy! = DAY): DateTime
   age: Float!
   priority: Float!
   createdBy: String
@@ -310,8 +318,8 @@ type SubTask {
   title: String!
   description: String
   completed: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt(by: GroupBy! = DAY): DateTime
+  updatedAt(by: GroupBy! = DAY): DateTime
   createdBy: String
   updatedBy: String
   todoItem: TodoItem!
@@ -376,18 +384,10 @@ type SubTaskAggregateGroupBy {
   title: String
   description: String
   completed: Boolean
-  createdAt(by: GroupBy! = DAY): DateTime
-  updatedAt(by: GroupBy! = DAY): DateTime
+  createdAt: DateTime
+  updatedAt: DateTime
   createdBy: String
   updatedBy: String
-}
-
-"""Group by"""
-enum GroupBy {
-  DAY
-  WEEK
-  MONTH
-  YEAR
 }
 
 type SubTaskCountAggregate {
@@ -459,8 +459,8 @@ type TagConnection {
 type TagAggregateGroupBy {
   id: ID
   name: String
-  createdAt(by: GroupBy! = DAY): DateTime
-  updatedAt(by: GroupBy! = DAY): DateTime
+  createdAt: DateTime
+  updatedAt: DateTime
   createdBy: String
   updatedBy: String
 }
@@ -610,8 +610,8 @@ type TodoItemAggregateGroupBy {
   title: String
   description: String
   completed: Boolean
-  createdAt(by: GroupBy! = DAY): DateTime
-  updatedAt(by: GroupBy! = DAY): DateTime
+  createdAt: DateTime
+  updatedAt: DateTime
   priority: Float
   createdBy: String
   updatedBy: String
@@ -860,6 +860,7 @@ type Query {
 }
 
 type Mutation {
+  """Sets the provided relation, replacing any existing relation."""
   setTodoItemOnSubTask(input: SetTodoItemOnSubTaskInput!): SubTask!
   createOneSubTask(input: CreateOneSubTaskInput!): SubTask!
   createManySubTasks(input: CreateManySubTasksInput!): [SubTask!]!
@@ -867,9 +868,21 @@ type Mutation {
   updateManySubTasks(input: UpdateManySubTasksInput!): UpdateManyResponse!
   deleteOneSubTask(input: DeleteOneSubTaskInput!): SubTaskDeleteResponse!
   deleteManySubTasks(input: DeleteManySubTasksInput!): DeleteManyResponse!
+
+  """Adds the provided relations without removing existing relations."""
   addSubTasksToTodoItem(input: AddSubTasksToTodoItemInput!): TodoItem!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setSubTasksOnTodoItem(input: SetSubTasksOnTodoItemInput!): TodoItem!
+
+  """Adds the provided relations without removing existing relations."""
   addTagsToTodoItem(input: AddTagsToTodoItemInput!): TodoItem!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setTagsOnTodoItem(input: SetTagsOnTodoItemInput!): TodoItem!
   removeTagsFromTodoItem(input: RemoveTagsFromTodoItemInput!): TodoItem!
   createOneTodoItem(input: CreateOneTodoItemInput!): TodoItem!
