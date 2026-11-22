@@ -2,7 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-schema {
+schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable"]) {
   query: Query
   mutation: Mutation
 }

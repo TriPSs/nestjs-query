@@ -47,6 +47,9 @@
     "graphql-subscriptions": "^3.0.0"
   },
   "peerDependenciesMeta": {
+    "@apollo/gateway": {
+      "optional": true
+    },
     "csv-stringify": {
       "optional": true
     }

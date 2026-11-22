@@ -19,7 +19,9 @@ import { UserModule } from './user/user.module'
       autoSchemaFile: 'examples/auth/schema.gql',
       subscriptions: {
         'graphql-ws': {
-          onConnect: (ctx: Context) => ({ headers: ctx.connectionParams })
+          // graphql-ws calls this per operation; the onConnect return value is
+          // only the connection-ack payload and never reaches resolvers
+          context: (ctx: Context) => ({ req: { headers: ctx.connectionParams ?? {} } })
         }
       },
       formatError: formatGraphqlError

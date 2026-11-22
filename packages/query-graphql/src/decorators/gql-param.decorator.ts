@@ -32,7 +32,9 @@ export function createGqlParamDecorator(
       // argument counts as a pipe, not as parameter data.
       const paramData = isPipe(data) ? undefined : data
       const paramPipes = isPipe(data) ? [data, ...pipes] : pipes
-      const existing = Reflect.getMetadata(PARAM_ARGS_METADATA, target.constructor, propertyKey) ?? {}
+      // propertyKey is undefined only for constructors, which never carry param metadata
+      const key = propertyKey as string | symbol
+      const existing = Reflect.getMetadata(PARAM_ARGS_METADATA, target.constructor, key) ?? {}
       Reflect.defineMetadata(
         PARAM_ARGS_METADATA,
         {
@@ -45,7 +47,7 @@ export function createGqlParamDecorator(
           }
         },
         target.constructor,
-        propertyKey
+        key
       )
     }
 }

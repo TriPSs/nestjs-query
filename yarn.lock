@@ -2480,6 +2480,8 @@ __metadata:
     graphql: ^16.0.0
     graphql-subscriptions: ^3.0.0
   peerDependenciesMeta:
+    "@apollo/gateway":
+      optional: true
     csv-stringify:
       optional: true
   languageName: unknown
