@@ -1,48 +1,58 @@
+import { Provider } from '@nestjs/common'
 import { Args, Parent, registerEnumType, Resolver } from '@nestjs/graphql'
-import { AggregateResponse, Class, GroupBy, MapReflector, QueryService } from '@ptc-org/nestjs-query-core'
+import { Class, GroupBy, MapReflector } from '@ptc-org/nestjs-query-core'
 
 import { getGraphqlObjectName } from '../../common'
 import { getFilterableFields, ResolverField } from '../../decorators'
-import { ServiceResolver } from '../resolver.interface'
+import { AggregateResponseType } from '../../types'
 
-const reflector = new MapReflector('nestjs-query:aggregate-response-type')
+const reflector = new MapReflector('nestjs-query:aggregate-group-by-resolver')
 
 registerEnumType(GroupBy, {
   name: 'GroupBy', // this one is mandatory
   description: 'Group by' // this one is optional
 })
 
-export const GroupByAggregateMixin =
-  <DTO>(DTOClass: Class<DTO>, AR: Class<AggregateResponse<DTO>>) =>
-  <B extends Class<ServiceResolver<DTO, QueryService<DTO, unknown, unknown>>>>(Base: B): B => {
-    const objName = getGraphqlObjectName(DTOClass, 'Unable to make AggregationResponseType.')
+// @nestjs/graphql 14 binds inherited field resolvers to the final resolver's parent
+// type, so the group-by field resolvers live on their own @Resolver class targeting
+// the aggregate group-by type instead of being mixed into the CRUD resolver.
+export const createGroupByResolver = <DTO>(DTOClass: Class<DTO>): Provider | null => {
+  const objName = getGraphqlObjectName(DTOClass, 'Unable to make AggregationResponseType.')
+  const aggName = `${objName}AggregateGroupBy`
 
-    const aggName = `${objName}AggregateGroupBy`
-    return reflector.memoize(DTOClass, aggName, () => {
-      const fields = getFilterableFields(DTOClass).filter((field) => field.target === Date)
+  return reflector.memoize(DTOClass, aggName, () => {
+    const fields = getFilterableFields(DTOClass).filter((field) => field.target === Date)
 
-      // If there are no date fields return base
-      if (!fields.length) {
-        return Base
+    // If there are no date fields there is nothing to resolve
+    if (!fields.length) {
+      return null
+    }
+
+    const [, GroupByType] = AggregateResponseType(DTOClass)
+
+    class EmptyBase {}
+
+    const GroupByResolverClass = fields.reduce<typeof EmptyBase>((Base, field) => {
+      @Resolver(() => GroupByType)
+      class GroupByResolver extends Base {
+        @ResolverField(field.schemaName, () => field.target, { nullable: true })
+        [field.schemaName](
+          @Parent() dto: DTO,
+          @Args('by', {
+            type: () => GroupBy,
+            defaultValue: GroupBy.DAY
+          }) // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          by: string
+        ): unknown {
+          return (dto as Record<string, unknown>)[field.propertyName]
+        }
       }
 
-      return fields.reduce((RB, field) => {
-        @Resolver(() => AR, { isAbstract: true })
-        class ReadOneMixin extends RB {
-          @ResolverField(field.schemaName, () => field.target, { nullable: true })
-          [field.schemaName](
-            @Parent() dto: DTO,
-            @Args('by', {
-              type: () => GroupBy,
-              defaultValue: GroupBy.DAY
-            }) // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            by: string
-          ): unknown {
-            return (dto as Record<string, unknown>)[field.propertyName]
-          }
-        }
+      return GroupByResolver
+    }, EmptyBase)
 
-        return ReadOneMixin
-      }, Base)
-    })
-  }
+    // need to set class name so DI works properly
+    Object.defineProperty(GroupByResolverClass, 'name', { value: `${objName}GroupByResolver`, writable: false })
+    return GroupByResolverClass
+  })
+}

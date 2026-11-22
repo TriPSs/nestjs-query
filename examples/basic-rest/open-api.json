@@ -1,24 +1,152 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/sub-task-dtos/export": {
+      "get": {
+        "operationId": "subTaskDTOS.exportMany",
+        "parameters": [
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "title:ASC",
+                  "title:ASC:NULLS_FIRST",
+                  "title:ASC:NULLS_LAST",
+                  "title:DESC",
+                  "title:DESC:NULLS_FIRST",
+                  "title:DESC:NULLS_LAST",
+                  "description:ASC",
+                  "description:ASC:NULLS_FIRST",
+                  "description:ASC:NULLS_LAST",
+                  "description:DESC",
+                  "description:DESC:NULLS_FIRST",
+                  "description:DESC:NULLS_LAST",
+                  "completed:ASC",
+                  "completed:ASC:NULLS_FIRST",
+                  "completed:ASC:NULLS_LAST",
+                  "completed:DESC",
+                  "completed:DESC:NULLS_FIRST",
+                  "completed:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST",
+                  "todoItemId:ASC",
+                  "todoItemId:ASC:NULLS_FIRST",
+                  "todoItemId:ASC:NULLS_LAST",
+                  "todoItemId:DESC",
+                  "todoItemId:DESC:NULLS_FIRST",
+                  "todoItemId:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "name": "completed",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "todoItemId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
+      }
+    },
     "/sub-task-dtos/{id}": {
       "get": {
         "operationId": "subTaskDTOS.findById",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -27,25 +155,18 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
       },
       "delete": {
         "operationId": "subTaskDTOS.deleteOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -54,35 +175,28 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
       },
       "put": {
         "operationId": "subTaskDTOS.updateOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SubTaskUpdateDTO"
+                "$ref": "#/components/schemas/UpdateSubTaskDTO"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -91,37 +205,164 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
       }
     },
     "/sub-task-dtos": {
       "get": {
         "operationId": "subTaskDTOS.queryMany",
-        "summary": "",
-        "tags": [],
         "parameters": [
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "title:ASC",
+                  "title:ASC:NULLS_FIRST",
+                  "title:ASC:NULLS_LAST",
+                  "title:DESC",
+                  "title:DESC:NULLS_FIRST",
+                  "title:DESC:NULLS_LAST",
+                  "description:ASC",
+                  "description:ASC:NULLS_FIRST",
+                  "description:ASC:NULLS_LAST",
+                  "description:DESC",
+                  "description:DESC:NULLS_FIRST",
+                  "description:DESC:NULLS_LAST",
+                  "completed:ASC",
+                  "completed:ASC:NULLS_FIRST",
+                  "completed:ASC:NULLS_LAST",
+                  "completed:DESC",
+                  "completed:DESC:NULLS_FIRST",
+                  "completed:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST",
+                  "todoItemId:ASC",
+                  "todoItemId:ASC:NULLS_FIRST",
+                  "todoItemId:ASC:NULLS_LAST",
+                  "todoItemId:DESC",
+                  "todoItemId:DESC:NULLS_FIRST",
+                  "todoItemId:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
           {
             "name": "limit",
             "required": false,
             "in": "query",
+            "description": "The maximum number of results to return.",
             "schema": {
+              "minimum": 1,
+              "maximum": 100,
               "nullable": true,
-              "type": "number"
+              "default": 25,
+              "example": 25,
+              "type": "integer"
             }
           },
           {
             "name": "offset",
             "required": false,
             "in": "query",
+            "description": "The offset to start returning results from.",
+            "schema": {
+              "minimum": 0,
+              "nullable": true,
+              "default": 0,
+              "example": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "required": false,
+            "in": "query",
             "schema": {
               "nullable": true,
-              "type": "number"
+              "type": "string"
+            }
+          },
+          {
+            "name": "completed",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "todoItemId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -130,12 +371,14 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
       },
       "post": {
         "operationId": "subTaskDTOS.createOne",
-        "summary": "",
-        "tags": [],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -148,8 +391,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "",
+          "201": {
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -158,27 +401,145 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "SubTaskDTOAutoEndpoint"
+        ]
+      }
+    },
+    "/todo-item-dtos/export": {
+      "get": {
+        "operationId": "todoItemDTOS.exportMany",
+        "parameters": [
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "title:ASC",
+                  "title:ASC:NULLS_FIRST",
+                  "title:ASC:NULLS_LAST",
+                  "title:DESC",
+                  "title:DESC:NULLS_FIRST",
+                  "title:DESC:NULLS_LAST",
+                  "description:ASC",
+                  "description:ASC:NULLS_FIRST",
+                  "description:ASC:NULLS_LAST",
+                  "description:DESC",
+                  "description:DESC:NULLS_FIRST",
+                  "description:DESC:NULLS_LAST",
+                  "isCompleted:ASC",
+                  "isCompleted:ASC:NULLS_FIRST",
+                  "isCompleted:ASC:NULLS_LAST",
+                  "isCompleted:DESC",
+                  "isCompleted:DESC:NULLS_FIRST",
+                  "isCompleted:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "name": "isCompleted",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
       }
     },
     "/todo-item-dtos/{id}": {
       "get": {
         "operationId": "todoItemDTOS.findById",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -187,25 +548,18 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
       },
       "delete": {
         "operationId": "todoItemDTOS.deleteOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -214,35 +568,28 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
       },
       "put": {
         "operationId": "todoItemDTOS.updateOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TodoItemUpdateDTO"
+                "$ref": "#/components/schemas/UpdateTodoItemDTO"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -251,37 +598,150 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
       }
     },
     "/todo-item-dtos": {
       "get": {
         "operationId": "todoItemDTOS.queryMany",
-        "summary": "",
-        "tags": [],
         "parameters": [
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "title:ASC",
+                  "title:ASC:NULLS_FIRST",
+                  "title:ASC:NULLS_LAST",
+                  "title:DESC",
+                  "title:DESC:NULLS_FIRST",
+                  "title:DESC:NULLS_LAST",
+                  "description:ASC",
+                  "description:ASC:NULLS_FIRST",
+                  "description:ASC:NULLS_LAST",
+                  "description:DESC",
+                  "description:DESC:NULLS_FIRST",
+                  "description:DESC:NULLS_LAST",
+                  "isCompleted:ASC",
+                  "isCompleted:ASC:NULLS_FIRST",
+                  "isCompleted:ASC:NULLS_LAST",
+                  "isCompleted:DESC",
+                  "isCompleted:DESC:NULLS_FIRST",
+                  "isCompleted:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
           {
             "name": "limit",
             "required": false,
             "in": "query",
+            "description": "The maximum number of results to return.",
             "schema": {
+              "minimum": 1,
+              "maximum": 100,
               "nullable": true,
-              "type": "number"
+              "default": 25,
+              "example": 25,
+              "type": "integer"
             }
           },
           {
             "name": "offset",
             "required": false,
             "in": "query",
+            "description": "The offset to start returning results from.",
+            "schema": {
+              "minimum": 0,
+              "nullable": true,
+              "default": 0,
+              "example": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "required": false,
+            "in": "query",
             "schema": {
               "nullable": true,
-              "type": "number"
+              "type": "string"
+            }
+          },
+          {
+            "name": "isCompleted",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -290,12 +750,14 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
       },
       "post": {
         "operationId": "todoItemDTOS.createOne",
-        "summary": "",
-        "tags": [],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -308,8 +770,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "",
+          "201": {
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -318,27 +780,116 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "TodoItemDTOAutoEndpoint"
+        ]
+      }
+    },
+    "/tag-dtos/export": {
+      "get": {
+        "operationId": "tagDTOS.exportMany",
+        "parameters": [
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "name:ASC",
+                  "name:ASC:NULLS_FIRST",
+                  "name:ASC:NULLS_LAST",
+                  "name:DESC",
+                  "name:DESC:NULLS_FIRST",
+                  "name:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       }
     },
     "/tag-dtos/{id}": {
       "get": {
         "operationId": "tagDTOS.findById",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -347,25 +898,18 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       },
       "delete": {
         "operationId": "tagDTOS.deleteOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -374,35 +918,28 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       },
       "put": {
         "operationId": "tagDTOS.updateOne",
-        "summary": "",
-        "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateTagDTO"
+                "$ref": "#/components/schemas/UpdateTagDTO"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -411,37 +948,121 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       }
     },
     "/tag-dtos": {
       "get": {
         "operationId": "tagDTOS.queryMany",
-        "summary": "",
-        "tags": [],
         "parameters": [
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field:ASC or field:DESC. Repeat for multiple fields. Optionally append :NULLS_FIRST or :NULLS_LAST.",
+            "schema": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id:ASC",
+                  "id:ASC:NULLS_FIRST",
+                  "id:ASC:NULLS_LAST",
+                  "id:DESC",
+                  "id:DESC:NULLS_FIRST",
+                  "id:DESC:NULLS_LAST",
+                  "name:ASC",
+                  "name:ASC:NULLS_FIRST",
+                  "name:ASC:NULLS_LAST",
+                  "name:DESC",
+                  "name:DESC:NULLS_FIRST",
+                  "name:DESC:NULLS_LAST",
+                  "created:ASC",
+                  "created:ASC:NULLS_FIRST",
+                  "created:ASC:NULLS_LAST",
+                  "created:DESC",
+                  "created:DESC:NULLS_FIRST",
+                  "created:DESC:NULLS_LAST",
+                  "updated:ASC",
+                  "updated:ASC:NULLS_FIRST",
+                  "updated:ASC:NULLS_LAST",
+                  "updated:DESC",
+                  "updated:DESC:NULLS_FIRST",
+                  "updated:DESC:NULLS_LAST"
+                ]
+              }
+            }
+          },
           {
             "name": "limit",
             "required": false,
             "in": "query",
+            "description": "The maximum number of results to return.",
             "schema": {
+              "minimum": 1,
+              "maximum": 100,
               "nullable": true,
-              "type": "number"
+              "default": 25,
+              "example": 25,
+              "type": "integer"
             }
           },
           {
             "name": "offset",
             "required": false,
             "in": "query",
+            "description": "The offset to start returning results from.",
             "schema": {
+              "minimum": 0,
               "nullable": true,
+              "default": 0,
+              "example": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
               "type": "number"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "created",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updated",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -450,12 +1071,14 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       },
       "post": {
         "operationId": "tagDTOS.createOne",
-        "summary": "",
-        "tags": [],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -468,8 +1091,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "",
+          "201": {
+            "description": "Successful response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -478,7 +1101,11 @@
               }
             }
           }
-        }
+        },
+        "summary": "",
+        "tags": [
+          "TagDTOAutoEndpoint"
+        ]
       }
     }
   },
@@ -534,15 +1161,17 @@
         "properties": {
           "hasNextPage": {
             "type": "boolean",
-            "description": "true if paging forward and there are more records.",
-            "nullable": true
+            "description": "`true` if paging forward and there are more records."
           },
           "hasPreviousPage": {
             "type": "boolean",
-            "description": "true if paging backwards and there are more records.",
-            "nullable": true
+            "description": "`true` if paging backwards and there are more records."
           }
-        }
+        },
+        "required": [
+          "hasNextPage",
+          "hasPreviousPage"
+        ]
       },
       "SubTaskDTOConnection": {
         "type": "object",
@@ -555,10 +1184,6 @@
               }
             ]
           },
-          "totalCount": {
-            "type": "number",
-            "description": "Total amount of records."
-          },
           "nodes": {
             "description": "Array of nodes.",
             "type": "array",
@@ -569,11 +1194,10 @@
         },
         "required": [
           "pageInfo",
-          "totalCount",
           "nodes"
         ]
       },
-      "SubTaskUpdateDTO": {
+      "UpdateSubTaskDTO": {
         "type": "object",
         "properties": {
           "title": {
@@ -653,10 +1277,6 @@
               }
             ]
           },
-          "totalCount": {
-            "type": "number",
-            "description": "Total amount of records."
-          },
           "nodes": {
             "description": "Array of nodes.",
             "type": "array",
@@ -667,11 +1287,10 @@
         },
         "required": [
           "pageInfo",
-          "totalCount",
           "nodes"
         ]
       },
-      "TodoItemUpdateDTO": {
+      "UpdateTodoItemDTO": {
         "type": "object",
         "properties": {
           "title": {
@@ -735,10 +1354,6 @@
               }
             ]
           },
-          "totalCount": {
-            "type": "number",
-            "description": "Total amount of records."
-          },
           "nodes": {
             "description": "Array of nodes.",
             "type": "array",
@@ -749,8 +1364,18 @@
         },
         "required": [
           "pageInfo",
-          "totalCount",
           "nodes"
+        ]
+      },
+      "UpdateTagDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
         ]
       },
       "CreateTagDTO": {

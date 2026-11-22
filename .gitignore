@@ -94,3 +94,6 @@ tsconfig.tsbuildinfo
 .claude/worktrees
 
 .isox/
+
+# isox/nx cache
+.nx/

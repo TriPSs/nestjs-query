@@ -1,3 +1,4 @@
+export { createGroupByResolver } from './aggregate/group-by-aggregate.resolver'
 export { CreateResolver, CreateResolverOpts } from './create.resolver'
 export { CRUDResolver, CRUDResolverOpts } from './crud.resolver'
 export { DeleteResolver, DeleteResolverOpts } from './delete.resolver'

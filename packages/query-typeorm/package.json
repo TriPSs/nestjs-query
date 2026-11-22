@@ -30,8 +30,8 @@
     "tslib": "^2.9.1"
   },
   "peerDependencies": {
-    "@nestjs/common": "^10.0.0 || ^11.0.0",
-    "@nestjs/typeorm": "^10.0.0 || ^11.0.0",
+    "@nestjs/common": "^10.0.0 || ^11.0.0 || ^12.0.0",
+    "@nestjs/typeorm": "^10.0.0 || ^11.0.0 || ^12.0.0",
     "class-transformer": "^0.5",
     "typeorm": "^0.3.15 || ^1.0.0"
   },

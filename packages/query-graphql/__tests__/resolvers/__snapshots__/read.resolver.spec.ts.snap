@@ -193,8 +193,6 @@ type Query {
     id: ID!
   ): TestResolverDTO!
   testResolverDTOS(
-    other: String!
-
     """Limit or page results."""
     paging: CursorPaging! = {first: 10}
 
@@ -203,6 +201,7 @@ type Query {
 
     """Specify to sort results."""
     sorting: [TestResolverDTOSort!]! = []
+    other: String!
   ): TestResolverDTOConnection!
   test: TestResolverDTO!
 }

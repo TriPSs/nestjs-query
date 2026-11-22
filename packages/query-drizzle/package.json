@@ -1,0 +1,44 @@
+{
+  "name": "@ptc-org/nestjs-query-drizzle",
+  "version": "11.1.0-alpha.1",
+  "description": "Drizzle ORM adapter for @ptc-org/nestjs-query-core",
+  "homepage": "https://github.com/fullstackhouse/nestjs-query#readme",
+  "bugs": {
+    "url": "https://github.com/fullstackhouse/nestjs-query/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fullstackhouse/nestjs-query.git",
+    "directory": "packages/query-drizzle"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "directories": {
+    "lib": ".",
+    "test": "__tests__"
+  },
+  "files": [
+    "**/*.js",
+    "**/*.d.ts",
+    "**/*.js.map"
+  ],
+  "dependencies": {
+    "tslib": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/pg": "^8.15.0",
+    "better-sqlite3": "^13.0.3",
+    "drizzle-orm": "1.0.0-rc.5-ab785fc",
+    "pg": "^8.16.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.0.0 || ^11.0.0 || ^12.0.0",
+    "@ptc-org/nestjs-query-core": "^11.1.0-alpha.1",
+    "drizzle-orm": "^1.0.0-rc.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

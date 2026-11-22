@@ -1,5 +1,5 @@
 import { ExecutionContext } from '@nestjs/common'
-import { ROUTE_ARGS_METADATA } from '@nestjs/common/constants'
+import { PARAM_ARGS_METADATA } from '@nestjs/graphql'
 import { instance, mock, when } from 'ts-mockito'
 import { vi } from 'vitest'
 
@@ -21,7 +21,7 @@ describe('AuthorizerFilter', () => {
     const context = { authorizer: { authorize } }
     const executionContext = mock<ExecutionContext>()
     when(executionContext.getArgs()).thenReturn([undefined, {}, context, undefined])
-    const metadata = Reflect.getMetadata(ROUTE_ARGS_METADATA, Resolver, 'exportMany') as Record<
+    const metadata = Reflect.getMetadata(PARAM_ARGS_METADATA, Resolver, 'exportMany') as Record<
       string,
       { factory: (data: unknown, ctx: ExecutionContext) => unknown }
     >

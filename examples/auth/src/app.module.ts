@@ -2,6 +2,7 @@ import { ApolloDriver } from '@nestjs/apollo'
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { Context } from 'graphql-ws'
 
 import { formatGraphqlError, typeormOrmConfig } from '../../helpers'
 import { AuthModule } from './auth/auth.module'
@@ -16,10 +17,11 @@ import { UserModule } from './user/user.module'
     GraphQLModule.forRoot({
       driver: ApolloDriver,
       autoSchemaFile: 'examples/auth/schema.gql',
-      installSubscriptionHandlers: true,
       subscriptions: {
-        'subscriptions-transport-ws': {
-          onConnect: (connectionParams: unknown) => ({ headers: connectionParams })
+        'graphql-ws': {
+          // graphql-ws calls this per operation; the onConnect return value is
+          // only the connection-ack payload and never reaches resolvers
+          context: (ctx: Context) => ({ req: { headers: ctx.connectionParams ?? {} } })
         }
       },
       formatError: formatGraphqlError
