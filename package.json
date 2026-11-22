@@ -84,6 +84,7 @@
     "eslint-plugin-jest": "28.14.0",
     "eslint-plugin-prettier": "5.5.6",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "fastify": "^5.2.1",
     "graphql": "16.14.2",
     "graphql-query-complexity": "1.1.0",
     "graphql-subscriptions": "^3.0.0",
