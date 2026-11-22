@@ -1,9 +1,8 @@
-import { ObjectType } from '@nestjs/graphql'
+import { ObjectType, Resolver } from '@nestjs/graphql'
 import { describe, expect, it } from 'vitest'
 
-import { FilterableField, PagingStrategies } from '../../src'
+import { createGroupByResolver, CRUDResolver, FilterableField, PagingStrategies } from '../../src'
 import { createResolvers } from '../../src/providers/resolver.provider'
-import { createGroupByResolver } from '../../src/resolvers/aggregate/group-by-aggregate.resolver'
 import { generateSchema, TestService } from '../__fixtures__'
 
 @ObjectType('ScratchDateDTO')
@@ -20,33 +19,80 @@ const section = (sdl: string, typeName: string): string =>
 
 describe('aggregate group by resolver', () => {
   it('exposes the by argument on the group-by type fields only', async () => {
-    const providers = createResolvers([
-      {
-        DTOClass: ScratchDateDTO,
-        ServiceClass: TestService,
-        enableAggregate: true,
-        pagingStrategy: PagingStrategies.NONE
-      }
-    ])
-    const sdl = await generateSchema(providers)
+    const sdl = await generateSchema(
+      createResolvers([
+        {
+          DTOClass: ScratchDateDTO,
+          ServiceClass: TestService,
+          enableAggregate: true,
+          pagingStrategy: PagingStrategies.NONE
+        }
+      ])
+    )
 
     expect(section(sdl, 'ScratchDateDTOAggregateGroupBy')).toContain('fakeDate(by:')
     expect(section(sdl, 'ScratchDateDTO')).not.toContain('(by:')
   })
 
-  it('does not register a group-by resolver when aggregate is disabled', () => {
-    const providers = createResolvers([
-      {
-        DTOClass: ScratchDateDTO,
-        ServiceClass: TestService,
-        pagingStrategy: PagingStrategies.NONE
-      }
-    ])
+  it('exposes the by argument for manually composed resolvers', async () => {
+    @Resolver(() => ScratchDateDTO)
+    class ScratchResolver extends CRUDResolver(ScratchDateDTO, { enableAggregate: true }) {}
 
-    expect(providers).toHaveLength(1)
+    const sdl = await generateSchema([ScratchResolver, createGroupByResolver(ScratchDateDTO) as never])
+
+    expect(section(sdl, 'ScratchDateDTOAggregateGroupBy')).toContain('fakeDate(by:')
+    expect(section(sdl, 'ScratchDateDTO')).not.toContain('(by:')
   })
 
-  it('memoizes the group-by resolver per DTO', () => {
-    expect(createGroupByResolver(ScratchDateDTO)).toBe(createGroupByResolver(ScratchDateDTO))
+  it('registers the group-by field resolvers once per DTO across registrations', async () => {
+    const first = {
+      DTOClass: ScratchDateDTO,
+      ServiceClass: TestService,
+      enableAggregate: true,
+      pagingStrategy: PagingStrategies.NONE
+    } as never
+    const second = {
+      DTOClass: ScratchDateDTO,
+      ServiceClass: TestService,
+      create: { disabled: true },
+      update: { disabled: true },
+      delete: { disabled: true },
+      read: { one: { disabled: true }, many: { name: 'scratchDatesOffset' } },
+      pagingStrategy: PagingStrategies.NONE
+    } as never
+
+    const sdl = await generateSchema(createResolvers([first, second]))
+
+    expect(section(sdl, 'ScratchDateDTOAggregateGroupBy')).toContain('fakeDate(by:')
+    expect(section(sdl, 'ScratchDateDTO')).not.toContain('(by:')
+  })
+
+  it('registers the group-by field resolvers when only aggregate opts enable it', async () => {
+    const sdl = await generateSchema(
+      createResolvers([
+        {
+          DTOClass: ScratchDateDTO,
+          ServiceClass: TestService,
+          aggregate: { enabled: true },
+          pagingStrategy: PagingStrategies.NONE
+        }
+      ])
+    )
+
+    expect(section(sdl, 'ScratchDateDTOAggregateGroupBy')).toContain('fakeDate(by:')
+  })
+
+  it('does not add the by argument when aggregate is disabled', async () => {
+    const sdl = await generateSchema(
+      createResolvers([
+        {
+          DTOClass: ScratchDateDTO,
+          ServiceClass: TestService,
+          pagingStrategy: PagingStrategies.NONE
+        }
+      ])
+    )
+
+    expect(sdl).not.toContain('(by:')
   })
 })
