@@ -67,7 +67,7 @@
           { "group": "Project", "pages": ["faq", "contributing"] },
           {
             "group": "Migration Guides",
-            "pages": ["migration-guides/v10.x.x-to-v11.x.x", "migration-guides/v2.x.x-to-v3.x.x"]
+            "pages": ["migration-guides/nestjs-12", "migration-guides/v10.x.x-to-v11.x.x", "migration-guides/v2.x.x-to-v3.x.x"]
           }
         ]
       },
