@@ -277,9 +277,7 @@ input TodoItemDeleteFilter {
 type Subscription {
   createdTodoItem(input: CreateTodoItemSubscriptionFilterInput): TodoItem!
   updatedOneTodoItem(input: UpdateOneTodoItemSubscriptionFilterInput): TodoItem!
-  updatedManyTodoItems: UpdateManyResponse!
   deletedOneTodoItem(input: DeleteOneTodoItemSubscriptionFilterInput): TodoItemDeleteResponse!
-  deletedManyTodoItems: DeleteManyResponse!
 }
 
 input CreateTodoItemSubscriptionFilterInput {

@@ -8,7 +8,9 @@ export interface SubscriptionResolverMethodOpts extends ResolverMethodOpts {
 }
 
 export function areSubscriptionsEnabled(opts: SubscriptionResolverMethodOpts[]): boolean {
-  return !!opts.find((o) => o.enableSubscriptions)
+  // last defined option wins, matching the `??`-based per-method overrides in the resolvers
+  const lastDefined = [...opts].reverse().find((o) => o.enableSubscriptions !== undefined)
+  return !!lastDefined?.enableSubscriptions
 }
 
 export function ResolverSubscription(
