@@ -63,6 +63,8 @@ export interface DrizzleQueryServiceOptions {
   table: unknown
   /** Key of the table in the schema passed to `defineRelations()`, required for relation reads. */
   relationsKey?: string
+  /** The object returned by `defineRelations()`; enables SQL COUNT in `countRelations` instead of loading rows. */
+  relations?: unknown
 }
 
 function isDefined<T>(value: T | undefined): value is T {
@@ -260,8 +262,11 @@ export class DrizzleQueryService<DTO extends object, C = DeepPartial<DTO>, U = D
     filter: Filter<Relation>,
     _opts?: QueryRelationsOptions
   ): Promise<Map<DTO, number> | number> {
-    // shortcut: counts load all matching related rows instead of a SQL COUNT,
-    // upgrade to an aggregate query when relation volume matters
+    const sqlCounts = await this.sqlCountRelations(relationName, entities, filter)
+    if (sqlCounts) {
+      return sqlCounts
+    }
+    // fallback when no relations schema is provided: load the rows and count them
     const config = this.relationsQueryConfig({ filter })
     if (!Array.isArray(entities)) {
       const row = await this.fetchOwnRow(entities, relationName, config)
@@ -274,6 +279,61 @@ export class DrizzleQueryService<DTO extends object, C = DeepPartial<DTO>, U = D
         (byPk.get((dto as Record<string, unknown>)[this.pkName]) as unknown[] | undefined)?.length ?? 0
       ])
     )
+  }
+
+  /** Counts related rows with a grouped SQL COUNT, derived from the relations schema. */
+  private async sqlCountRelations(
+    relationName: string,
+    entities: DTO | DTO[],
+    filter: Filter<any>
+  ): Promise<Map<DTO, number> | number | undefined> {
+    const relation = this.relationInfo(relationName)
+    if (!relation) {
+      return undefined
+    }
+    if (relation.through || relation.throughTable) {
+      throw new Error('countRelations does not support many-to-many (junction table) relations yet')
+    }
+    if (relation.targetColumns.length !== 1) {
+      throw new Error('countRelations does not support composite foreign keys yet')
+    }
+
+    const targetColumn = relation.targetColumns[0]
+    const ids = Array.isArray(entities)
+      ? entities.map((dto) => (dto as Record<string, unknown>)[this.pkName])
+      : [(entities as Record<string, unknown>)[this.pkName]]
+    const conditions = [inArray(targetColumn, ids as never)]
+    const filterCondition = this.buildWhere(filter, getTableColumns(relation.targetTable as never))
+    if (filterCondition) {
+      conditions.push(filterCondition)
+    }
+
+    const rows = await this.options.db
+      .select({ key: targetColumn, value: count() })
+      .from(relation.targetTable)
+      .where(and(...conditions))
+      .groupBy(targetColumn)
+    const counts = new Map<unknown, number>(rows.map((row: { key: unknown; value: unknown }) => [row.key, Number(row.value)]))
+
+    if (!Array.isArray(entities)) {
+      return counts.get((entities as Record<string, unknown>)[this.pkName]) ?? 0
+    }
+    return new Map(entities.map((dto) => [dto, counts.get((dto as Record<string, unknown>)[this.pkName]) ?? 0]))
+  }
+
+  /** Internal shape of a relation definition in the `defineRelations()` output (rc.5). */
+  private relationInfo(relationName: string):
+    | {
+        relationType: string
+        sourceColumns: Column[]
+        targetColumns: Column[]
+        targetTable: unknown
+        through?: unknown
+        throughTable?: unknown
+      }
+    | undefined {
+    const schema = this.options.relations as Record<string, any> | undefined
+    return schema?.[this.options.relationsKey as string]?.relations?.[relationName]
   }
 
   /** Relational query API of the drizzle instance (requires `relationsKey` and `drizzle({ client, relations })`). */

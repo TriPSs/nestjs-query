@@ -103,4 +103,43 @@ describe('DrizzleQueryService - read relations', () => {
     expect(map.get(all[0])).toBe(3)
     expect(map.get(all[1])).toBe(1)
   })
+
+  it('countRelations issues a SQL COUNT instead of loading rows when the relations schema is provided', async () => {
+    const client = new Database(':memory:')
+    client.exec(`
+      CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL);
+      CREATE TABLE todo_items (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, user_id INTEGER REFERENCES users(id));
+    `)
+    const queries: string[] = []
+    const db = drizzle({ client, relations, logger: { logQuery: (query) => queries.push(query) } })
+    const service = new DrizzleQueryService<typeof users.$inferSelect>({
+      db,
+      table: users,
+      relationsKey: 'users',
+      relations
+    })
+    const todosHelper = new DrizzleQueryService<typeof todoItems.$inferSelect>({
+      db,
+      table: todoItems,
+      relationsKey: 'todoItems'
+    })
+
+    const [ada, grace] = await service.createMany([{ name: 'Ada' }, { name: 'Grace' }])
+    await todosHelper.createMany([
+      { title: 'Ada - one', userId: ada.id },
+      { title: 'Ada - two', userId: ada.id },
+      { title: 'Ada - three', userId: ada.id },
+      { title: 'Grace - one', userId: grace.id }
+    ])
+
+    queries.length = 0
+    const map = await service.countRelations(TodoItemDto, 'todoItems', [ada, grace], {
+      title: { like: '%Ada%' }
+    })
+    expect(map.get(ada)).toBe(3)
+    expect(map.get(grace)).toBe(0)
+    const countedQuery = queries.find((query) => /count/i.test(query))
+    expect(countedQuery).toBeDefined()
+    expect(countedQuery).toMatch(/group by/i)
+  })
 })

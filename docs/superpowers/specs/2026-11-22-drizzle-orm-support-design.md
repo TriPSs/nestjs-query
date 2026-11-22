@@ -1,7 +1,7 @@
 # Drizzle ORM support — feasibility design
 
 Date: 2026-11-22
-Status: POC validated (40 tests green: lint, test, build via isox)
+Status: POC validated (45 tests green: lint, test, build via isox — 41 on SQLite, 4 on Postgres 14)
 Worktree: `.worktrees/feat-drizzle-orm` (branch `feat/drizzle-orm-support`, based on `feat/nestjs-12-support`)
 
 ## Verdict
@@ -16,13 +16,17 @@ Drizzle 1.0.0-rc.5. It ships as `packages/query-drizzle` (~600 lines of src, ~70
 - `DrizzleQueryService<DTO, C, U> extends NoOpQueryService` — only implements what it
   supports; everything else (relation mutations, aggregates) rejects with
   `NotImplementedException` for free from the NoOp base.
-- Constructed with `{ db, table, relationsKey? }`:
+- Constructed with `{ db, table, relationsKey?, relations? }`:
   - `db`: any drizzle instance (deliberate `any` boundary — drizzle generics are
     dialect-specific). Works with the db from `@nestjs/drizzle` `@InjectDrizzle()`.
   - `table`: the drizzle table object. No `forFeature()`, no decorators, no entity
     metadata: primary key is auto-detected via `getTableColumns(table)`.
   - `relationsKey`: the key of the table in the `defineRelations()` schema, required only
     for relation reads through the relational query API (`db.query.<key>`).
+  - `relations`: the object returned by `defineRelations()`; when provided,
+    `countRelations` issues a grouped SQL `COUNT` derived from the relation's
+    `sourceColumns`/`targetColumns`/`targetTable` instead of loading rows. Junction-table
+    (many-to-many) relations and composite foreign keys are rejected explicitly.
 - Two filter mappers:
   - `Filter<DTO>` → SQL expressions (drizzle `eq/gt/like/...`) for the main table CRUD.
   - `Filter<DTO>` → RQB v2 object filter for relation reads (see findings).
@@ -52,10 +56,17 @@ Drizzle 1.0.0-rc.5. It ships as `packages/query-drizzle` (~600 lines of src, ~70
    ASCII case-insensitive on SQLite and MySQL; a Postgres build needs a per-dialect
    `lower()` mapping (see `shortcut` comments in `drizzle-query.service.ts`).
 7. **Relation reads are cheap to implement** (the `defineRelations()` object is reused
-   as-is through `db.query`), but `countRelations` currently loads the related rows and
-   counts them (`shortcut` comment) — upgrade to a SQL COUNT aggregate in phase 2+.
+   as-is through `db.query`). `countRelations` uses a grouped SQL `COUNT` when the
+   relations schema is passed to the service, and falls back to load-and-count
+   otherwise (see `shortcut` comment in `drizzle-query.service.ts`).
 8. **`@nestjs/drizzle` integration is trivial**: the adapter takes the injected db; no
    connection management, no module wiring needed.
+9. **Postgres confirmed**: the same filter builders and RQB v2 object filters work
+   unchanged on Postgres 14 (test suite `drizzle-query.pg.spec.ts`, reusing the
+   `examples/docker-compose.yml` postgres service on port 5436, override with
+   `DRIZZLE_PG_URL`; the spec skips when no postgres is reachable). `iLike` remains the
+   one dialect-sensitive operator (LIKE on PG is case-sensitive; per-dialect upgrade
+   tracked for phase 2).
 
 ## Not implemented (by design)
 
@@ -71,8 +82,8 @@ Drizzle 1.0.0-rc.5. It ships as `packages/query-drizzle` (~600 lines of src, ~70
 
 | Phase | Content | Notes |
 | --- | --- | --- |
-| 1 — POC (done) | CRUD, filters, read relations | this branch |
-| 2 | Aggregates + SQL COUNT for countRelations + SortNulls + cursor paging | mechanical |
+| 1 — POC (done) | CRUD, filters, read relations, SQL COUNT counts, Postgres suite | this branch |
+| 2 | Aggregates + SortNulls + cursor paging + per-dialect ILIKE | mechanical |
 | 3 | Relation mutations (FK first, then junction tables) | the big one, pure SQL |
 | 4 | e2e example (`examples/drizzle/`, Postgres + docker-compose) | copies existing patterns |
 | 5 | Docs page (`docs/` + `docs/docs.json`), README, publish alpha | |

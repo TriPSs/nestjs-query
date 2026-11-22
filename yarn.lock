@@ -2467,8 +2467,10 @@ __metadata:
   resolution: "@ptc-org/nestjs-query-drizzle@workspace:packages/query-drizzle"
   dependencies:
     "@types/better-sqlite3": "npm:^7.6.13"
+    "@types/pg": "npm:^8.15.0"
     better-sqlite3: "npm:^13.0.3"
     drizzle-orm: "npm:1.0.0-rc.5-ab785fc"
+    pg: "npm:^8.16.0"
     tslib: "npm:^2.9.1"
   peerDependencies:
     "@nestjs/common": ^10.0.0 || ^11.0.0 || ^12.0.0
@@ -3072,6 +3074,17 @@ __metadata:
   dependencies:
     "@types/express": "npm:*"
   checksum: 10/3db90645d58d928796dd8e9c328dec8040b71a43f3691d42a08fb4779efcbfc7dccc43ea612066a961a41be0869800096d52fd8aaa71518a89aa4483f67f5914
+  languageName: node
+  linkType: hard
+
+"@types/pg@npm:^8.15.0":
+  version: 8.23.1
+  resolution: "@types/pg@npm:8.23.1"
+  dependencies:
+    "@types/node": "npm:*"
+    pg-protocol: "npm:*"
+    pg-types: "npm:^2.2.0"
+  checksum: 10/c68a88f73e05dc17c20f819682b43fd17b5c80baf5651f391303fef462ce7ba58e9fde2ce0964016a9db0a60a8abb15817b765c2db9f4b4c2907255ab43c5a03
   languageName: node
   linkType: hard
 
@@ -9673,14 +9686,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-protocol@npm:^1.16.1":
+"pg-protocol@npm:*, pg-protocol@npm:^1.16.1":
   version: 1.16.1
   resolution: "pg-protocol@npm:1.16.1"
   checksum: 10/4fbc86b76c4b1c30d004503ca3f30defb202e37cb3cd71b1c41224681b0d6cf2c3d99bad937eb63b7d7dc4015e29b26ab095de1678770967cd715b10b6fc7569
   languageName: node
   linkType: hard
 
-"pg-types@npm:2.2.0":
+"pg-types@npm:2.2.0, pg-types@npm:^2.2.0":
   version: 2.2.0
   resolution: "pg-types@npm:2.2.0"
   dependencies:
@@ -9693,7 +9706,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg@npm:8.23.1, pg@npm:^8.23.1":
+"pg@npm:8.23.1, pg@npm:^8.16.0, pg@npm:^8.23.1":
   version: 8.23.1
   resolution: "pg@npm:8.23.1"
   dependencies:
