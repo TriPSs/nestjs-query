@@ -173,64 +173,6 @@ type SubTask {
   todoItem: TodoItem!
 }
 
-type DeleteManyResponse {
-  """The number of records deleted."""
-  deletedCount: Int!
-}
-
-type SubTaskDeleteResponse {
-  id: ID
-  title: String
-  description: String
-  completed: Boolean
-  created: DateTime
-  updated: DateTime
-  todoItemId: String
-  createdBy: String
-  updatedBy: String
-}
-
-type UpdateManyResponse {
-  """The number of records updated."""
-  updatedCount: Int!
-}
-
-type SubTaskEdge {
-  """The node containing the SubTask"""
-  node: SubTask!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-"""Cursor for paging through collections"""
-scalar ConnectionCursor
-
-type PageInfo {
-  """true if paging forward and there are more records."""
-  hasNextPage: Boolean
-
-  """true if paging backwards and there are more records."""
-  hasPreviousPage: Boolean
-
-  """The cursor of the first returned record."""
-  startCursor: ConnectionCursor
-
-  """The cursor of the last returned record."""
-  endCursor: ConnectionCursor
-}
-
-type SubTaskConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [SubTaskEdge!]!
-
-  """Fetch total count of records"""
-  totalCount: Int!
-}
-
 type SubTaskAggregateGroupBy {
   id: ID
   title: String
@@ -300,6 +242,64 @@ type SubTaskAggregateResponse {
   avg: SubTaskAvgAggregate
   min: SubTaskMinAggregate
   max: SubTaskMaxAggregate
+}
+
+type DeleteManyResponse {
+  """The number of records deleted."""
+  deletedCount: Int!
+}
+
+type SubTaskDeleteResponse {
+  id: ID
+  title: String
+  description: String
+  completed: Boolean
+  created: DateTime
+  updated: DateTime
+  todoItemId: String
+  createdBy: String
+  updatedBy: String
+}
+
+type UpdateManyResponse {
+  """The number of records updated."""
+  updatedCount: Int!
+}
+
+type SubTaskEdge {
+  """The node containing the SubTask"""
+  node: SubTask!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+"""Cursor for paging through collections"""
+scalar ConnectionCursor
+
+type PageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
+
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
+}
+
+type SubTaskConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [SubTaskEdge!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
 }
 
 type TodoItemEdge {
@@ -458,6 +458,7 @@ enum TodoItemSortFields {
 }
 
 type Mutation {
+  """Sets the provided relation, replacing any existing relation."""
   setTodoItemOnSubTask(input: SetTodoItemOnSubTaskInput!): SubTask!
   createOneSubTask(input: CreateOneSubTaskInput!): SubTask!
   createManySubTasks(input: CreateManySubTasksInput!): [SubTask!]!
@@ -467,7 +468,13 @@ type Mutation {
   deleteManySubTasks(input: DeleteManySubTasksInput!): DeleteManyResponse!
   restoreOneTodoItem(input: ID!): TodoItem!
   restoreManyTodoItems(input: TodoItemFilter!): UpdateManyResponse!
+
+  """Adds the provided relations without removing existing relations."""
   addSubTasksToTodoItem(input: AddSubTasksToTodoItemInput!): TodoItem!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setSubTasksOnTodoItem(input: SetSubTasksOnTodoItemInput!): TodoItem!
   createOneTodoItem(input: CreateOneTodoItemInput!): TodoItem!
   createManyTodoItems(input: CreateManyTodoItemsInput!): [TodoItem!]!

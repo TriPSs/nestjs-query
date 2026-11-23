@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { PassportModule } from '@nestjs/passport'
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 
@@ -11,14 +12,14 @@ import { SubTaskEntity } from './sub-task.entity'
 @Module({
   imports: [
     NestjsQueryGraphQLModule.forFeature({
-      imports: [NestjsQueryTypeOrmModule.forFeature([SubTaskEntity])],
+      imports: [PassportModule.register({}), NestjsQueryTypeOrmModule.forFeature([SubTaskEntity])],
       resolvers: [
         {
           DTOClass: SubTaskDTO,
           EntityClass: SubTaskEntity,
           CreateDTOClass: CreateSubTaskDTO,
           UpdateDTOClass: SubTaskUpdateDTO,
-          enableAggregate: true,
+          aggregate: { enabled: true },
           enableSubscriptions: true,
           guards: [JwtAuthGuard]
         }

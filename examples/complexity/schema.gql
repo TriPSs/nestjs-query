@@ -414,6 +414,7 @@ type Query {
 }
 
 type Mutation {
+  """Sets the provided relation, replacing any existing relation."""
   setTodoItemOnSubTask(input: SetTodoItemOnSubTaskInput!): SubTask!
   createOneSubTask(input: CreateOneSubTaskInput!): SubTask!
   createManySubTasks(input: CreateManySubTasksInput!): [SubTask!]!
@@ -421,9 +422,21 @@ type Mutation {
   updateManySubTasks(input: UpdateManySubTasksInput!): UpdateManyResponse!
   deleteOneSubTask(input: DeleteOneSubTaskInput!): SubTaskDeleteResponse!
   deleteManySubTasks(input: DeleteManySubTasksInput!): DeleteManyResponse!
+
+  """Adds the provided relations without removing existing relations."""
   addSubTasksToTodoItem(input: AddSubTasksToTodoItemInput!): TodoItem!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setSubTasksOnTodoItem(input: SetSubTasksOnTodoItemInput!): TodoItem!
+
+  """Adds the provided relations without removing existing relations."""
   addTagsToTodoItem(input: AddTagsToTodoItemInput!): TodoItem!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setTagsOnTodoItem(input: SetTagsOnTodoItemInput!): TodoItem!
   removeTagsFromTodoItem(input: RemoveTagsFromTodoItemInput!): TodoItem!
   createOneTodoItem(input: CreateOneTodoItemInput!): TodoItem!
@@ -432,7 +445,13 @@ type Mutation {
   updateManyTodoItems(input: UpdateManyTodoItemsInput!): UpdateManyResponse!
   deleteOneTodoItem(input: DeleteOneTodoItemInput!): TodoItemDeleteResponse!
   deleteManyTodoItems(input: DeleteManyTodoItemsInput!): DeleteManyResponse!
+
+  """Adds the provided relations without removing existing relations."""
   addTodoItemsToTag(input: AddTodoItemsToTagInput!): Tag!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setTodoItemsOnTag(input: SetTodoItemsOnTagInput!): Tag!
   removeTodoItemsFromTag(input: RemoveTodoItemsFromTagInput!): Tag!
   createOneTag(input: CreateOneTagInput!): Tag!

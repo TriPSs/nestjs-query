@@ -15,12 +15,23 @@ export interface RelatableOpts extends BaseResolverOptions {
   enableAggregate?: boolean
 }
 
+// @nestjs/graphql 14 refuses field resolvers declared by sibling resolver classes.
+// Relation resolvers depend only on the DTO decoration, so register them once per
+// DTO class: later registrations of the same DTO (e.g. one per paging strategy)
+// reuse the ones from the first.
+const relatableDTOs = new WeakSet<Class<unknown>>()
+
 export const Relatable =
   <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(
     DTOClass: Class<DTO>,
     opts: RelatableOpts = {}
   ) =>
   <B extends Class<ServiceResolver<DTO, QS>>>(Base: B): B => {
+    if (relatableDTOs.has(DTOClass)) {
+      return Base
+    }
+    relatableDTOs.add(DTOClass)
+
     const { enableTotalCount, enableAggregate } = opts
     const relations = getRelations(DTOClass, opts)
     const references = getReferences(DTOClass, opts)

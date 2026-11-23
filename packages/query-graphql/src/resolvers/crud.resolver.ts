@@ -37,7 +37,6 @@ export interface CRUDResolverOpts<
   AggregateDTOClass?: Class<DTO>
   enableSubscriptions?: boolean
   pagingStrategy?: PS
-  enableAggregate?: boolean
   create?: CreateResolverOpts<DTO, C>
   read?: R
   update?: UpdateResolverOpts<DTO, U>
@@ -65,15 +64,15 @@ export interface CRUDResolver<
 function extractRelatableOpts<DTO>(
   opts: CRUDResolverOpts<DTO, unknown, unknown, ReadResolverOpts<DTO>, PagingStrategies, unknown>
 ): RelatableOpts {
-  const { enableTotalCount, enableAggregate } = opts
-  return mergeBaseResolverOpts<RelatableOpts>({ enableAggregate, enableTotalCount }, opts)
+  const { enableTotalCount, aggregate } = opts
+  return mergeBaseResolverOpts<RelatableOpts>({ enableAggregate: aggregate?.enabled, enableTotalCount }, opts)
 }
 
 function extractAggregateResolverOpts<DTO>(
   opts: CRUDResolverOpts<DTO, unknown, unknown, ReadResolverOpts<DTO>, PagingStrategies, unknown>
 ): AggregateResolverOpts<DTO> {
-  const { AggregateDTOClass, enableAggregate, aggregate } = opts
-  return mergeBaseResolverOpts<AggregateResolverOpts<DTO>>({ enabled: enableAggregate, AggregateDTOClass, ...aggregate }, opts)
+  const { AggregateDTOClass, aggregate } = opts
+  return mergeBaseResolverOpts<AggregateResolverOpts<DTO>>({ AggregateDTOClass, ...aggregate }, opts)
 }
 
 function extractCreateResolverOpts<DTO, C>(

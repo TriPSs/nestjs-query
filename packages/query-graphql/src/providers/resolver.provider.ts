@@ -13,6 +13,7 @@ import { PubSub } from 'graphql-subscriptions'
 
 import { InjectPubSub } from '../decorators'
 import { CRUDResolver, CRUDResolverOpts, FederationResolver } from '../resolvers'
+import { createGroupByResolver } from '../resolvers/aggregate/group-by-aggregate.resolver'
 import { ReadResolverOpts } from '../resolvers/read.resolver'
 import { PagingStrategies } from '../types/query/paging'
 
@@ -189,19 +190,22 @@ function createServiceAutoResolver<DTO, Service, C, U, R extends ReadResolverOpt
 
 function createResolver<DTO, EntityServiceOrAssembler, C, U, R extends ReadResolverOpts<DTO>, PS extends PagingStrategies>(
   resolverOpts: AutoResolverOpts<DTO, EntityServiceOrAssembler, C, U, R, PS>
-): Provider {
+): Provider[] {
   if (isFederatedResolverOpts(resolverOpts)) {
-    return createFederatedResolver(resolverOpts)
+    return [createFederatedResolver(resolverOpts)]
   }
-  if (isAssemblerCRUDAutoResolverOpts(resolverOpts)) {
-    return createAssemblerAutoResolver(resolverOpts)
-  }
-  if (isServiceCRUDAutoResolverOpts(resolverOpts)) {
-    return createServiceAutoResolver(resolverOpts)
-  }
-  return createEntityAutoResolver(resolverOpts)
+  // @nestjs/graphql 14 requires the group-by field resolvers to live on their own
+  // @Resolver class (inherited resolvers bind to the final resolver's parent type)
+  const aggregateEnabled = resolverOpts.aggregate?.enabled
+  const groupByResolver = aggregateEnabled ? createGroupByResolver(resolverOpts.DTOClass) : null
+  const resolver = isAssemblerCRUDAutoResolverOpts(resolverOpts)
+    ? createAssemblerAutoResolver(resolverOpts)
+    : isServiceCRUDAutoResolverOpts(resolverOpts)
+      ? createServiceAutoResolver(resolverOpts)
+      : createEntityAutoResolver(resolverOpts)
+  return groupByResolver ? [resolver, groupByResolver] : [resolver]
 }
 
 export const createResolvers = (
   opts: AutoResolverOpts<unknown, unknown, unknown, unknown, ReadResolverOpts<unknown>, PagingStrategies>[]
-): Provider[] => opts.map((opt) => createResolver(opt))
+): Provider[] => opts.flatMap((opt) => createResolver(opt))

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { PassportModule } from '@nestjs/passport'
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
 import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
 
@@ -14,7 +15,7 @@ import { TodoItemResolver } from './todo-item.resolver'
   providers: [TodoItemResolver],
   imports: [
     NestjsQueryGraphQLModule.forFeature({
-      imports: [NestjsQueryTypeOrmModule.forFeature([TodoItemEntity])],
+      imports: [PassportModule.register({}), NestjsQueryTypeOrmModule.forFeature([TodoItemEntity])],
       assemblers: [TodoItemAssembler],
       resolvers: [
         {
@@ -22,7 +23,7 @@ import { TodoItemResolver } from './todo-item.resolver'
           AssemblerClass: TodoItemAssembler,
           CreateDTOClass: TodoItemInputDTO,
           UpdateDTOClass: TodoItemUpdateDTO,
-          enableAggregate: true,
+          aggregate: { enabled: true },
           enableSubscriptions: true,
           guards: [JwtAuthGuard]
         }

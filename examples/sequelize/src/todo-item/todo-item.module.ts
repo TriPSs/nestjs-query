@@ -25,11 +25,10 @@ const guards = [AuthGuard]
           AssemblerClass: TodoItemAssembler,
           CreateDTOClass: TodoItemInputDTO,
           UpdateDTOClass: TodoItemUpdateDTO,
-          enableAggregate: true,
+          aggregate: { guards, enabled: true },
           create: { guards },
           update: { guards },
-          delete: { guards },
-          aggregate: { guards }
+          delete: { guards }
         }
       ]
     })

@@ -456,61 +456,6 @@ type SubTask {
   todoItem: TodoItem!
 }
 
-type DeleteManyResponse {
-  """The number of records deleted."""
-  deletedCount: Int!
-}
-
-type SubTaskDeleteResponse {
-  id: ID
-  title: String
-  description: String
-  completed: Boolean
-  created: DateTime
-  updated: DateTime
-  todoItemId: String
-  createdBy: String
-  updatedBy: String
-}
-
-type UpdateManyResponse {
-  """The number of records updated."""
-  updatedCount: Int!
-}
-
-type SubTaskEdge {
-  """The node containing the SubTask"""
-  node: SubTask!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-type PageInfo {
-  """true if paging forward and there are more records."""
-  hasNextPage: Boolean
-
-  """true if paging backwards and there are more records."""
-  hasPreviousPage: Boolean
-
-  """The cursor of the first returned record."""
-  startCursor: ConnectionCursor
-
-  """The cursor of the last returned record."""
-  endCursor: ConnectionCursor
-}
-
-type SubTaskConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [SubTaskEdge!]!
-
-  """Fetch total count of records"""
-  totalCount: Int!
-}
-
 type SubTaskAggregateGroupBy {
   id: ID
   title: String
@@ -582,29 +527,56 @@ type SubTaskAggregateResponse {
   max: SubTaskMaxAggregate
 }
 
-type TagDeleteResponse {
+type DeleteManyResponse {
+  """The number of records deleted."""
+  deletedCount: Int!
+}
+
+type SubTaskDeleteResponse {
   id: ID
-  name: String
+  title: String
+  description: String
+  completed: Boolean
   created: DateTime
   updated: DateTime
+  todoItemId: String
   createdBy: String
   updatedBy: String
 }
 
-type TagEdge {
-  """The node containing the Tag"""
-  node: Tag!
+type UpdateManyResponse {
+  """The number of records updated."""
+  updatedCount: Int!
+}
+
+type SubTaskEdge {
+  """The node containing the SubTask"""
+  node: SubTask!
 
   """Cursor for this node."""
   cursor: ConnectionCursor!
 }
 
-type TagConnection {
+type PageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
+
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
+}
+
+type SubTaskConnection {
   """Paging information"""
   pageInfo: PageInfo!
 
   """Array of edges."""
-  edges: [TagEdge!]!
+  edges: [SubTaskEdge!]!
 
   """Fetch total count of records"""
   totalCount: Int!
@@ -661,6 +633,34 @@ type TagAggregateResponse {
   avg: TagAvgAggregate
   min: TagMinAggregate
   max: TagMaxAggregate
+}
+
+type TagDeleteResponse {
+  id: ID
+  name: String
+  created: DateTime
+  updated: DateTime
+  createdBy: String
+  updatedBy: String
+}
+
+type TagEdge {
+  """The node containing the Tag"""
+  node: Tag!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+type TagConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [TagEdge!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
 }
 
 type TodoItemEdge {
@@ -764,20 +764,6 @@ type TodoItemConnection {
   totalCount: Int!
 }
 
-type TodoItemDeleteResponse {
-  id: ID
-  title: String
-  description: String
-  completed: Boolean
-  created: DateTime
-  updated: DateTime
-  age: Float
-  priority: Float
-  createdBy: String
-  updatedBy: String
-  ownerId: Float
-}
-
 type TodoItemAggregateGroupBy {
   id: ID
   title: String
@@ -847,6 +833,20 @@ type TodoItemAggregateResponse {
   avg: TodoItemAvgAggregate
   min: TodoItemMinAggregate
   max: TodoItemMaxAggregate
+}
+
+type TodoItemDeleteResponse {
+  id: ID
+  title: String
+  description: String
+  completed: Boolean
+  created: DateTime
+  updated: DateTime
+  age: Float
+  priority: Float
+  createdBy: String
+  updatedBy: String
+  ownerId: Float
 }
 
 type TodoItemTagsConnection {
@@ -1077,9 +1077,21 @@ type Query {
 
 type Mutation {
   login(input: LoginInputDTO!): LoginResponse!
+
+  """Adds the provided relations without removing existing relations."""
   addSubTasksToTodoItem(input: AddSubTasksToTodoItemInput!): TodoItem!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setSubTasksOnTodoItem(input: SetSubTasksOnTodoItemInput!): TodoItem!
+
+  """Adds the provided relations without removing existing relations."""
   addTagsToTodoItem(input: AddTagsToTodoItemInput!): TodoItem!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setTagsOnTodoItem(input: SetTagsOnTodoItemInput!): TodoItem!
   removeTagsFromTodoItem(input: RemoveTagsFromTodoItemInput!): TodoItem!
   createOneTodoItem(input: CreateOneTodoItemInput!): TodoItem!
@@ -1088,6 +1100,8 @@ type Mutation {
   updateManyTodoItems(input: UpdateManyTodoItemsInput!): UpdateManyResponse!
   deleteOneTodoItem(input: DeleteOneTodoItemInput!): TodoItemDeleteResponse!
   deleteManyTodoItems(input: DeleteManyTodoItemsInput!): DeleteManyResponse!
+
+  """Sets the provided relation, replacing any existing relation."""
   setTodoItemOnSubTask(input: SetTodoItemOnSubTaskInput!): SubTask!
   createOneSubTask(input: CreateOneSubTaskInput!): SubTask!
   createManySubTasks(input: CreateManySubTasksInput!): [SubTask!]!
@@ -1095,7 +1109,13 @@ type Mutation {
   updateManySubTasks(input: UpdateManySubTasksInput!): UpdateManyResponse!
   deleteOneSubTask(input: DeleteOneSubTaskInput!): SubTaskDeleteResponse!
   deleteManySubTasks(input: DeleteManySubTasksInput!): DeleteManyResponse!
+
+  """Adds the provided relations without removing existing relations."""
   addTodoItemsToTag(input: AddTodoItemsToTagInput!): Tag!
+
+  """
+  Replaces all existing relations with the provided relations. An empty list removes all relations.
+  """
   setTodoItemsOnTag(input: SetTodoItemsOnTagInput!): Tag!
   removeTodoItemsFromTag(input: RemoveTodoItemsFromTagInput!): Tag!
   createOneTag(input: CreateOneTagInput!): Tag!

@@ -6,7 +6,6 @@ import { getDTONames } from '../common'
 import { AggregateQueryParam, AuthorizerFilter, ResolverMethodOpts, ResolverQuery } from '../decorators'
 import { AuthorizerInterceptor } from '../interceptors'
 import { AggregateArgsType, AggregateResponseType } from '../types'
-import { GroupByAggregateMixin } from './aggregate/group-by-aggregate.resolver'
 import { transformAndValidate } from './helpers'
 import { BaseServiceResolver, NamedEndpoint, ResolverClass, ServiceResolver } from './resolver.interface'
 
@@ -47,7 +46,7 @@ export const Aggregateable =
       'AggregateDTOClass'
     )
     const queryName = opts.name || `${baseNameLower}Aggregate`
-    const [AR, GroupByType] = AggregateResponseType(DTOClass)
+    const [AR] = AggregateResponseType(DTOClass)
 
     @ArgsType()
     class AA extends AggregateArgsType(opts.AggregateDTOClass || DTOClass) {}
@@ -75,7 +74,8 @@ export const Aggregateable =
       }
     }
 
-    return GroupByAggregateMixin(DTOClass, GroupByType)(AggregateResolverBase)
+    // group-by field resolvers are registered separately (see createGroupByResolver)
+    return AggregateResolverBase
   }
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- intentional
 export const AggregateResolver = <DTO, QS extends QueryService<DTO, unknown, unknown> = QueryService<DTO, unknown, unknown>>(

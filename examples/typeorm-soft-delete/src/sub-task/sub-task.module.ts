@@ -20,7 +20,7 @@ import { SubTaskService } from './sub-task.service'
           CreateDTOClass: CreateSubTaskDTO,
           UpdateDTOClass: SubTaskUpdateDTO,
           ServiceClass: SubTaskService,
-          enableAggregate: true
+          aggregate: { enabled: true }
         }
       ]
     })
