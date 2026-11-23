@@ -42,7 +42,7 @@ export class TodoItemDTO {
 
 ### Enabling Aggregate Queries[​](#enabling-aggregate-queries 'Direct link to Enabling Aggregate Queries')
 
-To enable aggregate queries you can set the `enableAggregate` option in your resolver
+To enable aggregate queries you can set the `aggregate` option with `enabled: true` in your resolver
 
 ```ts todo-item/todo-item.module.ts
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
@@ -63,7 +63,7 @@ import { TodoItemEntity } from './todo-item.entity'
           EntityClass: TodoItemEntity,
           CreateDTOClass: TodoItemInputDTO,
           UpdateDTOClass: TodoItemUpdateDTO,
-          enableAggregate: true
+          aggregate: { enabled: true }
         }
       ]
     })
@@ -405,7 +405,7 @@ For example assume description is null for all todo items you will get `0` back.
 
 ## Aggregating Relations[​](#aggregating-relations 'Direct link to Aggregating Relations')
 
-When using the `enableAggregate` option any defined `many` relations will also expose a aggregate query `{relationName}Aggregate`
+When the `aggregate` option is enabled with `enabled: true` any defined `many` relations will also expose a aggregate query `{relationName}Aggregate`
 
 Building on the previous example assume `TodoItem` has a `subTasks` connection.
 
@@ -700,35 +700,7 @@ This example will aggregate all related `subTasks` that are not completed.
 
 ### Enabling Aggregates Only For Root[​](#enabling-aggregates-only-for-root 'Direct link to Enabling Aggregates Only For Root')
 
-When using the `enableAggregate` option it will enable aggregates on the root type as well as all relations. If you only want to expose aggregate functionality on the root type you can specify the `aggregate` option.
-
-```ts
-import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql'
-import { NestjsQueryTypeOrmModule } from '@ptc-org/nestjs-query-typeorm'
-import { Module } from '@nestjs/common'
-import { TodoItemInputDTO } from './dto/todo-item-input.dto'
-import { TodoItemUpdateDTO } from './dto/todo-item-update.dto'
-import { TodoItemDTO } from './dto/todo-item.dto'
-import { TodoItemEntity } from './todo-item.entity'
-
-@Module({
-  imports: [
-    NestjsQueryGraphQLModule.forFeature({
-      imports: [NestjsQueryTypeOrmModule.forFeature([TodoItemEntity])],
-      resolvers: [
-        {
-          DTOClass: TodoItemDTO,
-          EntityClass: TodoItemEntity,
-          CreateDTOClass: TodoItemInputDTO,
-          UpdateDTOClass: TodoItemUpdateDTO,
-          aggregate: { enabled: true }
-        }
-      ]
-    })
-  ]
-})
-export class TodoItemModule {}
-```
+The `aggregate` option with `enabled: true` enables aggregates on the root type as well as all relations. To expose aggregate functionality only on the root type, disable the aggregate query on each relation with the relation-level `enableAggregate` option (see the next section).
 
 ### Disable Aggregate for Single Relation[​](#disable-aggregate-for-single-relation 'Direct link to Disable Aggregate for Single Relation')
 

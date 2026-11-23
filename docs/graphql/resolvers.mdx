@@ -224,8 +224,6 @@ When using `NestjsQueryGraphQLModule` or `CRUDResolver` you can define a number 
 
 - `enableSubscriptions?` - Set to `true` to enable graphql subscriptions. See [Subscriptions](/graphql/subscriptions).
 
-- `enableAggregate?` - When set to true an aggregate query will be enabled on the type and all relations (unless the explicitly disable it). See [Aggregation](/graphql/aggregations)
-
 - `create` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
 
   - `CreateDTOClass` - The input DTO to use for create mutations.
@@ -249,7 +247,7 @@ When using `NestjsQueryGraphQLModule` or `CRUDResolver` you can define a number 
 
 - `aggregate` - In addition to [`ResolverOptions`](#resolveroptions) you can also specify the following
 
-  - `enabled` - Set to true to enable aggregations. If this is used in place of the root `enableAggregate` option relations will not have aggregate queries exposed.
+  - `enabled` - Set to `true` to enable aggregations on the type and all relations (unless explicitly disabled per relation). See [Aggregation](/graphql/aggregations).
 
 - `export` - Configure CSV export. See [CSV Export](/graphql/export).
 

@@ -19,7 +19,7 @@ import { SubTaskEntity, SubTaskEntitySchema } from './sub-task.entity'
           EntityClass: SubTaskEntity,
           CreateDTOClass: CreateSubTaskDTO,
           UpdateDTOClass: SubTaskUpdateDTO,
-          enableAggregate: true
+          aggregate: { enabled: true }
         }
       ]
     })

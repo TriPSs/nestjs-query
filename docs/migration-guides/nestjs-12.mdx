@@ -9,6 +9,10 @@ description: 'Migrate to NestJS 12 and @nestjs/graphql 14: relation and field na
 
 An explicitly declared field takes precedence over a relation with the same name on the same DTO. In `@nestjs/graphql@13` the relation used to win instead. If a DTO declares both — for example a class-level `@Relation('lender', () => LenderDto)` and a `@FilterableField(() => GraphQLObjectID, { nullable: true }) lender: string` — the generated schema will silently change after the upgrade. Remove the duplicate declaration and keep only the one you actually want exposed. See [issue #532](https://github.com/TriPSs/nestjs-query/issues/532) for details.
 
+## Root `enableAggregate` option
+
+The root `enableAggregate` resolver option is removed. Use `aggregate: { enabled: true }` instead — it now enables aggregate queries on the root type and all relations, exactly as the removed option did. Relation-level options (`enableAggregate` and `aggregate`) are unchanged.
+
 ## Subscription authentication
 
 If you migrate your subscriptions to the `graphql-ws` protocol as part of the upgrade, authentication no longer flows through `onConnect`: its return value is only the connection-ack payload and never reaches resolvers. Expose the connection params as headers through `context` instead.

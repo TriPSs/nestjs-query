@@ -196,7 +196,7 @@ function createResolver<DTO, EntityServiceOrAssembler, C, U, R extends ReadResol
   }
   // @nestjs/graphql 14 requires the group-by field resolvers to live on their own
   // @Resolver class (inherited resolvers bind to the final resolver's parent type)
-  const aggregateEnabled = resolverOpts.aggregate?.enabled ?? resolverOpts.enableAggregate
+  const aggregateEnabled = resolverOpts.aggregate?.enabled
   const groupByResolver = aggregateEnabled ? createGroupByResolver(resolverOpts.DTOClass) : null
   const resolver = isAssemblerCRUDAutoResolverOpts(resolverOpts)
     ? createAssemblerAutoResolver(resolverOpts)

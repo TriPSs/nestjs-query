@@ -24,7 +24,7 @@ describe('aggregate group by resolver', () => {
         {
           DTOClass: ScratchDateDTO,
           ServiceClass: TestService,
-          enableAggregate: true,
+          aggregate: { enabled: true },
           pagingStrategy: PagingStrategies.NONE
         }
       ])
@@ -36,7 +36,7 @@ describe('aggregate group by resolver', () => {
 
   it('exposes the by argument for manually composed resolvers', async () => {
     @Resolver(() => ScratchDateDTO)
-    class ScratchResolver extends CRUDResolver(ScratchDateDTO, { enableAggregate: true }) {}
+    class ScratchResolver extends CRUDResolver(ScratchDateDTO, { aggregate: { enabled: true } }) {}
 
     const sdl = await generateSchema([ScratchResolver, createGroupByResolver(ScratchDateDTO) as never])
 
@@ -48,7 +48,7 @@ describe('aggregate group by resolver', () => {
     const first = {
       DTOClass: ScratchDateDTO,
       ServiceClass: TestService,
-      enableAggregate: true,
+      aggregate: { enabled: true },
       pagingStrategy: PagingStrategies.NONE
     } as never
     const second = {

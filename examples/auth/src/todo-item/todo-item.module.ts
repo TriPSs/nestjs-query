@@ -23,7 +23,7 @@ import { TodoItemResolver } from './todo-item.resolver'
           AssemblerClass: TodoItemAssembler,
           CreateDTOClass: TodoItemInputDTO,
           UpdateDTOClass: TodoItemUpdateDTO,
-          enableAggregate: true,
+          aggregate: { enabled: true },
           enableSubscriptions: true,
           guards: [JwtAuthGuard]
         }
